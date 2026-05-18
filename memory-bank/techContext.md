@@ -12,7 +12,8 @@
 | Payments | Stripe Checkout + webhooks |
 | Scheduling | Calendly (embedded) |
 | Analytics | PostHog, Google Analytics |
-| Marketing automation | Klaviyo (newsletter) |
+| CRM / attribution | Supabase (`leads`, `clients`, `enrollments`, `touch_events`) |
+| Marketing automation | Klaviyo (newsletter + server events) |
 
 ## Key scripts
 
@@ -39,7 +40,11 @@ npm run release      # env:sync + deploy:prod
 | `STRIPE_WEBHOOK_SECRET` | Webhook verification |
 | `STRIPE_PRICE_ID` | Enrollment price |
 | `NEXT_PUBLIC_POSTHOG_KEY` | Product analytics |
-| `NEXT_PUBLIC_KLAVIYO_PUBLIC_API_KEY` | Newsletter |
+| `NEXT_PUBLIC_KLAVIYO_PUBLIC_API_KEY` | Newsletter (client) |
+| `KLAVIYO_PRIVATE_API_KEY` | Server events + profiles |
+| `SUPABASE_URL` / `SUPABASE_SERVICE_ROLE_KEY` | CRM writes (server only) |
+| `ADMIN_SECRET` | `/admin` dashboard |
+| `CALENDLY_WEBHOOK_SIGNING_KEY` | Calendly → lead `call_booked` |
 
 Stripe bootstrap: `node --env-file=.env.local scripts/setup-stripe.mjs` (with `STRIPE_TUITION_CENTS`).
 
@@ -51,11 +56,13 @@ Stripe bootstrap: `node --env-file=.env.local scripts/setup-stripe.mjs` (with `S
 ## Integrations map
 
 ```
-Browser → Next.js pages
-        → POST /api/contact → Resend → support@illuminairy.com
-        → POST /api/newsletter → Klaviyo
-        → POST /api/checkout → Stripe Checkout
-Stripe  → POST /api/webhooks/stripe → fulfillment logic
+Browser → AttributionProvider (visitor_id) → POST /api/attribution/touch → touch_events
+        → POST /api/intake → Supabase leads + touch_events → Klaviyo + Resend
+        → POST /api/contact → Resend
+        → POST /api/checkout → Stripe (+ touch_events, Klaviyo)
+Calendly → POST /api/webhooks/calendly → leads + touch_events + Klaviyo
+Stripe  → POST /api/webhooks/stripe → clients / enrollments + Klaviyo + Resend
+Admin   → /admin (ADMIN_SECRET) → Supabase read/write
 ```
 
 ## DNS & domain

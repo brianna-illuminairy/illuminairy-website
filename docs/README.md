@@ -25,6 +25,8 @@ Internal brand and product docs for Illuminairy.
 | [sat-competitor-analysis.md](sat-competitor-analysis.md) | SAT prep competitor profiles (Kaplan, Magoosh, etc.) |
 | [sat-us-vs-competitors.md](sat-us-vs-competitors.md) | Us vs. them tables for site and consults |
 | [competitor-intel-curious-cardinals.md](competitor-intel-curious-cardinals.md) | **Curious Cardinals** — archive, pivot, top content, **same trust levers / SAT proof** positioning, content calendar |
+| [research/](research/README.md) | Research index |
+| [research/parent-voice-social-listening-2026-05.md](research/parent-voice-social-listening-2026-05.md) | **Georgia SAT funnel** — parent forum language, fear IDs, ad hooks, banned phrases |
 | [research/cc-get-started-funnel.md](research/cc-get-started-funnel.md) | CC **get-started** funnel — full Typeform fields, call vs Luma branch |
 
 ## Product code

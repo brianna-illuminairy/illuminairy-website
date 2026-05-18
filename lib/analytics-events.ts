@@ -9,7 +9,19 @@ export const AnalyticsEvents = {
   enrollCtaClick: "enroll_cta_click",
   checkoutStarted: "checkout_started",
   checkoutCompleted: "checkout_completed",
-  contactFormSubmitted: "contact_form_submitted"
+  contactFormSubmitted: "contact_form_submitted",
+  leadMagnetSubmitted: "lead_magnet_submitted",
+  leadMagnetDownloadViewed: "lead_magnet_download_viewed",
+  getStartedIntakeSubmitted: "get_started_intake_submitted",
+  getStartedScheduleViewed: "get_started_schedule_viewed",
+  funnelLandingView: "funnel_landing_view",
+  funnelCtaClick: "funnel_cta_click",
+  intakeStepView: "intake_step_view",
+  intakeCompleted: "intake_completed",
+  schedulePageView: "schedule_page_view",
+  listFitStarted: "list_fit_started",
+  listFitCompleted: "list_fit_completed",
+  listFitCtaApply: "list_fit_cta_apply"
 } as const;
 
 export type AnalyticsEventName =

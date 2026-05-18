@@ -33,6 +33,18 @@ export function Footer() {
                 {item.label}
               </Link>
             ))}
+            <Link
+              href="/guides"
+              className="text-[14px] text-ink-soft transition hover:text-ink"
+            >
+              Parent guides
+            </Link>
+            <Link
+              href="/get-started"
+              className="text-[14px] text-ink-soft transition hover:text-ink"
+            >
+              Get started
+            </Link>
           </div>
         </div>
         <div>

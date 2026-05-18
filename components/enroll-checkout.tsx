@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import { ArrowRight, Loader2 } from "lucide-react";
+import { getAttributionPayload } from "@/components/attribution-provider";
 import { site } from "@/lib/site";
 
 const inputClass =
@@ -53,7 +54,9 @@ export function EnrollCheckout() {
     setErrorMsg("");
 
     const fd = new FormData(e.currentTarget);
+    const { visitorId } = getAttributionPayload();
     const payload = {
+      visitorId,
       parentFirstName: String(fd.get("parentFirstName") ?? ""),
       parentLastName: String(fd.get("parentLastName") ?? ""),
       parentEmail: String(fd.get("parentEmail") ?? ""),

@@ -27,6 +27,7 @@ Use [0000-template.md](0000-template.md) for new entries.
 | [0004](0004-calendly-public-vs-invite.md) | Public vs invite-only Calendly | accepted |
 | [0005](0005-resend-contact-form.md) | Resend for contact form | accepted |
 | [0006](0006-agentic-development-workflow.md) | Agentic development workflow | accepted |
+| [0007](0007-supabase-crm-attribution.md) | Supabase CRM + touch log + attribution | accepted |
 
 ## When to add an ADR
 

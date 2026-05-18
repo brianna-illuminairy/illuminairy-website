@@ -1,0 +1,7 @@
+{
+  "id": "trigger-may-score",
+  "name": "May score release — primary spend window",
+  "primaryTones": ["aspiration", "fear"],
+  "leadFearIds": ["hours-no-payoff", "doors-closing"],
+  "window": "May 3–25"
+}

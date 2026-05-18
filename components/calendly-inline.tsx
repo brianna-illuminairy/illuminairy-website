@@ -1,15 +1,41 @@
 "use client";
 
+import { useEffect } from "react";
 import Script from "next/script";
 import { site } from "@/lib/site";
 
 type CalendlyInlineProps = {
   className?: string;
   minHeight?: number;
+  /** Override default public consultation URL (e.g. Calendly prefill after intake). */
+  bookingUrl?: string;
+  /** Fires when the visitor completes a Calendly booking in the embed */
+  onEventScheduled?: () => void;
 };
 
-export function CalendlyInline({ className = "", minHeight = 700 }: CalendlyInlineProps) {
-  const url = site.calendlyUrl;
+export function CalendlyInline({
+  className = "",
+  minHeight = 700,
+  bookingUrl,
+  onEventScheduled
+}: CalendlyInlineProps) {
+  const url = bookingUrl || site.calendlyUrl;
+
+  useEffect(() => {
+    if (!onEventScheduled) return;
+
+    function onMessage(e: MessageEvent) {
+      if (e.origin !== "https://calendly.com") return;
+      const data = e.data as { event?: string };
+      if (data?.event === "calendly.event_scheduled") {
+        onEventScheduled?.();
+      }
+    }
+
+    window.addEventListener("message", onMessage);
+    return () => window.removeEventListener("message", onMessage);
+  }, [onEventScheduled]);
+
   if (!url) {
     return null;
   }

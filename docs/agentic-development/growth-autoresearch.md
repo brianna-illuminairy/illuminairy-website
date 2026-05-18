@@ -63,7 +63,7 @@ Log every experiment, including inconclusive runs — this is your marketing “
 
 1. Ensure `NEXT_PUBLIC_POSTHOG_KEY` is set (`npm run posthog:verify`).
 2. Build a funnel: SAT pageview → schedule CTA → (optional) enroll → checkout.
-3. **Follow-up:** instrument CTAs with `posthog.capture()` using constants from `lib/analytics-events.ts`. Until then, use Stripe/Calendly/GA for north-star reads and manual experiment logs.
+3. Instrument CTAs with `posthog.capture()` using constants from `lib/analytics-events.ts` (lead magnets, get-started intake — see `lib/analytics-capture.ts`).
 
 ## Rules
 

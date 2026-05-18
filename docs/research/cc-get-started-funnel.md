@@ -7,6 +7,8 @@ Sources: Typeform public API (`api.typeform.com/forms/{id}`), live page inspecti
 
 **Related:** [competitor-intel-curious-cardinals.md](../competitor-intel-curious-cardinals.md)
 
+**Cross-funnel comparison:** [premium-funnel-teardowns.md](premium-funnel-teardowns.md) maps CC against Alpha, Gauntlet, MarketerHire, Cohort, Crimson, and other premium application funnels.
+
 ---
 
 ## Funnel overview
@@ -187,3 +189,13 @@ Raw API dumps: [cc-typeform-capture/](cc-typeform-capture/)
 3. **Webinar escape hatch** (Luma) for parents not ready to book — still captures marketing opt-in from step 1.  
 4. **Heavy spam logic** (dog images, blocklist emails) — explains automated runs hitting “spammer” screens.  
 5. For Illuminairy: mirror **schedule vs nurture** split (Calendly + optional recorded webinar), plus **published price** acknowledgment before consult.
+
+## Side-by-side mapping
+
+| Funnel lever | Curious Cardinals | Crimson / Cohort pattern | Illuminairy SAT adaptation |
+|--------------|-------------------|--------------------------|----------------------------|
+| First conversion | Parent Typeform | Consult-first or free tool | `/get-started` intake or Georgia List Fit Check |
+| Qualification | Program interest, grade, goals, $380/mo acknowledgment | Candidacy or next-step assessment | Target schools, practice history, timeline, $1,200 readiness |
+| Human close | HubSpot consult with co-founder | Roadmap / intro-call agenda | Diagnostic and list-fit review call |
+| Nurture branch | Luma virtual event | Free tools / resources | Guide, recorded August SAT walkthrough, Klaviyo flow |
+| Proof | Reviews, case studies, mentor profiles | Outcomes, price-vs-incumbent comparison | Weekly reports, diagnostics, class cap, no score guarantee |

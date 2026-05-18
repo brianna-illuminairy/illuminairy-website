@@ -1,8 +1,11 @@
 import { NextResponse } from "next/server";
+import { appendTouchEvent } from "@/lib/crm/touch";
+import { trackKlaviyoEvent } from "@/lib/klaviyo-server";
 import { getStripe } from "@/lib/stripe";
 import { site } from "@/lib/site";
 
 type CheckoutPayload = {
+  visitorId?: string;
   parentFirstName?: string;
   parentLastName?: string;
   parentEmail?: string;
@@ -110,6 +113,7 @@ export async function POST(request: Request) {
       customer_email: parentEmail,
       metadata: {
         program: "sat-accelerator",
+        visitorId: body.visitorId?.trim() ?? "",
         parentFirstName,
         parentLastName,
         parentEmail,
@@ -122,6 +126,17 @@ export async function POST(request: Request) {
       },
       success_url: `${site.url}/enroll/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${site.url}/enroll?canceled=1`
+    });
+
+    void appendTouchEvent({
+      visitor_id: body.visitorId?.trim(),
+      event_type: "checkout_started",
+      source: "server",
+      payload: { parent_email: parentEmail, stripe_session: session.id }
+    });
+
+    void trackKlaviyoEvent(parentEmail, "Checkout Started", {
+      stripe_session_id: session.id
     });
 
     return NextResponse.json({ url: session.url });

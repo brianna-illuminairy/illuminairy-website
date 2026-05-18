@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
+import { recordEnrollmentFromStripe } from "@/lib/crm/enrollment";
+import { onEnrollmentCompleted } from "@/lib/klaviyo-server";
 import { getStripe } from "@/lib/stripe";
-import { site } from "@/lib/site";
+import { satProgram, site } from "@/lib/site";
 
 export async function POST(request: Request) {
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
@@ -34,6 +36,24 @@ export async function POST(request: Request) {
       .filter(Boolean)
       .join(" ");
     const legacyParentName = meta.parentName as string | undefined;
+
+    const enrollment = await recordEnrollmentFromStripe({
+      id: session.id,
+      amount_total: session.amount_total,
+      customer_email: session.customer_email,
+      metadata: meta as Record<string, string>
+    });
+
+    if (enrollment.ok) {
+      const parentEmail =
+        meta.parentEmail ?? session.customer_email ?? enrollment.parentEmail;
+      void onEnrollmentCompleted({
+        email: parentEmail,
+        programLabel: `SAT Accelerator · ${satProgram.examDayLabel}`
+      });
+    } else if (enrollment.error !== "supabase_not_configured") {
+      console.error("CRM enrollment error:", enrollment.error);
+    }
 
     const resendKey = process.env.RESEND_API_KEY;
     if (resendKey) {

@@ -14,10 +14,12 @@ flowchart TB
     Pages --> API[API routes]
     API --> Resend[Resend email]
     API --> StripeAPI[Stripe API]
+    API --> Supabase[Supabase CRM]
   end
 
   subgraph external [External services]
     Calendly[Calendly embed]
+    CalendlyWH[Calendly webhooks]
     StripeWH[Stripe webhooks]
     PostHog[PostHog]
     GA[Google Analytics]
@@ -29,6 +31,7 @@ flowchart TB
   Pages --> GA
   Pages --> Klaviyo
   StripeWH --> API
+  CalendlyWH --> API
 ```
 
 ## Routes (pages)
@@ -43,6 +46,9 @@ flowchart TB
 | `/contact` | Form + `#schedule` Calendly |
 | `/enroll` | Stripe Checkout start |
 | `/enroll/success` | Post-payment confirmation |
+| `/get-started` | SAT intake funnel |
+| `/get-started/schedule` | Calendly after intake |
+| `/admin/*` | Internal CRM (auth-gated) |
 | `/privacy`, `/terms`, `/refund-policy`, `/support-policy` | Legal |
 
 ## API routes
@@ -50,9 +56,12 @@ flowchart TB
 | Route | Method | Integration |
 |-------|--------|-------------|
 | `/api/contact` | POST | Resend → inbox |
+| `/api/intake` | POST | Supabase lead + touch log → Klaviyo + Resend |
+| `/api/attribution/touch` | POST | Append `touch_events` |
 | `/api/newsletter` | POST | Klaviyo |
 | `/api/checkout` | POST | Stripe Checkout session |
-| `/api/webhooks/stripe` | POST | Stripe signature verify → handle completion |
+| `/api/webhooks/stripe` | POST | Stripe → client/enrollment + Klaviyo |
+| `/api/webhooks/calendly` | POST | Calendly → lead `call_booked` + Klaviyo |
 
 ## Core libraries
 
@@ -63,6 +72,10 @@ flowchart TB
 | `lib/internal-links.ts` | Public consult path; private tutor Calendly URL |
 | `lib/stripe.ts` | Stripe server client |
 | `lib/posthog.ts` | Analytics init helpers |
+| `lib/attribution.ts` | UTM / click-id capture helpers |
+| `lib/supabase/server.ts` | Supabase service-role client |
+| `lib/crm/*` | Leads, touches, enrollment, admin updates |
+| `lib/klaviyo-server.ts` | Server-side Klaviyo events |
 
 ## Component layers
 

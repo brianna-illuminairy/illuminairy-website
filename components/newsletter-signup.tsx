@@ -1,56 +1,8 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
-
-const KLAVIYO_REVISION = "2024-10-15";
-
-async function subscribeWithKlaviyo(email: string) {
-  const companyId = process.env.NEXT_PUBLIC_KLAVIYO_PUBLIC_API_KEY;
-  if (!companyId) {
-    throw new Error("Newsletter is not configured yet.");
-  }
-
-  const listId = process.env.NEXT_PUBLIC_KLAVIYO_LIST_ID;
-  const payload: Record<string, unknown> = {
-    data: {
-      type: "subscription",
-      attributes: {
-        custom_source: "illuminairy.com newsletter",
-        profile: {
-          data: {
-            type: "profile",
-            attributes: { email }
-          }
-        }
-      },
-      ...(listId
-        ? {
-            relationships: {
-              list: {
-                data: { type: "list", id: listId }
-              }
-            }
-          }
-        : {})
-    }
-  };
-
-  const response = await fetch(
-    `https://a.klaviyo.com/client/subscriptions/?company_id=${encodeURIComponent(companyId)}`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/vnd.api+json",
-        revision: KLAVIYO_REVISION
-      },
-      body: JSON.stringify(payload)
-    }
-  );
-
-  if (response.status !== 202) {
-    throw new Error("Could not subscribe. Please try again later.");
-  }
-}
+import { subscribeToKlaviyo } from "@/lib/klaviyo-client";
 
 export function NewsletterSignup({ compact = false }: { compact?: boolean }) {
   const [email, setEmail] = useState("");
@@ -72,7 +24,10 @@ export function NewsletterSignup({ compact = false }: { compact?: boolean }) {
     }
 
     try {
-      await subscribeWithKlaviyo(email.trim());
+      await subscribeToKlaviyo({
+        email: email.trim(),
+        customSource: "illuminairy.com newsletter"
+      });
       setStatus("success");
       setEmail("");
       setMessage("You're on the list. We'll be in touch.");
@@ -92,7 +47,11 @@ export function NewsletterSignup({ compact = false }: { compact?: boolean }) {
         <>
           <p className="eyebrow text-gold-deep">Stay in the loop</p>
           <p className="mt-3 text-[14.5px] leading-relaxed text-ink-soft">
-            Program updates, new session openings, and Illuminairy news.
+            Program updates, new session openings, and Illuminairy news.{" "}
+            <Link href="/guides" className="font-medium text-gold-deep hover:underline">
+              Free parent guides
+            </Link>{" "}
+            are also available.
           </p>
         </>
       )}

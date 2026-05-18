@@ -18,6 +18,7 @@
 - [x] Vercel deploy scripts and env sync
 - [x] Agent docs: AGENTS.md, memory bank, ADRs, Cursor rules
 - [x] Agentic dev workflow: `docs/agentic-development/`, `specs/`, `agent:verify`, Ralph scripts, Cursor skills, ADR 0006
+- [x] Premium application-funnel teardowns for SAT growth strategy (`docs/research/premium-funnel-teardowns.md`)
 
 ## In progress
 

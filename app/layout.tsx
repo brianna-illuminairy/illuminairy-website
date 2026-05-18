@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
-import { Footer } from "@/components/footer";
-import { Header } from "@/components/header";
+import { LayoutChrome } from "@/components/layout-chrome";
 import { GoogleAnalytics } from "@/components/google-analytics";
 import { KlaviyoScript } from "@/components/klaviyo";
+import { AttributionProvider } from "@/components/attribution-provider";
 import { PostHogProvider } from "@/components/posthog-provider";
 import { site } from "@/lib/site";
 import "./globals.css";
@@ -84,15 +84,15 @@ export default function RootLayout({
     <html lang="en" className={jakarta.variable} data-scroll-behavior="smooth">
       <body className="bg-ivory text-ink antialiased">
         <PostHogProvider>
-          <Header />
-          <main>{children}</main>
-          <Footer />
+          <AttributionProvider>
+            <LayoutChrome>{children}</LayoutChrome>
           <script
             type="application/ld+json"
             dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
           />
           <GoogleAnalytics />
           <KlaviyoScript />
+          </AttributionProvider>
         </PostHogProvider>
       </body>
     </html>
