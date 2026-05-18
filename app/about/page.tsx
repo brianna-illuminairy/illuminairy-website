@@ -26,7 +26,7 @@ export default function AboutPage() {
           <SectionHeader
             eyebrow="Why it exists"
             title="A better model for high-trust learning."
-            text="Most tutoring feels opaque and transactional — rotating tutors, unclear progress, promises that sound too good. Illuminairy is built on what research and families both want: a mentor who has walked the path, a program you can see, and weekly honesty about effort and results."
+            text="Most SAT prep feels opaque and transactional — rotating staff, unclear progress, promises that sound too good. Illuminairy is built on what research and families both want: mentors and instructors who have walked the path, a program you can see, and weekly honesty about effort and results."
           />
           <div className="grid gap-4">
             {[
@@ -38,7 +38,7 @@ export default function AboutPage() {
               {
                 icon: Blocks,
                 title: "Build repeatable structure",
-                text: "Instead of one-off tutoring, Illuminairy packages mentorship into clear programs with defined structure, support, and expectations."
+                text: "Instead of one-off sessions, Illuminairy packages mentorship and instruction into clear programs with defined structure, support, and expectations."
               },
               {
                 icon: Compass,
@@ -59,7 +59,7 @@ export default function AboutPage() {
           <p className="mt-6 eyebrow text-gold-light">The thesis</p>
           <blockquote className="mt-7">
             <p className="text-balance text-[clamp(1.75rem,1.1rem+2.4vw,3rem)] font-light leading-[1.15] tracking-[-0.025em] text-ivory">
-              Legacy tutoring and expertise marketplaces are fragmented, opaque, and
+              Legacy prep programs and expertise marketplaces are fragmented, opaque, and
               transactional. <span className="text-gold-light">Illuminairy is building a more
               structured model for premium mentorship and applied learning</span>, starting
               with the SAT Accelerator and expanding carefully from there.
@@ -83,7 +83,7 @@ export default function AboutPage() {
               },
               {
                 title: "Who we serve",
-                text: "Ambitious students and families who want structure, accountability, and mentors who have actually succeeded — not a generic tutoring center."
+                text: "Ambitious students and families who want structure, accountability, and mentors who have actually succeeded — not a generic prep center."
               },
               {
                 title: "How to reach us",

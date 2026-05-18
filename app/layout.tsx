@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     template: "%s · Illuminairy"
   },
   description:
-    "Better SAT tutors and a better model — diagnostics, six personalized 1:1s, live classes, and practice. Not self-study or à la carte tutoring.",
+    "Better SAT mentors and instructors — diagnostics, six personalized 1:1s, live classes, and practice. Not self-study or à la carte sessions.",
   alternates: {
     canonical: "/"
   },

@@ -7,7 +7,7 @@
 export const publicConsultationPath = "/contact#schedule";
 
 /**
- * Mentor / tutor interview — invite only after resume review.
+ * Mentor interview — invite only after resume review.
  * Do not import this in client components or public pages.
  */
 export const tutorInterviewCalendlyUrl =

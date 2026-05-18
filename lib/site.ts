@@ -22,7 +22,7 @@ export const site = {
   descriptor: "ILLUMINAIRY",
   satDate: "August 22, 2026",
   tagline: "your guiding light for goals and growth",
-  /** Public SAT consultation only — not the invite-only tutor interview link */
+  /** Public SAT consultation only — not the invite-only mentor interview link */
   calendlyUrl:
     process.env.NEXT_PUBLIC_CALENDLY_URL ||
     "https://calendly.com/brianna-illuminairy/august-sat",
@@ -37,7 +37,7 @@ export const satProgram = {
   privateSessions: 6,
   maxPerClass: 10,
   headline:
-    "A twelve-week plan — not self-study, not random tutoring sessions.",
+    "A twelve-week plan — not self-study, not random à la carte sessions.",
   tracking:
     "Week-one diagnostics personalize six private 1:1s. Live classes teach. Practice reinforces. Weekly reports keep families in the loop.",
   structureLine:
@@ -108,12 +108,12 @@ export const programStats = [
   { value: "1450+", label: "SAT mentor score standard" }
 ];
 
-/** Core positioning — better tutors, better model, 1:1 + diagnostics + practice. */
+/** Core positioning — mentors + instructors, better model, 1:1 + diagnostics + practice. */
 export const mentorshipMessaging = {
   thesis:
-    "Better tutors and a better model beat self-study and à la carte tutoring. Georgia Tech mentors who recently scored 1450+ teach inside a twelve-week plan where week-one diagnostics shape six private 1:1s, live classes explain the material, and practice reinforces it through repetition.",
+    "Better mentors and instructors, and a better model, beat self-study and à la carte sessions. Georgia Tech mentors and instructors who recently scored 1450+ lead a twelve-week plan where week-one diagnostics shape six private 1:1s, live classes teach the material, and practice reinforces it through repetition.",
   researchNote:
-    "Research backs personalized 1:1 instruction — including Benjamin Bloom's two-sigma finding on tutoring (Educational Researcher, 1984) and studies on mentor-led programs — when it is structured, not random."
+    "Research backs personalized 1:1 instruction — including Benjamin Bloom's two-sigma finding on individualized teaching (Educational Researcher, 1984) and studies on mentor-led programs — when it is structured, not random."
 };
 
 /** The Accelerator loop — diagnostics → 1:1 → classes → practice. */
@@ -121,7 +121,7 @@ export const acceleratorModel = {
   eyebrow: "How the model works",
   title: "Diagnostics personalize the 1:1s. Practice makes it stick.",
   intro:
-    "Self-study leaves gaps. Random tutoring sessions never build momentum. Illuminairy combines a fixed twelve-week arc with data from day one — so every session has a purpose.",
+    "Self-study leaves gaps. Random à la carte sessions never build momentum. Illuminairy runs one twelve-week program with a set schedule from day one — diagnostics, then weekly classes, 1:1s, and practice — so every session has a purpose.",
   steps: [
     {
       title: "Week-one diagnostics",
@@ -133,7 +133,7 @@ export const acceleratorModel = {
     },
     {
       title: "Live classes every week",
-      text: "Small-group R&W and Math instruction from mentors who teach clearly — capped at ten students per class."
+      text: "Small-group R&W and Math classes from instructors who teach clearly — capped at ten students per class."
     },
     {
       title: "Practice that reinforces",
@@ -145,21 +145,21 @@ export const acceleratorModel = {
 /** How Illuminairy differs from typical SAT prep — used on Home and SAT pages. */
 export const programDifferentiation = {
   eyebrow: "The difference",
-  title: "Better tutors. A better model.",
+  title: "Better mentors and instructors. A better model.",
   intro:
-    "Illuminairy is not a tutoring center and not a marketplace. It is a twelve-week program with better mentors, mandatory 1:1 time, diagnostics that personalize coaching, and practice built into every week.",
+    "Illuminairy is not a prep center and not a marketplace. It is a twelve-week program with vetted mentors and instructors, mandatory 1:1 time, diagnostics that personalize coaching, and practice built into every week.",
   rows: [
     {
-      aspect: "The tutors",
+      aspect: "Who teaches",
       typical: "Whoever is free that week — varied quality, little continuity",
       illuminairy:
-        "Vetted Georgia Tech mentors (1450+ SAT), chosen for teaching ability — recently succeeded on the same test your student is taking"
+        "Vetted Georgia Tech mentors and instructors (1450+ SAT) — recently succeeded on the same test your student is taking"
     },
     {
       aspect: "The model",
-      typical: "Self-study books, or à la carte sessions with no arc",
+      typical: "Self-study books, or à la carte sessions with no real plan",
       illuminairy:
-        "A fixed twelve-week plan: diagnostics → personalized 1:1s → live classes → practice — so momentum actually builds"
+        "One twelve-week program with a set schedule: diagnostics, then personalized 1:1s, live classes, and practice every week"
     },
     {
       aspect: "1:1 attention",
@@ -179,8 +179,8 @@ export const programDifferentiation = {
 export const satFeatures = [
   {
     icon: GraduationCap,
-    title: "Better tutors",
-    text: "Georgia Tech mentors who recently scored 1450+ — close enough to relate, far enough to lead. Vetted to teach clearly, not just test well."
+    title: "Mentors & instructors",
+    text: "Georgia Tech mentors and instructors who recently scored 1450+ — close enough to relate, far enough to lead. Vetted to teach clearly, not just test well."
   },
   {
     icon: CalendarCheck,
@@ -226,7 +226,7 @@ export const platformAreas = [
     icon: Network,
     title: "Illuminairy Mentors",
     status: "Planned",
-    text: "A selective network of high-performing educated talent for mentorship, tutoring, and applied expertise."
+    text: "A selective network of high-performing educated talent for mentorship, instruction, and applied expertise."
   },
   {
     icon: BriefcaseBusiness,
@@ -247,19 +247,19 @@ export const mentorStandards = [
   "Verified 1450+ SAT scores for SAT mentors",
   "Communication screening",
   "Professionalism and reliability",
-  "Ability to teach clearly"
+  "Ability to instruct small groups and mentor one-on-one"
 ];
 
 export const trustPillars = [
   {
     icon: GraduationCap,
-    title: "Better tutors",
-    text: "Georgia Tech mentors (1450+ SAT) who recently took the test — relatable, rigorous, and screened for how they teach."
+    title: "Mentors & instructors",
+    text: "Georgia Tech mentors and instructors (1450+ SAT) who recently took the test — relatable, rigorous, and screened for how they teach."
   },
   {
     icon: CalendarCheck,
     title: "Better model",
-    text: "A twelve-week arc beats self-study and à la carte sessions — diagnostics, 1:1s, classes, and practice in one plan."
+    text: "One twelve-week program with a set schedule beats self-study and à la carte sessions — diagnostics, 1:1s, classes, and practice, all mapped out in advance."
   },
   {
     icon: UserCheck,

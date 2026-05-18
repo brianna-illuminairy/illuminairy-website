@@ -13,17 +13,17 @@ import { mentorApplyLink, mentorStandards } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Mentors",
   description:
-    "Illuminairy mentors are accomplished educators selected for academic credibility, communication, professionalism, and teaching ability."
+    "Near-peer expert mentorship at Illuminairy — mentors selected for academic credibility, communication, professionalism, and the ability to instruct small groups and mentor one-on-one."
 };
 
 export default function MentorsPage() {
-  // Mentor flow: apply via contact form → team reviews → invite-only tutor-call Calendly link by email (see lib/internal-links.ts). Never embed tutor-call on this page.
+  // Mentor flow: apply via contact form → team reviews → invite-only interview Calendly link by email (see lib/internal-links.ts).
   return (
     <>
       <PageHero
         eyebrow="Mentors"
-        title="Premium mentorship, held to a higher standard."
-        text="Illuminairy mentors are selected for academic credibility, communication, professionalism, and — above all — teaching ability. Apply first; if you are a fit, we will email you a link to schedule an interview."
+        title="Near-peer expert mentorship."
+        text="Illuminairy mentors are selected for academic credibility, communication, professionalism, and — above all — their ability to instruct small groups and mentor one-on-one. Apply first; if you are a fit, we will email you a link to schedule an interview."
         primary={{ label: "Apply to become a mentor", href: mentorApplyLink }}
         secondary={{ label: "Contact Illuminairy", href: "/contact" }}
       >
@@ -65,8 +65,8 @@ export default function MentorsPage() {
                 "Illuminairy screens for academic background, communication, reliability, and professionalism."
               ],
               [
-                "Teaching ability",
-                "Mentors must be able to explain concepts clearly — not just perform well themselves."
+                "Small groups and 1:1",
+                "Mentors must instruct live classes clearly and mentor students one-on-one — not just perform well on tests themselves."
               ],
               [
                 "Selective network",

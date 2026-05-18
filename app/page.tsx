@@ -38,7 +38,7 @@ export default function Home() {
             </div>
 
             <h1 className="mt-6 text-balance text-[clamp(2.5rem,1.5rem+4vw,4.75rem)] font-extralight leading-[1.02] tracking-[-0.035em] text-ink">
-              Better tutors. A better model.
+              Better mentors and instructors. A better model.
             </h1>
 
             <p className="mt-7 max-w-xl text-pretty text-lg leading-[1.65] text-ink-soft sm:text-xl">
@@ -105,8 +105,8 @@ export default function Home() {
         <div className="mx-auto max-w-7xl">
           <SectionHeader
             eyebrow="Why illuminairy"
-            title="Better tutors. A better model. Real 1:1."
-            text="Self-study leaves gaps. À la carte tutoring never builds momentum. Illuminairy combines Georgia Tech mentors (1450+ SAT) with week-one diagnostics, six personalized private sessions, live classes, and practice that reinforces what was taught — inside one twelve-week plan families can follow."
+            title="Better mentors and instructors. A better model. Real 1:1."
+            text="Self-study leaves gaps. À la carte sessions never build momentum. Illuminairy combines Georgia Tech mentors and instructors (1450+ SAT) with week-one diagnostics, six personalized private sessions, live classes, and practice that reinforces what was taught — inside one twelve-week plan families can follow."
           />
           <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
             {trustPillars.map((item) => (

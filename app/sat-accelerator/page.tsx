@@ -24,7 +24,7 @@ export default function SatAcceleratorPage() {
     <>
       <PageHero
         eyebrow="Illuminairy SAT · August 2026"
-        title={`Better tutors. A better model — for the ${site.satDate} SAT.`}
+        title={`Better mentors and instructors — for the ${site.satDate} SAT.`}
         text={mentorshipMessaging.thesis}
         primary={{ label: "Book a free consultation", href: "#schedule" }}
         secondary={{ label: "Request program details", href: "/contact?reason=parent" }}
@@ -50,8 +50,8 @@ export default function SatAcceleratorPage() {
           </div>
           <div className="mt-4 rounded-2xl border border-line bg-ivory-200/60 p-5">
             <p className="text-[14px] font-medium leading-[1.55] text-ink">
-              Not self-study. Not à la carte sessions. A twelve-week arc with diagnostics,
-              six 1:1s, live classes, and practice built in.
+              Not self-study. Not à la carte sessions. One twelve-week program with
+              diagnostics, six 1:1s, live classes each week, and practice built in.
             </p>
           </div>
         </div>
@@ -61,8 +61,8 @@ export default function SatAcceleratorPage() {
         <div className="mx-auto max-w-7xl">
           <SectionHeader
             eyebrow="What's included"
-            title="Better tutors inside a model built around 1:1."
-            text="Georgia Tech mentors (1450+ SAT) teach inside a fixed plan: diagnostics personalize six private sessions, live classes cover the material, and practice reinforces it every week. After enrollment, your family gets class times, session links, and your mentor's name before week one."
+            title="Mentors and instructors inside a model built around 1:1."
+            text="Georgia Tech mentors (1450+ SAT) lead your student's 1:1s; instructors teach live R&W and Math classes — all inside one fixed plan. Diagnostics personalize six private sessions, and practice reinforces what was taught every week. After enrollment, your family gets class times, session links, and your mentor's name before week one."
           />
           <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {satFeatures.map((item) => (
@@ -143,7 +143,7 @@ export default function SatAcceleratorPage() {
             <div className="space-y-5 text-[15.5px] leading-[1.75] text-ink-soft">
               <p>
                 Research has measured what intuition already knew. Benjamin Bloom&apos;s landmark
-                study found that one-to-one tutoring can raise achievement by roughly{" "}
+                study found that one-to-one instruction can raise achievement by roughly{" "}
                 <span className="font-medium text-ink">two standard deviations</span> compared with
                 conventional classroom instruction — the famous &ldquo;two sigma&rdquo; result (
                 <em>Educational Researcher</em>, 1984). Mentor-led programs in college show the same
@@ -152,8 +152,9 @@ export default function SatAcceleratorPage() {
                 ask real questions — not when they sit in another lecture.
               </p>
               <p className="font-medium text-ink">
-                That is what the SAT Accelerator delivers: better tutors (Georgia Tech,
-                1450+), a better model than self-study or random sessions, week-one diagnostics
+                That is what the SAT Accelerator delivers: better mentors and instructors
+                (Georgia Tech, 1450+), a better model than self-study or random sessions,
+                week-one diagnostics
                 that shape six private 1:1s, live classes, practice that reinforces through
                 repetition, and weekly reports — so families always know what was covered and
                 what&apos;s due.
