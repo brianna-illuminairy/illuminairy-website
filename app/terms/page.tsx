@@ -4,7 +4,7 @@ import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Terms of Service",
-  description: "Illuminairy Terms of Service for virtual educational services."
+  description: "Illuminairy Terms of Service for programs, enrollment, and website use."
 };
 
 export default function TermsPage() {
@@ -13,7 +13,7 @@ export default function TermsPage() {
       <PageHero
         eyebrow="Policy"
         title="Terms of Service"
-        text="These Terms govern your use of Illuminairy’s website, programs, consultations, and virtual educational services."
+        text="These Terms govern your use of Illuminairy’s website, programs, and consultations."
       />
       <section className="px-5 py-16 sm:px-8 lg:px-12">
         <div className="legal-copy mx-auto max-w-4xl rounded-3xl border border-line bg-ivory-50 p-7 shadow-editorial sm:p-12">
@@ -27,7 +27,7 @@ export default function TermsPage() {
 
           <h2>Educational services</h2>
           <p>
-            Illuminairy provides virtual educational services, including
+            Illuminairy provides educational programs, including
             structured SAT preparation, mentorship, coaching, diagnostics, study
             support, and related learning programs. Services may be delivered
             through live sessions, private coaching, digital materials, email,

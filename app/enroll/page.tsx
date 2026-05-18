@@ -23,7 +23,7 @@ export default async function EnrollPage({
       <PageHero
         eyebrow="SAT Accelerator · Enrollment"
         title="Raise your August SAT score. Reserve your spot."
-        text={`For families who have already spoken with Illuminairy. Secure payment holds your spot for the ${site.satDate} SAT.`}
+        text={`Secure payment holds your spot for the ${site.satDate} SAT.`}
         secondary={{ label: "Need to talk first?", href: "/contact" }}
       />
 

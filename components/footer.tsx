@@ -11,8 +11,8 @@ export function Footer() {
         <div>
           <Logo />
           <p className="mt-6 max-w-sm text-[15px] leading-[1.6] text-ink-soft">
-            {site.tagline}. Premium near-peer mentorship — SAT Accelerator live now,
-            with more programs opening soon.
+            {site.tagline}. Premium mentorship — SAT Accelerator live now, with more
+            programs opening soon.
           </p>
           <p className="mt-6 text-xs leading-5 text-ink-muted">
             Operated by {site.legalName}.
@@ -65,7 +65,7 @@ export function Footer() {
       </div>
       <div className="mx-auto mt-12 flex max-w-7xl flex-col gap-3 border-t border-line/70 pt-7 text-xs text-ink-muted sm:flex-row sm:items-center sm:justify-between">
         <p>© 2026 Illuminairy. All rights reserved.</p>
-        <p>Virtual educational services. No guaranteed test score or admissions outcome.</p>
+        <p>Mentorship and test preparation. No guaranteed test score or admissions outcome.</p>
       </div>
     </footer>
   );

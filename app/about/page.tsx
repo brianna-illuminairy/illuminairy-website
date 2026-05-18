@@ -26,7 +26,7 @@ export default function AboutPage() {
           <SectionHeader
             eyebrow="Why it exists"
             title="A better model for high-trust learning."
-            text="Most tutoring and expertise platforms feel opaque, transactional, and outdated. Families want clarity. Learners want momentum. Mentors want meaningful work. Illuminairy is a product-led model built around structure, transparency, and excellent human guidance."
+            text="Most tutoring feels opaque and transactional — rotating tutors, unclear progress, promises that sound too good. Illuminairy is built on what research and families both want: a mentor who has walked the path, a program you can see, and weekly honesty about effort and results."
           />
           <div className="grid gap-4">
             {[
@@ -38,7 +38,7 @@ export default function AboutPage() {
               {
                 icon: Blocks,
                 title: "Build repeatable structure",
-                text: "Instead of one-off tutoring, Illuminairy packages mentorship into clear programs with defined delivery, support, and expectations."
+                text: "Instead of one-off tutoring, Illuminairy packages mentorship into clear programs with defined structure, support, and expectations."
               },
               {
                 icon: Compass,
@@ -73,7 +73,7 @@ export default function AboutPage() {
           <SectionHeader
             eyebrow="Today"
             title="What Illuminairy is building right now."
-            text="We are a premium virtual mentorship company based in Atlanta, operating as Zytech Development LLC. Families and students can enroll in the Georgia Tech-led SAT Accelerator today; professional and business programs are opening next."
+            text="We are a premium mentorship company based in Atlanta, operating as Zytech Development LLC. Families and students can enroll in the Georgia Tech-led SAT Accelerator today; professional and business programs are opening next."
           />
           <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {[
@@ -83,11 +83,11 @@ export default function AboutPage() {
               },
               {
                 title: "Who we serve",
-                text: "Ambitious students and families who want structure, clarity, and near-peer mentors — not a generic tutoring center."
+                text: "Ambitious students and families who want structure, accountability, and mentors who have actually succeeded — not a generic tutoring center."
               },
               {
                 title: "How to reach us",
-                text: `Support at ${site.supportEmail}. Book a consultation online or send a message through contact.`
+                text: `Support at ${site.supportEmail}. Book a consultation or send a message through contact.`
               }
             ].map((item) => (
               <div

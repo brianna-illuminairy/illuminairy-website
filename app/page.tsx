@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, Calendar, GraduationCap, UserCheck, Users } from "lucide-react";
 import { CohortsPanel } from "@/components/brand-visual";
+import { ProgramDifferentiation } from "@/components/program-differentiation";
 import { NorthStar } from "@/components/logo";
 import {
   ButtonLink,
@@ -13,6 +14,7 @@ import {
 import {
   mentorApplyLink,
   programStats,
+  mentorshipMessaging,
   satProgram,
   scheduleLink,
   site,
@@ -36,15 +38,12 @@ export default function Home() {
             </div>
 
             <h1 className="mt-6 text-balance text-[clamp(2.5rem,1.5rem+4vw,4.75rem)] font-extralight leading-[1.02] tracking-[-0.035em] text-ink">
-              The right mentor for where you&apos;re headed.
+              Better tutors. A better model.
             </h1>
 
             <p className="mt-7 max-w-xl text-pretty text-lg leading-[1.65] text-ink-soft sm:text-xl">
-              The SAT Accelerator is live for the {site.satDate} test. Your child
-              works with a vetted Georgia Tech mentor who scored 1450+ — someone who
-              knows the material, the pacing, and what selective universities expect.{" "}
-              {satProgram.structureLine} Professional and business owner programs are
-              opening next.
+              The SAT Accelerator is live for the {site.satDate} test. {mentorshipMessaging.thesis}{" "}
+              Professional and business owner programs are opening next.
             </p>
 
             <div className="mt-10 flex flex-col gap-3 sm:flex-row">
@@ -86,10 +85,10 @@ export default function Home() {
       >
         <div className="grid gap-3 sm:grid-cols-2">
           {[
-            "One Reading & Writing class per week",
-            "One Math class per week",
-            "Six private 1:1 sessions",
-            "Weekly reports for parents & students"
+            "Week-one diagnostics (R&W + Math)",
+            "Six personalized 1:1 sessions",
+            "Weekly live classes + practice sets",
+            "Progress reports every week"
           ].map((item) => (
             <div
               key={item}
@@ -106,8 +105,8 @@ export default function Home() {
         <div className="mx-auto max-w-7xl">
           <SectionHeader
             eyebrow="Why illuminairy"
-            title="Structure you can see. Mentors you can trust."
-            text="Families get a clear program outline, live schedule, and policies upfront. Students get near-peer guidance and weekly progress reports. Every class has a defined rhythm and a real human mentor — not a random name from a tutoring website."
+            title="Better tutors. A better model. Real 1:1."
+            text="Self-study leaves gaps. À la carte tutoring never builds momentum. Illuminairy combines Georgia Tech mentors (1450+ SAT) with week-one diagnostics, six personalized private sessions, live classes, and practice that reinforces what was taught — inside one twelve-week plan families can follow."
           />
           <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
             {trustPillars.map((item) => (
@@ -116,6 +115,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <ProgramDifferentiation />
 
       {/* Audience paths — sage pop */}
       <PopSection

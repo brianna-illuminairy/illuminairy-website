@@ -6,13 +6,10 @@ import {
   GraduationCap,
   LineChart,
   LockKeyhole,
-  MessagesSquare,
   Network,
-  Sparkles,
   Target,
   UserCheck,
-  UsersRound,
-  Video
+  UsersRound
 } from "lucide-react";
 
 export const site = {
@@ -40,11 +37,11 @@ export const satProgram = {
   privateSessions: 6,
   maxPerClass: 10,
   headline:
-    "12 weeks of intensive instruction, 1:1 expert help, and practice problems.",
+    "A twelve-week plan — not self-study, not random tutoring sessions.",
   tracking:
-    "All tracked and reported to you and your student every week — so you always know what was covered, what's due, and where scores are heading.",
+    "Week-one diagnostics personalize six private 1:1s. Live classes teach. Practice reinforces. Weekly reports keep families in the loop.",
   structureLine:
-    "One live Reading & Writing class and one live Math class each week, plus six private 1:1 sessions across the program.",
+    "Diagnostics in week one, then weekly Reading & Writing and Math classes, six personalized 1:1s, and assigned practice between every session.",
   /** First week begins Wed May 27, 2026; exam day Sat Aug 22, 2026 — see lib/sat-program-schedule.ts */
   programStartLabel: "May 27, 2026",
   examDayLabel: "August 22, 2026"
@@ -111,36 +108,104 @@ export const programStats = [
   { value: "1450+", label: "SAT mentor score standard" }
 ];
 
+/** Core positioning — better tutors, better model, 1:1 + diagnostics + practice. */
+export const mentorshipMessaging = {
+  thesis:
+    "Better tutors and a better model beat self-study and à la carte tutoring. Georgia Tech mentors who recently scored 1450+ teach inside a twelve-week plan where week-one diagnostics shape six private 1:1s, live classes explain the material, and practice reinforces it through repetition.",
+  researchNote:
+    "Research backs personalized 1:1 instruction — including Benjamin Bloom's two-sigma finding on tutoring (Educational Researcher, 1984) and studies on mentor-led programs — when it is structured, not random."
+};
+
+/** The Accelerator loop — diagnostics → 1:1 → classes → practice. */
+export const acceleratorModel = {
+  eyebrow: "How the model works",
+  title: "Diagnostics personalize the 1:1s. Practice makes it stick.",
+  intro:
+    "Self-study leaves gaps. Random tutoring sessions never build momentum. Illuminairy combines a fixed twelve-week arc with data from day one — so every session has a purpose.",
+  steps: [
+    {
+      title: "Week-one diagnostics",
+      text: "Reading & Writing and Math baselines show exactly where your student stands — the foundation for every 1:1 after that."
+    },
+    {
+      title: "Six personalized 1:1s",
+      text: "Private sessions driven by diagnostic data and weekly progress — not generic review. This is the core of the model."
+    },
+    {
+      title: "Live classes every week",
+      text: "Small-group R&W and Math instruction from mentors who teach clearly — capped at ten students per class."
+    },
+    {
+      title: "Practice that reinforces",
+      text: "Assigned problem sets between sessions (and full-length timed tests every three weeks) so skills repeat until they hold."
+    }
+  ] as const
+};
+
+/** How Illuminairy differs from typical SAT prep — used on Home and SAT pages. */
+export const programDifferentiation = {
+  eyebrow: "The difference",
+  title: "Better tutors. A better model.",
+  intro:
+    "Illuminairy is not a tutoring center and not a marketplace. It is a twelve-week program with better mentors, mandatory 1:1 time, diagnostics that personalize coaching, and practice built into every week.",
+  rows: [
+    {
+      aspect: "The tutors",
+      typical: "Whoever is free that week — varied quality, little continuity",
+      illuminairy:
+        "Vetted Georgia Tech mentors (1450+ SAT), chosen for teaching ability — recently succeeded on the same test your student is taking"
+    },
+    {
+      aspect: "The model",
+      typical: "Self-study books, or à la carte sessions with no arc",
+      illuminairy:
+        "A fixed twelve-week plan: diagnostics → personalized 1:1s → live classes → practice — so momentum actually builds"
+    },
+    {
+      aspect: "1:1 attention",
+      typical: "Optional add-on, often skipped — or one-size-fits-all review",
+      illuminairy:
+        "Six private 1:1s included and shaped by week-one diagnostics — the non-negotiable center of the program"
+    },
+    {
+      aspect: "Practice",
+      typical: "Figure it out on your own between sessions",
+      illuminairy:
+        "Assigned sets every week (plus timed full-length tests) to reinforce what was taught through repetition"
+    }
+  ] as const
+};
+
 export const satFeatures = [
   {
+    icon: GraduationCap,
+    title: "Better tutors",
+    text: "Georgia Tech mentors who recently scored 1450+ — close enough to relate, far enough to lead. Vetted to teach clearly, not just test well."
+  },
+  {
     icon: CalendarCheck,
-    title: "Twelve focused weeks",
-    text: "A complete preparation arc built for students working toward the August 22, 2026 SAT."
-  },
-  {
-    icon: UsersRound,
-    title: "Two live classes every week",
-    text: "One Reading & Writing small group and one Math small group — taught live, with practice assigned between sessions."
-  },
-  {
-    icon: UserCheck,
-    title: "Private coaching",
-    text: "Six private 1:1 sessions for diagnostic review, planning, and targeted support."
+    title: "A plan that beats self-study",
+    text: "Twelve weeks with a fixed rhythm — not a book on the shelf or sessions booked whenever you remember."
   },
   {
     icon: Target,
-    title: "Weekly progress reports",
-    text: "Parents and students see what was covered, what's due, and how practice-test scores are trending — every week."
+    title: "Diagnostics first",
+    text: "Week-one R&W and Math baselines so six private 1:1s target your student's actual gaps — not a generic syllabus."
   },
   {
-    icon: GraduationCap,
-    title: "Georgia Tech mentors",
-    text: "Georgia Tech students, alumni, or similarly qualified mentors with verified SAT performance."
+    icon: UserCheck,
+    title: "1:1 is the engine",
+    text: "Six personalized private sessions across the program — the part research and families both count on most."
   },
   {
-    icon: Video,
-    title: "Virtual delivery",
-    text: "Live instruction and coaching delivered online so students can join from anywhere."
+    icon: UsersRound,
+    title: "Live classes + practice",
+    text: "Weekly small-group R&W and Math, plus assigned practice between sessions so concepts repeat until they stick."
+  },
+  {
+    icon: LockKeyhole,
+    title: "Weekly accountability",
+    text: "Progress reports every week — what was covered, what's due, and where practice scores are heading."
   }
 ];
 
@@ -187,24 +252,24 @@ export const mentorStandards = [
 
 export const trustPillars = [
   {
-    icon: LockKeyhole,
-    title: "Transparent service model",
-    text: "Families see exactly what is being delivered: live sessions, private coaching, diagnostics, and support."
+    icon: GraduationCap,
+    title: "Better tutors",
+    text: "Georgia Tech mentors (1450+ SAT) who recently took the test — relatable, rigorous, and screened for how they teach."
   },
   {
-    icon: MessagesSquare,
-    title: "Direct, human support",
-    text: "Real contact details, real humans, plain-language policies — before, during, and after enrollment."
+    icon: CalendarCheck,
+    title: "Better model",
+    text: "A twelve-week arc beats self-study and à la carte sessions — diagnostics, 1:1s, classes, and practice in one plan."
   },
   {
-    icon: Network,
-    title: "Selective mentor network",
-    text: "A careful model for sourcing and vetting educated talent, starting with Georgia Tech-led SAT instruction."
+    icon: UserCheck,
+    title: "1:1 + diagnostics",
+    text: "Week-one baselines shape six private sessions — personalized coaching, not generic review."
   },
   {
-    icon: Sparkles,
-    title: "Room to grow",
-    text: "The SAT Accelerator is live today. Professional and business programs are planned with the same standard for structure and mentor quality."
+    icon: Target,
+    title: "Practice that reinforces",
+    text: "Assigned sets between classes (and timed full-length tests) so what was taught gets repeated until it holds."
   }
 ];
 

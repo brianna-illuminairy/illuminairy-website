@@ -5,7 +5,7 @@ import { site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Customer Support Policy",
   description:
-    "Customer support details for Illuminairy virtual educational services."
+    "Customer support details for Illuminairy programs and SAT Accelerator enrollment."
 };
 
 export default function SupportPolicyPage() {
@@ -40,12 +40,11 @@ export default function SupportPolicyPage() {
             U.S. holidays.
           </p>
 
-          <h2>Program fulfillment support</h2>
+          <h2>Enrolled families</h2>
           <p>
-            For enrolled programs, Illuminairy provides onboarding details,
-            cohort schedule information, session links, and support instructions
-            by email. Customers should contact support if they do not receive
-            expected onboarding or session information.
+            After enrollment, Illuminairy sends your class schedule, session
+            links, and support instructions by email. Contact support if you do
+            not receive that information before your first class.
           </p>
 
           <h2>Billing support</h2>

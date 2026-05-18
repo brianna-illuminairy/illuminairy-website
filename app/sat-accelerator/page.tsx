@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Calendar, ShieldCheck } from "lucide-react";
+import { Calendar } from "lucide-react";
 import { CalendlyBookingSection } from "@/components/calendly-booking";
 import {
   ButtonLink,
@@ -7,10 +7,11 @@ import {
   Eyebrow,
   FeatureCard,
   PageHero,
-  PopSection,
   SectionHeader
 } from "@/components/ui";
-import { satFeatures, satProgram, site } from "@/lib/site";
+import { AcceleratorModel } from "@/components/accelerator-model";
+import { ProgramDifferentiation } from "@/components/program-differentiation";
+import { mentorshipMessaging, satFeatures, site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "SAT Accelerator",
@@ -18,22 +19,13 @@ export const metadata: Metadata = {
     "Twelve weeks with weekly Reading & Writing and Math classes, private 1:1 sessions, and weekly progress reports for the August 22, 2026 SAT."
 };
 
-const schedule = [
-  "One live Reading & Writing class per week",
-  "One live Math class per week",
-  "Six private 1:1 sessions across the program",
-  "Practice problems assigned between classes",
-  "Weekly reports to parents and students",
-  "Classes capped at 10 students"
-];
-
 export default function SatAcceleratorPage() {
   return (
     <>
       <PageHero
         eyebrow="Illuminairy SAT · August 2026"
-        title={`A twelve-week SAT accelerator for the ${site.satDate} test.`}
-        text="Structured, Georgia Tech-led mentorship for ambitious students targeting competitive colleges and 1300+ SAT scores."
+        title={`Better tutors. A better model — for the ${site.satDate} SAT.`}
+        text={mentorshipMessaging.thesis}
         primary={{ label: "Book a free consultation", href: "#schedule" }}
         secondary={{ label: "Request program details", href: "/contact?reason=parent" }}
       >
@@ -58,7 +50,8 @@ export default function SatAcceleratorPage() {
           </div>
           <div className="mt-4 rounded-2xl border border-line bg-ivory-200/60 p-5">
             <p className="text-[14px] font-medium leading-[1.55] text-ink">
-              For families who want a premium, organized SAT experience — without the tutoring-center feel.
+              Not self-study. Not à la carte sessions. A twelve-week arc with diagnostics,
+              six 1:1s, live classes, and practice built in.
             </p>
           </div>
         </div>
@@ -67,42 +60,30 @@ export default function SatAcceleratorPage() {
       <section className="px-5 py-24 sm:px-8 lg:px-12">
         <div className="mx-auto max-w-7xl">
           <SectionHeader
-            eyebrow="What students receive"
-            title="Live teaching, private coaching, and a mentor who knows your name."
-            text="The Accelerator is built around the way people have always learned best: a real relationship, honest feedback, and work that earns understanding — with a clear schedule so preparation actually happens."
+            eyebrow="What's included"
+            title="Better tutors inside a model built around 1:1."
+            text="Georgia Tech mentors (1450+ SAT) teach inside a fixed plan: diagnostics personalize six private sessions, live classes cover the material, and practice reinforces it every week. After enrollment, your family gets class times, session links, and your mentor's name before week one."
           />
           <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {satFeatures.map((item) => (
               <FeatureCard key={item.title} {...item} />
             ))}
           </div>
+          <p className="mt-10 text-center text-[14px] text-ink-muted">
+            Classes capped at 10 students.{" "}
+            <a
+              href="/refund-policy"
+              className="font-medium text-gold-deep underline-offset-2 hover:underline"
+            >
+              Refund policy
+            </a>
+          </p>
         </div>
       </section>
 
-      <PopSection
-        color="marigold"
-        eyebrow="Delivery"
-        title="A clear virtual fulfillment model."
-        text="Illuminairy sells virtual educational services. After enrollment, families receive onboarding details, class schedules, session links, and support instructions by email."
-        primary={{ label: "Book a consultation", href: "#schedule" }}
-        secondary={{ label: "View refund policy", href: "/refund-policy" }}
-      >
-        <div className="grid gap-3">
-          {schedule.map((item) => (
-            <div
-              key={item}
-              className="flex gap-3 rounded-2xl border border-marigold-ink/15 bg-ivory/90 p-4 backdrop-blur-sm"
-            >
-              <ShieldCheck
-                className="mt-0.5 h-5 w-5 shrink-0 text-marigold-ink"
-                aria-hidden="true"
-                strokeWidth={1.6}
-              />
-              <p className="text-[14px] leading-[1.55] text-marigold-ink">{item}</p>
-            </div>
-          ))}
-        </div>
-      </PopSection>
+      <AcceleratorModel />
+
+      <ProgramDifferentiation showResearchNote={false} />
 
       <section className="px-5 py-24 sm:px-8 lg:px-12">
         <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-3">
@@ -122,7 +103,7 @@ export default function SatAcceleratorPage() {
             {[
               "Verified 1450+ SAT scores",
               "Communication and professionalism screening",
-              "Near-peer perspective for college-bound students",
+              "Relatable role models for college-bound students",
               "Chosen for teaching ability — not assigned at random"
             ].map((text) => (
               <div
@@ -165,29 +146,27 @@ export default function SatAcceleratorPage() {
                 study found that one-to-one tutoring can raise achievement by roughly{" "}
                 <span className="font-medium text-ink">two standard deviations</span> compared with
                 conventional classroom instruction — the famous &ldquo;two sigma&rdquo; result (
-                <em>Educational Researcher</em>, 1984). Work on deliberate, effortful practice
-                shows the same pattern: skill grows when difficulty is calibrated, feedback is
-                timely, and a teacher keeps the student honest about the work.
+                <em>Educational Researcher</em>, 1984). Mentor-led programs in college show the same
+                pattern in a different form: students learn better when someone close to their
+                experience gives timely feedback, holds them accountable, and makes it safe to
+                ask real questions — not when they sit in another lecture.
               </p>
               <p className="font-medium text-ink">
-                That is what the SAT Accelerator delivers: Georgia Tech-led mentors, one
-                Reading & Writing and one Math class each week, six private 1:1s, practice
-                between sessions, and weekly reports — so families and students always know
-                what was covered, what&apos;s due, and where scores are heading.
+                That is what the SAT Accelerator delivers: better tutors (Georgia Tech,
+                1450+), a better model than self-study or random sessions, week-one diagnostics
+                that shape six private 1:1s, live classes, practice that reinforces through
+                repetition, and weekly reports — so families always know what was covered and
+                what&apos;s due.
               </p>
             </div>
           </div>
 
-          <p className="mt-10 max-w-3xl text-[16px] leading-[1.7] text-ink">
-            We do not sell a score on a checkout page. We give you a mentor who lights the way,
-            a structure you can see, and an honest read on effort and progress — so when the
-            student takes the steps, performing well is the natural outcome, not a lottery ticket.
-          </p>
-
-          <p className="mt-8 border-t border-line pt-6 text-[13px] leading-[1.65] text-ink-muted">
-            Illuminairy does not guarantee any specific SAT score, admissions result, scholarship,
-            or college decision. Outcomes depend on starting point, attendance, and the effort a
-            student puts in — but the model above is what makes that effort count.
+          <p className="mt-10 max-w-3xl border-t border-line pt-8 text-[14.5px] leading-[1.7] text-ink-soft">
+            You get a mentor who knows the material, a schedule your family can follow, and
+            weekly clarity on effort and progress — not a promised score. Illuminairy does not
+            guarantee any specific SAT score, admissions result, scholarship, or college decision;
+            outcomes depend on starting point, attendance, and the work a student puts in. This
+            program is built to make that work count.
           </p>
         </div>
       </section>

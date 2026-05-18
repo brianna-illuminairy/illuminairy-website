@@ -13,7 +13,7 @@ import { mentorApplyLink, mentorStandards } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Mentors",
   description:
-    "Illuminairy mentors are high-performing near-peer educators selected for academic credibility, communication, professionalism, and teaching ability."
+    "Illuminairy mentors are accomplished educators selected for academic credibility, communication, professionalism, and teaching ability."
 };
 
 export default function MentorsPage() {
@@ -22,7 +22,7 @@ export default function MentorsPage() {
     <>
       <PageHero
         eyebrow="Mentors"
-        title="Premium near-peer mentorship, held to a higher standard."
+        title="Premium mentorship, held to a higher standard."
         text="Illuminairy mentors are selected for academic credibility, communication, professionalism, and — above all — teaching ability. Apply first; if you are a fit, we will email you a link to schedule an interview."
         primary={{ label: "Apply to become a mentor", href: mentorApplyLink }}
         secondary={{ label: "Contact Illuminairy", href: "/contact" }}
@@ -51,14 +51,14 @@ export default function MentorsPage() {
         <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.9fr_1.1fr]">
           <SectionHeader
             eyebrow="Model"
-            title="High-performing educators — chosen carefully."
-            text="The mentor model is built around students, graduates, and senior practitioners who can make learning feel clear, current, and personal — not generic and transactional."
+            title="The mentor your student actually wants to learn from."
+            text="Illuminairy mentors are role models first — people who have succeeded in demanding academic environments and can show students what is possible, hold them accountable, and teach in a way that feels personal, not transactional."
           />
           <div className="grid gap-4 md:grid-cols-2">
             {[
               [
-                "Near-peer clarity",
-                "Students benefit from mentors who recently succeeded in demanding academic environments."
+                "Role models who've been there",
+                "Mentors show students what's possible because they have walked the path themselves — recently, credibly, and relatably."
               ],
               [
                 "Vetted standards",
@@ -99,7 +99,7 @@ export default function MentorsPage() {
           {[
             ["Clear schedule", "You know the timeline, session count, and class size before you start."],
             ["Clear standards", "Academic credibility, communication, and teaching ability are non-negotiable."],
-            ["Human support", "Questions about scheduling, families, or delivery go through the Illuminairy team."]
+            ["Human support", "Questions about scheduling, families, or the program go through the Illuminairy team."]
           ].map(([title, text]) => (
             <article
               key={title}

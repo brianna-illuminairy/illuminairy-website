@@ -22,14 +22,14 @@ export const metadata: Metadata = {
     template: "%s · Illuminairy"
   },
   description:
-    "Premium near-peer mentorship with structure and clarity. SAT Accelerator live now — professional and business programs opening soon.",
+    "Better SAT tutors and a better model — diagnostics, six personalized 1:1s, live classes, and practice. Not self-study or à la carte tutoring.",
   alternates: {
     canonical: "/"
   },
   openGraph: {
     title: "Illuminairy — your guiding light for goals and growth",
     description:
-      "Premium near-peer mentorship. Georgia Tech-led SAT Accelerator live now.",
+      "Named mentors. Clear structure. Weekly progress reports. Georgia Tech-led SAT Accelerator.",
     url: site.url,
     siteName: "Illuminairy",
     images: [
@@ -77,7 +77,7 @@ export default function RootLayout({
     areaServed: "United States",
     slogan: site.tagline,
     description:
-      "Premium virtual educational services, mentorship, SAT preparation, and applied learning programs. Launching with Georgia Tech-led SAT instruction."
+      "Premium mentorship, SAT preparation, and applied learning programs. Launching with Georgia Tech-led SAT instruction."
   };
 
   return (

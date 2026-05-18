@@ -5,7 +5,7 @@ import { site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Refund and Cancellation Policy",
   description:
-    "Illuminairy refund and cancellation policy for virtual educational services and SAT Accelerator enrollment."
+    "Illuminairy refund and cancellation policy for SAT Accelerator and other program enrollment."
 };
 
 export default function RefundPolicyPage() {
@@ -14,7 +14,7 @@ export default function RefundPolicyPage() {
       <PageHero
         eyebrow="Policy"
         title="Refund and Cancellation Policy"
-        text="This policy explains refund eligibility, missed-session handling, cancellations, and virtual fulfillment for Illuminairy educational services."
+        text="This policy explains refund eligibility, missed sessions, cancellations, and how program access works after you enroll."
       />
       <section className="px-5 py-16 sm:px-8 lg:px-12">
         <div className="legal-copy mx-auto max-w-4xl rounded-3xl border border-line bg-ivory-50 p-7 shadow-editorial sm:p-12">
@@ -22,15 +22,15 @@ export default function RefundPolicyPage() {
 
           <h2>Educational services</h2>
           <p>
-            Illuminairy sells virtual educational services, including SAT
-            preparation cohorts, private coaching, diagnostics, mentorship, and
-            related learning programs. Payments reserve instructional time,
-            cohort seats, mentor availability, and program access.
+            Illuminairy provides SAT preparation, private coaching,
+            diagnostics, mentorship, and related learning programs. Payments
+            reserve instructional time, class seats, mentor availability, and
+            program access.
           </p>
 
           <h2>Refund window</h2>
           <p>
-            For SAT Accelerator cohorts, customers may request a full refund up
+            For the SAT Accelerator, customers may request a full refund up
             to 7 days before the program start date. Cancellations made less
             than 7 days before the program start date but before the first live
             session may be eligible for a 50% refund.
@@ -40,7 +40,7 @@ export default function RefundPolicyPage() {
           <p>
             After the first live session or once program access has begun,
             payments are generally non-refundable. This helps protect reserved
-            cohort seats, mentor time, and instructional capacity.
+            class seats, mentor time, and instructional capacity.
           </p>
 
           <h2>Missed sessions</h2>

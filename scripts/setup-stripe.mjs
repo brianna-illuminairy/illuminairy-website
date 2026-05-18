@@ -41,7 +41,7 @@ async function main() {
   const product = await stripe.products.create({
     name: productName,
     description:
-      "Twelve-week SAT Accelerator: 24 live small-group sessions, 6 private 1:1s, Georgia Tech-led mentors. Virtual cohort for August 22, 2026 SAT.",
+      "Twelve-week SAT Accelerator: weekly R&W and Math classes, 6 private 1:1s, Georgia Tech-led mentors. For the August 22, 2026 SAT.",
     metadata: { program: "sat-accelerator" }
   });
 
