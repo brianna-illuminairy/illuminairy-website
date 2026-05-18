@@ -25,6 +25,7 @@ export const site = {
   descriptor: "ILLUMINAIRY",
   satDate: "August 22, 2026",
   tagline: "your guiding light for goals and growth",
+  /** Public SAT consultation only — not the invite-only tutor interview link */
   calendlyUrl:
     process.env.NEXT_PUBLIC_CALENDLY_URL ||
     "https://calendly.com/brianna-illuminairy/august-sat",

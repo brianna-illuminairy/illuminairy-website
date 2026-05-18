@@ -17,12 +17,13 @@ export const metadata: Metadata = {
 };
 
 export default function MentorsPage() {
+  // Mentor flow: apply via contact form → team reviews → invite-only tutor-call Calendly link by email (see lib/internal-links.ts). Never embed tutor-call on this page.
   return (
     <>
       <PageHero
         eyebrow="Mentors"
         title="Premium near-peer mentorship, held to a higher standard."
-        text="Illuminairy mentors are selected for academic credibility, communication, professionalism, and — above all — teaching ability."
+        text="Illuminairy mentors are selected for academic credibility, communication, professionalism, and — above all — teaching ability. Apply first; if you are a fit, we will email you a link to schedule an interview."
         primary={{ label: "Apply to become a mentor", href: mentorApplyLink }}
         secondary={{ label: "Contact Illuminairy", href: "/contact" }}
       >

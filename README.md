@@ -23,11 +23,19 @@ RESEND_FROM_EMAIL=Illuminairy <notifications@illuminairy.com>
 
 Until `RESEND_API_KEY` is set, the form on `/contact` shows an error and visitors can still email `support@illuminairy.com` directly.
 
-**Optional booking link:**
+**Public SAT consultation** (embedded on `/contact#schedule` and `/sat-accelerator#schedule`):
 
 ```bash
-NEXT_PUBLIC_CALENDLY_URL=https://calendly.com/...
+NEXT_PUBLIC_CALENDLY_URL=https://calendly.com/brianna-illuminairy/august-sat
 ```
+
+**Invite-only mentor interview** (never on the public site — email this link after you review an application):
+
+```bash
+TUTOR_CALENDLY_URL=https://calendly.com/brianna-illuminairy/tutor-call
+```
+
+See `lib/internal-links.ts`. Mentor applicants use `/contact?reason=mentor`; you send `tutor-call` manually when they pass vetting.
 
 If Calendly is not set, consultation CTAs fall back to `mailto:support@illuminairy.com`.
 
