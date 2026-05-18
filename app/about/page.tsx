@@ -60,7 +60,7 @@ export default function AboutPage() {
           <blockquote className="mt-7">
             <p className="text-balance text-[clamp(1.75rem,1.1rem+2.4vw,3rem)] font-light leading-[1.15] tracking-[-0.025em] text-ivory">
               Most SAT companies rotate tutors, hide results behind vague updates, and
-              promise scores they can't control. <span className="text-gold-light">Illuminairy gives
+              promise scores they can&apos;t control. <span className="text-gold-light">Illuminairy gives
               your student a named mentor, a fixed twelve-week schedule, and a report every
               week</span> — starting with the SAT Accelerator.
             </p>

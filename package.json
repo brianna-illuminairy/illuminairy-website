@@ -12,7 +12,11 @@
     "deploy:prod": "npx vercel deploy --prod",
     "release": "npm run env:sync && npm run deploy:prod",
     "posthog:verify": "node scripts/verify-posthog.mjs",
-    "cc:analyze-blog": "node scripts/analyze-curious-cardinals-blog.mjs"
+    "cc:analyze-blog": "node scripts/analyze-curious-cardinals-blog.mjs",
+    "cc:fetch-typeforms": "node scripts/fetch-cc-typeforms.mjs",
+    "agent:verify": "node scripts/agent-verify.mjs",
+    "ralph:status": "node scripts/ralph-loop.mjs status",
+    "ralph:next": "node scripts/ralph-loop.mjs next"
   },
   "dependencies": {
     "lucide-react": "^0.468.0",

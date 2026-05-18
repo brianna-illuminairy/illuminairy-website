@@ -41,4 +41,4 @@ Implementation source: **`lib/site.ts`** — must stay aligned with brand docs w
 
 ## Competitor context (adjacent)
 
-**Curious Cardinals** — mentorship / passion-project / college-narrative platform (not direct SAT prep). May 2026 pivot to **FlightPlan**. Full intel: `docs/competitor-intel-curious-cardinals.md`. Site mirror: git branch `archive/curious-cardinals-2026-05-18`.
+**Curious Cardinals** — mentorship / passion-project / college-narrative platform (not direct SAT prep). May 2026 pivot to **FlightPlan**. Illuminairy matches their **parent-trust mechanics** (narrative, content, outcomes, mentor visibility) with **SAT program proof**; we do not copy their product story or unbacked scale claims. Full intel: `docs/competitor-intel-curious-cardinals.md`. Site mirror: git branch `archive/curious-cardinals-2026-05-18`.

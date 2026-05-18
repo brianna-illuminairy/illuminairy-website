@@ -11,6 +11,8 @@ Internal brand and product docs for Illuminairy.
 | [../AGENTS.md](../AGENTS.md) | AI assistant instructions |
 | [../memory-bank/](../memory-bank/README.md) | Persistent session context |
 | [../CONTRIBUTING.md](../CONTRIBUTING.md) | Contributor checklist |
+| [agentic-development/](agentic-development/README.md) | Spec-driven, Ralph loop, autoresearch, growth experiments, gstack |
+| [../specs/](../specs/README.md) | PRDs, active spec, Ralph PLAN |
 
 ## Brand & design
 
@@ -22,7 +24,8 @@ Internal brand and product docs for Illuminairy.
 | [sat-messaging-positioning.md](sat-messaging-positioning.md) | SAT competitive positioning, pillars, objection handlers, copy bank |
 | [sat-competitor-analysis.md](sat-competitor-analysis.md) | SAT prep competitor profiles (Kaplan, Magoosh, etc.) |
 | [sat-us-vs-competitors.md](sat-us-vs-competitors.md) | Us vs. them tables for site and consults |
-| [competitor-intel-curious-cardinals.md](competitor-intel-curious-cardinals.md) | **Curious Cardinals** — archive, pivot, top content, Illuminairy response |
+| [competitor-intel-curious-cardinals.md](competitor-intel-curious-cardinals.md) | **Curious Cardinals** — archive, pivot, top content, **same trust levers / SAT proof** positioning, content calendar |
+| [research/cc-get-started-funnel.md](research/cc-get-started-funnel.md) | CC **get-started** funnel — full Typeform fields, call vs Luma branch |
 
 ## Product code
 

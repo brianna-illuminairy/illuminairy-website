@@ -91,7 +91,7 @@ export function EnrollCheckout() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="mt-7 grid gap-6">
+    <form onSubmit={handleSubmit} className="mt-5 grid gap-5">
       <input
         type="text"
         name="company"
@@ -101,14 +101,18 @@ export function EnrollCheckout() {
         aria-hidden="true"
       />
 
-      <fieldset className="grid gap-4 border-0 p-0">
-        <legend className="text-[12px] font-semibold uppercase tracking-[0.08em] text-gold-deep">
-          Parent or guardian
-        </legend>
-        <p className="-mt-2 text-[13px] leading-relaxed text-ink-muted">
-          Billing contact and who we copy on schedules and program updates.
-        </p>
-        <div className="grid gap-4 sm:grid-cols-2">
+      <fieldset className="border-0 p-0">
+        <legend className="sr-only">Parent or guardian</legend>
+        <div className="grid gap-4">
+          <div className="space-y-1">
+            <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-gold-deep">
+              Parent or guardian
+            </p>
+            <p className="text-[13px] leading-relaxed text-ink-muted">
+              Billing contact and who we copy on schedules and program updates.
+            </p>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2">
           <Field
             label="Parent first name"
             name="parentFirstName"
@@ -142,6 +146,7 @@ export function EnrollCheckout() {
           placeholder="(555) 555-5555"
           autoComplete="tel"
         />
+        </div>
       </fieldset>
 
       <fieldset className="grid gap-4 border-0 border-t border-line pt-6 p-0">
@@ -210,7 +215,7 @@ export function EnrollCheckout() {
           </>
         ) : (
           <>
-            Continue to secure payment
+            Reserve your spot
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </>
         )}

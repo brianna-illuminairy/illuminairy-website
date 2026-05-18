@@ -14,8 +14,10 @@
 - [x] Brand docs in `docs/` (voice, visual, SAT messaging)
 - [x] Curious Cardinals competitor intel (`docs/competitor-intel-curious-cardinals.md`) + site archive branch
 - [x] CC blog analyzer script (`npm run cc:analyze-blog`)
+- [x] CC intel cross-linked in SAT + brand docs (trust levers vs SAT proof)
 - [x] Vercel deploy scripts and env sync
 - [x] Agent docs: AGENTS.md, memory bank, ADRs, Cursor rules
+- [x] Agentic dev workflow: `docs/agentic-development/`, `specs/`, `agent:verify`, Ralph scripts, Cursor skills, ADR 0006
 
 ## In progress
 
@@ -23,6 +25,8 @@
 
 ## Backlog
 
+- [ ] PostHog CTA instrumentation using `lib/analytics-events.ts`
+- [ ] Optional: CI job running `npm run agent:verify` on PRs
 - [ ] AI for Professionals program page when offer is ready
 - [ ] Business programs when defined
 - [ ] Optional: rate limiting on `/api/contact` if spam increases

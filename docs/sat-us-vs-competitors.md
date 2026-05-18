@@ -71,8 +71,13 @@ Rating key: **Strong** · **Partial** · **Weak** · **N/A**
 | Level-matched paths | Weak | Partial | N/A | N/A | Weak | N/A | **Strong** (planned) |
 | SAT / digital test focus | Partial | Partial | Partial | Partial | Weak | Partial | **Strong** |
 | Passion-project / research track | N/A | N/A | N/A | N/A | N/A | N/A | **N/A** (not offered) |
+| Parent-facing blog / guides | Strong | Strong | Strong | Partial | Partial | Partial | **Partial** (planned; see CC intel §5) |
+| Outcome / case-study depth | Strong | Strong | Partial | Partial | Partial | N/A | **Partial** until post–Aug 2026 cohort proof |
+| Mentor profile SEO (volume) | N/A | N/A | N/A | N/A | N/A | N/A | **Partial** (curated `/mentors` > CC-style thousands) |
 
 *Passion-project row: Curious Cardinals and similar mentorship brands are **Strong** on that axis — we intentionally do not compete there for Aug 2026 SAT.*
+
+*Trust-lever rows: CC and peers are **Strong** on blog volume and mentor URL count; Illuminairy is **Strong** on SAT program trust (reports, diagnostics, published price) once content and cohort stories ship—same parent-trust *categories*, different proof. See [competitor-intel-curious-cardinals.md](competitor-intel-curious-cardinals.md).*
 
 ---
 

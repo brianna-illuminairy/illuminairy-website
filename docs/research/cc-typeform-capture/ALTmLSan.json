@@ -1,0 +1,1096 @@
+{
+  "id": "ALTmLSan",
+  "type": "quiz",
+  "title": "Parent Intake - Student Info",
+  "workspace": {
+    "href": "https://api.typeform.com/workspaces/Wg9rNA"
+  },
+  "theme": {
+    "href": "https://api.typeform.com/themes/Gr5psaKw"
+  },
+  "settings": {
+    "language": "en",
+    "progress_bar": "proportion",
+    "meta": {
+      "allow_indexing": false
+    },
+    "hide_navigation": false,
+    "is_public": true,
+    "is_trial": false,
+    "show_progress_bar": true,
+    "show_typeform_branding": false,
+    "are_uploads_public": false,
+    "show_time_to_complete": true,
+    "show_number_of_submissions": false,
+    "show_cookie_consent": false,
+    "show_question_number": true,
+    "show_key_hint_on_choices": true,
+    "autosave_progress": true,
+    "free_form_navigation": false,
+    "use_lead_qualification": false,
+    "pro_subdomain_enabled": false,
+    "google_tag_manager": "GTM-5792Z7P",
+    "spam_identification": true,
+    "auto_translate": true,
+    "partial_responses_to_all_integrations": false
+  },
+  "thankyou_screens": [
+    {
+      "id": "cyELxcctmVbQ",
+      "ref": "e7cfda6d-7212-4e53-a7c2-39df4017f25f",
+      "title": "https://www.curiouscardinals.com/get-started/book-a-consultation-call?utm_source={{hidden:utm_source}}&utm_medium={{hidden:utm_medium}}&utm_campaign={{hidden:utm_campaign}}&utm_term={{hidden:utm_term}}&utm_content={{hidden:utm_content}}&firstname={{hidden:parent_first}}&lastname={{hidden:parent_last}}&email={{hidden:parent_email}}&phone={{hidden:parent_phone}}&source={{hidden:source}}",
+      "type": "url_redirect",
+      "properties": {
+        "redirect_url": "https://www.curiouscardinals.com/get-started/book-a-consultation-call?utm_source={{hidden:utm_source}}&utm_medium={{hidden:utm_medium}}&utm_campaign={{hidden:utm_campaign}}&utm_term={{hidden:utm_term}}&utm_content={{hidden:utm_content}}&firstname={{hidden:parent_first}}&lastname={{hidden:parent_last}}&email={{hidden:parent_email}}&phone={{hidden:parent_phone}}&source={{hidden:source}}"
+      }
+    },
+    {
+      "id": "jO3vVYrbtL3C",
+      "ref": "2256547f-dee3-4106-9613-e3deb1746bf9",
+      "title": "https://info599864.typeform.com/to/eE2xCG6H?utm_source={{hidden:utm_source}}&utm_medium={{hidden:utm_medium}}&utm_campaign={{hidden:utm_campaign}}&utm_term={{hidden:utm_term}}&utm_content={{hidden:utm_content}}#parent_email={{hidden:parent_email}}&parent_first={{hidden:parent_first}}&parent_last={{hidden:parent_last}}&parent_phone={{hidden:parent_phone}}&offering={{field:01JD2R4V7MYFXV5D2KNT7XPJHT}}&am_math={{field:b6642aab-4a37-4da4-b5e3-f8772b5c2b07}}&am_science={{field:3ff79f5f-dfb7-45bc-a1f0-2fbb88d6f45c}}&am_writing={{field:33cbbc2f-6e93-467c-9c7a-b8e3cc6e18ae}}&am_languages={{field:2c7b2ce9-66ed-4b6b-b674-710f58149341}}&am_other={{field:4620047f-93dd-4b35-8bf4-afed7464c8b1}}&pp_arts_humanities={{field:6c85c235-4b29-48c7-8869-9b47374fd1a3}}&pp_business_finance={{field:a99f41c5-6478-4ba6-8ff0-8391db9ddd2c}}&pp_sci_eng_tech={{field:2e7902b4-34eb-4ab1-9634-73691c51574c}}&pp_politics_ethics={{field:87d6bf12-68eb-484f-acab-53c3eafe390c}}&pp_input=&student_archetype=&student_archetype_input={{field:fcc783ad-ff43-45f4-b967-8d2485e1a74a}}&student_first={{field:f155ed59-057b-4840-b667-97c6bc9557da}}&student_last={{field:a28c1dd3-2d2b-43f5-bf0b-6c20cdb4d07f}}&school={{field:8a4b6067-bb65-4690-a452-e4cec5479f08}}&location={{field:2c42ab4e-b8e1-44bb-aadf-601112d96b3e}}&grade={{field:6e68c181-ddf9-4fe7-997e-38b25245d62f}}&source={{hidden:source}}",
+      "type": "url_redirect",
+      "properties": {
+        "redirect_url": "https://info599864.typeform.com/to/eE2xCG6H?utm_source={{hidden:utm_source}}&utm_medium={{hidden:utm_medium}}&utm_campaign={{hidden:utm_campaign}}&utm_term={{hidden:utm_term}}&utm_content={{hidden:utm_content}}#parent_email={{hidden:parent_email}}&parent_first={{hidden:parent_first}}&parent_last={{hidden:parent_last}}&parent_phone={{hidden:parent_phone}}&offering={{field:01JD2R4V7MYFXV5D2KNT7XPJHT}}&am_math={{field:b6642aab-4a37-4da4-b5e3-f8772b5c2b07}}&am_science={{field:3ff79f5f-dfb7-45bc-a1f0-2fbb88d6f45c}}&am_writing={{field:33cbbc2f-6e93-467c-9c7a-b8e3cc6e18ae}}&am_languages={{field:2c7b2ce9-66ed-4b6b-b674-710f58149341}}&am_other={{field:4620047f-93dd-4b35-8bf4-afed7464c8b1}}&pp_arts_humanities={{field:6c85c235-4b29-48c7-8869-9b47374fd1a3}}&pp_business_finance={{field:a99f41c5-6478-4ba6-8ff0-8391db9ddd2c}}&pp_sci_eng_tech={{field:2e7902b4-34eb-4ab1-9634-73691c51574c}}&pp_politics_ethics={{field:87d6bf12-68eb-484f-acab-53c3eafe390c}}&pp_input=&student_archetype=&student_archetype_input={{field:fcc783ad-ff43-45f4-b967-8d2485e1a74a}}&student_first={{field:f155ed59-057b-4840-b667-97c6bc9557da}}&student_last={{field:a28c1dd3-2d2b-43f5-bf0b-6c20cdb4d07f}}&school={{field:8a4b6067-bb65-4690-a452-e4cec5479f08}}&location={{field:2c42ab4e-b8e1-44bb-aadf-601112d96b3e}}&grade={{field:6e68c181-ddf9-4fe7-997e-38b25245d62f}}&source={{hidden:source}}"
+      }
+    },
+    {
+      "id": "cvx7VvWNHKAT",
+      "ref": "0a81b2f0-fcdb-4f30-a256-da7dd4790fc4",
+      "title": "https://lu.ma/calendar/cal-LvLbx6gS0ChhPQz?utm_source=getstarted",
+      "type": "url_redirect",
+      "properties": {
+        "redirect_url": "https://lu.ma/calendar/cal-LvLbx6gS0ChhPQz?utm_source=getstarted"
+      }
+    },
+    {
+      "id": "HARxNAso6F4n",
+      "ref": "b597bbc6-ad04-4e15-9494-93d465f8f39b",
+      "title": "Thank you and goodbye!",
+      "type": "thankyou_screen",
+      "properties": {
+        "show_button": false,
+        "share_icons": false,
+        "button_mode": "default_redirect",
+        "button_text": "again"
+      }
+    },
+    {
+      "id": "DefaultTyScreen",
+      "ref": "default_tys",
+      "title": "All done! Thanks for your time.",
+      "type": "thankyou_screen",
+      "properties": {
+        "show_button": false,
+        "share_icons": false
+      }
+    }
+  ],
+  "fields": [
+    {
+      "id": "6yTXoCwIMJcK",
+      "title": "Which mentorship program are you interested in for your child?",
+      "ref": "01JD2R4V7MYFXV5D2KNT7XPJHT",
+      "properties": {
+        "description": "Please select the program(s) that best suit your child’s needs and interests. You may choose one or both options.",
+        "randomize": false,
+        "allow_multiple_selection": false,
+        "allow_other_choice": false,
+        "vertical_alignment": true,
+        "choices": [
+          {
+            "id": "EbekFRteskGz",
+            "ref": "01JD2R4V7M27HABT9ZR5AWVQEK",
+            "label": "*Academic Mentorship: *_Get support with school subjects to improve grades and build confidence._"
+          },
+          {
+            "id": "MIPIpvfHZu74",
+            "ref": "01JD2R4V7MN40PHZN6W4VHJJA9",
+            "label": "*Passion Project:*_Turn interests (coding, writing, research, leadership, and more) into impressive achievements._"
+          },
+          {
+            "id": "BQWiycdMeqD0",
+            "ref": "ac14cd61-f7e5-410f-be5b-469bc006208a",
+            "label": "I am interested in *both* programs."
+          }
+        ]
+      },
+      "validations": {
+        "required": true
+      },
+      "type": "multiple_choice"
+    },
+    {
+      "id": "8FCTnTZBXG5q",
+      "title": "What academic subjects would you like your child to receive mentorship in?",
+      "ref": "87137c72-f3e5-4bfb-805b-bf364c7cc9ef",
+      "properties": {
+        "description": "Please select all the subjects and specific areas where your child could benefit from additional support or wishes to advance. You may choose multiple options.",
+        "fields": [
+          {
+            "id": "RjTElY9fJ9g9",
+            "title": "Math:",
+            "ref": "b6642aab-4a37-4da4-b5e3-f8772b5c2b07",
+            "properties": {
+              "randomize": false,
+              "allow_multiple_selection": true,
+              "allow_other_choice": false,
+              "vertical_alignment": true,
+              "choices": [
+                {
+                  "id": "J19YHzHUWo0t",
+                  "ref": "ae2fcf21-8982-4bda-b6c2-4e1d0040f269",
+                  "label": "K-5 Grade Math"
+                },
+                {
+                  "id": "GujlsHpx3ZGy",
+                  "ref": "e7c08626-1b82-4b7d-9372-a29eb35afec2",
+                  "label": "Pre-Algebra"
+                },
+                {
+                  "id": "pnXAOQUsFVEy",
+                  "ref": "b4026391-f44f-4ca9-9c06-02d8d626fde7",
+                  "label": "Algebra I"
+                },
+                {
+                  "id": "i1xHQRXQbo5r",
+                  "ref": "152361ac-cd2f-44bc-b51a-04ad880c03c1",
+                  "label": "Algebra II"
+                },
+                {
+                  "id": "JUw5oSEihSma",
+                  "ref": "115e3922-6049-4518-8fb5-c26813c943dc",
+                  "label": "Geometry"
+                },
+                {
+                  "id": "iZwz61SFQXxF",
+                  "ref": "6e61ee0c-c626-4c6c-bd09-0df7481faa79",
+                  "label": "Precalculus & Trigonometry"
+                },
+                {
+                  "id": "sbvgTpIlwXiq",
+                  "ref": "7fbe41b8-cb58-45b1-a5af-696aef9965b7",
+                  "label": "Calculus"
+                },
+                {
+                  "id": "VscUn1a9pCc5",
+                  "ref": "e81a0f7c-0269-4c98-a151-6465c026da04",
+                  "label": "Statistics"
+                }
+              ]
+            },
+            "validations": {
+              "required": false
+            },
+            "type": "multiple_choice"
+          },
+          {
+            "id": "qRCY6NuEQDJM",
+            "title": "Science:",
+            "ref": "3ff79f5f-dfb7-45bc-a1f0-2fbb88d6f45c",
+            "properties": {
+              "randomize": false,
+              "allow_multiple_selection": true,
+              "allow_other_choice": false,
+              "vertical_alignment": true,
+              "choices": [
+                {
+                  "id": "uo9gKc7weeUy",
+                  "ref": "78a0380d-39be-4819-8c29-0cb9d74ef807",
+                  "label": "6-8 Grade Science"
+                },
+                {
+                  "id": "xyLne0N3FLuM",
+                  "ref": "89d4192b-675f-440b-b475-1783364ebf03",
+                  "label": "Chemistry"
+                },
+                {
+                  "id": "NyPcZbgUF87K",
+                  "ref": "e64c4e13-4350-403d-9587-919dc5292795",
+                  "label": "Biology"
+                },
+                {
+                  "id": "tiVZVbRboFaO",
+                  "ref": "1c0a42ae-5f39-4de7-acd3-8c61703a2bb2",
+                  "label": "Physics"
+                }
+              ]
+            },
+            "validations": {
+              "required": false
+            },
+            "type": "multiple_choice"
+          },
+          {
+            "id": "i27ZGXlkFqKv",
+            "title": "Writing:",
+            "ref": "33cbbc2f-6e93-467c-9c7a-b8e3cc6e18ae",
+            "properties": {
+              "randomize": false,
+              "allow_multiple_selection": true,
+              "allow_other_choice": false,
+              "vertical_alignment": true,
+              "choices": [
+                {
+                  "id": "mzMe7x3ACpw4",
+                  "ref": "a5f985d4-74bf-4649-bd37-85b49a9db88e",
+                  "label": "Writing"
+                }
+              ]
+            },
+            "validations": {
+              "required": false
+            },
+            "type": "multiple_choice"
+          },
+          {
+            "id": "GW3aCg0aJN1x",
+            "title": "Languages:",
+            "ref": "2c7b2ce9-66ed-4b6b-b674-710f58149341",
+            "properties": {
+              "randomize": false,
+              "allow_multiple_selection": true,
+              "allow_other_choice": true,
+              "vertical_alignment": true,
+              "choices": [
+                {
+                  "id": "xGFoGmlI7Rkd",
+                  "ref": "de63b65b-5330-4707-a007-307388474a2a",
+                  "label": "Spanish"
+                },
+                {
+                  "id": "6Z8chvpSok1W",
+                  "ref": "1e29971a-2c90-41ca-a908-8a9229c532b0",
+                  "label": "French"
+                }
+              ]
+            },
+            "validations": {
+              "required": false
+            },
+            "type": "multiple_choice"
+          },
+          {
+            "id": "GFfQArbdk5js",
+            "title": "Other:",
+            "ref": "4620047f-93dd-4b35-8bf4-afed7464c8b1",
+            "properties": {
+              "randomize": false,
+              "allow_multiple_selection": true,
+              "allow_other_choice": false,
+              "vertical_alignment": true,
+              "choices": [
+                {
+                  "id": "Ew1ZMAf1Rdhc",
+                  "ref": "22300f69-9e09-44ea-b4dd-94eb1d3d1212",
+                  "label": "Academic Coaching"
+                },
+                {
+                  "id": "7XhLvgdlSMl9",
+                  "ref": "92c19134-99bc-4c23-abbb-3713b5f4dcb4",
+                  "label": "Executive Function"
+                },
+                {
+                  "id": "0swkytrvoydL",
+                  "ref": "bf55b8ab-0257-44ff-b08e-77e556012be5",
+                  "label": "College Essay Writing"
+                },
+                {
+                  "id": "if8mcPUwYEvt",
+                  "ref": "86e0628d-0238-404c-a62e-4a495c4d8f53",
+                  "label": "Reading"
+                },
+                {
+                  "id": "iyGoLMqaEGo9",
+                  "ref": "51083b55-b745-4d7c-8e02-c4a6aed3cb22",
+                  "label": "History"
+                },
+                {
+                  "id": "kMuhyXMkkS8f",
+                  "ref": "7c947e34-d205-48a3-bb57-50061e6f3472",
+                  "label": "Economics"
+                },
+                {
+                  "id": "wDjpM6ep1msq",
+                  "ref": "39092247-8975-4622-b1b1-b8cb74ee1aa2",
+                  "label": "Computer Science"
+                }
+              ]
+            },
+            "validations": {
+              "required": false
+            },
+            "type": "multiple_choice"
+          }
+        ]
+      },
+      "type": "inline_group"
+    },
+    {
+      "id": "JbHmsDJ8POb1",
+      "title": "What areas of interest would your child like to explore or pursue through a passion project?",
+      "ref": "eb2b453c-5037-43a2-a9ca-44d8fc831560",
+      "properties": {
+        "description": "Please select all the topics that align with your child’s passions and interests. You may choose multiple options",
+        "fields": [
+          {
+            "id": "lS3nswTpiZbh",
+            "title": "Arts & Humanities:",
+            "ref": "6c85c235-4b29-48c7-8869-9b47374fd1a3",
+            "properties": {
+              "randomize": false,
+              "allow_multiple_selection": true,
+              "allow_other_choice": false,
+              "vertical_alignment": true,
+              "choices": [
+                {
+                  "id": "8pWmPH1mba0q",
+                  "ref": "2977db78-2c6c-42dd-82db-f09a5d6aacee",
+                  "label": "Creative Writing"
+                },
+                {
+                  "id": "raMzu97RiJ8b",
+                  "ref": "09c8cf34-a2a4-41d1-b0b0-d374ac534261",
+                  "label": "Music"
+                },
+                {
+                  "id": "ABm97oL0Y8ah",
+                  "ref": "97b3aac1-b8b0-4213-82be-8212cdc99264",
+                  "label": "Fashion / Cosmetics"
+                },
+                {
+                  "id": "ThSCIAsaIJZo",
+                  "ref": "27153ffe-f562-4665-a3ef-c9924f95d844",
+                  "label": "Visual Arts / Graphic Design"
+                },
+                {
+                  "id": "EZ9dcWCKLK2d",
+                  "ref": "08f5d73c-0f9a-4818-b0d4-6e95ac2064a8",
+                  "label": "Film / Theater"
+                },
+                {
+                  "id": "XDBmMFw5D8bj",
+                  "ref": "68d164b0-d642-4e71-947c-3099359e5809",
+                  "label": "Sports Journalism"
+                },
+                {
+                  "id": "CF7hEuC578h2",
+                  "ref": "c0824214-48f0-4176-8507-dc2bfdcb8b7c",
+                  "label": "History Project"
+                },
+                {
+                  "id": "4qP3QYdPlcrV",
+                  "ref": "77a32edd-6176-4b09-984a-41244772e151",
+                  "label": "Video / Photography"
+                },
+                {
+                  "id": "Hsu9xDwjPthQ",
+                  "ref": "f8a80cfe-d261-4810-8280-c70920565d53",
+                  "label": "K-6 Storybook"
+                }
+              ]
+            },
+            "validations": {
+              "required": false
+            },
+            "type": "multiple_choice"
+          },
+          {
+            "id": "oMtWMxUYM8GV",
+            "title": "Business, Finance & Entrepreneurship:",
+            "ref": "a99f41c5-6478-4ba6-8ff0-8391db9ddd2c",
+            "properties": {
+              "randomize": false,
+              "allow_multiple_selection": true,
+              "allow_other_choice": false,
+              "vertical_alignment": true,
+              "choices": [
+                {
+                  "id": "xMpW393m2kHY",
+                  "ref": "bf4a71a2-bfdf-4125-9456-3972131d91e8",
+                  "label": "Business / Entrepreneurship"
+                },
+                {
+                  "id": "lSJRBCMd5HSZ",
+                  "ref": "326540ba-1f66-48b1-8c11-de0d8b3ca3a5",
+                  "label": "Finance / Investing"
+                }
+              ]
+            },
+            "validations": {
+              "required": false
+            },
+            "type": "multiple_choice"
+          },
+          {
+            "id": "RfUl6mzRlx9u",
+            "title": "Science, Engineering & Technology:",
+            "ref": "2e7902b4-34eb-4ab1-9634-73691c51574c",
+            "properties": {
+              "randomize": false,
+              "allow_multiple_selection": true,
+              "allow_other_choice": false,
+              "vertical_alignment": true,
+              "choices": [
+                {
+                  "id": "QSghHRsJCHgg",
+                  "ref": "23cdbdbd-2b36-4b0d-ad44-c0bf389134d2",
+                  "label": "Coding & Programming"
+                },
+                {
+                  "id": "Mbd8l6ljqqN0",
+                  "ref": "075a018f-eda3-4053-8de5-c0a53968a8f7",
+                  "label": "Medicine & Health"
+                },
+                {
+                  "id": "g0OV5ulJccoH",
+                  "ref": "8834c98e-4cd4-480e-9e3f-184fd0a89774",
+                  "label": "Sports Analytics"
+                },
+                {
+                  "id": "65jyjtJNQHtr",
+                  "ref": "c9047f2e-2d25-435e-8a0f-5d4e392ff228",
+                  "label": "Web Design"
+                },
+                {
+                  "id": "oG0qpYRyVMFt",
+                  "ref": "c851a076-bdf8-4caf-ab26-e725d5b26ffd",
+                  "label": "Robotics & Electronics / CAD"
+                },
+                {
+                  "id": "F7iLKSzQAg2d",
+                  "ref": "00edef99-f890-42ef-8ac8-f705eed8593e",
+                  "label": "Game Design"
+                },
+                {
+                  "id": "JlIvuwPlusNQ",
+                  "ref": "ffbf7f5f-d953-4406-8c0b-4be01fd86b21",
+                  "label": "STEM Project (e.g., Biology, Chemistry, Physics, Psychology)"
+                },
+                {
+                  "id": "PfWFIPwmVG0e",
+                  "ref": "9d1e446f-9895-44a1-89c7-94aafd1198c7",
+                  "label": "Aviation & Aerospace"
+                },
+                {
+                  "id": "aMruiZ3ty7nt",
+                  "ref": "ad4a7fd8-a2dc-4360-822c-b1b09b2f8c72",
+                  "label": "Machine Learning & AI"
+                }
+              ]
+            },
+            "validations": {
+              "required": false
+            },
+            "type": "multiple_choice"
+          },
+          {
+            "id": "0aMlgSph4lmc",
+            "title": "Politics, Ethics & Social Justice:",
+            "ref": "87d6bf12-68eb-484f-acab-53c3eafe390c",
+            "properties": {
+              "randomize": false,
+              "allow_multiple_selection": true,
+              "allow_other_choice": false,
+              "vertical_alignment": true,
+              "choices": [
+                {
+                  "id": "4ewJ3oB9LPt3",
+                  "ref": "b037a87b-e3ae-405b-8e53-de3e8ea46f34",
+                  "label": "Law / Government / Policy"
+                },
+                {
+                  "id": "X0X6CbTWO3QG",
+                  "ref": "cc566d1e-6ac0-4ced-9df6-ae4fb8e612ad",
+                  "label": "Sustainability"
+                },
+                {
+                  "id": "0FkRneWeNcjm",
+                  "ref": "ffd58d92-c5f7-4d0d-b554-e5d6c63d1e8d",
+                  "label": "Journalism"
+                },
+                {
+                  "id": "q4B2VTPvcU7H",
+                  "ref": "23a877ed-22bd-4ecd-839d-603d1ebee5c2",
+                  "label": "Debate"
+                },
+                {
+                  "id": "t31EvMGDUH4Z",
+                  "ref": "0df69357-c698-4cc1-b623-ab2faf723832",
+                  "label": "Public Speaking"
+                }
+              ]
+            },
+            "validations": {
+              "required": false
+            },
+            "type": "multiple_choice"
+          }
+        ]
+      },
+      "type": "inline_group"
+    },
+    {
+      "id": "eKVEl2mP15Ko",
+      "title": "Please elaborate on your child’s goals or areas for growth:",
+      "ref": "fcc783ad-ff43-45f4-b967-8d2485e1a74a",
+      "properties": {},
+      "validations": {
+        "required": false
+      },
+      "type": "short_text"
+    },
+    {
+      "id": "maWW9hs9BQwE",
+      "title": "Student Information",
+      "ref": "a773ae26-50c8-4347-b107-bca1176cc765",
+      "properties": {
+        "description": "Finally, please share some additional information about your child to help us personalize their mentorship experience. ",
+        "fields": [
+          {
+            "id": "3sxGYQequY0W",
+            "title": "Student first name:",
+            "ref": "f155ed59-057b-4840-b667-97c6bc9557da",
+            "properties": {},
+            "validations": {
+              "required": true
+            },
+            "type": "short_text"
+          },
+          {
+            "id": "4DcIMVZy9qCn",
+            "title": "Student last name:",
+            "ref": "a28c1dd3-2d2b-43f5-bf0b-6c20cdb4d07f",
+            "properties": {},
+            "validations": {
+              "required": true
+            },
+            "type": "short_text"
+          },
+          {
+            "id": "RhgJnpn83AG9",
+            "title": "School",
+            "ref": "8a4b6067-bb65-4690-a452-e4cec5479f08",
+            "properties": {},
+            "validations": {
+              "required": true
+            },
+            "type": "short_text"
+          },
+          {
+            "id": "5PEMejzB1tia",
+            "title": "Location (City, State)",
+            "ref": "2c42ab4e-b8e1-44bb-aadf-601112d96b3e",
+            "properties": {},
+            "validations": {
+              "required": true
+            },
+            "type": "short_text"
+          }
+        ]
+      },
+      "type": "inline_group"
+    },
+    {
+      "id": "gLrxUbXxcsiT",
+      "title": "What is your student's grade?",
+      "ref": "6e68c181-ddf9-4fe7-997e-38b25245d62f",
+      "properties": {
+        "randomize": false,
+        "alphabetical_order": false,
+        "choices": [
+          {
+            "id": "Ze3osD4NLtP1",
+            "ref": "90614e9c-8f26-479f-9356-2d435e699276",
+            "label": "1st Grade"
+          },
+          {
+            "id": "Zpo6Y5vbxwJ5",
+            "ref": "c092f311-87d6-4236-9438-6254e942d198",
+            "label": "2nd Grade"
+          },
+          {
+            "id": "qwtaIzbaXC3V",
+            "ref": "8f60afe7-a97b-45bb-a6cd-83733c01daa8",
+            "label": "3rd Grade"
+          },
+          {
+            "id": "zTe6XREwEDsV",
+            "ref": "ac162664-89b9-46c0-9abe-42192b8beff9",
+            "label": "4th Grade"
+          },
+          {
+            "id": "i8H6IW3YhBmk",
+            "ref": "7a5edaf9-2ea8-4a6b-aeea-594c82d1f2ea",
+            "label": "5th Grade"
+          },
+          {
+            "id": "MgYNMl73uKjv",
+            "ref": "5ec47ada-6a18-472b-9a5a-92e32b4cd26c",
+            "label": "6th Grade"
+          },
+          {
+            "id": "5hp8bTKHelRU",
+            "ref": "add9caa4-90f8-4219-980e-63fdd04f0ae9",
+            "label": "7th Grade"
+          },
+          {
+            "id": "Ay3MXwhu6ZPC",
+            "ref": "3fb8af83-21d7-4a11-914b-b67568f9f0e3",
+            "label": "8th Grade"
+          },
+          {
+            "id": "VqbAP7kiRwsP",
+            "ref": "d7d18163-60e9-47a2-85a8-16dbe845a957",
+            "label": "9th Grade (Freshman)"
+          },
+          {
+            "id": "ABa5IAH60hmu",
+            "ref": "e2bc1d3f-d950-4b25-b0da-fba2844329bb",
+            "label": "10th Grade (Sophomore)"
+          },
+          {
+            "id": "2RiqpWGSWmbv",
+            "ref": "d48de91d-38cb-4e61-bc7e-9e34e0df0d51",
+            "label": "11th Grade (Junior)"
+          },
+          {
+            "id": "tH1O7CQLrXr0",
+            "ref": "d3ec188d-0815-49e3-b3e0-c565cfca4cd2",
+            "label": "12th Grade (Senior)"
+          }
+        ]
+      },
+      "validations": {
+        "required": true
+      },
+      "type": "dropdown"
+    },
+    {
+      "id": "4FpdyAvUU1un",
+      "title": "Match your child with the perfect mentor:",
+      "ref": "cdb71b15-e394-4e9e-ae61-41ff67096386",
+      "properties": {
+        "description": "We recommend scheduling a call with our Family Admissions team!",
+        "randomize": false,
+        "allow_multiple_selection": false,
+        "allow_other_choice": false,
+        "vertical_alignment": true,
+        "choices": [
+          {
+            "id": "1DijJ1f4Cgym",
+            "ref": "ff7f8a7e-86dd-4839-b9c2-ba31f2074ab7",
+            "label": "*Schedule a call (Recommended): *_Book a time to receive a personalized learning plan and mentor recommendation for your child._"
+          },
+          {
+            "id": "dVaryJ2dDJLj",
+            "ref": "4d691634-759a-4f1e-ade7-9f57ed693a25",
+            "label": "*Attend a virtual event: *_Not ready to schedule a call? Meet our CEO, our amazing mentors, and hear from Curious Cardinals families in an intimate coffee chat. Bring your questions!_"
+          }
+        ]
+      },
+      "validations": {
+        "required": true
+      },
+      "type": "multiple_choice"
+    },
+    {
+      "id": "6hF7b9Hc4oAU",
+      "title": "☎️ We take the call very seriously! Please confirm that:\n\n✅ At least one guardian will be attending the consultation\n\n✅ If you need to cancel or reschedule, you will let us know 24 hours in advance\n\n✅ You are willing to invest $380/month for sessions\n",
+      "ref": "7b41db71-c183-41bd-b698-816fb715de1e",
+      "properties": {
+        "description": "We invest a lot of time and effort into crafting a personalized learning plan and mentor match so please don’t waste our time! ",
+        "button_text": "Confirm",
+        "hide_marks": false
+      },
+      "type": "statement",
+      "attachment": {
+        "type": "video",
+        "href": "https://vimeo.com/1075871499"
+      },
+      "layout": {
+        "type": "stack",
+        "attachment": {
+          "type": "video",
+          "href": "https://vimeo.com/1075871499"
+        },
+        "viewport_overrides": {}
+      }
+    },
+    {
+      "id": "PPBIIv3lrWpa",
+      "title": "We have identified you as a spammer. Please stop.  ",
+      "ref": "06a8d503-21cc-43d1-8f95-cf3b332b6e05",
+      "properties": {
+        "button_text": "I will stop spamming",
+        "hide_marks": true
+      },
+      "type": "statement"
+    }
+  ],
+  "hidden": [
+    "parent_email",
+    "parent_first",
+    "parent_last",
+    "parent_phone",
+    "source",
+    "utm_source",
+    "utm_medium",
+    "utm_campaign",
+    "utm_term",
+    "utm_content",
+    "sessionid"
+  ],
+  "logic": [
+    {
+      "type": "field",
+      "ref": "01JD2R4V7MYFXV5D2KNT7XPJHT",
+      "actions": [
+        {
+          "action": "jump",
+          "details": {
+            "to": {
+              "type": "field",
+              "value": "87137c72-f3e5-4bfb-805b-bf364c7cc9ef"
+            }
+          },
+          "condition": {
+            "op": "is",
+            "vars": [
+              {
+                "type": "field",
+                "value": "01JD2R4V7MYFXV5D2KNT7XPJHT"
+              },
+              {
+                "type": "choice",
+                "value": "01JD2R4V7M27HABT9ZR5AWVQEK"
+              }
+            ]
+          }
+        },
+        {
+          "action": "jump",
+          "details": {
+            "to": {
+              "type": "field",
+              "value": "eb2b453c-5037-43a2-a9ca-44d8fc831560"
+            }
+          },
+          "condition": {
+            "op": "is",
+            "vars": [
+              {
+                "type": "field",
+                "value": "01JD2R4V7MYFXV5D2KNT7XPJHT"
+              },
+              {
+                "type": "choice",
+                "value": "01JD2R4V7MN40PHZN6W4VHJJA9"
+              }
+            ]
+          }
+        },
+        {
+          "action": "jump",
+          "details": {
+            "to": {
+              "type": "field",
+              "value": "87137c72-f3e5-4bfb-805b-bf364c7cc9ef"
+            }
+          },
+          "condition": {
+            "op": "is",
+            "vars": [
+              {
+                "type": "field",
+                "value": "01JD2R4V7MYFXV5D2KNT7XPJHT"
+              },
+              {
+                "type": "choice",
+                "value": "ac14cd61-f7e5-410f-be5b-469bc006208a"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "type": "field",
+      "ref": "87137c72-f3e5-4bfb-805b-bf364c7cc9ef",
+      "actions": [
+        {
+          "action": "jump",
+          "details": {
+            "to": {
+              "type": "field",
+              "value": "eb2b453c-5037-43a2-a9ca-44d8fc831560"
+            }
+          },
+          "condition": {
+            "op": "is",
+            "vars": [
+              {
+                "type": "field",
+                "value": "01JD2R4V7MYFXV5D2KNT7XPJHT"
+              },
+              {
+                "type": "choice",
+                "value": "ac14cd61-f7e5-410f-be5b-469bc006208a"
+              }
+            ]
+          }
+        },
+        {
+          "action": "jump",
+          "details": {
+            "to": {
+              "type": "field",
+              "value": "fcc783ad-ff43-45f4-b967-8d2485e1a74a"
+            }
+          },
+          "condition": {
+            "op": "is",
+            "vars": [
+              {
+                "type": "field",
+                "value": "01JD2R4V7MYFXV5D2KNT7XPJHT"
+              },
+              {
+                "type": "choice",
+                "value": "01JD2R4V7M27HABT9ZR5AWVQEK"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "type": "field",
+      "ref": "cdb71b15-e394-4e9e-ae61-41ff67096386",
+      "actions": [
+        {
+          "action": "jump",
+          "details": {
+            "to": {
+              "type": "field",
+              "value": "7b41db71-c183-41bd-b698-816fb715de1e"
+            }
+          },
+          "condition": {
+            "op": "and",
+            "vars": [
+              {
+                "op": "is",
+                "vars": [
+                  {
+                    "type": "field",
+                    "value": "cdb71b15-e394-4e9e-ae61-41ff67096386"
+                  },
+                  {
+                    "type": "choice",
+                    "value": "ff7f8a7e-86dd-4839-b9c2-ba31f2074ab7"
+                  }
+                ]
+              },
+              {
+                "op": "equal",
+                "vars": [
+                  {
+                    "type": "hidden",
+                    "value": "utm_source"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "meta"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "action": "jump",
+          "details": {
+            "to": {
+              "type": "thankyou",
+              "value": "0a81b2f0-fcdb-4f30-a256-da7dd4790fc4"
+            }
+          },
+          "condition": {
+            "op": "is",
+            "vars": [
+              {
+                "type": "field",
+                "value": "cdb71b15-e394-4e9e-ae61-41ff67096386"
+              },
+              {
+                "type": "choice",
+                "value": "4d691634-759a-4f1e-ade7-9f57ed693a25"
+              }
+            ]
+          }
+        },
+        {
+          "action": "jump",
+          "details": {
+            "to": {
+              "type": "thankyou",
+              "value": "e7cfda6d-7212-4e53-a7c2-39df4017f25f"
+            }
+          },
+          "condition": {
+            "op": "always",
+            "vars": []
+          }
+        }
+      ]
+    },
+    {
+      "type": "field",
+      "ref": "7b41db71-c183-41bd-b698-816fb715de1e",
+      "actions": [
+        {
+          "action": "jump",
+          "details": {
+            "to": {
+              "type": "thankyou",
+              "value": "e7cfda6d-7212-4e53-a7c2-39df4017f25f"
+            }
+          },
+          "condition": {
+            "op": "is",
+            "vars": [
+              {
+                "type": "field",
+                "value": "cdb71b15-e394-4e9e-ae61-41ff67096386"
+              },
+              {
+                "type": "choice",
+                "value": "ff7f8a7e-86dd-4839-b9c2-ba31f2074ab7"
+              }
+            ]
+          }
+        },
+        {
+          "action": "jump",
+          "details": {
+            "to": {
+              "type": "thankyou",
+              "value": "e7cfda6d-7212-4e53-a7c2-39df4017f25f"
+            }
+          },
+          "condition": {
+            "op": "always",
+            "vars": []
+          }
+        }
+      ]
+    },
+    {
+      "type": "hidden",
+      "actions": [
+        {
+          "action": "jump",
+          "details": {
+            "to": {
+              "type": "field",
+              "value": "06a8d503-21cc-43d1-8f95-cf3b332b6e05"
+            }
+          },
+          "condition": {
+            "op": "or",
+            "vars": [
+              {
+                "op": "equal",
+                "vars": [
+                  {
+                    "type": "hidden",
+                    "value": "parent_email"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "rexxdraws@gmail.com"
+                  }
+                ]
+              },
+              {
+                "op": "equal",
+                "vars": [
+                  {
+                    "type": "hidden",
+                    "value": "parent_email"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "toning98@gmail.com"
+                  }
+                ]
+              },
+              {
+                "op": "equal",
+                "vars": [
+                  {
+                    "type": "hidden",
+                    "value": "parent_email"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "lyhong123@gmail.com"
+                  }
+                ]
+              },
+              {
+                "op": "not_equal",
+                "vars": [
+                  {
+                    "type": "hidden",
+                    "value": "sessionid"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "7ZZ5Odv0ZgxjhU7ddzFaBPQodu"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "action": "jump",
+          "details": {
+            "to": {
+              "type": "field",
+              "value": "01JD2R4V7MYFXV5D2KNT7XPJHT"
+            }
+          },
+          "condition": {
+            "op": "always",
+            "vars": []
+          }
+        }
+      ]
+    },
+    {
+      "type": "field",
+      "ref": "06a8d503-21cc-43d1-8f95-cf3b332b6e05",
+      "actions": [
+        {
+          "action": "jump",
+          "details": {
+            "to": {
+              "type": "thankyou",
+              "value": "b597bbc6-ad04-4e15-9494-93d465f8f39b"
+            }
+          },
+          "condition": {
+            "op": "always",
+            "vars": []
+          }
+        }
+      ]
+    }
+  ],
+  "_links": {
+    "display": "https://info599864.typeform.com/to/ALTmLSan",
+    "responses": "https://api.typeform.com/forms/ALTmLSan/responses"
+  }
+}

@@ -1,0 +1,421 @@
+{
+  "id": "P5h8CCfR",
+  "type": "quiz",
+  "title": "Parent Intake - Parent Info",
+  "workspace": {
+    "href": "https://api.typeform.com/workspaces/Wg9rNA"
+  },
+  "theme": {
+    "href": "https://api.typeform.com/themes/Gr5psaKw"
+  },
+  "settings": {
+    "language": "en",
+    "progress_bar": "proportion",
+    "meta": {
+      "allow_indexing": false
+    },
+    "hide_navigation": false,
+    "is_public": true,
+    "is_trial": false,
+    "show_progress_bar": true,
+    "show_typeform_branding": false,
+    "are_uploads_public": false,
+    "show_time_to_complete": true,
+    "show_number_of_submissions": false,
+    "show_cookie_consent": false,
+    "show_question_number": true,
+    "show_key_hint_on_choices": true,
+    "autosave_progress": true,
+    "free_form_navigation": false,
+    "use_lead_qualification": false,
+    "pro_subdomain_enabled": false,
+    "google_tag_manager": "GTM-5792Z7P",
+    "spam_identification": true,
+    "enrichment_in_renderer": {
+      "toggle": true,
+      "active": false
+    },
+    "auto_translate": true,
+    "partial_responses_to_all_integrations": true
+  },
+  "thankyou_screens": [
+    {
+      "id": "a77o9iZme2nT",
+      "ref": "d02015dd-de16-4a6d-9132-ea848158fd07",
+      "title": "https://www.curiouscardinals.com/get-started/student-info?utm_source={{hidden:utm_source}}&utm_medium={{hidden:utm_medium}}&utm_campaign={{hidden:utm_campaign}}&utm_term={{hidden:utm_term}}&utm_content={{hidden:utm_content}}&parent_email={{field:ea4aa40a-8360-460b-8f4e-123ccd06a1d5}}&parent_first={{field:da56ba93-9189-48ad-8128-fb20a9e7f423}}&parent_last={{field:3f6c2bdd-21b9-4240-ac6e-3243a8f9f74f}}&parent_phone={{field:b23c5d10-ea70-4957-850c-09a4a3ece34a}}&source={{hidden:source}}&sessionId=7ZZ5Odv0ZgxjhU7ddzFaBPQodu",
+      "type": "url_redirect",
+      "properties": {
+        "redirect_url": "https://www.curiouscardinals.com/get-started/student-info?utm_source={{hidden:utm_source}}&utm_medium={{hidden:utm_medium}}&utm_campaign={{hidden:utm_campaign}}&utm_term={{hidden:utm_term}}&utm_content={{hidden:utm_content}}&parent_email={{field:ea4aa40a-8360-460b-8f4e-123ccd06a1d5}}&parent_first={{field:da56ba93-9189-48ad-8128-fb20a9e7f423}}&parent_last={{field:3f6c2bdd-21b9-4240-ac6e-3243a8f9f74f}}&parent_phone={{field:b23c5d10-ea70-4957-850c-09a4a3ece34a}}&source={{hidden:source}}&sessionId=7ZZ5Odv0ZgxjhU7ddzFaBPQodu"
+      }
+    },
+    {
+      "id": "DefaultTyScreen",
+      "ref": "default_tys",
+      "title": "All done! Thanks for your time.",
+      "type": "thankyou_screen",
+      "properties": {
+        "show_button": false,
+        "share_icons": false
+      }
+    }
+  ],
+  "fields": [
+    {
+      "id": "Mt6HNDr2jrnf",
+      "title": "Parent/Guardian Email",
+      "ref": "ea4aa40a-8360-460b-8f4e-123ccd06a1d5",
+      "properties": {
+        "description": "Please provide your email details below so we can connect with you about mentorship opportunities for your child. Your information will be kept confidential and used solely to support your child’s participation in our program."
+      },
+      "validations": {
+        "required": true
+      },
+      "type": "email"
+    },
+    {
+      "id": "t0bZQGj2S3Ty",
+      "title": "Parent/Guardian Contact Information",
+      "ref": "ad85f342-9849-4178-8c8b-73af4d845154",
+      "properties": {
+        "fields": [
+          {
+            "id": "pwYEC8w9p1nT",
+            "title": "First name",
+            "ref": "da56ba93-9189-48ad-8128-fb20a9e7f423",
+            "subfield_key": "first_name",
+            "properties": {},
+            "validations": {
+              "required": true
+            },
+            "type": "short_text"
+          },
+          {
+            "id": "A3EWoO8M2wcq",
+            "title": "Last name",
+            "ref": "3f6c2bdd-21b9-4240-ac6e-3243a8f9f74f",
+            "subfield_key": "last_name",
+            "properties": {},
+            "validations": {
+              "required": true
+            },
+            "type": "short_text"
+          },
+          {
+            "id": "XcwHnC8GlToO",
+            "title": "Phone number",
+            "ref": "b23c5d10-ea70-4957-850c-09a4a3ece34a",
+            "subfield_key": "phone_number",
+            "properties": {
+              "default_country_code": "US"
+            },
+            "validations": {
+              "required": true
+            },
+            "type": "phone_number"
+          }
+        ]
+      },
+      "type": "contact_info"
+    },
+    {
+      "id": "uGqdU6LpSNos",
+      "title": "Which of these images is a dog",
+      "ref": "bd5e70b3-edc3-48db-97fb-9b85f87853b6",
+      "properties": {
+        "randomize": true,
+        "allow_multiple_selection": true,
+        "allow_other_choice": false,
+        "supersized": false,
+        "show_labels": true,
+        "choices": [
+          {
+            "id": "EAV1V3rI0hKK",
+            "ref": "5baadf35-4f41-4bd8-a1bb-f73e457f9f4a",
+            "label": "choice 1",
+            "attachment": {
+              "type": "image",
+              "href": "https://images.typeform.com/images/WTBiiNuK6DqV",
+              "properties": {
+                "description": "download-4"
+              }
+            }
+          },
+          {
+            "id": "YumtgRITObeF",
+            "ref": "36acf055-ac67-464a-b049-3b9d552f8626",
+            "label": "choice 2",
+            "attachment": {
+              "type": "image",
+              "href": "https://images.typeform.com/images/vcMM2AarSE3f",
+              "properties": {
+                "description": "download-3"
+              }
+            }
+          },
+          {
+            "id": "lrc7TWjbuipi",
+            "ref": "46f26f70-1274-41e5-b4b7-132d41988c04",
+            "label": "choice 3",
+            "attachment": {
+              "type": "image",
+              "href": "https://images.typeform.com/images/3R7DgcaGXjd5",
+              "properties": {
+                "description": "download-1"
+              }
+            }
+          },
+          {
+            "id": "d70O9718os03",
+            "ref": "e22c4b38-6971-48d6-a921-857148613349",
+            "label": "choice 4",
+            "attachment": {
+              "type": "image",
+              "href": "https://images.typeform.com/images/n4Sgnwssv5Az",
+              "properties": {
+                "description": "download-2"
+              }
+            }
+          },
+          {
+            "id": "muqOTlhskGrS",
+            "ref": "d30b9b4b-2c1f-4796-ae4e-ba424c2b0939",
+            "label": "choice 5",
+            "attachment": {
+              "type": "image",
+              "href": "https://images.typeform.com/images/JGjQdFTG2hVv",
+              "properties": {
+                "description": "download"
+              }
+            }
+          }
+        ]
+      },
+      "validations": {
+        "required": true
+      },
+      "type": "picture_choice"
+    },
+    {
+      "id": "rOYAQoz70FRK",
+      "title": "Bye!",
+      "ref": "e0b90115-bcb6-4371-977e-c79988aea1f5",
+      "properties": {},
+      "integrations": [
+        {
+          "id": "google-drive-app",
+          "installation_id": "91a74574-45b0-4f9c-8d71-5475dc830b95"
+        }
+      ],
+      "validations": {
+        "required": true
+      },
+      "type": "file_upload"
+    }
+  ],
+  "hidden": [
+    "source",
+    "utm_source",
+    "utm_medium",
+    "utm_campaign",
+    "utm_term",
+    "utm_content",
+    "hubspot_utk",
+    "hubspot_page_name",
+    "hubspot_page_url"
+  ],
+  "logic": [
+    {
+      "type": "field",
+      "ref": "ea4aa40a-8360-460b-8f4e-123ccd06a1d5",
+      "actions": [
+        {
+          "action": "jump",
+          "details": {
+            "to": {
+              "type": "field",
+              "value": "bd5e70b3-edc3-48db-97fb-9b85f87853b6"
+            }
+          },
+          "condition": {
+            "op": "or",
+            "vars": [
+              {
+                "op": "equal",
+                "vars": [
+                  {
+                    "type": "field",
+                    "value": "ea4aa40a-8360-460b-8f4e-123ccd06a1d5"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "lyhong123@gmail.com"
+                  }
+                ]
+              },
+              {
+                "op": "equal",
+                "vars": [
+                  {
+                    "type": "field",
+                    "value": "ea4aa40a-8360-460b-8f4e-123ccd06a1d5"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "toning89@gmail.com"
+                  }
+                ]
+              },
+              {
+                "op": "equal",
+                "vars": [
+                  {
+                    "type": "field",
+                    "value": "ea4aa40a-8360-460b-8f4e-123ccd06a1d5"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "rexxdraws@gmail.com"
+                  }
+                ]
+              },
+              {
+                "op": "equal",
+                "vars": [
+                  {
+                    "type": "field",
+                    "value": "ea4aa40a-8360-460b-8f4e-123ccd06a1d5"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "lyhong123@gmail.com"
+                  }
+                ]
+              },
+              {
+                "op": "equal",
+                "vars": [
+                  {
+                    "type": "field",
+                    "value": "ea4aa40a-8360-460b-8f4e-123ccd06a1d5"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "toning98@gmail.com"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "action": "jump",
+          "details": {
+            "to": {
+              "type": "field",
+              "value": "ad85f342-9849-4178-8c8b-73af4d845154"
+            }
+          },
+          "condition": {
+            "op": "always",
+            "vars": []
+          }
+        }
+      ]
+    },
+    {
+      "type": "field",
+      "ref": "bd5e70b3-edc3-48db-97fb-9b85f87853b6",
+      "actions": [
+        {
+          "action": "jump",
+          "details": {
+            "to": {
+              "type": "field",
+              "value": "e0b90115-bcb6-4371-977e-c79988aea1f5"
+            }
+          },
+          "condition": {
+            "op": "and",
+            "vars": [
+              {
+                "op": "is",
+                "vars": [
+                  {
+                    "type": "field",
+                    "value": "bd5e70b3-edc3-48db-97fb-9b85f87853b6"
+                  },
+                  {
+                    "type": "choice",
+                    "value": "5baadf35-4f41-4bd8-a1bb-f73e457f9f4a"
+                  }
+                ]
+              },
+              {
+                "op": "is",
+                "vars": [
+                  {
+                    "type": "field",
+                    "value": "bd5e70b3-edc3-48db-97fb-9b85f87853b6"
+                  },
+                  {
+                    "type": "choice",
+                    "value": "46f26f70-1274-41e5-b4b7-132d41988c04"
+                  }
+                ]
+              },
+              {
+                "op": "is",
+                "vars": [
+                  {
+                    "type": "field",
+                    "value": "bd5e70b3-edc3-48db-97fb-9b85f87853b6"
+                  },
+                  {
+                    "type": "choice",
+                    "value": "e22c4b38-6971-48d6-a921-857148613349"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "action": "jump",
+          "details": {
+            "to": {
+              "type": "field",
+              "value": "ea4aa40a-8360-460b-8f4e-123ccd06a1d5"
+            }
+          },
+          "condition": {
+            "op": "always",
+            "vars": []
+          }
+        }
+      ]
+    },
+    {
+      "type": "field",
+      "ref": "ad85f342-9849-4178-8c8b-73af4d845154",
+      "actions": [
+        {
+          "action": "jump",
+          "details": {
+            "to": {
+              "type": "thankyou",
+              "value": "d02015dd-de16-4a6d-9132-ea848158fd07"
+            }
+          },
+          "condition": {
+            "op": "always",
+            "vars": []
+          }
+        }
+      ]
+    }
+  ],
+  "_links": {
+    "display": "https://info599864.typeform.com/to/P5h8CCfR",
+    "responses": "https://api.typeform.com/forms/P5h8CCfR/responses"
+  }
+}

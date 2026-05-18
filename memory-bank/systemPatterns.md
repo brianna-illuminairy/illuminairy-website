@@ -9,8 +9,20 @@ lib/           → site config, Stripe, PostHog, schedules
 public/        → static assets
 docs/          → brand & internal docs (not shipped)
 memory-bank/   → AI/human persistent context
-scripts/       → env sync, Stripe setup, PostHog verify
+specs/         → PRDs, specs, Ralph PLAN, ACTIVE pointer
+agent/         → human-owned program.md, growth-program.md
+growth/        → experiment logs (not shipped)
+scripts/       → env sync, agent-verify, ralph-loop, PostHog verify
+.cursor/skills → plan, review, ship, investigate, ralph-iteration
 ```
+
+## Agentic workflow
+
+- **Spec-driven** — `specs/ACTIVE.md` points at the current `SPEC.md`; templates in `specs/_templates/`.
+- **Ralph** — one task per agent session; `specs/ralph/PLAN.md`; `npm run ralph:next`.
+- **Engineering gate** — `npm run agent:verify`; `scripts/agent-verify.mjs` is immutable for agents.
+- **Growth experiments** — `agent/growth-program.md`, `growth/experiments/`, event names in `lib/analytics-events.ts`.
+- **Docs** — `docs/agentic-development/`; ADR [0006](../docs/decisions/0006-agentic-development-workflow.md).
 
 ## Configuration pattern
 

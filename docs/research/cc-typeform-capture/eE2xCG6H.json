@@ -1,0 +1,402 @@
+{
+  "id": "eE2xCG6H",
+  "type": "quiz",
+  "title": "Parent Intake - Additional Info",
+  "workspace": {
+    "href": "https://api.typeform.com/workspaces/Wg9rNA"
+  },
+  "theme": {
+    "href": "https://api.typeform.com/themes/Gr5psaKw"
+  },
+  "settings": {
+    "language": "en",
+    "progress_bar": "proportion",
+    "meta": {
+      "allow_indexing": false
+    },
+    "hide_navigation": false,
+    "is_public": true,
+    "is_trial": false,
+    "show_progress_bar": true,
+    "show_typeform_branding": true,
+    "are_uploads_public": false,
+    "show_time_to_complete": true,
+    "show_number_of_submissions": false,
+    "show_cookie_consent": false,
+    "show_question_number": true,
+    "show_key_hint_on_choices": true,
+    "autosave_progress": true,
+    "free_form_navigation": false,
+    "use_lead_qualification": false,
+    "pro_subdomain_enabled": false,
+    "google_tag_manager": "GTM-5792Z7P",
+    "auto_translate": true,
+    "partial_responses_to_all_integrations": false
+  },
+  "thankyou_screens": [
+    {
+      "id": "PkuxPf1kz4Ve",
+      "ref": "dcbd87d5-1946-4dbb-89eb-8ca449545920",
+      "title": "https://www.curiouscardinals.com/get-started/asynchronous-match-request?utm_source={{hidden:utm_source}}&utm_medium={{hidden:utm_medium}}&utm_campaign={{hidden:utm_campaign}}&utm_term={{hidden:utm_term}}&utm_content={{hidden:utm_content}}&firstname={{hidden:parent_first}}&lastname={{hidden:parent_last}}&email={{hidden:parent_email}}&phone={{hidden:parent_phone}}&source={{hidden:source}}",
+      "type": "url_redirect",
+      "properties": {
+        "redirect_url": "https://www.curiouscardinals.com/get-started/asynchronous-match-request?utm_source={{hidden:utm_source}}&utm_medium={{hidden:utm_medium}}&utm_campaign={{hidden:utm_campaign}}&utm_term={{hidden:utm_term}}&utm_content={{hidden:utm_content}}&firstname={{hidden:parent_first}}&lastname={{hidden:parent_last}}&email={{hidden:parent_email}}&phone={{hidden:parent_phone}}&source={{hidden:source}}"
+      }
+    },
+    {
+      "id": "DefaultTyScreen",
+      "ref": "default_tys",
+      "title": "Thanks for completing this typeform\nNow *create your own* — it's free, easy, & beautiful",
+      "type": "thankyou_screen",
+      "properties": {
+        "show_button": true,
+        "share_icons": false,
+        "button_mode": "default_redirect",
+        "button_text": "Create a *typeform*"
+      },
+      "attachment": {
+        "type": "image",
+        "href": "https://public-assets.typeform.com/public/admin/2dpnUBBkz2VN.gif"
+      }
+    }
+  ],
+  "fields": [
+    {
+      "id": "SV86OTflxcQN",
+      "title": "Tell us a little more about {{hidden:student_first}}:",
+      "ref": "59e1591a-fcc1-4501-87f4-21ed7c953333",
+      "properties": {
+        "description": "Help us provide the most personalized mentor recommendation and learning plan for {{hidden:student_first}}. ",
+        "fields": [
+          {
+            "id": "ZhYgIQsAjyzc",
+            "title": "Extracurriculars:",
+            "ref": "5d2a0488-6784-4e62-a1f6-d2b9388c7103",
+            "properties": {
+              "randomize": false,
+              "allow_multiple_selection": true,
+              "allow_other_choice": true,
+              "vertical_alignment": true,
+              "choices": [
+                {
+                  "id": "NlBdTdgmFG4k",
+                  "ref": "2be1c797-3631-43ec-9dab-e07ff8839970",
+                  "label": "STEM (Olympiads, Robotics)"
+                },
+                {
+                  "id": "SHje3T76f0XZ",
+                  "ref": "f3214966-d1f1-4b80-b758-17bcd0b45b42",
+                  "label": "Business/Leadership (DECA, FBLA)"
+                },
+                {
+                  "id": "LYVfN9Blo5ZQ",
+                  "ref": "ef390e45-1555-445c-ae5b-853349c989ff",
+                  "label": "Community service"
+                },
+                {
+                  "id": "y4PhsmgoFVnj",
+                  "ref": "459b3301-8f73-4c78-a688-9281e125b673",
+                  "label": "Dance"
+                },
+                {
+                  "id": "6rELqE32qwNX",
+                  "ref": "12b03495-bb67-41ef-9524-1cd6df83466a",
+                  "label": "Music"
+                },
+                {
+                  "id": "2Ucq3FtwXoap",
+                  "ref": "dcec3378-6c59-499c-b25b-51440e8316ed",
+                  "label": "Speech/Debate/Model UN"
+                },
+                {
+                  "id": "A4pcTF7gDikT",
+                  "ref": "4c9101e8-ed81-4560-a1ab-089cb7105f77",
+                  "label": "Sports"
+                },
+                {
+                  "id": "tdkFkg11lU4y",
+                  "ref": "ab61dbb0-ef5f-4907-b83b-fd7bf0c4363c",
+                  "label": "Theater"
+                },
+                {
+                  "id": "5boQH1eI7VwN",
+                  "ref": "94c18291-fe0e-449d-a0a3-8b9ba5e4f6c5",
+                  "label": "Visual arts"
+                }
+              ]
+            },
+            "validations": {
+              "required": true
+            },
+            "type": "multiple_choice"
+          },
+          {
+            "id": "2GANPvEvSWyQ",
+            "title": "Please elaborate on your child's extracurricular activites:",
+            "ref": "4786c3bd-6b57-4fdf-8491-d4d7893fd2c3",
+            "properties": {},
+            "validations": {
+              "required": false
+            },
+            "type": "short_text"
+          },
+          {
+            "id": "iQYIXNoCqk0H",
+            "title": "Interest/hobbies:",
+            "ref": "69b10126-9fb5-4273-a9ed-fbadb8cee1a6",
+            "properties": {
+              "randomize": false,
+              "allow_multiple_selection": true,
+              "allow_other_choice": true,
+              "vertical_alignment": false,
+              "choices": [
+                {
+                  "id": "eWJmv04oV4jP",
+                  "ref": "bc228e44-5716-4c1c-b157-6ce613001987",
+                  "label": "Arts & Crafts"
+                },
+                {
+                  "id": "8l889INlL15B",
+                  "ref": "3e68c564-f823-4c20-8c18-17b528538ec0",
+                  "label": "Cooking & Baking"
+                },
+                {
+                  "id": "OdMkBWrFcK9y",
+                  "ref": "ced6d8d9-2e36-40f7-be94-8b4cd774acc4",
+                  "label": "Friends"
+                },
+                {
+                  "id": "0DRpN4v83Yci",
+                  "ref": "8b590936-59ef-45b7-8b53-1e615e6b2576",
+                  "label": "Gaming"
+                },
+                {
+                  "id": "dxNgLp5wYXJN",
+                  "ref": "2b600774-ce72-4c3c-840a-83f52625fa7c",
+                  "label": "Movies & TV"
+                },
+                {
+                  "id": "N2JNcHlZGcgw",
+                  "ref": "2082489e-655f-44ee-9518-2d252f7fc302",
+                  "label": "Outdoors"
+                },
+                {
+                  "id": "x0tNYoV2Sp9o",
+                  "ref": "d36cda3a-192d-46ef-a334-2a8f96408871",
+                  "label": "Reading"
+                },
+                {
+                  "id": "gMF1ogQCPFiI",
+                  "ref": "a8da5db7-2e27-417f-9b00-980205aeddbb",
+                  "label": "Social media"
+                },
+                {
+                  "id": "L7XJ3TqTrgQi",
+                  "ref": "25325541-a842-480b-bdc2-d60bf206cc92",
+                  "label": "Sports"
+                },
+                {
+                  "id": "9I5EcWjOApYB",
+                  "ref": "3f742083-af84-4d74-9d9e-dbf9a66c0dab",
+                  "label": "Traveling"
+                }
+              ]
+            },
+            "validations": {
+              "required": false
+            },
+            "type": "multiple_choice"
+          },
+          {
+            "id": "pFmIqwAT8xFG",
+            "title": "Please elaborate on your child's interests and hobbies:",
+            "ref": "d1e4120b-28a4-4504-a2fd-63fec2c79477",
+            "properties": {},
+            "validations": {
+              "required": false
+            },
+            "type": "short_text"
+          },
+          {
+            "id": "XsDQKrXqw6au",
+            "title": "Personality traits:",
+            "ref": "245dbe43-812e-4d98-a714-8e274ea0dd63",
+            "properties": {
+              "randomize": false,
+              "allow_multiple_selection": true,
+              "allow_other_choice": true,
+              "vertical_alignment": false,
+              "choices": [
+                {
+                  "id": "tzWQODE0S1tJ",
+                  "ref": "0427703a-7561-4620-8dc1-4b81157444ea",
+                  "label": "Assertive"
+                },
+                {
+                  "id": "WE62WwNN1Ced",
+                  "ref": "76af3d8b-17c2-4b9c-90ce-df602dbf8ba0",
+                  "label": "Creative"
+                },
+                {
+                  "id": "dvT1FXIA5Ncx",
+                  "ref": "2db7d6aa-70f5-4cda-b515-89355e4f64be",
+                  "label": "Energetic"
+                },
+                {
+                  "id": "qiqWXZXrl9dc",
+                  "ref": "dceec6f2-8886-4c9a-98bd-117a8dbfe032",
+                  "label": "Funny"
+                },
+                {
+                  "id": "XRjwkUXey5RR",
+                  "ref": "a0e475a3-4510-4272-a892-2472a419854b",
+                  "label": "Nerdy"
+                },
+                {
+                  "id": "iAC8bKyzGUGT",
+                  "ref": "12d55410-89ee-4381-8ea5-1bf63869ba0b",
+                  "label": "Open-minded"
+                },
+                {
+                  "id": "wmGPXDKr0iRS",
+                  "ref": "21e881c4-0d0a-4fdd-a641-6901151934bb",
+                  "label": "Organized"
+                },
+                {
+                  "id": "Ym3t0u2pcPiW",
+                  "ref": "6a323f7c-550c-4721-8f1d-6d0b1a29cdfa",
+                  "label": "Patient"
+                },
+                {
+                  "id": "u9uqgDn8Bp8s",
+                  "ref": "6bb34017-0877-4fdd-b1bb-13d002bc9414",
+                  "label": "Shy"
+                },
+                {
+                  "id": "Nlu5vDEdLrO3",
+                  "ref": "6b7e1619-e1ee-46c5-8e2d-76ffaa3591cd",
+                  "label": "Social"
+                },
+                {
+                  "id": "0TxSLh90EOX3",
+                  "ref": "0e72daca-e5e9-43e4-8d25-fbc1e08aaad4",
+                  "label": "Sporty"
+                }
+              ]
+            },
+            "validations": {
+              "required": false
+            },
+            "type": "multiple_choice"
+          },
+          {
+            "id": "tiMIhW4zWrOM",
+            "title": "Please elaborate on your child's personality:",
+            "ref": "c8c4be52-ad23-48f9-b2ee-5744417e0153",
+            "properties": {},
+            "validations": {
+              "required": false
+            },
+            "type": "short_text"
+          }
+        ]
+      },
+      "type": "inline_group"
+    },
+    {
+      "id": "l4oLyq80S9Ud",
+      "title": "What is {{hidden:student_first}}'s gender?",
+      "ref": "4b37a177-864b-4a30-98dd-ca4be2d4a565",
+      "properties": {
+        "randomize": false,
+        "allow_multiple_selection": false,
+        "allow_other_choice": false,
+        "vertical_alignment": true,
+        "choices": [
+          {
+            "id": "PWHt4kqvadty",
+            "ref": "088a1714-cd3c-4a0c-bd90-1dabc2a0af3c",
+            "label": "Female"
+          },
+          {
+            "id": "OiEel7Gu97j3",
+            "ref": "adb9ccfd-b4dc-4eea-9b19-24270f3b68ba",
+            "label": "Male"
+          },
+          {
+            "id": "SfcFbeUJpA8f",
+            "ref": "634296e0-5920-470f-a90d-0dea209c9da7",
+            "label": "Non-binary"
+          },
+          {
+            "id": "yemTtGa7ISD2",
+            "ref": "1a6890f3-44a9-4ac9-9093-5d4d0fb98e3e",
+            "label": "Prefer not to say"
+          }
+        ]
+      },
+      "validations": {
+        "required": true
+      },
+      "type": "multiple_choice"
+    },
+    {
+      "id": "Xt08ihENCg19",
+      "title": "What does success look like for {{hidden:student_first}}?",
+      "ref": "4baa57a7-71c0-4141-8a25-52d9d2d62c22",
+      "properties": {
+        "description": "Think about the outcomes or milestones you hope your child will achieve. For example: building confidence, excelling academically, excelling in a specific interest, or achieving long-term goals."
+      },
+      "validations": {
+        "required": true
+      },
+      "type": "long_text"
+    },
+    {
+      "id": "xChabCNlQooE",
+      "title": "What are you looking for in a dream mentor for {{hidden:student_first}}?",
+      "ref": "832f759d-b7b0-4163-bb7d-c5a07545c125",
+      "properties": {
+        "description": "Consider the traits, skills, or values that would make a mentor ideal for your child. For example: a big sister figure studying a STEM field, an inspiring history major who loves basketball, someone who can provide guidance in securing an internship or publishing a research paper."
+      },
+      "validations": {
+        "required": true
+      },
+      "type": "long_text"
+    }
+  ],
+  "hidden": [
+    "parent_email",
+    "parent_first",
+    "parent_last",
+    "parent_phone",
+    "offering",
+    "am_math",
+    "am_science",
+    "am_writing",
+    "am_languages",
+    "am_other",
+    "pp_arts_humanities",
+    "pp_business_finance",
+    "pp_sci_eng_tech",
+    "pp_politics_ethics",
+    "pp_input",
+    "student_archetype",
+    "student_archetype_input",
+    "student_first",
+    "student_last",
+    "school",
+    "location",
+    "grade",
+    "source",
+    "utm_source",
+    "utm_medium",
+    "utm_campaign",
+    "utm_term",
+    "utm_content"
+  ],
+  "_links": {
+    "display": "https://info599864.typeform.com/to/eE2xCG6H",
+    "responses": "https://api.typeform.com/forms/eE2xCG6H/responses"
+  }
+}

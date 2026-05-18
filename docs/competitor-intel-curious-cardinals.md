@@ -20,7 +20,7 @@
 | **SEO scale** | ~786 marketing URLs, ~2,196 app mentor profiles, 121 blog posts | Focused program pages; mentor page TBD |
 | **2026 pivot** | **FlightPlan** — “clearer college strategy” on homepage | SAT live; AI / professional programs planned Q3 2026 |
 
-**Takeaway for Illuminairy:** CC won parent trust with **mentorship narrative**, **parent-first content**, **outcome stories**, and **mentor marketplace SEO**. Illuminairy wins on **digital SAT specificity**, **fixed program structure**, **honest pricing**, and **mistake-driven diagnostics** — do not chase passion-project / FlightPlan positioning.
+**Takeaway for Illuminairy:** CC proved that parents buy **mentorship narrative**, **parent-first content**, **outcome stories**, and **mentor visibility in search** — Illuminairy can win on the **same trust levers**, with **SAT-specific proof** (digital test, 12-week plan, weekly reports, published $1,200). Do **not** copy their **product story** (passion projects, FlightPlan, multi-year subscription, scale claims we can’t back yet). You’re behind on **assets** (blog volume, case studies, review count), not on **strategy**.
 
 ---
 
@@ -90,28 +90,36 @@ Marketing wget exited with code 8 (some server errors); coverage still strong. Z
 
 ### Lead funnel (Typeform → call or webinar)
 
-CC’s primary conversion path was **qualify first, then schedule** — not “pick a time” on the first click.
+**Full field-by-field capture:** [docs/research/cc-get-started-funnel.md](research/cc-get-started-funnel.md) (Typeform API + live pages, May 2026).
+
+CC’s primary path was **qualify first, then schedule** — not “pick a time” on the first click.
 
 ```text
-Ad / SEO / homepage CTA
+Ad / SEO / homepage CTA → /get-started/contact-info
         ↓
-   Typeform intake
-   (/get-started/* — basic info, student insights, parent info, etc.)
+   Typeform P5h8CCfR — parent email + contact
         ↓
-    ┌───┴───┐
-    ↓       ↓
-Book a      Optional webinar
-consult     (if they don’t want a live call yet)
-call
+   /get-started/student-info (Typeform ALTmLSan)
+   program fit, subjects, passion areas, student grade, goals
+   + $380/mo commitment statement
+        ↓
+    ┌───┴────────────────────────┐
+    ↓                            ↓
+Schedule a call (default)    Attend virtual event
+    ↓                            ↓
+/book-a-consultation-call    lu.ma/calendar/cal-LvLbx6gS0ChhPQz
+HubSpot: Alec Katz consult
     ↓
 Personalized plan → mentor match → $380/mo subscription
 ```
 
+**Legacy parallel path** (still in sitemap): `/get-started/basic-info` → HubSpot form → `student-insights` → `add-another-student` — not the redirect from the live contact-info Typeform.
+
 | Step | What CC did | Why it matters |
 |------|-------------|----------------|
-| **Typeform** | Captured parent/student context before sales | Filters tire-kickers; gives reps context; enables segmentation |
-| **Book a call** | Default path to 30-min consult (`/get-started/book-a-consultation-call` and variants) | High-intent families talk to admissions (ex-educator positioning) |
-| **Webinar / events (optional)** | Off-ramp for families not ready for a call — often via **Luma** ([calendar link](https://lu.ma/calendar/cal-LvLbx6gS0ChhPQz?utm_source=website) in site nav as “Upcoming Events”) | Keeps leads warm without forcing synchronous sales; **not archived** (third-party host) |
+| **Typeform (2 steps)** | Parent contact, then student/program detail + **$380/mo** acknowledgment | Filters tire-kickers; gives reps context; spam traps on known emails |
+| **Book a call** | Default path → HubSpot Meetings (`meetings.hubspot.com/alec-katz/curious-cardinals-consultation-call`) | High-intent families talk to admissions |
+| **Webinar / events** | **In-form choice** “Attend a virtual event” → **Luma** ([calendar](https://lu.ma/calendar/cal-LvLbx6gS0ChhPQz?utm_source=getstarted)); also in nav as “Upcoming Events” | Off-ramp without a live sales call; **not archived** |
 
 **Illuminairy contrast:** Public **Calendly** on `/contact#schedule` (and SAT pages) — lower friction, faster to conversation; optional `NEXT_PUBLIC_TYPEFORM_URL` exists in `lib/site.ts` but is not the primary SAT funnel. CC traded speed for **qualification + nurture**.
 
@@ -270,19 +278,23 @@ Manifesto also linked from main marketing site — **core brand narrative**.
 
 ### Messaging to **steal** (adapted, not copied)
 
-| CC pattern | Illuminairy adaptation |
-|------------|------------------------|
-| Parent-first blog | Weekly reports, fit-first consult, parent trust beliefs in `lib/site.ts` |
+Same categories CC used for trust; different job-to-be-done and proof.
+
+| CC trust lever | Illuminairy adaptation |
+|----------------|------------------------|
+| Mentorship narrative | Near-peer GT mentors (1450+), path illumination, continuity — tied to **August SAT**, not open-ended college narrative |
+| Parent-first blog | SAT parent pains (pacing, guarantees, when to start); weekly reports; fit-first consult — see §5 content calendar |
 | “Not tutoring” | “Not a marketplace, not self-study” (`programDifferentiation`) |
 | Founder authenticity | Brianna voice on guarantees, digital SAT, honest fit |
-| Outcome stories | Post-cohort anonymized score + engagement stories (SAT-specific) |
-| FAQ / subscription clarity | SAT Accelerator FAQ page (tuition, refund, schedule) |
+| Outcome stories | Post–Aug 2026 cohort: score band, study habits, parent quote — **one honest SAT story beats vague passion outcomes** for our ICP |
+| Mentor visibility (SEO) | **Curated** mentor pages (quality + program link), not 2k+ thin profiles — target “SAT mentor” + university/geo, not CC’s marketplace scale |
+| FAQ / pricing clarity | SAT Accelerator FAQ (tuition, refund, schedule) — published price vs consult-only |
 
 ### Messaging to **avoid**
 
-- Passion projects, published research, FlightPlan / college strategy (their pivot)  
+- Passion projects, published research, FlightPlan / college strategy (their **product**, not their trust mechanics)  
 - 10k students / 530 reviews scale claims we can't match yet  
-- Mentor directory SEO at their volume without quality control  
+- Chasing mentor URL volume without real profiles and program tie-in  
 
 ---
 

@@ -161,15 +161,15 @@ export default function SatAcceleratorPage() {
           <div className="mt-10 grid gap-10 lg:grid-cols-2 lg:gap-14">
             <div className="space-y-5 text-[15.5px] leading-[1.75] text-ink-soft">
               <p>
-                Most learning that actually changes how someone performs doesn't happen in a
+                Most learning that actually changes how someone performs doesn&apos;t happen in a
                 lecture hall. It happens when one person who knows the material sits with one
-                person who doesn't, spots exactly where they're going wrong, and explains it
+                person who doesn&apos;t, spots exactly where they&apos;re going wrong, and explains it
                 until they get it right.
               </p>
               <p>
-                That's what the 1:1 sessions are for. The mentor sees your student's errors,
+                That&apos;s what the 1:1 sessions are for. The mentor sees your student&apos;s errors,
                 knows the test, and spends the session on the specific problems your student
-                keeps missing. The student does the work — the mentor makes sure it's the
+                keeps missing. The student does the work — the mentor makes sure it&apos;s the
                 right work.
               </p>
             </div>
@@ -195,7 +195,7 @@ export default function SatAcceleratorPage() {
 
           <p className="mt-10 max-w-3xl border-t border-line pt-8 text-[14.5px] leading-[1.7] text-ink-soft">
             Your student gets a named mentor, the same class schedule every week, and a
-            report showing what was covered and what's due — not a promised score. Illuminairy does not
+            report showing what was covered and what&apos;s due — not a promised score. Illuminairy does not
             guarantee any specific SAT score, admissions result, scholarship, or college decision;
             outcomes depend on starting point, attendance, and the work a student puts in.             This
             program gives your student a plan and the people to execute it.

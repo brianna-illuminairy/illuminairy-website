@@ -15,7 +15,7 @@
 | **[sat-messaging-positioning.md](sat-messaging-positioning.md)** | SAT messaging pillars, objection handlers, paste-ready copy |
 | **[sat-competitor-analysis.md](sat-competitor-analysis.md)** | SAT prep competitor profiles, market map, when to recommend us vs. alternatives |
 | **[sat-us-vs-competitors.md](sat-us-vs-competitors.md)** | Us vs. them tables — site-ready differentiation + internal feature matrix |
-| **[competitor-intel-curious-cardinals.md](competitor-intel-curious-cardinals.md)** | Curious Cardinals (adjacent): archive, content winners, pivot, consult talk tracks |
+| **[competitor-intel-curious-cardinals.md](competitor-intel-curious-cardinals.md)** | Curious Cardinals (adjacent): archive, funnel, content calendar, **trust-lever playbook** (narrative, blog, outcomes, mentor SEO) vs SAT proof, consult talk tracks |
 
 ---
 
@@ -23,7 +23,7 @@
 
 - **Writing website copy, emails, or consult scripts** → [brand-voice-and-positioning.md](brand-voice-and-positioning.md), then [sat-messaging-positioning.md](sat-messaging-positioning.md) and [sat-us-vs-competitors.md](sat-us-vs-competitors.md)
 - **Competitive sales prep or comparison slides** → [sat-competitor-analysis.md](sat-competitor-analysis.md) + [sat-us-vs-competitors.md](sat-us-vs-competitors.md)
-- **Mentorship / passion-project competitor (Curious Cardinals)** → [competitor-intel-curious-cardinals.md](competitor-intel-curious-cardinals.md)
+- **Mentorship / passion-project competitor (Curious Cardinals)** — same parent-trust levers, different product proof → [competitor-intel-curious-cardinals.md](competitor-intel-curious-cardinals.md)
 - **Designing UI, marketing layouts, or assets** → [visual-identity.md](visual-identity.md)
 - **Implementing the live site** → [../lib/site.ts](../lib/site.ts) for canonical product facts; voice rules in brand voice doc
 

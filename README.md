@@ -11,6 +11,8 @@ Custom Next.js website for [Illuminairy](https://illuminairy.com) — mentorship
 | [**docs/architecture.md**](docs/architecture.md) | Routes, APIs, integrations, folder layout |
 | [**docs/decisions/**](docs/decisions/README.md) | Architecture decision log (ADRs) |
 | [**CONTRIBUTING.md**](CONTRIBUTING.md) | Setup, PR checklist, commit norms |
+| [**docs/agentic-development/**](docs/agentic-development/README.md) | Spec-driven, Ralph loop, agent verify, growth experiments |
+| [**specs/**](specs/README.md) | PRDs, active spec, Ralph PLAN |
 | [**docs/**](docs/README.md) | Brand voice, visual identity, SAT messaging |
 
 ## Brand & design
@@ -27,9 +29,13 @@ components/       UI components
 lib/              Site config, Stripe, schedules
 docs/             Brand + internal technical docs
 memory-bank/      Session context for humans & AI
+specs/            PRDs, specs, Ralph PLAN
+agent/            Human-owned engineering & growth program files
+growth/           Growth experiment logs
 archives/         Historical reference captures (not deployed)
-scripts/          Env sync, Stripe setup, verification
+scripts/          Env sync, Stripe setup, agent:verify, ralph loop
 .cursor/rules/    Cursor agent rules
+.cursor/skills/   Cursor project skills (plan, review, ship, …)
 ```
 
 ## Local development

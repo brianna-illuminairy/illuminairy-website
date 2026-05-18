@@ -1,0 +1,13 @@
+---
+description: Spec-driven and agentic workflow when working under specs/ or on planned features
+globs: specs/**
+alwaysApply: false
+---
+
+# Agentic workflow
+
+- Read `specs/ACTIVE.md` before implementing; if not `(none)`, follow that SPEC.
+- Prefer `npm run agent:verify` over ad-hoc partial checks before claiming done.
+- End non-trivial sessions: update `memory-bank/activeContext.md` and `progress.md`.
+- Ralph: one PLAN task per session — see `docs/agentic-development/ralph-loop.md`.
+- Do not edit `scripts/agent-verify.mjs` or rename `lib/analytics-events.ts` during experiments.

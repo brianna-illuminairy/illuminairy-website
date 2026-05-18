@@ -107,6 +107,8 @@ These are **trust beliefs**, not feature bullets. Copy and creative should make 
 | 4 | **Never in the dark** — see effort, engagement, goofing off, off-track early | Reports, dashboards, plain parent language |
 | 5 | **It works** — credible approach | Research now; testimonials + before/after after first programs complete |
 
+**Competitive note (adjacent mentorship brands):** Parents may weigh us against platforms that invest heavily in **mentor narrative, parent-first blogs, outcome stories, and searchable mentor pages**. We compete in those **trust dimensions** too—using program structure, reports, and SAT honesty—not by pretending to be a passion-project or college-narrative shop. Strategy vs. Curious Cardinals → [competitor-intel-curious-cardinals.md](competitor-intel-curious-cardinals.md).
+
 ---
 
 ## Why we win vs in-person (full narrative from workshop)

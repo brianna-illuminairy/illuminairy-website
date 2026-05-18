@@ -16,7 +16,25 @@ This is **not** a coursework or AIMA assignment repo. Do not apply academic “s
 | [`docs/architecture.md`](docs/architecture.md) | Routes, APIs, integrations, folder layout |
 | [`docs/decisions/`](docs/decisions/README.md) | Why we chose stacks and patterns — add an ADR for non-trivial choices |
 | [`docs/designer-brief.md`](docs/designer-brief.md) | Brand doc index |
+| [`docs/competitor-intel-curious-cardinals.md`](docs/competitor-intel-curious-cardinals.md) | Adjacent mentorship competitor — trust levers, funnel, when writing blog or competitive copy |
 | [`lib/site.ts`](lib/site.ts) | Canonical product facts, tuition, hero copy, program structure |
+| [`docs/agentic-development/`](docs/agentic-development/README.md) | Spec-driven, Ralph, autoresearch, growth experiments, gstack |
+| [`specs/`](specs/README.md) | PRDs, specs, `ACTIVE.md`, Ralph `PLAN.md` |
+
+## Agentic workflows
+
+Patterns for multi-session AI work (full guide: [`docs/agentic-development/README.md`](docs/agentic-development/README.md)):
+
+| Pattern | Command / location |
+|---------|-------------------|
+| Spec-driven | `specs/_templates/` → set `specs/ACTIVE.md` |
+| Ralph (one task per session) | `npm run ralph:next` → `specs/ralph/PLAN.md` |
+| Engineering verify gate | `npm run agent:verify` (do not edit `scripts/agent-verify.mjs`) |
+| Growth experiments | `agent/growth-program.md`, `growth/experiments/`, `lib/analytics-events.ts` |
+| Cursor skills | `.cursor/skills/` (plan, review, ship, investigate, ralph-iteration) |
+| Claude Code | [`docs/agentic-development/claude-code-and-gstack.md`](docs/agentic-development/claude-code-and-gstack.md) |
+
+Non-trivial features: start with a spec. End sessions: update memory-bank.
 
 ## Golden rules
 
@@ -67,9 +85,10 @@ After a session with meaningful changes:
 Before marking work complete:
 
 ```bash
-npm run lint
-npm run build
+npm run agent:verify
 ```
+
+(`agent:verify` runs lint and build. Equivalent: `npm run lint` && `npm run build`.)
 
 For contact/Stripe/Calendly changes, say what env vars are required and whether manual QA steps are needed.
 

@@ -15,14 +15,22 @@ npm run dev
 
 ## Before you open a PR
 
-1. Run `npm run lint` and `npm run build`.
+1. Run **`npm run agent:verify`** (lint + build).
 2. If you changed product facts, update **`lib/site.ts`** and relevant **`docs/`** files.
 3. Update **`memory-bank/activeContext.md`** and **`memory-bank/progress.md`** for non-trivial work.
 4. Add an **ADR** in `docs/decisions/` for architectural or integration choices (use `0000-template.md`).
 
+## Spec-driven work
+
+Non-trivial features start with a spec:
+
+1. Copy templates from **`specs/_templates/`** into `specs/YYYY-MM-slug/`.
+2. Set **`specs/ACTIVE.md`** to your `SPEC.md` path.
+3. See **[`docs/agentic-development/spec-driven.md`](docs/agentic-development/spec-driven.md)**.
+
 ## AI assistants
 
-Read **[`AGENTS.md`](AGENTS.md)** and skim **`memory-bank/activeContext.md`** at session start.
+Read **[`AGENTS.md`](AGENTS.md)** and skim **`memory-bank/activeContext.md`** at session start. For multi-session work, use **`npm run ralph:next`** and **[`docs/agentic-development/`](docs/agentic-development/README.md)**.
 
 ## Copy & brand
 

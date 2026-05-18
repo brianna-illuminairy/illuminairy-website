@@ -12,4 +12,4 @@ Production site for illuminairy.com — SAT Accelerator enrollment, contact, bra
 - Brand voice: `docs/brand-voice-and-positioning.md`; no SAT score guarantees.
 - Never expose `TUTOR_CALENDLY_URL` on public pages or `NEXT_PUBLIC_*` env.
 - Do not apply academic/coursework coding style rules; this is a commercial TypeScript repo.
-- Verify with `npm run lint` and `npm run build` before claiming done.
+- Verify with `npm run agent:verify` before claiming done.

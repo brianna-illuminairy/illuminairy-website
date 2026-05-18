@@ -26,6 +26,7 @@ Use [0000-template.md](0000-template.md) for new entries.
 | [0003](0003-stripe-checkout-enrollment.md) | Stripe Checkout for enrollment | accepted |
 | [0004](0004-calendly-public-vs-invite.md) | Public vs invite-only Calendly | accepted |
 | [0005](0005-resend-contact-form.md) | Resend for contact form | accepted |
+| [0006](0006-agentic-development-workflow.md) | Agentic development workflow | accepted |
 
 ## When to add an ADR
 

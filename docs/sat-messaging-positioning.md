@@ -17,6 +17,10 @@ Updated: May 2026
 
 **Who it's not for.** Families looking for the cheapest option, a guaranteed score in exchange for a check, or a passive video library. We say this openly, and our consultation is designed to confirm fit before enrollment — not pressure a sale.
 
+### Parent trust vs adjacent mentorship brands
+
+Families sometimes compare us to **long-horizon mentorship** platforms (near-peer guides, parent blogs, case studies, mentor SEO). Those brands win on **trust categories**—not only on “SAT features.” Illuminairy can **use the same categories** with **SAT-specific proof**: illuminate-the-path copy, week-one diagnostics, six 1:1s shaped by mistakes, weekly parent reports, published tuition, and an honest **no score guarantee** (Pillar B). **Do not** copy their **product story** (passion projects, published research, college-strategy pivots, volume claims we cannot verify). Playbook and CC funnel detail → [competitor-intel-curious-cardinals.md](competitor-intel-curious-cardinals.md) and [research/cc-get-started-funnel.md](research/cc-get-started-funnel.md).
+
 ---
 
 ## 2. Market pains and Illuminairy answers
