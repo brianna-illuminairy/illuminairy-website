@@ -14,7 +14,7 @@ export function ProgramDifferentiation({ showResearchNote = true }: { showResear
         <div className="mt-12 overflow-hidden rounded-3xl border border-line bg-ivory shadow-editorial">
           <div className="grid border-b border-line bg-navy-gradient px-5 py-4 text-[11px] font-bold uppercase tracking-[0.1em] text-ivory sm:grid-cols-[0.85fr_1fr_1fr] sm:px-6">
             <span className="hidden sm:block" />
-            <span className="text-ivory/70">Typical SAT prep</span>
+            <span className="text-ivory/70">Typical SAT program</span>
             <span className="text-gold-light">Illuminairy</span>
           </div>
           <ul>

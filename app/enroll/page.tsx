@@ -23,7 +23,7 @@ export default async function EnrollPage({
       <PageHero
         eyebrow="SAT Accelerator · Enrollment"
         title="Reserve your spot in the SAT Accelerator."
-        text={`Twelve weeks with a clear plan, vetted mentors, and weekly progress reports for the ${site.satDate} SAT. Program tuition is ${satProgram.tuitionDisplay}.`}
+        text={`Twelve weeks, Georgia Tech mentors who scored 1450+, six private 1:1s, live R&W and Math classes, and a progress report every week — for the ${site.satDate} SAT. Tuition: ${satProgram.tuitionDisplay}.`}
         secondary={{ label: "Need to talk first?", href: "/contact" }}
       />
 
@@ -62,9 +62,9 @@ export default async function EnrollPage({
               One-time program tuition
             </p>
             <p className="mt-4 text-[14.5px] leading-[1.6] text-ink-soft">
-              We use this to set up the student account, connect mentors and
-              instructors, and keep parents aligned on schedules and updates.
-              Then you&apos;ll continue to secure payment.
+              After enrollment, we set up your student&apos;s account, assign a
+              mentor, and send you the class schedule, session links, and your
+              mentor&apos;s name. Then you&apos;ll continue to secure payment.
             </p>
 
             {canceled && (

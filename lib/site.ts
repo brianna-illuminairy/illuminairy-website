@@ -166,7 +166,7 @@ export const programDifferentiation = {
   eyebrow: "The difference",
   title: "Better mentors and instructors. A better program.",
   intro:
-    "Illuminairy is not a prep center and not a tutor marketplace. It is one twelve-week program: your student gets a named mentor, week-one diagnostics, six private 1:1s based on those results, two live classes per week, and assigned practice with a report sent to you every week.",
+    "Illuminairy is not a tutoring center and not a tutor marketplace. It is one twelve-week program: your student gets a named mentor, week-one diagnostics, six private 1:1s based on those results, two live classes per week, and assigned practice with a report sent to you every week.",
   rows: [
     {
       aspect: "Who teaches",
@@ -234,7 +234,7 @@ export const satFeatures = [
   },
   {
     icon: UserCheck,
-    title: "1:1 is the engine",
+    title: "Six private 1:1s",
     text: "Six private sessions with a mentor who reviews your student's errors before every meeting and adjusts what they work on each time."
   },
   {
@@ -245,7 +245,7 @@ export const satFeatures = [
   {
     icon: LockKeyhole,
     title: "Weekly accountability",
-    text: "Progress reports every week — what was covered, what's due, and where practice scores are heading."
+    text: "Progress reports every week — what was covered, what's due, and whether assigned practice was completed."
   }
 ];
 
@@ -283,11 +283,11 @@ export const platformAreas = [
 ];
 
 export const mentorStandards = [
-  "Verified academic background",
-  "Verified 1450+ SAT scores for SAT mentors",
-  "Communication screening",
-  "Professionalism and reliability",
-  "Ability to instruct small groups and mentor one-on-one"
+  "Currently enrolled at or graduated from a selective university",
+  "Verified 1450+ SAT score (for SAT mentors)",
+  "Screened in a live interview for how they explain concepts",
+  "Responsive to scheduling and shows up prepared",
+  "Can teach groups of ten and run private 1:1s"
 ];
 
 export const trustPillars = [
@@ -368,7 +368,7 @@ export const parentTrustBeliefs = {
     {
       icon: Eye,
       title: "Never in the dark",
-      text: "Every week you get a report: what was covered, what practice was assigned, whether it was completed, and how scores are trending — not 'session went fine.'"
+      text: "Every week you get a report: what was covered, what practice was assigned, and whether it was completed — not 'session went fine.'"
     },
     {
       icon: BadgeCheck,
@@ -381,7 +381,7 @@ export const parentTrustBeliefs = {
 /** In-person comparison — brand-voice § "Why we win vs in-person" */
 export const inPersonComparison = {
   eyebrow: "Why families choose illuminairy",
-  title: "What in-person prep misses.",
+  title: "What in-person tutoring misses.",
   columns: [
     {
       label: "Big group class",
@@ -428,11 +428,11 @@ export const noGuarantee = {
   eyebrow: "Our commitment",
   title: "Why we don't guarantee a score.",
   summary:
-    "Most prep companies offer score guarantees with fine print that voids them if you miss a single assignment or deadline. That's not a guarantee — it's a loophole. We skip the marketing number and commit to the things we actually control.",
+    "Most SAT companies offer score guarantees with fine print that voids them if you miss a single assignment or deadline. That's not a guarantee — it's a loophole. We skip the marketing number and commit to the things we actually control.",
   commitments: [
     "The program runs exactly as described: twelve weeks, two live classes per week, six private 1:1s, diagnostics in week one, and assigned practice every week.",
     "Your student's mentor scored 1450+ on the SAT, comes from a selective university, and was chosen because they can teach — not just because they tested well.",
-    "You get a progress report every week showing what was covered, what's due next, and where your student's scores are heading.",
+    "You get a progress report every week showing what was covered, what's due next, and whether the assigned practice was completed.",
     "Before you enroll, we talk about whether this program is actually the right fit. If it's not, we'll say so — we'd rather lose the enrollment than take one we can't deliver on.",
     "The refund policy is linked on every program page. It's short and straightforward — not 18 pages of conditions."
   ],
@@ -496,7 +496,7 @@ export const satHero = {
 /** Digital SAT callout — brand-voice § parent education */
 export const digitalSat = {
   eyebrow: "The test changed",
-  title: "The SAT is digital. Your student's prep should be too.",
+  title: "The SAT is digital. Your student's practice should be too.",
   metaphor:
     "You wouldn't practice soccer on a baseball field. Don't prepare for a digital test with paper worksheets.",
   points: [

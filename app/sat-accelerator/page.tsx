@@ -185,20 +185,20 @@ export default function SatAcceleratorPage() {
                 ask real questions.
               </p>
               <p className="font-medium text-ink">
-                That is what the SAT Accelerator delivers: Georgia Tech mentors (1450+),
-                a clear twelve-week plan, week-one diagnostics that shape six private 1:1s, live
-                classes, practice that reinforces through repetition, and weekly reports — so
-                families always know what was covered and what&apos;s due.
+                The SAT Accelerator puts this into practice: Georgia Tech mentors who scored 1450+,
+                week-one diagnostics, six private 1:1s based on those results, live R&W and Math
+                classes, assigned practice between every session, and a report to parents every week
+                showing what was covered and what&apos;s next.
               </p>
             </div>
           </div>
 
           <p className="mt-10 max-w-3xl border-t border-line pt-8 text-[14.5px] leading-[1.7] text-ink-soft">
-            You get a mentor who knows the material, a schedule your family can follow, and
-            weekly clarity on effort and progress — not a promised score. Illuminairy does not
+            Your student gets a named mentor, the same class schedule every week, and a
+            report showing what was covered and what's due — not a promised score. Illuminairy does not
             guarantee any specific SAT score, admissions result, scholarship, or college decision;
-            outcomes depend on starting point, attendance, and the work a student puts in. This
-            program is built to make that work count.
+            outcomes depend on starting point, attendance, and the work a student puts in.             This
+            program gives your student a plan and the people to execute it.
           </p>
         </div>
       </section>

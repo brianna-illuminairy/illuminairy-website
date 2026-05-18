@@ -7,7 +7,7 @@ import { scheduleLink, site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "About",
   description:
-    "Illuminairy is a premium mentorship and applied learning company — illuminate + luminary. Launching with Georgia Tech-led SAT preparation and expanding from there."
+    "Illuminairy runs mentorship programs starting with the SAT Accelerator — twelve weeks, Georgia Tech mentors who scored 1450+, and weekly progress reports. Based in Atlanta."
 };
 
 export default function AboutPage() {
@@ -16,7 +16,7 @@ export default function AboutPage() {
       <PageHero
         eyebrow="About Illuminairy"
         title="Your guiding light for goals and growth."
-        text="Illuminairy exists because high-trust learning should feel clearer, more guided, and more human. We are starting with premium SAT preparation and building toward professional and business programs."
+        text="Illuminairy runs the SAT Accelerator: twelve weeks, Georgia Tech mentors who scored 1450+, week-one diagnostics, six private 1:1s, and a progress report sent to parents every week. Professional and business programs are next."
         primary={{ label: "Explore Programs", href: "/programs" }}
         secondary={{ label: "Contact Us", href: "/contact" }}
       />
@@ -26,24 +26,24 @@ export default function AboutPage() {
           <SectionHeader
             eyebrow="Why it exists"
             title="A better way to learn with mentors."
-            text="Most SAT prep feels opaque and transactional — rotating staff, unclear progress, promises that sound too good. Illuminairy is built on what research and families both want: mentors and instructors who have walked the path, a program you can see, and weekly honesty about effort and results."
+            text="Most SAT programs rotate through different tutors, give you vague updates, and promise scores they can't control. Illuminairy gives you a named mentor, a twelve-week schedule, and a report every week showing exactly what your student worked on and how they did."
           />
           <div className="grid gap-4">
             {[
               {
                 icon: GraduationCap,
                 title: "Start with a real need",
-                text: "SAT preparation is a high-stakes category where trust, clarity, and mentor quality matter immediately."
+                text: "Parents spend thousands on SAT tutoring and usually can't tell if it's working. We start here because the problem is obvious and the fix is specific."
               },
               {
                 icon: Blocks,
                 title: "Build a clear, repeatable plan",
-                text: "Instead of one-off sessions, Illuminairy packages mentorship and instruction into guided programs with a defined plan, support, and expectations."
+                text: "One twelve-week program with the same schedule every week — not one-off sessions where you start over each time."
               },
               {
                 icon: Compass,
                 title: "Expand with intention",
-                text: "After SAT, the same approach will support professional and business programs — always with clear outcomes and excellent mentors."
+                text: "After the SAT Accelerator, we'll open professional and business programs — details and pricing published when they're ready."
               }
             ].map((item) => (
               <FeatureCard key={item.title} {...item} />
@@ -59,10 +59,10 @@ export default function AboutPage() {
           <p className="mt-6 eyebrow text-gold-light">The thesis</p>
           <blockquote className="mt-7">
             <p className="text-balance text-[clamp(1.75rem,1.1rem+2.4vw,3rem)] font-light leading-[1.15] tracking-[-0.025em] text-ivory">
-              Legacy prep programs and expertise marketplaces are fragmented, opaque, and
-              transactional. <span className="text-gold-light">Illuminairy is building guided
-              near-peer mentorship and applied learning</span>, starting with the SAT
-              Accelerator and expanding carefully from there.
+              Most SAT companies rotate tutors, hide results behind vague updates, and
+              promise scores they can't control. <span className="text-gold-light">Illuminairy gives
+              your student a named mentor, a fixed twelve-week schedule, and a report every
+              week</span> — starting with the SAT Accelerator.
             </p>
           </blockquote>
         </div>
@@ -83,7 +83,7 @@ export default function AboutPage() {
               },
               {
                 title: "Who we serve",
-                text: "Ambitious students and families who want a clear plan, accountability, and mentors who have actually succeeded — not a generic prep center."
+                text: "Students and families who want to know exactly what happens each week, who's teaching, and how it's going — not a tutoring center where you hope for the best."
               },
               {
                 title: "How to reach us",

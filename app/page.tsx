@@ -127,7 +127,7 @@ export default function Home() {
         color="sage"
         eyebrow="Who it's for"
         title="Built for families, students, and mentors."
-        text="Parents looking at SAT prep options. Students targeting selective colleges. Mentors from Georgia Tech who want to teach — not just tutor."
+        text="Parents comparing SAT programs. Students targeting selective colleges. Mentors from Georgia Tech who want to teach — not just tutor."
       >
         <div className="grid gap-4 sm:grid-cols-3">
           {[

@@ -61,6 +61,19 @@ npx --yes serve archives/curious-cardinals-2026-05-18/marketing -p 4321
 
 Marketing wget exited with code 8 (some server errors); coverage still strong. Zero-byte files: 0.
 
+### Spot-check: URLs you asked about
+
+| URL | Archived? | Where / notes |
+|-----|-----------|----------------|
+| [curiouscardinals.com/pricing](https://www.curiouscardinals.com/pricing) | **Yes** | `marketing/curiouscardinals.com/pricing.html` — includes **$380/mo**, 4 sessions, 2-week evaluation, money-back guarantee, CTA → `/get-started/contact-info` |
+| [curiouscardinals.com/reviews](https://www.curiouscardinals.com/reviews) | **Yes** | `marketing/curiouscardinals.com/reviews.html` |
+| [curiouscardinals.com/mentors](https://www.curiouscardinals.com/mentors) | **Yes** | `marketing/curiouscardinals.com/mentors.html` (Webflow directory). Separate app profiles: `app-mentors/app.curiouscardinals.com/mentors/*.html` (~2,196) |
+| [curiouscardinals.com/case-study](https://www.curiouscardinals.com/case-study) | **Yes** | `marketing/curiouscardinals.com/case-study.html` + individual `/case-study/*` pages |
+| [curiouscardinals.com/case-studies/elise-l](https://www.curiouscardinals.com/case-studies/elise-l) | **Yes** | `marketing/curiouscardinals.com/case-studies/elise-l.html` |
+| [lu.ma/.../cal-LvLbx6gS0ChhPQz](https://luma.com/calendar/cal-LvLbx6gS0ChhPQz?utm_source=website) | **No (external)** | **Link only** in archived nav (“Upcoming Events” on pricing and other pages). Luma was **not** in wget domain allowlist — webinar/event pages live on Luma, not in our mirror |
+
+`www.` vs non-`www`: sitemap uses `curiouscardinals.com`; files are saved under `marketing/curiouscardinals.com/`. Open locally via archive branch paths above (not live URLs when offline).
+
 ---
 
 ## 2. Business model & positioning (May 2026 snapshot)
@@ -73,12 +86,42 @@ Marketing wget exited with code 8 (some server errors); coverage still strong. Z
 - Flagship launch: **FlightPlan** — “A clearer college strategy starts here”
 - Tracks: Portfolio, Organization, **Research**, Content creation
 - Academic mentorship positioned as **“Better than tutoring”**
-- Funnel: free 30-min consult → personalized learning plan → mentor match → weekly sessions + parent notes
+- Post-click funnel: **Typeform intake** → book a call (not a bare Calendly link on the homepage)
+
+### Lead funnel (Typeform → call or webinar)
+
+CC’s primary conversion path was **qualify first, then schedule** — not “pick a time” on the first click.
+
+```text
+Ad / SEO / homepage CTA
+        ↓
+   Typeform intake
+   (/get-started/* — basic info, student insights, parent info, etc.)
+        ↓
+    ┌───┴───┐
+    ↓       ↓
+Book a      Optional webinar
+consult     (if they don’t want a live call yet)
+call
+    ↓
+Personalized plan → mentor match → $380/mo subscription
+```
+
+| Step | What CC did | Why it matters |
+|------|-------------|----------------|
+| **Typeform** | Captured parent/student context before sales | Filters tire-kickers; gives reps context; enables segmentation |
+| **Book a call** | Default path to 30-min consult (`/get-started/book-a-consultation-call` and variants) | High-intent families talk to admissions (ex-educator positioning) |
+| **Webinar / events (optional)** | Off-ramp for families not ready for a call — often via **Luma** ([calendar link](https://lu.ma/calendar/cal-LvLbx6gS0ChhPQz?utm_source=website) in site nav as “Upcoming Events”) | Keeps leads warm without forcing synchronous sales; **not archived** (third-party host) |
+
+**Illuminairy contrast:** Public **Calendly** on `/contact#schedule` (and SAT pages) — lower friction, faster to conversation; optional `NEXT_PUBLIC_TYPEFORM_URL` exists in `lib/site.ts` but is not the primary SAT funnel. CC traded speed for **qualification + nurture**.
+
+**Takeaway:** If Illuminairy adds a blog or paid traffic, a short Typeform *before* Calendly can improve consult quality; a **recorded webinar** (program walkthrough, “week one diagnostics”) is a useful middle step for parents who won’t book yet.
 
 ### Product tracks (marketing sitemap)
 
 - `/passion-project`, `/research`, `/academic-mentorship`, `/organization`, `/content-creation`
 - `/how-it-works`, `/pricing`, `/reviews`, `/faq`
+- `/get-started/*` — Typeform-led funnel (basic info, book-a-consultation-call, confirmation, async match request)
 - `/our-mentors/*` (~474 Webflow profiles)
 - Case studies: `/case-studies/*`, `/case-study/*`
 - Past projects & holiday workshops (long-tail SEO)
@@ -95,7 +138,7 @@ These three are the **canonical proof stories** CC puts in front of families.
 
 ### Pricing (subscription model)
 
-Documented offering (not always prominent on marketing pages; confirm on consult):
+**Confirmed on archived `/pricing` page** (May 2026 snapshot) and consult:
 
 | | Curious Cardinals | Illuminairy SAT Accelerator |
 |---|-------------------|----------------------------|
@@ -105,7 +148,7 @@ Documented offering (not always prominent on marketing pages; confirm on consult
 | **12-week cost** | ~**$1,140** (3 months × $380) for 12 mentor hours | **$1,200** fixed |
 | **Annual run rate** | ~**$4,560/year** if retained 12 months (48 mentor hours) | Cohort-based; not a rolling subscription |
 
-**Consultation:** Sales path is free consult → plan → mentor match (same motion as Illuminairy’s Calendly consult, but CC pricing was often clarified on the call rather than on the homepage).
+**Enrollment path:** After Typeform + consult (or webinar nurture), pricing (**$380/mo**) was confirmed on the call — not always on the marketing homepage.
 
 **Comparison note for families:** CC is cheaper **per mentor hour** in isolation but is **ongoing** and does not include structured SAT classes, diagnostics, pacing work, or digital-test practice. Illuminairy is a **bounded** exam-prep program at similar total cost for a single summer.
 

@@ -1,0 +1,41 @@
+---
+description: Banned marketing phrases in customer-facing copy
+globs: "{app/**/*.tsx,lib/site.ts,components/**/*.tsx}"
+alwaysApply: false
+---
+
+# Banned copy phrases
+
+Never use these words or patterns in customer-facing strings. Replace with something specific and concrete.
+
+| Banned | Why | Write instead |
+|--------|-----|---------------|
+| prep (as noun or modifier) | means nothing specific | "program," "practice," "tutoring," or name what's actually happening |
+| engine, pivot engine | metaphor, not a feature | say what the 1:1s or sessions actually do |
+| blueprint | vague planning metaphor | "schedule" or "twelve-week program" |
+| rhythm, cadence | marketer shorthand for "schedule" | "the same schedule every week" |
+| leverage | corporate jargon | "use" |
+| ecosystem | meaningless in this context | name the actual parts |
+| holistic | says nothing | describe what's included |
+| empower, empowerment | empty verb | say what the student can do after |
+| unlock, unlock potential | cliché | say what happens specifically |
+| journey | vague | "twelve weeks" or "the program" |
+| transform, transformation | overpromise | say what changes and how |
+| seamless | never true, never specific | describe the actual experience |
+| robust | filler adjective | drop it or say what makes it strong |
+| curated | overused | "chosen" or "picked" |
+| elevate | vague verb | say what improves and by how much |
+| cutting-edge | cliché | name the specific thing |
+| world-class | unprovable | use a specific credential |
+| best-in-class | unprovable | use a specific credential |
+| synergy | corporate jargon | say what works together and why |
+| deep dive | cliché | "focus on" or "work through" |
+| game-changer | hyperbole | say what's different and why it matters |
+| next-level | empty modifier | drop it |
+| proven (without citing proof) | unsubstantiated | cite the study or drop it |
+| structured (as adjective for program) | brand-voice ban | "twelve-week program" or describe what's in it |
+| personalized (without saying how) | vague | say what the mentor does differently for each student |
+| reinforce / reinforces | vague | "your student works the same problem types until they stop getting them wrong" |
+| human explanation layer | marketer metaphor | "a mentor who explains why you got it wrong" |
+
+When in doubt: if a phrase could describe any company's product, it's too vague. Replace it with something only Illuminairy can say.

@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     template: "%s · Illuminairy"
   },
   description:
-    "Better SAT mentors and instructors — diagnostics, six personalized 1:1s, live classes, and practice. Not self-study or à la carte sessions.",
+    "Georgia Tech mentors who scored 1450+, week-one diagnostics, six private 1:1s, live R&W and Math classes, and a progress report every week. Twelve weeks for the August 2026 SAT.",
   alternates: {
     canonical: "/"
   },
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
         url: "/og-image.svg",
         width: 1200,
         height: 630,
-        alt: "Illuminairy — premium mentorship and applied learning"
+        alt: "Illuminairy — SAT Accelerator with Georgia Tech mentors"
       }
     ],
     locale: "en_US",

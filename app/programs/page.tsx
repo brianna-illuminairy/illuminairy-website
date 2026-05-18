@@ -93,7 +93,7 @@ export default function ProgramsPage() {
       >
         <div className="rounded-3xl border border-sky-ink/15 bg-ivory/85 p-7 backdrop-blur-sm">
           <p className="text-[16px] leading-[1.65] text-sky-ink">
-            SAT prep comes first because families need clarity now. Future programs will use
+            The SAT Accelerator comes first because families need it now. Future programs will use
             the same approach: live classes, weekly reports, clear policies, and mentors held to a high bar.
           </p>
           <div className="mt-6 flex flex-wrap gap-2 text-[12px]">

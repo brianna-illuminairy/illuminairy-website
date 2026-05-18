@@ -38,7 +38,7 @@ export default async function ContactPage({
             <SectionHeader
               eyebrow="Support"
               title="Direct contact for families and mentors."
-              text="Illuminairy provides support for educational services, consultations, billing questions, mentor applications, and partnership inquiries."
+              text="Email us about the SAT Accelerator, enrollment, billing, mentor applications, or anything else. We respond within one business day."
             />
             <div className="mt-9 grid gap-3">
               <a
