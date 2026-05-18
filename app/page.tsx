@@ -98,7 +98,7 @@ export default function Home() {
           <SectionHeader
             eyebrow="Why illuminairy"
             title="Structure you can see. Mentors you can trust."
-            text="Families get a clear program outline, live schedule, and policies upfront. Students get accountability and near-peer guidance. Mentors work inside a defined cohort model — not open-ended gig matching."
+            text="Families get a clear program outline, live schedule, and policies upfront. Students get near-peer guidance and weekly mentor check-ins. Every cohort has a defined schedule and a real human mentor — not a random name from a tutoring website."
           />
           <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
             {trustPillars.map((item) => (

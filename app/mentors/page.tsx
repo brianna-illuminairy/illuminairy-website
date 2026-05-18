@@ -51,7 +51,7 @@ export default function MentorsPage() {
         <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.9fr_1.1fr]">
           <SectionHeader
             eyebrow="Model"
-            title="High-performing educated talent. Not anonymous matching."
+            title="High-performing educators — chosen carefully."
             text="The mentor model is built around students, graduates, and senior practitioners who can make learning feel clear, current, and personal — not generic and transactional."
           />
           <div className="grid gap-4 md:grid-cols-2">
@@ -119,7 +119,7 @@ export default function MentorsPage() {
           <SectionHeader
             eyebrow="SAT mentor standard"
             title="The first cohort starts with academic credibility."
-            text="For SAT programs, mentors are Georgia Tech students, Georgia Tech alumni, or similarly qualified academic mentors who scored 1450+ on the SAT where applicable. Illuminairy may verify score records, academic background, communication, professionalism, and availability."
+            text="For SAT programs, mentors are Georgia Tech students, Georgia Tech alumni, or similarly qualified academic mentors who scored 1450+ on the SAT. Illuminairy verifies score records, academic background, communication, professionalism, and availability."
           />
           <div className="mt-9">
             <ButtonLink href={mentorApplyLink} icon={Send}>

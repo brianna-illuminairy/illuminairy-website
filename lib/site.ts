@@ -114,7 +114,7 @@ export const satFeatures = [
   {
     icon: Target,
     title: "Diagnostic-driven plan",
-    text: "Preparation is shaped around strengths, gaps, pacing, and weekly accountability."
+    text: "Preparation is shaped around strengths, gaps, pacing, and weekly mentor check-ins."
   },
   {
     icon: GraduationCap,
@@ -163,8 +163,7 @@ export const platformAreas = [
 
 export const mentorStandards = [
   "Verified academic background",
-  "1450+ SAT score standard for SAT mentors",
-  "Score verification where applicable",
+  "Verified 1450+ SAT scores for SAT mentors",
   "Communication screening",
   "Professionalism and reliability",
   "Ability to teach clearly"

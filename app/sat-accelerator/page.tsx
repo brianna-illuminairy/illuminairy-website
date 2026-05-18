@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 const schedule = [
   "24 live small-group sessions across 12 weeks",
   "6 private 1:1 coaching sessions",
-  "Weekly accountability and preparation guidance",
+  "Weekly check-ins with your mentor on pace and priorities",
   "Diagnostic review to identify priority areas",
   "Virtual delivery for students across the United States",
   "Cohorts capped at 10 students"
@@ -68,8 +68,8 @@ export default function SatAcceleratorPage() {
         <div className="mx-auto max-w-7xl">
           <SectionHeader
             eyebrow="What students receive"
-            title="Live instruction, private coaching, and accountability — built into one program."
-            text="The Accelerator is designed to help students prepare with consistency, focus, and mentor guidance. It doesn't promise a specific score. It creates the structure students need to do the work."
+            title="Live teaching, private coaching, and a mentor who knows your name."
+            text="The Accelerator is built around the way people have always learned best: a real relationship, honest feedback, and work that earns understanding — with a clear schedule so preparation actually happens."
           />
           <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {satFeatures.map((item) => (
@@ -110,7 +110,7 @@ export default function SatAcceleratorPage() {
             <SectionHeader
               eyebrow="Mentors"
               title="Georgia Tech-led, with a high bar."
-              text="SAT mentors are Georgia Tech students, alumni, or similarly qualified academic mentors who scored 1450+ on the SAT where applicable — and can teach clearly."
+              text="SAT mentors are Georgia Tech students, alumni, or similarly qualified academic mentors who scored 1450+ on the SAT — and can teach clearly."
             />
             <div className="mt-7">
               <ButtonLink href="#schedule" variant="secondary" icon={Calendar}>
@@ -120,10 +120,10 @@ export default function SatAcceleratorPage() {
           </div>
           <div className="grid gap-4 md:grid-cols-2 lg:col-span-2">
             {[
-              "Verified SAT performance where applicable",
+              "Verified 1450+ SAT scores",
               "Communication and professionalism screening",
               "Near-peer perspective for college-bound students",
-              "Teaching ability over generic matching"
+              "Chosen for teaching ability — not assigned at random"
             ].map((text) => (
               <div
                 key={text}
@@ -138,15 +138,57 @@ export default function SatAcceleratorPage() {
 
       <section className="bg-ivory-200/50 px-5 py-20 sm:px-8 lg:px-12">
         <div className="mx-auto max-w-7xl rounded-3xl border border-line bg-ivory p-9">
-          <Eyebrow>An honest note on outcomes</Eyebrow>
-          <h2 className="mt-5 text-[1.75rem] font-light leading-[1.1] tracking-[-0.025em] text-ink sm:text-[2.125rem]">
-	            We do not guarantee a score. We promise the structure.
+          <Eyebrow tone="gold">How people actually learn</Eyebrow>
+          <h2 className="mt-5 text-balance text-[1.75rem] font-light leading-[1.1] tracking-[-0.025em] text-ink sm:text-[2.25rem]">
+            The oldest model of learning — built for the SAT.
           </h2>
-          <p className="mt-5 max-w-4xl text-[15.5px] leading-[1.7] text-ink-soft">
-            Illuminairy does not guarantee specific SAT score increases, admissions outcomes,
-            scholarship results, or college decisions. The SAT Accelerator is designed to support
-            preparation through live instruction, structured practice, diagnostics, and
-            accountability — done well.
+
+          <div className="mt-10 grid gap-10 lg:grid-cols-2 lg:gap-14">
+            <div className="space-y-5 text-[15.5px] leading-[1.75] text-ink-soft">
+              <p>
+                For most of human history, the deepest learning did not happen in a lecture hall
+                with hundreds of faces. It happened in relationship: one teacher, one student,
+                honest feedback, and work that earns understanding. Socrates with his
+                interlocutors. Aristotle with Alexander. A bonded pair — not a conveyor belt.
+              </p>
+              <p>
+                That is still how mastery forms. A mentor can light the way — see the path,
+                name the next move, hold the standard. Only the student can take the steps. Our
+                job is to make both roles clear: guidance from someone who has walked it, and
+                ownership of the work that actually moves the score.
+              </p>
+            </div>
+
+            <div className="space-y-5 text-[15.5px] leading-[1.75] text-ink-soft">
+              <p>
+                Research has measured what intuition already knew. Benjamin Bloom&apos;s landmark
+                study found that one-to-one tutoring can raise achievement by roughly{" "}
+                <span className="font-medium text-ink">two standard deviations</span> compared with
+                conventional classroom instruction — the famous &ldquo;two sigma&rdquo; result (
+                <em>Educational Researcher</em>, 1984). Work on deliberate, effortful practice
+                shows the same pattern: skill grows when difficulty is calibrated, feedback is
+                timely, and a teacher keeps the student honest about the work.
+              </p>
+              <p className="font-medium text-ink">
+                That is what the SAT Accelerator delivers: Georgia Tech-led mentors, cohorts
+                capped at ten, twenty-four live small-group sessions, six private 1:1s, and a
+                twelve-week arc that makes serious preparation the default — with transparency
+                into effort and progress toward the goal, so families and students always know
+                where they stand and what comes next.
+              </p>
+            </div>
+          </div>
+
+          <p className="mt-10 max-w-3xl text-[16px] leading-[1.7] text-ink">
+            We do not sell a score on a checkout page. We give you a mentor who lights the way,
+            a structure you can see, and an honest read on effort and progress — so when the
+            student takes the steps, performing well is the natural outcome, not a lottery ticket.
+          </p>
+
+          <p className="mt-8 border-t border-line pt-6 text-[13px] leading-[1.65] text-ink-muted">
+            Illuminairy does not guarantee any specific SAT score, admissions result, scholarship,
+            or college decision. Outcomes depend on starting point, attendance, and the effort a
+            student puts in — but the model above is what makes that effort count.
           </p>
         </div>
       </section>
