@@ -1,16 +1,22 @@
 <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="64" height="64" rx="14" fill="#0B0D12"/>
-  <circle cx="23" cy="18" r="20" fill="url(#a)" fill-opacity=".95"/>
-  <circle cx="46" cy="47" r="24" fill="url(#b)" fill-opacity=".8"/>
-  <path d="M19.6 43 28 21h4.2L40.8 43h-4.7l-1.8-5.1h-8.5L24 43h-4.4Zm7.5-8.9h5.8l-2.9-8.4-2.9 8.4ZM43.9 43V21h4.4v22h-4.4Z" fill="#fff"/>
   <defs>
-    <radialGradient id="a" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(23 18) rotate(90) scale(20)">
-      <stop stop-color="#5B7CFF"/>
-      <stop offset="1" stop-color="#5B7CFF" stop-opacity="0"/>
-    </radialGradient>
-    <radialGradient id="b" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(46 47) rotate(90) scale(24)">
-      <stop stop-color="#8B5CF6"/>
-      <stop offset="1" stop-color="#8B5CF6" stop-opacity="0"/>
+    <linearGradient id="bg" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#1E2942"/>
+      <stop offset="1" stop-color="#0B1124"/>
+    </linearGradient>
+    <linearGradient id="star" x1="32" y1="3" x2="32" y2="61" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#F1D362"/>
+      <stop offset="0.5" stop-color="#D4AF3A"/>
+      <stop offset="1" stop-color="#A07E10"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="32" cy="32" r="26" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#E8C547" stop-opacity="0.45"/>
+      <stop offset="0.55" stop-color="#C49A18" stop-opacity="0.12"/>
+      <stop offset="1" stop-color="#C49A18" stop-opacity="0"/>
     </radialGradient>
   </defs>
+  <rect width="64" height="64" rx="14" fill="url(#bg)"/>
+  <circle cx="32" cy="32" r="26" fill="url(#glow)"/>
+  <path d="M32 6 L35.8 27.2 L57 32 L35.8 36.8 L32 58 L28.2 36.8 L7 32 L28.2 27.2 Z" fill="url(#star)"/>
+  <path d="M32 16 L33.2 28.8 L46 32 L33.2 35.2 L32 48 L30.8 35.2 L18 32 L30.8 28.8 Z" fill="#F4D976" fill-opacity="0.35"/>
 </svg>

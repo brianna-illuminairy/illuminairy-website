@@ -5,39 +5,39 @@ import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { ButtonLink } from "@/components/ui";
 import { Logo } from "@/components/logo";
-import { bookLink, navItems } from "@/lib/site";
+import { navItems, scheduleLink } from "@/lib/site";
+
+const headerItems = navItems.filter((item) =>
+  ["/sat-accelerator", "/mentors", "/contact"].includes(item.href)
+);
 
 export function Header() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-line/80 bg-white/86 backdrop-blur-xl">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 sm:px-8 lg:px-12">
+    <header className="sticky top-0 z-50 border-b border-line/70 bg-ivory/85 backdrop-blur-xl">
+      <div className="mx-auto flex h-[68px] max-w-7xl items-center justify-between px-5 sm:px-8 lg:px-12">
         <Logo />
-        <nav className="hidden items-center gap-7 lg:flex" aria-label="Main navigation">
-          {navItems.map((item) => (
+        <nav className="hidden items-center gap-8 lg:flex" aria-label="Main navigation">
+          {headerItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className="text-sm font-medium text-slatecopy transition hover:text-ink"
+              className="text-[13.5px] font-medium tracking-[-0.005em] text-ink-soft transition hover:text-ink"
             >
               {item.label}
             </Link>
           ))}
         </nav>
-        <div className="hidden items-center gap-3 lg:flex">
-          <Link
-            href="/mentors"
-            className="text-sm font-medium text-slatecopy transition hover:text-ink"
-          >
-            Apply as a Mentor
-          </Link>
-          <ButtonLink href={bookLink}>Book a Consultation</ButtonLink>
+        <div className="hidden items-center lg:flex">
+          <ButtonLink href={scheduleLink} variant="primary">
+            Book a consultation
+          </ButtonLink>
         </div>
         <button
           type="button"
           onClick={() => setOpen((prev) => !prev)}
-          className="grid h-10 w-10 place-items-center rounded-lg border border-line bg-white text-ink lg:hidden"
+          className="grid h-10 w-10 place-items-center rounded-lg border border-line-strong bg-ivory-50 text-ink transition hover:border-gold/40 lg:hidden"
           aria-label={open ? "Close menu" : "Open menu"}
           aria-expanded={open}
         >
@@ -45,22 +45,22 @@ export function Header() {
         </button>
       </div>
       {open && (
-        <div className="border-t border-line bg-white px-5 py-5 shadow-soft lg:hidden">
+        <div className="border-t border-line bg-ivory px-5 py-6 shadow-soft lg:hidden">
           <nav className="mx-auto grid max-w-7xl gap-1" aria-label="Mobile navigation">
             {navItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
                 onClick={() => setOpen(false)}
-                className="rounded-lg px-3 py-3 text-sm font-medium text-slatecopy hover:bg-cloud hover:text-ink"
+                className="rounded-lg px-3 py-3 text-[14.5px] font-medium text-ink-soft hover:bg-ivory-200 hover:text-ink"
               >
                 {item.label}
               </Link>
             ))}
-            <div className="mt-4 grid gap-3 sm:grid-cols-2">
-              <ButtonLink href={bookLink}>Book a Consultation</ButtonLink>
+            <div className="mt-5 grid gap-3 sm:grid-cols-2">
+              <ButtonLink href={scheduleLink}>Book a consultation</ButtonLink>
               <ButtonLink href="/mentors" variant="secondary">
-                Apply as a Mentor
+                Apply as a mentor
               </ButtonLink>
             </div>
           </nav>

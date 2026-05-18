@@ -1,24 +1,33 @@
 import type { Metadata } from "next";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
+import { KlaviyoScript } from "@/components/klaviyo";
 import { site } from "@/lib/site";
 import "./globals.css";
+
+const jakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  weight: ["200", "300", "400", "500", "600", "700", "800"],
+  display: "swap",
+  variable: "--font-jakarta"
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: "Illuminairy | Modern Mentorship and Applied Learning",
-    template: "%s | Illuminairy"
+    default: "Illuminairy — your guiding light for goals and growth",
+    template: "%s · Illuminairy"
   },
   description:
-    "Illuminairy is a premium education and mentorship company launching with a Georgia Tech-led SAT Accelerator and expanding into applied learning.",
+    "Premium near-peer mentorship with structure and clarity. SAT Accelerator cohorts live now — professional and business programs opening soon.",
   alternates: {
     canonical: "/"
   },
   openGraph: {
-    title: "Illuminairy",
+    title: "Illuminairy — your guiding light for goals and growth",
     description:
-      "Modern mentorship and applied learning for ambitious students and professionals.",
+      "Premium near-peer mentorship. Georgia Tech-led SAT Accelerator cohorts live now.",
     url: site.url,
     siteName: "Illuminairy",
     images: [
@@ -26,7 +35,7 @@ export const metadata: Metadata = {
         url: "/og-image.svg",
         width: 1200,
         height: 630,
-        alt: "Illuminairy brand card"
+        alt: "Illuminairy — premium mentorship and applied learning"
       }
     ],
     locale: "en_US",
@@ -36,7 +45,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Illuminairy",
     description:
-      "Modern mentorship and applied learning for ambitious students and professionals.",
+      "Premium mentor-led learning for ambitious students.",
     images: ["/og-image.svg"]
   },
   icons: {
@@ -57,21 +66,21 @@ export default function RootLayout({
     legalName: site.legalName,
     url: site.url,
     email: site.supportEmail,
-    telephone: site.phone,
     address: {
       "@type": "PostalAddress",
-      addressLocality: "Evans",
+      addressLocality: "Atlanta",
       addressRegion: "GA",
       addressCountry: "US"
     },
     areaServed: "United States",
+    slogan: site.tagline,
     description:
-      "Premium virtual educational services, mentorship, SAT preparation, and applied learning programs."
+      "Premium virtual educational services, mentorship, SAT preparation, and applied learning programs. Launching with Georgia Tech-led SAT cohorts."
   };
 
   return (
-    <html lang="en">
-      <body>
+    <html lang="en" className={jakarta.variable} data-scroll-behavior="smooth">
+      <body className="bg-ivory text-ink antialiased">
         <Header />
         <main>{children}</main>
         <Footer />
@@ -79,6 +88,7 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
         />
+        <KlaviyoScript />
       </body>
     </html>
   );

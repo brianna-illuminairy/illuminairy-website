@@ -17,7 +17,7 @@ export default function SupportPolicyPage() {
         text="Illuminairy provides customer support for program questions, scheduling, billing, consultations, mentor applications, and service issues."
       />
       <section className="px-5 py-16 sm:px-8 lg:px-12">
-        <div className="legal-copy mx-auto max-w-4xl rounded-2xl border border-line bg-white p-6 shadow-soft sm:p-10">
+        <div className="legal-copy mx-auto max-w-4xl rounded-3xl border border-line bg-ivory-50 p-7 shadow-editorial sm:p-12">
           <p>Effective date: May 17, 2026</p>
 
           <h2>Support scope</h2>
@@ -30,8 +30,6 @@ export default function SupportPolicyPage() {
           <h2>Contact methods</h2>
           <ul>
             <li>Email: {site.supportEmail}</li>
-            <li>Business email: {site.email}</li>
-            <li>Phone: {site.phone}</li>
             <li>Business location: {site.location}, United States</li>
           </ul>
 

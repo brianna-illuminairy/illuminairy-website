@@ -1,28 +1,35 @@
 <svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="1200" height="630" fill="#F8FAFC"/>
-  <circle cx="900" cy="120" r="330" fill="url(#a)" fill-opacity=".42"/>
-  <circle cx="190" cy="520" r="280" fill="url(#b)" fill-opacity=".34"/>
-  <rect x="70" y="70" width="1060" height="490" rx="34" fill="white" stroke="#E3E8F0"/>
-  <rect x="110" y="110" width="58" height="58" rx="14" fill="#0B0D12"/>
-  <circle cx="132" cy="130" r="21" fill="#5B7CFF" fill-opacity=".95"/>
-  <circle cx="153" cy="154" r="24" fill="#8B5CF6" fill-opacity=".8"/>
-  <text x="184" y="149" fill="#0B0D12" font-family="Inter, ui-sans-serif, system-ui" font-size="37" font-weight="650" letter-spacing="-1.4">Illumin</text>
-  <text x="321" y="149" fill="#4F46E5" font-family="Inter, ui-sans-serif, system-ui" font-size="37" font-weight="650" letter-spacing="-1.4">ai</text>
-  <text x="358" y="149" fill="#0B0D12" font-family="Inter, ui-sans-serif, system-ui" font-size="37" font-weight="650" letter-spacing="-1.4">ry</text>
-  <text x="110" y="285" fill="#0B0D12" font-family="Inter, ui-sans-serif, system-ui" font-size="64" font-weight="650" letter-spacing="-4">Modern mentorship and applied learning.</text>
-  <text x="110" y="356" fill="#475569" font-family="Inter, ui-sans-serif, system-ui" font-size="30" font-weight="400">Premium education, SAT preparation, and applied expertise.</text>
-  <rect x="110" y="435" width="232" height="58" rx="13" fill="#0B0D12"/>
-  <text x="139" y="472" fill="white" font-family="Inter, ui-sans-serif, system-ui" font-size="22" font-weight="600">SAT Accelerator</text>
-  <rect x="366" y="435" width="236" height="58" rx="13" fill="#EEF2F7"/>
-  <text x="394" y="472" fill="#0B0D12" font-family="Inter, ui-sans-serif, system-ui" font-size="22" font-weight="600">Mentor-led learning</text>
   <defs>
-    <radialGradient id="a" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(900 120) rotate(90) scale(330)">
-      <stop stop-color="#5B7CFF"/>
-      <stop offset="1" stop-color="#5B7CFF" stop-opacity="0"/>
+    <linearGradient id="ivory" x1="0" y1="0" x2="0" y2="630" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FDFBF7"/>
+      <stop offset="0.6" stop-color="#FAF6F0"/>
+      <stop offset="1" stop-color="#F3EDE0"/>
+    </linearGradient>
+    <radialGradient id="goldGlow" cx="1000" cy="180" r="380" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#E8C547" stop-opacity="0.32"/>
+      <stop offset="1" stop-color="#C49A18" stop-opacity="0"/>
     </radialGradient>
-    <radialGradient id="b" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(190 520) rotate(90) scale(280)">
-      <stop stop-color="#8B5CF6"/>
-      <stop offset="1" stop-color="#8B5CF6" stop-opacity="0"/>
-    </radialGradient>
+    <linearGradient id="star" x1="1000" y1="120" x2="1000" y2="280" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#E8C547"/>
+      <stop offset="0.5" stop-color="#C49A18"/>
+      <stop offset="1" stop-color="#8F6E0C"/>
+    </linearGradient>
   </defs>
+
+  <rect width="1200" height="630" fill="url(#ivory)"/>
+  <circle cx="1000" cy="180" r="380" fill="url(#goldGlow)"/>
+
+  <g transform="translate(1000 200)">
+    <path d="M0 -82 L13 -28 L82 0 L13 28 L0 82 L-13 28 L-82 0 L-13 -28 Z" fill="url(#star)"/>
+    <path d="M0 -40 L5 -14 L40 0 L5 14 L0 40 L-5 14 L-40 0 L-5 -14 Z" fill="#F8DC79" fill-opacity="0.30"/>
+  </g>
+
+  <text x="100" y="220" fill="#8F6E0C" font-family="Plus Jakarta Sans, ui-sans-serif, system-ui" font-size="20" font-weight="700" letter-spacing="2.8" text-transform="uppercase">PREMIUM MENTORSHIP</text>
+
+  <text x="100" y="338" fill="#16120A" font-family="Plus Jakarta Sans, ui-sans-serif, system-ui" font-size="92" font-weight="200" letter-spacing="-4">modern mentorship</text>
+  <text x="100" y="446" fill="#16120A" font-family="Plus Jakarta Sans, ui-sans-serif, system-ui" font-size="92" font-weight="200" letter-spacing="-4">and <tspan fill="#8F6E0C" font-style="italic" font-weight="300">applied learning.</tspan></text>
+
+  <text x="100" y="556" fill="#16120A" font-family="Plus Jakarta Sans, ui-sans-serif, system-ui" font-size="34" font-weight="500" letter-spacing="-0.5">illumin<tspan fill="#C49A18">ai</tspan>ry</text>
+
+  <text x="100" y="586" fill="#7A7160" font-family="Plus Jakarta Sans, ui-sans-serif, system-ui" font-size="16" font-weight="500" letter-spacing="0.4">Launching first with structured SAT cohorts.</text>
 </svg>

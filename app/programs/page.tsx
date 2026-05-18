@@ -1,11 +1,18 @@
 import type { Metadata } from "next";
-import { ButtonLink, DarkCta, FeatureCard, PageHero, SectionHeader } from "@/components/ui";
-import { bookLink, platformAreas } from "@/lib/site";
+import {
+  ButtonLink,
+  DarkCta,
+  Eyebrow,
+  PageHero,
+  PopSection,
+  SectionHeader
+} from "@/components/ui";
+import { platformAreas, scheduleLink } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Programs",
   description:
-    "Current and future Illuminairy learning programs, starting with the SAT Accelerator and expanding into AI, technical education, and applied expertise."
+    "Current and future Illuminairy programs. Starting with the SAT Accelerator and growing into AI upskilling, technical education, and applied expertise."
 };
 
 export default function ProgramsPage() {
@@ -13,73 +20,102 @@ export default function ProgramsPage() {
     <>
       <PageHero
         eyebrow="Programs"
-        title="Structured learning programs led by high-performing mentors."
-        text="Illuminairy begins with SAT preparation and is building toward a broader platform for premium mentorship, technical education, and applied expertise."
+        title="Structured programs led by people who actively do the thing."
+        text="Illuminairy starts with premium SAT preparation and is building additional programs for professionals and business owners — announced only when cohorts are scheduled."
         primary={{ label: "Explore SAT Accelerator", href: "/sat-accelerator" }}
         secondary={{ label: "Contact Illuminairy", href: "/contact" }}
       />
 
-      <section className="px-5 py-20 sm:px-8 lg:px-12">
+      <section className="px-5 py-24 sm:px-8 lg:px-12">
         <div className="mx-auto max-w-7xl">
           <SectionHeader
             eyebrow="Current and future"
-            title="Starting focused, expanding carefully."
-            text="The current live product is the Illuminairy SAT Accelerator. Future programs will be announced as they become available; they are not presented as currently launched services."
+            title="Starting focused. Expanding carefully."
+            text="The live product today is the Illuminairy SAT Accelerator. Other program areas below are in development and are not open for enrollment until Illuminairy announces a cohort."
           />
-          <div className="mt-10 grid gap-4 md:grid-cols-2">
+          <div className="mt-12 grid gap-4 md:grid-cols-2">
             {platformAreas.map((area) => (
-              <FeatureCard
+              <article
                 key={area.title}
-                icon={area.icon}
-                title={area.title}
-                text={area.text}
-                meta={area.status}
-              />
+                className="group rounded-2xl border border-line bg-ivory-50 p-7 transition hover:border-gold/30 hover:shadow-gold"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="inline-flex h-11 w-11 items-center justify-center rounded-lg border border-gold/20 bg-gold/10 text-gold-deep">
+                    <area.icon className="h-5 w-5" aria-hidden="true" strokeWidth={1.6} />
+                  </div>
+                  <p className="eyebrow text-gold-deep">{area.status}</p>
+                </div>
+                <h3 className="mt-6 text-[1.375rem] font-semibold tracking-[-0.022em] text-ink">
+                  {area.title}
+                </h3>
+                <p className="mt-3 text-[15px] leading-[1.65] text-ink-soft">{area.text}</p>
+              </article>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="bg-white px-5 py-20 sm:px-8 lg:px-12">
-        <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[1fr_1fr]">
-          <div className="rounded-2xl border border-line bg-cloud p-8">
-            <p className="text-xs font-medium uppercase tracking-[0.16em] text-indigo">
-              Live now
-            </p>
-            <h2 className="mt-5 text-3xl font-semibold tracking-[-0.045em] text-ink">
-              Illuminairy SAT Accelerator
-            </h2>
-            <p className="mt-5 leading-7 text-slatecopy">
-              A 12-week virtual SAT cohort with 30 live sessions, small-group
-              instruction, private coaching, diagnostics, and accountability for
-              students preparing for the August 22, 2026 SAT.
-            </p>
-            <div className="mt-7">
-              <ButtonLink href={bookLink}>Book a Consultation</ButtonLink>
-            </div>
-          </div>
-          <div className="rounded-2xl border border-line bg-white p-8 shadow-ringed">
-            <p className="text-xs font-medium uppercase tracking-[0.16em] text-indigo">
-              In development
-            </p>
-            <h2 className="mt-5 text-3xl font-semibold tracking-[-0.045em] text-ink">
-              Applied expertise beyond test prep.
-            </h2>
-            <p className="mt-5 leading-7 text-slatecopy">
-              Illuminairy’s future program areas include AI upskilling,
-              automation education for business owners, technical learning,
-              professional coaching, and expert-led applied learning. These
-              areas are planned platform directions, not currently sold as live
-              programs unless announced by Illuminairy.
-            </p>
+      <PopSection
+        color="sage"
+        eyebrow="Live now"
+        title="Illuminairy SAT Accelerator."
+        text="A twelve-week virtual SAT cohort with 30 live sessions, small-group instruction, private coaching, diagnostics, and accountability for students preparing for the August 22, 2026 SAT."
+        primary={{ label: "View the Accelerator", href: "/sat-accelerator" }}
+        secondary={{ label: "Book a consultation", href: scheduleLink }}
+      >
+        <div className="rounded-3xl border border-sage-ink/15 bg-ivory/90 p-7 backdrop-blur-sm">
+          <Eyebrow tone="sage">Cohort structure</Eyebrow>
+          <div className="mt-5 grid grid-cols-2 gap-4">
+            {[
+              ["12", "weeks"],
+              ["30", "live sessions"],
+              ["24", "small-group"],
+              ["10", "students per cohort"]
+            ].map(([value, label]) => (
+              <div key={label} className="rounded-xl border border-sage-ink/10 bg-ivory p-4">
+                <p className="text-[2rem] font-light leading-none tracking-[-0.04em] text-sage-ink">
+                  {value}
+                </p>
+                <p className="mt-2 text-[12.5px] text-sage-ink/75">{label}</p>
+              </div>
+            ))}
           </div>
         </div>
-      </section>
+      </PopSection>
+
+      <PopSection
+        color="sky"
+        eyebrow="In design"
+        title="More programs, same standard."
+        text="Illuminairy is exploring AI upskilling, technical education, business owner education, and professional coaching. We will announce dates, pricing, and enrollment only when a cohort is ready."
+        primary={{ label: "Join the newsletter", href: "/#newsletter" }}
+        secondary={{ label: "Contact us", href: "/contact" }}
+      >
+        <div className="rounded-3xl border border-sky-ink/15 bg-ivory/85 p-7 backdrop-blur-sm">
+          <p className="text-[16px] leading-[1.65] text-sky-ink">
+            SAT prep comes first because families need clarity now. Future programs will use
+            the same cohort model: live sessions, clear policies, and mentors held to a high bar.
+          </p>
+          <div className="mt-6 flex flex-wrap gap-2 text-[12px]">
+            {["AI", "Automation", "Technical", "Business", "Coaching", "Professional", "Labs"].map(
+              (tag) => (
+                <span
+                  key={tag}
+                  className="rounded-full border border-sky-ink/15 bg-ivory px-3 py-1 font-medium text-sky-ink"
+                >
+                  {tag}
+                </span>
+              )
+            )}
+          </div>
+        </div>
+      </PopSection>
 
       <DarkCta
         title="Looking for the current SAT cohort?"
-        text="The SAT Accelerator is the first live Illuminairy program and the best place for families to begin."
+        text="The SAT Accelerator is the first live Illuminairy program — and the best place for families to begin."
         primary={{ label: "View SAT Accelerator", href: "/sat-accelerator" }}
+        secondary={{ label: "Contact Illuminairy", href: "/contact" }}
       />
     </>
   );

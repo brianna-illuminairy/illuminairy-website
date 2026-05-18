@@ -9,17 +9,27 @@ npm install
 npm run dev
 ```
 
-## Optional links
+## Environment variables
 
-Add these to `.env.local` when the live booking and inquiry tools are ready:
+Copy `.env.example` to `.env.local`.
+
+**Contact form** (recommended): create a free [Resend](https://resend.com) account, add your API key, and verify `illuminairy.com` so messages send from your domain to `support@illuminairy.com`:
+
+```bash
+RESEND_API_KEY=re_...
+CONTACT_INBOX=support@illuminairy.com
+RESEND_FROM_EMAIL=Illuminairy <notifications@illuminairy.com>
+```
+
+Until `RESEND_API_KEY` is set, the form on `/contact` shows an error and visitors can still email `support@illuminairy.com` directly.
+
+**Optional booking link:**
 
 ```bash
 NEXT_PUBLIC_CALENDLY_URL=https://calendly.com/...
-NEXT_PUBLIC_TYPEFORM_URL=https://form.typeform.com/to/...
 ```
 
-If those values are not set, consultation and inquiry CTAs fall back to
-`mailto:brianna@illuminairy.com`.
+If Calendly is not set, consultation CTAs fall back to `mailto:support@illuminairy.com`.
 
 ## Deployment
 

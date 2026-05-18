@@ -16,7 +16,7 @@ export default function PrivacyPage() {
         text="This policy explains how Illuminairy collects, uses, and protects information submitted through the website, consultations, forms, and educational services."
       />
       <section className="px-5 py-16 sm:px-8 lg:px-12">
-        <div className="legal-copy mx-auto max-w-4xl rounded-2xl border border-line bg-white p-6 shadow-soft sm:p-10">
+        <div className="legal-copy mx-auto max-w-4xl rounded-3xl border border-line bg-ivory-50 p-7 shadow-editorial sm:p-12">
           <p>Effective date: May 17, 2026</p>
 
           <h2>Overview</h2>
@@ -28,10 +28,11 @@ export default function PrivacyPage() {
 
           <h2>Information we collect</h2>
           <p>
-            We may collect name, email address, phone number, parent or student
-            inquiry details, billing-related information, program interest,
-            student education goals, mentor application details, and messages
-            submitted through forms or email.
+            We may collect name, email address, parent or student inquiry
+            details, billing-related information, program interest, student
+            education goals, mentor application details, and messages submitted
+            through forms or email. If you choose to share a phone number with us,
+            we use it only to respond to your request.
           </p>
 
           <h2>Payment information</h2>

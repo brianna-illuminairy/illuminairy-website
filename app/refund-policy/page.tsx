@@ -17,7 +17,7 @@ export default function RefundPolicyPage() {
         text="This policy explains refund eligibility, missed-session handling, cancellations, and virtual fulfillment for Illuminairy educational services."
       />
       <section className="px-5 py-16 sm:px-8 lg:px-12">
-        <div className="legal-copy mx-auto max-w-4xl rounded-2xl border border-line bg-white p-6 shadow-soft sm:p-10">
+        <div className="legal-copy mx-auto max-w-4xl rounded-3xl border border-line bg-ivory-50 p-7 shadow-editorial sm:p-12">
           <p>Effective date: May 17, 2026</p>
 
           <h2>Educational services</h2>

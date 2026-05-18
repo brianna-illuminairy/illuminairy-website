@@ -1,9 +1,11 @@
-<svg width="230" height="48" viewBox="0 0 230 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect x="2" y="6" width="36" height="36" rx="8" fill="#0B0D12"/>
-  <circle cx="16" cy="17" r="13" fill="#5B7CFF" fill-opacity=".9"/>
-  <circle cx="28" cy="31" r="15" fill="#8B5CF6" fill-opacity=".72"/>
-  <path d="M13.1 31 18 17h3.1L26.2 31h-3.4l-1-3h-4.6l-1 3h-3.1Zm4.9-5.6h3l-1.5-4.7-1.5 4.7ZM28.1 31V17h3.1v14h-3.1Z" fill="#fff"/>
-  <text x="50" y="31" fill="#0B0D12" font-family="Inter, ui-sans-serif, system-ui" font-size="23" font-weight="650" letter-spacing="-.9">Illumin</text>
-  <text x="134" y="31" fill="#4F46E5" font-family="Inter, ui-sans-serif, system-ui" font-size="23" font-weight="650" letter-spacing="-.9">ai</text>
-  <text x="157" y="31" fill="#0B0D12" font-family="Inter, ui-sans-serif, system-ui" font-size="23" font-weight="650" letter-spacing="-.9">ry</text>
+<svg width="360" height="64" viewBox="0 0 360 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="star" x1="32" y1="3" x2="32" y2="61" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#E8C547"/>
+      <stop offset="0.55" stop-color="#C49A18"/>
+      <stop offset="1" stop-color="#8F6E0C"/>
+    </linearGradient>
+  </defs>
+  <path d="M32 6 L35.8 27.2 L57 32 L35.8 36.8 L32 58 L28.2 36.8 L7 32 L28.2 27.2 Z" fill="url(#star)"/>
+  <text x="76" y="42" fill="#16120A" font-family="Plus Jakarta Sans, ui-sans-serif, system-ui" font-size="32" font-weight="300" letter-spacing="-1.0">illumin<tspan fill="#C49A18">AI</tspan>ry</text>
 </svg>

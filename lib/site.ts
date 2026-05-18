@@ -3,7 +3,6 @@ import {
   BrainCircuit,
   BriefcaseBusiness,
   CalendarCheck,
-  CheckCircle2,
   GraduationCap,
   LineChart,
   LockKeyhole,
@@ -20,15 +19,49 @@ export const site = {
   name: "Illuminairy",
   legalName: "Zytech Development LLC",
   url: "https://illuminairy.com",
-  email: "brianna@illuminairy.com",
-  supportEmail: "brianna@illuminairy.com",
-  phone: "+1 (404) 314-4872",
-  location: "Evans, Georgia",
+  email: "support@illuminairy.com",
+  supportEmail: "support@illuminairy.com",
+  location: "Atlanta",
   descriptor: "ILLUMINAIRY",
   satDate: "August 22, 2026",
-  calendlyUrl: process.env.NEXT_PUBLIC_CALENDLY_URL || "",
+  tagline: "your guiding light for goals and growth",
+  calendlyUrl:
+    process.env.NEXT_PUBLIC_CALENDLY_URL ||
+    "https://calendly.com/brianna-illuminairy/new-meeting",
   typeformUrl: process.env.NEXT_PUBLIC_TYPEFORM_URL || ""
 };
+
+/**
+ * Live and upcoming cohorts — the proof-of-momentum surface.
+ * Shown on the home page hero card so families and mentors
+ * can immediately see what's running.
+ */
+export const cohorts = [
+  {
+    status: "live",
+    statusLabel: "Live · 2 cohorts",
+    name: "SAT Accelerator",
+    when: "August 2026 SAT",
+    audience: "Ambitious high schoolers",
+    href: "/sat-accelerator"
+  },
+  {
+    status: "soon",
+    statusLabel: "Opening soon",
+    name: "AI for Professionals",
+    when: "Q3 2026",
+    audience: "Working professionals",
+    href: "/programs"
+  },
+  {
+    status: "soon",
+    statusLabel: "Opening soon",
+    name: "AI for Business Owners",
+    when: "Q3 2026",
+    audience: "Founders & operators",
+    href: "/programs"
+  }
+] as const;
 
 export const navItems = [
   { label: "Home", href: "/" },
@@ -47,22 +80,24 @@ export const policyItems = [
 ];
 
 export const mailtoLink =
-  "mailto:brianna@illuminairy.com?subject=Illuminairy%20program%20inquiry";
+  "mailto:support@illuminairy.com?subject=Illuminairy%20program%20inquiry";
 
 export const bookLink = site.calendlyUrl || mailtoLink;
-export const inquiryLink = site.typeformUrl || mailtoLink;
+export const scheduleLink = "/contact#schedule";
+export const mentorApplyLink = "/contact?reason=mentor";
+export const inquiryLink = site.typeformUrl || mentorApplyLink;
 
 export const programStats = [
-  { value: "12", label: "weeks of structured preparation" },
-  { value: "30", label: "live virtual sessions" },
-  { value: "10", label: "students per capped cohort" },
+  { value: "12", label: "Weeks of structured preparation" },
+  { value: "30", label: "Live small-group + private sessions" },
+  { value: "10", label: "Students per capped cohort" },
   { value: "1450+", label: "SAT mentor score standard" }
 ];
 
 export const satFeatures = [
   {
     icon: CalendarCheck,
-    title: "12-week program",
+    title: "Twelve focused weeks",
     text: "A complete preparation arc built for students working toward the August 22, 2026 SAT."
   },
   {
@@ -77,45 +112,51 @@ export const satFeatures = [
   },
   {
     icon: Target,
-    title: "Diagnostic-driven support",
+    title: "Diagnostic-driven plan",
     text: "Preparation is shaped around strengths, gaps, pacing, and weekly accountability."
   },
   {
     icon: GraduationCap,
-    title: "High-performing mentors",
-    text: "Georgia Tech students, alumni, or similarly qualified mentors with verified SAT performance where applicable."
+    title: "Georgia Tech mentors",
+    text: "Georgia Tech students, alumni, or similarly qualified mentors with verified SAT performance."
   },
   {
     icon: Video,
     title: "Virtual delivery",
-    text: "Live instruction and coaching delivered online so students can participate from home."
+    text: "Live instruction and coaching delivered online so students can join from anywhere."
   }
 ];
 
 export const platformAreas = [
   {
     icon: GraduationCap,
-    title: "Illuminairy SAT Accelerator",
-    status: "Live first product",
-    text: "Premium cohort-based SAT preparation for ambitious students and families who want structure, rigor, and mentorship."
+    title: "Illuminairy SAT",
+    status: "Live now",
+    text: "Premium cohort-based SAT preparation, Georgia Tech-led, for ambitious students and families who want structure and rigor."
   },
   {
     icon: BrainCircuit,
-    title: "IlluminAIry AI",
-    status: "Future area",
-    text: "Practical AI upskilling for professionals and business owners as the platform expands."
+    title: "Illuminairy AI",
+    status: "Planned",
+    text: "Future practical AI upskilling for students, professionals, and business owners who need applied fluency."
   },
   {
-    icon: LineChart,
-    title: "Illuminairy Labs",
-    status: "Future area",
-    text: "Project-based technical learning and applied education for motivated learners."
+    icon: Network,
+    title: "Illuminairy Mentors",
+    status: "Planned",
+    text: "A selective network of high-performing educated talent for mentorship, tutoring, and applied expertise."
   },
   {
     icon: BriefcaseBusiness,
     title: "Illuminairy Professional",
-    status: "Future area",
-    text: "Mentor-led professional learning, coaching, and business education."
+    status: "Planned",
+    text: "Future professional coaching and business education programs built around clear outcomes and expert guidance."
+  },
+  {
+    icon: LineChart,
+    title: "Illuminairy Labs",
+    status: "Planned",
+    text: "A future space for applied learning experiments, technical education, and new expert-led cohorts."
   }
 ];
 
@@ -132,12 +173,12 @@ export const trustPillars = [
   {
     icon: LockKeyhole,
     title: "Transparent service model",
-    text: "Families can see what is being delivered: live sessions, private coaching, diagnostics, and support."
+    text: "Families see exactly what is being delivered: live sessions, private coaching, diagnostics, and support."
   },
   {
     icon: MessagesSquare,
-    title: "Direct customer support",
-    text: "Clear contact details, human support, and plain-language policies before enrollment."
+    title: "Direct, human support",
+    text: "Real contact details, real humans, plain-language policies — before, during, and after enrollment."
   },
   {
     icon: Network,
@@ -146,8 +187,8 @@ export const trustPillars = [
   },
   {
     icon: Sparkles,
-    title: "Future-facing platform",
-    text: "SAT prep is the first wedge toward applied expertise across AI, technical learning, and professional education."
+    title: "Room to grow",
+    text: "SAT cohorts are live today. Professional and business programs are planned with the same standard for structure and mentor quality."
   }
 ];
 
@@ -157,6 +198,30 @@ export const contactReasons = [
   "Partnership",
   "Billing/support",
   "General inquiry"
-];
+] as const;
+
+const contactReasonAliases: Record<string, (typeof contactReasons)[number]> = {
+  mentor: "Mentor application",
+  parent: "Parent/student inquiry",
+  billing: "Billing/support",
+  partnership: "Partnership",
+  general: "General inquiry"
+};
+
+export function resolveContactReason(
+  param?: string
+): (typeof contactReasons)[number] {
+  if (!param) {
+    return contactReasons[0];
+  }
+  const decoded = decodeURIComponent(param).trim();
+  if (contactReasonAliases[decoded]) {
+    return contactReasonAliases[decoded];
+  }
+  if (contactReasons.includes(decoded as (typeof contactReasons)[number])) {
+    return decoded as (typeof contactReasons)[number];
+  }
+  return contactReasons[0];
+}
 
 export const Arrow = ArrowRight;

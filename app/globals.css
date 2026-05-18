@@ -3,9 +3,14 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: light;
-  --font-sans: Inter, Geist, Satoshi, ui-sans-serif, system-ui, -apple-system,
-    BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color-scheme: light only;
+  --bg-ivory: #faf6f0;
+  --bg-ivory-deep: #f3ede0;
+  --ink: #16120a;
+  --ink-soft: #3d372a;
+  --gold: #c49a18;
+  --gold-deep: #8f6e0c;
+  --navy: #131c32;
 }
 
 * {
@@ -18,10 +23,14 @@ html {
 
 body {
   margin: 0;
-  background: #f8fafc;
-  color: #0b0d12;
-  font-family: var(--font-sans);
-  text-rendering: geometricPrecision;
+  background: var(--bg-ivory);
+  color: var(--ink);
+  font-family: var(--font-jakarta), ui-sans-serif, system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-feature-settings: "ss01", "cv11";
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 a {
@@ -29,9 +38,11 @@ a {
 }
 
 ::selection {
-  background: rgba(91, 124, 255, 0.22);
+  background: rgba(196, 154, 24, 0.30);
+  color: var(--ink);
 }
 
+/* Brand utilities */
 .text-balance {
   text-wrap: balance;
 }
@@ -40,17 +51,64 @@ a {
   text-wrap: pretty;
 }
 
+/* Wordmark — display sizing rules per brand brief.
+   AI lives inside .wordmark__ai with the gold color treatment. */
+.wordmark {
+  font-weight: 200;
+  letter-spacing: -0.032em;
+  font-feature-settings: "ss01";
+}
+
+.wordmark--sm {
+  font-weight: 500;
+  letter-spacing: -0.012em;
+}
+
+.wordmark__ai {
+  color: var(--gold);
+}
+
+.wordmark--invert .wordmark__ai {
+  color: #d4af3a;
+}
+
+/* "Small voice" eyebrow per brief: 10–11px, 700, +14% tracking, uppercase */
+.eyebrow {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* North Star spin for the home identity moment */
+@keyframes north-star-pulse {
+  0%, 100% {
+    opacity: 0.92;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.04);
+  }
+}
+
+.north-star-pulse {
+  animation: north-star-pulse 5.4s ease-in-out infinite;
+  transform-origin: center;
+}
+
+/* Legal copy — editorial, ivory-warm */
 .legal-copy h2 {
   margin-top: 2.25rem;
   font-size: 1.25rem;
-  font-weight: 650;
-  letter-spacing: -0.025em;
-  color: #0b0d12;
+  font-weight: 600;
+  letter-spacing: -0.018em;
+  color: var(--ink);
 }
 
 .legal-copy p,
 .legal-copy li {
-  color: #475569;
+  color: var(--ink-soft);
   line-height: 1.75;
 }
 
@@ -61,4 +119,159 @@ a {
 
 .legal-copy li + li {
   margin-top: 0.55rem;
+}
+
+/* Editorial big-type leading — for hero headline */
+.headline-display {
+  font-weight: 200;
+  letter-spacing: -0.038em;
+  line-height: 0.96;
+}
+
+.headline-display em {
+  font-style: normal;
+  color: var(--gold-deep);
+  font-weight: 300;
+}
+
+/* Editorial subhead used inside pop panels */
+.headline-pop {
+  font-weight: 300;
+  letter-spacing: -0.028em;
+  line-height: 1.02;
+}
+
+/* Simple home identity system */
+.beam-field {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.beam-field::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(22, 18, 10, 0.05) 1px, transparent 1px),
+    linear-gradient(rgba(22, 18, 10, 0.04) 1px, transparent 1px);
+  background-size: 76px 76px;
+  mask-image: linear-gradient(90deg, transparent, black 18%, black 82%, transparent);
+}
+
+.beam-line {
+  position: absolute;
+  left: 44%;
+  width: 82vw;
+  height: 1px;
+  transform-origin: left center;
+  background: linear-gradient(90deg, rgba(196, 154, 24, 0.82), rgba(232, 197, 71, 0.22), transparent);
+}
+
+.beam-line-one {
+  top: 31%;
+  transform: rotate(-18deg);
+}
+
+.beam-line-two {
+  top: 58%;
+  transform: rotate(14deg);
+}
+
+.beam-panel {
+  position: absolute;
+  right: 8vw;
+  border: 1px solid rgba(22, 18, 10, 0.11);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.42), rgba(196, 154, 24, 0.10));
+  transform: skewX(-10deg);
+}
+
+.beam-panel-one {
+  top: 19%;
+  width: 21vw;
+  height: 34vh;
+}
+
+.beam-panel-two {
+  bottom: 13%;
+  width: 31vw;
+  height: 28vh;
+}
+
+.visual-identity {
+  position: relative;
+  min-height: 460px;
+}
+
+.visual-frame {
+  position: absolute;
+  inset: 6% 0 6% auto;
+  width: min(520px, 100%);
+  display: grid;
+  align-content: space-between;
+  border: 1px solid rgba(22, 18, 10, 0.12);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.68), rgba(255, 255, 255, 0.22)),
+    linear-gradient(155deg, rgba(232, 197, 71, 0.16), rgba(196, 154, 24, 0.08), transparent 62%);
+  padding: clamp(1.5rem, 4vw, 3rem);
+  box-shadow: 0 34px 100px rgba(22, 18, 10, 0.12);
+  backdrop-filter: blur(18px);
+}
+
+.visual-word {
+  font-size: clamp(7rem, 16vw, 13rem);
+  line-height: 0.78;
+  font-weight: 200;
+  letter-spacing: -0.11em;
+  color: var(--ink);
+}
+
+.visual-rule {
+  height: 1px;
+  width: 100%;
+  background: linear-gradient(90deg, var(--ink), var(--gold), transparent);
+}
+
+.visual-copy {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  background: rgba(22, 18, 10, 0.12);
+  border: 1px solid rgba(22, 18, 10, 0.12);
+}
+
+.visual-copy span {
+  background: rgba(250, 246, 240, 0.84);
+  padding: 1rem;
+  font-size: 0.78rem;
+  font-weight: 560;
+  color: rgba(22, 18, 10, 0.64);
+}
+
+@media (max-width: 1023px) {
+  .visual-identity {
+    min-height: 360px;
+  }
+
+  .visual-frame {
+    inset: 0;
+    width: 100%;
+  }
+
+  .beam-panel-one,
+  .beam-panel-two {
+    right: -18vw;
+    width: 56vw;
+  }
+}
+
+@media (max-width: 640px) {
+  .visual-identity {
+    min-height: 320px;
+  }
+
+  .visual-copy {
+    grid-template-columns: 1fr;
+  }
 }

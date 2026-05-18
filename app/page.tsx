@@ -1,65 +1,106 @@
-import { Calendar, CheckCircle2, GraduationCap, Sparkles } from "lucide-react";
-import { IdentityPanel, PlatformVisual } from "@/components/brand-visual";
-import { ButtonLink, DarkCta, FeatureCard, SectionHeader } from "@/components/ui";
+import Link from "next/link";
+import { ArrowRight, Calendar, GraduationCap, UserCheck, Users } from "lucide-react";
+import { CohortsPanel } from "@/components/brand-visual";
+import { NorthStar } from "@/components/logo";
 import {
-  bookLink,
-  inquiryLink,
-  platformAreas,
-  programStats,
-  satFeatures,
-  site,
-  trustPillars
-} from "@/lib/site";
+  ButtonLink,
+  DarkCta,
+  Eyebrow,
+  FeatureCard,
+  PopSection,
+  SectionHeader
+} from "@/components/ui";
+import { mentorApplyLink, programStats, scheduleLink, site, trustPillars } from "@/lib/site";
 
 export default function Home() {
   return (
     <>
-      <section className="relative overflow-hidden px-5 pb-16 pt-12 sm:px-8 lg:px-12">
-        <div className="absolute inset-0 -z-10 bg-[linear-gradient(180deg,#ffffff_0%,#f8fafc_68%,#eef2f7_100%)]" />
-        <div className="absolute left-1/2 top-0 -z-10 h-[520px] w-[820px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(91,124,255,0.20),transparent_66%)] blur-3xl" />
-        <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
-          <div className="max-w-4xl">
-            <p className="mb-5 inline-flex rounded-full border border-indigo/15 bg-white/70 px-3 py-1 text-xs font-medium uppercase tracking-[0.16em] text-indigo shadow-sm">
-              Premium mentorship · Applied learning
-            </p>
-            <h1 className="text-balance text-5xl font-semibold tracking-[-0.07em] text-ink sm:text-6xl lg:text-7xl">
-              Modern mentorship and applied learning for ambitious students and professionals.
+      {/* Hero */}
+      <section className="relative overflow-hidden bg-ivory px-5 pb-16 pt-14 sm:px-8 sm:pt-20 lg:px-12">
+        <div className="absolute inset-0 -z-10 bg-ivory-gradient" />
+        <div className="absolute inset-0 -z-10 bg-paper-grain" />
+        <div className="absolute left-1/2 top-0 -z-10 h-[520px] w-[900px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(196,154,24,0.10),transparent_62%)] blur-2xl" />
+
+        <div className="mx-auto grid max-w-7xl gap-14 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+          <div className="max-w-2xl">
+            <div className="flex items-center gap-3">
+              <NorthStar size={20} tone="ivory" glow={false} />
+              <Eyebrow tone="gold">{site.tagline}</Eyebrow>
+            </div>
+
+            <h1 className="mt-6 text-balance text-[clamp(2.5rem,1.5rem+4vw,4.75rem)] font-extralight leading-[1.02] tracking-[-0.035em] text-ink">
+              The right mentor for where you&apos;re headed.
             </h1>
-            <p className="mt-7 max-w-2xl text-pretty text-lg leading-8 text-slatecopy sm:text-xl">
-              Illuminairy connects learners with premium educated talent through structured programs, live mentorship, and applied learning experiences. We’re launching first with a Georgia Tech-led SAT Accelerator for students preparing for the {site.satDate} SAT.
+
+            <p className="mt-7 max-w-xl text-pretty text-lg leading-[1.65] text-ink-soft sm:text-xl">
+              Premium near-peer mentorship with structure, clarity, and a high
+              bar. Two SAT cohorts are live now — with professional and business
+              owner programs opening next.
             </p>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <ButtonLink href={bookLink} icon={Calendar}>
-                Book a SAT Consultation
+
+            <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+              <ButtonLink href={scheduleLink} icon={Calendar}>
+                Book a consultation
               </ButtonLink>
-              <ButtonLink href="/programs" variant="secondary" icon={Sparkles}>
-                Explore Programs
+              <ButtonLink href={mentorApplyLink} variant="secondary" icon={ArrowRight}>
+                Apply as a mentor
               </ButtonLink>
             </div>
           </div>
-          <PlatformVisual />
+
+          <CohortsPanel />
         </div>
       </section>
 
-      <section className="border-y border-line bg-white px-5 py-8 sm:px-8 lg:px-12">
-        <div className="mx-auto grid max-w-7xl gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {/* Stats strip */}
+      <section className="border-y border-line/70 bg-ivory-200/50 px-5 py-10 sm:px-8 lg:px-12">
+        <div className="mx-auto grid max-w-7xl gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {programStats.map((stat) => (
-            <div key={stat.label} className="rounded-lg border border-line bg-cloud/60 p-5">
-              <p className="text-3xl font-semibold tracking-[-0.045em] text-ink">{stat.value}</p>
-              <p className="mt-2 text-sm leading-5 text-slatecopy">{stat.label}</p>
+            <div key={stat.label} className="px-2">
+              <p className="text-[2.5rem] font-extralight leading-none tracking-[-0.04em] text-ink">
+                {stat.value}
+              </p>
+              <p className="mt-3 text-[13.5px] leading-[1.5] text-ink-soft">{stat.label}</p>
             </div>
           ))}
         </div>
       </section>
 
-      <section className="px-5 py-20 sm:px-8 lg:px-12">
+      {/* SAT — marigold pop */}
+      <PopSection
+        color="marigold"
+        eyebrow="Live now · August 2026 SAT"
+        title="Illuminairy SAT Accelerator."
+        text={`Twelve weeks. Thirty live sessions. Ten students per cohort. Georgia Tech-led mentorship for students preparing for the ${site.satDate} SAT.`}
+        primary={{ label: "View the Accelerator", href: "/sat-accelerator" }}
+        secondary={{ label: "Book a consultation", href: scheduleLink }}
+      >
+        <div className="grid gap-3 sm:grid-cols-2">
+          {[
+            "24 live small-group sessions",
+            "6 private 1:1 coaching sessions",
+            "Diagnostic-driven weekly plan",
+            "Virtual delivery nationwide"
+          ].map((item) => (
+            <div
+              key={item}
+              className="rounded-2xl border border-marigold-ink/15 bg-ivory/90 px-5 py-4 text-[14px] font-medium leading-snug text-marigold-ink backdrop-blur-sm"
+            >
+              {item}
+            </div>
+          ))}
+        </div>
+      </PopSection>
+
+      {/* Company + trust */}
+      <section className="bg-ivory px-5 py-24 sm:px-8 lg:px-12">
         <div className="mx-auto max-w-7xl">
           <SectionHeader
-            eyebrow="Company"
-            title="A modern platform for premium mentorship, learning, and applied expertise."
-            text="Legacy tutoring and expertise marketplaces are often fragmented, opaque, and transactional. Illuminairy is building a more structured, transparent, mentor-led model for motivated learners."
+            eyebrow="Why illuminairy"
+            title="Structure you can see. Mentors you can trust."
+            text="Families get a clear program outline, live schedule, and policies upfront. Students get accountability and near-peer guidance. Mentors work inside a defined cohort model — not open-ended gig matching."
           />
-          <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
             {trustPillars.map((item) => (
               <FeatureCard key={item.title} {...item} />
             ))}
@@ -67,102 +108,105 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="bg-ink px-5 py-20 text-white sm:px-8 lg:px-12">
-        <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
-          <div>
-            <p className="mb-4 text-xs font-medium uppercase tracking-[0.18em] text-electric">
-              First wedge
-            </p>
-            <h2 className="text-balance text-4xl font-semibold tracking-[-0.05em] sm:text-5xl">
-              Starting with the Illuminairy SAT Accelerator.
+      {/* Audience paths — sage pop */}
+      <PopSection
+        color="sage"
+        eyebrow="Who it's for"
+        title="Built for families, students, and mentors."
+        text="Parents evaluating SAT prep. Students aiming for competitive colleges. Mentors who want meaningful, well-structured work with a high bar for quality."
+      >
+        <div className="grid gap-4 sm:grid-cols-3">
+          {[
+            {
+              icon: GraduationCap,
+              label: "Families & students",
+              text: "Structured SAT cohorts, clear policies, and a direct path to enrollment.",
+              href: "/sat-accelerator"
+            },
+            {
+              icon: UserCheck,
+              label: "Mentors",
+              text: "Georgia Tech-led standards today. More program areas as cohorts open.",
+              href: "/mentors"
+            },
+            {
+              icon: Users,
+              label: "Programs",
+              text: "SAT live now. AI for Professionals and Business Owners opening soon.",
+              href: "/programs"
+            }
+          ].map(({ icon: Icon, label, text, href }) => (
+            <Link
+              key={label}
+              href={href}
+              className="group rounded-2xl border border-sage-ink/15 bg-ivory/90 p-6 backdrop-blur-sm transition hover:border-sage-ink/30"
+            >
+              <Icon className="h-5 w-5 text-sage-ink" strokeWidth={1.6} aria-hidden="true" />
+              <h3 className="mt-5 text-[16px] font-semibold tracking-[-0.015em] text-sage-ink">
+                {label}
+              </h3>
+              <p className="mt-2 text-[13.5px] leading-[1.55] text-sage-ink/80">{text}</p>
+              <span className="mt-4 inline-flex items-center gap-1 text-[12px] font-semibold uppercase tracking-[0.12em] text-sage-ink/70 group-hover:text-sage-ink">
+                Learn more
+                <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+              </span>
+            </Link>
+          ))}
+        </div>
+      </PopSection>
+
+      {/* Trust + clarity */}
+      <section className="px-5 py-24 sm:px-8 lg:px-12">
+        <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-2">
+          <div className="rounded-3xl bg-navy-gradient p-9 text-ivory sm:p-11">
+            <Eyebrow tone="ivory">The model</Eyebrow>
+            <h2 className="mt-5 text-balance text-3xl font-light leading-[1.05] tracking-[-0.03em] sm:text-4xl">
+              Mentorship with a high bar.
             </h2>
-            <p className="mt-5 text-lg leading-8 text-white/68">
-              A 12-week virtual SAT program with live small-group instruction,
-              private coaching, diagnostics, and weekly accountability. Built
-              for ambitious students targeting competitive colleges and 1300+
-              SAT scores.
+            <p className="mt-6 max-w-md text-[15.5px] leading-[1.65] text-ivory/72">
+              Small cohorts, clear structure, and mentors we would trust with our
+              own goals. Quality and clarity over volume.
             </p>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <ButtonLink href="/sat-accelerator" variant="dark" icon={GraduationCap}>
-                View SAT Accelerator
-              </ButtonLink>
-              <ButtonLink href={inquiryLink} variant="ghost">
-                <span className="text-white">Request Program Details</span>
-              </ButtonLink>
+            <p className="wordmark mt-10 text-[clamp(2.5rem,5vw,4rem)] leading-none text-ivory">
+              illumin<span className="text-gold-light">ai</span>ry
+            </p>
+          </div>
+
+          <div className="flex flex-col justify-between rounded-3xl border border-line bg-ivory-50 p-9 sm:p-11">
+            <div>
+              <Eyebrow>Trust & policies</Eyebrow>
+              <h2 className="mt-5 text-balance text-3xl font-light leading-[1.05] tracking-[-0.03em] text-ink sm:text-4xl">
+                Clear policies. Straightforward next steps.
+              </h2>
             </div>
-          </div>
-          <div className="grid gap-3 sm:grid-cols-2">
-            {satFeatures.slice(0, 4).map((item) => (
-              <article key={item.title} className="rounded-lg border border-white/10 bg-white/[0.06] p-5">
-                <item.icon className="h-5 w-5 text-electric" aria-hidden="true" />
-                <h3 className="mt-4 text-base font-semibold">{item.title}</h3>
-                <p className="mt-2 text-sm leading-6 text-white/62">{item.text}</p>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="px-5 py-20 sm:px-8 lg:px-12">
-        <div className="mx-auto max-w-7xl">
-          <SectionHeader
-            eyebrow="Platform direction"
-            title="Built for the categories where trust, skill, and clarity matter."
-            text="The SAT Accelerator is the first live product. Over time, Illuminairy can expand into AI upskilling, technical education, business owner learning, professional coaching, and broader applied expertise programs."
-          />
-          <div className="mt-10 grid gap-4 md:grid-cols-2">
-            {platformAreas.map((area) => (
-              <FeatureCard
-                key={area.title}
-                icon={area.icon}
-                title={area.title}
-                text={area.text}
-                meta={area.status}
-              />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-white px-5 py-20 sm:px-8 lg:px-12">
-        <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
-          <SectionHeader
-            eyebrow="Identity"
-            title="Premium, minimal, and technical without looking like a tutoring center."
-            text="The Illuminairy identity uses a wordmark-first system with a subtle discoverable AI treatment, a compact mark for favicons, and a restrained palette designed for website, checkout, social, and investor materials."
-          />
-          <IdentityPanel />
-        </div>
-      </section>
-
-      <section className="px-5 py-20 sm:px-8 lg:px-12">
-        <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[1fr_1fr]">
-          <div className="rounded-2xl border border-line bg-white p-8 shadow-ringed">
-            <CheckCircle2 className="h-6 w-6 text-indigo" aria-hidden="true" />
-            <h2 className="mt-5 text-2xl font-semibold tracking-[-0.035em] text-ink">
-              Clear enough for families.
-            </h2>
-            <p className="mt-4 leading-7 text-slatecopy">
-              Parents can understand the service, schedule, delivery format, mentor standards, support contact, and enrollment path without having to decode a marketplace.
-            </p>
-          </div>
-          <div className="rounded-2xl border border-line bg-white p-8 shadow-ringed">
-            <Sparkles className="h-6 w-6 text-indigo" aria-hidden="true" />
-            <h2 className="mt-5 text-2xl font-semibold tracking-[-0.035em] text-ink">
-              Ambitious enough for the larger company.
-            </h2>
-            <p className="mt-4 leading-7 text-slatecopy">
-              The public story starts with SAT prep while leaving room for AI upskilling, technical learning, professional coaching, and applied expertise networks.
-            </p>
+            <ul className="mt-10 grid gap-0">
+              {[
+                { label: "Refund policy", href: "/refund-policy" },
+                { label: "Support policy", href: "/support-policy" },
+                { label: "Terms of service", href: "/terms" },
+                { label: "Privacy policy", href: "/privacy" },
+                { label: "Contact & enrollment", href: "/contact" }
+              ].map(({ label, href }) => (
+                <li key={href} className="border-t border-line first:border-t-0">
+                  <Link
+                    href={href}
+                    className="flex items-center justify-between py-4 text-[14.5px] font-medium text-ink-soft transition hover:text-ink"
+                  >
+                    {label}
+                    <ArrowRight className="h-4 w-4 text-gold-deep" aria-hidden="true" />
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </section>
 
       <DarkCta
-        title="Start with a conversation about the SAT Accelerator."
-        text="For parents and students, the best next step is a short consultation to understand fit, schedule, and enrollment details."
-        primary={{ label: "Book a Consultation", href: bookLink }}
-        secondary={{ label: "Contact Illuminairy", href: "/contact" }}
+        title="Start with a conversation."
+        text="Parents and students: book a short call about the SAT Accelerator. Mentors: apply through contact. Everyone else: send a message anytime."
+        primary={{ label: "Book a consultation", href: scheduleLink }}
+        secondary={{ label: "Contact illuminairy", href: "/contact" }}
       />
     </>
   );

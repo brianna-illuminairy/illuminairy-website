@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
-import { Mail, MapPin, Phone, Send } from "lucide-react";
-import { ButtonLink, PageHero, SectionHeader } from "@/components/ui";
-import { bookLink, contactReasons, inquiryLink, site } from "@/lib/site";
+import { Mail, MapPin } from "lucide-react";
+import { CalendlyBookingSection } from "@/components/calendly-booking";
+import { ContactForm } from "@/components/contact-form";
+import { ButtonLink, Eyebrow, PageHero, SectionHeader } from "@/components/ui";
+import { resolveContactReason, site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -9,121 +11,76 @@ export const metadata: Metadata = {
     "Contact Illuminairy for parent and student inquiries, mentor applications, partnerships, billing, or support."
 };
 
-export default function ContactPage() {
-  const formAction = site.typeformUrl || `mailto:${site.email}`;
-  const formMethod = site.typeformUrl ? "get" : "post";
+export default async function ContactPage({
+  searchParams
+}: {
+  searchParams: Promise<{ reason?: string }>;
+}) {
+  const { reason } = await searchParams;
+  const defaultReason = resolveContactReason(reason);
 
   return (
     <>
       <PageHero
         eyebrow="Contact"
-        title="Contact Illuminairy."
-        text="For program questions, mentor applications, partnerships, billing, or support, contact our team."
-        primary={{ label: "Book a Consultation", href: bookLink }}
-        secondary={{ label: "Email Illuminairy", href: `mailto:${site.email}` }}
+        title="Talk to a person at Illuminairy."
+        text="For program questions, mentor applications, partnerships, billing, or support — send a message and we'll get back quickly."
+        primary={{ label: "Book a consultation", href: "#schedule" }}
+        secondary={{
+          label: "Email support",
+          href: `mailto:${site.supportEmail}`
+        }}
       />
 
-      <section className="px-5 py-20 sm:px-8 lg:px-12">
+      <section className="px-5 py-24 sm:px-8 lg:px-12">
         <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.8fr_1.2fr]">
           <div>
             <SectionHeader
               eyebrow="Support"
-              title="Clear contact details for customers and partners."
+              title="Direct contact for families and mentors."
               text="Illuminairy provides support for educational services, consultations, billing questions, mentor applications, and partnership inquiries."
             />
-            <div className="mt-8 grid gap-3">
+            <div className="mt-9 grid gap-3">
               <a
-                href={`mailto:${site.email}`}
-                className="flex items-center gap-3 rounded-lg border border-line bg-white p-4 text-sm font-medium text-ink hover:border-indigo/30"
+                href={`mailto:${site.supportEmail}`}
+                className="flex items-center gap-3 rounded-2xl border border-line bg-ivory-50 p-5 text-[14.5px] font-medium text-ink transition hover:border-gold/40 hover:bg-ivory"
               >
-                <Mail className="h-5 w-5 text-indigo" aria-hidden="true" />
-                {site.email}
+                <Mail className="h-5 w-5 text-gold-deep" aria-hidden="true" strokeWidth={1.6} />
+                {site.supportEmail}
               </a>
-              <a
-                href={`tel:${site.phone.replace(/[^+\d]/g, "")}`}
-                className="flex items-center gap-3 rounded-lg border border-line bg-white p-4 text-sm font-medium text-ink hover:border-indigo/30"
-              >
-                <Phone className="h-5 w-5 text-indigo" aria-hidden="true" />
-                {site.phone}
-              </a>
-              <div className="flex items-center gap-3 rounded-lg border border-line bg-white p-4 text-sm font-medium text-ink">
-                <MapPin className="h-5 w-5 text-indigo" aria-hidden="true" />
+              <div className="flex items-center gap-3 rounded-2xl border border-line bg-ivory-50 p-5 text-[14.5px] font-medium text-ink">
+                <MapPin className="h-5 w-5 text-gold-deep" aria-hidden="true" strokeWidth={1.6} />
                 {site.location}, United States
               </div>
             </div>
           </div>
 
-          <div className="rounded-2xl border border-line bg-white p-6 shadow-soft">
-            <h2 className="text-2xl font-semibold tracking-[-0.035em] text-ink">
-              Send an inquiry
+          <div className="rounded-3xl border border-line bg-ivory-50 p-7 shadow-editorial sm:p-9">
+            <Eyebrow tone="gold">Send an inquiry</Eyebrow>
+            <h2 className="mt-4 text-[1.625rem] font-light leading-[1.1] tracking-[-0.025em] text-ink sm:text-[2rem]">
+              We read every message.
             </h2>
-            <p className="mt-3 text-sm leading-6 text-slatecopy">
-              Use this form for parent/student inquiries, mentor applications,
-              billing/support, partnerships, or general questions.
+            <p className="mt-3 text-[14.5px] leading-[1.6] text-ink-soft">
+              Use the form for parent/student inquiries, mentor applications,
+              billing/support, partnerships, or general questions. Messages go to{" "}
+              {site.supportEmail}.
             </p>
-            <form
-              action={formAction}
-              method={formMethod}
-              encType={site.typeformUrl ? undefined : "text/plain"}
-              className="mt-6 grid gap-4"
-            >
-              <label className="grid gap-2 text-sm font-medium text-ink">
-                Name
-                <input
-                  name="name"
-                  required
-                  className="h-12 rounded-lg border border-line bg-cloud px-4 text-sm outline-none transition focus:border-indigo"
-                  placeholder="Your name"
-                />
-              </label>
-              <label className="grid gap-2 text-sm font-medium text-ink">
-                Email
-                <input
-                  name="email"
-                  type="email"
-                  required
-                  className="h-12 rounded-lg border border-line bg-cloud px-4 text-sm outline-none transition focus:border-indigo"
-                  placeholder="you@example.com"
-                />
-              </label>
-              <label className="grid gap-2 text-sm font-medium text-ink">
-                Reason for inquiry
-                <select
-                  name="reason"
-                  className="h-12 rounded-lg border border-line bg-cloud px-4 text-sm outline-none transition focus:border-indigo"
-                  defaultValue={contactReasons[0]}
-                >
-                  {contactReasons.map((reason) => (
-                    <option key={reason}>{reason}</option>
-                  ))}
-                </select>
-              </label>
-              <label className="grid gap-2 text-sm font-medium text-ink">
-                Message
-                <textarea
-                  name="message"
-                  required
-                  className="min-h-36 rounded-lg border border-line bg-cloud px-4 py-3 text-sm outline-none transition focus:border-indigo"
-                  placeholder="How can Illuminairy help?"
-                />
-              </label>
-              <button
-                type="submit"
-                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-lg border border-ink bg-ink px-5 text-sm font-medium text-white transition hover:-translate-y-0.5 hover:bg-graphite"
-              >
-                Submit inquiry
-                <Send className="h-4 w-4" aria-hidden="true" />
-              </button>
-            </form>
-            <div className="mt-5 flex flex-col gap-3 border-t border-line pt-5 sm:flex-row">
-              <ButtonLink href={bookLink}>Book a Consultation</ButtonLink>
-              <ButtonLink href={inquiryLink} variant="secondary">
-                Request Details
+            <ContactForm defaultReason={defaultReason} />
+            <div className="mt-7 flex flex-col gap-3 border-t border-line pt-7 sm:flex-row">
+              <ButtonLink href="#schedule">Book a consultation</ButtonLink>
+              <ButtonLink href="/sat-accelerator" variant="secondary">
+                View SAT program
               </ButtonLink>
             </div>
           </div>
         </div>
       </section>
+
+      <CalendlyBookingSection
+        eyebrow="SAT Accelerator · August 2026"
+        title="Book your free consultation."
+        text="Choose a time below to talk about cohort fit, schedule, and enrollment for the August 22, 2026 SAT."
+      />
     </>
   );
 }
