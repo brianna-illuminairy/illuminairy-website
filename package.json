@@ -6,7 +6,11 @@
     "dev": "next dev",
     "build": "next build --webpack",
     "start": "next start",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "env:sync": "node scripts/sync-vercel-env.mjs",
+    "env:pull": "npx vercel env pull .env.local --yes",
+    "deploy:prod": "npx vercel deploy --prod",
+    "release": "npm run env:sync && npm run deploy:prod"
   },
   "dependencies": {
     "lucide-react": "^0.468.0",

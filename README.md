@@ -13,6 +13,15 @@ npm run dev
 
 Copy `.env.example` to `.env.local`.
 
+**Vercel (one command):** after editing `.env.local`, push secrets to production, preview, and development:
+
+```bash
+npm run env:sync
+npm run deploy:prod
+```
+
+Pull from Vercel into `.env.local` on a new machine: `npm run env:pull` (requires `vercel link` once).
+
 **Contact form** (recommended): create a free [Resend](https://resend.com) account, add your API key, and verify `illuminairy.com` so messages send from your domain to `support@illuminairy.com`:
 
 ```bash
