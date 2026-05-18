@@ -3,7 +3,7 @@
  *
  * Prerequisites in .env.local:
  *   STRIPE_SECRET_KEY=sk_live_...
- *   STRIPE_TUITION_CENTS=249900   (example: $2,499.00)
+ *   STRIPE_TUITION_CENTS=150000   (example: $1,500.00)
  *
  * Optional:
  *   SITE_URL=https://illuminairy.com  (webhook URL; skip webhook if unset)
@@ -27,7 +27,7 @@ if (!secret) {
 
 if (!tuitionCents || !/^\d+$/.test(tuitionCents)) {
   console.error(
-    "Missing STRIPE_TUITION_CENTS in .env.local (whole USD cents, e.g. 249900 for $2,499.00)"
+    "Missing STRIPE_TUITION_CENTS in .env.local (whole USD cents, e.g. 150000 for $1,500.00)"
   );
   process.exit(1);
 }

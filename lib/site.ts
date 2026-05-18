@@ -22,6 +22,12 @@ export const site = {
   descriptor: "ILLUMINAIRY",
   satDate: "August 22, 2026",
   tagline: "your guiding light for goals and growth",
+  /** Homepage hero — align with docs/brand-voice-and-positioning.md (illuminate + guide) */
+  homeHero: {
+    title: "We illuminate the path to your goals.",
+    lead:
+      "Near-peer mentors who've already achieved what you're aiming for—guided, research-informed, and clear at every step. The SAT Accelerator is live for the August 22, 2026 test; professional and business programs open next."
+  },
   /** Public SAT consultation only — not the invite-only mentor interview link */
   calendlyUrl:
     process.env.NEXT_PUBLIC_CALENDLY_URL ||
@@ -42,6 +48,9 @@ export const satProgram = {
     "Week-one diagnostics personalize six private 1:1s. Live classes teach. Practice reinforces. Weekly reports keep families in the loop.",
   structureLine:
     "Diagnostics in week one, then weekly Reading & Writing and Math classes, six personalized 1:1s, and assigned practice between every session.",
+  /** Tuition in cents — single source of truth for display on /enroll. */
+  tuitionCents: 120_000,
+  tuitionDisplay: "$1,200",
   /** First week begins Wed May 27, 2026; exam day Sat Aug 22, 2026 — see lib/sat-program-schedule.ts */
   programStartLabel: "May 27, 2026",
   examDayLabel: "August 22, 2026"
@@ -111,14 +120,14 @@ export const programStats = [
 /** Core positioning — mentors + instructors, better model, 1:1 + diagnostics + practice. */
 export const mentorshipMessaging = {
   thesis:
-    "Better mentors and instructors, and a better model, beat self-study and à la carte sessions. Georgia Tech mentors and instructors who recently scored 1450+ lead a twelve-week plan where week-one diagnostics shape six private 1:1s, live classes teach the material, and practice reinforces it through repetition.",
+    "Better mentors and instructors beat self-study and à la carte sessions. Georgia Tech mentors and instructors who recently scored 1450+ lead a twelve-week plan where week-one diagnostics shape six private 1:1s, live classes teach the material, and practice reinforces it through repetition.",
   researchNote:
     "Research backs personalized 1:1 instruction — including Benjamin Bloom's two-sigma finding on individualized teaching (Educational Researcher, 1984) and studies on mentor-led programs — when it is structured, not random."
 };
 
 /** The Accelerator loop — diagnostics → 1:1 → classes → practice. */
 export const acceleratorModel = {
-  eyebrow: "How the model works",
+  eyebrow: "How it works",
   title: "Diagnostics personalize the 1:1s. Practice makes it stick.",
   intro:
     "Self-study leaves gaps. Random à la carte sessions never build momentum. Illuminairy runs one twelve-week program with a set schedule from day one — diagnostics, then weekly classes, 1:1s, and practice — so every session has a purpose.",
@@ -129,7 +138,7 @@ export const acceleratorModel = {
     },
     {
       title: "Six personalized 1:1s",
-      text: "Private sessions driven by diagnostic data and weekly progress — not generic review. This is the core of the model."
+      text: "Private sessions driven by diagnostic data and weekly progress — not generic review. This is the heart of the program."
     },
     {
       title: "Live classes every week",
@@ -145,7 +154,7 @@ export const acceleratorModel = {
 /** How Illuminairy differs from typical SAT prep — used on Home and SAT pages. */
 export const programDifferentiation = {
   eyebrow: "The difference",
-  title: "Better mentors and instructors. A better model.",
+  title: "Better mentors and instructors. A better program.",
   intro:
     "Illuminairy is not a prep center and not a marketplace. It is a twelve-week program with vetted mentors and instructors, mandatory 1:1 time, diagnostics that personalize coaching, and practice built into every week.",
   rows: [
@@ -156,7 +165,7 @@ export const programDifferentiation = {
         "Vetted Georgia Tech mentors and instructors (1450+ SAT) — recently succeeded on the same test your student is taking"
     },
     {
-      aspect: "The model",
+      aspect: "The program",
       typical: "Self-study books, or à la carte sessions with no real plan",
       illuminairy:
         "One twelve-week program with a set schedule: diagnostics, then personalized 1:1s, live classes, and practice every week"
@@ -258,7 +267,7 @@ export const trustPillars = [
   },
   {
     icon: CalendarCheck,
-    title: "Better model",
+    title: "Twelve-week plan",
     text: "One twelve-week program with a set schedule beats self-study and à la carte sessions — diagnostics, 1:1s, classes, and practice, all mapped out in advance."
   },
   {

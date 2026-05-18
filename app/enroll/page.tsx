@@ -23,7 +23,7 @@ export default async function EnrollPage({
       <PageHero
         eyebrow="SAT Accelerator · Enrollment"
         title="Raise your August SAT score. Reserve your spot."
-        text={`Secure payment holds your spot for the ${site.satDate} SAT.`}
+        text={`Program tuition is ${satProgram.tuitionDisplay}. Secure payment holds your spot for the ${site.satDate} SAT.`}
         secondary={{ label: "Need to talk first?", href: "/contact" }}
       />
 
@@ -55,7 +55,13 @@ export default async function EnrollPage({
             <h2 className="mt-4 text-[1.625rem] font-light leading-[1.1] tracking-[-0.025em] text-ink sm:text-[2rem]">
               Complete your enrollment
             </h2>
-            <p className="mt-3 text-[14.5px] leading-[1.6] text-ink-soft">
+            <p className="mt-2 text-[2rem] font-light tracking-[-0.03em] text-ink">
+              {satProgram.tuitionDisplay}
+            </p>
+            <p className="mt-1 text-[13px] text-ink-muted">
+              One-time program tuition
+            </p>
+            <p className="mt-4 text-[14.5px] leading-[1.6] text-ink-soft">
               We use this to set up the student account, connect mentors and
               instructors, and keep parents aligned on schedules and updates.
               Then you&apos;ll continue to secure payment.

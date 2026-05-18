@@ -61,7 +61,7 @@ export default function SatAcceleratorPage() {
         <div className="mx-auto max-w-7xl">
           <SectionHeader
             eyebrow="What's included"
-            title="Mentors and instructors inside a model built around 1:1."
+            title="Mentors and instructors — built around 1:1."
             text="Georgia Tech mentors (1450+ SAT) lead your student's 1:1s; instructors teach live R&W and Math classes — all inside one fixed plan. Diagnostics personalize six private sessions, and practice reinforces what was taught every week. After enrollment, your family gets class times, session links, and your mentor's name before week one."
           />
           <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -121,7 +121,7 @@ export default function SatAcceleratorPage() {
         <div className="mx-auto max-w-7xl rounded-3xl border border-line bg-ivory p-9">
           <Eyebrow tone="gold">How people actually learn</Eyebrow>
           <h2 className="mt-5 text-balance text-[1.75rem] font-light leading-[1.1] tracking-[-0.025em] text-ink sm:text-[2.25rem]">
-            The oldest model of learning — built for the SAT.
+            The oldest way people learn — built for the SAT.
           </h2>
 
           <div className="mt-10 grid gap-10 lg:grid-cols-2 lg:gap-14">
@@ -153,7 +153,7 @@ export default function SatAcceleratorPage() {
               </p>
               <p className="font-medium text-ink">
                 That is what the SAT Accelerator delivers: better mentors and instructors
-                (Georgia Tech, 1450+), a better model than self-study or random sessions,
+                (Georgia Tech, 1450+), a structured program that beats self-study or random sessions,
                 week-one diagnostics
                 that shape six private 1:1s, live classes, practice that reinforces through
                 repetition, and weekly reports — so families always know what was covered and

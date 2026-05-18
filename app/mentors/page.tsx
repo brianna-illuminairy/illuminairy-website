@@ -50,7 +50,7 @@ export default function MentorsPage() {
       <section className="px-5 py-24 sm:px-8 lg:px-12">
         <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.9fr_1.1fr]">
           <SectionHeader
-            eyebrow="Model"
+            eyebrow="Mentorship"
             title="The mentor your student actually wants to learn from."
             text="Illuminairy mentors are role models first — people who have succeeded in demanding academic environments and can show students what is possible, hold them accountable, and teach in a way that feels personal, not transactional."
           />

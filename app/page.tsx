@@ -14,7 +14,6 @@ import {
 import {
   mentorApplyLink,
   programStats,
-  mentorshipMessaging,
   satProgram,
   scheduleLink,
   site,
@@ -38,12 +37,11 @@ export default function Home() {
             </div>
 
             <h1 className="mt-6 text-balance text-[clamp(2.5rem,1.5rem+4vw,4.75rem)] font-extralight leading-[1.02] tracking-[-0.035em] text-ink">
-              Better mentors and instructors. A better model.
+              {site.homeHero.title}
             </h1>
 
             <p className="mt-7 max-w-xl text-pretty text-lg leading-[1.65] text-ink-soft sm:text-xl">
-              The SAT Accelerator is live for the {site.satDate} test. {mentorshipMessaging.thesis}{" "}
-              Professional and business owner programs are opening next.
+              {site.homeHero.lead}
             </p>
 
             <div className="mt-10 flex flex-col gap-3 sm:flex-row">
@@ -105,7 +103,7 @@ export default function Home() {
         <div className="mx-auto max-w-7xl">
           <SectionHeader
             eyebrow="Why illuminairy"
-            title="Better mentors and instructors. A better model. Real 1:1."
+            title="Better mentors and instructors. Real 1:1."
             text="Self-study leaves gaps. À la carte sessions never build momentum. Illuminairy combines Georgia Tech mentors and instructors (1450+ SAT) with week-one diagnostics, six personalized private sessions, live classes, and practice that reinforces what was taught — inside one twelve-week plan families can follow."
           />
           <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
@@ -169,12 +167,12 @@ export default function Home() {
       <section className="px-5 py-24 sm:px-8 lg:px-12">
         <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-2">
           <div className="rounded-3xl bg-navy-gradient p-9 text-ivory sm:p-11">
-            <Eyebrow tone="ivory">The model</Eyebrow>
+            <Eyebrow tone="ivory">What we stand for</Eyebrow>
             <h2 className="mt-5 text-balance text-3xl font-light leading-[1.05] tracking-[-0.03em] sm:text-4xl">
               Mentorship with a high bar.
             </h2>
             <p className="mt-6 max-w-md text-[15.5px] leading-[1.65] text-ivory/72">
-              Small classes, clear structure, and mentors we would trust with our
+              Small classes, a clear plan, and mentors we would trust with our
               own goals. Quality and clarity over volume.
             </p>
             <p className="wordmark mt-10 text-[clamp(2.5rem,5vw,4rem)] leading-none text-ivory">

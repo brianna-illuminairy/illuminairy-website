@@ -2,6 +2,12 @@
 
 Custom Next.js website for Illuminairy.
 
+## Brand & design
+
+**Brand docs:** [`docs/designer-brief.md`](docs/designer-brief.md) (index) · [voice & positioning](docs/brand-voice-and-positioning.md) · [visual identity](docs/visual-identity.md) · [SAT messaging](docs/sat-messaging-positioning.md)
+
+Canonical copy for tagline and homepage hero lives in [`lib/site.ts`](lib/site.ts). HTML brand books may live outside this repo (see [visual-identity.md](docs/visual-identity.md)).
+
 ## Local development
 
 ```bash

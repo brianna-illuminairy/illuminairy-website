@@ -25,7 +25,7 @@ export default function AboutPage() {
         <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.9fr_1.1fr]">
           <SectionHeader
             eyebrow="Why it exists"
-            title="A better model for high-trust learning."
+            title="A better way to learn with mentors."
             text="Most SAT prep feels opaque and transactional — rotating staff, unclear progress, promises that sound too good. Illuminairy is built on what research and families both want: mentors and instructors who have walked the path, a program you can see, and weekly honesty about effort and results."
           />
           <div className="grid gap-4">
@@ -43,7 +43,7 @@ export default function AboutPage() {
               {
                 icon: Compass,
                 title: "Expand with intention",
-                text: "After SAT, the same model will support professional and business programs — always with clear outcomes and excellent mentors."
+                text: "After SAT, the same approach will support professional and business programs — always with clear outcomes and excellent mentors."
               }
             ].map((item) => (
               <FeatureCard key={item.title} {...item} />
@@ -61,7 +61,7 @@ export default function AboutPage() {
             <p className="text-balance text-[clamp(1.75rem,1.1rem+2.4vw,3rem)] font-light leading-[1.15] tracking-[-0.025em] text-ivory">
               Legacy prep programs and expertise marketplaces are fragmented, opaque, and
               transactional. <span className="text-gold-light">Illuminairy is building a more
-              structured model for premium mentorship and applied learning</span>, starting
+              structured approach to premium mentorship and applied learning</span>, starting
               with the SAT Accelerator and expanding carefully from there.
             </p>
           </blockquote>
