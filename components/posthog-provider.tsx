@@ -4,17 +4,14 @@ import posthog from "posthog-js";
 import { PostHogProvider as PHProvider } from "posthog-js/react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { Suspense, useEffect } from "react";
-
-const posthogKey = process.env.NEXT_PUBLIC_POSTHOG_KEY;
-const posthogHost =
-  process.env.NEXT_PUBLIC_POSTHOG_HOST ?? "https://us.i.posthog.com";
+import { getPostHogKey } from "@/lib/posthog";
 
 function PostHogPageView() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    if (!posthogKey || !pathname) {
+    if (!getPostHogKey() || !pathname) {
       return;
     }
     let url = window.location.origin + pathname;
@@ -29,18 +26,9 @@ function PostHogPageView() {
 }
 
 export function PostHogProvider({ children }: { children: React.ReactNode }) {
-  useEffect(() => {
-    if (!posthogKey) {
-      return;
-    }
-    posthog.init(posthogKey, {
-      api_host: posthogHost,
-      person_profiles: "identified_only",
-      capture_pageview: false
-    });
-  }, []);
+  const key = getPostHogKey();
 
-  if (!posthogKey) {
+  if (!key) {
     return <>{children}</>;
   }
 
