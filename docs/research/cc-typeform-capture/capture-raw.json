@@ -1,0 +1,525 @@
+{
+  "captured_at": "2026-05-18T06:55:01.678Z",
+  "typeforms": [
+    {
+      "id": "contact-info",
+      "url": "https://www.curiouscardinals.com/get-started/contact-info",
+      "typeformLive": "01K8K8SQJ19ZW5HCXAD7WHDAYT",
+      "formSlug": "P5h8CCfR",
+      "frameUrl": "https://form.typeform.com/to/P5h8CCfR?typeform-embed-id=21958790386271954&typeform-embed=embed-widget&typeform-source=curiouscardinals.com&typeform-medium=snippet&typeform-medium-version=next&embed-opacity=100&typeform-embed-handles-redirect=1",
+      "steps": [
+        {
+          "step": 1,
+          "bodyText": "1\nParent/Guardian Email*\nPlease provide your email details below so we can connect with you about mentorship opportunities for your child. Your information will be kept confidential and used solely to support your child’s participation in our program.\nOK\n2\nParent/Guardian Contact Information*\nFirst name*\nLast name*\nPhone number*\nOK",
+          "inputs": [
+            {
+              "tag": "INPUT",
+              "type": "email",
+              "name": "email",
+              "placeholder": "name@example.com",
+              "aria": "",
+              "value": ""
+            },
+            {
+              "tag": "INPUT",
+              "type": "text",
+              "name": "given-name",
+              "placeholder": "Jane",
+              "aria": "Enter your first name",
+              "value": ""
+            },
+            {
+              "tag": "INPUT",
+              "type": "text",
+              "name": "family-name",
+              "placeholder": "Smith",
+              "aria": "Enter your last name",
+              "value": ""
+            },
+            {
+              "tag": "INPUT",
+              "type": "tel",
+              "name": "tel",
+              "placeholder": "(201) 555-0123",
+              "aria": "Enter your phone number",
+              "value": ""
+            }
+          ],
+          "frameUrl": "https://form.typeform.com/to/P5h8CCfR?typeform-embed-id=21958790386271954&typeform-embed=embed-widget&typeform-source=curiouscardinals.com&typeform-medium=snippet&typeform-medium-version=next&embed-opacity=100&typeform-embed-handles-redirect=1"
+        }
+      ]
+    },
+    {
+      "id": "parent-info",
+      "url": "https://www.curiouscardinals.com/get-started/parent-info",
+      "typeformLive": "01K8BW43NZXA5C24GC08WJBB9G",
+      "formSlug": "ALTmLSan",
+      "frameUrl": "https://form.typeform.com/to/ALTmLSan?typeform-embed-id=6170549046869103&typeform-embed=embed-widget&typeform-source=curiouscardinals.com&typeform-medium=snippet&typeform-medium-version=next&embed-opacity=100&typeform-embed-handles-redirect=1",
+      "steps": [
+        {
+          "step": 1,
+          "bodyText": "We have identified you as a spammer. Please stop.\nSubmit\npress Cmd ⌘ + Enter ↵\nThis site is protected by reCAPTCHA and the Google Privacy Policy and Terms of Service apply.",
+          "inputs": [],
+          "frameUrl": "https://form.typeform.com/to/ALTmLSan?typeform-embed-id=6170549046869103&typeform-embed=embed-widget&typeform-source=curiouscardinals.com&typeform-medium=snippet&typeform-medium-version=next&embed-opacity=100&typeform-embed-handles-redirect=1"
+        },
+        {
+          "step": 2,
+          "bodyText": "Thank you and goodbye!",
+          "inputs": [],
+          "frameUrl": "https://form.typeform.com/to/ALTmLSan?typeform-embed-id=6170549046869103&typeform-embed=embed-widget&typeform-source=curiouscardinals.com&typeform-medium=snippet&typeform-medium-version=next&embed-opacity=100&typeform-embed-handles-redirect=1"
+        }
+      ]
+    }
+  ],
+  "webflow_steps": [
+    {
+      "slug": "basic-info",
+      "url": "https://www.curiouscardinals.com/get-started/basic-info",
+      "title": "Get Started",
+      "labels": [
+        "Parent’s first name*",
+        "Parent’s last name*",
+        "Parent’s phone number*",
+        "Parent’s email address*",
+        "Student’s first name*",
+        "Student’s last name*",
+        "Student's grade*",
+        "Student’s current school (optional)",
+        "I would like to receive follow-up calls or emails about Curious Cardinals's offers and updates.",
+        "GS Source",
+        "GS2 A/B Test Variant",
+        "GS2 Submitted At",
+        "UTM Source",
+        "UTM Medium",
+        "UTM Campaign",
+        "UTM Term",
+        "UTM Content",
+        "Parent’s first name",
+        "Parent’s last name",
+        "Parent’s phone number",
+        "Parent’s email address",
+        "Student’s first name",
+        "Student’s last name",
+        "Student’s birthdate",
+        "At Curious Cardinals, we’re experts at building confidence in students by connecting them to their dream mentor and anchoring their learning in what’s relevant to them."
+      ],
+      "fields": [
+        {
+          "name": "firstname",
+          "type": "text",
+          "placeholder": "",
+          "id": "firstname-f6fe28f7-8663-413a-87f6-57fd19a0bd60"
+        },
+        {
+          "name": "lastname",
+          "type": "text",
+          "placeholder": "",
+          "id": "lastname-f6fe28f7-8663-413a-87f6-57fd19a0bd60"
+        },
+        {
+          "name": "phone",
+          "type": "tel",
+          "placeholder": "",
+          "id": "phone-f6fe28f7-8663-413a-87f6-57fd19a0bd60"
+        },
+        {
+          "name": "email",
+          "type": "email",
+          "placeholder": "",
+          "id": "email-f6fe28f7-8663-413a-87f6-57fd19a0bd60"
+        },
+        {
+          "name": "gs_student_first_name",
+          "type": "text",
+          "placeholder": "",
+          "id": "gs_student_first_name-f6fe28f7-8663-413a-87f6-57fd19a0bd60"
+        },
+        {
+          "name": "gs_student_last_name",
+          "type": "text",
+          "placeholder": "",
+          "id": "gs_student_last_name-f6fe28f7-8663-413a-87f6-57fd19a0bd60"
+        },
+        {
+          "name": "gs_select_student_grade",
+          "type": "select-one",
+          "id": "gs_select_student_grade-f6fe28f7-8663-413a-87f6-57fd19a0bd60"
+        },
+        {
+          "name": "gs_school_name",
+          "type": "text",
+          "placeholder": "",
+          "id": "gs_school_name-f6fe28f7-8663-413a-87f6-57fd19a0bd60"
+        },
+        {
+          "name": "gs2_marketing___sales_opt_in",
+          "type": "checkbox",
+          "placeholder": "",
+          "id": "gs2_marketing___sales_opt_in-f6fe28f7-8663-413a-87f6-57fd19a0bd60"
+        },
+        {
+          "name": "gs_source",
+          "type": "hidden",
+          "placeholder": "",
+          "id": "gs_source-f6fe28f7-8663-413a-87f6-57fd19a0bd60"
+        },
+        {
+          "name": "get_started_ab_test_variant",
+          "type": "hidden",
+          "placeholder": "",
+          "id": "get_started_ab_test_variant-f6fe28f7-8663-413a-87f6-57fd19a0bd60"
+        },
+        {
+          "name": "get_started_submitted_at",
+          "type": "hidden",
+          "placeholder": "",
+          "id": "get_started_submitted_at-f6fe28f7-8663-413a-87f6-57fd19a0bd60"
+        },
+        {
+          "name": "gs2_utm_source",
+          "type": "hidden",
+          "placeholder": "",
+          "id": "gs2_utm_source-f6fe28f7-8663-413a-87f6-57fd19a0bd60"
+        },
+        {
+          "name": "gs2_utm_medium",
+          "type": "hidden",
+          "placeholder": "",
+          "id": "gs2_utm_medium-f6fe28f7-8663-413a-87f6-57fd19a0bd60"
+        },
+        {
+          "name": "gs2_utm_campaign",
+          "type": "hidden",
+          "placeholder": "",
+          "id": "gs2_utm_campaign-f6fe28f7-8663-413a-87f6-57fd19a0bd60"
+        },
+        {
+          "name": "gs2_utm_term",
+          "type": "hidden",
+          "placeholder": "",
+          "id": "gs2_utm_term-f6fe28f7-8663-413a-87f6-57fd19a0bd60"
+        },
+        {
+          "name": "gs2_utm_content",
+          "type": "hidden",
+          "placeholder": "",
+          "id": "gs2_utm_content-f6fe28f7-8663-413a-87f6-57fd19a0bd60"
+        },
+        {
+          "name": "",
+          "type": "submit",
+          "placeholder": "",
+          "id": ""
+        },
+        {
+          "name": "hs_context",
+          "type": "hidden",
+          "placeholder": "",
+          "id": ""
+        },
+        {
+          "name": "parent_first_name",
+          "type": "text",
+          "placeholder": "eg. Sarah",
+          "id": "parent_first_name"
+        },
+        {
+          "name": "parent_last_name",
+          "type": "text",
+          "placeholder": "eg. Smith",
+          "id": "parent_last_name"
+        },
+        {
+          "name": "parent_phone_number",
+          "type": "text",
+          "placeholder": "eg. (123)456-7890",
+          "id": "parent_phone_number"
+        },
+        {
+          "name": "Parent-Email-Address",
+          "type": "email",
+          "placeholder": "eg. sarahsmith@gmail.com",
+          "id": "Parent-Email-Address"
+        },
+        {
+          "name": "student_first_name",
+          "type": "text",
+          "placeholder": "eg. Sarah",
+          "id": "student_first_name"
+        },
+        {
+          "name": "student_last_name",
+          "type": "text",
+          "placeholder": "eg. Smith",
+          "id": "student_last_name"
+        },
+        {
+          "name": "Student-Birthdate",
+          "type": "text",
+          "placeholder": "eg. Oct 29, 2009",
+          "id": "Student-Birthdate"
+        },
+        {
+          "name": "Student-Current-School",
+          "type": "text",
+          "placeholder": "eg. Riverdale Country School",
+          "id": "Student-Current-School"
+        }
+      ],
+      "buttons": [
+        {
+          "text": "Next",
+          "href": ""
+        },
+        {
+          "text": "Next",
+          "href": "https://www.curiouscardinals.com/get-started/basic-info#"
+        }
+      ],
+      "iframes": [
+        "",
+        ""
+      ]
+    },
+    {
+      "slug": "student-insights",
+      "url": "https://www.curiouscardinals.com/get-started/student-insights",
+      "title": "Student Insights",
+      "labels": [
+        "Parent’s first name",
+        "Parent’s last name",
+        "Parent’s phone number",
+        "Parent’s email address",
+        "Student’s first name",
+        "Student’s last name",
+        "Student’s birthdate",
+        "Student’s current school (optional)",
+        "At Curious Cardinals, we’re experts at building confidence in students by connecting them to their dream mentor and anchoring their learning in what’s relevant to them."
+      ],
+      "fields": [
+        {
+          "name": "parent_first_name",
+          "type": "text",
+          "placeholder": "eg. Sarah",
+          "id": "parent_first_name"
+        },
+        {
+          "name": "parent_last_name",
+          "type": "text",
+          "placeholder": "eg. Smith",
+          "id": "parent_last_name"
+        },
+        {
+          "name": "parent_phone_number",
+          "type": "text",
+          "placeholder": "eg. (123)456-7890",
+          "id": "parent_phone_number"
+        },
+        {
+          "name": "Parent-Email-Address",
+          "type": "email",
+          "placeholder": "eg. sarahsmith@gmail.com",
+          "id": "Parent-Email-Address"
+        },
+        {
+          "name": "student_first_name",
+          "type": "text",
+          "placeholder": "eg. Sarah",
+          "id": "student_first_name"
+        },
+        {
+          "name": "student_last_name",
+          "type": "text",
+          "placeholder": "eg. Smith",
+          "id": "student_last_name"
+        },
+        {
+          "name": "Student-Birthdate",
+          "type": "text",
+          "placeholder": "eg. Oct 29, 2009",
+          "id": "Student-Birthdate"
+        },
+        {
+          "name": "Student-Current-School",
+          "type": "text",
+          "placeholder": "eg. Riverdale Country School",
+          "id": "Student-Current-School"
+        }
+      ],
+      "buttons": [
+        {
+          "text": "Next",
+          "href": "https://www.curiouscardinals.com/get-started/student-insights#"
+        }
+      ],
+      "iframes": [
+        "",
+        ""
+      ]
+    },
+    {
+      "slug": "add-another-student",
+      "url": "https://www.curiouscardinals.com/get-started/add-another-student",
+      "title": "Add Another Student",
+      "labels": [
+        "Parent’s first name",
+        "Parent’s last name",
+        "Parent’s phone number",
+        "Parent’s email address",
+        "Student’s first name",
+        "Student’s last name",
+        "Student’s birthdate",
+        "Student’s current school (optional)",
+        "At Curious Cardinals, we’re experts at building confidence in students by connecting them to their dream mentor and anchoring their learning in what’s relevant to them."
+      ],
+      "fields": [
+        {
+          "name": "parent_first_name",
+          "type": "text",
+          "placeholder": "eg. Sarah",
+          "id": "parent_first_name"
+        },
+        {
+          "name": "parent_last_name",
+          "type": "text",
+          "placeholder": "eg. Smith",
+          "id": "parent_last_name"
+        },
+        {
+          "name": "parent_phone_number",
+          "type": "text",
+          "placeholder": "eg. (123)456-7890",
+          "id": "parent_phone_number"
+        },
+        {
+          "name": "Parent-Email-Address",
+          "type": "email",
+          "placeholder": "eg. sarahsmith@gmail.com",
+          "id": "Parent-Email-Address"
+        },
+        {
+          "name": "student_first_name",
+          "type": "text",
+          "placeholder": "eg. Sarah",
+          "id": "student_first_name"
+        },
+        {
+          "name": "student_last_name",
+          "type": "text",
+          "placeholder": "eg. Smith",
+          "id": "student_last_name"
+        },
+        {
+          "name": "Student-Birthdate",
+          "type": "text",
+          "placeholder": "eg. Oct 29, 2009",
+          "id": "Student-Birthdate"
+        },
+        {
+          "name": "Student-Current-School",
+          "type": "text",
+          "placeholder": "eg. Riverdale Country School",
+          "id": "Student-Current-School"
+        }
+      ],
+      "buttons": [
+        {
+          "text": "Add another student",
+          "href": "https://www.curiouscardinals.com/get-started/student-insights"
+        },
+        {
+          "text": "Next",
+          "href": "https://www.curiouscardinals.com/get-started/add-another-student#"
+        }
+      ],
+      "iframes": [
+        ""
+      ]
+    },
+    {
+      "slug": "book-a-consultation-call",
+      "url": "https://www.curiouscardinals.com/get-started/book-a-consultation-call",
+      "title": "Book a Consultation Call",
+      "labels": [
+        "At Curious Cardinals, we’re experts at building confidence in students by connecting them to their dream mentor and anchoring their learning in what’s relevant to them.",
+        "Our mentor matching process is our secret sauce, but it’s not rocket science."
+      ],
+      "fields": [],
+      "buttons": [],
+      "iframes": [
+        "https://meetings.hubspot.com/alec-katz/curious-cardinals-consultation-call?embed=true&parentHubspotUtk=a6a83f2448db0b604e5c75e5e665f76b&parentPageUrl=https://www.curiouscardinals.com/get-started/book-a-consultation-call",
+        ""
+      ]
+    },
+    {
+      "slug": "book-a-consultation-call-passion-project",
+      "url": "https://www.curiouscardinals.com/get-started/book-a-consultation-call-passion-project",
+      "title": "Publish High School Research - Ambitious Teens - Passion Project Program for Teens",
+      "labels": [
+        "At Curious Cardinals, we’re experts at building confidence in students by connecting them to their dream mentor and anchoring their learning in what’s relevant to them.",
+        "Traditional extracurriculars\naren’t enough",
+        "The right mentor\n‍changes everything",
+        "Our Four Tracks to Choose From",
+        "Portfolio Creation",
+        "Launching an Organization",
+        "Research",
+        "Content Creation",
+        "Why parents trust us",
+        "Trusted by 10k + parents",
+        "Mentors who get it",
+        "Built for busy schedules",
+        "Results you can see",
+        "Learn from the best of the best",
+        "Our Pricing",
+        "Founder letter"
+      ],
+      "fields": [],
+      "buttons": [],
+      "iframes": [
+        "https://meetings.hubspot.com/alec-katz/curious-cardinals-consultation-call?embed=true&parentHubspotUtk=a6a83f2448db0b604e5c75e5e665f76b&parentPageUrl=https://www.curiouscardinals.com/get-started/book-a-consultation-call-passion-project",
+        "https://cdn.embedly.com/widgets/media.html?src=https%3A%2F%2Fplayer.vimeo.com%2Fvideo%2F1077769577%3Fapp_id%3D122963&dntp=1&display_name=Vimeo&url=https%3A%2F%2Fvimeo.com%2F1077769577&image=https%3A%2F%2Fi.vimeocdn.com%2Fvideo%2F2007861655-320fa9c51130829b5f706aad8c8dac583f4df0f9480a878775ad761a3484cee9-d_640&type=text%2Fhtml&schema=vimeo",
+        "https://cdn.embedly.com/widgets/media.html?src=https%3A%2F%2Fplayer.vimeo.com%2Fvideo%2F1077769601%3Fapp_id%3D122963&dntp=1&display_name=Vimeo&url=https%3A%2F%2Fvimeo.com%2F1077769601&image=https%3A%2F%2Fi.vimeocdn.com%2Fvideo%2F2007861675-b6ef296f04ea4a32e74ae9117beb2aa1a6e2d504f088f977b7ebac45cdd0ad78-d_640&type=text%2Fhtml&schema=vimeo",
+        ""
+      ]
+    },
+    {
+      "slug": "confirmation",
+      "url": "https://www.curiouscardinals.com/get-started/confirmation",
+      "title": "Get Started - Confirmation",
+      "labels": [],
+      "fields": [],
+      "buttons": [],
+      "iframes": [
+        ""
+      ]
+    },
+    {
+      "slug": "async-confirmation",
+      "url": "https://www.curiouscardinals.com/get-started/async-confirmation",
+      "title": "Async Confirmation",
+      "labels": [
+        "Frequently Asked Questions"
+      ],
+      "fields": [],
+      "buttons": [],
+      "iframes": [
+        ""
+      ]
+    },
+    {
+      "slug": "asynchronous-match-request",
+      "url": "https://www.curiouscardinals.com/get-started/asynchronous-match-request",
+      "title": "Asynchronous Match Request",
+      "labels": [
+        "At Curious Cardinals, we’re experts at building confidence in students by connecting them to their dream mentor and anchoring their learning in what’s relevant to them.",
+        "Thank you for providing additional information!"
+      ],
+      "fields": [],
+      "buttons": [],
+      "iframes": [
+        "https://meetings.hubspot.com/alec-katz/curious-cardinals-consultation-call?embed=true&parentHubspotUtk=a6a83f2448db0b604e5c75e5e665f76b&parentPageUrl=https://www.curiouscardinals.com/get-started/asynchronous-match-request",
+        ""
+      ]
+    }
+  ]
+}
