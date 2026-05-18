@@ -27,7 +27,7 @@ export const site = {
   tagline: "your guiding light for goals and growth",
   calendlyUrl:
     process.env.NEXT_PUBLIC_CALENDLY_URL ||
-    "https://calendly.com/brianna-illuminairy/new-meeting",
+    "https://calendly.com/brianna-illuminairy/august-sat",
   typeformUrl: process.env.NEXT_PUBLIC_TYPEFORM_URL || ""
 };
 
