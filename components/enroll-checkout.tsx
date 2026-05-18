@@ -10,6 +10,39 @@ const inputClass =
 const labelClass =
   "grid gap-2 text-[13px] font-semibold tracking-[-0.005em] text-ink";
 
+function Field({
+  label,
+  name,
+  type = "text",
+  required,
+  disabled,
+  placeholder,
+  autoComplete
+}: {
+  label: string;
+  name: string;
+  type?: string;
+  required?: boolean;
+  disabled?: boolean;
+  placeholder?: string;
+  autoComplete?: string;
+}) {
+  return (
+    <label className={labelClass}>
+      {label}
+      <input
+        name={name}
+        type={type}
+        required={required}
+        disabled={disabled}
+        className={inputClass}
+        placeholder={placeholder}
+        autoComplete={autoComplete}
+      />
+    </label>
+  );
+}
+
 export function EnrollCheckout() {
   const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
@@ -21,9 +54,15 @@ export function EnrollCheckout() {
 
     const fd = new FormData(e.currentTarget);
     const payload = {
-      parentName: String(fd.get("parentName") ?? ""),
-      email: String(fd.get("email") ?? ""),
-      studentName: String(fd.get("studentName") ?? ""),
+      parentFirstName: String(fd.get("parentFirstName") ?? ""),
+      parentLastName: String(fd.get("parentLastName") ?? ""),
+      parentEmail: String(fd.get("parentEmail") ?? ""),
+      parentPhone: String(fd.get("parentPhone") ?? ""),
+      studentFirstName: String(fd.get("studentFirstName") ?? ""),
+      studentLastName: String(fd.get("studentLastName") ?? ""),
+      studentEmail: String(fd.get("studentEmail") ?? ""),
+      studentPhone: String(fd.get("studentPhone") ?? ""),
+      studentZipCode: String(fd.get("studentZipCode") ?? ""),
       company: String(fd.get("company") ?? "")
     };
 
@@ -52,7 +91,7 @@ export function EnrollCheckout() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="mt-7 grid gap-4">
+    <form onSubmit={handleSubmit} className="mt-7 grid gap-6">
       <input
         type="text"
         name="company"
@@ -62,38 +101,96 @@ export function EnrollCheckout() {
         aria-hidden="true"
       />
 
-      <label className={labelClass}>
-        Parent / guardian name
-        <input
-          name="parentName"
-          required
-          disabled={status === "loading"}
-          className={inputClass}
-          placeholder="Your full name"
-        />
-      </label>
-
-      <label className={labelClass}>
-        Email
-        <input
-          name="email"
+      <fieldset className="grid gap-4 border-0 p-0">
+        <legend className="text-[12px] font-semibold uppercase tracking-[0.08em] text-gold-deep">
+          Parent or guardian
+        </legend>
+        <p className="-mt-2 text-[13px] leading-relaxed text-ink-muted">
+          Billing contact and who we copy on schedules and program updates.
+        </p>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <Field
+            label="Parent first name"
+            name="parentFirstName"
+            required
+            disabled={status === "loading"}
+            autoComplete="given-name"
+          />
+          <Field
+            label="Parent last name"
+            name="parentLastName"
+            required
+            disabled={status === "loading"}
+            autoComplete="family-name"
+          />
+        </div>
+        <Field
+          label="Parent email"
+          name="parentEmail"
           type="email"
           required
           disabled={status === "loading"}
-          className={inputClass}
           placeholder="you@example.com"
+          autoComplete="email"
         />
-      </label>
-
-      <label className={labelClass}>
-        Student name
-        <input
-          name="studentName"
+        <Field
+          label="Parent phone"
+          name="parentPhone"
+          type="tel"
+          required
           disabled={status === "loading"}
-          className={inputClass}
-          placeholder="Optional — or share after payment"
+          placeholder="(555) 555-5555"
+          autoComplete="tel"
         />
-      </label>
+      </fieldset>
+
+      <fieldset className="grid gap-4 border-0 border-t border-line pt-6 p-0">
+        <legend className="text-[12px] font-semibold uppercase tracking-[0.08em] text-gold-deep">
+          Student taking the SAT
+        </legend>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <Field
+            label="Student first name"
+            name="studentFirstName"
+            required
+            disabled={status === "loading"}
+            autoComplete="given-name"
+          />
+          <Field
+            label="Student last name"
+            name="studentLastName"
+            required
+            disabled={status === "loading"}
+            autoComplete="family-name"
+          />
+        </div>
+        <Field
+          label="Student email"
+          name="studentEmail"
+          type="email"
+          required
+          disabled={status === "loading"}
+          placeholder="student@example.com"
+          autoComplete="email"
+        />
+        <Field
+          label="Student phone"
+          name="studentPhone"
+          type="tel"
+          required
+          disabled={status === "loading"}
+          placeholder="(555) 555-5555"
+          autoComplete="tel"
+        />
+        <Field
+          label="Student zip code"
+          name="studentZipCode"
+          required
+          disabled={status === "loading"}
+          placeholder="30308"
+          autoComplete="postal-code"
+        />
+      </fieldset>
 
       {status === "error" && errorMsg && (
         <p className="rounded-xl border border-terracotta/25 bg-terracotta/10 px-4 py-3 text-[14px] leading-relaxed text-terracotta-ink">

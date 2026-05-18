@@ -23,10 +23,17 @@ export async function POST(request: Request) {
 
   if (event.type === "checkout.session.completed") {
     const session = event.data.object;
-    const customerEmail = session.customer_email ?? "unknown";
     const meta = session.metadata ?? {};
     const amountCents = session.amount_total ?? 0;
     const amountFormatted = `$${(amountCents / 100).toFixed(2)}`;
+
+    const studentName = [meta.studentFirstName, meta.studentLastName]
+      .filter(Boolean)
+      .join(" ");
+    const parentName = [meta.parentFirstName, meta.parentLastName]
+      .filter(Boolean)
+      .join(" ");
+    const legacyParentName = meta.parentName as string | undefined;
 
     const resendKey = process.env.RESEND_API_KEY;
     if (resendKey) {
@@ -38,26 +45,28 @@ export async function POST(request: Request) {
       await resend.emails.send({
         from,
         to: inbox,
-        subject: `New SAT enrollment paid · ${customerEmail}`,
+        subject: `New SAT enrollment paid · ${studentName || parentName || legacyParentName || "Family"}`,
         text: [
           `New enrollment payment received.`,
           "",
-          `Email: ${customerEmail}`,
-          `Parent/guardian: ${meta.parentName ?? "—"}`,
-          `Student: ${meta.studentName ?? "—"}`,
+          `Student: ${studentName || "—"}`,
+          `Student email: ${meta.studentEmail ?? "—"}`,
+          `Student phone: ${meta.studentPhone ?? "—"}`,
+          `Student zip: ${meta.studentZipCode ?? "—"}`,
+          "",
+          `Parent/guardian: ${parentName || legacyParentName || "—"}`,
+          `Parent email: ${meta.parentEmail ?? session.customer_email ?? "—"}`,
+          `Parent phone: ${meta.parentPhone ?? "—"}`,
+          "",
           `Program: ${meta.program ?? "—"}`,
           `Amount: ${amountFormatted}`,
           `Session ID: ${session.id}`,
           "",
-          `Next step: send onboarding details to this family.`
+          `Next steps: student account setup, mentor match, parent onboarding email.`
         ].join("\n")
       });
     } else {
-      console.log(
-        "Enrollment paid (Resend not configured):",
-        customerEmail,
-        session.id
-      );
+      console.log("Enrollment paid (Resend not configured):", session.id);
     }
   }
 

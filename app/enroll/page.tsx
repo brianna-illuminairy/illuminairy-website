@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
-import { ShieldCheck, CalendarCheck, UsersRound, UserCheck } from "lucide-react";
 import { EnrollCheckout } from "@/components/enroll-checkout";
+import { EnrollProgramCalendar } from "@/components/enroll-program-calendar";
 import { Eyebrow, PageHero, ButtonLink } from "@/components/ui";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Enroll",
   description:
-    "Complete your enrollment in the Illuminairy SAT Accelerator. Payment reserves your cohort seat.",
+    "Enroll in the Illuminairy SAT Accelerator for the August 2026 SAT. Secure payment holds your spot.",
   robots: { index: false, follow: false }
 };
 
@@ -22,47 +22,25 @@ export default async function EnrollPage({
     <>
       <PageHero
         eyebrow="SAT Accelerator · Enrollment"
-        title="Reserve your cohort seat."
-        text="This page is for families who have already spoken with Illuminairy. Payment reserves your seat in the next SAT Accelerator cohort."
+        title="Raise your August SAT score. Reserve your spot."
+        text={`For families who have already spoken with Illuminairy. Secure payment holds your spot for the ${site.satDate} SAT.`}
         secondary={{ label: "Need to talk first?", href: "/contact" }}
       />
 
       <section className="px-5 py-24 sm:px-8 lg:px-12">
-        <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.8fr_1.2fr]">
+        <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[1.05fr_0.95fr]">
           <div>
             <Eyebrow tone="gold">What you get</Eyebrow>
             <h2 className="mt-4 text-[1.625rem] font-light leading-[1.1] tracking-[-0.025em] text-ink sm:text-[2rem]">
-              Twelve weeks of structured SAT preparation.
+              12 weeks of intensive instruction, 1:1 expert help, and practice
+              problems.
             </h2>
-            <div className="mt-8 grid gap-5">
-              {[
-                {
-                  icon: CalendarCheck,
-                  label: "24 live small-group sessions"
-                },
-                {
-                  icon: UserCheck,
-                  label: "6 private 1:1 coaching sessions"
-                },
-                {
-                  icon: UsersRound,
-                  label: "Cohorts capped at 10 students"
-                },
-                {
-                  icon: ShieldCheck,
-                  label: "Georgia Tech-led mentors (1450+ SAT)"
-                }
-              ].map((item) => (
-                <div key={item.label} className="flex items-center gap-3">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-gold/20 bg-gold/10 text-gold-deep">
-                    <item.icon className="h-4 w-4" strokeWidth={1.6} aria-hidden="true" />
-                  </div>
-                  <span className="text-[14.5px] font-medium text-ink">
-                    {item.label}
-                  </span>
-                </div>
-              ))}
-            </div>
+            <p className="mt-4 text-[15px] leading-[1.65] text-ink-soft">
+              All tracked and reported to you and your student every week — so
+              you always know what was covered, what&apos;s due, and where scores
+              are heading.
+            </p>
+            <EnrollProgramCalendar />
             <p className="mt-8 text-[13px] leading-relaxed text-ink-muted">
               Payment is processed securely through Stripe. See our{" "}
               <a href="/refund-policy" className="underline underline-offset-2 hover:text-ink">
@@ -76,13 +54,14 @@ export default async function EnrollPage({
           </div>
 
           <div className="rounded-3xl border border-line bg-ivory-50 p-7 shadow-editorial sm:p-9">
-            <Eyebrow tone="gold">Secure checkout</Eyebrow>
+            <Eyebrow tone="gold">Reserve your spot</Eyebrow>
             <h2 className="mt-4 text-[1.625rem] font-light leading-[1.1] tracking-[-0.025em] text-ink sm:text-[2rem]">
-              Complete your enrollment.
+              Complete your enrollment
             </h2>
             <p className="mt-3 text-[14.5px] leading-[1.6] text-ink-soft">
-              Enter your details below and continue to Stripe for secure payment.
-              You will receive onboarding details by email after payment.
+              We use this to set up the student account, connect mentors and
+              instructors, and keep parents aligned on schedules and updates.
+              Then you&apos;ll continue to secure payment.
             </p>
 
             {canceled && (

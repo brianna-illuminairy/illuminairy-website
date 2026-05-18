@@ -24,9 +24,9 @@ export default function EnrollSuccessPage() {
         </h1>
 
         <p className="mt-6 text-pretty text-lg leading-[1.65] text-ink-soft">
-          Thank you for joining the Illuminairy SAT Accelerator. We will send
-          onboarding details, your cohort schedule, session links, and support
-          instructions to your email within 1–2 business days.
+          Thank you for joining the Illuminairy SAT Accelerator. Within 1–2
+          business days we will email the student and parent with account setup,
+          mentor introductions, schedule, and session links.
         </p>
 
         <p className="mt-4 text-[14.5px] leading-[1.6] text-ink-muted">
