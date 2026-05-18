@@ -1,0 +1,24 @@
+{
+  "archived_at": "2026-05-18T05:23:27Z",
+  "tool": "GNU wget 1.25",
+  "sections": {
+    "marketing": {
+      "sitemap_urls": 786,
+      "html_files": 564,
+      "total_files": 2087,
+      "zero_byte_files": 0
+    },
+    "blog": {
+      "sitemap_urls": 121,
+      "html_files": 121,
+      "total_files": 2148,
+      "zero_byte_files": 0
+    },
+    "app_mentors": {
+      "sitemap_urls": 2196,
+      "html_files": 2196,
+      "total_files": 2376,
+      "zero_byte_files": 0
+    }
+  }
+}
