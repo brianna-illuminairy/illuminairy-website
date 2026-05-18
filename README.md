@@ -39,6 +39,17 @@ See `lib/internal-links.ts`. Mentor applicants use `/contact?reason=mentor`; you
 
 If Calendly is not set, consultation CTAs fall back to `mailto:support@illuminairy.com`.
 
+**Stripe enrollment** (post-consultation checkout on `/enroll`):
+
+```bash
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_live_...
+STRIPE_SECRET_KEY=sk_live_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+STRIPE_PRICE_ID=price_...
+```
+
+Create the Product and Price in Stripe Dashboard → Products. The Price ID goes into `STRIPE_PRICE_ID`. Register a webhook endpoint at `https://illuminairy.com/api/webhooks/stripe` for `checkout.session.completed` events. For local testing, run `stripe listen --forward-to localhost:3000/api/webhooks/stripe` and use the signing secret it prints.
+
 ## Deployment
 
 Deploy the project on Vercel, then point the Squarespace-managed DNS for
