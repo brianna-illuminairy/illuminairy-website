@@ -72,7 +72,7 @@ A **luminary** is someone who **inspires others through achievement** in a field
 | 1:1 | **6 private sessions**, shaped by **week-one diagnostics** |
 | Mentors | Georgia Tech students/alumni (or equivalent), **1450+ SAT**, vetted to teach |
 | Target exam | **August 22, 2026** SAT (program start **May 27, 2026**) |
-| Tuition | **$1,500** (display from site) |
+| Tuition | **$1,200** (display from site) |
 | Parent visibility | **Weekly reports** on effort and progress—not a promised score |
 
 **Thesis (site):** Better mentors + a real program beat self-study and random à la carte tutoring. Diagnostics → personalized 1:1s → live classes → practice every week.

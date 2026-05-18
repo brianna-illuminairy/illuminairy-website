@@ -1,0 +1,13 @@
+---
+description: API routes and third-party integrations
+globs: app/api/**/*.ts,lib/stripe.ts,lib/posthog.ts,scripts/**/*
+alwaysApply: false
+---
+
+# API & integrations
+
+- Validate input; return JSON errors without leaking stack traces.
+- Stripe webhooks: verify signature with `STRIPE_WEBHOOK_SECRET`.
+- Contact: requires `RESEND_API_KEY`; safe fallback messaging if unset.
+- Server-only secrets: never prefix tutor Calendly or Stripe secret with `NEXT_PUBLIC_`.
+- Document new env vars in `.env.example` and `memory-bank/techContext.md`.

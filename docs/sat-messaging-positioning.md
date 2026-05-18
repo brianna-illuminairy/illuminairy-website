@@ -1,7 +1,7 @@
 # SAT Accelerator — Messaging & Competitive Positioning
 
 *Internal document for founders, consultation calls, copywriters, and future site updates.*
-*Voice and positioning: [brand-voice-and-positioning.md](brand-voice-and-positioning.md). Visual system: [visual-identity.md](visual-identity.md). Doc index: [designer-brief.md](designer-brief.md).*
+*Voice: [brand-voice-and-positioning.md](brand-voice-and-positioning.md). Visual: [visual-identity.md](visual-identity.md). Competitors: [sat-competitor-analysis.md](sat-competitor-analysis.md). Tables: [sat-us-vs-competitors.md](sat-us-vs-competitors.md). Adjacent mentorship intel: [competitor-intel-curious-cardinals.md](competitor-intel-curious-cardinals.md). Index: [designer-brief.md](designer-brief.md).*
 
 Updated: May 2026
 
@@ -31,7 +31,7 @@ These pains come from Reddit (r/SAT, r/digitalSATs), College Confidential, Trust
 | Generic group classes that can't separate levels | Bogleheads parents note explicitly: a room of 1100-band and 1400-band students gets neither what they need | **Two paths by starting level and goal.** R&W and Math sessions further adjusted by diagnostic subscores — a strong-math / weak-R&W student isn't stuck in generic instruction. |
 | Tutor quality roulette | Varsity Tutors described as "staffing platform" with wild variance; Wyzant praised when great but "you're the hiring manager"; big brands: "nice teachers, run of the mill content" | **Vetted Georgia Tech mentors (1450+)**, same mentor continuity across the program, chosen for teaching ability — not assigned at random and not "whoever is free this week." |
 | Score guarantees with punitive fine print | Kaplan, Princeton Review, PrepScholar all face guarantee complaints; TINA.org pressured Princeton to revise "1400+ guaranteed" marketing; PrepScholar parents report 40+ hours with no improvement and refund denied | We don't offer a score guarantee — and we explain why honestly. See Pillar B below. |
-| Sales pressure and opaque pricing | Varsity Tutors requires a mandatory sales call before showing prices; franchise centers use high-pressure enrollment and resist refunds | **No-pressure consultation** — we recommend the program only for families we genuinely believe we can help. Published tuition ($1,500) on the site. Clear refund policy linked from every program page. |
+| Sales pressure and opaque pricing | Varsity Tutors requires a mandatory sales call before showing prices; franchise centers use high-pressure enrollment and resist refunds | **No-pressure consultation** — we recommend the program only for families we genuinely believe we can help. Published tuition ($1,200) on the site. Clear refund policy linked from every program page. |
 | Digital SAT transition pain — outdated books, thin official explanations, "AI slop" third-party questions | Khan/official praised for authenticity but criticized for no roadmap; third-party apps with fake-hard or gotcha questions that don't match College Board logic | **Official-aligned practice** with a human explanation layer. We don't replace official material with fabricated tests — we teach students how to use the real thing and add the roadmap and depth the official tools lack. |
 
 ---
@@ -221,7 +221,7 @@ Consultation → Week-one diagnostics (R&W + Math)
 | | Marketplace / franchise | Illuminairy |
 |---|---|---|
 | **Who teaches** | Whoever is available; quality varies wildly | Named Georgia Tech mentors (1450+), same mentor for the full program, vetted for teaching ability |
-| **Pricing** | Hidden behind sales calls, or $5k+ packages with upsells | $1,500 published on the site. No hidden fees. |
+| **Pricing** | Hidden behind sales calls, or $5k+ packages with upsells | $1,200 published on the site. No hidden fees. |
 | **Enrollment** | High-pressure calls, subscription lock-ins, package bundling | No-pressure consultation. We don't recommend the program unless we believe it's the right fit. |
 | **Refunds** | Dense fine print, friction, guarantee loopholes | Clear refund policy with a straightforward window, linked from every program page |
 | **Continuity** | Tutor changes, substitutions, no consistent plan | One twelve-week plan, same mentor, weekly reports |
@@ -255,20 +255,11 @@ Consultation → Week-one diagnostics (R&W + Math)
 
 ---
 
-## 4. Competitive positioning matrix
+## 4. Competitive positioning (see dedicated docs)
 
-**Internal reference only — do not publish this table.** Use it for consultation preparation and to understand where Illuminairy's strengths land relative to alternatives.
+Full competitor profiles, market map, and "when to recommend us vs. them" → **[sat-competitor-analysis.md](sat-competitor-analysis.md)**.
 
-| | Plan clarity | 1:1 quality | Pacing focus | Real-SAT alignment | Guarantee honesty | Sales experience |
-|---|---|---|---|---|---|---|
-| **Kaplan** | Polished but generic | Not included in base | Minimal | Practice often "too fundamental" for 1300+ | "Higher Score Guarantee" — strict T&Cs, sometimes ~10pt threshold | Online purchase, straightforward |
-| **Princeton Review** | Well-organized courses | Optional add-on, costly | Minimal | Practice tests considerably harder than real SAT | TINA.org investigated guarantee marketing | Standard enrollment |
-| **PrepScholar** | Customized online path | No live 1:1 | Minimal | Online-only, decent Q bank | 240-point guarantee with 18 pages of fine print | Online purchase |
-| **Magoosh / UWorld** | Self-directed — no plan | No 1:1 | Not addressed | Good quality (UWorld better on realism) | No guarantee (honest) | Low-friction sign-up |
-| **Varsity / Wyzant** | No plan — marketplace | Varies wildly by tutor | Depends on tutor | Depends on tutor | None (marketplace) | Varsity: mandatory sales call; Wyzant: self-serve |
-| **Huntington / Sylvan** | Center-dependent | Location-dependent | Rarely emphasized | Often outdated materials | Varies by franchise | High-pressure enrollment at many locations |
-| **Free official (Khan + Bluebook)** | No plan — self-guided | None | Not taught | Highest authenticity | N/A (free) | N/A |
-| **Illuminairy** | Fixed 12-week blueprint with diagnostics, assigned practice, weekly reports | Six 1:1s with same vetted mentor, shaped by diagnostics | Core differentiator — taught explicitly | Official materials as foundation + human explanation layer | No guarantee — commits to program delivery, mentor bar, weekly visibility | No-pressure consultation, published pricing |
+Site-ready **Typical vs. Illuminairy** table, feature matrix, price comparison, and consultation talk tracks → **[sat-us-vs-competitors.md](sat-us-vs-competitors.md)**.
 
 ---
 
@@ -286,7 +277,7 @@ Use these as guides for conversation, not scripts to read verbatim. Match the br
 
 **"How is this different from hiring a $200/hr private tutor?"**
 
-> A great private tutor can be fantastic. The risk is finding one — and the cost adds up quickly. At $200/hr, six hours of tutoring is $1,200 with no group classes, no assigned practice, no diagnostic framework, and no weekly reports. Our program gives your student a vetted 1450+ mentor for six 1:1 sessions, plus two live classes every week, diagnostics, practice, and full-length timed tests — for a fixed $1,500. And because we run a program, not freelance sessions, every part reinforces the others.
+> A great private tutor can be fantastic. The risk is finding one — and the cost adds up quickly. At $200/hr, six hours of tutoring is $1,200 with no group classes, no assigned practice, no diagnostic framework, and no weekly reports. Our program gives your student a vetted 1450+ mentor for six 1:1 sessions, plus two live classes every week, diagnostics, practice, and full-length timed tests — for a fixed $1,200. And because we run a program, not freelance sessions, every part reinforces the others.
 
 **"My kid already scores 1500+ on practice tests."**
 
@@ -309,6 +300,8 @@ Use with or in place of the current SAT Accelerator hero text.
 3. *Not self-study. Not a tutor marketplace. One guided program from diagnostics to test day.*
 
 ### Differentiation table rows (Phase 2 site additions)
+
+Full tables (live + Phase 2 rows) → [sat-us-vs-competitors.md](sat-us-vs-competitors.md) § Table 1.
 
 These three rows can extend the `programDifferentiation.rows` array in `lib/site.ts` when ready:
 
@@ -381,7 +374,7 @@ These carry forward from the brand workshop and [brand-voice-and-positioning.md]
 | Phase | Work | Status |
 |---|---|---|
 | **Now** | Save this document as internal reference for consultations, copywriting, and program design decisions | Done |
-| **Next (Phase 2 — site)** | Add three differentiation table rows (Pacing, Guarantees, Level matching) to `programDifferentiation.rows` in `lib/site.ts`; add a "Why we don't guarantee a score" section to the SAT Accelerator page | Planned |
-| **Next (Phase 2 — site)** | Update consultation booking copy with no-pressure language from this doc | Planned |
+| **Next (Phase 2 — site)** | Add three differentiation table rows from [sat-us-vs-competitors.md](sat-us-vs-competitors.md) to `programDifferentiation.rows`; add a "Why we don't guarantee a score" section to the SAT Accelerator page | Done |
+| **Next (Phase 2 — site)** | Update consultation booking copy with no-pressure language from this doc | Done |
 | **Later** | Define enrollment cutoffs for two-path system; build class assignment rules; update site to reflect two paths publicly | Planned — pending operational decisions |
 | **Later** | Post-cohort: publish real outcomes and testimonials (permissioned) per brand-voice proof ladder | Planned — after first cohort completes |

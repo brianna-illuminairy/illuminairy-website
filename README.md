@@ -1,12 +1,36 @@
 # Illuminairy
 
-Custom Next.js website for Illuminairy.
+Custom Next.js website for [Illuminairy](https://illuminairy.com) — mentorship programs with **SAT Accelerator** live for the August 22, 2026 SAT.
+
+## Documentation map
+
+| Doc | Purpose |
+|-----|---------|
+| [**AGENTS.md**](AGENTS.md) | Instructions for AI assistants working in this repo |
+| [**memory-bank/**](memory-bank/README.md) | Persistent context (product, tech, active work) |
+| [**docs/architecture.md**](docs/architecture.md) | Routes, APIs, integrations, folder layout |
+| [**docs/decisions/**](docs/decisions/README.md) | Architecture decision log (ADRs) |
+| [**CONTRIBUTING.md**](CONTRIBUTING.md) | Setup, PR checklist, commit norms |
+| [**docs/**](docs/README.md) | Brand voice, visual identity, SAT messaging |
 
 ## Brand & design
 
 **Brand docs:** [`docs/designer-brief.md`](docs/designer-brief.md) (index) · [voice & positioning](docs/brand-voice-and-positioning.md) · [visual identity](docs/visual-identity.md) · [SAT messaging](docs/sat-messaging-positioning.md)
 
 Canonical copy for tagline and homepage hero lives in [`lib/site.ts`](lib/site.ts). HTML brand books may live outside this repo (see [visual-identity.md](docs/visual-identity.md)).
+
+## Repo layout
+
+```
+app/              Pages and API routes
+components/       UI components
+lib/              Site config, Stripe, schedules
+docs/             Brand + internal technical docs
+memory-bank/      Session context for humans & AI
+archives/         Historical reference captures (not deployed)
+scripts/          Env sync, Stripe setup, verification
+.cursor/rules/    Cursor agent rules
+```
 
 ## Local development
 
@@ -77,3 +101,9 @@ Or create Product/Price in Dashboard → Products and register webhook `https://
 
 Deploy the project on Vercel, then point the Squarespace-managed DNS for
 `illuminairy.com` to Vercel.
+
+## Working with AI in Cursor
+
+1. Open **`memory-bank/activeContext.md`** to see current focus.
+2. Agents follow **`AGENTS.md`** and **`.cursor/rules/`** automatically.
+3. After significant work, update the memory bank and add an ADR if you made a durable decision.

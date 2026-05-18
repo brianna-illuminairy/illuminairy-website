@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
-import { Calendar } from "lucide-react";
+import { Calendar, Check } from "lucide-react";
 import { CalendlyBookingSection } from "@/components/calendly-booking";
+import { DigitalSatCallout } from "@/components/digital-sat-callout";
+import { NoGuaranteeSection } from "@/components/no-guarantee-section";
+import { SatPillars } from "@/components/sat-pillars";
 import {
   ButtonLink,
   DarkCta,
@@ -11,12 +14,18 @@ import {
 } from "@/components/ui";
 import { AcceleratorModel } from "@/components/accelerator-model";
 import { ProgramDifferentiation } from "@/components/program-differentiation";
-import { mentorshipMessaging, satFeatures, site } from "@/lib/site";
+import {
+  commitments,
+  consultationCopy,
+  satFeatures,
+  satHero,
+  site
+} from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "SAT Accelerator",
   description:
-    "Twelve weeks with weekly Reading & Writing and Math classes, private 1:1 sessions, and weekly progress reports for the August 22, 2026 SAT."
+    "Twelve weeks with Georgia Tech mentors (1450+ SAT), week-one diagnostics, six personalized 1:1s, live classes, and weekly progress reports for families targeting selective admissions — August 22, 2026 SAT."
 };
 
 export default function SatAcceleratorPage() {
@@ -24,8 +33,8 @@ export default function SatAcceleratorPage() {
     <>
       <PageHero
         eyebrow="Illuminairy SAT · August 2026"
-        title={`Better mentors and instructors — for the ${site.satDate} SAT.`}
-        text={mentorshipMessaging.thesis}
+        title={satHero.title}
+        text={satHero.lead}
         primary={{ label: "Book a free consultation", href: "#schedule" }}
         secondary={{ label: "Request program details", href: "/contact?reason=parent" }}
       >
@@ -50,19 +59,38 @@ export default function SatAcceleratorPage() {
           </div>
           <div className="mt-4 rounded-2xl border border-line bg-ivory-200/60 p-5">
             <p className="text-[14px] font-medium leading-[1.55] text-ink">
-              Not self-study. Not à la carte sessions. One twelve-week program with
-              diagnostics, six 1:1s, live classes each week, and practice built in.
+              Not self-study. Not a tutor marketplace. One guided program from
+              diagnostics to test day.
             </p>
           </div>
         </div>
       </PageHero>
+
+      {/* Commitments strip */}
+      <section className="border-y border-line/70 bg-ivory-200/50 px-5 py-10 sm:px-8 lg:px-12">
+        <div className="mx-auto max-w-5xl">
+          <p className="eyebrow text-center text-gold-deep">What we commit to</p>
+          <ul className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {commitments.map((item) => (
+              <li key={item} className="flex gap-3 px-2 text-[14px] leading-[1.6] text-ink-soft">
+                <Check
+                  className="mt-0.5 h-4 w-4 shrink-0 text-gold-deep"
+                  strokeWidth={2}
+                  aria-hidden="true"
+                />
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
 
       <section className="px-5 py-24 sm:px-8 lg:px-12">
         <div className="mx-auto max-w-7xl">
           <SectionHeader
             eyebrow="What's included"
             title="Mentors and instructors — built around 1:1."
-            text="Georgia Tech mentors (1450+ SAT) lead your student's 1:1s; instructors teach live R&W and Math classes — all inside one fixed plan. Diagnostics personalize six private sessions, and practice reinforces what was taught every week. After enrollment, your family gets class times, session links, and your mentor's name before week one."
+            text="Georgia Tech mentors (1450+ SAT) run your student's 1:1s. Instructors teach live R&W and Math classes. Week-one diagnostics tell the mentor which question types to focus on, and practice is assigned between every session. After enrollment, you get class times, session links, and your mentor's name before week one."
           />
           <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {satFeatures.map((item) => (
@@ -83,6 +111,8 @@ export default function SatAcceleratorPage() {
 
       <AcceleratorModel />
 
+      <SatPillars />
+
       <ProgramDifferentiation showResearchNote={false} />
 
       <section className="px-5 py-24 sm:px-8 lg:px-12">
@@ -91,7 +121,7 @@ export default function SatAcceleratorPage() {
             <SectionHeader
               eyebrow="Mentors"
               title="Georgia Tech-led, with a high bar."
-              text="SAT mentors are Georgia Tech students, alumni, or similarly qualified academic mentors who scored 1450+ on the SAT — and can teach clearly."
+              text="SAT mentors are Georgia Tech students, alumni, or similarly qualified mentors who scored 1450+ on the SAT — screened for how they explain things, not just their score."
             />
             <div className="mt-7">
               <ButtonLink href="#schedule" variant="secondary" icon={Calendar}>
@@ -103,7 +133,7 @@ export default function SatAcceleratorPage() {
             {[
               "Verified 1450+ SAT scores",
               "Communication and professionalism screening",
-              "Relatable role models for college-bound students",
+              "Recently took the same test your student is preparing for",
               "Chosen for teaching ability — not assigned at random"
             ].map((text) => (
               <div
@@ -117,9 +147,13 @@ export default function SatAcceleratorPage() {
         </div>
       </section>
 
+      <NoGuaranteeSection />
+
+      <DigitalSatCallout />
+
       <section className="bg-ivory-200/50 px-5 py-20 sm:px-8 lg:px-12">
         <div className="mx-auto max-w-7xl rounded-3xl border border-line bg-ivory p-9">
-          <Eyebrow tone="gold">How people actually learn</Eyebrow>
+          <Eyebrow tone="gold">Research-informed</Eyebrow>
           <h2 className="mt-5 text-balance text-[1.75rem] font-light leading-[1.1] tracking-[-0.025em] text-ink sm:text-[2.25rem]">
             The oldest way people learn — built for the SAT.
           </h2>
@@ -127,37 +161,34 @@ export default function SatAcceleratorPage() {
           <div className="mt-10 grid gap-10 lg:grid-cols-2 lg:gap-14">
             <div className="space-y-5 text-[15.5px] leading-[1.75] text-ink-soft">
               <p>
-                For most of human history, the deepest learning did not happen in a lecture hall
-                with hundreds of faces. It happened in relationship: one teacher, one student,
-                honest feedback, and work that earns understanding. Socrates with his
-                interlocutors. Aristotle with Alexander. A bonded pair — not a conveyor belt.
+                Most learning that actually changes how someone performs doesn't happen in a
+                lecture hall. It happens when one person who knows the material sits with one
+                person who doesn't, spots exactly where they're going wrong, and explains it
+                until they get it right.
               </p>
               <p>
-                That is still how mastery forms. A mentor can light the way — see the path,
-                name the next move, hold the standard. Only the student can take the steps. Our
-                job is to make both roles clear: guidance from someone who has walked it, and
-                ownership of the work that actually moves the score.
+                That's what the 1:1 sessions are for. The mentor sees your student's errors,
+                knows the test, and spends the session on the specific problems your student
+                keeps missing. The student does the work — the mentor makes sure it's the
+                right work.
               </p>
             </div>
 
             <div className="space-y-5 text-[15.5px] leading-[1.75] text-ink-soft">
               <p>
-                Research has measured what intuition already knew. Benjamin Bloom&apos;s landmark
-                study found that one-to-one instruction can raise achievement by roughly{" "}
+                Benjamin Bloom&apos;s landmark study found that one-to-one instruction can raise
+                achievement by roughly{" "}
                 <span className="font-medium text-ink">two standard deviations</span> compared with
                 conventional classroom instruction — the famous &ldquo;two sigma&rdquo; result (
-                <em>Educational Researcher</em>, 1984). Mentor-led programs in college show the same
-                pattern in a different form: students learn better when someone close to their
-                experience gives timely feedback, holds them accountable, and makes it safe to
-                ask real questions — not when they sit in another lecture.
+                <em>Educational Researcher</em>, 1984). Students learn better when someone close to
+                their experience gives timely feedback, holds them accountable, and makes it safe to
+                ask real questions.
               </p>
               <p className="font-medium text-ink">
-                That is what the SAT Accelerator delivers: better mentors and instructors
-                (Georgia Tech, 1450+), a structured program that beats self-study or random sessions,
-                week-one diagnostics
-                that shape six private 1:1s, live classes, practice that reinforces through
-                repetition, and weekly reports — so families always know what was covered and
-                what&apos;s due.
+                That is what the SAT Accelerator delivers: Georgia Tech mentors (1450+),
+                a clear twelve-week plan, week-one diagnostics that shape six private 1:1s, live
+                classes, practice that reinforces through repetition, and weekly reports — so
+                families always know what was covered and what&apos;s due.
               </p>
             </div>
           </div>
@@ -173,9 +204,9 @@ export default function SatAcceleratorPage() {
       </section>
 
       <CalendlyBookingSection
-        eyebrow="Schedule"
-        title="Book your free SAT consultation."
-        text="Pick a time below. We'll cover program fit, the August 2026 timeline, and enrollment details."
+        eyebrow={consultationCopy.eyebrow}
+        title={consultationCopy.title}
+        text={consultationCopy.text}
       />
 
       <DarkCta

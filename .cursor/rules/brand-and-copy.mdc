@@ -1,0 +1,13 @@
+---
+description: Brand copy and site config conventions
+globs: lib/site.ts,lib/sat-program-schedule.ts,docs/**/*.md,app/**/*.tsx
+alwaysApply: false
+---
+
+# Brand & copy
+
+- Factual constants (tuition, weeks, dates, structure) live in `lib/site.ts`.
+- Voice: warm, clear, parent-friendly; avoid "cohort."
+- SAT angles: `docs/sat-messaging-positioning.md`.
+- When changing hero or program facts, sync `docs/` if positioning text references them.
+- Tutor interview scheduling is invite-only — see `lib/internal-links.ts`.

@@ -31,3 +31,9 @@ rm -rf archives/curious-cardinals-2026-05-18
 ### Re-run the mirror
 
 Scripts live on the archive branch under `archives/curious-cardinals-2026-05-18/scripts/`.
+
+### Content analysis & competitor intel
+
+**Canonical doc:** [docs/competitor-intel-curious-cardinals.md](../docs/competitor-intel-curious-cardinals.md) — archive summary, top blog content, pivot, Illuminairy positioning, content calendar.
+
+Re-scrape CC blog: `npm run cc:analyze-blog`

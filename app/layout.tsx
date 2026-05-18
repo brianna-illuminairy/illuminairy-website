@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Illuminairy — your guiding light for goals and growth",
     description:
-      "Named mentors. Clear structure. Weekly progress reports. Georgia Tech-led SAT Accelerator.",
+      "Named mentors. A clear plan. Weekly progress reports. Georgia Tech-led SAT Accelerator.",
     url: site.url,
     siteName: "Illuminairy",
     images: [

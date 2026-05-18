@@ -7,7 +7,7 @@ import { scheduleLink, site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "About",
   description:
-    "Illuminairy is a premium mentorship and applied learning company launching with structured SAT instruction."
+    "Illuminairy is a premium mentorship and applied learning company — illuminate + luminary. Launching with Georgia Tech-led SAT preparation and expanding from there."
 };
 
 export default function AboutPage() {
@@ -16,7 +16,7 @@ export default function AboutPage() {
       <PageHero
         eyebrow="About Illuminairy"
         title="Your guiding light for goals and growth."
-        text="Illuminairy exists because high-trust learning should feel clearer, more structured, and more human. We are starting with premium SAT preparation and building toward professional and business programs."
+        text="Illuminairy exists because high-trust learning should feel clearer, more guided, and more human. We are starting with premium SAT preparation and building toward professional and business programs."
         primary={{ label: "Explore Programs", href: "/programs" }}
         secondary={{ label: "Contact Us", href: "/contact" }}
       />
@@ -33,12 +33,12 @@ export default function AboutPage() {
               {
                 icon: GraduationCap,
                 title: "Start with a real need",
-                text: "SAT preparation is a high-stakes category where trust, structure, and mentor quality matter immediately."
+                text: "SAT preparation is a high-stakes category where trust, clarity, and mentor quality matter immediately."
               },
               {
                 icon: Blocks,
-                title: "Build repeatable structure",
-                text: "Instead of one-off sessions, Illuminairy packages mentorship and instruction into clear programs with defined structure, support, and expectations."
+                title: "Build a clear, repeatable plan",
+                text: "Instead of one-off sessions, Illuminairy packages mentorship and instruction into guided programs with a defined plan, support, and expectations."
               },
               {
                 icon: Compass,
@@ -60,9 +60,9 @@ export default function AboutPage() {
           <blockquote className="mt-7">
             <p className="text-balance text-[clamp(1.75rem,1.1rem+2.4vw,3rem)] font-light leading-[1.15] tracking-[-0.025em] text-ivory">
               Legacy prep programs and expertise marketplaces are fragmented, opaque, and
-              transactional. <span className="text-gold-light">Illuminairy is building a more
-              structured approach to premium mentorship and applied learning</span>, starting
-              with the SAT Accelerator and expanding carefully from there.
+              transactional. <span className="text-gold-light">Illuminairy is building guided
+              near-peer mentorship and applied learning</span>, starting with the SAT
+              Accelerator and expanding carefully from there.
             </p>
           </blockquote>
         </div>
@@ -83,7 +83,7 @@ export default function AboutPage() {
               },
               {
                 title: "Who we serve",
-                text: "Ambitious students and families who want structure, accountability, and mentors who have actually succeeded — not a generic prep center."
+                text: "Ambitious students and families who want a clear plan, accountability, and mentors who have actually succeeded — not a generic prep center."
               },
               {
                 title: "How to reach us",

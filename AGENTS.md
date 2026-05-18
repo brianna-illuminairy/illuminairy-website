@@ -1,0 +1,78 @@
+# Agent guide — Illuminairy
+
+Instructions for AI assistants (Cursor, Claude Code, etc.) working in this repository.
+
+## What this repo is
+
+Production **Next.js 16** marketing and enrollment site for [Illuminairy](https://illuminairy.com): mentorship programs led from Atlanta, with **SAT Accelerator** live for the August 22, 2026 SAT. Legal entity: Zytech Development LLC.
+
+This is **not** a coursework or AIMA assignment repo. Do not apply academic “student code style” rules here.
+
+## Read first
+
+| Resource | When |
+|----------|------|
+| [`memory-bank/`](memory-bank/README.md) | Persistent context — update `activeContext.md` and `progress.md` when you finish meaningful work |
+| [`docs/architecture.md`](docs/architecture.md) | Routes, APIs, integrations, folder layout |
+| [`docs/decisions/`](docs/decisions/README.md) | Why we chose stacks and patterns — add an ADR for non-trivial choices |
+| [`docs/designer-brief.md`](docs/designer-brief.md) | Brand doc index |
+| [`lib/site.ts`](lib/site.ts) | Canonical product facts, tuition, hero copy, program structure |
+
+## Golden rules
+
+1. **Single source of truth for public facts** — tuition, dates, program structure, and hero copy live in `lib/site.ts` (and `lib/sat-program-schedule.ts` for the calendar). Update code and brand docs together when facts change.
+2. **Brand voice** — Follow [`docs/brand-voice-and-positioning.md`](docs/brand-voice-and-positioning.md). SAT-specific angles: [`docs/sat-messaging-positioning.md`](docs/sat-messaging-positioning.md). Avoid “cohort”; use parent-friendly language.
+3. **Secrets** — Never commit `.env.local`, API keys, or webhook secrets. Use `.env.example` as the template.
+4. **Invite-only links** — `TUTOR_CALENDLY_URL` / `lib/internal-links.ts` tutor interview URL is **email-only after vetting**. Never surface it in public pages, sitemaps, or client bundles.
+5. **Deploy path** — Vercel production; DNS for `illuminairy.com` points to Vercel. Env sync: `npm run env:sync` then `npm run deploy:prod` (or `npm run release`).
+
+## Code conventions
+
+- **Stack:** TypeScript, React 18, App Router, Tailwind 3, Lucide icons.
+- **Paths:** `@/` alias → project root.
+- **Components:** `components/` for UI; `app/` for routes and API routes; `lib/` for config and server helpers.
+- **Styling:** Tailwind + CSS variables in `app/globals.css`; font is Plus Jakarta Sans.
+- **API routes:** `app/api/contact`, `newsletter`, `checkout`, `webhooks/stripe` — keep side effects in route handlers; validate env at runtime with clear errors.
+- **Lint:** Run `npm run lint` before claiming a task is done.
+- **Build:** `npm run build` uses webpack (`--webpack` in package.json).
+
+## Common tasks
+
+| Task | Where to look |
+|------|----------------|
+| Change homepage hero or tuition | `lib/site.ts`, `lib/sat-program-schedule.ts` |
+| SAT program page | `app/sat-accelerator/page.tsx`, related components |
+| Contact / Calendly embed | `app/contact/page.tsx`, `components/calendly-*` |
+| Enrollment / Stripe | `app/enroll/`, `lib/stripe.ts`, `scripts/setup-stripe.mjs` |
+| Analytics | `lib/posthog.ts`, `components/posthog-provider.tsx`, `components/google-analytics.tsx` |
+| SEO | `app/layout.tsx`, `app/sitemap.ts`, `app/robots.ts` |
+
+## Memory bank workflow
+
+After a session with meaningful changes:
+
+1. Update `memory-bank/activeContext.md` — what you did, what’s in flight.
+2. Update `memory-bank/progress.md` — check off or add items.
+3. If you made an architectural or product choice, add a row in `docs/decisions/` (see template).
+
+## What not to do
+
+- Do not edit `archives/` except to add dated snapshots or README notes.
+- Do not duplicate long copy in multiple TSX files — prefer `lib/site.ts` or small exported constants.
+- Do not add guarantee language for SAT score outcomes (see brand docs).
+- Do not run `git push --force` to `main` without explicit user request.
+
+## Verification
+
+Before marking work complete:
+
+```bash
+npm run lint
+npm run build
+```
+
+For contact/Stripe/Calendly changes, say what env vars are required and whether manual QA steps are needed.
+
+## Human owner
+
+Brianna — `brianna@illuminairy.com` / `support@illuminairy.com`

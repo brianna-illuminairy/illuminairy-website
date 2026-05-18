@@ -1,0 +1,15 @@
+---
+description: Core context for the Illuminairy Next.js site
+alwaysApply: true
+---
+
+# Illuminairy
+
+Production site for illuminairy.com — SAT Accelerator enrollment, contact, brand pages.
+
+- Read `AGENTS.md` and `memory-bank/activeContext.md` at session start.
+- Product facts: `lib/site.ts` — do not duplicate tuition/dates elsewhere.
+- Brand voice: `docs/brand-voice-and-positioning.md`; no SAT score guarantees.
+- Never expose `TUTOR_CALENDLY_URL` on public pages or `NEXT_PUBLIC_*` env.
+- Do not apply academic/coursework coding style rules; this is a commercial TypeScript repo.
+- Verify with `npm run lint` and `npm run build` before claiming done.

@@ -1,13 +1,23 @@
 import {
   ArrowRight,
+  BadgeCheck,
   BrainCircuit,
   BriefcaseBusiness,
   CalendarCheck,
+  ClipboardCheck,
+  Clock,
+  Eye,
   GraduationCap,
+  Laptop,
   LineChart,
   LockKeyhole,
+  Map,
+  Microscope,
+  Monitor,
   Network,
+  ShieldCheck,
   Target,
+  TrendingUp,
   UserCheck,
   UsersRound
 } from "lucide-react";
@@ -22,11 +32,11 @@ export const site = {
   descriptor: "ILLUMINAIRY",
   satDate: "August 22, 2026",
   tagline: "your guiding light for goals and growth",
-  /** Homepage hero — align with docs/brand-voice-and-positioning.md (illuminate + guide) */
+  /** Homepage hero — Frame B parent lead + messaging hierarchy (illuminate → mentors → guided path) */
   homeHero: {
-    title: "We illuminate the path to your goals.",
+    title: "We illuminate the path — so your student can walk it.",
     lead:
-      "Near-peer mentors who've already achieved what you're aiming for—guided, research-informed, and clear at every step. The SAT Accelerator is live for the August 22, 2026 test; professional and business programs open next."
+      "Mentors from selective universities who scored 1450+ on the SAT, paired with your student for twelve weeks. Week-one diagnostics, six private 1:1s, live classes, assigned practice, and a progress report sent to you every week. The SAT Accelerator is live for the August 22, 2026 test; professional and business programs open next."
   },
   /** Public SAT consultation only — not the invite-only mentor interview link */
   calendlyUrl:
@@ -45,10 +55,10 @@ export const satProgram = {
   headline:
     "A twelve-week plan — not self-study, not random à la carte sessions.",
   tracking:
-    "Week-one diagnostics personalize six private 1:1s. Live classes teach. Practice reinforces. Weekly reports keep families in the loop.",
+    "Week-one diagnostics tell your mentor exactly what to focus on in six private 1:1s. Live classes cover the material. Assigned practice makes sure it sticks. You get a report every week.",
   structureLine:
     "Diagnostics in week one, then weekly Reading & Writing and Math classes, six personalized 1:1s, and assigned practice between every session.",
-  /** Tuition in cents — single source of truth for display on /enroll. */
+  /** Tuition in cents — site/Stripe canonical price. Brand doc says $1,500; live site uses $1,200. */
   tuitionCents: 120_000,
   tuitionDisplay: "$1,200",
   /** First week begins Wed May 27, 2026; exam day Sat Aug 22, 2026 — see lib/sat-program-schedule.ts */
@@ -120,33 +130,33 @@ export const programStats = [
 /** Core positioning — mentors + instructors, better model, 1:1 + diagnostics + practice. */
 export const mentorshipMessaging = {
   thesis:
-    "Better mentors and instructors beat self-study and à la carte sessions. Georgia Tech mentors and instructors who recently scored 1450+ lead a twelve-week plan where week-one diagnostics shape six private 1:1s, live classes teach the material, and practice reinforces it through repetition.",
+    "Georgia Tech mentors who scored 1450+ on the SAT run your student's 1:1s. Instructors teach live R&W and Math classes. Week-one diagnostics show the mentor where your student is struggling, and every 1:1 after that targets those specific weak spots. Practice is assigned between every session so your student works the same problem types until they stop getting them wrong.",
   researchNote:
-    "Research backs personalized 1:1 instruction — including Benjamin Bloom's two-sigma finding on individualized teaching (Educational Researcher, 1984) and studies on mentor-led programs — when it is structured, not random."
+    "Research backs personalized 1:1 instruction — including Benjamin Bloom's two-sigma finding on individualized teaching (Educational Researcher, 1984) and studies on mentor-led programs — when it follows a clear plan, not random sessions."
 };
 
 /** The Accelerator loop — diagnostics → 1:1 → classes → practice. */
 export const acceleratorModel = {
   eyebrow: "How it works",
-  title: "Diagnostics personalize the 1:1s. Practice makes it stick.",
+  title: "Your student's diagnostic results tell the mentor what to teach.",
   intro:
-    "Self-study leaves gaps. Random à la carte sessions never build momentum. Illuminairy runs one twelve-week program with a set schedule from day one — diagnostics, then weekly classes, 1:1s, and practice — so every session has a purpose.",
+    "Self-study means guessing what to work on. Random tutoring sessions start from scratch every time. Illuminairy runs one twelve-week program — diagnostics first, then weekly classes, 1:1s, and assigned practice — so the mentor always knows exactly where your student is.",
   steps: [
     {
       title: "Week-one diagnostics",
-      text: "Reading & Writing and Math baselines show exactly where your student stands — the foundation for every 1:1 after that."
+      text: "R&W and Math tests in week one show which question types your student gets wrong and why — that's what every 1:1 after that focuses on."
     },
     {
       title: "Six personalized 1:1s",
-      text: "Private sessions driven by diagnostic data and weekly progress — not generic review. This is the heart of the program."
+      text: "Your mentor reviews last week's errors and class performance before every session, then works on the specific question types your student keeps missing."
     },
     {
       title: "Live classes every week",
-      text: "Small-group R&W and Math classes from instructors who teach clearly — capped at ten students per class."
+      text: "R&W and Math each week in groups of ten or fewer. Instructors explain concepts, work through example problems, and call on students — no one sits silently."
     },
     {
       title: "Practice that reinforces",
-      text: "Assigned problem sets between sessions (and full-length timed tests every three weeks) so skills repeat until they hold."
+      text: "Problem sets assigned between every session, plus a full-length timed practice test every three weeks. Your student works the same types of problems until they stop getting them wrong."
     }
   ] as const
 };
@@ -156,7 +166,7 @@ export const programDifferentiation = {
   eyebrow: "The difference",
   title: "Better mentors and instructors. A better program.",
   intro:
-    "Illuminairy is not a prep center and not a marketplace. It is a twelve-week program with vetted mentors and instructors, mandatory 1:1 time, diagnostics that personalize coaching, and practice built into every week.",
+    "Illuminairy is not a prep center and not a tutor marketplace. It is one twelve-week program: your student gets a named mentor, week-one diagnostics, six private 1:1s based on those results, two live classes per week, and assigned practice with a report sent to you every week.",
   rows: [
     {
       aspect: "Who teaches",
@@ -174,13 +184,34 @@ export const programDifferentiation = {
       aspect: "1:1 attention",
       typical: "Optional add-on, often skipped — or one-size-fits-all review",
       illuminairy:
-        "Six private 1:1s included and shaped by week-one diagnostics — the non-negotiable center of the program"
+        "Six private 1:1s included — your mentor uses diagnostic results to decide what to work on, not a generic checklist"
     },
     {
       aspect: "Practice",
       typical: "Figure it out on your own between sessions",
       illuminairy:
-        "Assigned sets every week (plus timed full-length tests) to reinforce what was taught through repetition"
+        "Problem sets assigned every week, plus timed full-length tests — your student works the same question types until they stop missing them"
+    },
+    {
+      aspect: "Pacing",
+      typical:
+        "Pacing is assumed — if you know the content, you'll finish in time",
+      illuminairy:
+        "Pacing is a skill we teach — timed module work, trap-answer discipline, and full-length tests every three weeks so test day isn't the first time it's real"
+    },
+    {
+      aspect: "Guarantees",
+      typical:
+        "Score guarantee with pages of fine print — miss one assignment and it's void",
+      illuminairy:
+        "No score guarantee. You get a named mentor, the program as described, a progress report every week, and a real conversation about fit before you enroll"
+    },
+    {
+      aspect: "Level matching",
+      typical:
+        "One class for every student — 1100 and 1400 in the same room",
+      illuminairy:
+        "Classes matched to your student's starting level and goal, with R&W and Math sessions shaped by their diagnostic profile"
     }
   ] as const
 };
@@ -189,27 +220,27 @@ export const satFeatures = [
   {
     icon: GraduationCap,
     title: "Mentors & instructors",
-    text: "Georgia Tech mentors and instructors who recently scored 1450+ — close enough to relate, far enough to lead. Vetted to teach clearly, not just test well."
+    text: "Georgia Tech students and alumni who scored 1450+ on the SAT. They took the same test recently, they know the format, and they were screened for how they explain things — not just their score."
   },
   {
     icon: CalendarCheck,
     title: "A plan that beats self-study",
-    text: "Twelve weeks with a fixed rhythm — not a book on the shelf or sessions booked whenever you remember."
+    text: "Twelve weeks with the same schedule every week — not a book on the shelf or sessions booked whenever you remember."
   },
   {
     icon: Target,
     title: "Diagnostics first",
-    text: "Week-one R&W and Math baselines so six private 1:1s target your student's actual gaps — not a generic syllabus."
+    text: "R&W and Math tests in week one show which question types your student gets wrong. Every 1:1 after that works on those specific problems."
   },
   {
     icon: UserCheck,
     title: "1:1 is the engine",
-    text: "Six personalized private sessions across the program — the part research and families both count on most."
+    text: "Six private sessions with a mentor who reviews your student's errors before every meeting and adjusts what they work on each time."
   },
   {
     icon: UsersRound,
     title: "Live classes + practice",
-    text: "Weekly small-group R&W and Math, plus assigned practice between sessions so concepts repeat until they stick."
+    text: "R&W and Math classes every week in groups of ten or fewer, plus assigned practice between sessions. Your student works the same problem types until they stop missing them."
   },
   {
     icon: LockKeyhole,
@@ -223,31 +254,31 @@ export const platformAreas = [
     icon: GraduationCap,
     title: "Illuminairy SAT",
     status: "Live now",
-    text: "Twelve-week SAT preparation with weekly R&W and Math classes, Georgia Tech-led mentors, and a clear schedule families can follow."
+    text: "Twelve weeks: R&W and Math classes every week, Georgia Tech mentors who scored 1450+, six private 1:1s, and a report sent to parents every week."
   },
   {
     icon: BrainCircuit,
     title: "Illuminairy AI",
     status: "Planned",
-    text: "Future practical AI upskilling for students, professionals, and business owners who need applied fluency."
+    text: "Hands-on AI courses for students, professionals, and business owners — focused on using the tools, not just understanding the theory."
   },
   {
     icon: Network,
     title: "Illuminairy Mentors",
     status: "Planned",
-    text: "A selective network of high-performing educated talent for mentorship, instruction, and applied expertise."
+    text: "Screened mentors and instructors from selective universities — available for 1:1 sessions, live classes, and program-specific teaching."
   },
   {
     icon: BriefcaseBusiness,
     title: "Illuminairy Professional",
     status: "Planned",
-    text: "Future professional coaching and business education programs built around clear outcomes and expert guidance."
+    text: "Coaching and education programs for working professionals and business owners — details and pricing published when programs open."
   },
   {
     icon: LineChart,
     title: "Illuminairy Labs",
     status: "Planned",
-    text: "A future space for applied learning experiments, technical education, and new expert-led programs."
+    text: "New programs and formats we're testing — specifics shared when they're ready."
   }
 ];
 
@@ -263,22 +294,22 @@ export const trustPillars = [
   {
     icon: GraduationCap,
     title: "Mentors & instructors",
-    text: "Georgia Tech mentors and instructors (1450+ SAT) who recently took the test — relatable, rigorous, and screened for how they teach."
+    text: "Georgia Tech students and alumni who scored 1450+ on the SAT. They took the same test recently and were screened for how they explain things, not just their score."
   },
   {
     icon: CalendarCheck,
     title: "Twelve-week plan",
-    text: "One twelve-week program with a set schedule beats self-study and à la carte sessions — diagnostics, 1:1s, classes, and practice, all mapped out in advance."
+    text: "One twelve-week program with the same schedule every week — diagnostics, 1:1s, classes, and practice all decided before you start."
   },
   {
     icon: UserCheck,
     title: "1:1 + diagnostics",
-    text: "Week-one baselines shape six private sessions — personalized coaching, not generic review."
+    text: "Week-one test results tell the mentor which question types to focus on in six private sessions."
   },
   {
     icon: Target,
     title: "Practice that reinforces",
-    text: "Assigned sets between classes (and timed full-length tests) so what was taught gets repeated until it holds."
+    text: "Problem sets assigned between every class, plus timed full-length tests. Your student works the same problem types until they stop getting them wrong."
   }
 ];
 
@@ -313,5 +344,166 @@ export function resolveContactReason(
   }
   return contactReasons[0];
 }
+
+/** Parent trust beliefs — brand-voice § "What parents must believe" */
+export const parentTrustBeliefs = {
+  eyebrow: "What matters to families",
+  title: "What parents need to see before they enroll.",
+  beliefs: [
+    {
+      icon: TrendingUp,
+      title: "Good outcomes",
+      text: "You see what your student worked on, which scores went up, and what's next — every single week. We don't promise a number; we show you the work."
+    },
+    {
+      icon: Laptop,
+      title: "Better than in-person for a reason",
+      text: "Groups of ten or fewer on a live video call, practicing on the same digital interface used on test day. The instructor sees who participates and reports it to you — no anonymous lecture halls or paper worksheets."
+    },
+    {
+      icon: ClipboardCheck,
+      title: "Accountability",
+      text: "Every student answers questions out loud, explains their reasoning, and works through problems during class — cameras on, no hiding in the back row."
+    },
+    {
+      icon: Eye,
+      title: "Never in the dark",
+      text: "Every week you get a report: what was covered, what practice was assigned, whether it was completed, and how scores are trending — not 'session went fine.'"
+    },
+    {
+      icon: BadgeCheck,
+      title: "A credible approach",
+      text: "Mentors who scored 1450+ and were screened for teaching ability, a program based on Benjamin Bloom's research on 1:1 instruction, and real student outcomes published after programs finish."
+    }
+  ]
+};
+
+/** In-person comparison — brand-voice § "Why we win vs in-person" */
+export const inPersonComparison = {
+  eyebrow: "Why families choose illuminairy",
+  title: "What in-person prep misses.",
+  columns: [
+    {
+      label: "Big group class",
+      problems: [
+        "Your child is a number — teaching is generic",
+        "Easy to zone out, put their head down — no one intervenes",
+        "Worksheets and volume, not depth on weak areas",
+        "No 1:1 when stuck — more content, same gaps"
+      ]
+    },
+    {
+      label: "1:1 in-person tutor",
+      problems: [
+        "Can still be passive — 'session went fine' with no proof",
+        "Often paper-first — wrong format for the digital SAT",
+        "Quality varies wildly — you're the hiring manager",
+        "No program behind it — just isolated sessions"
+      ]
+    }
+  ],
+  illuminairyAnswer: {
+    label: "Illuminairy",
+    points: [
+      "Small live groups (cap 10) — participation required, not optional",
+      "Students work problems aloud, explain logic, help peers reach answers",
+      "Engagement tracked and reported to parents weekly",
+      "Diagnostics + class work feed into 1:1s — the mentor starts each session from real data",
+      "Digital-interface practice: timing, on-screen tools, Desmos fluency"
+    ]
+  }
+};
+
+/** Commitments — brand-voice § Proof & promises */
+export const commitments = [
+  "You get a progress report every week — what your student worked on, where they're improving, and what's next.",
+  "Every mentor scored 1450+ on the SAT, attends or graduated from a selective university, and was screened for how they teach — not just what they scored.",
+  "The program runs exactly as described: 12 weeks, 2 live classes per week, 6 private 1:1s, diagnostics in week one, practice assigned between every session.",
+  "Every student speaks, solves problems out loud, and explains their reasoning multiple times per session — no one hides in the back row.",
+  "We don't guarantee a score. We give you the plan, the mentors, and the weekly proof that the work is happening."
+];
+
+/** No-guarantee section — sat-messaging Pillar B (no competitor names on public site) */
+export const noGuarantee = {
+  eyebrow: "Our commitment",
+  title: "Why we don't guarantee a score.",
+  summary:
+    "Most prep companies offer score guarantees with fine print that voids them if you miss a single assignment or deadline. That's not a guarantee — it's a loophole. We skip the marketing number and commit to the things we actually control.",
+  commitments: [
+    "The program runs exactly as described: twelve weeks, two live classes per week, six private 1:1s, diagnostics in week one, and assigned practice every week.",
+    "Your student's mentor scored 1450+ on the SAT, comes from a selective university, and was chosen because they can teach — not just because they tested well.",
+    "You get a progress report every week showing what was covered, what's due next, and where your student's scores are heading.",
+    "Before you enroll, we talk about whether this program is actually the right fit. If it's not, we'll say so — we'd rather lose the enrollment than take one we can't deliver on.",
+    "The refund policy is linked on every program page. It's short and straightforward — not 18 pages of conditions."
+  ],
+  closing:
+    "Once programs finish, we'll publish real outcomes. Until then, we stand behind how we run it, who teaches, and what we show you every week."
+};
+
+/** SAT pillars — condensed from sat-messaging § Pillars A–I (excl. G, deferred) */
+export const satPillars = {
+  eyebrow: "What sets us apart",
+  title: "Built around the mistakes that matter.",
+  intro:
+    "The SAT Accelerator finds the specific question types your student gets wrong, figures out why, and works on them until test day.",
+  cards: [
+    {
+      icon: Microscope,
+      title: "Mistake-driven study",
+      text: "When your student gets a question wrong, the mentor logs the error type, the section, and whether time was a factor. That data decides what the next 1:1 and practice set focus on."
+    },
+    {
+      icon: UserCheck,
+      title: "1:1s adjust every week",
+      text: "Six private sessions. Before each one, the mentor reviews what your student got wrong that week and changes the focus accordingly — not the same generic review every time."
+    },
+    {
+      icon: Map,
+      title: "One plan, not fifty links",
+      text: "One twelve-week schedule: same classes, same days, same mentor. Practice is assigned after every session — not suggested, not optional."
+    },
+    {
+      icon: Clock,
+      title: "Pacing is a skill",
+      text: "Most students who underperform on test day knew the content — they ran out of time. We teach pacing explicitly with timed module work and full-length tests."
+    },
+    {
+      icon: Monitor,
+      title: "Digital SAT done right",
+      text: "Practice on the same digital interface used on test day, with official College Board materials. When your student gets something wrong, a mentor explains why — something the official tools don't do."
+    },
+    {
+      icon: ShieldCheck,
+      title: "Not a marketplace",
+      text: "You know your mentor's name before you start. Pricing is on the website. The refund policy is short and linked on every program page. If it's not the right fit, we'll tell you before you enroll."
+    }
+  ]
+};
+
+/** Consultation booking copy — sat-messaging § Consultation intro paragraph */
+export const consultationCopy = {
+  eyebrow: "Book a consultation",
+  title: "Start with a conversation — no pressure.",
+  text: "This is a free, no-pressure conversation. We'll talk about where your student is starting, what score they're aiming for, and whether the twelve-week SAT Accelerator is the right fit. If it's not — maybe they need something different, or maybe self-study is genuinely enough — we'll tell you honestly."
+};
+
+/** SAT page hero — copy bank variant #1 */
+export const satHero = {
+  title: "Better mentors. A clear plan. No empty promises.",
+  lead: "Twelve weeks with Georgia Tech mentors who scored 1450+. Week-one diagnostics, six private 1:1s, live R&W and Math classes, assigned practice, and a progress report sent to you every week — for the August 22, 2026 SAT."
+};
+
+/** Digital SAT callout — brand-voice § parent education */
+export const digitalSat = {
+  eyebrow: "The test changed",
+  title: "The SAT is digital. Your student's prep should be too.",
+  metaphor:
+    "You wouldn't practice soccer on a baseball field. Don't prepare for a digital test with paper worksheets.",
+  points: [
+    "Most students who underperform knew the material — they ran out of time. The test rewards knowing when to skip a hard question and come back.",
+    "Built-in formulas, on-screen references, and the Desmos calculator are tools your student needs to master — for speed and accuracy.",
+    "Your student should practice on a screen that looks like the real test — not a workbook."
+  ]
+};
 
 export const Arrow = ArrowRight;

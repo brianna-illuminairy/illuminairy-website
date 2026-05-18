@@ -28,7 +28,7 @@ export default function TermsPage() {
           <h2>Educational services</h2>
           <p>
             Illuminairy provides educational programs, including
-            structured SAT preparation, mentorship, coaching, diagnostics, study
+            program-based SAT preparation, mentorship, coaching, diagnostics, study
             support, and related learning programs. Services may be delivered
             through live sessions, private coaching, digital materials, email,
             scheduling tools, and third-party video or communication platforms.

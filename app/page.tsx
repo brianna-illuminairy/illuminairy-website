@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { ArrowRight, Calendar, GraduationCap, UserCheck, Users } from "lucide-react";
 import { CohortsPanel } from "@/components/brand-visual";
+import { InPersonComparison } from "@/components/in-person-comparison";
+import { ParentTrustBeliefs } from "@/components/parent-trust-beliefs";
 import { ProgramDifferentiation } from "@/components/program-differentiation";
 import { NorthStar } from "@/components/logo";
 import {
@@ -72,12 +74,14 @@ export default function Home() {
         </div>
       </section>
 
+      <ParentTrustBeliefs />
+
       {/* SAT — marigold pop */}
       <PopSection
         color="marigold"
         eyebrow="Live now · August 2026 SAT"
         title="Illuminairy SAT Accelerator."
-        text={`${satProgram.headline} ${satProgram.tracking} Georgia Tech-led mentors for the ${site.satDate} SAT.`}
+        text={`${satProgram.headline} Week-one diagnostics, six private 1:1s, live classes, assigned practice, and a report sent to parents every week. Georgia Tech mentors who scored 1450+ — for the ${site.satDate} SAT.`}
         primary={{ label: "View the Accelerator", href: "/sat-accelerator" }}
         secondary={{ label: "Book a consultation", href: scheduleLink }}
       >
@@ -85,8 +89,8 @@ export default function Home() {
           {[
             "Week-one diagnostics (R&W + Math)",
             "Six personalized 1:1 sessions",
-            "Weekly live classes + practice sets",
-            "Progress reports every week"
+            "Mistake-driven study + assigned practice",
+            "Weekly progress reports for families"
           ].map((item) => (
             <div
               key={item}
@@ -98,13 +102,13 @@ export default function Home() {
         </div>
       </PopSection>
 
-      {/* Company + trust */}
+      {/* Illuminate + luminary mentors */}
       <section className="bg-ivory px-5 py-24 sm:px-8 lg:px-12">
         <div className="mx-auto max-w-7xl">
           <SectionHeader
             eyebrow="Why illuminairy"
-            title="Better mentors and instructors. Real 1:1."
-            text="Self-study leaves gaps. À la carte sessions never build momentum. Illuminairy combines Georgia Tech mentors and instructors (1450+ SAT) with week-one diagnostics, six personalized private sessions, live classes, and practice that reinforces what was taught — inside one twelve-week plan families can follow."
+            title="What you actually get."
+            text="Illuminairy means illuminate + luminary. Your student gets a Georgia Tech mentor who scored 1450+ on the SAT, week-one diagnostics that tell the mentor where to focus, six private 1:1s, live R&W and Math classes every week, assigned practice between sessions, and a progress report sent to you every week — all inside one twelve-week program."
           />
           <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
             {trustPillars.map((item) => (
@@ -114,6 +118,8 @@ export default function Home() {
         </div>
       </section>
 
+      <InPersonComparison />
+
       <ProgramDifferentiation />
 
       {/* Audience paths — sage pop */}
@@ -121,14 +127,14 @@ export default function Home() {
         color="sage"
         eyebrow="Who it's for"
         title="Built for families, students, and mentors."
-        text="Parents evaluating SAT prep. Students aiming for competitive colleges. Mentors who want meaningful, well-structured work with a high bar for quality."
+        text="Parents looking at SAT prep options. Students targeting selective colleges. Mentors from Georgia Tech who want to teach — not just tutor."
       >
         <div className="grid gap-4 sm:grid-cols-3">
           {[
             {
               icon: GraduationCap,
               label: "Families & students",
-              text: "Weekly R&W and Math classes, clear policies, and a direct path to enrollment.",
+              text: "R&W and Math classes every week, published pricing, and you can enroll online.",
               href: "/sat-accelerator"
             },
             {
@@ -172,8 +178,8 @@ export default function Home() {
               Mentorship with a high bar.
             </h2>
             <p className="mt-6 max-w-md text-[15.5px] leading-[1.65] text-ivory/72">
-              Small classes, a clear plan, and mentors we would trust with our
-              own goals. Quality and clarity over volume.
+              Ten students per class, a twelve-week schedule you know before
+              you start, and mentors we screened ourselves.
             </p>
             <p className="wordmark mt-10 text-[clamp(2.5rem,5vw,4rem)] leading-none text-ivory">
               illumin<span className="text-gold-light">ai</span>ry
