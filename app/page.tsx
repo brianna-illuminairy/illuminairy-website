@@ -33,9 +33,12 @@ export default function Home() {
             </h1>
 
             <p className="mt-7 max-w-xl text-pretty text-lg leading-[1.65] text-ink-soft sm:text-xl">
-              Premium near-peer mentorship with structure, clarity, and a high
-              bar. Two SAT cohorts are live now — with professional and business
-              owner programs opening next.
+              Two SAT cohorts are live for the {site.satDate} test. Your child
+              works with a vetted Georgia Tech mentor who scored 1450+ — someone
+              who knows the material, the pacing, and what selective universities
+              expect. We teach what matters, diagnose weaknesses early, and pair
+              small-group instruction with one-on-one mentorship. Professional and
+              business owner programs are opening next.
             </p>
 
             <div className="mt-10 flex flex-col gap-3 sm:flex-row">
