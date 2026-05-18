@@ -7,7 +7,7 @@ import {
   PopSection,
   SectionHeader
 } from "@/components/ui";
-import { platformAreas, scheduleLink } from "@/lib/site";
+import { platformAreas, satProgram, scheduleLink } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Programs",
@@ -21,7 +21,7 @@ export default function ProgramsPage() {
       <PageHero
         eyebrow="Programs"
         title="Structured programs led by people who actively do the thing."
-        text="Illuminairy starts with premium SAT preparation and is building additional programs for professionals and business owners — announced only when cohorts are scheduled."
+        text="Illuminairy starts with premium SAT preparation and is building additional programs for professionals and business owners — announced only when new sessions are scheduled."
         primary={{ label: "Explore SAT Accelerator", href: "/sat-accelerator" }}
         secondary={{ label: "Contact Illuminairy", href: "/contact" }}
       />
@@ -31,7 +31,7 @@ export default function ProgramsPage() {
           <SectionHeader
             eyebrow="Current and future"
             title="Starting focused. Expanding carefully."
-            text="The live product today is the Illuminairy SAT Accelerator. Other program areas below are in development and are not open for enrollment until Illuminairy announces a cohort."
+            text="The live product today is the Illuminairy SAT Accelerator. Other program areas below are in development and are not open for enrollment until Illuminairy announces dates."
           />
           <div className="mt-12 grid gap-4 md:grid-cols-2">
             {platformAreas.map((area) => (
@@ -59,18 +59,18 @@ export default function ProgramsPage() {
         color="sage"
         eyebrow="Live now"
         title="Illuminairy SAT Accelerator."
-        text="A twelve-week virtual SAT cohort with 30 live sessions, small-group instruction, private coaching, diagnostics, and accountability for students preparing for the August 22, 2026 SAT."
+        text={`${satProgram.headline} ${satProgram.structureLine} For the August 22, 2026 SAT.`}
         primary={{ label: "View the Accelerator", href: "/sat-accelerator" }}
         secondary={{ label: "Book a consultation", href: scheduleLink }}
       >
         <div className="rounded-3xl border border-sage-ink/15 bg-ivory/90 p-7 backdrop-blur-sm">
-          <Eyebrow tone="sage">Cohort structure</Eyebrow>
+          <Eyebrow tone="sage">Program structure</Eyebrow>
           <div className="mt-5 grid grid-cols-2 gap-4">
             {[
               ["12", "weeks"],
-              ["30", "live sessions"],
-              ["24", "small-group"],
-              ["10", "students per cohort"]
+              ["2", "classes / week"],
+              ["6", "private 1:1"],
+              ["10", "max per class"]
             ].map(([value, label]) => (
               <div key={label} className="rounded-xl border border-sage-ink/10 bg-ivory p-4">
                 <p className="text-[2rem] font-light leading-none tracking-[-0.04em] text-sage-ink">
@@ -87,14 +87,14 @@ export default function ProgramsPage() {
         color="sky"
         eyebrow="In design"
         title="More programs, same standard."
-        text="Illuminairy is exploring AI upskilling, technical education, business owner education, and professional coaching. We will announce dates, pricing, and enrollment only when a cohort is ready."
+        text="Illuminairy is exploring AI upskilling, technical education, business owner education, and professional coaching. We will announce dates, pricing, and enrollment only when a program is ready."
         primary={{ label: "Join the newsletter", href: "/#newsletter" }}
         secondary={{ label: "Contact us", href: "/contact" }}
       >
         <div className="rounded-3xl border border-sky-ink/15 bg-ivory/85 p-7 backdrop-blur-sm">
           <p className="text-[16px] leading-[1.65] text-sky-ink">
             SAT prep comes first because families need clarity now. Future programs will use
-            the same cohort model: live sessions, clear policies, and mentors held to a high bar.
+            the same model: live classes, weekly reports, clear policies, and mentors held to a high bar.
           </p>
           <div className="mt-6 flex flex-wrap gap-2 text-[12px]">
             {["AI", "Automation", "Technical", "Business", "Coaching", "Professional", "Labs"].map(
@@ -112,7 +112,7 @@ export default function ProgramsPage() {
       </PopSection>
 
       <DarkCta
-        title="Looking for the current SAT cohort?"
+        title="Looking for the SAT Accelerator?"
         text="The SAT Accelerator is the first live Illuminairy program — and the best place for families to begin."
         primary={{ label: "View SAT Accelerator", href: "/sat-accelerator" }}
         secondary={{ label: "Contact Illuminairy", href: "/contact" }}

@@ -79,7 +79,7 @@ export default async function ContactPage({
       <CalendlyBookingSection
         eyebrow="SAT Accelerator · August 2026"
         title="Book your free consultation."
-        text="Choose a time below to talk about cohort fit, schedule, and enrollment for the August 22, 2026 SAT."
+        text="Choose a time below to talk about program fit, schedule, and enrollment for the August 22, 2026 SAT."
       />
     </>
   );

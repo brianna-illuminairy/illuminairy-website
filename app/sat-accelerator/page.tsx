@@ -10,21 +10,21 @@ import {
   PopSection,
   SectionHeader
 } from "@/components/ui";
-import { satFeatures, site } from "@/lib/site";
+import { satFeatures, satProgram, site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "SAT Accelerator",
   description:
-    "Twelve weeks. Thirty live sessions. Georgia Tech-led mentorship for students preparing for the August 22, 2026 SAT."
+    "Twelve weeks with weekly Reading & Writing and Math classes, private 1:1 sessions, and weekly progress reports for the August 22, 2026 SAT."
 };
 
 const schedule = [
-  "24 live small-group sessions across 12 weeks",
-  "6 private 1:1 coaching sessions",
-  "Weekly check-ins with your mentor on pace and priorities",
-  "Diagnostic review to identify priority areas",
-  "Virtual delivery for students across the United States",
-  "Cohorts capped at 10 students"
+  "One live Reading & Writing class per week",
+  "One live Math class per week",
+  "Six private 1:1 sessions across the program",
+  "Practice problems assigned between classes",
+  "Weekly reports to parents and students",
+  "Classes capped at 10 students"
 ];
 
 export default function SatAcceleratorPage() {
@@ -43,9 +43,9 @@ export default function SatAcceleratorPage() {
             <div className="mt-7 grid grid-cols-2 gap-3">
               {[
                 ["12", "weeks"],
-                ["30", "live sessions"],
-                ["24", "small-group"],
-                ["6", "private 1:1"]
+                ["2", "classes / week"],
+                ["6", "private 1:1"],
+                ["10", "max per class"]
               ].map(([value, label]) => (
                 <div key={label} className="rounded-xl border border-ivory/10 bg-ivory/[0.04] p-4">
                   <p className="text-[2.25rem] font-light leading-none tracking-[-0.04em] text-ivory">
@@ -83,7 +83,7 @@ export default function SatAcceleratorPage() {
         color="marigold"
         eyebrow="Delivery"
         title="A clear virtual fulfillment model."
-        text="Illuminairy sells virtual educational services. After enrollment, families receive onboarding details, cohort schedules, session links, and support instructions by email."
+        text="Illuminairy sells virtual educational services. After enrollment, families receive onboarding details, class schedules, session links, and support instructions by email."
         primary={{ label: "Book a consultation", href: "#schedule" }}
         secondary={{ label: "View refund policy", href: "/refund-policy" }}
       >
@@ -170,11 +170,10 @@ export default function SatAcceleratorPage() {
                 timely, and a teacher keeps the student honest about the work.
               </p>
               <p className="font-medium text-ink">
-                That is what the SAT Accelerator delivers: Georgia Tech-led mentors, cohorts
-                capped at ten, twenty-four live small-group sessions, six private 1:1s, and a
-                twelve-week arc that makes serious preparation the default — with transparency
-                into effort and progress toward the goal, so families and students always know
-                where they stand and what comes next.
+                That is what the SAT Accelerator delivers: Georgia Tech-led mentors, one
+                Reading & Writing and one Math class each week, six private 1:1s, practice
+                between sessions, and weekly reports — so families and students always know
+                what was covered, what&apos;s due, and where scores are heading.
               </p>
             </div>
           </div>
@@ -196,7 +195,7 @@ export default function SatAcceleratorPage() {
       <CalendlyBookingSection
         eyebrow="Schedule"
         title="Book your free SAT consultation."
-        text="Pick a time below. We'll cover cohort fit, the August 2026 timeline, and enrollment details."
+        text="Pick a time below. We'll cover program fit, the August 2026 timeline, and enrollment details."
       />
 
       <DarkCta

@@ -32,15 +32,31 @@ export const site = {
   typeformUrl: process.env.NEXT_PUBLIC_TYPEFORM_URL || ""
 };
 
+/** SAT Accelerator structure — use parent-friendly language, not “cohort.” */
+export const satProgram = {
+  weeks: 12,
+  classesPerWeek: 2,
+  classLabels: ["Reading & Writing", "Math"] as const,
+  privateSessions: 6,
+  maxPerClass: 10,
+  headline:
+    "12 weeks of intensive instruction, 1:1 expert help, and practice problems.",
+  tracking:
+    "All tracked and reported to you and your student every week — so you always know what was covered, what's due, and where scores are heading.",
+  structureLine:
+    "One live Reading & Writing class and one live Math class each week, plus six private 1:1 sessions across the program.",
+  /** First week begins Wed May 27, 2026; exam day Sat Aug 22, 2026 — see lib/sat-program-schedule.ts */
+  programStartLabel: "May 27, 2026",
+  examDayLabel: "August 22, 2026"
+};
+
 /**
- * Live and upcoming cohorts — the proof-of-momentum surface.
- * Shown on the home page hero card so families and mentors
- * can immediately see what's running.
+ * Live and upcoming programs — home page hero card.
  */
 export const cohorts = [
   {
     status: "live",
-    statusLabel: "Live · 2 cohorts",
+    statusLabel: "Live now",
     name: "SAT Accelerator",
     when: "August 2026 SAT",
     audience: "Ambitious high schoolers",
@@ -89,9 +105,9 @@ export const mentorApplyLink = "/contact?reason=mentor";
 export const inquiryLink = site.typeformUrl || mentorApplyLink;
 
 export const programStats = [
-  { value: "12", label: "Weeks of structured preparation" },
-  { value: "30", label: "Live small-group + private sessions" },
-  { value: "10", label: "Students per capped cohort" },
+  { value: "12", label: "Weeks of live instruction" },
+  { value: "2", label: "Live classes each week (R&W + Math)" },
+  { value: "6", label: "Private 1:1 sessions" },
   { value: "1450+", label: "SAT mentor score standard" }
 ];
 
@@ -103,8 +119,8 @@ export const satFeatures = [
   },
   {
     icon: UsersRound,
-    title: "Small-group instruction",
-    text: "Twenty-four live cohort sessions with room for interaction, review, and guided practice."
+    title: "Two live classes every week",
+    text: "One Reading & Writing small group and one Math small group — taught live, with practice assigned between sessions."
   },
   {
     icon: UserCheck,
@@ -113,8 +129,8 @@ export const satFeatures = [
   },
   {
     icon: Target,
-    title: "Diagnostic-driven plan",
-    text: "Preparation is shaped around strengths, gaps, pacing, and weekly mentor check-ins."
+    title: "Weekly progress reports",
+    text: "Parents and students see what was covered, what's due, and how practice-test scores are trending — every week."
   },
   {
     icon: GraduationCap,
@@ -133,7 +149,7 @@ export const platformAreas = [
     icon: GraduationCap,
     title: "Illuminairy SAT",
     status: "Live now",
-    text: "Premium cohort-based SAT preparation, Georgia Tech-led, for ambitious students and families who want structure and rigor."
+    text: "Twelve-week SAT preparation with weekly R&W and Math classes, Georgia Tech-led mentors, and a clear schedule families can follow."
   },
   {
     icon: BrainCircuit,
@@ -157,7 +173,7 @@ export const platformAreas = [
     icon: LineChart,
     title: "Illuminairy Labs",
     status: "Planned",
-    text: "A future space for applied learning experiments, technical education, and new expert-led cohorts."
+    text: "A future space for applied learning experiments, technical education, and new expert-led programs."
   }
 ];
 
@@ -183,12 +199,12 @@ export const trustPillars = [
   {
     icon: Network,
     title: "Selective mentor network",
-    text: "A careful model for sourcing and vetting educated talent, starting with Georgia Tech-led SAT cohorts."
+    text: "A careful model for sourcing and vetting educated talent, starting with Georgia Tech-led SAT instruction."
   },
   {
     icon: Sparkles,
     title: "Room to grow",
-    text: "SAT cohorts are live today. Professional and business programs are planned with the same standard for structure and mentor quality."
+    text: "The SAT Accelerator is live today. Professional and business programs are planned with the same standard for structure and mentor quality."
   }
 ];
 

@@ -7,7 +7,7 @@ import { scheduleLink, site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "About",
   description:
-    "Illuminairy is a premium mentorship and applied learning company launching with structured SAT cohorts."
+    "Illuminairy is a premium mentorship and applied learning company launching with structured SAT instruction."
 };
 
 export default function AboutPage() {
@@ -62,7 +62,7 @@ export default function AboutPage() {
               Legacy tutoring and expertise marketplaces are fragmented, opaque, and
               transactional. <span className="text-gold-light">Illuminairy is building a more
               structured model for premium mentorship and applied learning</span>, starting
-              with focused SAT cohorts and expanding carefully from there.
+              with the SAT Accelerator and expanding carefully from there.
             </p>
           </blockquote>
         </div>
@@ -73,13 +73,13 @@ export default function AboutPage() {
           <SectionHeader
             eyebrow="Today"
             title="What Illuminairy is building right now."
-            text="We are a premium virtual mentorship company based in Atlanta, operating as Zytech Development LLC. Families and students can enroll in Georgia Tech-led SAT Accelerator cohorts today; professional and business programs are opening next."
+            text="We are a premium virtual mentorship company based in Atlanta, operating as Zytech Development LLC. Families and students can enroll in the Georgia Tech-led SAT Accelerator today; professional and business programs are opening next."
           />
           <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {[
               {
                 title: "Live program",
-                text: "Illuminairy SAT Accelerator — twelve weeks, thirty live sessions, capped cohorts for the August 22, 2026 SAT."
+                text: "Illuminairy SAT Accelerator — twelve weeks, weekly R&W and Math classes, six private 1:1s, and weekly family reports for the August 22, 2026 SAT."
               },
               {
                 title: "Who we serve",

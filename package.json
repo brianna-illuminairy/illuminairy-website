@@ -10,7 +10,8 @@
     "env:sync": "node scripts/sync-vercel-env.mjs",
     "env:pull": "npx vercel env pull .env.local --yes",
     "deploy:prod": "npx vercel deploy --prod",
-    "release": "npm run env:sync && npm run deploy:prod"
+    "release": "npm run env:sync && npm run deploy:prod",
+    "posthog:verify": "node scripts/verify-posthog.mjs"
   },
   "dependencies": {
     "lucide-react": "^0.468.0",

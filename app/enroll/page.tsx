@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { EnrollCheckout } from "@/components/enroll-checkout";
 import { EnrollProgramCalendar } from "@/components/enroll-program-calendar";
 import { Eyebrow, PageHero, ButtonLink } from "@/components/ui";
-import { site } from "@/lib/site";
+import { satProgram, site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Enroll",
@@ -32,13 +32,10 @@ export default async function EnrollPage({
           <div>
             <Eyebrow tone="gold">What you get</Eyebrow>
             <h2 className="mt-4 text-[1.625rem] font-light leading-[1.1] tracking-[-0.025em] text-ink sm:text-[2rem]">
-              12 weeks of intensive instruction, 1:1 expert help, and practice
-              problems.
+              {satProgram.headline}
             </h2>
             <p className="mt-4 text-[15px] leading-[1.65] text-ink-soft">
-              All tracked and reported to you and your student every week — so
-              you always know what was covered, what&apos;s due, and where scores
-              are heading.
+              {satProgram.tracking} {satProgram.structureLine}
             </p>
             <EnrollProgramCalendar />
             <p className="mt-8 text-[13px] leading-relaxed text-ink-muted">

@@ -12,7 +12,7 @@ export function CalendlyBookingSection({
   id = "schedule",
   eyebrow = "Book a consultation",
   title = "Pick a time that works for you.",
-  text = "Schedule a short call to discuss the SAT Accelerator, cohort fit, and next steps. No obligation — just a clear conversation."
+  text = "Schedule a short call to discuss the SAT Accelerator, your student's goals, and next steps. No obligation — just a clear conversation."
 }: CalendlyBookingSectionProps) {
   return (
     <section id={id} className="scroll-mt-28 border-t border-line/70 bg-ivory-200/40 px-5 py-24 sm:px-8 lg:px-12">

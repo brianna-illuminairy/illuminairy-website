@@ -11,7 +11,7 @@ export function Footer() {
         <div>
           <Logo />
           <p className="mt-6 max-w-sm text-[15px] leading-[1.6] text-ink-soft">
-            {site.tagline}. Premium near-peer mentorship — SAT cohorts live now,
+            {site.tagline}. Premium near-peer mentorship — SAT Accelerator live now,
             with more programs opening soon.
           </p>
           <p className="mt-6 text-xs leading-5 text-ink-muted">

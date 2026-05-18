@@ -10,7 +10,7 @@ export function CohortsPanel() {
       <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-[radial-gradient(circle,rgba(196,154,24,0.14),transparent_65%)]" />
       <div className="relative">
         <div className="flex items-center justify-between gap-4">
-          <p className="eyebrow text-gold-deep">Programs</p>
+          <p className="eyebrow text-gold-deep">What&apos;s live</p>
           <NorthStar size={22} tone="ivory" glow={false} />
         </div>
         <ul className="mt-5 grid gap-3">

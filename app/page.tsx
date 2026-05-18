@@ -10,7 +10,14 @@ import {
   PopSection,
   SectionHeader
 } from "@/components/ui";
-import { mentorApplyLink, programStats, scheduleLink, site, trustPillars } from "@/lib/site";
+import {
+  mentorApplyLink,
+  programStats,
+  satProgram,
+  scheduleLink,
+  site,
+  trustPillars
+} from "@/lib/site";
 
 export default function Home() {
   return (
@@ -33,12 +40,11 @@ export default function Home() {
             </h1>
 
             <p className="mt-7 max-w-xl text-pretty text-lg leading-[1.65] text-ink-soft sm:text-xl">
-              Two SAT cohorts are live for the {site.satDate} test. Your child
-              works with a vetted Georgia Tech mentor who scored 1450+ — someone
-              who knows the material, the pacing, and what selective universities
-              expect. We teach what matters, diagnose weaknesses early, and pair
-              small-group instruction with one-on-one mentorship. Professional and
-              business owner programs are opening next.
+              The SAT Accelerator is live for the {site.satDate} test. Your child
+              works with a vetted Georgia Tech mentor who scored 1450+ — someone who
+              knows the material, the pacing, and what selective universities expect.{" "}
+              {satProgram.structureLine} Professional and business owner programs are
+              opening next.
             </p>
 
             <div className="mt-10 flex flex-col gap-3 sm:flex-row">
@@ -74,16 +80,16 @@ export default function Home() {
         color="marigold"
         eyebrow="Live now · August 2026 SAT"
         title="Illuminairy SAT Accelerator."
-        text={`Twelve weeks. Thirty live sessions. Ten students per cohort. Georgia Tech-led mentorship for students preparing for the ${site.satDate} SAT.`}
+        text={`${satProgram.headline} ${satProgram.tracking} Georgia Tech-led mentors for the ${site.satDate} SAT.`}
         primary={{ label: "View the Accelerator", href: "/sat-accelerator" }}
         secondary={{ label: "Book a consultation", href: scheduleLink }}
       >
         <div className="grid gap-3 sm:grid-cols-2">
           {[
-            "24 live small-group sessions",
-            "6 private 1:1 coaching sessions",
-            "Diagnostic-driven weekly plan",
-            "Virtual delivery nationwide"
+            "One Reading & Writing class per week",
+            "One Math class per week",
+            "Six private 1:1 sessions",
+            "Weekly reports for parents & students"
           ].map((item) => (
             <div
               key={item}
@@ -101,7 +107,7 @@ export default function Home() {
           <SectionHeader
             eyebrow="Why illuminairy"
             title="Structure you can see. Mentors you can trust."
-            text="Families get a clear program outline, live schedule, and policies upfront. Students get near-peer guidance and weekly mentor check-ins. Every cohort has a defined schedule and a real human mentor — not a random name from a tutoring website."
+            text="Families get a clear program outline, live schedule, and policies upfront. Students get near-peer guidance and weekly progress reports. Every class has a defined rhythm and a real human mentor — not a random name from a tutoring website."
           />
           <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
             {trustPillars.map((item) => (
@@ -123,13 +129,13 @@ export default function Home() {
             {
               icon: GraduationCap,
               label: "Families & students",
-              text: "Structured SAT cohorts, clear policies, and a direct path to enrollment.",
+              text: "Weekly R&W and Math classes, clear policies, and a direct path to enrollment.",
               href: "/sat-accelerator"
             },
             {
               icon: UserCheck,
               label: "Mentors",
-              text: "Georgia Tech-led standards today. More program areas as cohorts open.",
+              text: "Georgia Tech-led standards today. More program areas opening soon.",
               href: "/mentors"
             },
             {
@@ -167,7 +173,7 @@ export default function Home() {
               Mentorship with a high bar.
             </h2>
             <p className="mt-6 max-w-md text-[15.5px] leading-[1.65] text-ivory/72">
-              Small cohorts, clear structure, and mentors we would trust with our
+              Small classes, clear structure, and mentors we would trust with our
               own goals. Quality and clarity over volume.
             </p>
             <p className="wordmark mt-10 text-[clamp(2.5rem,5vw,4rem)] leading-none text-ivory">

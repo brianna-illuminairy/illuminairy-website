@@ -92,7 +92,7 @@ export function NewsletterSignup({ compact = false }: { compact?: boolean }) {
         <>
           <p className="eyebrow text-gold-deep">Stay in the loop</p>
           <p className="mt-3 text-[14.5px] leading-relaxed text-ink-soft">
-            Program updates, cohort openings, and Illuminairy news.
+            Program updates, new session openings, and Illuminairy news.
           </p>
         </>
       )}

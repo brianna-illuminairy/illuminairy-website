@@ -92,12 +92,12 @@ export default function MentorsPage() {
         color="terracotta"
         eyebrow="Why mentors stay"
         title="Teach inside a program — not a marketplace."
-        text="Illuminairy runs defined cohorts with clear schedules, expectations, and support. You focus on instruction and student momentum while the program handles enrollment, policies, and family communication."
+        text="Illuminairy runs defined programs with clear schedules, expectations, and support. You focus on instruction and student momentum while the team handles enrollment, policies, and family communication."
         primary={{ label: "Apply as a mentor", href: mentorApplyLink }}
       >
         <div className="grid gap-3">
           {[
-            ["Defined cohorts", "You know the timeline, session count, and student cap before you start."],
+            ["Clear schedule", "You know the timeline, session count, and class size before you start."],
             ["Clear standards", "Academic credibility, communication, and teaching ability are non-negotiable."],
             ["Human support", "Questions about scheduling, families, or delivery go through the Illuminairy team."]
           ].map(([title, text]) => (
@@ -118,7 +118,7 @@ export default function MentorsPage() {
         <div className="mx-auto max-w-7xl">
           <SectionHeader
             eyebrow="SAT mentor standard"
-            title="The first cohort starts with academic credibility."
+            title="The SAT program starts with academic credibility."
             text="For SAT programs, mentors are Georgia Tech students, Georgia Tech alumni, or similarly qualified academic mentors who scored 1450+ on the SAT. Illuminairy verifies score records, academic background, communication, professionalism, and availability."
           />
           <div className="mt-9">
