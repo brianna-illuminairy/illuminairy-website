@@ -48,7 +48,15 @@ STRIPE_WEBHOOK_SECRET=whsec_...
 STRIPE_PRICE_ID=price_...
 ```
 
-Create the Product and Price in Stripe Dashboard → Products. The Price ID goes into `STRIPE_PRICE_ID`. Register a webhook endpoint at `https://illuminairy.com/api/webhooks/stripe` for `checkout.session.completed` events. For local testing, run `stripe listen --forward-to localhost:3000/api/webhooks/stripe` and use the signing secret it prints.
+**Automated setup (recommended):** add `STRIPE_SECRET_KEY` and `STRIPE_TUITION_CENTS` (tuition in USD cents) to `.env.local`, then run:
+
+```bash
+node --env-file=.env.local scripts/setup-stripe.mjs
+```
+
+The script creates the Product, Price, and production webhook; copy the printed `STRIPE_PRICE_ID` and `STRIPE_WEBHOOK_SECRET` into `.env.local` and Vercel.
+
+Or create Product/Price in Dashboard → Products and register webhook `https://illuminairy.com/api/webhooks/stripe` for `checkout.session.completed`. For local testing, install [Stripe CLI](https://stripe.com/docs/stripe-cli) and run `stripe listen --forward-to localhost:3000/api/webhooks/stripe`.
 
 ## Deployment
 
