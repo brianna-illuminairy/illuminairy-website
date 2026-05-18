@@ -1,0 +1,64 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+  --font-sans: Inter, Geist, Satoshi, ui-sans-serif, system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: #f8fafc;
+  color: #0b0d12;
+  font-family: var(--font-sans);
+  text-rendering: geometricPrecision;
+}
+
+a {
+  text-decoration: none;
+}
+
+::selection {
+  background: rgba(91, 124, 255, 0.22);
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+.text-pretty {
+  text-wrap: pretty;
+}
+
+.legal-copy h2 {
+  margin-top: 2.25rem;
+  font-size: 1.25rem;
+  font-weight: 650;
+  letter-spacing: -0.025em;
+  color: #0b0d12;
+}
+
+.legal-copy p,
+.legal-copy li {
+  color: #475569;
+  line-height: 1.75;
+}
+
+.legal-copy ul {
+  margin-top: 1rem;
+  padding-left: 1.25rem;
+}
+
+.legal-copy li + li {
+  margin-top: 0.55rem;
+}
