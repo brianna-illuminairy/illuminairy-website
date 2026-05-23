@@ -1,10 +1,10 @@
 # Active context
 
-*Last updated: 2026-05-19*
+*Last updated: 2026-05-23*
 
 ## Current focus
 
-- **SAT plan funnel (production)** — `/satplan` — lagoon LP + worries grid; components in `components/sat-plan/`. `noindex` until launch-ready. Specs/copy in sibling `quizfunnel/` repo.
+- **SAT plan funnel (production)** — https://illuminairy.com/satplan — deployed May 23 (`npm run deploy:prod`). Landing + worries live. `noindex` until launch-ready.
 - **YC homepage** — `/` waitlist cutdown (ADR [0008](../docs/decisions/0008-yc-site-cutdown.md)).
 - **Human:** Create Klaviyo platform waitlist list → `NEXT_PUBLIC_KLAVIYO_LIST_ID_PLATFORM_WAITLIST`
 
