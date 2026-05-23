@@ -3,19 +3,14 @@
 import { usePathname } from "next/navigation";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
-import { FunnelShell } from "@/funnel/layout/funnel-shell";
-import { MagnetFunnelShell } from "@/funnel/layout/magnet-funnel-shell";
-import { isFunnelPath } from "@/components/site-chrome";
 
 export function LayoutChrome({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const isMinimalFunnel =
+    pathname?.startsWith("/go/") || pathname === "/satplan" || pathname?.startsWith("/satplan/");
 
-  if (pathname.startsWith("/go/guide")) {
-    return <MagnetFunnelShell>{children}</MagnetFunnelShell>;
-  }
-
-  if (isFunnelPath(pathname)) {
-    return <FunnelShell>{children}</FunnelShell>;
+  if (isMinimalFunnel) {
+    return <main>{children}</main>;
   }
 
   return (

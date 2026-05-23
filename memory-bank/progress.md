@@ -1,6 +1,6 @@
 # Progress
 
-*Last updated: 2026-05-18*
+*Last updated: 2026-05-23*
 
 ## Shipped
 
@@ -19,10 +19,11 @@
 - [x] Agent docs: AGENTS.md, memory bank, ADRs, Cursor rules
 - [x] Agentic dev workflow: `docs/agentic-development/`, `specs/`, `agent:verify`, Ralph scripts, Cursor skills, ADR 0006
 - [x] Premium application-funnel teardowns for SAT growth strategy (`docs/research/premium-funnel-teardowns.md`)
+- [x] **SAT plan funnel** at `/satplan` (Next.js; landing + worries; ADR 0009). Specs in `quizfunnel` repo.
 
 ## In progress
 
-- [ ] —
+- [ ] SAT plan funnel: Screen 02+ on `/satplan`; contact → report → Calendly (per quizfunnel SPEC)
 
 ## Backlog
 

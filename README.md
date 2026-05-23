@@ -21,12 +21,24 @@ Custom Next.js website for [Illuminairy](https://illuminairy.com) — mentorship
 
 Canonical copy for tagline and homepage hero lives in [`lib/site.ts`](lib/site.ts). HTML brand books may live outside this repo (see [visual-identity.md](docs/visual-identity.md)).
 
+## SAT plan funnel (Meta assessment)
+
+**Production URL:** `/satplan` (e.g. https://illuminairy.com/satplan)
+
+| | |
+|-|-|
+| Code | `app/satplan/`, `components/sat-plan/`, `lib/sat-plan-funnel/` |
+| Specs & screen copy | [github.com/brianna-illuminairy/quizfunnel](https://github.com/brianna-illuminairy/quizfunnel) |
+| Local | `npm run dev` → http://localhost:3000/satplan |
+
+Do **not** build new funnel screens in the quizfunnel Babel prototype — see [ADR 0009](docs/decisions/0009-satplan-nextjs-production.md).
+
 ## Repo layout
 
 ```
-app/              Pages and API routes
-components/       UI components
-lib/              Site config, Stripe, schedules
+app/              Pages and API routes (includes /satplan)
+components/       UI components (sat-plan/ = assessment funnel)
+lib/              Site config, Stripe, schedules, sat-plan-funnel/
 docs/             Brand + internal technical docs
 memory-bank/      Session context for humans & AI
 specs/            PRDs, specs, Ralph PLAN

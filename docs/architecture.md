@@ -38,6 +38,7 @@ flowchart TB
 
 | Path | Purpose |
 |------|---------|
+| **`/satplan`** | **SAT assessment funnel (Meta)** — lagoon LP + quiz steps; `noindex` until launch |
 | `/` | Home, program cards, hero |
 | `/sat-accelerator` | SAT program detail + schedule CTA |
 | `/programs` | All programs (live + coming soon) |
@@ -99,7 +100,7 @@ Tuition amount displayed on site must match `satProgram.tuitionCents` in `lib/si
 
 1. User submits `components/contact-form.tsx`.
 2. `POST /api/contact` validates and sends via Resend.
-3. Optional `reason=mentor` query param categorizes mentor applications (no auto tutor Calendly).
+3. Mentor applications: `/apply/mentor` embeds `NEXT_PUBLIC_MENTOR_TYPEFORM_URL` (Typeform); fallback `/contact?reason=mentor`. No auto tutor Calendly (ADR 0004).
 
 ## SEO & metadata
 

@@ -28,6 +28,8 @@ Use [0000-template.md](0000-template.md) for new entries.
 | [0005](0005-resend-contact-form.md) | Resend for contact form | accepted |
 | [0006](0006-agentic-development-workflow.md) | Agentic development workflow | accepted |
 | [0007](0007-supabase-crm-attribution.md) | Supabase CRM + touch log + attribution | accepted |
+| [0008](0008-yc-site-cutdown.md) | YC site cutdown (single-page launch) | accepted |
+| [0009](0009-satplan-nextjs-production.md) | SAT plan funnel on Next.js `/satplan` (no Babel prototype) | accepted |
 
 ## When to add an ADR
 

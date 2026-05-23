@@ -16,12 +16,18 @@ export const AnalyticsEvents = {
   getStartedScheduleViewed: "get_started_schedule_viewed",
   funnelLandingView: "funnel_landing_view",
   funnelCtaClick: "funnel_cta_click",
+  assessmentStart: "assessment_start",
   intakeStepView: "intake_step_view",
+  intakeStepBack: "intake_step_back",
+  intakeAnswerToggle: "intake_answer_toggle",
+  intakeStepComplete: "intake_step_complete",
+  assessmentComplete: "assessment_complete",
   intakeCompleted: "intake_completed",
   schedulePageView: "schedule_page_view",
   listFitStarted: "list_fit_started",
   listFitCompleted: "list_fit_completed",
-  listFitCtaApply: "list_fit_cta_apply"
+  listFitCtaApply: "list_fit_cta_apply",
+  platformWaitlistSubmitted: "platform_waitlist_submitted"
 } as const;
 
 export type AnalyticsEventName =

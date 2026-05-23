@@ -20,6 +20,15 @@ This is **not** a coursework or AIMA assignment repo. Do not apply academic “s
 | [`lib/site.ts`](lib/site.ts) | Canonical product facts, tuition, hero copy, program structure |
 | [`docs/agentic-development/`](docs/agentic-development/README.md) | Spec-driven, Ralph, autoresearch, growth experiments, gstack |
 | [`specs/`](specs/README.md) | PRDs, specs, `ACTIVE.md`, Ralph `PLAN.md` |
+| **SAT plan funnel (live UI)** | **`/satplan`** in this repo — `components/sat-plan/`, `lib/sat-plan-funnel/` |
+| **SAT funnel specs / copy** | Sibling repo [brianna-illuminairy/quizfunnel](https://github.com/brianna-illuminairy/quizfunnel) — not runnable production code |
+
+## SAT plan funnel (`/satplan`) — do not revert to Babel
+
+- **Ship here:** Next.js only — `npm run dev` → http://localhost:3000/satplan
+- **Do not** extend `quizfunnel/prototype/` (in-browser Babel); that folder is deprecated — see ADR [0009](docs/decisions/0009-satplan-nextjs-production.md)
+- New assessment screens: `QuizStepTemplate` in `components/sat-plan/`; update step map in `lib/sat-plan-funnel/state.ts`
+- Product/copy checklists stay in the **quizfunnel** git repo
 
 ## Agentic workflows
 
