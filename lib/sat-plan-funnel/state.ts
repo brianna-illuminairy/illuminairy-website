@@ -13,7 +13,8 @@ export const SAT_PLAN_STEPS: Record<SatPlanStep, SatPlanStepMeta> = {
   worries: { progress: 7, label: "Question 1 of 14", labelUpper: true },
   who: { progress: 14, label: "Question 2 of 14", labelUpper: true },
   target: { progress: 21, label: "Question 3 of 14", labelUpper: true },
-  "trust-stub": { progress: 28, label: null }
+  trust: { progress: 28, label: null },
+  "history-stub": { progress: 35, label: "Question 4 of 14", labelUpper: true }
 };
 
 export function loadSatPlanState(): SatPlanFunnelState {
@@ -38,8 +39,16 @@ export function saveSatPlanState(state: SatPlanFunnelState): void {
 
 export function stepFromSearchParam(value: string | null): SatPlanStep {
   if (value === "target-stub") return "target";
-  if (value === "trust") return "trust-stub";
-  if (value === "worries" || value === "who" || value === "target" || value === "trust-stub") {
+  if (value === "trust-stub") return "trust";
+  if (
+    value === "worries" ||
+    value === "who" ||
+    value === "target" ||
+    value === "trust" ||
+    value === "history-stub" ||
+    value === "history"
+  ) {
+    if (value === "history") return "history-stub";
     return value;
   }
   if (value === "chapter1-stub") return "who";

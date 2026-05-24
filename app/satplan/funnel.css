@@ -339,6 +339,7 @@
   /* Fixed vertical rhythm — every quiz step, no scroll */
   --quiz-gap-headline-hint: 6px;
   --quiz-gap-hint-body: 14px;
+  --quiz-gap-copy: 14px;
   --quiz-gap-body-cta: 24px;
   --quiz-hint-line: 21px;
 }
@@ -481,6 +482,12 @@
   letter-spacing: 0.18em;
 }
 
+.funnel-step-label--reserved {
+  visibility: hidden;
+  user-select: none;
+  pointer-events: none;
+}
+
 .funnel-main {
   flex: 1;
   padding: 4px var(--page-x) 16px;
@@ -581,6 +588,117 @@
   font-size: 16px;
   line-height: 1.45;
   font-weight: 500;
+}
+
+.quiz-step-copy + .quiz-step-copy {
+  margin-top: var(--quiz-gap-copy);
+}
+
+.quiz-step-trust-content {
+  text-align: center;
+}
+
+.quiz-step-trust-content .quiz-step-copy {
+  text-align: center;
+}
+
+.quiz-step--copy:has(.quiz-step-trust-content) .quiz-step-headline {
+  text-align: center;
+  color: var(--ink);
+}
+
+.quiz-step-trust-target {
+  color: var(--tomato);
+  font-weight: 800;
+}
+
+.quiz-step-trust-graphic {
+  margin: 0 0 var(--quiz-gap-copy);
+  width: 100%;
+}
+
+.quiz-step-trust-card {
+  background: #ffffff;
+  border: 1px solid var(--hair);
+  border-radius: 0;
+  padding: 14px 14px 12px;
+  text-align: left;
+}
+
+.quiz-step-trust-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.quiz-step-trust-metric {
+  text-align: center;
+}
+
+.quiz-step-trust-metric-value {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: var(--ink);
+}
+
+.quiz-step-trust-metric--accent .quiz-step-trust-metric-value {
+  color: var(--tomato);
+}
+
+.quiz-step-trust-metric-plus {
+  font-size: 16px;
+  vertical-align: super;
+}
+
+.quiz-step-trust-metric-label {
+  margin: 4px 0 0;
+  font-family: var(--mono);
+  font-size: 8px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  line-height: 1.25;
+  color: var(--ink-soft);
+}
+
+.quiz-step-trust-outcome {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--hair);
+}
+
+.quiz-step-trust-ring {
+  flex-shrink: 0;
+}
+
+.quiz-step-trust-ring circle:nth-of-type(2) {
+  stroke: var(--tomato);
+}
+
+.quiz-step-trust-ring-label {
+  font-family: var(--display);
+  font-size: 13px;
+  font-weight: 800;
+  fill: var(--ink);
+}
+
+.quiz-step-trust-outcome-copy {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.35;
+  color: var(--ink);
+  text-align: left;
+}
+
+.quiz-step-trust-outcome-copy strong {
+  font-weight: 800;
 }
 
 .quiz-tile-grid {

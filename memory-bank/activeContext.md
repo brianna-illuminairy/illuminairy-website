@@ -4,7 +4,8 @@
 
 ## Current focus
 
-- **SAT plan funnel (production)** — https://illuminairy.com/satplan — deployed May 23 (`npm run deploy:prod`). Landing + worries live. `noindex` until launch-ready.
+- **SAT plan funnel (production)** — https://illuminairy.com/satplan — Landing, worries, who, target, INT1 trust live in code. `noindex` until launch-ready.
+- **Next funnel step:** test history (Step 4) — `history-stub` placeholder after trust
 - **YC homepage** — `/` waitlist cutdown (ADR [0008](../docs/decisions/0008-yc-site-cutdown.md)).
 - **Human:** Create Klaviyo platform waitlist list → `NEXT_PUBLIC_KLAVIYO_LIST_ID_PLATFORM_WAITLIST`
 

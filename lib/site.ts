@@ -326,6 +326,23 @@ export const satProgram = {
 };
 
 /**
+ * Published program outcome stats for funnel trust surfaces (INT1, INT6).
+ * Methodology: internal completer data — always pair with vary disclaimers in UI.
+ */
+export const satProgramOutcomes = {
+  cohortShortLabel: "'24–'25",
+  footnoteLabel: "ILLUMINAIRY OUTCOMES · 2024–25 PROGRAM DATA",
+  plansBuiltCount: 95,
+  avgPointsGained: 182,
+  programWeeks: satProgram.weeks,
+  targetHitRatePct: 78,
+  targetHitBefore: "of students who complete their plan ",
+  targetHitEmphasis: "hit their target score",
+  targetHitAfter: " on the next sitting.",
+  varyDisclaimer: "Results vary."
+} as const;
+
+/**
  * Live and upcoming programs — home page hero card.
  */
 export const cohorts = [

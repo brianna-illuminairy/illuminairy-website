@@ -56,7 +56,11 @@ export function FunnelShell({
         <p className={`funnel-step-label${meta.labelUpper ? " funnel-step-label--qnum" : ""}`}>
           {meta.labelUpper ? meta.label.toUpperCase() : meta.label}
         </p>
-      ) : null}
+      ) : (
+        <p className="funnel-step-label funnel-step-label--qnum funnel-step-label--reserved" aria-hidden="true">
+          &nbsp;
+        </p>
+      )}
 
       <main className="funnel-main">
         <div className="funnel-quiz-body">

@@ -11,7 +11,8 @@ import type { SatPlanStep } from "@/lib/sat-plan-funnel/types";
 
 type QuizStepTemplateProps = {
   stepId: SatPlanStep;
-  headline: string;
+  headline?: string;
+  headlineNode?: ReactNode;
   hint?: string | null;
   hintId?: string | null;
   bodyVariant: QuizStepBodyVariant;
@@ -26,6 +27,7 @@ type QuizStepTemplateProps = {
 export function QuizStepTemplate({
   stepId,
   headline,
+  headlineNode,
   hint = null,
   hintId = null,
   bodyVariant,
@@ -58,7 +60,11 @@ export function QuizStepTemplate({
       footer={footerNode}
     >
       <div className={["quiz-step", bodyClassName].filter(Boolean).join(" ")}>
-        <h1 className="quiz-step-headline">{headline}</h1>
+        <h1 className="quiz-step-headline">
+          {headlineNode ??
+            headline ??
+            null}
+        </h1>
         {hint ? (
           <p className="quiz-step-hint" id={resolvedHintId ?? undefined}>
             {hint}

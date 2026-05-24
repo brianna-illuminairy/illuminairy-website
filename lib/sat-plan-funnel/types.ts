@@ -1,4 +1,10 @@
-export type SatPlanStep = "landing" | "worries" | "who" | "target" | "trust-stub";
+export type SatPlanStep =
+  | "landing"
+  | "worries"
+  | "who"
+  | "target"
+  | "trust"
+  | "history-stub";
 
 export type SatPlanAnswers = {
   worries?: string[];

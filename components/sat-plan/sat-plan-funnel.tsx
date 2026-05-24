@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { SatPlanChapterStub } from "@/components/sat-plan/sat-plan-chapter-stub";
 import { SatPlanLanding } from "@/components/sat-plan/sat-plan-landing";
 import { SatPlanTarget } from "@/components/sat-plan/sat-plan-target";
+import { SatPlanTrust } from "@/components/sat-plan/sat-plan-trust";
 import { SatPlanWho } from "@/components/sat-plan/sat-plan-who";
 import { SatPlanWorries } from "@/components/sat-plan/sat-plan-worries";
 import { trackSatPlanFunnelEvent } from "@/lib/sat-plan-funnel/analytics";
@@ -61,14 +62,18 @@ export function SatPlanFunnel() {
       ) : null}
 
       {step === "target" ? (
-        <SatPlanTarget onBack={() => goTo("who")} onContinue={() => goTo("trust-stub")} />
+        <SatPlanTarget onBack={() => goTo("who")} onContinue={() => goTo("trust")} />
       ) : null}
 
-      {step === "trust-stub" ? (
+      {step === "trust" ? (
+        <SatPlanTrust onBack={() => goTo("target")} onContinue={() => goTo("history-stub")} />
+      ) : null}
+
+      {step === "history-stub" ? (
         <SatPlanChapterStub
-          stepId="trust-stub"
-          title="You're in good hands"
-          onBack={() => goTo("target")}
+          stepId="history-stub"
+          title="Test history"
+          onBack={() => goTo("trust")}
         />
       ) : null}
     </div>
