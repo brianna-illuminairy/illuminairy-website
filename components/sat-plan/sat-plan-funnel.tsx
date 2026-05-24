@@ -17,6 +17,7 @@ import { SatPlanPlanPath } from "@/components/sat-plan/sat-plan-plan-path";
 import { SatPlanPlanReady } from "@/components/sat-plan/sat-plan-plan-ready";
 import { SatPlanPrep } from "@/components/sat-plan/sat-plan-prep";
 import { SatPlanReport } from "@/components/sat-plan/sat-plan-report";
+import { SatPlanSatChanged } from "@/components/sat-plan/sat-plan-sat-changed";
 import { SatPlanSchools } from "@/components/sat-plan/sat-plan-schools";
 import { SatPlanScore } from "@/components/sat-plan/sat-plan-score";
 import { SatPlanTarget } from "@/components/sat-plan/sat-plan-target";
@@ -42,6 +43,7 @@ import {
   nextStepAfterPrep,
   nextStepAfterPrepFailed,
   nextStepAfterReport,
+  nextStepAfterSatChanged,
   nextStepAfterSchools,
   nextStepAfterScore,
   nextStepAfterTestDate,
@@ -57,6 +59,7 @@ import {
   stepBeforePlanReady,
   stepBeforePrep,
   stepBeforeReport,
+  stepBeforeSatChanged,
   stepBeforeSchools,
   stepBeforeScore,
   stepBeforeTestDate,
@@ -101,7 +104,7 @@ export function SatPlanFunnel() {
 
   useEffect(() => {
     if (step !== "wrong") return;
-    if (!isTestedHistory(answers().test_history)) goTo("gpa");
+    if (!isTestedHistory(answers().test_history)) goTo("sat-changed");
   }, [step, goTo]);
 
   useEffect(() => {
@@ -225,6 +228,13 @@ export function SatPlanFunnel() {
         <SatPlanWrong
           onBack={() => goTo(stepBeforeWrong())}
           onContinue={() => goTo(nextStepAfterWrong())}
+        />
+      ) : null}
+
+      {step === "sat-changed" ? (
+        <SatPlanSatChanged
+          onBack={() => goTo(stepBeforeSatChanged(answers()))}
+          onContinue={() => goTo(nextStepAfterSatChanged())}
         />
       ) : null}
 

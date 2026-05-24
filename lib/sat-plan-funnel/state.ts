@@ -26,6 +26,7 @@ export const SAT_PLAN_STEPS: Record<SatPlanStep, SatPlanStepMeta> = {
   hours: { progress: 50, label: "Question 6 of 11", labelUpper: true },
   score: { progress: 56, label: "Question 7 of 11", labelUpper: true },
   wrong: { progress: 62, label: "Question 8 of 11", labelUpper: true },
+  "sat-changed": { progress: 65, label: null },
   gpa: { progress: 68, label: "Question 9 of 11", labelUpper: true },
   "gpa-paradox": { progress: 72, label: null },
   "test-date": { progress: 76, label: "Question 10 of 11", labelUpper: true },

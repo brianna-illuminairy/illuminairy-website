@@ -1777,3 +1777,55 @@
   margin: 8px 0 4px;
 }
 
+/* INT12 — digital vs paper split */
+.int12-format-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  width: 100%;
+  margin: 0 0 16px;
+}
+
+.int12-format-split__panel {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 88px;
+  padding: 12px;
+  border: 1px solid rgba(10, 10, 10, 0.12);
+}
+
+.int12-format-split__panel--digital {
+  background: #eef6f0;
+}
+
+.int12-format-split__panel--paper {
+  background: var(--cream, var(--quiz-card-bg));
+}
+
+.int12-format-split__label {
+  font-family: var(--display);
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.25;
+  color: var(--ink);
+}
+
+.int12-format-split__detail {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  line-height: 1.35;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.quiz-step-copy--accent {
+  font-weight: 700;
+}
+
+.quiz-step-copy--quote {
+  font-style: italic;
+}
+

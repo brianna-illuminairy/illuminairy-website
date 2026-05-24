@@ -15,6 +15,7 @@ export type SatPlanStep =
   | "hours"
   | "score"
   | "wrong"
+  | "sat-changed"
   | "gpa"
   | "gpa-paradox"
   | "test-date"
@@ -71,6 +72,7 @@ export const SAT_PLAN_ROUTABLE_STEPS: SatPlanStep[] = [
   "hours",
   "score",
   "wrong",
+  "sat-changed",
   "gpa",
   "gpa-paradox",
   "test-date",

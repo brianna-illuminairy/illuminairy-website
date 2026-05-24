@@ -73,7 +73,7 @@ export function stepBeforeInt8(
 }
 
 export function nextStepAfterPrepFailed(historyId?: string): SatPlanStep {
-  return isTestedHistory(historyId) ? "hours" : "gpa";
+  return isTestedHistory(historyId) ? "hours" : "sat-changed";
 }
 
 export function nextStepAfterHours(): SatPlanStep {
@@ -85,6 +85,10 @@ export function nextStepAfterScore(): SatPlanStep {
 }
 
 export function nextStepAfterWrong(): SatPlanStep {
+  return "sat-changed";
+}
+
+export function nextStepAfterSatChanged(): SatPlanStep {
   return "gpa";
 }
 
@@ -137,6 +141,10 @@ export function stepBeforeWrong(): SatPlanStep {
 }
 
 export function stepBeforeGpa(answers: SatPlanAnswers): SatPlanStep {
+  return "sat-changed";
+}
+
+export function stepBeforeSatChanged(answers: SatPlanAnswers): SatPlanStep {
   if (isTestedHistory(answers.test_history)) return "wrong";
   return lastInt8Step(answers.prep_method);
 }
