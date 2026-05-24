@@ -90,3 +90,89 @@ export function getSatTestDateOptions(now: Date = new Date()): SatTestDateOption
 export type TestDateId =
   | (typeof EXAM_DATES)[number]["id"]
   | (typeof META_OPTIONS)[number]["id"];
+
+export type TimelineMode = "exam" | "not_sure" | "not_planning";
+
+export type TimelineMeta = {
+  mode: TimelineMode;
+  days: number | null;
+  weeks: number | null;
+  dateLabel: string | null;
+  hoursPerWeek: number | null;
+};
+
+/** Guided prep hour reference (College Board ~80 hr) for hrs/week math. */
+export const GUIDED_PREP_HOURS_TOTAL = 80;
+
+const DEFAULT_PLANNING_WEEKS = 12;
+
+function formatExamLabel(iso: string): string {
+  const date = parseLocalDate(iso);
+  return date.toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric"
+  });
+}
+
+function hoursPerWeekForWeeks(weeks: number): number {
+  const safeWeeks = Math.max(weeks, 1);
+  return Math.min(12, Math.max(3, Math.ceil(GUIDED_PREP_HOURS_TOTAL / safeWeeks)));
+}
+
+export function getTestDateLabel(testDateId?: string): string | null {
+  if (!testDateId) return null;
+  const exam = EXAM_DATES.find((row) => row.id === testDateId);
+  if (exam?.examDay) return formatExamLabel(exam.examDay);
+  const meta = META_OPTIONS.find((row) => row.id === testDateId);
+  return meta?.label ?? null;
+}
+
+export function resolveTimelineFromTestDate(
+  testDateId?: string,
+  now: Date = new Date()
+): TimelineMeta {
+  if (testDateId === "test_date_not_sure") {
+    const weeks = DEFAULT_PLANNING_WEEKS;
+    return {
+      mode: "not_sure",
+      days: weeks * 7,
+      weeks,
+      dateLabel: null,
+      hoursPerWeek: hoursPerWeekForWeeks(weeks)
+    };
+  }
+
+  if (testDateId === "test_date_not_planning") {
+  return {
+      mode: "not_planning",
+      days: null,
+      weeks: null,
+      dateLabel: null,
+      hoursPerWeek: hoursPerWeekForWeeks(DEFAULT_PLANNING_WEEKS)
+    };
+  }
+
+  const exam = EXAM_DATES.find((row) => row.id === testDateId);
+  if (!exam?.examDay) {
+    const weeks = DEFAULT_PLANNING_WEEKS;
+    return {
+      mode: "not_sure",
+      days: weeks * 7,
+      weeks,
+      dateLabel: null,
+      hoursPerWeek: hoursPerWeekForWeeks(weeks)
+    };
+  }
+
+  const days = daysUntil(exam.examDay, now);
+  const weeks = Math.max(1, Math.round(days / 7));
+
+  return {
+    mode: "exam",
+    days: Math.max(days, 0),
+    weeks,
+    dateLabel: formatExamLabel(exam.examDay),
+    hoursPerWeek: hoursPerWeekForWeeks(weeks)
+  };
+}

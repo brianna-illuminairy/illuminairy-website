@@ -2,23 +2,32 @@
 
 import { useCallback, useEffect, useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { SatPlanFunnelStub } from "@/components/sat-plan/sat-plan-chapter-stub";
+import { SatPlanBook } from "@/components/sat-plan/sat-plan-book";
+import { SatPlanContact } from "@/components/sat-plan/sat-plan-contact";
 import { SatPlanGpa } from "@/components/sat-plan/sat-plan-gpa";
 import { SatPlanHours } from "@/components/sat-plan/sat-plan-hours";
+import { SatPlanInt2GpaParadox } from "@/components/sat-plan/sat-plan-int2-gpa-paradox";
+import { SatPlanInt6Timeline } from "@/components/sat-plan/sat-plan-int6-timeline";
 import { SatPlanInt8Mentorship } from "@/components/sat-plan/sat-plan-int8-mentorship";
 import { SatPlanInt8PrepComparison } from "@/components/sat-plan/sat-plan-int8-prep-comparison";
 import { SatPlanHistory } from "@/components/sat-plan/sat-plan-history";
 import { SatPlanInt3Retake } from "@/components/sat-plan/sat-plan-int3-retake";
 import { SatPlanLanding } from "@/components/sat-plan/sat-plan-landing";
+import { SatPlanPlanPath } from "@/components/sat-plan/sat-plan-plan-path";
+import { SatPlanPlanReady } from "@/components/sat-plan/sat-plan-plan-ready";
 import { SatPlanPrep } from "@/components/sat-plan/sat-plan-prep";
+import { SatPlanReport } from "@/components/sat-plan/sat-plan-report";
+import { SatPlanSchools } from "@/components/sat-plan/sat-plan-schools";
 import { SatPlanScore } from "@/components/sat-plan/sat-plan-score";
 import { SatPlanTarget } from "@/components/sat-plan/sat-plan-target";
 import { SatPlanTestDate } from "@/components/sat-plan/sat-plan-test-date";
 import { SatPlanTrust } from "@/components/sat-plan/sat-plan-trust";
 import { SatPlanWho } from "@/components/sat-plan/sat-plan-who";
+import { SatPlanWrong } from "@/components/sat-plan/sat-plan-wrong";
 import { SatPlanWorries } from "@/components/sat-plan/sat-plan-worries";
 import { trackSatPlanFunnelEvent } from "@/lib/sat-plan-funnel/analytics";
 import {
+  isTestedHistory,
   lastInt8Step,
   nextStepAfterContact,
   nextStepAfterGpa,
@@ -89,6 +98,11 @@ export function SatPlanFunnel() {
     },
     [router]
   );
+
+  useEffect(() => {
+    if (step !== "wrong") return;
+    if (!isTestedHistory(answers().test_history)) goTo("gpa");
+  }, [step, goTo]);
 
   useEffect(() => {
     if (step !== "prep-failed-stub") return;
@@ -208,12 +222,9 @@ export function SatPlanFunnel() {
       ) : null}
 
       {step === "wrong" ? (
-        <SatPlanFunnelStub
-          stepId="wrong"
-          title="What went wrong?"
-          body="Multiselect question — placeholder. Continue to preview the rest of the funnel."
+        <SatPlanWrong
           onBack={() => goTo(stepBeforeWrong())}
-          onContinue={() => stubContinue("wrong", nextStepAfterWrong())}
+          onContinue={() => goTo(nextStepAfterWrong())}
         />
       ) : null}
 
@@ -225,12 +236,9 @@ export function SatPlanFunnel() {
       ) : null}
 
       {step === "gpa-paradox" ? (
-        <SatPlanFunnelStub
-          stepId="gpa-paradox"
-          title="Smart kid / GPA–SAT gap"
-          body="INT2 interstitial — placeholder."
+        <SatPlanInt2GpaParadox
           onBack={() => goTo(stepBeforeGpaParadox())}
-          onContinue={() => stubContinue("gpa-paradox", nextStepAfterGpaParadox())}
+          onContinue={() => goTo(nextStepAfterGpaParadox())}
         />
       ) : null}
 
@@ -242,74 +250,51 @@ export function SatPlanFunnel() {
       ) : null}
 
       {step === "timeline" ? (
-        <SatPlanFunnelStub
-          stepId="timeline"
-          title="Weeks until test"
-          body="INT6 timeline interstitial — placeholder."
+        <SatPlanInt6Timeline
           onBack={() => goTo(stepBeforeTimeline())}
-          onContinue={() => stubContinue("timeline", nextStepAfterTimeline())}
+          onContinue={() => goTo(nextStepAfterTimeline())}
         />
       ) : null}
 
       {step === "schools" ? (
-        <SatPlanFunnelStub
-          stepId="schools"
-          title="Target schools"
-          body="Free-text schools question — placeholder. Skip ships in the real screen."
+        <SatPlanSchools
           onBack={() => goTo(stepBeforeSchools())}
-          onContinue={() => stubContinue("schools", nextStepAfterSchools())}
-          continueLabel="Skip for now"
+          onContinue={() => goTo(nextStepAfterSchools())}
         />
       ) : null}
 
       {step === "plan-path" ? (
-        <SatPlanFunnelStub
-          stepId="plan-path"
-          title="Your score gap"
-          body="INT6 prediction — gap points, 182 avg, path graph — placeholder."
+        <SatPlanPlanPath
           onBack={() => goTo(stepBeforePlanPath())}
-          onContinue={() => stubContinue("plan-path", nextStepAfterPlanPath())}
+          onContinue={() => goTo(nextStepAfterPlanPath())}
         />
       ) : null}
 
       {step === "contact" ? (
-        <SatPlanFunnelStub
-          stepId="contact"
-          title="Get your plan"
-          body="Parent email + phone + TCPA — placeholder."
+        <SatPlanContact
           onBack={() => goTo(stepBeforeContact())}
-          onContinue={() => stubContinue("contact", nextStepAfterContact())}
+          onContinue={() => goTo(nextStepAfterContact())}
         />
       ) : null}
 
       {step === "plan-ready" ? (
-        <SatPlanFunnelStub
-          stepId="plan-ready"
-          title="Your plan is ready"
-          body="Pre-report bridge interstitial — placeholder."
+        <SatPlanPlanReady
           onBack={() => goTo(stepBeforePlanReady())}
-          onContinue={() => stubContinue("plan-ready", nextStepAfterPlanReady())}
+          onContinue={() => goTo(nextStepAfterPlanReady())}
         />
       ) : null}
 
       {step === "report" ? (
-        <SatPlanFunnelStub
-          stepId="report"
-          title="Your SAT plan"
-          body="Personalized on-screen report — placeholder."
+        <SatPlanReport
           onBack={() => goTo(stepBeforeReport())}
-          onContinue={() => stubContinue("report", nextStepAfterReport())}
+          onContinue={() => goTo(nextStepAfterReport())}
         />
       ) : null}
 
       {step === "book" ? (
-        <SatPlanFunnelStub
-          stepId="book"
-          title="Book your free review"
-          body="Calendly embed + confirmation — placeholder. End of funnel outline."
+        <SatPlanBook
           onBack={() => goTo(stepBeforeBook())}
           onContinue={() => stubContinue("book", "book")}
-          continueLabel="Done (preview)"
         />
       ) : null}
     </div>

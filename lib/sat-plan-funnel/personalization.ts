@@ -90,6 +90,25 @@ export function gpaHeadline(testTaker?: string): string {
   return `What's ${possessive} GPA?`;
 }
 
+/** Step 8 — what went wrong (tested path). */
+export function wrongHeadline(): string {
+  return "What do you think went wrong?";
+}
+
+/** Step 11 — target schools (optional). */
+export function schoolsHeadline(testTaker?: string): string {
+  const { subject } = subjectPossessive(testTaker);
+  if (testTaker === "test_taker_self") {
+    return "Which schools are you aiming for?";
+  }
+  return `Which schools is ${subject} aiming for?`;
+}
+
+/** Contact gate — parent email for plan delivery. */
+export function contactHeadline(): string {
+  return "Where should we send the plan?";
+}
+
 /** Step 10 — test / retake date. */
 export function testDateHeadline(testTaker?: string, testHistory?: string): string {
   const { subject, possessive } = subjectPossessive(testTaker);
