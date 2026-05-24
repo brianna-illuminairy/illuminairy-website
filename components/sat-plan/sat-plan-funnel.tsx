@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { SatPlanChapterStub } from "@/components/sat-plan/sat-plan-chapter-stub";
 import { SatPlanLanding } from "@/components/sat-plan/sat-plan-landing";
+import { SatPlanTarget } from "@/components/sat-plan/sat-plan-target";
 import { SatPlanWho } from "@/components/sat-plan/sat-plan-who";
 import { SatPlanWorries } from "@/components/sat-plan/sat-plan-worries";
 import { trackSatPlanFunnelEvent } from "@/lib/sat-plan-funnel/analytics";
@@ -56,14 +57,18 @@ export function SatPlanFunnel() {
       ) : null}
 
       {step === "who" ? (
-        <SatPlanWho onBack={() => goTo("worries")} onContinue={() => goTo("target-stub")} />
+        <SatPlanWho onBack={() => goTo("worries")} onContinue={() => goTo("target")} />
       ) : null}
 
-      {step === "target-stub" ? (
+      {step === "target" ? (
+        <SatPlanTarget onBack={() => goTo("who")} onContinue={() => goTo("trust-stub")} />
+      ) : null}
+
+      {step === "trust-stub" ? (
         <SatPlanChapterStub
-          stepId="target-stub"
-          title="Target score"
-          onBack={() => goTo("who")}
+          stepId="trust-stub"
+          title="You're in good hands"
+          onBack={() => goTo("target")}
         />
       ) : null}
     </div>
