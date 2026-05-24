@@ -5,6 +5,7 @@ import { Int8SelfStudyFailBody } from "@/components/sat-plan/int8-self-study-fai
 import { QuizStepTemplate } from "@/components/sat-plan/quiz-step-template";
 import { trackSatPlanFunnelEvent } from "@/lib/sat-plan-funnel/analytics";
 import { buildInt8SelfStudyFailCopy } from "@/lib/sat-plan-funnel/int8-self-study-fail-copy";
+import { useSatPlanAnswers } from "@/lib/sat-plan-funnel/use-sat-plan-answers";
 
 type SatPlanInt8SelfStudyFailProps = {
   onBack: () => void;
@@ -15,6 +16,7 @@ export function SatPlanInt8SelfStudyFail({
   onBack,
   onContinue
 }: SatPlanInt8SelfStudyFailProps) {
+  const answers = useSatPlanAnswers();
   const copy = useMemo(() => buildInt8SelfStudyFailCopy(), []);
 
   useEffect(() => {
@@ -42,7 +44,7 @@ export function SatPlanInt8SelfStudyFail({
       onContinue={handleContinue}
       onBack={onBack}
     >
-      <Int8SelfStudyFailBody copy={copy} />
+      <Int8SelfStudyFailBody copy={copy} testTaker={answers.test_taker} />
     </QuizStepTemplate>
   );
 }

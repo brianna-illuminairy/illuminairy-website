@@ -1,6 +1,5 @@
 import { GPA_OPTIONS } from "@/lib/sat-plan-funnel/gpa-options";
 import { HISTORY_OPTIONS } from "@/lib/sat-plan-funnel/history-options";
-import { HOURS_OPTIONS } from "@/lib/sat-plan-funnel/hours-options";
 import { PREP_OPTIONS } from "@/lib/sat-plan-funnel/prep-options";
 import { conservativeScoreGap, targetBandLabel } from "@/lib/sat-plan-funnel/score-gap";
 import { SCORE_OPTIONS } from "@/lib/sat-plan-funnel/score-options";
@@ -51,9 +50,6 @@ export function buildReportSummary(answers: SatPlanAnswers): ReportSummaryRow[] 
 
   const kidBlocks = kidProblemLabels(answers.kid_problem_blocks);
   if (kidBlocks) rows.push({ label: "Prep blockers", value: kidBlocks });
-
-  const hours = labelFromOptions(answers.study_hours, HOURS_OPTIONS);
-  if (hours) rows.push({ label: "Study hours", value: hours });
 
   const score = labelFromOptions(answers.recent_score, SCORE_OPTIONS);
   if (score) rows.push({ label: "Recent score", value: score });

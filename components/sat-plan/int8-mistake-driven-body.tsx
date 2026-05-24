@@ -8,23 +8,15 @@ type Int8MistakeDrivenBodyProps = {
 export function Int8MistakeDrivenBody({ copy }: Int8MistakeDrivenBodyProps) {
   return (
     <div className="quiz-step-trust-content int8-mistake-driven">
-      <Int8MistakeDrivenGraphic copy={copy} />
-
-      {copy.introParagraphs.map((paragraph, index) => (
-        <p key={`intro-${index}`} className="quiz-step-copy">
-          {paragraph}
-        </p>
-      ))}
-
-      <p className="quiz-step-copy int8-mistake-driven__session">
-        <strong>{copy.sessionIntro}</strong> {copy.sessionSteps[0]}
+      <p className="quiz-step-copy int8-mistake-driven__body-copy int8-mistake-driven__intro">
+        {copy.introParagraph}
       </p>
 
-      {copy.closingParagraphs.map((paragraph, index) => (
-        <p key={`close-${index}`} className="quiz-step-copy">
-          {paragraph}
-        </p>
-      ))}
+      <Int8MistakeDrivenGraphic copy={copy} />
+
+      <p className="quiz-step-copy int8-mistake-driven__body-copy int8-mistake-driven__closing">
+        {copy.closingParagraph}
+      </p>
     </div>
   );
 }

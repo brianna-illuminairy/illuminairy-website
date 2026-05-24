@@ -3,58 +3,57 @@ import type { Int8MistakeDrivenCopy } from "@/lib/sat-plan-funnel/int8-mistake-d
 type Int8MistakeDrivenGraphicProps = {
   copy: Pick<
     Int8MistakeDrivenCopy,
-    "flowSteps" | "drillTitle" | "drillQuestions" | "graphicAriaLabel"
+    | "sessionBannerLead"
+    | "sessionSkillLabel"
+    | "progressionSteps"
+    | "footerLabel"
+    | "footerStatus"
+    | "graphicAriaLabel"
   >;
 };
 
 export function Int8MistakeDrivenGraphic({ copy }: Int8MistakeDrivenGraphicProps) {
   return (
-    <div className="int8-mistake-graphic" role="img" aria-label={copy.graphicAriaLabel}>
+    <div
+      className="int8-mistake-graphic int8-mistake-graphic--reveal quiz-step-trust-graphic int8-mistake-graphic--inset"
+      role="img"
+      aria-label={copy.graphicAriaLabel}
+    >
       <div className="quiz-step-trust-card int8-mistake-graphic__card">
-        <div className="int8-mistake-graphic__flow" aria-hidden>
-          {copy.flowSteps.map((step) => (
-            <span
-              key={step.label}
-              className={[
-                "int8-mistake-graphic__flow-step",
-                step.isMastery ? "int8-mistake-graphic__flow-step--mastery" : ""
-              ]
-                .filter(Boolean)
-                .join(" ")}
-            >
-              {step.isMastery ? <span className="int8-mistake-graphic__flow-check">✓</span> : null}
-              <span className="int8-mistake-graphic__flow-label">{step.label}</span>
-            </span>
-          ))}
+        <div className="int8-mistake-graphic__banner" aria-hidden>
+          <span className="int8-mistake-graphic__banner-lead">{copy.sessionBannerLead}</span>
+          <strong className="int8-mistake-graphic__banner-skill">{copy.sessionSkillLabel}</strong>
         </div>
 
-        <div className="int8-mistake-graphic__drill" aria-hidden>
-          <p className="int8-mistake-graphic__drill-title">{copy.drillTitle}</p>
-          <ul className="int8-mistake-graphic__drill-list">
-            {copy.drillQuestions.map((question) => (
-              <li
-                key={question.label}
+        <ol className="int8-mistake-graphic__progression" aria-hidden>
+          {copy.progressionSteps.map((step) => (
+            <li
+              key={step.status}
+              className={[
+                "int8-mistake-graphic__row",
+                `int8-mistake-graphic__row--${step.status}`
+              ].join(" ")}
+            >
+              <div className="int8-mistake-graphic__row-copy">
+                <strong>{step.title}</strong>
+              </div>
+              <span
                 className={[
-                  "int8-mistake-graphic__drill-item",
-                  question.mastered ? "int8-mistake-graphic__drill-item--done" : ""
-                ]
-                  .filter(Boolean)
-                  .join(" ")}
+                  "int8-mistake-graphic__badge",
+                  `int8-mistake-graphic__badge--${step.status}`
+                ].join(" ")}
               >
-                <span className="int8-mistake-graphic__drill-q">{question.label}</span>
-                {question.mastered ? (
-                  <span className="int8-mistake-graphic__drill-check" aria-hidden>
-                    ✓
-                  </span>
-                ) : (
-                  <span className="int8-mistake-graphic__drill-pending" aria-hidden>
-                    ···
-                  </span>
-                )}
-              </li>
-            ))}
-          </ul>
+                {step.statusMark}
+              </span>
+            </li>
+          ))}
+        </ol>
+
+        <div className="int8-mistake-graphic__footer" aria-hidden>
+          <span>{copy.footerLabel}</span>
+          <strong>{copy.footerStatus}</strong>
         </div>
+        <div className="int8-mistake-graphic__bar" aria-hidden />
       </div>
     </div>
   );

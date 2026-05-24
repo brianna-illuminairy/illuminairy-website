@@ -2,7 +2,6 @@ import {
   normalizePrepMethods,
   PREP_SELF_STUDY_IDS
 } from "@/lib/sat-plan-funnel/prep-options";
-import { shouldShowKidProblem } from "@/lib/sat-plan-funnel/int13-kid-problem-copy";
 import type { SatPlanAnswers, SatPlanStep } from "@/lib/sat-plan-funnel/types";
 
 export function isTestedHistory(historyId?: string): boolean {
@@ -106,17 +105,12 @@ export function stepBeforeInt8(
   }
 }
 
-/** After INT8 (or stub): tested path → score / kid-problem; never-tested → sat-changed. */
+/** After INT8 (or stub): tested path → score; never-tested → sat-changed. */
 export function nextStepAfterPrepFailed(
   historyId?: string,
-  prepMethod?: SatPlanAnswers["prep_method"]
+  _prepMethod?: SatPlanAnswers["prep_method"]
 ): SatPlanStep {
   if (!isTestedHistory(historyId)) return "sat-changed";
-  if (shouldShowKidProblem(prepMethod)) return "kid-problem";
-  return "score";
-}
-
-export function nextStepAfterKidProblem(): SatPlanStep {
   return "score";
 }
 
@@ -145,6 +139,10 @@ export function nextStepAfterTestDate(): SatPlanStep {
 }
 
 export function nextStepAfterTimeline(): SatPlanStep {
+  return "schools";
+}
+
+export function nextStepAfterSchools(): SatPlanStep {
   return "plan-path";
 }
 
@@ -165,11 +163,6 @@ export function nextStepAfterReport(): SatPlanStep {
 }
 
 export function stepBeforeScore(answers: SatPlanAnswers): SatPlanStep {
-  if (shouldShowKidProblem(answers.prep_method)) return "kid-problem";
-  return lastInt8Step(answers.prep_method);
-}
-
-export function stepBeforeKidProblem(answers: SatPlanAnswers): SatPlanStep {
   return lastInt8Step(answers.prep_method);
 }
 
@@ -198,8 +191,12 @@ export function stepBeforeTimeline(): SatPlanStep {
   return "test-date";
 }
 
-export function stepBeforePlanPath(): SatPlanStep {
+export function stepBeforeSchools(): SatPlanStep {
   return "timeline";
+}
+
+export function stepBeforePlanPath(): SatPlanStep {
+  return "schools";
 }
 
 export function stepBeforeContact(): SatPlanStep {

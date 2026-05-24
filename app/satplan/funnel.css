@@ -418,11 +418,22 @@
 
 .funnel-header {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: calc(12px + env(safe-area-inset-top, 0px)) var(--page-x) 12px;
+  flex-direction: column;
+  align-items: stretch;
+  padding: calc(12px + env(safe-area-inset-top, 0px)) var(--page-x) 8px;
   padding-left: calc(var(--page-x) + env(safe-area-inset-left, 0px));
   padding-right: calc(var(--page-x) + env(safe-area-inset-right, 0px));
+}
+
+.funnel-back-row {
+  flex-shrink: 0;
+}
+
+.funnel-brand-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 28px;
 }
 
 .funnel-word {
@@ -440,17 +451,12 @@
   font-weight: 600;
   color: var(--ink-soft);
   cursor: pointer;
-  padding: 10px 4px 10px 0;
-  min-width: 72px;
+  padding: 0 4px 6px 0;
+  min-width: auto;
   min-height: var(--touch-min);
   text-align: left;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
-}
-
-.funnel-back--spacer,
-.funnel-header-spacer {
-  min-width: 72px;
 }
 
 .funnel-progress {
@@ -901,8 +907,7 @@
 /* INT8 — group class / self-study fail: compact interstitial copy */
 .quiz-step--copy:has(.int8-group-class-fail) .quiz-step-headline,
 .quiz-step--copy:has(.int8-self-study-fail) .quiz-step-headline,
-.quiz-step--copy:has(.int8-diagnostic-driven) .quiz-step-headline,
-.quiz-step--copy:has(.int8-mistake-driven) .quiz-step-headline {
+.quiz-step--copy:has(.int8-diagnostic-driven) .quiz-step-headline {
   font-size: clamp(20px, 5.6vw, 26px);
   line-height: 1.14;
   letter-spacing: -0.03em;
@@ -1258,117 +1263,248 @@
   color: var(--ink-soft);
 }
 
-/* INT8 — diagnostic-driven (slide 3): topic map + personalized plan */
-.int8-diagnostic-driven .quiz-step-copy {
-  font-size: 12px;
-  line-height: 1.28;
+/* INT8 — diagnostic-driven (slide 3): sequential analysis animation */
+.int8-diagnostic-driven .int8-diagnostic-analysis--inset {
+  margin: 8px auto 12px;
+  width: 100%;
+  max-width: var(--funnel-col-max);
+}
+
+.int8-diagnostic-analysis__card {
+  padding: 10px 10px 9px;
   text-align: left;
+  min-height: 248px;
 }
 
-.int8-diagnostic-driven .quiz-step-copy + .quiz-step-copy {
-  margin-top: 6px;
+.int8-diagnostic-analysis__header {
+  margin-bottom: 8px;
 }
 
-.int8-diagnostic-driven .int8-diagnostic-graphic {
-  margin-top: 8px;
-}
-
-.int8-diagnostic-graphic__card {
-  padding: 10px 10px 8px;
-  text-align: left;
-}
-
-.int8-diagnostic-graphic__split {
-  display: grid;
-  grid-template-columns: 1.05fr 0.95fr;
-  gap: 8px;
-  align-items: stretch;
-}
-
-.int8-diagnostic-graphic__map,
-.int8-diagnostic-graphic__plan {
-  padding: 8px 7px;
-  border: 1px solid var(--hair);
-  background: rgba(0, 0, 0, 0.02);
-}
-
-.int8-diagnostic-graphic__map-label,
-.int8-diagnostic-graphic__plan-title {
-  margin: 0 0 6px;
-  font-family: var(--mono);
-  font-size: 7px;
+.int8-diagnostic-analysis__title {
+  margin: 0;
+  font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+.int8-diagnostic-analysis__subtext {
+  margin: 3px 0 0;
+  font-family: var(--mono);
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--ink-soft);
 }
 
-.int8-diagnostic-graphic__topics {
+.int8-diagnostic-analysis__stage {
+  position: relative;
+  min-height: 168px;
+}
+
+.int8-diagnostic-analysis__scan-panel {
+  position: absolute;
+  inset: 0;
+  transition: opacity 0.65s ease, transform 0.65s ease;
+}
+
+.int8-diagnostic-analysis--filtering .int8-diagnostic-analysis__scan-panel,
+.int8-diagnostic-analysis--building .int8-diagnostic-analysis__scan-panel,
+.int8-diagnostic-analysis--ready .int8-diagnostic-analysis__scan-panel {
+  opacity: 0;
+  transform: translateY(-6px);
+  pointer-events: none;
+}
+
+.int8-diagnostic-analysis--filtering .int8-diagnostic-analysis__scan-panel {
+  opacity: 0.35;
+  transform: translateY(-10px) scale(0.98);
+}
+
+.int8-diagnostic-analysis__scan-window {
+  height: 118px;
+  overflow: hidden;
+  border: 1px solid var(--hair);
+  background: rgba(0, 0, 0, 0.02);
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 8%, #000 92%, transparent 100%);
+}
+
+.int8-diagnostic-analysis__skill-track {
   margin: 0;
-  padding: 0;
+  padding: 4px 6px;
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 3px;
+  animation: int8-diag-skill-scroll 18s linear infinite;
 }
 
-.int8-diagnostic-graphic__topic {
+.int8-diagnostic-analysis--filtering .int8-diagnostic-analysis__skill-track {
+  animation-play-state: paused;
+}
+
+@keyframes int8-diag-skill-scroll {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-50%);
+  }
+}
+
+.int8-diagnostic-analysis__skill-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 4px;
+  gap: 6px;
   padding: 3px 5px;
+  border: 1px solid var(--hair);
+  background: var(--paper);
   font-size: 9px;
   font-weight: 600;
   line-height: 1.2;
-  border: 1px solid var(--hair);
-  background: var(--paper);
   color: var(--ink-soft);
+  transition: opacity 0.55s ease, border-color 0.55s ease, background 0.55s ease;
 }
 
-.int8-diagnostic-graphic__topic--hot {
-  border-color: rgba(200, 62, 44, 0.45);
+.int8-diagnostic-analysis__skill-row.is-tagged .int8-diagnostic-analysis__skill-tag {
+  opacity: 1;
+  animation: int8-diag-tag-in 0.45s ease forwards;
+}
+
+.int8-diagnostic-analysis--filtering .int8-diagnostic-analysis__priority-list.is-locking {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+}
+
+@keyframes int8-diag-tag-in {
+  from {
+    opacity: 0;
+    transform: translateX(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.int8-diagnostic-analysis__skill-row--strong {
+  border-color: rgba(0, 0, 0, 0.08);
+  background: rgba(0, 0, 0, 0.03);
+  color: rgba(0, 0, 0, 0.42);
+}
+
+.int8-diagnostic-analysis__skill-row--high-impact.is-tagged,
+.int8-diagnostic-analysis__skill-row.is-priority {
+  border-color: rgba(200, 62, 44, 0.42);
   background: rgba(200, 62, 44, 0.07);
   color: var(--ink);
 }
 
-.int8-diagnostic-graphic__topic-name {
+.int8-diagnostic-analysis__skill-row.is-faded {
+  opacity: 0.22;
+}
+
+.int8-diagnostic-analysis__skill-row.is-dimmed {
+  opacity: 0.45;
+}
+
+.int8-diagnostic-analysis__skill-name {
   flex: 1;
   min-width: 0;
 }
 
-.int8-diagnostic-graphic__topic-pts {
+.int8-diagnostic-analysis__skill-tag {
   flex-shrink: 0;
   font-family: var(--mono);
-  font-size: 7px;
+  font-size: 6px;
   font-weight: 700;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.05em;
+  opacity: 0;
+}
+
+.int8-diagnostic-analysis__skill-row--strong .int8-diagnostic-analysis__skill-tag {
+  color: rgba(0, 0, 0, 0.38);
+}
+
+.int8-diagnostic-analysis__skill-row--developing .int8-diagnostic-analysis__skill-tag {
+  color: var(--ink-soft);
+}
+
+.int8-diagnostic-analysis__skill-row--high-impact .int8-diagnostic-analysis__skill-tag {
   color: var(--tomato);
 }
 
-.int8-diagnostic-graphic__plan-list {
+.int8-diagnostic-analysis__skill-row--low-impact .int8-diagnostic-analysis__skill-tag {
+  color: rgba(0, 0, 0, 0.35);
+}
+
+.int8-diagnostic-analysis__priority-list {
   margin: 0;
   padding: 0;
   list-style: none;
   display: flex;
   flex-direction: column;
   gap: 4px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
 }
 
-.int8-diagnostic-graphic__plan-item {
+.int8-diagnostic-analysis__priority-list.is-locking,
+.int8-diagnostic-analysis__priority-list.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.int8-diagnostic-analysis--building .int8-diagnostic-analysis__priority-list,
+.int8-diagnostic-analysis--ready .int8-diagnostic-analysis__priority-list {
+  margin-bottom: 8px;
+}
+
+.int8-diagnostic-analysis__priority-item {
   display: flex;
   align-items: center;
-  gap: 5px;
-  padding: 3px 5px;
+  gap: 6px;
+  padding: 4px 6px;
+  border: 1px solid rgba(200, 62, 44, 0.22);
+  background: rgba(200, 62, 44, 0.04);
   font-size: 9px;
   font-weight: 700;
   line-height: 1.2;
-  border: 1px solid rgba(200, 62, 44, 0.25);
-  background: rgba(200, 62, 44, 0.05);
+  color: var(--ink-soft);
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity 0.55s ease,
+    transform 0.55s ease,
+    border-color 0.45s ease,
+    background 0.45s ease,
+    color 0.45s ease;
+}
+
+.int8-diagnostic-analysis__priority-item.is-slotted {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.int8-diagnostic-analysis__priority-item.is-added {
+  border-color: rgba(200, 62, 44, 0.38);
+  background: rgba(200, 62, 44, 0.08);
   color: var(--ink);
 }
 
-.int8-diagnostic-graphic__plan-rank {
+.int8-diagnostic-analysis__priority-item.is-active {
+  border-color: rgba(200, 62, 44, 0.55);
+  background: rgba(200, 62, 44, 0.12);
+}
+
+.int8-diagnostic-analysis__priority-rank {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1383,178 +1519,500 @@
   color: var(--paper);
 }
 
-.int8-diagnostic-graphic__scores {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 4px;
-  margin-top: 8px;
-  padding-top: 8px;
-  border-top: 1px dashed var(--hair);
+.int8-diagnostic-analysis__priority-name {
+  flex: 1;
+  min-width: 0;
 }
 
-.int8-diagnostic-graphic__score-wrap {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.int8-diagnostic-graphic__score-arrow {
-  font-family: var(--mono);
-  font-size: 9px;
-  font-weight: 700;
-  color: var(--ink-soft);
-}
-
-.int8-diagnostic-graphic__score {
-  padding: 3px 7px;
-  font-family: var(--mono);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  border: 1px solid var(--hair);
-  background: var(--paper);
-  color: var(--ink-soft);
-}
-
-.int8-diagnostic-graphic__score--goal {
-  border-color: rgba(200, 62, 44, 0.45);
-  background: rgba(200, 62, 44, 0.08);
-  color: var(--ink);
-}
-
-/* INT8 — mistake-driven (slide 4): progression + drill */
-.quiz-step--copy:has(.int8-mistake-driven) .quiz-step-trust-content,
-.quiz-step--copy:has(.int8-mistake-driven) .quiz-step-trust-content .quiz-step-copy {
-  text-align: left;
-}
-
-.int8-mistake-driven .quiz-step-copy {
-  font-size: 12px;
-  line-height: 1.28;
-  margin: 0;
-}
-
-.int8-mistake-driven .quiz-step-copy + .quiz-step-copy,
-.int8-mistake-driven .int8-mistake-graphic + .quiz-step-copy {
-  margin-top: 6px;
-}
-
-.int8-mistake-driven__session {
-  margin-top: 6px;
-}
-
-.int8-mistake-driven__session strong {
-  font-weight: 700;
-}
-
-.int8-mistake-driven .int8-mistake-graphic {
-  margin: 0 0 8px;
-  width: 100%;
-  max-width: var(--funnel-col-max);
-}
-
-.int8-mistake-graphic__card {
-  padding: 8px 8px 6px;
-  text-align: left;
-}
-
-.int8-mistake-graphic__flow {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 4px;
-  margin-bottom: 8px;
-}
-
-.int8-mistake-graphic__flow-step {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 2px;
-  min-height: 26px;
-  padding: 4px 3px;
-  border: 1px solid var(--hair);
-  background: rgba(0, 0, 0, 0.03);
+.int8-diagnostic-analysis__priority-pts {
+  flex-shrink: 0;
   font-family: var(--mono);
   font-size: 7px;
   font-weight: 700;
   letter-spacing: 0.04em;
-  line-height: 1.15;
-  text-transform: uppercase;
-  text-align: center;
-  color: var(--ink);
-}
-
-.int8-mistake-graphic__flow-step--mastery {
-  border-color: rgba(200, 62, 44, 0.45);
-  background: rgba(200, 62, 44, 0.1);
   color: var(--tomato);
 }
 
-.int8-mistake-graphic__flow-check {
-  flex-shrink: 0;
+.int8-diagnostic-analysis__roadmap {
+  padding-top: 6px;
+  border-top: 1px dashed var(--hair);
+}
+
+.int8-diagnostic-analysis__score-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 3px;
+  min-height: 22px;
+}
+
+.int8-diagnostic-analysis__score-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-family: var(--mono);
   font-size: 9px;
-  line-height: 1;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: var(--ink-soft);
+  opacity: 0;
+  transform: translateY(3px);
+  transition: opacity 0.5s ease, transform 0.5s ease, color 0.5s ease;
 }
 
-.int8-mistake-graphic__flow-label {
-  min-width: 0;
+.int8-diagnostic-analysis__score-chip.is-visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
-.int8-mistake-graphic__drill {
-  padding: 6px 7px;
+.int8-diagnostic-analysis__score-chip.is-goal {
+  padding: 2px 6px;
+  border: 1px solid rgba(200, 62, 44, 0.42);
+  background: rgba(200, 62, 44, 0.08);
+  color: var(--ink);
+}
+
+.int8-diagnostic-analysis__score-arrow {
+  font-size: 8px;
+  color: var(--ink-soft);
+}
+
+.int8-diagnostic-analysis__progress-wrap {
+  margin-top: 7px;
+}
+
+.int8-diagnostic-analysis__week-map {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 3px;
+  margin-bottom: 5px;
+}
+
+.int8-diagnostic-analysis__week-block {
+  padding: 3px 2px;
   border: 1px solid var(--hair);
   background: rgba(0, 0, 0, 0.02);
+  text-align: center;
+  opacity: 0.45;
+  transition: opacity 0.5s ease, border-color 0.5s ease, background 0.5s ease;
 }
 
-.int8-mistake-graphic__drill-title {
-  margin: 0 0 5px;
+.int8-diagnostic-analysis__week-block.is-active {
+  opacity: 1;
+  border-color: rgba(200, 62, 44, 0.35);
+  background: rgba(200, 62, 44, 0.06);
+}
+
+.int8-diagnostic-analysis__week-label {
+  display: block;
+  font-family: var(--mono);
+  font-size: 6px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+  color: var(--ink-soft);
+}
+
+.int8-diagnostic-analysis__week-block.is-active .int8-diagnostic-analysis__week-label {
+  color: var(--ink);
+}
+
+.int8-diagnostic-analysis__progress-track {
+  display: block;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+}
+
+.int8-diagnostic-analysis__progress-fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, rgba(200, 62, 44, 0.55), rgba(200, 62, 44, 0.85));
+  transition: width 0.75s ease;
+}
+
+.int8-diagnostic-analysis__timeline {
+  margin: 4px 0 0;
   font-family: var(--mono);
   font-size: 7px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--ink-soft);
+  text-align: center;
 }
 
-.int8-mistake-graphic__drill-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.int8-mistake-graphic__drill-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  min-width: 0;
-  padding: 3px 6px;
-  border: 1px solid var(--hair);
-  background: #fff;
-  font-family: var(--mono);
-  font-size: 8px;
-  font-weight: 700;
+.int8-diagnostic-analysis__summary {
+  margin: 8px 0 0;
+  padding-top: 8px;
+  border-top: 1px solid var(--hair);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.35;
   color: var(--ink-soft);
 }
 
-.int8-mistake-graphic__drill-item--done {
-  border-color: rgba(34, 120, 72, 0.45);
-  background: rgba(34, 120, 72, 0.1);
-  color: #1a6b42;
+@media (prefers-reduced-motion: reduce) {
+  .int8-diagnostic-analysis__skill-track {
+    animation: none;
+  }
+
+  .int8-diagnostic-analysis__scan-panel,
+  .int8-diagnostic-analysis__priority-list,
+  .int8-diagnostic-analysis__score-chip,
+  .int8-diagnostic-analysis__skill-row,
+  .int8-diagnostic-analysis__progress-fill {
+    transition: none;
+    animation: none;
+  }
+
+  .int8-diagnostic-analysis--filtering .int8-diagnostic-analysis__scan-panel {
+    display: none;
+  }
 }
 
-.int8-mistake-graphic__drill-check {
+/* INT8 — mistake-driven (slide 4): progression + drill — type matches prep-failed-proof */
+.quiz-step--copy:has(.int8-mistake-driven) .quiz-step-headline {
+  text-align: left;
+}
+
+.quiz-step--copy:has(.int8-mistake-driven) .quiz-step-trust-content,
+.quiz-step--copy:has(.int8-mistake-driven) .quiz-step-trust-content .quiz-step-copy {
+  text-align: left;
+}
+
+.int8-mistake-driven .quiz-step-copy {
+  margin: 0;
+}
+
+.int8-mistake-driven__body-copy {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.45;
+  letter-spacing: -0.005em;
+  color: var(--ink);
+  text-align: left;
+}
+
+.int8-mistake-driven__intro {
+  margin: 0 0 20px;
+}
+
+.int8-mistake-driven__closing {
+  margin: 0;
+}
+
+.int8-mistake-driven .int8-mistake-graphic--inset {
+  margin: 8px auto 32px;
+  width: 85%;
+  max-width: calc(var(--funnel-col-max) * 0.85);
+}
+
+.int8-mistake-graphic__card {
+  padding: 0;
+  overflow: hidden;
+  text-align: left;
+}
+
+.int8-mistake-graphic__banner {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 7px 12px;
+  background: var(--ink);
+  color: #fff;
+}
+
+.int8-mistake-graphic__banner-lead {
+  font-family: var(--mono);
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.72);
+  padding-top: 2px;
+}
+
+.int8-mistake-graphic__banner-skill {
+  margin-left: auto;
+  font-family: var(--display);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  color: #fff;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.int8-mistake-graphic__progression {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: 1px solid var(--hair);
+  border-top: 0;
+}
+
+.int8-mistake-graphic__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 20px;
+  gap: 10px;
+  align-items: center;
+  padding: 6px 12px;
+  min-height: 32px;
+  border-bottom: 1px solid var(--hair);
+  background: var(--quiz-card-bg);
+}
+
+.int8-mistake-graphic__row:last-child {
+  border-bottom: 0;
+}
+
+.int8-mistake-graphic__row--mastery {
+  background: rgba(34, 120, 72, 0.12);
+}
+
+.int8-mistake-graphic__row-copy {
+  min-width: 0;
+}
+
+.int8-mistake-graphic__row-copy strong {
+  display: block;
+  font-family: var(--display);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+.int8-mistake-graphic__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
   font-size: 9px;
+  font-weight: 800;
   line-height: 1;
 }
 
-.int8-mistake-graphic__drill-pending {
-  letter-spacing: 0.12em;
-  opacity: 0.55;
+.int8-mistake-graphic__badge--miss {
+  background: var(--tomato);
+  color: #fff;
+}
+
+.int8-mistake-graphic__badge--tutor {
+  background: var(--ink);
+  color: #fff;
+  font-size: 8px;
+}
+
+.int8-mistake-graphic__badge--hint {
+  background: #6b8294;
+  color: #fff;
+}
+
+.int8-mistake-graphic__badge--solo,
+.int8-mistake-graphic__badge--mastery {
+  background: #2f8b55;
+  color: #fff;
+}
+
+.int8-mistake-graphic__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 12px;
+  border: 1px solid var(--hair);
+  border-top: 0;
+  font-family: var(--mono);
+  font-size: 7px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.int8-mistake-graphic__footer strong {
+  font-family: var(--display);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  text-transform: none;
+  color: #1a6b42;
+}
+
+.int8-mistake-graphic__bar {
+  height: 3px;
+  background: #1a6b42;
+}
+
+/* INT8 mistake graphic — calm sequential mastery reveal */
+@keyframes int8-mistake-row-in {
+  from {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes int8-mistake-badge-miss {
+  from {
+    background: #d9a89e;
+  }
+
+  to {
+    background: var(--tomato);
+  }
+}
+
+@keyframes int8-mistake-badge-tutor {
+  from {
+    background: #a8b4be;
+  }
+
+  to {
+    background: var(--ink);
+  }
+}
+
+@keyframes int8-mistake-badge-check {
+  from {
+    background: #a8b4be;
+  }
+
+  to {
+    background: #2f8b55;
+  }
+}
+
+@keyframes int8-mistake-mastery-row {
+  from {
+    background: var(--quiz-card-bg);
+  }
+
+  to {
+    background: rgba(34, 120, 72, 0.12);
+  }
+}
+
+@keyframes int8-mistake-footer-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes int8-mistake-bar-grow {
+  from {
+    transform: scaleX(0);
+  }
+
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.int8-mistake-graphic--reveal .int8-mistake-graphic__row {
+  opacity: 0;
+  animation: int8-mistake-row-in 0.42s ease forwards;
+}
+
+.int8-mistake-graphic--reveal .int8-mistake-graphic__row:nth-child(1) {
+  animation-delay: 0.12s;
+}
+
+.int8-mistake-graphic--reveal .int8-mistake-graphic__row:nth-child(2) {
+  animation-delay: 0.48s;
+}
+
+.int8-mistake-graphic--reveal .int8-mistake-graphic__row:nth-child(3) {
+  animation-delay: 0.84s;
+}
+
+.int8-mistake-graphic--reveal .int8-mistake-graphic__row:nth-child(4) {
+  animation-delay: 1.2s;
+}
+
+.int8-mistake-graphic--reveal .int8-mistake-graphic__row:nth-child(5) {
+  animation-delay: 1.56s;
+}
+
+.int8-mistake-graphic--reveal .int8-mistake-graphic__row--mastery {
+  animation:
+    int8-mistake-row-in 0.42s ease forwards,
+    int8-mistake-mastery-row 0.55s ease forwards;
+  animation-delay: 1.56s, 1.72s;
+}
+
+.int8-mistake-graphic--reveal .int8-mistake-graphic__badge--miss {
+  animation: int8-mistake-badge-miss 0.38s ease forwards;
+  animation-delay: 0.38s;
+}
+
+.int8-mistake-graphic--reveal .int8-mistake-graphic__badge--tutor {
+  animation: int8-mistake-badge-tutor 0.38s ease forwards;
+  animation-delay: 0.74s;
+}
+
+.int8-mistake-graphic--reveal .int8-mistake-graphic__badge--solo {
+  animation: int8-mistake-badge-check 0.4s ease forwards;
+  animation-delay: 1.44s;
+}
+
+.int8-mistake-graphic--reveal .int8-mistake-graphic__badge--mastery {
+  animation: int8-mistake-badge-check 0.45s ease forwards;
+  animation-delay: 1.82s;
+}
+
+.int8-mistake-graphic--reveal .int8-mistake-graphic__footer {
+  opacity: 0;
+  animation: int8-mistake-footer-in 0.4s ease forwards;
+  animation-delay: 2s;
+}
+
+.int8-mistake-graphic--reveal .int8-mistake-graphic__bar {
+  transform: scaleX(0);
+  transform-origin: left center;
+  animation: int8-mistake-bar-grow 0.45s ease forwards;
+  animation-delay: 2.12s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .int8-mistake-graphic--reveal .int8-mistake-graphic__row,
+  .int8-mistake-graphic--reveal .int8-mistake-graphic__row--mastery,
+  .int8-mistake-graphic--reveal .int8-mistake-graphic__footer,
+  .int8-mistake-graphic--reveal .int8-mistake-graphic__bar {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .int8-mistake-graphic--reveal .int8-mistake-graphic__row--mastery {
+    background: rgba(34, 120, 72, 0.12);
+  }
+
+  .int8-mistake-graphic--reveal .int8-mistake-graphic__badge--miss,
+  .int8-mistake-graphic--reveal .int8-mistake-graphic__badge--tutor,
+  .int8-mistake-graphic--reveal .int8-mistake-graphic__badge--hint,
+  .int8-mistake-graphic--reveal .int8-mistake-graphic__badge--solo,
+  .int8-mistake-graphic--reveal .int8-mistake-graphic__badge--mastery {
+    animation: none;
+  }
 }
 
 .int8-prep-path-triptych {

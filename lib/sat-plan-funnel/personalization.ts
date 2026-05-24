@@ -86,6 +86,15 @@ export function wrongHeadline(): string {
   return "What do you think went wrong?";
 }
 
+/** Step 11 — target schools (optional). */
+export function schoolsHeadline(testTaker?: string): string {
+  const { subject } = subjectPossessive(testTaker);
+  if (testTaker === "test_taker_self") {
+    return "Which schools are you aiming for?";
+  }
+  return `Which schools is ${subject} aiming for?`;
+}
+
 /** Contact gate — parent email for plan delivery. */
 export function contactHeadline(): string {
   return "Where should we send the plan?";

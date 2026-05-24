@@ -15,7 +15,6 @@ export type SatPlanStep =
   | "prep-failed-guided"
   | "prep-failed-mistake-driven"
   | "prep-failed-stub"
-  | "kid-problem"
   | "score"
   | "wrong"
   | "sat-changed"
@@ -23,6 +22,7 @@ export type SatPlanStep =
   | "gpa-paradox"
   | "test-date"
   | "timeline"
+  | "schools"
   | "plan-path"
   | "contact"
   | "plan-ready"
@@ -35,9 +35,8 @@ export type SatPlanAnswers = {
   target_score?: string;
   test_history?: string;
   prep_method?: string | string[];
-  /** INT13 — self-study blocker multiselect (`kid_block_*`). */
+  /** Deprecated INT13 — kept for saved sessions; screen removed from funnel. */
   kid_problem_blocks?: string[];
-  study_hours?: string;
   recent_score?: string;
   wrong_reasons?: string[];
   gpa_band?: string;
@@ -76,7 +75,6 @@ export const SAT_PLAN_ROUTABLE_STEPS: SatPlanStep[] = [
   "prep-failed-guided",
   "prep-failed-mistake-driven",
   "prep-failed-stub",
-  "kid-problem",
   "score",
   "wrong",
   "sat-changed",
@@ -84,6 +82,7 @@ export const SAT_PLAN_ROUTABLE_STEPS: SatPlanStep[] = [
   "gpa-paradox",
   "test-date",
   "timeline",
+  "schools",
   "plan-path",
   "contact",
   "plan-ready",

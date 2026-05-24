@@ -1,57 +1,62 @@
-export type Int8MistakeFlowStep = {
-  label: string;
-  isMastery?: boolean;
-};
-
-export type Int8MistakeDrillQuestion = {
-  label: string;
-  mastered: boolean;
+export type Int8MistakeProgressionStep = {
+  title: string;
+  status: "miss" | "tutor" | "hint" | "solo" | "mastery";
+  statusMark: string;
 };
 
 export type Int8MistakeDrivenCopy = {
   headline: string;
-  introParagraphs: string[];
-  sessionIntro: string;
-  sessionSteps: string[];
-  closingParagraphs: string[];
-  flowSteps: Int8MistakeFlowStep[];
-  drillTitle: string;
-  drillQuestions: Int8MistakeDrillQuestion[];
+  introParagraph: string;
+  closingParagraph: string;
+  sessionBannerLead: string;
+  sessionSkillLabel: string;
+  progressionSteps: Int8MistakeProgressionStep[];
+  footerLabel: string;
+  footerStatus: string;
   graphicAriaLabel: string;
 };
 
-const FLOW_STEPS: Int8MistakeFlowStep[] = [
-  { label: "Together" },
-  { label: "Mistake" },
-  { label: "Fix" },
-  { label: "Retry" },
-  { label: "Solo" },
-  { label: "Mastered", isMastery: true }
-];
-
-const DRILL_QUESTIONS: Int8MistakeDrillQuestion[] = [
-  { label: "Q1", mastered: true },
-  { label: "Q2", mastered: true },
-  { label: "Q3", mastered: true },
-  { label: "Q4", mastered: false },
-  { label: "Q5", mastered: false }
+const PROGRESSION_STEPS: Int8MistakeProgressionStep[] = [
+  {
+    title: "Mistake Found",
+    status: "miss",
+    statusMark: "✕"
+  },
+  {
+    title: "Guided Correction",
+    status: "tutor",
+    statusMark: "T"
+  },
+  {
+    title: "Supported Solve",
+    status: "hint",
+    statusMark: "✓"
+  },
+  {
+    title: "Independent Solve",
+    status: "solo",
+    statusMark: "✓"
+  },
+  {
+    title: "Automatic",
+    status: "mastery",
+    statusMark: "✓"
+  }
 ];
 
 export function buildInt8MistakeDrivenCopy(): Int8MistakeDrivenCopy {
   return {
-    headline: "Real improvement happens inside the mistakes.",
-    introParagraphs: [
-      "Scores move when students fix misses in real time, with feedback and repetition, not from more lectures."
-    ],
-    sessionIntro: "One skill per session:",
-    sessionSteps: [
-      "Examples together, thinking out loud, fix mistakes, repeat until automatic"
-    ],
-    closingParagraphs: [],
-    flowSteps: FLOW_STEPS.map((step) => ({ ...step })),
-    drillTitle: "Right Triangles Only",
-    drillQuestions: DRILL_QUESTIONS.map((question) => ({ ...question })),
+    headline: "Improve faster through mistake-driven learning",
+    introParagraph:
+      "Students don't improve from more lectures. They improve by fixing mistakes until mastery.",
+    closingParagraph:
+      "This is how students who had plateaued in the 1100s or 1200s get their score up 100-250 points.",
+    sessionBannerLead: "One session · One skill",
+    sessionSkillLabel: "Geometry: Right Triangles",
+    progressionSteps: PROGRESSION_STEPS.map((step) => ({ ...step })),
+    footerLabel: "Geometry · Mastery",
+    footerStatus: "Automatic",
     graphicAriaLabel:
-      "Session flow from together through mistake, fix, retry, and solo to mastered. Drill card shows Right Triangles questions gaining checkmarks."
+      "One skill session: mistake found, guided correction, supported solve, independent solve, then automatic."
   };
 }

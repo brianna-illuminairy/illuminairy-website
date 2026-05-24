@@ -6,31 +6,35 @@ export type WrongOption = {
 
 /** Six-tile multiselect on `?step=wrong` — matches worries / kid-problem grid. */
 export const WRONG_TILE_OPTIONS: WrongOption[] = [
-  { id: "wrong_cat_time", label: "Time", ariaLabel: "Time or pacing on the test" },
+  {
+    id: "wrong_cat_time",
+    label: "Ran out of time",
+    ariaLabel: "Ran out of time on the test"
+  },
   {
     id: "wrong_cat_focus",
-    label: "Focus",
-    ariaLabel: "Focus or stamina during the test"
+    label: "Struggled with stamina",
+    ariaLabel: "Struggled with focus or stamina during the test"
   },
   {
     id: "wrong_cat_anxiety",
-    label: "Anxiety",
-    ariaLabel: "Test anxiety or second-guessing"
+    label: "Overthought",
+    ariaLabel: "Overthought or second-guessed answers"
   },
   {
     id: "wrong_cat_math",
     label: "Math",
-    ariaLabel: "Struggled with math topics"
+    ariaLabel: "Struggled with math"
   },
   {
     id: "wrong_cat_reading",
-    label: "Reading",
-    ariaLabel: "Struggled with reading or grammar"
+    label: "Reading & writing",
+    ariaLabel: "Struggled with reading and writing"
   },
   {
     id: "wrong_cat_prep",
-    label: "Prep",
-    ariaLabel: "Preparation or practice tests"
+    label: "Not enough preparation",
+    ariaLabel: "Not enough preparation or practice"
   }
 ];
 

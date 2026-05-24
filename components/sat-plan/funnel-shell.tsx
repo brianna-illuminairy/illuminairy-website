@@ -30,14 +30,15 @@ export function FunnelShell({
     >
       <header className="funnel-header">
         {showBack ? (
-          <button type="button" className="funnel-back" onClick={onBack} aria-label="Back">
-            ← Back
-          </button>
-        ) : (
-          <span className="funnel-back funnel-back--spacer" aria-hidden />
-        )}
-        <span className="funnel-word">illuminairy</span>
-        <span className="funnel-header-spacer" aria-hidden />
+          <div className="funnel-back-row">
+            <button type="button" className="funnel-back" onClick={onBack} aria-label="Back">
+              ← Back
+            </button>
+          </div>
+        ) : null}
+        <div className="funnel-brand-row">
+          <span className="funnel-word">illuminairy</span>
+        </div>
       </header>
 
       {progress > 0 ? (

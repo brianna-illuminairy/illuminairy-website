@@ -5,6 +5,7 @@ import { Int8GroupClassFailBody } from "@/components/sat-plan/int8-group-class-f
 import { QuizStepTemplate } from "@/components/sat-plan/quiz-step-template";
 import { trackSatPlanFunnelEvent } from "@/lib/sat-plan-funnel/analytics";
 import { buildInt8GroupClassFailCopy } from "@/lib/sat-plan-funnel/int8-group-class-fail-copy";
+import { useSatPlanAnswers } from "@/lib/sat-plan-funnel/use-sat-plan-answers";
 
 type SatPlanInt8GroupClassFailProps = {
   onBack: () => void;
@@ -15,6 +16,7 @@ export function SatPlanInt8GroupClassFail({
   onBack,
   onContinue
 }: SatPlanInt8GroupClassFailProps) {
+  const answers = useSatPlanAnswers();
   const copy = useMemo(() => buildInt8GroupClassFailCopy(), []);
 
   useEffect(() => {
@@ -42,7 +44,7 @@ export function SatPlanInt8GroupClassFail({
       onContinue={handleContinue}
       onBack={onBack}
     >
-      <Int8GroupClassFailBody copy={copy} />
+      <Int8GroupClassFailBody copy={copy} testTaker={answers.test_taker} />
     </QuizStepTemplate>
   );
 }

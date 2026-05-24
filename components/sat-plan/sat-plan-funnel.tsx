@@ -14,7 +14,7 @@ import { SatPlanInt8MistakeDriven } from "@/components/sat-plan/sat-plan-int8-mi
 import { SatPlanInt8PrepComparison } from "@/components/sat-plan/sat-plan-int8-prep-comparison";
 import { SatPlanHistory } from "@/components/sat-plan/sat-plan-history";
 import { SatPlanInt3Retake } from "@/components/sat-plan/sat-plan-int3-retake";
-import { SatPlanKidProblem } from "@/components/sat-plan/sat-plan-kid-problem";
+import { SatPlanSchools } from "@/components/sat-plan/sat-plan-schools";
 import { SatPlanLanding } from "@/components/sat-plan/sat-plan-landing";
 import { SatPlanPlanPath } from "@/components/sat-plan/sat-plan-plan-path";
 import { SatPlanPlanReady } from "@/components/sat-plan/sat-plan-plan-ready";
@@ -29,7 +29,6 @@ import { SatPlanWho } from "@/components/sat-plan/sat-plan-who";
 import { SatPlanWrong } from "@/components/sat-plan/sat-plan-wrong";
 import { SatPlanWorries } from "@/components/sat-plan/sat-plan-worries";
 import { trackSatPlanFunnelEvent } from "@/lib/sat-plan-funnel/analytics";
-import { shouldShowKidProblem } from "@/lib/sat-plan-funnel/int13-kid-problem-copy";
 import {
   isTestedHistory,
   lastInt8Step,
@@ -37,7 +36,7 @@ import {
   nextStepAfterGpa,
   nextStepAfterGpaParadox,
   nextStepAfterHistory,
-  nextStepAfterKidProblem,
+  nextStepAfterSchools,
   nextStepAfterInt8SelfStudy,
   nextStepAfterInt8GroupClass,
   nextStepAfterInt8Plateau,
@@ -58,8 +57,8 @@ import {
   stepBeforeGpa,
   stepBeforeGpaParadox,
   stepBeforeInt8,
-  stepBeforeKidProblem,
   stepBeforePlanPath,
+  stepBeforeSchools,
   stepBeforePlanReady,
   stepBeforePrep,
   stepBeforeReport,
@@ -111,11 +110,6 @@ export function SatPlanFunnel() {
   useEffect(() => {
     if (step !== "wrong") return;
     if (!isTestedHistory(answers().test_history)) goTo("sat-changed");
-  }, [step, goTo]);
-
-  useEffect(() => {
-    if (step !== "kid-problem") return;
-    if (!shouldShowKidProblem(answers().prep_method)) goTo("score");
   }, [step, goTo]);
 
   useEffect(() => {
@@ -288,13 +282,6 @@ export function SatPlanFunnel() {
         />
       ) : null}
 
-      {step === "kid-problem" ? (
-        <SatPlanKidProblem
-          onBack={() => goTo(stepBeforeKidProblem(answers()))}
-          onContinue={() => goTo(nextStepAfterKidProblem())}
-        />
-      ) : null}
-
       {step === "score" ? (
         <SatPlanScore
           onBack={() => goTo(stepBeforeScore(answers()))}
@@ -341,6 +328,13 @@ export function SatPlanFunnel() {
         <SatPlanInt6Timeline
           onBack={() => goTo(stepBeforeTimeline())}
           onContinue={() => goTo(nextStepAfterTimeline())}
+        />
+      ) : null}
+
+      {step === "schools" ? (
+        <SatPlanSchools
+          onBack={() => goTo(stepBeforeSchools())}
+          onContinue={() => goTo(nextStepAfterSchools())}
         />
       ) : null}
 
