@@ -21,9 +21,6 @@ function targetGoalPhrase(targetScore?: string): string {
 }
 
 type ChildVoice = {
-  yourChild: string;
-  possessive: string;
-  subjectObj: string;
   planPossessive: string;
   isSelf: boolean;
 };
@@ -31,45 +28,14 @@ type ChildVoice = {
 function childVoice(testTaker?: string): ChildVoice {
   switch (testTaker) {
     case "test_taker_son":
-      return {
-        yourChild: "your son",
-        possessive: "his",
-        subjectObj: "him",
-        planPossessive: "your son's",
-        isSelf: false
-      };
+      return { planPossessive: "your son's", isSelf: false };
     case "test_taker_daughter":
-      return {
-        yourChild: "your daughter",
-        possessive: "her",
-        subjectObj: "her",
-        planPossessive: "your daughter's",
-        isSelf: false
-      };
+      return { planPossessive: "your daughter's", isSelf: false };
     case "test_taker_self":
-      return {
-        yourChild: "you",
-        possessive: "your",
-        subjectObj: "you",
-        planPossessive: "your",
-        isSelf: true
-      };
+      return { planPossessive: "your", isSelf: true };
     case "test_taker_other":
-      return {
-        yourChild: "your student",
-        possessive: "their",
-        subjectObj: "them",
-        planPossessive: "your student's",
-        isSelf: false
-      };
     default:
-      return {
-        yourChild: "your student",
-        possessive: "their",
-        subjectObj: "them",
-        planPossessive: "your student's",
-        isSelf: false
-      };
+      return { planPossessive: "your student's", isSelf: false };
   }
 }
 
@@ -84,13 +50,16 @@ export const INT1_TRUST_HEADLINE = "You're in good hands.";
 
 function buildLead(voice: ChildVoice): string {
   if (voice.isSelf) {
-    return "Most students came to us to build a plan after their first SAT score came back too low, and they didn't know what to do to fix it before the retake.";
+    return "Most students came to us to build a plan after their first SAT score came back too low.";
   }
 
-  return "Most parents came to us to build them a plan after their first SAT score came back too low, and they didn't know what to do to fix it before the retake.";
+  return "Most parents came to us to build them a plan after their first SAT score came back too low.";
 }
 
-function buildBridge(voice: ChildVoice, targetGoal: string): Pick<Int1TrustCopy, "bridgeBefore" | "bridgeTarget" | "bridgeAfter"> {
+function buildBridge(
+  voice: ChildVoice,
+  targetGoal: string
+): Pick<Int1TrustCopy, "bridgeBefore" | "bridgeTarget" | "bridgeAfter"> {
   if (targetGoal === "") {
     return {
       bridgeBefore: `Let's build ${voice.planPossessive} plan.`,
@@ -110,10 +79,8 @@ export function buildInt1TrustCopy(answers: SatPlanAnswers): Int1TrustCopy {
   const voice = childVoice(answers.test_taker);
   const targetGoal = targetGoalPhrase(answers.target_score);
 
-  const bridge = buildBridge(voice, targetGoal);
-
   return {
     lead: buildLead(voice),
-    ...bridge
+    ...buildBridge(voice, targetGoal)
   };
 }
