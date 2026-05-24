@@ -2,7 +2,12 @@
 
 import type { ReactNode } from "react";
 import { WorryTileCorner } from "@/components/sat-plan/worry-icons";
-import type { WorryOption } from "@/lib/sat-plan-funnel/worry-options";
+
+export type QuizTileOption = {
+  id: string;
+  label: string;
+  ariaLabel: string;
+};
 
 type QuizTileProps = {
   selected: boolean;
@@ -29,7 +34,7 @@ function QuizTile({ selected, onToggle, ariaLabel, label, icon }: QuizTileProps)
 }
 
 type QuizTileGridProps = {
-  options: WorryOption[];
+  options: QuizTileOption[];
   selectedIds: string[];
   onToggle: (id: string) => void;
   groupLabel: string;

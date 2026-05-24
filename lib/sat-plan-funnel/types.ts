@@ -4,12 +4,42 @@ export type SatPlanStep =
   | "who"
   | "target"
   | "trust"
-  | "history-stub";
+  | "history"
+  | "int3-retake"
+  | "prep"
+  | "prep-failed-plateau"
+  | "prep-failed-proof"
+  | "prep-failed-mentors"
+  | "prep-failed-guided"
+  | "prep-failed-stub"
+  | "hours"
+  | "score"
+  | "wrong"
+  | "gpa"
+  | "gpa-paradox"
+  | "test-date"
+  | "timeline"
+  | "schools"
+  | "plan-path"
+  | "contact"
+  | "plan-ready"
+  | "report"
+  | "book";
 
 export type SatPlanAnswers = {
   worries?: string[];
   test_taker?: string;
   target_score?: string;
+  test_history?: string;
+  prep_method?: string | string[];
+  study_hours?: string;
+  recent_score?: string;
+  wrong_reasons?: string[];
+  gpa_band?: string;
+  test_date?: string;
+  target_schools?: string;
+  parent_email?: string;
+  parent_phone?: string;
 };
 
 export type SatPlanFunnelState = {
@@ -23,3 +53,32 @@ export type SatPlanStepMeta = {
   label: string | null;
   labelUpper?: boolean;
 };
+
+/** All routable steps except landing — used for URL validation. */
+export const SAT_PLAN_ROUTABLE_STEPS: SatPlanStep[] = [
+  "worries",
+  "who",
+  "target",
+  "trust",
+  "history",
+  "int3-retake",
+  "prep",
+  "prep-failed-plateau",
+  "prep-failed-proof",
+  "prep-failed-mentors",
+  "prep-failed-guided",
+  "prep-failed-stub",
+  "hours",
+  "score",
+  "wrong",
+  "gpa",
+  "gpa-paradox",
+  "test-date",
+  "timeline",
+  "schools",
+  "plan-path",
+  "contact",
+  "plan-ready",
+  "report",
+  "book"
+];

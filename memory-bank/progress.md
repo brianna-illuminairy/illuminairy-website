@@ -1,6 +1,6 @@
 # Progress
 
-*Last updated: 2026-05-23*
+*Last updated: 2026-05-24*
 
 ## Shipped
 
@@ -12,29 +12,29 @@
 - [x] Policy pages (privacy, terms, refund, support)
 - [x] PostHog, GA, Klaviyo hooks
 - [x] Brand docs in `docs/` (voice, visual, SAT messaging)
-- [x] Curious Cardinals competitor intel (`docs/competitor-intel-curious-cardinals.md`) + site archive branch
-- [x] CC blog analyzer script (`npm run cc:analyze-blog`)
-- [x] CC intel cross-linked in SAT + brand docs (trust levers vs SAT proof)
-- [x] Vercel deploy scripts and env sync
-- [x] Agent docs: AGENTS.md, memory bank, ADRs, Cursor rules
-- [x] Agentic dev workflow: `docs/agentic-development/`, `specs/`, `agent:verify`, Ralph scripts, Cursor skills, ADR 0006
-- [x] Premium application-funnel teardowns for SAT growth strategy (`docs/research/premium-funnel-teardowns.md`)
-- [x] **SAT plan funnel** at `/satplan` (Next.js; landing + worries; ADR 0009). Specs in `quizfunnel` repo.
+- [x] Agent docs: AGENTS.md, memory bank, ADRs, Cursor skills
+- [x] **SAT plan funnel** at `/satplan` (ADR 0009)
+- [x] Funnel spine: landing, worries, who, target, INT1 trust, history, INT3 retake, prep
+- [x] **INT8** prep comparison: stub + 4-step trilogy (`prep_class`), mentorship splash, contrast bars, triptych (girl variant for daughter/Me)
+- [x] `satPrepComparison` + Bloom chart title in `lib/site.ts`
+- [x] Shared `ContrastBarChart`; INT3 + INT8 proof charts
 
 ## In progress
 
-- [ ] SAT plan funnel: Screen 02+ on `/satplan`; contact → report → Calendly (per quizfunnel SPEC)
+- [ ] SAT plan funnel: GPA question + INT2; hours/score/wrong; contact → report → book (quizfunnel SPEC Phase A tail)
+- [ ] Default (son) prep-path triptych art asset
 
 ## Backlog
 
-- [ ] PostHog CTA instrumentation using `lib/analytics-events.ts`
-- [ ] Optional: CI job running `npm run agent:verify` on PRs
-- [ ] AI for Professionals program page when offer is ready
-- [ ] Business programs when defined
-- [ ] Optional: rate limiting on `/api/contact` if spam increases
-- [ ] Optional: E2E smoke tests for enroll + contact
+- [ ] PostHog funnel dashboard + step completion rates on new INT8 beats
+- [ ] `POST /api/funnel/lead` + Supabase + Klaviyo (Phase B)
+- [ ] Optional: dedicated 680×510 panel PNGs (`USE_DEDICATED_PREP_PATH_PANELS`)
+- [ ] INT12 format contrast visual
+- [ ] CI job running `npm run agent:verify` on PRs
+- [ ] Remove `noindex` on `/satplan` at launch
 
 ## Known issues
 
-- Contact form shows error until `RESEND_API_KEY` is configured (by design; mailto fallback in copy)
-- Calendly CTAs fall back to mailto if `NEXT_PUBLIC_CALENDLY_URL` unset
+- Contact form shows error until `RESEND_API_KEY` is configured (by design)
+- `gpa-stub` is placeholder — back nav returns to last INT8 step
+- Funnel layout CSS guarded by `FUNNEL_LAYOUT_UNLOCK=1` in CI

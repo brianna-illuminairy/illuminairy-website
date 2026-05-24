@@ -338,9 +338,81 @@ export const satProgramOutcomes = {
   targetHitRatePct: 78,
   targetHitBefore: "of students who complete their plan ",
   targetHitEmphasis: "hit their target score",
-  targetHitAfter: " on the next sitting.",
+  targetHitAfter: " on the next test.",
   varyDisclaimer: "Results vary."
 } as const;
+
+/**
+ * College Board retake research — INT3, parent reports, landing cred.
+ * Source: College Board analysis of 250,000+ retakers (verify before changing).
+ */
+export const satRetakeResearch = {
+  cohortSizeLabel: "250,000+",
+  avgPointsWithoutNewApproach: 40,
+  retakersScoreLowerPct: 35,
+  chartTitle: "College Board retaker data",
+  samePrepRetakeLabel: "Same prep, retake"
+} as const;
+
+/**
+ * INT8 / INT4 — three-way prep comparison (Noom-style bars).
+ * Self-study anchor: College Board retake band (same as satRetakeResearch).
+ * Group-class bar: illustrative plateau band for visualization only (not a cited CB stat).
+ * Guided anchor: satProgramOutcomes.avgPointsGained (program completers).
+ * Bloom 2-sigma: separate footnote — 1:1 vs classroom instruction, not the point-ratio source.
+ */
+export const satPrepComparison = {
+  selfStudyLabel: "On their own",
+  groupClassLabel: "Group class / course",
+  guidedLabel: "Guided 1:1 tutoring",
+  selfStudyAvgPoints: satRetakeResearch.avgPointsWithoutNewApproach,
+  /** Illustrative mid-band for survey-style classes — funnel visual only; pair with Bloom footnote. */
+  groupClassIllustrativePoints: 70,
+  guidedAvgPoints: satProgramOutcomes.avgPointsGained,
+  selfStudySourceLabel: "College Board · 250,000+ retakers",
+  groupClassSourceLabel: "Typical plateau without gap-level 1:1",
+  guidedSourceLabel: satProgramOutcomes.footnoteLabel,
+  varyDisclaimer: satProgramOutcomes.varyDisclaimer,
+  bloomFootnote:
+    "A group class covers the same lesson for everyone. A tutor works through the questions that student missed.",
+  /** INT8 chart card header — Bloom citation, not point stats. */
+  bloomChartTitle: "Bloom's two-sigma study"
+} as const;
+
+/** Point gap: guided avg minus solo / group illustrative bars (INT8 headline + caption). */
+export function guidedGapOverSelfStudyPoints(): number {
+  return (
+    satPrepComparison.guidedAvgPoints - satPrepComparison.selfStudyAvgPoints
+  );
+}
+
+export function guidedGapOverGroupClassPoints(): number {
+  return (
+    satPrepComparison.guidedAvgPoints -
+    satPrepComparison.groupClassIllustrativePoints
+  );
+}
+
+/** 182 ÷ 40 → one decimal for headline (4.6×). */
+export function guidedVsSelfStudyMultiplier(): number {
+  return (
+    Math.round(
+      (satPrepComparison.guidedAvgPoints / satPrepComparison.selfStudyAvgPoints) *
+        10
+    ) / 10
+  );
+}
+
+/** 182 ÷ 70 → one decimal for 1:1 vs illustrative group-class bar. */
+export function guidedVsGroupClassMultiplier(): number {
+  return (
+    Math.round(
+      (satPrepComparison.guidedAvgPoints /
+        satPrepComparison.groupClassIllustrativePoints) *
+        10
+    ) / 10
+  );
+}
 
 /**
  * Live and upcoming programs — home page hero card.

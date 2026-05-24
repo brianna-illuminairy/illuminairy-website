@@ -25,3 +25,17 @@ export function childGoalPhrase(testTaker: string | undefined, child: string): s
   if (child === "them") return "them";
   return `their ${child}`;
 }
+
+/** Parent-facing label — "your son", "your daughter", or "you". Never "your student". */
+export function yourStudentPhrase(testTaker?: string): string | null {
+  switch (testTaker) {
+    case "test_taker_son":
+      return "your son";
+    case "test_taker_daughter":
+      return "your daughter";
+    case "test_taker_self":
+      return "you";
+    default:
+      return null;
+  }
+}

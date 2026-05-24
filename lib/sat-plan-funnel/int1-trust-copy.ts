@@ -35,7 +35,7 @@ function childVoice(testTaker?: string): ChildVoice {
       return { planPossessive: "your", isSelf: true };
     case "test_taker_other":
     default:
-      return { planPossessive: "your student's", isSelf: false };
+      return { planPossessive: "their", isSelf: false };
   }
 }
 
