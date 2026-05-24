@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { QuizOptionCategoryList } from "@/components/sat-plan/quiz-option-category-list";
 import { QuizStepTemplate } from "@/components/sat-plan/quiz-step-template";
+import { QuizTileGrid } from "@/components/sat-plan/quiz-tile-grid";
+import { WrongReasonIcon } from "@/components/sat-plan/wrong-reason-icons";
 import { trackSatPlanFunnelEvent } from "@/lib/sat-plan-funnel/analytics";
 import { wrongHeadline } from "@/lib/sat-plan-funnel/personalization";
 import { loadSatPlanState, patchSatPlanAnswers } from "@/lib/sat-plan-funnel/state";
-import { WRONG_CATEGORIES } from "@/lib/sat-plan-funnel/wrong-options";
+import { WRONG_TILE_OPTIONS } from "@/lib/sat-plan-funnel/wrong-options";
 
 type SatPlanWrongProps = {
   onBack: () => void;
@@ -24,7 +25,7 @@ export function SatPlanWrong({ onBack, onContinue }: SatPlanWrongProps) {
     trackSatPlanFunnelEvent("intake_step_view", {
       step_id: "wrong",
       path: "spine",
-      layout: "category-list"
+      layout: "tile-grid"
     });
   }, []);
 
@@ -55,17 +56,18 @@ export function SatPlanWrong({ onBack, onContinue }: SatPlanWrongProps) {
       stepId="wrong"
       headline={headline}
       hint="Select all that apply"
-      bodyVariant="copy"
+      bodyVariant="tile-grid"
       continueDisabled={selected.length === 0}
       onContinue={handleContinue}
       onBack={onBack}
     >
-      <QuizOptionCategoryList
-        categories={WRONG_CATEGORIES}
+      <QuizTileGrid
+        options={WRONG_TILE_OPTIONS}
         selectedIds={selected}
         onToggle={toggle}
         groupLabel={headline}
         hintId="quiz-step-hint-wrong"
+        renderIcon={(id) => <WrongReasonIcon id={id} />}
       />
     </QuizStepTemplate>
   );

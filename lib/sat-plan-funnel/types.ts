@@ -7,12 +7,14 @@ export type SatPlanStep =
   | "history"
   | "int3-retake"
   | "prep"
+  | "prep-failed-group-class"
+  | "prep-failed-self-study"
   | "prep-failed-plateau"
   | "prep-failed-proof"
   | "prep-failed-mentors"
   | "prep-failed-guided"
+  | "prep-failed-mistake-driven"
   | "prep-failed-stub"
-  | "hours"
   | "kid-problem"
   | "score"
   | "wrong"
@@ -21,7 +23,6 @@ export type SatPlanStep =
   | "gpa-paradox"
   | "test-date"
   | "timeline"
-  | "schools"
   | "plan-path"
   | "contact"
   | "plan-ready"
@@ -34,6 +35,8 @@ export type SatPlanAnswers = {
   target_score?: string;
   test_history?: string;
   prep_method?: string | string[];
+  /** INT13 — self-study blocker multiselect (`kid_block_*`). */
+  kid_problem_blocks?: string[];
   study_hours?: string;
   recent_score?: string;
   wrong_reasons?: string[];
@@ -65,12 +68,14 @@ export const SAT_PLAN_ROUTABLE_STEPS: SatPlanStep[] = [
   "history",
   "int3-retake",
   "prep",
+  "prep-failed-group-class",
+  "prep-failed-self-study",
   "prep-failed-plateau",
   "prep-failed-proof",
   "prep-failed-mentors",
   "prep-failed-guided",
+  "prep-failed-mistake-driven",
   "prep-failed-stub",
-  "hours",
   "kid-problem",
   "score",
   "wrong",
@@ -79,7 +84,6 @@ export const SAT_PLAN_ROUTABLE_STEPS: SatPlanStep[] = [
   "gpa-paradox",
   "test-date",
   "timeline",
-  "schools",
   "plan-path",
   "contact",
   "plan-ready",

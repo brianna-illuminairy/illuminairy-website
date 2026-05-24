@@ -4,6 +4,7 @@ import type { SatPlanAnswers } from "@/lib/sat-plan-funnel/types";
 export type Int12SatChangedCopy = {
   eyebrow: string;
   headline: string;
+  subhead: string;
   paragraphs: string[];
   analogy: string[];
   prepLine: string | null;
@@ -36,10 +37,10 @@ function prepPersonalizationLine(
     return "Many classes still run paper drills; test day is on a laptop.";
   }
   if (prepIds.includes("prep_khan") || prepIds.includes("prep_app")) {
-    return `Apps help — but if ${subject} never trains timed digital reps, test day still feels foreign.`;
+    return `Apps help, but timed digital reps still matter. Without them, test day feels foreign.`;
   }
   if (prepIds.includes("prep_youtube")) {
-    return `Video lessons help — but if ${subject} never trains timed digital reps, test day still feels foreign.`;
+    return `Video helps, but timed digital reps still matter. Without them, test day feels foreign.`;
   }
   return null;
 }
@@ -52,27 +53,23 @@ export function buildInt12SatChangedCopy(answers: SatPlanAnswers): Int12SatChang
   const paragraphs =
     subject === "you"
       ? [
-          "Every math question includes a built-in graphing calculator (Desmos) and a formula reference sheet — no bringing your own.",
-          "Students who practice with the on-screen tools are much faster on math than students who only drill on paper.",
-          "Strong math students often skip the calculator because they don't need it — but can do it and can do it in 75 seconds are different skills."
+          "Every math question includes built-in Desmos and a formula sheet. On-screen practice is faster than paper-only drilling.",
+          "Being able to solve a problem and solving it in 75 seconds are different skills."
         ]
       : [
-          "Every math question includes a built-in graphing calculator (Desmos) and a formula reference sheet — no bringing your own.",
-          "Students who practice with the on-screen tools are much faster on math than students who only drill on paper.",
-          `Strong math students often skip the calculator because they don't need it — but can do it and can do it in 75 seconds are different skills for ${possessive} student.`
+          "Every math question includes built-in Desmos and a formula sheet. On-screen practice is faster than paper-only drilling.",
+          `Being able to solve a problem and solving it in 75 seconds are different skills for ${possessive} student.`
         ];
 
   return {
     eyebrow: "Did you know",
-    headline:
-      "The SAT is fully digital now — taken on a laptop, not with pencil and paper.",
+    headline: "The SAT is fully digital now.",
+    subhead: "Taken on a laptop, not pencil and paper.",
     paragraphs,
     analogy: [
-      "You wouldn't train for a baseball game on a football field.",
       "Don't train for a digital test with pencil, paper, and a prep book from 2019."
     ],
     prepLine,
-    footnote:
-      "College Board: Digital SAT format includes embedded Desmos and a formula sheet. Speed comparisons vary by student."
+    footnote: "College Board: Digital SAT includes embedded Desmos and a formula sheet."
   };
 }

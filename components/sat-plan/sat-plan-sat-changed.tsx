@@ -37,9 +37,13 @@ export function SatPlanSatChanged({ onBack, onContinue }: SatPlanSatChangedProps
   return (
     <QuizStepTemplate
       stepId="sat-changed"
-      headline={copy.headline}
+      headlineNode={
+        <span className="int12-sat-changed-headline">
+          <span className="int12-sat-changed-headline__lead">{copy.headline}</span>{" "}
+          <span className="int12-sat-changed-headline__sub">{copy.subhead}</span>
+        </span>
+      }
       bodyVariant="copy"
-      continueLabel="Got it"
       onContinue={handleContinue}
       onBack={onBack}
     >

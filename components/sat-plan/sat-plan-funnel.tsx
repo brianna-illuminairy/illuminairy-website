@@ -5,10 +5,12 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { SatPlanBook } from "@/components/sat-plan/sat-plan-book";
 import { SatPlanContact } from "@/components/sat-plan/sat-plan-contact";
 import { SatPlanGpa } from "@/components/sat-plan/sat-plan-gpa";
-import { SatPlanHours } from "@/components/sat-plan/sat-plan-hours";
 import { SatPlanInt2GpaParadox } from "@/components/sat-plan/sat-plan-int2-gpa-paradox";
 import { SatPlanInt6Timeline } from "@/components/sat-plan/sat-plan-int6-timeline";
-import { SatPlanInt8Mentorship } from "@/components/sat-plan/sat-plan-int8-mentorship";
+import { SatPlanInt8SelfStudyFail } from "@/components/sat-plan/sat-plan-int8-self-study-fail";
+import { SatPlanInt8GroupClassFail } from "@/components/sat-plan/sat-plan-int8-group-class-fail";
+import { SatPlanInt8DiagnosticDriven } from "@/components/sat-plan/sat-plan-int8-diagnostic-driven";
+import { SatPlanInt8MistakeDriven } from "@/components/sat-plan/sat-plan-int8-mistake-driven";
 import { SatPlanInt8PrepComparison } from "@/components/sat-plan/sat-plan-int8-prep-comparison";
 import { SatPlanHistory } from "@/components/sat-plan/sat-plan-history";
 import { SatPlanInt3Retake } from "@/components/sat-plan/sat-plan-int3-retake";
@@ -19,7 +21,6 @@ import { SatPlanPlanReady } from "@/components/sat-plan/sat-plan-plan-ready";
 import { SatPlanPrep } from "@/components/sat-plan/sat-plan-prep";
 import { SatPlanReport } from "@/components/sat-plan/sat-plan-report";
 import { SatPlanSatChanged } from "@/components/sat-plan/sat-plan-sat-changed";
-import { SatPlanSchools } from "@/components/sat-plan/sat-plan-schools";
 import { SatPlanScore } from "@/components/sat-plan/sat-plan-score";
 import { SatPlanTarget } from "@/components/sat-plan/sat-plan-target";
 import { SatPlanTestDate } from "@/components/sat-plan/sat-plan-test-date";
@@ -36,18 +37,18 @@ import {
   nextStepAfterGpa,
   nextStepAfterGpaParadox,
   nextStepAfterHistory,
-  nextStepAfterHours,
   nextStepAfterKidProblem,
-  nextStepAfterInt8Mentors,
+  nextStepAfterInt8SelfStudy,
+  nextStepAfterInt8GroupClass,
   nextStepAfterInt8Plateau,
   nextStepAfterInt8Proof,
+  nextStepAfterInt8Guided,
   nextStepAfterPlanPath,
   nextStepAfterPlanReady,
   nextStepAfterPrep,
   nextStepAfterPrepFailed,
   nextStepAfterReport,
   nextStepAfterSatChanged,
-  nextStepAfterSchools,
   nextStepAfterScore,
   nextStepAfterTestDate,
   nextStepAfterTimeline,
@@ -56,7 +57,6 @@ import {
   stepBeforeContact,
   stepBeforeGpa,
   stepBeforeGpaParadox,
-  stepBeforeHours,
   stepBeforeInt8,
   stepBeforeKidProblem,
   stepBeforePlanPath,
@@ -64,12 +64,12 @@ import {
   stepBeforePrep,
   stepBeforeReport,
   stepBeforeSatChanged,
-  stepBeforeSchools,
   stepBeforeScore,
   stepBeforeTestDate,
   stepBeforeTimeline,
   stepBeforeWrong,
-  usesInt8Trilogy
+  usesInt8Trilogy,
+  firstInt8Step
 } from "@/lib/sat-plan-funnel/funnel-routing";
 import {
   loadSatPlanState,
@@ -106,6 +106,8 @@ export function SatPlanFunnel() {
     [router]
   );
 
+  const answers = () => loadSatPlanState().answers;
+
   useEffect(() => {
     if (step !== "wrong") return;
     if (!isTestedHistory(answers().test_history)) goTo("sat-changed");
@@ -120,10 +122,13 @@ export function SatPlanFunnel() {
     if (step !== "prep-failed-stub") return;
     const prepMethod = loadSatPlanState().answers.prep_method;
     if (!usesInt8Trilogy(prepMethod)) return;
-    goTo("prep-failed-plateau");
+    goTo(firstInt8Step(prepMethod));
   }, [step, goTo]);
 
-  const answers = () => loadSatPlanState().answers;
+  useEffect(() => {
+    if (step !== "prep-failed-mentors") return;
+    goTo("prep-failed-guided");
+  }, [step, goTo]);
 
   const stubContinue = (stepId: SatPlanStep, next: SatPlanStep) => {
     trackSatPlanFunnelEvent("intake_step_complete", { step_id: stepId });
@@ -178,11 +183,31 @@ export function SatPlanFunnel() {
         />
       ) : null}
 
+      {step === "prep-failed-self-study" ? (
+        <SatPlanInt8SelfStudyFail
+          onBack={() =>
+            goTo(stepBeforeInt8("prep-failed-self-study", answers().test_history))
+          }
+          onContinue={() => goTo(nextStepAfterInt8SelfStudy())}
+        />
+      ) : null}
+
+      {step === "prep-failed-group-class" ? (
+        <SatPlanInt8GroupClassFail
+          onBack={() =>
+            goTo(stepBeforeInt8("prep-failed-group-class", answers().test_history))
+          }
+          onContinue={() => goTo(nextStepAfterInt8GroupClass())}
+        />
+      ) : null}
+
       {step === "prep-failed-plateau" ? (
         <SatPlanInt8PrepComparison
           beat="plateau"
           stepId="prep-failed-plateau"
-          onBack={() => goTo(stepBeforeInt8("prep-failed-plateau", answers().test_history))}
+          onBack={() =>
+            goTo(stepBeforeInt8("prep-failed-plateau", answers().test_history))
+          }
           onContinue={() => goTo(nextStepAfterInt8Plateau())}
         />
       ) : null}
@@ -191,44 +216,81 @@ export function SatPlanFunnel() {
         <SatPlanInt8PrepComparison
           beat="proof"
           stepId="prep-failed-proof"
-          onBack={() => goTo(stepBeforeInt8("prep-failed-proof", answers().test_history))}
+          onBack={() =>
+            goTo(
+              stepBeforeInt8(
+                "prep-failed-proof",
+                answers().test_history,
+                answers().prep_method
+              )
+            )
+          }
           onContinue={() => goTo(nextStepAfterInt8Proof())}
         />
       ) : null}
 
-      {step === "prep-failed-mentors" ? (
-        <SatPlanInt8Mentorship
-          onBack={() => goTo(stepBeforeInt8("prep-failed-mentors", answers().test_history))}
-          onContinue={() => goTo(nextStepAfterInt8Mentors())}
+      {step === "prep-failed-guided" ? (
+        <SatPlanInt8DiagnosticDriven
+          onBack={() =>
+            goTo(
+              stepBeforeInt8(
+                "prep-failed-guided",
+                answers().test_history,
+                answers().prep_method
+              )
+            )
+          }
+          onContinue={() => goTo(nextStepAfterInt8Guided())}
         />
       ) : null}
 
-      {step === "prep-failed-guided" ? (
-        <SatPlanInt8PrepComparison
-          beat="guided"
-          stepId="prep-failed-guided"
-          onBack={() => goTo(stepBeforeInt8("prep-failed-guided", answers().test_history))}
-          onContinue={() => goTo(nextStepAfterPrepFailed(answers().test_history))}
+      {step === "prep-failed-mistake-driven" ? (
+        <SatPlanInt8MistakeDriven
+          onBack={() =>
+            goTo(
+              stepBeforeInt8(
+                "prep-failed-mistake-driven",
+                answers().test_history,
+                answers().prep_method
+              )
+            )
+          }
+          onContinue={() =>
+            goTo(
+              nextStepAfterPrepFailed(
+                answers().test_history,
+                answers().prep_method
+              )
+            )
+          }
         />
       ) : null}
 
       {step === "prep-failed-stub" ? (
         <SatPlanInt8PrepComparison
-          onBack={() => goTo(stepBeforeInt8("prep-failed-stub", answers().test_history))}
-          onContinue={() => goTo(nextStepAfterPrepFailed(answers().test_history))}
-        />
-      ) : null}
-
-      {step === "hours" ? (
-        <SatPlanHours
-          onBack={() => goTo(stepBeforeHours(answers()))}
-          onContinue={() => goTo(nextStepAfterHours(answers()))}
+          onBack={() =>
+            goTo(
+              stepBeforeInt8(
+                "prep-failed-stub",
+                answers().test_history,
+                answers().prep_method
+              )
+            )
+          }
+          onContinue={() =>
+            goTo(
+              nextStepAfterPrepFailed(
+                answers().test_history,
+                answers().prep_method
+              )
+            )
+          }
         />
       ) : null}
 
       {step === "kid-problem" ? (
         <SatPlanKidProblem
-          onBack={() => goTo(stepBeforeKidProblem())}
+          onBack={() => goTo(stepBeforeKidProblem(answers()))}
           onContinue={() => goTo(nextStepAfterKidProblem())}
         />
       ) : null}
@@ -279,13 +341,6 @@ export function SatPlanFunnel() {
         <SatPlanInt6Timeline
           onBack={() => goTo(stepBeforeTimeline())}
           onContinue={() => goTo(nextStepAfterTimeline())}
-        />
-      ) : null}
-
-      {step === "schools" ? (
-        <SatPlanSchools
-          onBack={() => goTo(stepBeforeSchools())}
-          onContinue={() => goTo(nextStepAfterSchools())}
         />
       ) : null}
 

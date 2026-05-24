@@ -13,7 +13,8 @@ export function Int3RetakeContrastGraphic() {
     <ContrastBarChart
       title={satRetakeResearch.chartTitle}
       className="int8-prep-chart int3-retake-chart"
-      ariaLabel={`${satRetakeResearch.chartTitle}: about ${retakePoints} points when retaking with the same prep, ${guidedPoints} points with guided one-on-one tutoring`}
+      plotHeightPx={76}
+      ariaLabel={`${satRetakeResearch.chartTitle}: about ${retakePoints} points when retaking with the same prep, ${guidedPoints} points with guided one-on-one tutoring; based on ${satRetakeResearch.cohortSizeLabel} retakers`}
       bars={[
         {
           points: retakePoints,

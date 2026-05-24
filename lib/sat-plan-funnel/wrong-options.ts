@@ -4,6 +4,36 @@ export type WrongOption = {
   ariaLabel: string;
 };
 
+/** Six-tile multiselect on `?step=wrong` — matches worries / kid-problem grid. */
+export const WRONG_TILE_OPTIONS: WrongOption[] = [
+  { id: "wrong_cat_time", label: "Time", ariaLabel: "Time or pacing on the test" },
+  {
+    id: "wrong_cat_focus",
+    label: "Focus",
+    ariaLabel: "Focus or stamina during the test"
+  },
+  {
+    id: "wrong_cat_anxiety",
+    label: "Anxiety",
+    ariaLabel: "Test anxiety or second-guessing"
+  },
+  {
+    id: "wrong_cat_math",
+    label: "Math",
+    ariaLabel: "Struggled with math topics"
+  },
+  {
+    id: "wrong_cat_reading",
+    label: "Reading",
+    ariaLabel: "Struggled with reading or grammar"
+  },
+  {
+    id: "wrong_cat_prep",
+    label: "Prep",
+    ariaLabel: "Preparation or practice tests"
+  }
+];
+
 export type WrongCategory = {
   id: string;
   label: string;
@@ -121,3 +151,34 @@ export const WRONG_CATEGORIES: WrongCategory[] = [
 export const ALL_WRONG_OPTION_IDS = WRONG_CATEGORIES.flatMap((cat) =>
   cat.options.map((opt) => opt.id)
 );
+
+const WRONG_LABEL_MAP = new Map<string, string>([
+  ...WRONG_TILE_OPTIONS.map((row) => [row.id, row.label] as const),
+  ...WRONG_CATEGORIES.flatMap((cat) =>
+    cat.options.map((opt) => [opt.id, opt.label] as const)
+  )
+]);
+
+export function wrongReasonLabels(ids?: string[]): string | null {
+  if (!ids?.length) return null;
+  return ids.map((id) => WRONG_LABEL_MAP.get(id)).filter(Boolean).join(", ") || null;
+}
+
+/** INT7 / interstitials — coarse tile id or legacy granular id. */
+export function wrongReasonMatches(
+  ids: string[] | undefined,
+  prefix: "time" | "focus" | "anxiety" | "math" | "reading" | "prep" | "content"
+): boolean {
+  if (!ids?.length) return false;
+  if (prefix === "content") {
+    return ids.some(
+      (id) =>
+        id.startsWith("wrong_content_") ||
+        id === "wrong_cat_math" ||
+        id === "wrong_cat_reading"
+    );
+  }
+  return ids.some(
+    (id) => id.startsWith(`wrong_${prefix}_`) || id === `wrong_cat_${prefix}`
+  );
+}

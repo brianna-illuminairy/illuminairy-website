@@ -8,7 +8,8 @@ import { getTestDateLabel, resolveTimelineFromTestDate } from "@/lib/sat-plan-fu
 import { TARGET_SCORE_OPTIONS } from "@/lib/sat-plan-funnel/target-score-options";
 import type { SatPlanAnswers } from "@/lib/sat-plan-funnel/types";
 import { TEST_TAKER_OPTIONS } from "@/lib/sat-plan-funnel/test-taker-options";
-import { WRONG_CATEGORIES } from "@/lib/sat-plan-funnel/wrong-options";
+import { wrongReasonLabels } from "@/lib/sat-plan-funnel/wrong-options";
+import { kidProblemLabels } from "@/lib/sat-plan-funnel/kid-problem-options";
 import { WORRY_OPTIONS } from "@/lib/sat-plan-funnel/worry-options";
 
 export type ReportSummaryRow = {
@@ -22,14 +23,6 @@ function labelFromOptions(
 ): string | null {
   if (!id) return null;
   return options.find((row) => row.id === id)?.label ?? null;
-}
-
-function wrongLabels(ids?: string[]): string | null {
-  if (!ids?.length) return null;
-  const map = new Map(
-    WRONG_CATEGORIES.flatMap((cat) => cat.options.map((opt) => [opt.id, opt.label]))
-  );
-  return ids.map((id) => map.get(id)).filter(Boolean).join(", ") || null;
 }
 
 function prepLabels(prep?: string | string[]): string | null {
@@ -56,13 +49,16 @@ export function buildReportSummary(answers: SatPlanAnswers): ReportSummaryRow[] 
   const prep = prepLabels(answers.prep_method);
   if (prep) rows.push({ label: "Last prep", value: prep });
 
+  const kidBlocks = kidProblemLabels(answers.kid_problem_blocks);
+  if (kidBlocks) rows.push({ label: "Prep blockers", value: kidBlocks });
+
   const hours = labelFromOptions(answers.study_hours, HOURS_OPTIONS);
   if (hours) rows.push({ label: "Study hours", value: hours });
 
   const score = labelFromOptions(answers.recent_score, SCORE_OPTIONS);
   if (score) rows.push({ label: "Recent score", value: score });
 
-  const wrong = wrongLabels(answers.wrong_reasons);
+  const wrong = wrongReasonLabels(answers.wrong_reasons);
   if (wrong) rows.push({ label: "What went wrong", value: wrong });
 
   const gpa = labelFromOptions(answers.gpa_band, GPA_OPTIONS);

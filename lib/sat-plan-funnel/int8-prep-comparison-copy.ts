@@ -4,6 +4,8 @@ import {
   normalizePrepMethods,
   type PrepId
 } from "@/lib/sat-plan-funnel/prep-options";
+import type { PrepContrastPair } from "@/lib/sat-plan-funnel/prep-path-images";
+import { prepContrastPairAvailable } from "@/lib/sat-plan-funnel/prep-path-images";
 import type { SatPlanAnswers } from "@/lib/sat-plan-funnel/types";
 import {
   guidedGapOverGroupClassPoints,
@@ -84,18 +86,30 @@ function selfStudySentence(voice: PrepVoice, object: string): string {
   return "Self-study requires them to know why they're struggling and teach themselves without support when they get stuck.";
 }
 
-function groupClassPlateauShortCopy(testTaker?: string): string {
+/** Closing line for group-class plateau copy — topics he/she needs vs surface coverage. */
+function groupClassSurfaceTail(testTaker?: string): string {
   switch (testTaker) {
     case "test_taker_son":
-      return "The SAT spans years of math and reading. Most group courses touch every topic at a surface level and never go deep on the gaps that would move his score.";
+      return ", and the topics your son needs, they likely never went deep enough on for him to actually learn.";
     case "test_taker_daughter":
-      return "The SAT spans years of math and reading. Most group courses touch every topic at a surface level and never go deep on the gaps that would move her score.";
+      return ", and the topics your daughter needs, they likely never went deep enough on for her to actually learn.";
     case "test_taker_self":
-      return "The SAT spans years of math and reading. Most group courses touch every topic at a surface level and never go deep on the gaps that would move your score.";
+      return ", and the topics you need, you likely never went deep enough on them to actually learn.";
     case "test_taker_other":
     default:
-      return "The SAT spans years of math and reading. Most group courses touch every topic at a surface level and never go deep on the gaps that would move their score.";
+      return ", and the topics they need, they likely never went deep enough on for them to actually learn.";
   }
+}
+
+function groupClassPlateauShortCopy(testTaker?: string): string {
+  const tail = groupClassSurfaceTail(testTaker);
+  return `The SAT spans years of math and reading. Most group courses touch every topic at a surface level${tail}`;
+}
+
+function contrastPairForPlateau(scope: PrepMirrorScope): PrepContrastPair | null {
+  if (scope === "self_study") return "home";
+  if (scope === "group") return "crowd";
+  return null;
 }
 
 function triptychFocusForPlateau(scope: PrepMirrorScope): Int8PrepPathTriptychFocus {
@@ -105,21 +119,67 @@ function triptychFocusForPlateau(scope: PrepMirrorScope): Int8PrepPathTriptychFo
 }
 
 function groupClassPlateauCopy(testTaker?: string): string {
-  switch (testTaker) {
-    case "test_taker_son":
-      return "Group class is a common choice, but it is rarely the most effective way to prepare for the SAT. The class runs the same lesson for everyone, while the SAT spans years of math and reading. Most courses touch every topic at a surface level and never go deep on the gaps that would move his score.";
-    case "test_taker_daughter":
-      return "Group class is a common choice, but it is rarely the most effective way to prepare for the SAT. The class runs the same lesson for everyone, while the SAT spans years of math and reading. Most courses touch every topic at a surface level and never go deep on the gaps that would move her score.";
-    case "test_taker_self":
-      return "Group class is a common choice, but it is rarely the most effective way to prepare for the SAT. The class runs the same lesson for everyone, while the SAT spans years of math and reading. Most courses touch every topic at a surface level and never go deep on the gaps that would move your score.";
-    case "test_taker_other":
-    default:
-      return "Group class is a common choice, but it is rarely the most effective way to prepare for the SAT. The class runs the same lesson for everyone, while the SAT spans years of math and reading. Most courses touch every topic at a surface level and never go deep on the gaps that would move their score.";
-  }
+  const tail = groupClassSurfaceTail(testTaker);
+  const intro =
+    "Group class is a common choice, but it is rarely the most effective way to prepare for the SAT. The class runs the same lesson for everyone, while the SAT spans years of math and reading.";
+  return `${intro} Most courses touch every topic at a surface level${tail}`;
 }
 
 const BLOOM_TWO_SIGMA_COPY =
   "Bloom's research compared 1:1 tutoring to classroom teaching and found tutored students pulled ahead by two standard deviations. That is one of the largest effects in education research.";
+
+const SAT_SKILL_AREA_COUNT = 28;
+const SCORE_IMPACT_SKIPPED_COUNT = 23;
+
+const ILLUSTRATIVE_SCORE_IMPACT_ROWS = [
+  { rank: "01", label: "Right triangles & trigonometry", points: 38 },
+  { rank: "02", label: "Linear functions", points: 34 },
+  { rank: "03", label: "Boundaries (punctuation)", points: 32 },
+  { rank: "04", label: "Systems of linear equations", points: 28 },
+  { rank: "05", label: "Transitions", points: 24 }
+] as const;
+
+function guidedSubheadCopy(): string {
+  return "We focus on what moves the score fastest.";
+}
+
+function guidedIntroCopy(testTaker?: string): string {
+  switch (testTaker) {
+    case "test_taker_son":
+      return `The digital SAT tests ${SAT_SKILL_AREA_COUNT} distinct skill areas. Your son does not need to drill all of them — just the ones that are costing him the most points.`;
+    case "test_taker_daughter":
+      return `The digital SAT tests ${SAT_SKILL_AREA_COUNT} distinct skill areas. Your daughter does not need to drill all of them — just the ones that are costing her the most points.`;
+    case "test_taker_self":
+      return `The digital SAT tests ${SAT_SKILL_AREA_COUNT} distinct skill areas. You do not need to drill all of them — just the ones that are costing you the most points.`;
+    case "test_taker_other":
+    default:
+      return `The digital SAT tests ${SAT_SKILL_AREA_COUNT} distinct skill areas. They do not need to drill all of them — just the ones that are costing them the most points.`;
+  }
+}
+
+function scoreImpactMapTitle(testTaker?: string): string {
+  switch (testTaker) {
+    case "test_taker_son":
+      return "His score impact map";
+    case "test_taker_daughter":
+      return "Her score impact map";
+    case "test_taker_self":
+      return "Your score impact map";
+    case "test_taker_other":
+    default:
+      return "Score impact map";
+  }
+}
+
+function buildScoreImpactMapCopy(testTaker?: string): Int8ScoreImpactMapCopy {
+  const title = scoreImpactMapTitle(testTaker);
+  return {
+    title,
+    rows: ILLUSTRATIVE_SCORE_IMPACT_ROWS.map((row) => ({ ...row })),
+    skippedCount: SCORE_IMPACT_SKIPPED_COUNT,
+    ariaLabel: `${title}. Example priority topics with illustrative point gains. ${SCORE_IMPACT_SKIPPED_COUNT} lower-priority areas skipped.`
+  };
+}
 
 function guidedPlanCopy(testTaker?: string): string {
   switch (testTaker) {
@@ -214,6 +274,19 @@ function neverTestedEyebrow(testTaker?: string): string {
   }
 }
 
+export type Int8ScoreImpactRow = {
+  rank: string;
+  label: string;
+  points: number;
+};
+
+export type Int8ScoreImpactMapCopy = {
+  title: string;
+  rows: Int8ScoreImpactRow[];
+  skippedCount: number;
+  ariaLabel: string;
+};
+
 export type Int8PrepBeat = "full" | "plateau" | "proof" | "guided";
 
 export type Int8PrepPathTriptychFocus = "full" | "home" | "crowd" | "mentorship";
@@ -225,6 +298,7 @@ export type Int8PrepComparisonCopy = {
   prepLead: string | null;
   mirrorBody: string;
   showPrepPathsVisual: boolean;
+  contrastPairPlateau: PrepContrastPair | null;
   triptychFocusPlateau: Int8PrepPathTriptychFocus | null;
   triptychFocusGuided: Int8PrepPathTriptychFocus | null;
   plateauFollowUp: string | null;
@@ -234,6 +308,9 @@ export type Int8PrepComparisonCopy = {
   plateauHeadline: string;
   proofHeadlineGap: number;
   guidedHeadline: string;
+  guidedSubhead: string;
+  guidedIntro: string;
+  scoreImpactMap: Int8ScoreImpactMapCopy;
   selfStudyPoints: number;
   groupClassPoints: number;
   guidedPoints: number;
@@ -260,9 +337,20 @@ export function buildInt8PrepComparisonCopy(
     prepLead: prepLeadLabel(prepIds, scope),
     mirrorBody: buildMirrorBody(scope, voice, object, answers.test_taker),
     showPrepPathsVisual,
-    triptychFocusPlateau: showPrepPathsVisual
-      ? triptychFocusForPlateau(scope)
-      : null,
+    contrastPairPlateau: (() => {
+      if (!showPrepPathsVisual) return null;
+      const pair = contrastPairForPlateau(scope);
+      if (!pair) return null;
+      return prepContrastPairAvailable(pair, answers.test_taker) ? pair : null;
+    })(),
+    triptychFocusPlateau: (() => {
+      if (!showPrepPathsVisual) return null;
+      const pair = contrastPairForPlateau(scope);
+      if (pair && prepContrastPairAvailable(pair, answers.test_taker)) {
+        return null;
+      }
+      return triptychFocusForPlateau(scope);
+    })(),
     triptychFocusGuided: showPrepPathsVisual ? "mentorship" : null,
     plateauFollowUp: hasGroupClass
       ? groupClassPlateauShortCopy(answers.test_taker)
@@ -273,7 +361,10 @@ export function buildInt8PrepComparisonCopy(
     plateauHeadline: "That explains a lot.",
     proofHeadlineGap:
       scope === "self_study" ? gapOverSelfStudy : gapOverGroupClass,
-    guidedHeadline: "Here is what works better.",
+    guidedHeadline: "Here's what works better.",
+    guidedSubhead: guidedSubheadCopy(),
+    guidedIntro: guidedIntroCopy(answers.test_taker),
+    scoreImpactMap: buildScoreImpactMapCopy(answers.test_taker),
     selfStudyPoints: satPrepComparison.selfStudyAvgPoints,
     groupClassPoints: satPrepComparison.groupClassIllustrativePoints,
     guidedPoints: satPrepComparison.guidedAvgPoints

@@ -7,7 +7,8 @@ type Int3RetakeBodyProps = {
 
 export function Int3RetakeBody({ copy }: Int3RetakeBodyProps) {
   return (
-    <div className="quiz-step-int3-content quiz-step-trust-content">
+    <div className="quiz-step-int3-content quiz-step-trust-content int3-retake">
+      <p className="quiz-step-copy int3-retake__intro">{copy.introAboveChart}</p>
       <Int3RetakeContrastGraphic />
       {copy.paragraphs.map((paragraph, index) => (
         <p key={index} className="quiz-step-copy">

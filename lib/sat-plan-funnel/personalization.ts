@@ -62,16 +62,7 @@ function subjectPossessive(testTaker?: string): { subject: string; possessive: s
   }
 }
 
-/** Step 6 — study hours (tested path). */
-export function hoursHeadline(testTaker?: string): string {
-  const { subject, possessive } = subjectPossessive(testTaker);
-  if (subject === "you") {
-    return "About how many hours did you study for the last test?";
-  }
-  return `About how many hours did ${subject} study for the last test?`;
-}
-
-/** Step 7 — recent score; PSAT label when history is PSAT-only. */
+/** Step 6 — recent score; PSAT label when history is PSAT-only. */
 export function scoreHeadline(testTaker?: string, testHistory?: string): string {
   const { possessive } = subjectPossessive(testTaker);
   const exam = testHistory === "history_psat_only" ? "PSAT" : "SAT";
@@ -93,15 +84,6 @@ export function gpaHeadline(testTaker?: string): string {
 /** Step 8 — what went wrong (tested path). */
 export function wrongHeadline(): string {
   return "What do you think went wrong?";
-}
-
-/** Step 11 — target schools (optional). */
-export function schoolsHeadline(testTaker?: string): string {
-  const { subject } = subjectPossessive(testTaker);
-  if (testTaker === "test_taker_self") {
-    return "Which schools are you aiming for?";
-  }
-  return `Which schools is ${subject} aiming for?`;
 }
 
 /** Contact gate — parent email for plan delivery. */

@@ -16,9 +16,11 @@ type ContrastBarChartProps = {
   bars: ContrastBar[];
   ariaLabel: string;
   className?: string;
+  /** Shorter plot for 390×844 interstitials (default 112). */
+  plotHeightPx?: number;
 };
 
-const PLOT_HEIGHT_PX = 112;
+const DEFAULT_PLOT_HEIGHT_PX = 112;
 const DEFAULT_DELAYS = [80, 220, 360];
 
 const LOW_BAR_COLOR = "var(--tomato)";
@@ -28,7 +30,8 @@ export function ContrastBarChart({
   title,
   bars,
   ariaLabel,
-  className = "int8-prep-chart"
+  className = "int8-prep-chart",
+  plotHeightPx = DEFAULT_PLOT_HEIGHT_PX
 }: ContrastBarChartProps) {
   const [animate, setAnimate] = useState(false);
   const maxPoints = Math.max(...bars.map((bar) => bar.points), 1);
@@ -39,7 +42,7 @@ export function ContrastBarChart({
   }, []);
 
   const scaleHeight = (points: number) =>
-    Math.max(10, Math.round((points / maxPoints) * PLOT_HEIGHT_PX));
+    Math.max(10, Math.round((points / maxPoints) * plotHeightPx));
 
   return (
     <div
@@ -60,7 +63,10 @@ export function ContrastBarChart({
 
             return (
               <div key={bar.label} className="int8-prep-chart__column">
-                <div className="int8-prep-chart__bar-slot">
+                <div
+                  className="int8-prep-chart__bar-slot"
+                  style={{ height: plotHeightPx }}
+                >
                   <div className="int8-prep-chart__bar-stack">
                     <p
                       className="int8-prep-chart__value"

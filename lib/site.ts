@@ -355,6 +355,16 @@ export const satRetakeResearch = {
 } as const;
 
 /**
+ * INT2 GPA–SAT gap — grade vs test divergence (v4 Screen 6A).
+ * Verify against current College Board / HSTS releases before changing.
+ */
+export const satGpaSatResearch = {
+  gradeTestMismatchPctLabel: "nearly 60%",
+  footnote:
+    "College Board trend data: high school GPAs have risen for decades while SAT scores have declined. In national samples, grades and test scores often diverge, with grades frequently higher. That reflects different skills measured, not low ability."
+} as const;
+
+/**
  * INT8 / INT4 — three-way prep comparison (Noom-style bars).
  * Self-study anchor: College Board retake band (same as satRetakeResearch).
  * Group-class bar: illustrative plateau band for visualization only (not a cited CB stat).

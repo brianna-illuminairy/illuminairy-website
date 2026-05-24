@@ -3,7 +3,9 @@ import type {
   Int8PrepComparisonCopy
 } from "@/lib/sat-plan-funnel/int8-prep-comparison-copy";
 import { Int8PrepComparisonGraphic } from "@/components/sat-plan/int8-prep-comparison-graphic";
+import { Int8PrepContrastPair } from "@/components/sat-plan/int8-prep-contrast-pair";
 import { Int8PrepPathTriptych } from "@/components/sat-plan/int8-prep-path-triptych";
+import { Int8ScoreImpactMap } from "@/components/sat-plan/int8-score-impact-map";
 
 type Int8PrepComparisonBodyProps = {
   copy: Int8PrepComparisonCopy;
@@ -19,9 +21,14 @@ export function Int8PrepComparisonBody({
   const showPlateau = beat === "full" || beat === "plateau";
   const showChart = beat === "full" || beat === "proof";
   const showGuided = beat === "full" || beat === "guided";
+  const showPlateauContrastPair =
+    copy.showPrepPathsVisual &&
+    copy.contrastPairPlateau &&
+    (beat === "plateau" || beat === "full");
   const showPlateauTriptych =
     copy.showPrepPathsVisual &&
     copy.triptychFocusPlateau &&
+    !copy.contrastPairPlateau &&
     (beat === "plateau" || beat === "full");
   const showGuidedTriptych =
     copy.showPrepPathsVisual &&
@@ -43,17 +50,24 @@ export function Int8PrepComparisonBody({
       ) : null}
 
       {showPlateau ? (
-        showPlateauTriptych ? (
+        showPlateauContrastPair || showPlateauTriptych ? (
           <>
             {copy.prepLead ? (
               <p className="quiz-step-copy int8-prep-comparison__mirror">
                 You picked <strong>{copy.prepLead}</strong>.
               </p>
             ) : null}
-            <Int8PrepPathTriptych
-              focus={copy.triptychFocusPlateau!}
-              testTaker={testTaker}
-            />
+            {showPlateauContrastPair ? (
+              <Int8PrepContrastPair
+                pair={copy.contrastPairPlateau!}
+                testTaker={testTaker}
+              />
+            ) : (
+              <Int8PrepPathTriptych
+                focus={copy.triptychFocusPlateau!}
+                testTaker={testTaker}
+              />
+            )}
             {copy.plateauFollowUp ? (
               <p className="quiz-step-copy int8-prep-comparison__mirror">
                 {copy.plateauFollowUp}
@@ -100,9 +114,21 @@ export function Int8PrepComparisonBody({
       ) : null}
 
       {showGuided ? (
-        <p className="quiz-step-copy int8-prep-comparison__after-chart">
-          {copy.tutorProcessCopy}
-        </p>
+        beat === "guided" ? (
+          <>
+            <p className="quiz-step-copy int8-prep-comparison__guided-subhead">
+              {copy.guidedSubhead}
+            </p>
+            <p className="quiz-step-copy int8-prep-comparison__guided-intro">
+              {copy.guidedIntro}
+            </p>
+            <Int8ScoreImpactMap map={copy.scoreImpactMap} />
+          </>
+        ) : (
+          <p className="quiz-step-copy int8-prep-comparison__after-chart">
+            {copy.tutorProcessCopy}
+          </p>
+        )
       ) : null}
     </div>
   );

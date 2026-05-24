@@ -1,3 +1,4 @@
+import { nextStepAfterPrepFailed } from "@/lib/sat-plan-funnel/funnel-routing";
 import type { SatPlanFunnelState, SatPlanStep, SatPlanStepMeta } from "@/lib/sat-plan-funnel/types";
 import { SAT_PLAN_ROUTABLE_STEPS } from "@/lib/sat-plan-funnel/types";
 
@@ -11,28 +12,29 @@ const DEFAULT_STATE: SatPlanFunnelState = {
 
 export const SAT_PLAN_STEPS: Record<SatPlanStep, SatPlanStepMeta> = {
   landing: { progress: 0, label: null },
-  worries: { progress: 6, label: "Question 1 of 11", labelUpper: true },
-  who: { progress: 12, label: "Question 2 of 11", labelUpper: true },
-  target: { progress: 18, label: "Question 3 of 11", labelUpper: true },
+  worries: { progress: 6, label: "Question 1 of 9", labelUpper: true },
+  who: { progress: 12, label: "Question 2 of 9", labelUpper: true },
+  target: { progress: 18, label: "Question 3 of 9", labelUpper: true },
   trust: { progress: 24, label: null },
-  history: { progress: 30, label: "Question 4 of 11", labelUpper: true },
+  history: { progress: 30, label: "Question 4 of 9", labelUpper: true },
   "int3-retake": { progress: 33, label: null },
-  prep: { progress: 36, label: "Question 5 of 11", labelUpper: true },
+  prep: { progress: 36, label: "Question 5 of 9", labelUpper: true },
+  "prep-failed-group-class": { progress: 38, label: null },
+  "prep-failed-self-study": { progress: 38, label: null },
   "prep-failed-plateau": { progress: 39, label: null },
   "prep-failed-proof": { progress: 42, label: null },
   "prep-failed-mentors": { progress: 44, label: null },
   "prep-failed-guided": { progress: 46, label: null },
+  "prep-failed-mistake-driven": { progress: 48, label: null },
   "prep-failed-stub": { progress: 43, label: null },
-  hours: { progress: 50, label: "Question 6 of 11", labelUpper: true },
   "kid-problem": { progress: 53, label: null },
-  score: { progress: 56, label: "Question 7 of 11", labelUpper: true },
-  wrong: { progress: 62, label: "Question 8 of 11", labelUpper: true },
+  score: { progress: 56, label: "Question 6 of 9", labelUpper: true },
+  wrong: { progress: 62, label: "Question 7 of 9", labelUpper: true },
   "sat-changed": { progress: 65, label: null },
-  gpa: { progress: 68, label: "Question 9 of 11", labelUpper: true },
+  gpa: { progress: 68, label: "Question 8 of 9", labelUpper: true },
   "gpa-paradox": { progress: 72, label: null },
-  "test-date": { progress: 76, label: "Question 10 of 11", labelUpper: true },
-  timeline: { progress: 80, label: null },
-  schools: { progress: 84, label: "Question 11 of 11", labelUpper: true },
+  "test-date": { progress: 76, label: "Question 9 of 9", labelUpper: true },
+  timeline: { progress: 82, label: null },
   "plan-path": { progress: 88, label: null },
   contact: { progress: 92, label: null },
   "plan-ready": { progress: 95, label: null },
@@ -45,11 +47,20 @@ export function loadSatPlanState(): SatPlanFunnelState {
   try {
     const raw = sessionStorage.getItem(STORAGE_KEY);
     if (!raw) return { ...DEFAULT_STATE };
-    const parsed = JSON.parse(raw) as Partial<SatPlanFunnelState>;
+    const parsed = JSON.parse(raw) as Partial<SatPlanFunnelState> & { step?: string };
+    const answers = { ...DEFAULT_STATE.answers, ...(parsed.answers ?? {}) };
+    let step = (parsed.step ?? DEFAULT_STATE.step) as SatPlanStep;
+    if ((parsed.step as string | undefined) === "hours") {
+      step = nextStepAfterPrepFailed(answers.test_history, answers.prep_method);
+    }
+    if ((parsed.step as string | undefined) === "schools") {
+      step = "plan-path";
+    }
     return {
       ...DEFAULT_STATE,
       ...parsed,
-      answers: { ...DEFAULT_STATE.answers, ...(parsed.answers ?? {}) }
+      step,
+      answers
     };
   } catch {
     return { ...DEFAULT_STATE };
@@ -66,11 +77,16 @@ const LEGACY_STEP_ALIASES: Record<string, SatPlanStep> = {
   "history-stub": "history",
   "prep-stub": "prep",
   "chapter1-stub": "who",
-  "gpa-stub": "gpa"
+  "gpa-stub": "gpa",
+  schools: "plan-path"
 };
 
 export function stepFromSearchParam(value: string | null): SatPlanStep {
   if (!value) return "landing";
+  if (value === "hours") {
+    const { answers } = loadSatPlanState();
+    return nextStepAfterPrepFailed(answers.test_history, answers.prep_method);
+  }
   if (value in LEGACY_STEP_ALIASES) {
     return LEGACY_STEP_ALIASES[value];
   }

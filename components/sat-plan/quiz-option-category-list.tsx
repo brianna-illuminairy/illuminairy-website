@@ -8,6 +8,8 @@ type QuizOptionCategoryListProps = {
   onToggle: (id: string) => void;
   groupLabel: string;
   hintId?: string;
+  /** Dense 2-column layout for the wrong-reasons step (390×844, no scroll). */
+  compact?: boolean;
 };
 
 export function QuizOptionCategoryList({
@@ -15,11 +17,17 @@ export function QuizOptionCategoryList({
   selectedIds,
   onToggle,
   groupLabel,
-  hintId
+  hintId,
+  compact = false
 }: QuizOptionCategoryListProps) {
   return (
     <div
-      className="quiz-option-categories"
+      className={[
+        "quiz-option-categories",
+        compact ? "quiz-option-categories--compact" : ""
+      ]
+        .filter(Boolean)
+        .join(" ")}
       role="group"
       aria-label={groupLabel}
       aria-describedby={hintId}
@@ -40,9 +48,11 @@ export function QuizOptionCategoryList({
                   aria-label={opt.ariaLabel}
                   onClick={() => onToggle(opt.id)}
                 >
-                  <span className="quiz-option-check" aria-hidden="true">
-                    {selected ? "✓" : ""}
-                  </span>
+                  {!compact ? (
+                    <span className="quiz-option-check" aria-hidden="true">
+                      {selected ? "✓" : ""}
+                    </span>
+                  ) : null}
                   <span className="quiz-option-label">{opt.label}</span>
                 </button>
               );

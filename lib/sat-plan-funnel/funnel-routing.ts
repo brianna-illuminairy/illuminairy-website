@@ -24,16 +24,42 @@ export function stepBeforePrep(historyId?: string): SatPlanStep {
   return "history";
 }
 
-/** Group-class or self-study prep unlocks the four-beat INT8 chain (plateau → proof → mentors → guided). */
+/** Group class in prep multiselect — INT8 slide 1 (why group classes fail). */
+export function hasGroupClassPrep(prepMethod?: SatPlanAnswers["prep_method"]): boolean {
+  return normalizePrepMethods(prepMethod).includes("prep_class");
+}
+
+/** Self-study prep without group class — INT8 slide 2 (why self-study fails). */
+export function hasSelfStudyPrepOnly(prepMethod?: SatPlanAnswers["prep_method"]): boolean {
+  const prepIds = normalizePrepMethods(prepMethod);
+  if (prepIds.includes("prep_class")) return false;
+  return prepIds.some((id) => PREP_SELF_STUDY_IDS.has(id));
+}
+
+/** Group-class or self-study prep unlocks the INT8 trilogy (plateau → proof → guided). */
 export function usesInt8Trilogy(prepMethod?: SatPlanAnswers["prep_method"]): boolean {
   const prepIds = normalizePrepMethods(prepMethod);
   if (prepIds.includes("prep_class")) return true;
   return prepIds.some((id) => PREP_SELF_STUDY_IDS.has(id));
 }
 
-export function nextStepAfterPrep(prepMethod?: SatPlanAnswers["prep_method"]): SatPlanStep {
+export function firstInt8Step(prepMethod?: SatPlanAnswers["prep_method"]): SatPlanStep {
+  if (hasGroupClassPrep(prepMethod)) return "prep-failed-group-class";
+  if (hasSelfStudyPrepOnly(prepMethod)) return "prep-failed-self-study";
   if (usesInt8Trilogy(prepMethod)) return "prep-failed-plateau";
   return "prep-failed-stub";
+}
+
+export function nextStepAfterPrep(prepMethod?: SatPlanAnswers["prep_method"]): SatPlanStep {
+  return firstInt8Step(prepMethod);
+}
+
+export function nextStepAfterInt8GroupClass(): SatPlanStep {
+  return "prep-failed-proof";
+}
+
+export function nextStepAfterInt8SelfStudy(): SatPlanStep {
+  return "prep-failed-proof";
 }
 
 export function nextStepAfterInt8Plateau(): SatPlanStep {
@@ -41,44 +67,52 @@ export function nextStepAfterInt8Plateau(): SatPlanStep {
 }
 
 export function nextStepAfterInt8Proof(): SatPlanStep {
-  return "prep-failed-mentors";
+  return "prep-failed-guided";
 }
 
-export function nextStepAfterInt8Mentors(): SatPlanStep {
-  return "prep-failed-guided";
+export function nextStepAfterInt8Guided(): SatPlanStep {
+  return "prep-failed-mistake-driven";
 }
 
 /** Last INT8 screen before intake continues. */
 export function lastInt8Step(prepMethod?: SatPlanAnswers["prep_method"]): SatPlanStep {
-  if (usesInt8Trilogy(prepMethod)) return "prep-failed-guided";
+  if (usesInt8Trilogy(prepMethod)) return "prep-failed-mistake-driven";
   return "prep-failed-stub";
 }
 
 export function stepBeforeInt8(
   currentStep: SatPlanStep,
-  historyId?: string
+  historyId?: string,
+  prepMethod?: SatPlanAnswers["prep_method"]
 ): SatPlanStep {
   switch (currentStep) {
+    case "prep-failed-group-class":
+      return historyId === "history_none" ? "history" : "prep";
+    case "prep-failed-self-study":
+      return historyId === "history_none" ? "history" : "prep";
     case "prep-failed-plateau":
       return historyId === "history_none" ? "history" : "prep";
     case "prep-failed-proof":
+      if (hasGroupClassPrep(prepMethod)) return "prep-failed-group-class";
+      if (hasSelfStudyPrepOnly(prepMethod)) return "prep-failed-self-study";
       return "prep-failed-plateau";
-    case "prep-failed-mentors":
-      return "prep-failed-proof";
     case "prep-failed-guided":
-      return "prep-failed-mentors";
+      return "prep-failed-proof";
+    case "prep-failed-mistake-driven":
+      return "prep-failed-guided";
     case "prep-failed-stub":
     default:
       return historyId === "history_none" ? "history" : "prep";
   }
 }
 
-export function nextStepAfterPrepFailed(historyId?: string): SatPlanStep {
-  return isTestedHistory(historyId) ? "hours" : "sat-changed";
-}
-
-export function nextStepAfterHours(answers: SatPlanAnswers): SatPlanStep {
-  if (shouldShowKidProblem(answers.prep_method)) return "kid-problem";
+/** After INT8 (or stub): tested path → score / kid-problem; never-tested → sat-changed. */
+export function nextStepAfterPrepFailed(
+  historyId?: string,
+  prepMethod?: SatPlanAnswers["prep_method"]
+): SatPlanStep {
+  if (!isTestedHistory(historyId)) return "sat-changed";
+  if (shouldShowKidProblem(prepMethod)) return "kid-problem";
   return "score";
 }
 
@@ -111,10 +145,6 @@ export function nextStepAfterTestDate(): SatPlanStep {
 }
 
 export function nextStepAfterTimeline(): SatPlanStep {
-  return "schools";
-}
-
-export function nextStepAfterSchools(): SatPlanStep {
   return "plan-path";
 }
 
@@ -134,17 +164,13 @@ export function nextStepAfterReport(): SatPlanStep {
   return "book";
 }
 
-export function stepBeforeHours(answers: SatPlanAnswers): SatPlanStep {
+export function stepBeforeScore(answers: SatPlanAnswers): SatPlanStep {
+  if (shouldShowKidProblem(answers.prep_method)) return "kid-problem";
   return lastInt8Step(answers.prep_method);
 }
 
-export function stepBeforeScore(answers: SatPlanAnswers): SatPlanStep {
-  if (shouldShowKidProblem(answers.prep_method)) return "kid-problem";
-  return "hours";
-}
-
-export function stepBeforeKidProblem(): SatPlanStep {
-  return "hours";
+export function stepBeforeKidProblem(answers: SatPlanAnswers): SatPlanStep {
+  return lastInt8Step(answers.prep_method);
 }
 
 export function stepBeforeWrong(): SatPlanStep {
@@ -172,12 +198,8 @@ export function stepBeforeTimeline(): SatPlanStep {
   return "test-date";
 }
 
-export function stepBeforeSchools(): SatPlanStep {
-  return "timeline";
-}
-
 export function stepBeforePlanPath(): SatPlanStep {
-  return "schools";
+  return "timeline";
 }
 
 export function stepBeforeContact(): SatPlanStep {

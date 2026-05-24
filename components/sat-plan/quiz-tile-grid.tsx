@@ -39,6 +39,7 @@ type QuizTileGridProps = {
   onToggle: (id: string) => void;
   groupLabel: string;
   hintId?: string;
+  className?: string;
   renderIcon: (id: string) => ReactNode;
 };
 
@@ -48,11 +49,13 @@ export function QuizTileGrid({
   onToggle,
   groupLabel,
   hintId,
+  className,
   renderIcon
 }: QuizTileGridProps) {
+  const gridClass = ["quiz-tile-grid", className].filter(Boolean).join(" ");
   return (
     <div
-      className="quiz-tile-grid"
+      className={gridClass}
       role="group"
       aria-label={groupLabel}
       aria-describedby={hintId}

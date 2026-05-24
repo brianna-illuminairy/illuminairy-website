@@ -79,6 +79,68 @@ export type PrepPathImageSpec = {
   objectPosition: string;
 };
 
+/** Two-up contrast: problem (left) vs guided tutoring (right). */
+export type PrepContrastPair = "home" | "crowd";
+
+const CONTRAST_PAIR_SRC: Record<
+  PrepContrastPair,
+  { default: string; daughter: string }
+> = {
+  home: {
+    default: "/satplan/int8/prep-contrast-home-vs-guided.png",
+    daughter: "/satplan/int8/prep-contrast-home-vs-guided-daughter.png"
+  },
+  crowd: {
+    default: "/satplan/int8/prep-contrast-crowd-vs-guided.png",
+    daughter: "/satplan/int8/prep-contrast-crowd-vs-guided-daughter.png"
+  }
+};
+
+/** Flip on when the PNG exists in public/satplan/int8/. */
+const CONTRAST_PAIR_SHIPPED: Record<
+  PrepContrastPair,
+  { default: boolean; daughter: boolean }
+> = {
+  home: { default: true, daughter: true },
+  crowd: { default: true, daughter: true }
+};
+
+const CONTRAST_PAIR_ALT: Record<PrepContrastPair, string> = {
+  home:
+    "Split comparison: student frustrated studying alone at home on the left, and the same student having an aha moment with a tutor on the right.",
+  crowd:
+    "Split comparison: student lost in a crowded group class on the left, and the same student having an aha moment with a tutor on the right."
+};
+
+export type PrepContrastPairImageSpec = {
+  src: string;
+  width: number;
+  height: number;
+  alt: string;
+};
+
+export function prepContrastPairAvailable(
+  pair: PrepContrastPair,
+  testTaker?: string
+): boolean {
+  const slot = usesGirlPrepPathVisual(testTaker) ? "daughter" : "default";
+  return CONTRAST_PAIR_SHIPPED[pair][slot];
+}
+
+export function prepContrastPairImageSpec(
+  pair: PrepContrastPair,
+  testTaker?: string
+): PrepContrastPairImageSpec | null {
+  if (!prepContrastPairAvailable(pair, testTaker)) return null;
+  const slot = usesGirlPrepPathVisual(testTaker) ? "daughter" : "default";
+  return {
+    src: CONTRAST_PAIR_SRC[pair][slot],
+    width: FUNNEL_CONTRAST_PANEL_PX.width,
+    height: FUNNEL_CONTRAST_PANEL_PX.height,
+    alt: CONTRAST_PAIR_ALT[pair]
+  };
+}
+
 export function prepPathImageSpec(
   focus: Int8PrepPathTriptychFocus,
   testTaker?: string
