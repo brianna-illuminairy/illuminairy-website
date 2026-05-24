@@ -24,6 +24,7 @@ export const SAT_PLAN_STEPS: Record<SatPlanStep, SatPlanStepMeta> = {
   "prep-failed-guided": { progress: 46, label: null },
   "prep-failed-stub": { progress: 43, label: null },
   hours: { progress: 50, label: "Question 6 of 11", labelUpper: true },
+  "kid-problem": { progress: 53, label: null },
   score: { progress: 56, label: "Question 7 of 11", labelUpper: true },
   wrong: { progress: 62, label: "Question 8 of 11", labelUpper: true },
   "sat-changed": { progress: 65, label: null },

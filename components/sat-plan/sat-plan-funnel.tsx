@@ -12,6 +12,7 @@ import { SatPlanInt8Mentorship } from "@/components/sat-plan/sat-plan-int8-mento
 import { SatPlanInt8PrepComparison } from "@/components/sat-plan/sat-plan-int8-prep-comparison";
 import { SatPlanHistory } from "@/components/sat-plan/sat-plan-history";
 import { SatPlanInt3Retake } from "@/components/sat-plan/sat-plan-int3-retake";
+import { SatPlanKidProblem } from "@/components/sat-plan/sat-plan-kid-problem";
 import { SatPlanLanding } from "@/components/sat-plan/sat-plan-landing";
 import { SatPlanPlanPath } from "@/components/sat-plan/sat-plan-plan-path";
 import { SatPlanPlanReady } from "@/components/sat-plan/sat-plan-plan-ready";
@@ -27,6 +28,7 @@ import { SatPlanWho } from "@/components/sat-plan/sat-plan-who";
 import { SatPlanWrong } from "@/components/sat-plan/sat-plan-wrong";
 import { SatPlanWorries } from "@/components/sat-plan/sat-plan-worries";
 import { trackSatPlanFunnelEvent } from "@/lib/sat-plan-funnel/analytics";
+import { shouldShowKidProblem } from "@/lib/sat-plan-funnel/int13-kid-problem-copy";
 import {
   isTestedHistory,
   lastInt8Step,
@@ -35,6 +37,7 @@ import {
   nextStepAfterGpaParadox,
   nextStepAfterHistory,
   nextStepAfterHours,
+  nextStepAfterKidProblem,
   nextStepAfterInt8Mentors,
   nextStepAfterInt8Plateau,
   nextStepAfterInt8Proof,
@@ -55,6 +58,7 @@ import {
   stepBeforeGpaParadox,
   stepBeforeHours,
   stepBeforeInt8,
+  stepBeforeKidProblem,
   stepBeforePlanPath,
   stepBeforePlanReady,
   stepBeforePrep,
@@ -105,6 +109,11 @@ export function SatPlanFunnel() {
   useEffect(() => {
     if (step !== "wrong") return;
     if (!isTestedHistory(answers().test_history)) goTo("sat-changed");
+  }, [step, goTo]);
+
+  useEffect(() => {
+    if (step !== "kid-problem") return;
+    if (!shouldShowKidProblem(answers().prep_method)) goTo("score");
   }, [step, goTo]);
 
   useEffect(() => {
@@ -213,13 +222,20 @@ export function SatPlanFunnel() {
       {step === "hours" ? (
         <SatPlanHours
           onBack={() => goTo(stepBeforeHours(answers()))}
-          onContinue={() => goTo(nextStepAfterHours())}
+          onContinue={() => goTo(nextStepAfterHours(answers()))}
+        />
+      ) : null}
+
+      {step === "kid-problem" ? (
+        <SatPlanKidProblem
+          onBack={() => goTo(stepBeforeKidProblem())}
+          onContinue={() => goTo(nextStepAfterKidProblem())}
         />
       ) : null}
 
       {step === "score" ? (
         <SatPlanScore
-          onBack={() => goTo(stepBeforeScore())}
+          onBack={() => goTo(stepBeforeScore(answers()))}
           onContinue={() => goTo(nextStepAfterScore())}
         />
       ) : null}

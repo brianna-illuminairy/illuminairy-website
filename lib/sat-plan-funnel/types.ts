@@ -13,6 +13,7 @@ export type SatPlanStep =
   | "prep-failed-guided"
   | "prep-failed-stub"
   | "hours"
+  | "kid-problem"
   | "score"
   | "wrong"
   | "sat-changed"
@@ -70,6 +71,7 @@ export const SAT_PLAN_ROUTABLE_STEPS: SatPlanStep[] = [
   "prep-failed-guided",
   "prep-failed-stub",
   "hours",
+  "kid-problem",
   "score",
   "wrong",
   "sat-changed",

@@ -2,6 +2,7 @@ import {
   normalizePrepMethods,
   PREP_SELF_STUDY_IDS
 } from "@/lib/sat-plan-funnel/prep-options";
+import { shouldShowKidProblem } from "@/lib/sat-plan-funnel/int13-kid-problem-copy";
 import type { SatPlanAnswers, SatPlanStep } from "@/lib/sat-plan-funnel/types";
 
 export function isTestedHistory(historyId?: string): boolean {
@@ -76,7 +77,12 @@ export function nextStepAfterPrepFailed(historyId?: string): SatPlanStep {
   return isTestedHistory(historyId) ? "hours" : "sat-changed";
 }
 
-export function nextStepAfterHours(): SatPlanStep {
+export function nextStepAfterHours(answers: SatPlanAnswers): SatPlanStep {
+  if (shouldShowKidProblem(answers.prep_method)) return "kid-problem";
+  return "score";
+}
+
+export function nextStepAfterKidProblem(): SatPlanStep {
   return "score";
 }
 
@@ -132,7 +138,12 @@ export function stepBeforeHours(answers: SatPlanAnswers): SatPlanStep {
   return lastInt8Step(answers.prep_method);
 }
 
-export function stepBeforeScore(): SatPlanStep {
+export function stepBeforeScore(answers: SatPlanAnswers): SatPlanStep {
+  if (shouldShowKidProblem(answers.prep_method)) return "kid-problem";
+  return "hours";
+}
+
+export function stepBeforeKidProblem(): SatPlanStep {
   return "hours";
 }
 

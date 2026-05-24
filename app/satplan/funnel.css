@@ -1829,3 +1829,15 @@
   font-style: italic;
 }
 
+.int13-kid-problem__list {
+  margin: 0 0 16px;
+  padding: 0 0 0 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.int13-kid-problem__list .quiz-step-copy {
+  margin: 0;
+}
+
