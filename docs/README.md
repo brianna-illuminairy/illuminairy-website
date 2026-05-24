@@ -28,6 +28,7 @@ Internal brand and product docs for Illuminairy.
 | [research/](research/README.md) | Research index |
 | [research/parent-voice-social-listening-2026-05.md](research/parent-voice-social-listening-2026-05.md) | **Georgia SAT funnel** — parent forum language, fear IDs, ad hooks, banned phrases |
 | [research/cc-get-started-funnel.md](research/cc-get-started-funnel.md) | CC **get-started** funnel — full Typeform fields, call vs Luma branch |
+| [mentor-application-typeform.md](mentor-application-typeform.md) | **Mentor apply** — Typeform fields, U.S. gate, create script, QA |
 
 ## Product code
 

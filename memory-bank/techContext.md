@@ -13,7 +13,7 @@
 | Scheduling | Calendly (embedded) |
 | Analytics | PostHog, Google Analytics |
 | CRM / attribution | Supabase (`leads`, `clients`, `enrollments`, `touch_events`) |
-| Marketing automation | Klaviyo (newsletter + server events) |
+| Marketing automation | Klaviyo (newsletter, platform waitlist, server events) |
 
 ## Key scripts
 
@@ -32,6 +32,8 @@ npm run release      # env:sync + deploy:prod
 | Variable | Purpose |
 |----------|---------|
 | `NEXT_PUBLIC_CALENDLY_URL` | Public SAT consultation embed |
+| `NEXT_PUBLIC_MENTOR_TYPEFORM_URL` | Mentor application embed on `/apply/mentor` |
+| `TYPEFORM_API_TOKEN` | Local only — `npm run typeform:mentor:create` |
 | `TUTOR_CALENDLY_URL` | Invite-only mentor interview (server/email only) |
 | `RESEND_API_KEY` | Contact form delivery |
 | `CONTACT_INBOX` / `RESEND_FROM_EMAIL` | Inbox and from-address |
@@ -40,7 +42,9 @@ npm run release      # env:sync + deploy:prod
 | `STRIPE_WEBHOOK_SECRET` | Webhook verification |
 | `STRIPE_PRICE_ID` | Enrollment price |
 | `NEXT_PUBLIC_POSTHOG_KEY` | Product analytics |
-| `NEXT_PUBLIC_KLAVIYO_PUBLIC_API_KEY` | Newsletter (client) |
+| `NEXT_PUBLIC_KLAVIYO_PUBLIC_API_KEY` | Newsletter + waitlist (client) |
+| `NEXT_PUBLIC_KLAVIYO_LIST_ID` | Default newsletter list |
+| `NEXT_PUBLIC_KLAVIYO_LIST_ID_PLATFORM_WAITLIST` | Homepage platform waitlist list |
 | `KLAVIYO_PRIVATE_API_KEY` | Server events + profiles |
 | `SUPABASE_URL` / `SUPABASE_SERVICE_ROLE_KEY` | CRM writes (server only) |
 | `ADMIN_SECRET` | `/admin` dashboard |

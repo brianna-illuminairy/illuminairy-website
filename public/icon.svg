@@ -1,22 +1,18 @@
-<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#1E2942"/>
-      <stop offset="1" stop-color="#0B1124"/>
-    </linearGradient>
-    <linearGradient id="star" x1="32" y1="3" x2="32" y2="61" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#F1D362"/>
-      <stop offset="0.5" stop-color="#D4AF3A"/>
-      <stop offset="1" stop-color="#A07E10"/>
-    </linearGradient>
-    <radialGradient id="glow" cx="32" cy="32" r="26" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#E8C547" stop-opacity="0.45"/>
-      <stop offset="0.55" stop-color="#C49A18" stop-opacity="0.12"/>
-      <stop offset="1" stop-color="#C49A18" stop-opacity="0"/>
-    </radialGradient>
-  </defs>
-  <rect width="64" height="64" rx="14" fill="url(#bg)"/>
-  <circle cx="32" cy="32" r="26" fill="url(#glow)"/>
-  <path d="M32 6 L35.8 27.2 L57 32 L35.8 36.8 L32 58 L28.2 36.8 L7 32 L28.2 27.2 Z" fill="url(#star)"/>
-  <path d="M32 16 L33.2 28.8 L46 32 L33.2 35.2 L32 48 L30.8 35.2 L18 32 L30.8 28.8 Z" fill="#F4D976" fill-opacity="0.35"/>
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Illuminairy">
+  <title>Illuminairy</title>
+  <rect width="64" height="64" rx="14" fill="#0A0A0F" />
+  <rect x="0.75" y="0.75" width="62.5" height="62.5" rx="13.25" stroke="#27272A" stroke-width="1.5" />
+  <path
+    d="M14 48 C22 40 28 34 32 26"
+    stroke="#818CF8"
+    stroke-width="3.5"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+  <path d="M32 26 V18" stroke="#818CF8" stroke-width="3.5" stroke-linecap="round" />
+  <circle cx="14" cy="48" r="4" fill="#4F46E5" fill-opacity="0.55" />
+  <circle cx="32" cy="26" r="4.5" fill="#6366F1" />
+  <circle cx="32" cy="14" r="9" fill="#D4AF3A" fill-opacity="0.22" />
+  <circle cx="32" cy="14" r="5.5" fill="#D4AF3A" />
+  <circle cx="32" cy="14" r="2" fill="#F8E08A" />
 </svg>

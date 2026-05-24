@@ -1,0 +1,27 @@
+<svg width="320" height="64" viewBox="0 0 320 64" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Illuminairy">
+  <title>Illuminairy</title>
+  <g transform="translate(0 0)">
+    <path
+      d="M14 48 C22 40 28 34 32 26"
+      stroke="#6366F1"
+      stroke-width="3.5"
+      stroke-linecap="round"
+    />
+    <path d="M32 26 V18" stroke="#6366F1" stroke-width="3.5" stroke-linecap="round" />
+    <circle cx="14" cy="48" r="4" fill="#4F46E5" fill-opacity="0.45" />
+    <circle cx="32" cy="26" r="4.5" fill="#6366F1" />
+    <circle cx="32" cy="14" r="9" fill="#D4AF3A" fill-opacity="0.18" />
+    <circle cx="32" cy="14" r="5.5" fill="#D4AF3A" />
+  </g>
+  <text
+    x="76"
+    y="42"
+    fill="#0F0F12"
+    font-family="Plus Jakarta Sans, ui-sans-serif, system-ui, sans-serif"
+    font-size="28"
+    font-weight="600"
+    letter-spacing="-0.04em"
+  >
+    illumin<tspan fill="#C49A18">ai</tspan>ry
+  </text>
+</svg>

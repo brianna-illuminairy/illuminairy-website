@@ -5,19 +5,25 @@ export type KlaviyoSubscribeOptions = {
   customSource: string;
   /** Optional profile properties (magnet slug, intake stage, etc.) */
   properties?: Record<string, string>;
+  /** Override default NEXT_PUBLIC_KLAVIYO_LIST_ID (e.g. platform waitlist) */
+  listId?: string;
 };
 
 export async function subscribeToKlaviyo({
   email,
   customSource,
-  properties = {}
+  properties = {},
+  listId: listIdOverride
 }: KlaviyoSubscribeOptions) {
   const companyId = process.env.NEXT_PUBLIC_KLAVIYO_PUBLIC_API_KEY;
   if (!companyId) {
     throw new Error("Newsletter is not configured yet.");
   }
 
-  const listId = process.env.NEXT_PUBLIC_KLAVIYO_LIST_ID;
+  const listId =
+    listIdOverride?.trim() ||
+    process.env.NEXT_PUBLIC_KLAVIYO_LIST_ID ||
+    "";
   const profileAttributes: Record<string, string> = { email, ...properties };
 
   const payload: Record<string, unknown> = {

@@ -12,4 +12,5 @@ Production site for illuminairy.com — SAT Accelerator enrollment, contact, bra
 - Brand voice: `docs/brand-voice-and-positioning.md`; no SAT score guarantees.
 - Never expose `TUTOR_CALENDLY_URL` on public pages or `NEXT_PUBLIC_*` env.
 - Do not apply academic/coursework coding style rules; this is a commercial TypeScript repo.
+- **SAT plan funnel:** step screens are content-only — see `components/sat-plan/LAYOUT.lock.md`; no layout/CSS edits without explicit owner unlock (`FUNNEL_LAYOUT_UNLOCK=1`).
 - Verify with `npm run agent:verify` before claiming done.

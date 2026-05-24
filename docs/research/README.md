@@ -4,6 +4,8 @@ Captured competitor and audience research for product and funnel work.
 
 | Document | Purpose |
 |----------|---------|
+| [yc-blog-startup-branding-2026-05.md](yc-blog-startup-branding-2026-05.md) | **YC rebrand** — YC Library/blog patterns, v2 visual brief |
+| [customer-listening-kit.md](customer-listening-kit.md) | Reddit/HN listening toolkit (source on Desktop `research/`) |
 | [parent-voice-social-listening-2026-05.md](parent-voice-social-listening-2026-05.md) | **Georgia SAT funnel** — forum parent language, fear IDs, ad hooks, copy guardrails |
 | [list-fit-check-tool.md](list-fit-check-tool.md) | **List Fit Check** — UX, middle-50% education, guardrails |
 | [cc-get-started-funnel.md](cc-get-started-funnel.md) | Curious Cardinals get-started Typeform funnel (competitor) |

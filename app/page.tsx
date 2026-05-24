@@ -1,227 +1,200 @@
 import Link from "next/link";
-import { ArrowRight, Calendar, GraduationCap, UserCheck, Users } from "lucide-react";
-import { CohortsPanel } from "@/components/brand-visual";
-import { InPersonComparison } from "@/components/in-person-comparison";
-import { ParentTrustBeliefs } from "@/components/parent-trust-beliefs";
-import { ProgramDifferentiation } from "@/components/program-differentiation";
-import { NorthStar } from "@/components/logo";
-import {
-  ButtonLink,
-  DarkCta,
-  Eyebrow,
-  FeatureCard,
-  PopSection,
-  SectionHeader
-} from "@/components/ui";
-import {
-  mentorApplyLink,
-  programStats,
-  satProgram,
-  scheduleLink,
-  site,
-  trustPillars
-} from "@/lib/site";
+import { WaitlistSignup } from "@/components/waitlist-signup";
+import { site } from "@/lib/site";
+
+const palette = [
+  ["pink", "#e4abc4"],
+  ["tomato", "#f24822"],
+  ["mustard", "#dfc653"],
+  ["green", "#2f8b55"],
+  ["clock", "#379bd0"],
+  ["blush", "#eee3e0"],
+  ["peach", "#ecc8a4"],
+  ["off-white", "#f5ecd9"],
+  ["mint", "#c8e2c4"],
+  ["lagoon", "#90bdc1"]
+];
+
+const satFacts = [
+  ["12", "weeks"],
+  ["30", "live sessions"],
+  ["24", "small group"],
+  ["6", "private 1:1"],
+  ["10", "student cap"],
+  ["1450+", "mentor standard"]
+];
+
+const paths = [
+  ["SAT", "Structured test preparation for ambitious college-bound students."],
+  ["AI", "Applied AI upskilling for professionals and business owners."],
+  ["Mentors", "A selective network of high-performing educated talent."],
+  ["Labs", "Future experiments in technical education and applied expertise."]
+];
+
+const iconNames = [
+  "rise",
+  "window",
+  "stack",
+  "circle",
+  "corner",
+  "steps",
+  "burst",
+  "flag",
+  "grid",
+  "path",
+  "dot",
+  "spark"
+];
+
+function BoardMeta({
+  n,
+  label,
+  title
+}: {
+  n: string;
+  label: string;
+  title: string;
+}) {
+  return (
+    <div className="board-meta">
+      <span>{n}</span>
+      <i aria-hidden="true" />
+      <span>{label}</span>
+      <strong>{title}</strong>
+    </div>
+  );
+}
 
 export default function Home() {
   return (
-    <>
-      {/* Hero */}
-      <section className="relative overflow-hidden bg-ivory px-5 pb-16 pt-14 sm:px-8 sm:pt-20 lg:px-12">
-        <div className="absolute inset-0 -z-10 bg-ivory-gradient" />
-        <div className="absolute inset-0 -z-10 bg-paper-grain" />
-        <div className="absolute left-1/2 top-0 -z-10 h-[520px] w-[900px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(196,154,24,0.10),transparent_62%)] blur-2xl" />
-
-        <div className="mx-auto grid max-w-7xl gap-14 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
-          <div className="max-w-2xl">
-            <div className="flex items-center gap-3">
-              <NorthStar size={20} tone="ivory" glow={false} />
-              <Eyebrow tone="gold">{site.tagline}</Eyebrow>
-            </div>
-
-            <h1 className="mt-6 text-balance text-[clamp(2.5rem,1.5rem+4vw,4.75rem)] font-extralight leading-[1.02] tracking-[-0.035em] text-ink">
-              {site.homeHero.title}
-            </h1>
-
-            <p className="mt-7 max-w-xl text-pretty text-lg leading-[1.65] text-ink-soft sm:text-xl">
-              {site.homeHero.lead}
+    <section className="brand-board-page">
+      <div className="brand-board-grid">
+        <article className="brand-sheet brand-sheet--hero brand-sheet--wide">
+          <BoardMeta n="01" label="identity" title="company home" />
+          <div className="hero-spec">
+            <p className="spec-note">
+              Modern mentorship and applied learning for ambitious students,
+              professionals, and business owners.
             </p>
-
-            <div className="mt-10 flex flex-col gap-3 sm:flex-row">
-              <ButtonLink href={scheduleLink} icon={Calendar}>
-                Book a consultation
-              </ButtonLink>
-              <ButtonLink href={mentorApplyLink} variant="secondary" icon={ArrowRight}>
-                Apply as a mentor
-              </ButtonLink>
+            <h1 className="brand-display">
+              illumin<span>ai</span>ry
+            </h1>
+            <div className="word-rule" aria-hidden="true">
+              <b>ai</b>
             </div>
           </div>
+          <div className="sheet-footer">
+            <span>{site.legalName}</span>
+            <span>{site.location}</span>
+          </div>
+        </article>
 
-          <CohortsPanel />
-        </div>
-      </section>
-
-      {/* Stats strip */}
-      <section className="border-y border-line/70 bg-ivory-200/50 px-5 py-10 sm:px-8 lg:px-12">
-        <div className="mx-auto grid max-w-7xl gap-8 sm:grid-cols-2 lg:grid-cols-4">
-          {programStats.map((stat) => (
-            <div key={stat.label} className="px-2">
-              <p className="text-[2.5rem] font-extralight leading-none tracking-[-0.04em] text-ink">
-                {stat.value}
-              </p>
-              <p className="mt-3 text-[13.5px] leading-[1.5] text-ink-soft">{stat.label}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <ParentTrustBeliefs />
-
-      {/* SAT — marigold pop */}
-      <PopSection
-        color="marigold"
-        eyebrow="Live now · August 2026 SAT"
-        title="Illuminairy SAT Accelerator."
-        text={`${satProgram.headline} Week-one diagnostics, six private 1:1s, live classes, assigned practice, and a report sent to parents every week. Georgia Tech mentors who scored 1450+ — for the ${site.satDate} SAT.`}
-        primary={{ label: "View the Accelerator", href: "/sat-accelerator" }}
-        secondary={{ label: "Book a consultation", href: scheduleLink }}
-      >
-        <div className="grid gap-3 sm:grid-cols-2">
-          {[
-            "Week-one diagnostics (R&W + Math)",
-            "Six personalized 1:1 sessions",
-            "Mistake-driven study + assigned practice",
-            "Weekly progress reports for families"
-          ].map((item) => (
-            <div
-              key={item}
-              className="rounded-2xl border border-marigold-ink/15 bg-ivory/90 px-5 py-4 text-[14px] font-medium leading-snug text-marigold-ink backdrop-blur-sm"
-            >
-              {item}
-            </div>
-          ))}
-        </div>
-      </PopSection>
-
-      {/* Illuminate + luminary mentors */}
-      <section className="bg-ivory px-5 py-24 sm:px-8 lg:px-12">
-        <div className="mx-auto max-w-7xl">
-          <SectionHeader
-            eyebrow="Why illuminairy"
-            title="What you actually get."
-            text="Illuminairy means illuminate + luminary. Your student gets a Georgia Tech mentor who scored 1450+ on the SAT, week-one diagnostics that tell the mentor where to focus, six private 1:1s, live R&W and Math classes every week, assigned practice between sessions, and a progress report sent to you every week — all inside one twelve-week program."
-          />
-          <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
-            {trustPillars.map((item) => (
-              <FeatureCard key={item.title} {...item} />
+        <article className="brand-sheet brand-sheet--palette">
+          <BoardMeta n="02" label="color" title="brand palette" />
+          <div className="palette-grid">
+            {palette.map(([name, color]) => (
+              <div key={name} className="palette-tile" style={{ backgroundColor: color }}>
+                <span>{name}</span>
+                <small>{color}</small>
+              </div>
             ))}
           </div>
-        </div>
-      </section>
+          <div className="sheet-footer">
+            <span>flat color only</span>
+            <span>no gradients</span>
+          </div>
+        </article>
 
-      <InPersonComparison />
-
-      <ProgramDifferentiation />
-
-      {/* Audience paths — sage pop */}
-      <PopSection
-        color="sage"
-        eyebrow="Who it's for"
-        title="Built for families, students, and mentors."
-        text="Parents comparing SAT programs. Students targeting selective colleges. Mentors from Georgia Tech who want to teach — not just tutor."
-      >
-        <div className="grid gap-4 sm:grid-cols-3">
-          {[
-            {
-              icon: GraduationCap,
-              label: "Families & students",
-              text: "R&W and Math classes every week, published pricing, and you can enroll online.",
-              href: "/sat-accelerator"
-            },
-            {
-              icon: UserCheck,
-              label: "Mentors",
-              text: "Georgia Tech-led standards today. More program areas opening soon.",
-              href: "/mentors"
-            },
-            {
-              icon: Users,
-              label: "Programs",
-              text: "SAT live now. AI for Professionals and Business Owners opening soon.",
-              href: "/programs"
-            }
-          ].map(({ icon: Icon, label, text, href }) => (
-            <Link
-              key={label}
-              href={href}
-              className="group rounded-2xl border border-sage-ink/15 bg-ivory/90 p-6 backdrop-blur-sm transition hover:border-sage-ink/30"
-            >
-              <Icon className="h-5 w-5 text-sage-ink" strokeWidth={1.6} aria-hidden="true" />
-              <h3 className="mt-5 text-[16px] font-semibold tracking-[-0.015em] text-sage-ink">
-                {label}
-              </h3>
-              <p className="mt-2 text-[13.5px] leading-[1.55] text-sage-ink/80">{text}</p>
-              <span className="mt-4 inline-flex items-center gap-1 text-[12px] font-semibold uppercase tracking-[0.12em] text-sage-ink/70 group-hover:text-sage-ink">
-                Learn more
-                <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-              </span>
-            </Link>
-          ))}
-        </div>
-      </PopSection>
-
-      {/* Trust + clarity */}
-      <section className="px-5 py-24 sm:px-8 lg:px-12">
-        <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-2">
-          <div className="rounded-3xl bg-navy-gradient p-9 text-ivory sm:p-11">
-            <Eyebrow tone="ivory">What we stand for</Eyebrow>
-            <h2 className="mt-5 text-balance text-3xl font-light leading-[1.05] tracking-[-0.03em] sm:text-4xl">
-              Mentorship with a high bar.
-            </h2>
-            <p className="mt-6 max-w-md text-[15.5px] leading-[1.65] text-ivory/72">
-              Ten students per class, a twelve-week schedule you know before
-              you start, and mentors we screened ourselves.
+        <article className="brand-sheet brand-sheet--type">
+          <BoardMeta n="03" label="type" title="voice" />
+          <div>
+            <p className="type-stack">
+              learn.
+              <br />
+              build.
+              <br />
+              ship.
             </p>
-            <p className="wordmark mt-10 text-[clamp(2.5rem,5vw,4rem)] leading-none text-ivory">
-              illumin<span className="text-gold-light">ai</span>ry
+            <p className="type-copy">
+              Premium mentor-led programs with a high signal-to-noise ratio.
+              Calm, sharp, and direct.
             </p>
           </div>
+          <div className="type-panel">
+            <span>medium</span>
+            <span>regular</span>
+            <span>tight</span>
+            <b>AaBbCcDdEeFfGg</b>
+          </div>
+        </article>
 
-          <div className="flex flex-col justify-between rounded-3xl border border-line bg-ivory-50 p-9 sm:p-11">
+        <article className="brand-sheet brand-sheet--mustard" id="program">
+          <BoardMeta n="04" label="program" title="sat accelerator" />
+          <div className="vertical-word">cohort</div>
+          <div className="sat-facts">
+            {satFacts.map(([value, label]) => (
+              <div key={label}>
+                <strong>{value}</strong>
+                <span>{label}</span>
+              </div>
+            ))}
+          </div>
+          <p className="program-note">
+            Georgia Tech-led SAT preparation for the {site.satDate} SAT. No
+            guaranteed scores, just structure and accountability.
+          </p>
+        </article>
+
+        <article className="brand-sheet brand-sheet--center">
+          <BoardMeta n="05" label="positioning" title="platform" />
+          <p className="slash-title">
+            mentor-led /
+            <br />
+            applied learning
+          </p>
+          <div className="path-list">
+            {paths.map(([name, text]) => (
+              <div key={name}>
+                <strong>{name}</strong>
+                <span>{text}</span>
+              </div>
+            ))}
+          </div>
+        </article>
+
+        <article className="brand-sheet brand-sheet--icons" id="system">
+          <BoardMeta n="06" label="system" title="icons" />
+          <div className="icon-board" aria-label="Flat Illuminairy icon system">
+            {iconNames.map((name) => (
+              <span key={name} className={`shape-icon shape-icon--${name}`} />
+            ))}
+          </div>
+        </article>
+
+        <article className="brand-sheet brand-sheet--contact brand-sheet--wide">
+          <BoardMeta n="07" label="next step" title="request details" />
+          <div className="contact-layout" id="waitlist">
             <div>
-              <Eyebrow>Trust & policies</Eyebrow>
-              <h2 className="mt-5 text-balance text-3xl font-light leading-[1.05] tracking-[-0.03em] text-ink sm:text-4xl">
-                Clear policies. Straightforward next steps.
+              <h2>
+                Start with SAT.
+                <br />
+                Expand into AI.
               </h2>
+              <p>
+                Ask about the SAT cohort, mentor applications, partnerships, or
+                the broader Illuminairy platform.
+              </p>
+              <div className="contact-actions">
+                <Link href={`mailto:${site.email}`}>email us</Link>
+                <Link href={`mailto:${site.email}?subject=SAT%20consultation`}>
+                  book consult
+                </Link>
+              </div>
             </div>
-            <ul className="mt-10 grid gap-0">
-              {[
-                { label: "Refund policy", href: "/refund-policy" },
-                { label: "Support policy", href: "/support-policy" },
-                { label: "Terms of service", href: "/terms" },
-                { label: "Privacy policy", href: "/privacy" },
-                { label: "Contact & enrollment", href: "/contact" }
-              ].map(({ label, href }) => (
-                <li key={href} className="border-t border-line first:border-t-0">
-                  <Link
-                    href={href}
-                    className="flex items-center justify-between py-4 text-[14.5px] font-medium text-ink-soft transition hover:text-ink"
-                  >
-                    {label}
-                    <ArrowRight className="h-4 w-4 text-gold-deep" aria-hidden="true" />
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            <WaitlistSignup compact />
           </div>
-        </div>
-      </section>
-
-      <DarkCta
-        title="Start with a conversation."
-        text="Parents and students: book a short call about the SAT Accelerator. Mentors: apply through contact. Everyone else: send a message anytime."
-        primary={{ label: "Book a consultation", href: scheduleLink }}
-        secondary={{ label: "Contact illuminairy", href: "/contact" }}
-      />
-    </>
+        </article>
+      </div>
+    </section>
   );
 }

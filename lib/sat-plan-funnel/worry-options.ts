@@ -15,8 +15,8 @@ export const WORRY_OPTIONS: WorryOption[] = [
   },
   {
     id: "stuck_score",
-    label: "Already retook",
-    ariaLabel: "Taken it 2 or more times, score will not budge"
+    label: "Planning a retake",
+    ariaLabel: "Planning to retake the SAT"
   },
   { id: "not_prepped", label: "Haven't started", ariaLabel: "Have not started prepping" }
 ];

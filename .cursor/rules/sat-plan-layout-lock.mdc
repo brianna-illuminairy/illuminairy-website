@@ -1,0 +1,31 @@
+---
+description: SAT plan funnel — locked layout; step files are content-only
+globs:
+  - components/sat-plan/**
+  - app/satplan/**
+  - lib/sat-plan-funnel/**
+alwaysApply: false
+---
+
+# SAT plan layout lock
+
+**Default: content only.** Never change quiz layout unless the user explicitly asks to change layout/spacing/shell/CSS.
+
+## Step screens (`sat-plan-*.tsx`, except landing/funnel/chapter-stub)
+
+- Use **`QuizStepTemplate`** only — do not import `FunnelShell` or `FunnelCta`.
+- Swap **`headline`**, **`hint`**, **`bodyVariant`**, and body children only.
+- **`bodyVariant`**: `tile-grid` | `option-list` | `copy` — no custom `bodyClassName`.
+- No custom **`footer`**, no inline layout styles, no new spacing margins on step files.
+
+## Locked files (require `FUNNEL_LAYOUT_UNLOCK=1` + owner approval)
+
+- `app/satplan/funnel.css`
+- `components/sat-plan/funnel-shell.tsx`
+- `components/sat-plan/quiz-step-template.tsx`
+- `components/sat-plan/funnel-cta.tsx`
+- `lib/sat-plan-funnel/quiz-step-layout.ts`
+
+Read `components/sat-plan/LAYOUT.lock.md` before any satplan UI work.
+
+Verification: `npm run funnel:layout-guard` (included in `npm run agent:verify`).

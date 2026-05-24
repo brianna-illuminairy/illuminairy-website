@@ -1,0 +1,24 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Illuminairy mark">
+  <title>Illuminairy</title>
+  <!-- Path: start → mentor → illuminated outcome -->
+  <path
+    d="M14 48 C22 40 28 34 32 26"
+    stroke="#6366F1"
+    stroke-width="3.5"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+  <path
+    d="M32 26 V18"
+    stroke="#6366F1"
+    stroke-width="3.5"
+    stroke-linecap="round"
+  />
+  <!-- Near-peer nodes -->
+  <circle cx="14" cy="48" r="4" fill="#4F46E5" fill-opacity="0.45" />
+  <circle cx="32" cy="26" r="4.5" fill="#6366F1" />
+  <!-- Illumination (luminary + AI moment) -->
+  <circle cx="32" cy="14" r="9" fill="#D4AF3A" fill-opacity="0.18" />
+  <circle cx="32" cy="14" r="5.5" fill="#D4AF3A" />
+  <circle cx="32" cy="14" r="2" fill="#F8E08A" />
+</svg>

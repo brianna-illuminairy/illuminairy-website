@@ -1,0 +1,445 @@
+{
+  "title": "Illuminairy — Mentor / SAT Instructor Application",
+  "type": "form",
+  "settings": {
+    "language": "en",
+    "progress_bar": "proportion",
+    "show_progress_bar": true,
+    "show_typeform_branding": false,
+    "show_time_to_complete": true,
+    "show_question_number": true,
+    "meta": {
+      "allow_indexing": false
+    },
+    "is_public": true,
+    "are_uploads_public": false,
+    "autosave_progress": true
+  },
+  "welcome_screens": [
+    {
+      "ref": "welcome_mentor_apply",
+      "title": "Apply to mentor with Illuminairy",
+      "properties": {
+        "description": "We review every application. If you are a fit for the SAT Accelerator, we will email you a link to schedule an interview — we do not publish interview scheduling on the website.\n\nYou will need: contact details, your current U.S. location, Georgia Tech ID or transcript, resume, LinkedIn, a professional headshot, and a short note on why you want to mentor.",
+        "show_button": true,
+        "button_text": "Start application"
+      }
+    }
+  ],
+  "thankyou_screens": [
+    {
+      "ref": "tys_not_us_resident",
+      "title": "Thanks for your interest.",
+      "type": "thankyou_screen",
+      "properties": {
+        "description": "Right now we are only accepting mentors who are **currently residing in the United States**. If your situation changes, you are welcome to apply again.",
+        "show_button": true,
+        "button_text": "Back to illuminairy.com",
+        "button_mode": "redirect",
+        "redirect_url": "https://illuminairy.com/mentors"
+      }
+    },
+    {
+      "ref": "tys_application_received",
+      "title": "Application received — thank you.",
+      "type": "thankyou_screen",
+      "properties": {
+        "description": "Our team will review your materials. If you are a strong fit, we will email you at the address you provided with next steps and an invite-only link to schedule an interview. We typically respond within a few business days.",
+        "show_button": true,
+        "button_text": "Back to illuminairy.com",
+        "button_mode": "redirect",
+        "redirect_url": "https://illuminairy.com/mentors"
+      }
+    }
+  ],
+  "fields": [
+    {
+      "ref": "fld_current_location",
+      "title": "Where are you located right now?",
+      "type": "multiple_choice",
+      "properties": {
+        "description": "We require mentors to be **physically in the United States** for the current SAT Accelerator cycle.",
+        "choices": [
+          {
+            "ref": "choice_us_resident",
+            "label": "United States (I am currently residing in the U.S.)"
+          },
+          {
+            "ref": "choice_outside_us",
+            "label": "Outside the United States"
+          }
+        ]
+      },
+      "validations": {
+        "required": true
+      }
+    },
+    {
+      "ref": "fld_us_state",
+      "title": "What U.S. state are you in?",
+      "type": "dropdown",
+      "properties": {
+        "choices": [
+          {
+            "ref": "state_alabama",
+            "label": "Alabama"
+          },
+          {
+            "ref": "state_alaska",
+            "label": "Alaska"
+          },
+          {
+            "ref": "state_arizona",
+            "label": "Arizona"
+          },
+          {
+            "ref": "state_arkansas",
+            "label": "Arkansas"
+          },
+          {
+            "ref": "state_california",
+            "label": "California"
+          },
+          {
+            "ref": "state_colorado",
+            "label": "Colorado"
+          },
+          {
+            "ref": "state_connecticut",
+            "label": "Connecticut"
+          },
+          {
+            "ref": "state_delaware",
+            "label": "Delaware"
+          },
+          {
+            "ref": "state_district_of_columbia",
+            "label": "District of Columbia"
+          },
+          {
+            "ref": "state_florida",
+            "label": "Florida"
+          },
+          {
+            "ref": "state_georgia",
+            "label": "Georgia"
+          },
+          {
+            "ref": "state_hawaii",
+            "label": "Hawaii"
+          },
+          {
+            "ref": "state_idaho",
+            "label": "Idaho"
+          },
+          {
+            "ref": "state_illinois",
+            "label": "Illinois"
+          },
+          {
+            "ref": "state_indiana",
+            "label": "Indiana"
+          },
+          {
+            "ref": "state_iowa",
+            "label": "Iowa"
+          },
+          {
+            "ref": "state_kansas",
+            "label": "Kansas"
+          },
+          {
+            "ref": "state_kentucky",
+            "label": "Kentucky"
+          },
+          {
+            "ref": "state_louisiana",
+            "label": "Louisiana"
+          },
+          {
+            "ref": "state_maine",
+            "label": "Maine"
+          },
+          {
+            "ref": "state_maryland",
+            "label": "Maryland"
+          },
+          {
+            "ref": "state_massachusetts",
+            "label": "Massachusetts"
+          },
+          {
+            "ref": "state_michigan",
+            "label": "Michigan"
+          },
+          {
+            "ref": "state_minnesota",
+            "label": "Minnesota"
+          },
+          {
+            "ref": "state_mississippi",
+            "label": "Mississippi"
+          },
+          {
+            "ref": "state_missouri",
+            "label": "Missouri"
+          },
+          {
+            "ref": "state_montana",
+            "label": "Montana"
+          },
+          {
+            "ref": "state_nebraska",
+            "label": "Nebraska"
+          },
+          {
+            "ref": "state_nevada",
+            "label": "Nevada"
+          },
+          {
+            "ref": "state_new_hampshire",
+            "label": "New Hampshire"
+          },
+          {
+            "ref": "state_new_jersey",
+            "label": "New Jersey"
+          },
+          {
+            "ref": "state_new_mexico",
+            "label": "New Mexico"
+          },
+          {
+            "ref": "state_new_york",
+            "label": "New York"
+          },
+          {
+            "ref": "state_north_carolina",
+            "label": "North Carolina"
+          },
+          {
+            "ref": "state_north_dakota",
+            "label": "North Dakota"
+          },
+          {
+            "ref": "state_ohio",
+            "label": "Ohio"
+          },
+          {
+            "ref": "state_oklahoma",
+            "label": "Oklahoma"
+          },
+          {
+            "ref": "state_oregon",
+            "label": "Oregon"
+          },
+          {
+            "ref": "state_pennsylvania",
+            "label": "Pennsylvania"
+          },
+          {
+            "ref": "state_rhode_island",
+            "label": "Rhode Island"
+          },
+          {
+            "ref": "state_south_carolina",
+            "label": "South Carolina"
+          },
+          {
+            "ref": "state_south_dakota",
+            "label": "South Dakota"
+          },
+          {
+            "ref": "state_tennessee",
+            "label": "Tennessee"
+          },
+          {
+            "ref": "state_texas",
+            "label": "Texas"
+          },
+          {
+            "ref": "state_utah",
+            "label": "Utah"
+          },
+          {
+            "ref": "state_vermont",
+            "label": "Vermont"
+          },
+          {
+            "ref": "state_virginia",
+            "label": "Virginia"
+          },
+          {
+            "ref": "state_washington",
+            "label": "Washington"
+          },
+          {
+            "ref": "state_west_virginia",
+            "label": "West Virginia"
+          },
+          {
+            "ref": "state_wisconsin",
+            "label": "Wisconsin"
+          },
+          {
+            "ref": "state_wyoming",
+            "label": "Wyoming"
+          }
+        ],
+        "randomize": false,
+        "alphabetical_order": true
+      },
+      "validations": {
+        "required": true
+      }
+    },
+    {
+      "ref": "fld_us_zip",
+      "title": "ZIP code",
+      "type": "short_text",
+      "properties": {
+        "description": "Five-digit ZIP (or ZIP+4). Used for scheduling and local program planning only."
+      },
+      "validations": {
+        "required": true,
+        "max_length": 10
+      }
+    },
+    {
+      "ref": "fld_contact_info",
+      "title": "Your contact information",
+      "type": "contact_info",
+      "properties": {
+        "fields": [
+          {
+            "ref": "contact_first_name",
+            "title": "First name",
+            "subfield_key": "first_name",
+            "type": "short_text",
+            "validations": {
+              "required": true
+            }
+          },
+          {
+            "ref": "contact_last_name",
+            "title": "Last name",
+            "subfield_key": "last_name",
+            "type": "short_text",
+            "validations": {
+              "required": true
+            }
+          },
+          {
+            "ref": "contact_email",
+            "title": "Email",
+            "subfield_key": "email",
+            "type": "email",
+            "validations": {
+              "required": true
+            }
+          },
+          {
+            "ref": "contact_phone",
+            "title": "Phone number",
+            "subfield_key": "phone_number",
+            "type": "phone_number",
+            "properties": {
+              "default_country_code": "US"
+            },
+            "validations": {
+              "required": true
+            }
+          }
+        ]
+      },
+      "validations": {
+        "required": true
+      }
+    },
+    {
+      "ref": "fld_gatech_id_or_transcript",
+      "title": "Georgia Tech student ID or transcript",
+      "type": "file_upload",
+      "properties": {
+        "description": "Upload a photo or PDF of your **Georgia Tech student ID**, or an **unofficial transcript** showing enrollment. PDF, JPG, or PNG."
+      },
+      "validations": {
+        "required": true
+      }
+    },
+    {
+      "ref": "fld_resume",
+      "title": "Resume",
+      "type": "file_upload",
+      "properties": {
+        "description": "PDF preferred. Include teaching, tutoring, or leadership experience if relevant."
+      },
+      "validations": {
+        "required": true
+      }
+    },
+    {
+      "ref": "fld_linkedin",
+      "title": "LinkedIn profile",
+      "type": "website",
+      "properties": {
+        "description": "Full URL, e.g. https://www.linkedin.com/in/your-name"
+      },
+      "validations": {
+        "required": true
+      }
+    },
+    {
+      "ref": "fld_headshot",
+      "title": "Professional headshot",
+      "type": "file_upload",
+      "properties": {
+        "description": "A clear, professional photo (face visible, neutral background). JPG or PNG. Used only for internal vetting and mentor materials — not published without your consent."
+      },
+      "validations": {
+        "required": true
+      }
+    },
+    {
+      "ref": "fld_why_mentor",
+      "title": "Why do you want to be an SAT mentor with Illuminairy?",
+      "type": "long_text",
+      "properties": {
+        "description": "In **2–3 sentences**, tell us why you want to be an SAT tutor/mentor/instructor with us, and what makes you think you would be good at it."
+      },
+      "validations": {
+        "required": true,
+        "max_length": 1200
+      }
+    }
+  ],
+  "logic": [
+    {
+      "type": "field",
+      "ref": "fld_current_location",
+      "actions": [
+        {
+          "action": "jump",
+          "details": {
+            "to": {
+              "type": "thankyou",
+              "value": "tys_not_us_resident"
+            }
+          },
+          "condition": {
+            "op": "is",
+            "vars": [
+              {
+                "type": "field",
+                "value": "fld_current_location"
+              },
+              {
+                "type": "choice",
+                "value": "choice_outside_us"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

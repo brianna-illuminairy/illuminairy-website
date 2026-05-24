@@ -54,7 +54,7 @@ export function SatPlanWorries({ onBack, onContinue }: SatPlanWorriesProps) {
       stepId="worries"
       headline="What's got you worried?"
       hint="Select all that apply"
-      bodyClassName="quiz-step--tile-grid"
+      bodyVariant="tile-grid"
       continueDisabled={selected.length === 0}
       onContinue={handleContinue}
       onBack={onBack}

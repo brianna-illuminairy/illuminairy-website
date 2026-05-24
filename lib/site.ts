@@ -28,22 +28,281 @@ export const site = {
   url: "https://illuminairy.com",
   email: "support@illuminairy.com",
   supportEmail: "support@illuminairy.com",
-  location: "Atlanta",
+  location: "Evans, Georgia",
   descriptor: "ILLUMINAIRY",
   satDate: "August 22, 2026",
-  tagline: "your guiding light for goals and growth",
-  /** Homepage hero — Frame B parent lead + messaging hierarchy (illuminate → mentors → guided path) */
+  tagline: "modern mentorship and applied learning",
+  /** Homepage hero — platform / founder narrative */
   homeHero: {
-    title: "We illuminate the path — so your student can walk it.",
+    title: "Learn AI by achieving real outcomes.",
     lead:
-      "Mentors from selective universities who scored 1450+ on the SAT, paired with your student for twelve weeks. Week-one diagnostics, six private 1:1s, live classes, assigned practice, and a progress report sent to you every week. The SAT Accelerator is live for the August 22, 2026 test; professional and business programs open next."
+      "Illuminairy matches ambitious professionals and business owners with near-peer mentors who have already achieved the same goal using AI — then guides you there with a personalized plan, accountability, and a high bar."
   },
   /** Public SAT consultation only — not the invite-only mentor interview link */
   calendlyUrl:
     process.env.NEXT_PUBLIC_CALENDLY_URL ||
     "https://calendly.com/brianna-illuminairy/august-sat",
-  typeformUrl: process.env.NEXT_PUBLIC_TYPEFORM_URL || ""
+  typeformUrl: process.env.NEXT_PUBLIC_TYPEFORM_URL || "",
+  /** Mentor / SAT instructor application — public embed on /apply/mentor */
+  mentorTypeformUrl: process.env.NEXT_PUBLIC_MENTOR_TYPEFORM_URL || "",
+  /** Platform waitlist — dedicated Klaviyo list when set */
+  platformWaitlistListId:
+    process.env.NEXT_PUBLIC_KLAVIYO_LIST_ID_PLATFORM_WAITLIST || ""
 };
+
+/**
+ * Homepage copy — distilled from docs/brand-source/ (locked 2026-05-19).
+ * Customer voice lines from docs/research/customer-listening-kit.md + listening runs.
+ */
+export const homePlatform = {
+  hero: {
+    eyebrow: "Hi, I'm Brianna Zajicek",
+    /** Static fallback for SEO / no-JS — animated rotator uses lib/hero-search-outcomes.ts */
+    title: "How to use AI to grow my business",
+    lead:
+      "Businesses and professionals who can't turn AI into actual outcomes will get left behind by the ones who can. AI enablement is no longer optional — Illuminairy provides the plan and the guide to implement AI.",
+    sublead:
+      "Search traffic for “how do I use AI to [outcome] in my career or business” has exploded. So have searches for “AI coach.” Demand for both is surging — but nobody connects the outcome to the guide.",
+    founderName: "Brianna Zajicek"
+  },
+  credentials:
+    "Former Sr. Director of Revenue, Nerdy · 6 years AI/ML at Amazon · MSCS Georgia Tech · MBA Duke · AI Fund venture studio",
+  /** Replaced on homepage by painVoice marquee — kept for docs/specs */
+  /** v4 locked — docs/brand-source/01_problem_statement.md */
+  problem: {
+    eyebrow: "The problem",
+    stakes:
+      "Businesses and professionals who can't turn AI into actual outcomes will get left behind by the ones who can. AI enablement is no longer optional. Illuminairy provides the plan and the guide to implement AI.",
+    gap:
+      "There is no fast path from “I know I should be using AI for my career and business” to “I achieved my outcome with AI.”",
+    demand:
+      "Search traffic for “how do I use AI to [outcome] in my career or business” has exploded. So have searches for “AI coach.” Demand for both the outcome and the guide is surging — but there's nobody that connects the two.",
+    alternatives: [
+      {
+        title: "Courses",
+        text: "Generic and static — go stale before you finish."
+      },
+      {
+        title: "Freelancer marketplaces",
+        text: "Output without context — so you can never do it yourself."
+      },
+      {
+        title: "Gurus",
+        text: "Hype and generic trainings that aren't relevant to your use case."
+      }
+    ],
+    stall:
+      "So most ambitious professionals and business owners stall. They're using AI, but to do what? To produce more documents faster and AI-generated single-use content? That's not what they want. They want to generate leads, improve their sales conversion, automate their receptionist. They don't know the precise steps to take for their specific use case, nor do they have the support of anyone who's actually done it. So they're left with AI goals they can't execute, and every month they fall further behind someone who figured it out.",
+    connect:
+      "Illuminairy connects the outcome and the guide — a near-peer who's already done it in your lane, plus a living playbook, not another static course."
+  },
+  painVoice: {
+    eyebrow: "Customer voice",
+    title: "They are not asking for another AI course.",
+    lead:
+      "We scraped 6,567 posts — and the data says the same thing as the problem statement: people aren't asking for another course. They're stuck between “using AI” and getting results from it.",
+    methodNote:
+      "Verbatim quotes · pain map ranked by frequency · sources linked",
+    rankTitle: "Pain map",
+    rankSubtitle: "Ranked by how often each line showed up across 6,567 scraped posts",
+    beforeLabel: "Before",
+    beforeSub: "Real frustrated humans · verbatim from the research",
+    afterLabel: "After",
+    afterSub: "Clear, specific · what Illuminairy is for",
+    bridge:
+      "Demand for outcomes and guides is surging — Illuminairy connects both: your outcome × your vertical, with a near-peer who's already done it."
+  },
+  /** v3 locked — docs/brand-source/00_beliefs.md */
+  beliefs: {
+    eyebrow: "What we believe",
+    title: "Five lines we do not compromise on.",
+    intro:
+      "Knowledge is everywhere now, but the plan for applying it is missing. The person most able to give you that plan, hold you accountable, and get you to a result is not the world-class expert who has never lived your context — it's the person who has already applied the skill to your exact use case. AI changes quickly, so you need a plan that does too, so you can focus on execution, not the latest thing on Twitter. And a plan is only as good as the accountability system that drives you to complete it and helps you get unstuck.",
+    items: [
+      { title: "Learn by doing, not by watching." },
+      { title: "A step-by-step plan so you always know what's next." },
+      { title: "Guided by someone who's actually done it." },
+      { title: "Content that updates itself." },
+      { title: "Not done until you've hit your goal." }
+    ]
+  },
+  founderStory: {
+    eyebrow: "Why me, why now",
+    title: "I had unusual preparation. Most people don't — and the alternatives don't bridge it.",
+    paragraphs: [
+      "At Varsity Tutors I watched students matched to credentialed experts who were wrong for the actual test — when what they needed was someone one rung ahead who had just scored the 5. Toward the end of my time at Nerdy, the calls shifted: dentists who needed AI lead-gen, marketers whose CEOs wanted an AI plan. No path to pair them with someone who had already shipped that outcome in their lane.",
+      "I would know. At Nerdy, I built a closed-loop system that turned call transcripts into AI-generated marketing assets into ML-optimized outcomes. I built an AI sales chatbot that outperformed our average paid salesperson. I produced 50K lines of code per day via AI workflows — 12.8× the average staff engineer. We achieved our first two profitable quarters in over a year — something my predecessors couldn't do without AI. They got left behind; I led the future. AI enablement is no longer optional — and most people don't have my preparation. Illuminairy exists to bridge that asymmetry with near-peer mentors, live plans, and accountability."
+    ]
+  },
+  examples: [
+    {
+      title: "AI lead-gen for a dental practice",
+      text: "A dentist who wants patient acquisition with AI works with someone who already automated lead-gen for practices like theirs — not a generic AI course or a marketplace search."
+    },
+    {
+      title: "AI in your day job",
+      text: "A marketing director whose CEO wants an AI plan gets a near-peer who shipped the same deliverable last quarter — live 1:1, in context, until it ships."
+    }
+  ],
+  customerVoice: {
+    eyebrow: "What we hear",
+    title: "The market is trying to solve this — and stalling.",
+    quotes: [
+      {
+        text: "I started and stopped so many projects because I hit complexity that needed help. Mentors and freelancers were useful — but the costs add up.",
+        source: "Hacker News discussion on AI-assisted projects"
+      },
+      {
+        text: "Most system design resources are too theoretical. People want a flight simulator — practice real trade-offs, with feedback that is insightful, not generic.",
+        source: "Hacker News, applied learning thread"
+      }
+    ]
+  },
+  solution: {
+    eyebrow: "What Illuminairy does",
+    title: "Near-peer mentors who have already achieved your outcome.",
+    text:
+      "We connect surging demand for outcomes and guides. Illuminairy matches you with a near-peer mentor who already achieved your result using AI — then keeps you on a living playbook for your use case, with live 1:1s and progress you can see."
+  },
+  brandEquation: {
+    eyebrow: "The formula",
+    title: "You + Illuminairy + Illuminate = goal achieved",
+    subtitle:
+      "We took the abstract parts of learning with AI and made them visible — who walks with you, what path you follow, and what “done” looks like in your work.",
+    parts: [
+      {
+        id: "you",
+        symbol: "You",
+        role: "Your ambition",
+        definition:
+          "The outcome you want — grow the business, ship at work, automate the workflow. Not “learn AI theory.” A real result in your lane."
+      },
+      {
+        id: "luminairy",
+        symbol: "LuminAIry",
+        role: "Your guide",
+        definition:
+          "Your near-peer mentor (luminary): someone slightly ahead who already achieved that outcome with AI — and meets you live, 1:1, in your context."
+      },
+      {
+        id: "illuminate",
+        symbol: "ILLUMINATE",
+        role: "Your playbook",
+        definition:
+          "To illuminate is to make the path clear — milestones, session plan, and progress you can see. Not a static course; a living playbook that updates as you ship."
+      }
+    ],
+    result: {
+      symbol: "Goal achieved",
+      role: "Outcome shipped",
+      definition:
+        "The gap closes: from “I know AI exists” to “I used it for my restaurant / practice / role.” That is the win the slot machine lands on."
+    },
+    footnote:
+      "Illuminairy = illuminate + luminary + AI at the center. Human mentorship, amplified by AI — matching, planning, and accountability until the result ships."
+  },
+  /** @deprecated — use brandEquation; kept for docs references */
+  nameMeaning: {
+    eyebrow: "The name",
+    title: "Why Illuminairy?",
+    pillars: [
+      {
+        term: "Illuminate",
+        definition:
+          "To bring light, clarity, and understanding — to make a hard subject understandable."
+      },
+      {
+        term: "Luminary",
+        definition:
+          "A mentor or guide who inspires others through real achievement in a field."
+      },
+      {
+        term: "AI",
+        definition:
+          "At the center of the wordmark — the technology reshaping how people learn, work, and build."
+      }
+    ],
+    thesis:
+      "The future of learning is not artificial intelligence alone — it is human mentorship amplified by AI. Illuminairy strengthens those relationships: matching, planning, tracking progress, and updating your path as you grow — including bringing in other mentors when your goal calls for it."
+  },
+  differentiators: [
+    {
+      title: "Intelligent matching",
+      text: "Our platform matches you with a near-peer mentor for your specific goal — not a directory you have to search and vet yourself."
+    },
+    {
+      title: "Personalized learning plans",
+      text: "Milestones and a plan your mentor is qualified and committed to deliver — not a static syllabus that ages out."
+    },
+    {
+      title: "Session tracking and accountability",
+      text: "Each mentorship session is tracked for progress so you and your mentor stay aligned on a high bar."
+    },
+    {
+      title: "Paths that evolve",
+      text: "Your learning path updates over time — including new mentors when your goal requires a different expert."
+    }
+  ],
+  howItWorks: {
+    eyebrow: "How it works",
+    title: "The oldest way people learn — now AI-powered.",
+    steps: [
+      {
+        title: "Tell us your outcome",
+        text: "Share the career or business result you want — not just a topic to study."
+      },
+      {
+        title: "Get matched",
+        text: "Illuminairy pairs you with a near-peer mentor who has already achieved that outcome using AI."
+      },
+      {
+        title: "Follow your plan",
+        text: "Work through milestones built for your goal, with 1:1 sessions and timely feedback."
+      },
+      {
+        title: "Stay on track",
+        text: "Progress is tracked session by session; your path updates as you advance."
+      }
+    ]
+  },
+  mentorshipProof: {
+    eyebrow: "Why mentorship works",
+    title: "One-to-one guidance changes what is possible.",
+    text:
+      "From Aristotle and Plato to today, bonded mentorship over time drives outcomes. Benjamin Bloom's landmark study found that one-to-one instruction can raise achievement by roughly two standard deviations compared with conventional classroom instruction — the \"two sigma\" result (Educational Researcher, 1984). You learn better when someone close to your experience gives timely feedback, holds you accountable, and makes it safe to ask real questions.",
+    tagline: "Human mentorship, amplified by AI."
+  },
+  vision: {
+    title: "A platform for ambitious people learning how to use AI to achieve their goals.",
+    text: "Illuminairy is building the trusted place where professionals and business owners turn AI from pressure into progress — with mentors, plans, and accountability that match the stakes."
+  },
+  /** Brand-board homepage — single-page platform site */
+  brandBoard: {
+    identityNote:
+      "Modern mentorship and applied learning for ambitious students, professionals, and business owners.",
+    voiceLines: ["learn.", "build.", "ship."] as const,
+    voiceCopy:
+      "Premium mentor-led programs with a high signal-to-noise ratio. Calm, sharp, and direct.",
+    programNote:
+      "Georgia Tech-led SAT preparation for the August 22, 2026 SAT. No guaranteed scores — structure and accountability.",
+    positioningTitle: "mentor-led /\napplied learning",
+    contactTitle: "Start with SAT.\nExpand into AI.",
+    contactCopy:
+      "Ask about the SAT program, mentor applications, partnerships, or the broader Illuminairy platform."
+  },
+  waitlist: {
+    headline: "Join the waitlist",
+    subcopy:
+      "AI for Professionals and AI for Business Owners are opening next. Be first to know when sessions are available.",
+    successMessage:
+      "You're on the list — we'll email when AI programs open.",
+    interestLabel: "I'm interested in",
+    slotTitle: "Spin your match, then lock your spot",
+    slotSubcopy:
+      "Pick your industry, land on the outcome you want, and join the waitlist — we will match you when sessions open.",
+    slotCta: "Lock my spot"
+  }
+} as const;
 
 /** SAT Accelerator structure — use parent-friendly language, not “cohort.” */
 export const satProgram = {
@@ -96,14 +355,8 @@ export const cohorts = [
   }
 ] as const;
 
-export const navItems = [
-  { label: "Home", href: "/" },
-  { label: "SAT Accelerator", href: "/sat-accelerator" },
-  { label: "Programs", href: "/programs" },
-  { label: "Mentors", href: "/mentors" },
-  { label: "About", href: "/about" },
-  { label: "Contact", href: "/contact" }
-];
+/** YC site cut — no multi-page nav */
+export const navItems: { label: string; href: string }[] = [];
 
 export const policyItems = [
   { label: "Terms", href: "/terms" },
@@ -117,7 +370,9 @@ export const mailtoLink =
 
 export const bookLink = site.calendlyUrl || mailtoLink;
 export const scheduleLink = "/contact#schedule";
-export const mentorApplyLink = "/contact?reason=mentor";
+export const mentorApplyLink =
+  "mailto:support@illuminairy.com?subject=Illuminairy%20mentor%20application";
+export const mentorApplyFallbackLink = mentorApplyLink;
 export const inquiryLink = site.typeformUrl || mentorApplyLink;
 
 export const programStats = [

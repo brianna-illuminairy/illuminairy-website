@@ -28,6 +28,7 @@ This is **not** a coursework or AIMA assignment repo. Do not apply academic “s
 - **Ship here:** Next.js only — `npm run dev` → http://localhost:3000/satplan
 - **Do not** extend `quizfunnel/prototype/` (in-browser Babel); that folder is deprecated — see ADR [0009](docs/decisions/0009-satplan-nextjs-production.md)
 - New assessment screens: `QuizStepTemplate` in `components/sat-plan/`; update step map in `lib/sat-plan-funnel/state.ts`
+- **Layout lock:** step files are **content only** — swap `headline`, `hint`, `bodyVariant`, and body children. Do not edit `funnel.css`, `funnel-shell.tsx`, `quiz-step-template.tsx`, or spacing without owner approval. See `components/sat-plan/LAYOUT.lock.md` and `npm run funnel:layout-guard`.
 - Product/copy checklists stay in the **quizfunnel** git repo
 
 ## Agentic workflows

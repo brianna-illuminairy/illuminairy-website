@@ -1,1 +1,1 @@
-specs/2026-05-sat-funnel/SPEC.md
+specs/2026-05-yc-rebrand/SPEC.md

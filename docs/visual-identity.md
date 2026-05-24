@@ -73,6 +73,23 @@ Eyebrows: 10–11px, 700, +13–16% tracking, uppercase.
 
 ---
 
+## Visual system v2 (YC launch cut — May 2026)
+
+**Status:** Supersedes ivory/West Elm defaults for the public YC site. Full brief: [yc-blog-startup-branding-2026-05.md](research/yc-blog-startup-branding-2026-05.md).
+
+| Element | v2 rule |
+|---------|---------|
+| Surfaces | CSS semantic tokens `surface`, `surface-elevated`; light `#FAFAFA`, dark `#0A0A0F` |
+| Accent | Indigo `#4F46E5` (product UI); gold only for wordmark **AI** |
+| Type | Plus Jakarta **semibold/bold** headlines; no extralight 200 heroes |
+| Eyebrow | 11px medium, sentence case — not uppercase annual-report style |
+| Layout | Max ~1120px, subtle dot/grid background — no paper grain + gold radial |
+| Theme | `next-themes`: system default + manual toggle |
+
+SAT/parent-ed workshop rules below remain in repo for when those routes return from git.
+
+---
+
 ## What "YC-investible" means here
 
 - Restraint = confidence; every element serves **illuminate** or **guide**.

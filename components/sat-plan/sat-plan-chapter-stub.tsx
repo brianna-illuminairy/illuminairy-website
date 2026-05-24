@@ -14,14 +14,10 @@ export function SatPlanChapterStub({ title, stepId, onBack }: SatPlanChapterStub
     <QuizStepTemplate
       stepId={stepId}
       headline={title}
+      bodyVariant="copy"
       onBack={onBack}
-      footer={
-        <div className="cta-wrap cta-wrap--quiz">
-          <button type="button" className="funnel-btn-secondary" onClick={onBack}>
-            ← Back
-          </button>
-        </div>
-      }
+      continueLabel="← Back"
+      onContinue={onBack}
     >
       <p className="quiz-step-eyebrow">Next up</p>
       <p className="quiz-step-copy">

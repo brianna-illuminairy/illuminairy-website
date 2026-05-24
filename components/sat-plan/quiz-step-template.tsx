@@ -3,6 +3,10 @@
 import type { ReactNode } from "react";
 import { FunnelCta } from "@/components/sat-plan/funnel-cta";
 import { FunnelShell } from "@/components/sat-plan/funnel-shell";
+import {
+  bodyClassForVariant,
+  type QuizStepBodyVariant
+} from "@/lib/sat-plan-funnel/quiz-step-layout";
 import type { SatPlanStep } from "@/lib/sat-plan-funnel/types";
 
 type QuizStepTemplateProps = {
@@ -10,14 +14,13 @@ type QuizStepTemplateProps = {
   headline: string;
   hint?: string | null;
   hintId?: string | null;
+  bodyVariant: QuizStepBodyVariant;
   children: ReactNode;
   showBack?: boolean;
   onBack?: () => void;
   continueLabel?: string;
   onContinue?: (() => void) | null;
   continueDisabled?: boolean;
-  footer?: ReactNode | null;
-  bodyClassName?: string;
 };
 
 export function QuizStepTemplate({
@@ -25,29 +28,26 @@ export function QuizStepTemplate({
   headline,
   hint = null,
   hintId = null,
+  bodyVariant,
   children,
   showBack = true,
   onBack,
   continueLabel = "Continue",
   onContinue = null,
-  continueDisabled = false,
-  footer = null,
-  bodyClassName = ""
+  continueDisabled = false
 }: QuizStepTemplateProps) {
   const resolvedHintId = hintId ?? (hint ? `quiz-step-hint-${stepId}` : null);
+  const bodyClassName = bodyClassForVariant(bodyVariant);
 
-  const footerNode =
-    footer !== null ? (
-      footer
-    ) : onContinue ? (
-      <div className="cta-wrap cta-wrap--quiz">
-        <FunnelCta
-          label={continueLabel}
-          disabled={continueDisabled}
-          onClick={onContinue}
-        />
-      </div>
-    ) : null;
+  const footerNode = onContinue ? (
+    <div className="cta-wrap cta-wrap--quiz">
+      <FunnelCta
+        label={continueLabel}
+        disabled={continueDisabled}
+        onClick={onContinue}
+      />
+    </div>
+  ) : null;
 
   return (
     <FunnelShell
@@ -63,7 +63,9 @@ export function QuizStepTemplate({
           <p className="quiz-step-hint" id={resolvedHintId ?? undefined}>
             {hint}
           </p>
-        ) : null}
+        ) : (
+          <p className="quiz-step-hint quiz-step-hint--reserved" aria-hidden="true" />
+        )}
         <div
           className="quiz-step-body"
           aria-describedby={hint && resolvedHintId ? resolvedHintId : undefined}

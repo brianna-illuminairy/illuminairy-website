@@ -26,13 +26,7 @@ export function FunnelShell({
 
   return (
     <div
-      className={[
-        "funnel-shell",
-        `funnel-shell--${variant}`,
-        stepId === "worries" ? "funnel-shell--worries" : ""
-      ]
-        .filter(Boolean)
-        .join(" ")}
+      className={["funnel-shell", `funnel-shell--${variant}`].filter(Boolean).join(" ")}
     >
       <header className="funnel-header">
         {showBack ? (
@@ -65,8 +59,10 @@ export function FunnelShell({
       ) : null}
 
       <main className="funnel-main">
-        <div className="funnel-quiz-body">{children}</div>
-        {footer ? <footer className="funnel-footer">{footer}</footer> : null}
+        <div className="funnel-quiz-body">
+          {children}
+          {footer ? <footer className="funnel-footer">{footer}</footer> : null}
+        </div>
       </main>
     </div>
   );
