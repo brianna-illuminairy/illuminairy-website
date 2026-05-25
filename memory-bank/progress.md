@@ -1,6 +1,6 @@
 # Progress
 
-*Last updated: 2026-05-24*
+*Last updated: 2026-05-25*
 
 ## Shipped
 
@@ -13,28 +13,31 @@
 - [x] PostHog, GA, Klaviyo hooks
 - [x] Brand docs in `docs/` (voice, visual, SAT messaging)
 - [x] Agent docs: AGENTS.md, memory bank, ADRs, Cursor skills
-- [x] **SAT plan funnel** at `/satplan` (ADR 0009)
-- [x] Funnel spine: landing, worries, who, target, INT1 trust, history, INT3 retake, prep
-- [x] **INT8** prep comparison: stub + 4-step trilogy (`prep_class`), mentorship splash, contrast bars, triptych (girl variant for daughter/Me)
+- [x] **SAT plan funnel** at `/satplan` (ADR 0009) — **Phase A spine**
+- [x] Intake: landing through test-date, score, wrong, GPA, schools
+- [x] Interstitials: INT1, INT3, INT8 quartet, INT12, INT2, INT6 timeline, plan-path, plan-ready
+- [x] Tail: contact (form UI), report (snapshot), book (Calendly)
+- [x] INT8 contrast: triptych (daughter/Me variant), `ContrastBarChart`, diagnostic animation
+- [x] Wrong step: dashboard tile icons; INT2 tutor-note; INT12 digital-vs-paper mockup
 - [x] `satPrepComparison` + Bloom chart title in `lib/site.ts`
-- [x] Shared `ContrastBarChart`; INT3 + INT8 proof charts
 
 ## In progress
 
-- [ ] SAT plan funnel: GPA question + INT2; hours/score/wrong; contact → report → book (quizfunnel SPEC Phase A tail)
+- [ ] Phase B: `POST /api/funnel/lead` + Supabase + Klaviyo + TCPA on contact
 - [ ] Default (son) prep-path triptych art asset
+- [ ] Launch QA: Meta IAB 390×844, Lighthouse baseline
 
 ## Backlog
 
-- [ ] PostHog funnel dashboard + step completion rates on new INT8 beats
-- [ ] `POST /api/funnel/lead` + Supabase + Klaviyo (Phase B)
+- [ ] PostHog funnel dashboard + step completion rates
 - [ ] Optional: dedicated 680×510 panel PNGs (`USE_DEDICATED_PREP_PATH_PANELS`)
-- [ ] INT12 format contrast visual
+- [ ] Optional interstitials: INT5, INT9, INT10
+- [ ] Remove schools step from routing (if approved)
 - [ ] CI job running `npm run agent:verify` on PRs
 - [ ] Remove `noindex` on `/satplan` at launch
 
 ## Known issues
 
-- Contact form shows error until `RESEND_API_KEY` is configured (by design)
-- `gpa-stub` is placeholder — back nav returns to last INT8 step
+- Contact form on main site shows error until `RESEND_API_KEY` is configured (by design)
+- Funnel contact saves to sessionStorage only — no server lead row yet
 - Funnel layout CSS guarded by `FUNNEL_LAYOUT_UNLOCK=1` in CI
