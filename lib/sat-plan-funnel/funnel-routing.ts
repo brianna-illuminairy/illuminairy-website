@@ -13,7 +13,7 @@ export function shouldShowInt3Retake(historyId?: string): boolean {
 }
 
 export function nextStepAfterHistory(historyId?: string): SatPlanStep {
-  if (historyId === "history_none") return "prep-failed-stub";
+  if (historyId === "history_none") return firstInt8Step();
   if (shouldShowInt3Retake(historyId)) return "int3-retake";
   return "prep";
 }
@@ -35,18 +35,10 @@ export function hasSelfStudyPrepOnly(prepMethod?: SatPlanAnswers["prep_method"])
   return prepIds.some((id) => PREP_SELF_STUDY_IDS.has(id));
 }
 
-/** Group-class or self-study prep unlocks the INT8 trilogy (plateau → proof → guided). */
-export function usesInt8Trilogy(prepMethod?: SatPlanAnswers["prep_method"]): boolean {
-  const prepIds = normalizePrepMethods(prepMethod);
-  if (prepIds.includes("prep_class")) return true;
-  return prepIds.some((id) => PREP_SELF_STUDY_IDS.has(id));
-}
-
+/** First INT8 slide: group-class fail if they picked class; otherwise self-study fail (incl. little/none, never-tested). */
 export function firstInt8Step(prepMethod?: SatPlanAnswers["prep_method"]): SatPlanStep {
   if (hasGroupClassPrep(prepMethod)) return "prep-failed-group-class";
-  if (hasSelfStudyPrepOnly(prepMethod)) return "prep-failed-self-study";
-  if (usesInt8Trilogy(prepMethod)) return "prep-failed-plateau";
-  return "prep-failed-stub";
+  return "prep-failed-self-study";
 }
 
 export function nextStepAfterPrep(prepMethod?: SatPlanAnswers["prep_method"]): SatPlanStep {
@@ -73,10 +65,9 @@ export function nextStepAfterInt8Guided(): SatPlanStep {
   return "prep-failed-mistake-driven";
 }
 
-/** Last INT8 screen before intake continues. */
-export function lastInt8Step(prepMethod?: SatPlanAnswers["prep_method"]): SatPlanStep {
-  if (usesInt8Trilogy(prepMethod)) return "prep-failed-mistake-driven";
-  return "prep-failed-stub";
+/** Last INT8 screen before intake continues — always mistake-driven (full education sequence). */
+export function lastInt8Step(_prepMethod?: SatPlanAnswers["prep_method"]): SatPlanStep {
+  return "prep-failed-mistake-driven";
 }
 
 export function stepBeforeInt8(
@@ -93,19 +84,17 @@ export function stepBeforeInt8(
       return historyId === "history_none" ? "history" : "prep";
     case "prep-failed-proof":
       if (hasGroupClassPrep(prepMethod)) return "prep-failed-group-class";
-      if (hasSelfStudyPrepOnly(prepMethod)) return "prep-failed-self-study";
-      return "prep-failed-plateau";
+      return "prep-failed-self-study";
     case "prep-failed-guided":
       return "prep-failed-proof";
     case "prep-failed-mistake-driven":
       return "prep-failed-guided";
-    case "prep-failed-stub":
     default:
       return historyId === "history_none" ? "history" : "prep";
   }
 }
 
-/** After INT8 (or stub): tested path → score; never-tested → sat-changed. */
+/** After INT8 quartet: tested path → score; never-tested → sat-changed. */
 export function nextStepAfterPrepFailed(
   historyId?: string,
   _prepMethod?: SatPlanAnswers["prep_method"]

@@ -105,14 +105,14 @@ const FOCUS_WEEK_RANGES = ["2–3", "4–5", "6–7", "8–9", "10–11"];
 function subheadCopy(testTaker?: string): string {
   switch (testTaker) {
     case "test_taker_son":
-      return "A personalized SAT improvement plan focused on the few skills that will raise his score the fastest, prioritizing the highest-impact areas first.";
+      return "A diagnostic-driven SAT improvement plan that diagnoses skill gaps and builds a personalized plan focused on the skills that will raise his score the fastest, prioritizing the highest-impact areas first.";
     case "test_taker_daughter":
-      return "A personalized SAT improvement plan focused on the few skills that will raise her score the fastest, prioritizing the highest-impact areas first.";
+      return "A diagnostic-driven SAT improvement plan that diagnoses skill gaps and builds a personalized plan focused on the skills that will raise her score the fastest, prioritizing the highest-impact areas first.";
     case "test_taker_self":
-      return "A personalized SAT improvement plan focused on the few skills that will raise your score the fastest, prioritizing the highest-impact areas first.";
+      return "A diagnostic-driven SAT improvement plan that diagnoses skill gaps and builds a personalized plan focused on the skills that will raise your score the fastest, prioritizing the highest-impact areas first.";
     case "test_taker_other":
     default:
-      return "A personalized SAT improvement plan focused on the few skills that will raise their score the fastest, prioritizing the highest-impact areas first.";
+      return "A diagnostic-driven SAT improvement plan that diagnoses skill gaps and builds a personalized plan focused on the skills that will raise their score the fastest, prioritizing the highest-impact areas first.";
   }
 }
 
@@ -130,14 +130,14 @@ export function buildInt8DiagnosticDrivenCopy(testTaker?: string): Int8Diagnosti
     timelineWeeks: 12,
     phases: {
       analyzing: {
-        title: "Analyzing SAT performance…",
+        title: "Diagnosing SAT skill performance…",
         subtext: "28 SAT skill areas evaluated"
       },
       filtering: {
         title: "Identifying highest-impact weaknesses…"
       },
       building: {
-        title: "Building the focus plan…"
+        title: "Building personalized plan…"
       },
       ready: {
         title: "12 Week SAT Improvement Plan is ready.",
@@ -146,7 +146,7 @@ export function buildInt8DiagnosticDrivenCopy(testTaker?: string): Int8Diagnosti
       }
     },
     graphicAriaLabel:
-      "Animated analysis: SAT skills evaluated, highest-impact weaknesses ranked with illustrative point impact, then scheduled across weeks 2 through 11 of a 12-week focus plan with score range rising from 1180 toward 1380–1410."
+      "Animated diagnosis: SAT skill performance evaluated, highest-impact weaknesses ranked with illustrative point impact, then scheduled across weeks 2 through 11 of a 12-week personalized plan with score range rising from 1180 toward 1380–1410."
   };
 }
 

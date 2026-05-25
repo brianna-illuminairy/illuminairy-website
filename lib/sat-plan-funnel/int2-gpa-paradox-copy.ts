@@ -1,118 +1,123 @@
-import { satGpaSatResearch } from "@/lib/site";
-import { GPA_OPTIONS } from "@/lib/sat-plan-funnel/gpa-options";
-import { isHighGpaLowSat } from "@/lib/sat-plan-funnel/score-gap";
-import { SCORE_OPTIONS } from "@/lib/sat-plan-funnel/score-options";
 import type { SatPlanAnswers } from "@/lib/sat-plan-funnel/types";
 
+export type Int2CopyPart = {
+  text: string;
+  bold?: boolean;
+  accent?: boolean;
+  italic?: boolean;
+};
+
+export type Int2CompareCard = {
+  contextLabel: string;
+  rewardHeading: string;
+  habits: string[];
+};
+
 export type Int2GpaParadoxCopy = {
-  eyebrow: string;
-  headline: string;
-  paragraphs: string[];
-  footnote?: string;
-  gpaLabel: string;
-  scoreLabel: string;
+  headlinePrefix: string;
+  headlineAccent: string;
+  quoteParts: Int2CopyPart[];
+  schoolCard: Int2CompareCard;
+  satCard: Int2CompareCard;
+  insightParts: Int2CopyPart[];
+  tutorName: string;
+  tutorTitle: string;
 };
 
-type Voice = {
-  subject: string;
-  possessive: string;
-};
-
-function voice(testTaker?: string): Voice {
+function patternLine(testTaker?: string): string {
   switch (testTaker) {
     case "test_taker_daughter":
-      return { subject: "she", possessive: "her" };
+      return "It's not her. It's a known pattern.";
     case "test_taker_son":
-      return { subject: "he", possessive: "his" };
+      return "It's not him. It's a known pattern.";
     case "test_taker_self":
-      return { subject: "you", possessive: "your" };
-    case "test_taker_other":
+      return "It's not you. It's a known pattern.";
     default:
-      return { subject: "they", possessive: "their" };
+      return "It's not them. It's a known pattern.";
   }
 }
 
-function gpaLabel(gpaBand?: string): string {
-  const row = GPA_OPTIONS.find((opt) => opt.id === gpaBand);
-  return row?.label ?? "strong";
-}
-
-function scoreLabel(recentScore?: string): string {
-  const row = SCORE_OPTIONS.find((opt) => opt.id === recentScore);
-  return row?.label ?? "recent";
-}
-
-function smartOppositeLine(v: Voice): string {
-  if (v.subject === "you") {
-    return "It doesn't mean you aren't smart. It usually means the opposite.";
+function subjectForms(testTaker?: string): {
+  possessive: string;
+  optimizedClosing: string;
+} {
+  switch (testTaker) {
+    case "test_taker_daughter":
+      return {
+        possessive: "her",
+        optimizedClosing: "She's optimized for the wrong scoring environment."
+      };
+    case "test_taker_son":
+      return {
+        possessive: "his",
+        optimizedClosing: "He's optimized for the wrong scoring environment."
+      };
+    case "test_taker_self":
+      return {
+        possessive: "your",
+        optimizedClosing: "You're optimized for the wrong scoring environment."
+      };
+    default:
+      return {
+        possessive: "their",
+        optimizedClosing: "They're optimized for the wrong scoring environment."
+      };
   }
-  return `It doesn't mean ${v.subject} isn't smart. It usually means the opposite.`;
-}
-
-function schoolVsSatLine(): string {
-  return "School rewards depth, persistence, and revision. The SAT rewards speed, pattern recognition, and decision-making under time pressure. Those are different skill sets.";
-}
-
-function perfectionismLine(v: Voice): string {
-  if (v.subject === "you") {
-    return "Perfectionism often helps in school. On the SAT, wanting every answer exactly right is not weakness. It costs time when you only get about 75 seconds per question, and a few extra seconds per problem can mean never reaching the last few.";
-  }
-  return `Perfectionism often helps in school. On the SAT, wanting every answer exactly right is not weakness. It costs time when ${v.subject} only gets about 75 seconds per question, and a few extra seconds per problem can mean never reaching the last few.`;
-}
-
-function solvableLine(v: Voice): string {
-  if (v.subject === "you") {
-    return "This profile is common, and solvable when prep targets pacing, perfectionism habits, and the specific gaps that show up on score reports.";
-  }
-  return `This profile is common, and solvable when prep targets pacing, perfectionism habits, and the specific gaps that show up on ${v.possessive} score reports.`;
 }
 
 export function buildInt2GpaParadoxCopy(answers: SatPlanAnswers): Int2GpaParadoxCopy {
-  const v = voice(answers.test_taker);
-  const gpa = gpaLabel(answers.gpa_band);
-  const score = scoreLabel(answers.recent_score);
-  const fullGap = isHighGpaLowSat(answers.gpa_band, answers.recent_score);
+  const self = answers.test_taker === "test_taker_self";
+  const { possessive, optimizedClosing } = subjectForms(answers.test_taker);
 
-  const eyebrow = "Why smart kids score low on the SAT";
-
-  if (fullGap) {
-    const headline = `A ${gpa} GPA with a ${score} SAT. We see this all the time.`;
-
-    return {
-      eyebrow,
-      headline,
-      gpaLabel: gpa,
-      scoreLabel: score,
-      paragraphs: [
-        smartOppositeLine(v),
-        schoolVsSatLine(),
-        perfectionismLine(v),
-        solvableLine(v)
-      ],
-      footnote: satGpaSatResearch.footnote
-    };
-  }
-
-  const headline =
-    v.subject === "you"
-      ? `A ${gpa} GPA with a ${score} SAT score. We see this pattern often.`
-      : `A ${gpa} GPA with a ${score} SAT. We see this pattern often.`;
-
-  const paragraphs = [
-    smartOppositeLine(v),
-    schoolVsSatLine(),
-    perfectionismLine(v),
-    v.subject === "you"
-      ? "The gap is a skills gap, not a character flaw. It is fixable when prep targets what the test actually measures."
-      : `The gap is a skills gap, not a character flaw. It is fixable when prep targets what ${v.subject} misses on test day.`
-  ];
+  const headlinePrefix = self
+    ? "We help students like you "
+    : "We help high-GPA students ";
+  const headlineAccent = self ? "raise your SAT score." : "raise their SAT scores.";
 
   return {
-    eyebrow,
-    headline,
-    gpaLabel: gpa,
-    scoreLabel: score,
-    paragraphs,
-    footnote: satGpaSatResearch.footnote
+    headlinePrefix,
+    headlineAccent,
+    quoteParts: [
+      { text: `${patternLine(answers.test_taker)} ` },
+      { text: "The " },
+      { text: "same habits", italic: true },
+      { text: ` that earn ${possessive} A's in class ` },
+      { text: "quietly cost points", bold: true, accent: true },
+      { text: " on a test scored on pace. " },
+      { text: optimizedClosing },
+    ],
+    schoolCard: {
+      contextLabel: "In school",
+      rewardHeading: "Rewards depth.",
+      habits: [
+        "Persistence",
+        "Revision & precision",
+        "Showing your work",
+        "Long-term effort",
+      ],
+    },
+    satCard: {
+      contextLabel: "On the SAT",
+      rewardHeading: "Rewards speed.",
+      habits: [
+        "Pattern recognition",
+        "Pacing under pressure",
+        "Calculator-first math",
+        "Cognitive endurance",
+      ],
+    },
+    insightParts: [
+      { text: "It's not a knowledge test.", bold: true },
+      { text: " It's a " },
+      { text: "speed & stamina test", bold: true, accent: true },
+      { text: ", scored on a 2 hr 14 min clock. " },
+      { text: "A lower SAT score usually has more to do with " },
+      { text: "pacing and test strategy than intelligence.", bold: true },
+      { text: " The good news: " },
+      { text: "those skills are trainable.", bold: true, accent: true },
+      { text: " With the right plan, fast." },
+    ],
+    tutorName: "Maya Reinhart",
+    tutorTitle: "Head tutor · Illuminairy",
   };
 }

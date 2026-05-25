@@ -26,7 +26,6 @@ export const SAT_PLAN_STEPS: Record<SatPlanStep, SatPlanStepMeta> = {
   "prep-failed-mentors": { progress: 44, label: null },
   "prep-failed-guided": { progress: 46, label: null },
   "prep-failed-mistake-driven": { progress: 48, label: null },
-  "prep-failed-stub": { progress: 43, label: null },
   score: { progress: 52, label: "Question 6 of 10", labelUpper: true },
   wrong: { progress: 62, label: "Question 7 of 10", labelUpper: true },
   "sat-changed": { progress: 65, label: null },
@@ -54,9 +53,13 @@ export function loadSatPlanState(): SatPlanFunnelState {
     if (
       legacyStep === "hours" ||
       legacyStep === "int13-kid-problem" ||
-      legacyStep === "kid-problem"
+      legacyStep === "kid-problem" ||
+      legacyStep === "prep-failed-stub"
     ) {
-      step = nextStepAfterPrepFailed(answers.test_history, answers.prep_method);
+      step =
+        legacyStep === "prep-failed-stub"
+          ? "prep-failed-proof"
+          : nextStepAfterPrepFailed(answers.test_history, answers.prep_method);
     }
     return {
       ...DEFAULT_STATE,
@@ -81,7 +84,8 @@ const LEGACY_STEP_ALIASES: Record<string, SatPlanStep> = {
   "chapter1-stub": "who",
   "gpa-stub": "gpa",
   "int13-kid-problem": "score",
-  "kid-problem": "score"
+  "kid-problem": "score",
+  "prep-failed-stub": "prep-failed-proof"
 };
 
 export function stepFromSearchParam(value: string | null): SatPlanStep {

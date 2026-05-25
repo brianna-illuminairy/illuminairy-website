@@ -19,8 +19,8 @@ type SatPlanInt8PrepComparisonProps = {
 };
 
 export function SatPlanInt8PrepComparison({
-  beat = "full",
-  stepId = "prep-failed-stub",
+  beat = "proof",
+  stepId = "prep-failed-proof",
   onBack,
   onContinue
 }: SatPlanInt8PrepComparisonProps) {

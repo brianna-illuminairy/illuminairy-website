@@ -1,12 +1,18 @@
 # Active context
 
-*Last updated: 2026-05-24*
+*Last updated: 2026-05-25*
 
 ## Current focus
 
 - **SAT plan funnel (production)** — https://illuminairy.com/satplan — **full spine implemented** (landing → book); no stubs left on main path
 - **`noindex`** until Brianna review + launch QA
 - Specs/copy tracked in **quizfunnel** repo; code in this repo
+
+## Recent changes (2026-05-25)
+
+- **INT2 `gpa-paradox`** — tutor-note layout (headline eyebrow, quote, In school / On the SAT cards, closing copy, Maya signature); **no 200+ stat banner**
+- **Q7 `wrong`** — tile art redone as dashboard widgets (`ico-wrong-*` in `wrong-reason-icons.tsx` + `funnel.css`)
+- **INT12 `sat-changed`** — mockup layout (Digital headline, baseball subhead, two-panel contrast w/ year badges, 3 stat rows, closing line); May 2026 art
 
 ## Recent changes (2026-05-24)
 
@@ -21,7 +27,7 @@
 - [ ] **Brianna review** — copy/tone on INT6, contact TCPA, report layout (no verify/QA until approved)
 - [ ] Wire contact → API / Klaviyo (sessionStorage only today)
 - [ ] Replace default `prep-paths-triptych.png` with son/neutral art
-- [x] **INT12** format contrast image — `digital-vs-paper-prep.png` (SAT 1979 vs 2026) on `sat-changed`
+- [x] **INT12** format contrast image — `digital-vs-paper-prep.png` (1979 paper · digital Bluebook + Desmos, May 2026) on `sat-changed`
 - [ ] Meta IAB QA on 390×844 after review
 - [ ] Remove `noindex` when launch-ready
 

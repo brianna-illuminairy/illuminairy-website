@@ -1,19 +1,23 @@
 import type { Int12SatChangedCopy } from "@/lib/sat-plan-funnel/int12-sat-changed-copy";
 import { Int12FormatContrast } from "@/components/sat-plan/int12-format-contrast";
-import { int12FormatContrastImageSpec } from "@/lib/sat-plan-funnel/int12-format-images";
+import { Int12RichCopy } from "@/components/sat-plan/int12-rich-copy";
+import { Int12StatRows } from "@/components/sat-plan/int12-stat-rows";
+import { int12FormatPanelSpecs } from "@/lib/sat-plan-funnel/int12-format-images";
 
 type Int12SatChangedBodyProps = {
   copy: Int12SatChangedCopy;
 };
 
 export function Int12SatChangedBody({ copy }: Int12SatChangedBodyProps) {
-  const formatVisual = int12FormatContrastImageSpec();
+  const hasPanels = Boolean(int12FormatPanelSpecs());
 
   return (
     <div className="quiz-step-trust-content int12-sat-changed">
-      <p className="quiz-step-copy int12-sat-changed__intro">{copy.introAboveVisual}</p>
+      <p className="int12-sat-changed__subhead">
+        <Int12RichCopy parts={copy.subheadParts} />
+      </p>
 
-      {formatVisual ? (
+      {hasPanels ? (
         <Int12FormatContrast />
       ) : (
         <div className="int12-format-split quiz-step-trust-graphic" aria-hidden="true">
@@ -28,17 +32,13 @@ export function Int12SatChangedBody({ copy }: Int12SatChangedBodyProps) {
         </div>
       )}
 
-      {copy.paragraphs.map((paragraph, index) => (
-        <p key={index} className="quiz-step-copy">
-          {paragraph}
-        </p>
-      ))}
+      <Int12StatRows rows={copy.statRows} />
 
       {copy.prepLine ? <p className="quiz-step-copy quiz-step-copy--accent">{copy.prepLine}</p> : null}
 
-      <p className="quiz-step-copy quiz-step-copy--quote">{copy.closingLine}</p>
-
-      <p className="quiz-step-footnote">{copy.footnote}</p>
+      <p className="quiz-step-copy int12-sat-changed__closing">
+        <Int12RichCopy parts={copy.closingParts} />
+      </p>
     </div>
   );
 }

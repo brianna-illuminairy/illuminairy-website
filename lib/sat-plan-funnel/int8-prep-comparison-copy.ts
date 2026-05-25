@@ -311,7 +311,7 @@ export type Int8ScoreImpactMapCopy = {
   ariaLabel: string;
 };
 
-export type Int8PrepBeat = "full" | "plateau" | "proof" | "guided";
+export type Int8PrepBeat = "plateau" | "proof" | "guided";
 
 export type Int8PrepPathTriptychFocus = "full" | "home" | "crowd" | "mentorship";
 

@@ -16,12 +16,12 @@ type Int8DiagnosticAnalysisGraphicProps = {
 };
 
 const PHASE_MS: Record<Exclude<DiagnosticPhaseKey, "ready">, number> = {
-  analyzing: 5600,
+  analyzing: 4800,
   filtering: 4800,
   building: 5200
 };
 
-const TAG_REVEAL_MS = 175;
+const TAG_REVEAL_MS = 158;
 const FILTER_SLOT_MS = 780;
 const BUILD_STEP_MS = 880;
 
@@ -293,7 +293,7 @@ export function Int8DiagnosticAnalysisGraphic({ copy }: Int8DiagnosticAnalysisGr
                   />
                 </div>
                 <p className="int8-diagnostic-analysis__timeline">
-                  {copy.timelineWeeks}-week focus plan
+                  {copy.timelineWeeks}-week personalized plan
                 </p>
               </div>
             </div>

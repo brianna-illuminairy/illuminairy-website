@@ -1,0 +1,49 @@
+---
+description: Cursor-only — keep gstack skills deduped; avoid context bloat
+alwaysApply: true
+---
+
+# Cursor-only skills (no re-bloat)
+
+Brianna uses **Cursor only** (not Claude Code, Codex, OpenClaw, etc.). Duplicate skill catalogs waste ~80k+ tokens per chat.
+
+## gstack setup — never multi-host
+
+- **Never** run `./setup --host auto` or install for codex/factory/opencode/kiro/hermes/gbrain/slate.
+- **Only** upgrade/reinstall with:
+  ```bash
+  ~/.claude/skills/gstack/setup-cursor-only.sh
+  ```
+  or `./setup --host claude` then immediately run `~/.claude/skills/dedup-gstack-skills-for-cursor.sh`.
+
+## After any gstack setup or upgrade
+
+Run dedup and confirm count stays low:
+
+```bash
+~/.claude/skills/dedup-gstack-skills-for-cursor.sh
+find ~/.claude/skills -name SKILL.md | wc -l   # expect ~60, not 500+
+```
+
+## What must NOT come back
+
+- `gstack/.agents`, `.cursor`, `.factory`, `.gbrain`, `.hermes`, `.kiro`, `.openclaw`, `.opencode`, `.slate`
+- Top-level symlink dirs at `~/.claude/skills/qa`, `browse`, etc. (canonical paths: `gstack/qa/SKILL.md`, …)
+- `gstack/openclaw/skills/` copies
+
+Keep: `~/.claude/skills/gstack/*/SKILL.md`, plus `prd/` and `ralph-snarktank/`.
+
+## Cursor plugins (skill catalog)
+
+Prefer minimal plugin skills. **Disable** unless actively needed (Cursor Settings → Plugins):
+
+- **Superpowers** (~14 skills) — disable if not using brainstorming/TDD workflows
+- **Stripe** (~3 skills) — disable unless editing Stripe integration
+
+**Keep Vercel plugin** for Illuminairy deploy/Next.js work. Do not suggest enabling extra plugin packs without a concrete task.
+
+## Agent behavior
+
+- Do not recreate multi-host gstack dirs or top-level skill symlinks.
+- If asked to upgrade gstack, use `setup-cursor-only.sh` and verify dedup.
+- Reference: `~/.claude/skills/README-cursor-dedup.md`

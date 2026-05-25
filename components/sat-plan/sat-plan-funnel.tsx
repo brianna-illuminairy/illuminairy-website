@@ -67,8 +67,6 @@ import {
   stepBeforeTestDate,
   stepBeforeTimeline,
   stepBeforeWrong,
-  usesInt8Trilogy,
-  firstInt8Step
 } from "@/lib/sat-plan-funnel/funnel-routing";
 import {
   loadSatPlanState,
@@ -110,13 +108,6 @@ export function SatPlanFunnel() {
   useEffect(() => {
     if (step !== "wrong") return;
     if (!isTestedHistory(answers().test_history)) goTo("sat-changed");
-  }, [step, goTo]);
-
-  useEffect(() => {
-    if (step !== "prep-failed-stub") return;
-    const prepMethod = loadSatPlanState().answers.prep_method;
-    if (!usesInt8Trilogy(prepMethod)) return;
-    goTo(firstInt8Step(prepMethod));
   }, [step, goTo]);
 
   useEffect(() => {
@@ -244,28 +235,6 @@ export function SatPlanFunnel() {
             goTo(
               stepBeforeInt8(
                 "prep-failed-mistake-driven",
-                answers().test_history,
-                answers().prep_method
-              )
-            )
-          }
-          onContinue={() =>
-            goTo(
-              nextStepAfterPrepFailed(
-                answers().test_history,
-                answers().prep_method
-              )
-            )
-          }
-        />
-      ) : null}
-
-      {step === "prep-failed-stub" ? (
-        <SatPlanInt8PrepComparison
-          onBack={() =>
-            goTo(
-              stepBeforeInt8(
-                "prep-failed-stub",
                 answers().test_history,
                 answers().prep_method
               )

@@ -15,25 +15,21 @@ type Int8PrepComparisonBodyProps = {
 
 export function Int8PrepComparisonBody({
   copy,
-  beat = "full",
+  beat = "proof",
   testTaker
 }: Int8PrepComparisonBodyProps) {
-  const showPlateau = beat === "full" || beat === "plateau";
-  const showChart = beat === "full" || beat === "proof";
-  const showGuided = beat === "full" || beat === "guided";
+  const showPlateau = beat === "plateau";
+  const showChart = beat === "proof";
+  const showGuided = beat === "guided";
   const showPlateauContrastPair =
     copy.showPrepPathsVisual &&
     copy.contrastPairPlateau &&
-    (beat === "plateau" || beat === "full");
+    beat === "plateau";
   const showPlateauTriptych =
     copy.showPrepPathsVisual &&
     copy.triptychFocusPlateau &&
     !copy.contrastPairPlateau &&
-    (beat === "plateau" || beat === "full");
-  const showGuidedTriptych =
-    copy.showPrepPathsVisual &&
-    copy.triptychFocusGuided &&
-    beat === "full";
+    beat === "plateau";
 
   return (
     <div
@@ -73,7 +69,7 @@ export function Int8PrepComparisonBody({
                 {copy.plateauFollowUp}
               </p>
             ) : null}
-            {!copy.plateauFollowUp && copy.mirrorBody && (beat === "plateau" || beat === "full") ? (
+            {!copy.plateauFollowUp && copy.mirrorBody && beat === "plateau" ? (
               <p className="quiz-step-copy int8-prep-comparison__mirror">
                 {copy.mirrorBody}
               </p>
@@ -112,31 +108,18 @@ export function Int8PrepComparisonBody({
         </p>
       ) : null}
 
-      {showGuidedTriptych ? (
-        <Int8PrepPathTriptych
-          focus={copy.triptychFocusGuided!}
-          testTaker={testTaker}
-        />
-      ) : null}
-
       {showGuided ? (
-        beat === "guided" ? (
-          <>
-            {copy.guidedSubhead ? (
-              <p className="quiz-step-copy int8-prep-comparison__guided-subhead">
-                {copy.guidedSubhead}
-              </p>
-            ) : null}
-            <p className="quiz-step-copy int8-prep-comparison__guided-intro">
-              {copy.guidedIntro}
+        <>
+          {copy.guidedSubhead ? (
+            <p className="quiz-step-copy int8-prep-comparison__guided-subhead">
+              {copy.guidedSubhead}
             </p>
-            <Int8ScoreImpactMap map={copy.scoreImpactMap} />
-          </>
-        ) : (
-          <p className="quiz-step-copy int8-prep-comparison__after-chart">
-            {copy.tutorProcessCopy}
+          ) : null}
+          <p className="quiz-step-copy int8-prep-comparison__guided-intro">
+            {copy.guidedIntro}
           </p>
-        )
+          <Int8ScoreImpactMap map={copy.scoreImpactMap} />
+        </>
       ) : null}
     </div>
   );
