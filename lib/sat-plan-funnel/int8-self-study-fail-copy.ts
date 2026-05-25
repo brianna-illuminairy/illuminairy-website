@@ -1,3 +1,8 @@
+import {
+  prepMirrorPhrase,
+  profilePatternLine
+} from "@/lib/sat-plan-funnel/diagnosis-copy";
+import type { SatPlanAnswers } from "@/lib/sat-plan-funnel/types";
 import { subjectPronouns, yourStudentPhrase } from "@/lib/sat-plan-funnel/subject-pronouns";
 
 export type Int8SelfStudyFailCopy = {
@@ -13,22 +18,25 @@ const EFFORT_INLINE =
 const FOCUS_GAP =
   "which of the 28 SAT skills to focus on that would actually improve";
 
-function leadParagraph(testTaker?: string): string {
+function leadParagraph(answers: SatPlanAnswers): string {
+  const testTaker = answers.test_taker;
   const { subject } = subjectPronouns(testTaker);
   const student = yourStudentPhrase(testTaker);
+  const mirror = prepMirrorPhrase(answers) ?? profilePatternLine(answers, { includePrep: true });
+  const prefix = mirror ? `${mirror} ` : "";
 
   if (testTaker === "test_taker_self") {
-    return `You probably studied hard: ${EFFORT_INLINE}. But you likely struggled to identify ${FOCUS_GAP} your score.`;
+    return `${prefix}You probably studied hard: ${EFFORT_INLINE}. But you likely struggled to identify ${FOCUS_GAP} your score.`;
   }
 
   if (student) {
     const who = student.charAt(0).toUpperCase() + student.slice(1);
     const scoreWord =
       subject === "he" ? "his" : subject === "she" ? "her" : "their";
-    return `${who} probably studied hard: ${EFFORT_INLINE}. But ${subject} likely struggled to identify ${FOCUS_GAP} ${scoreWord} score.`;
+    return `${prefix}${who} probably studied hard: ${EFFORT_INLINE}. But ${subject} likely struggled to identify ${FOCUS_GAP} ${scoreWord} score.`;
   }
 
-  return `They probably studied hard: ${EFFORT_INLINE}. But they likely struggled to identify ${FOCUS_GAP} their score.`;
+  return `${prefix}They probably studied hard: ${EFFORT_INLINE}. But they likely struggled to identify ${FOCUS_GAP} their score.`;
 }
 
 const CLOSING_HELP_STEPS =
@@ -52,11 +60,13 @@ function closingParagraph(testTaker?: string): string {
   return `Without someone to help them ${CLOSING_HELP_STEPS}, simply doing practice problems won't help raise their score.`;
 }
 
-export function buildInt8SelfStudyFailCopy(testTaker?: string): Int8SelfStudyFailCopy {
+export function buildInt8SelfStudyFailCopy(
+  answers: SatPlanAnswers
+): Int8SelfStudyFailCopy {
   return {
     headline: "Why self-study fails",
-    leadParagraph: leadParagraph(testTaker),
-    closingParagraph: closingParagraph(testTaker),
+    leadParagraph: leadParagraph(answers),
+    closingParagraph: closingParagraph(answers.test_taker),
     graphicAriaLabel:
       "Messy self-study dashboard with practice tests, random videos, scattered SAT topics, and a long checklist. An overwhelmed student sits in the middle. Overlay: more studying does not equal targeted improvement. Bottom line: lots of effort, little score movement."
   };

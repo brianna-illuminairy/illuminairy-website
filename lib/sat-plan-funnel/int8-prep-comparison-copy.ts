@@ -1,9 +1,10 @@
+import { formatPrepLabels } from "@/lib/sat-plan-funnel/prep-labels";
 import {
-  PREP_OPTIONS,
   PREP_SELF_STUDY_IDS,
   normalizePrepMethods,
   type PrepId
 } from "@/lib/sat-plan-funnel/prep-options";
+import { profilePatternLine } from "@/lib/sat-plan-funnel/diagnosis-copy";
 import type { PrepContrastPair } from "@/lib/sat-plan-funnel/prep-path-images";
 import { prepContrastPairAvailable } from "@/lib/sat-plan-funnel/prep-path-images";
 import type { SatPlanAnswers } from "@/lib/sat-plan-funnel/types";
@@ -47,21 +48,6 @@ function objectForVoice(testTaker?: string): string {
     default:
       return "them";
   }
-}
-
-function formatPrepLabels(prepIds: PrepId[]): string | null {
-  if (prepIds.length === 0) return null;
-
-  const labels = prepIds
-    .map((id) => PREP_OPTIONS.find((opt) => opt.id === id)?.label)
-    .filter((label): label is string => Boolean(label));
-
-  if (labels.length === 0) return null;
-  if (labels.length === 1) return labels[0];
-  if (labels.length === 2) return `${labels[0]} and ${labels[1]}`;
-
-  const last = labels[labels.length - 1];
-  return `${labels.slice(0, -1).join(", ")}, and ${last}`;
 }
 
 function prepMirrorScope(prepIds: PrepId[]): PrepMirrorScope {
@@ -223,16 +209,20 @@ function buildMirrorBody(
   scope: PrepMirrorScope,
   voice: PrepVoice,
   object: string,
-  testTaker?: string
+  answers: SatPlanAnswers
 ): string {
-  const parts: string[] = [];
+  const opener = profilePatternLine(answers, { includePrep: true });
+  const parts: string[] = opener ? [opener] : [];
 
   if (scope === "self_study") {
     parts.push(selfStudySentence(voice, object));
   } else if (scope === "group") {
-    parts.push(groupClassPlateauCopy(testTaker));
+    parts.push(groupClassPlateauCopy(answers.test_taker));
   } else {
-    parts.push(selfStudySentence(voice, object), groupClassPlateauCopy(testTaker));
+    parts.push(
+      selfStudySentence(voice, object),
+      groupClassPlateauCopy(answers.test_taker)
+    );
   }
 
   return parts.join(" ");
@@ -360,7 +350,7 @@ export function buildInt8PrepComparisonCopy(
     gapOverGroupClass,
     eyebrow: neverTested ? neverTestedEyebrow(answers.test_taker) : null,
     prepLead: prepLeadLabel(prepIds, scope),
-    mirrorBody: buildMirrorBody(scope, voice, object, answers.test_taker),
+    mirrorBody: buildMirrorBody(scope, voice, object, answers),
     showPrepPathsVisual,
     contrastPairPlateau: (() => {
       if (!showPrepPathsVisual) return null;

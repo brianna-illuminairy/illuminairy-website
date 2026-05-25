@@ -18,8 +18,8 @@ export function SatPlanInt8DiagnosticDriven({
 }: SatPlanInt8DiagnosticDrivenProps) {
   const answers = useSatPlanAnswers();
   const copy = useMemo(
-    () => buildInt8DiagnosticDrivenCopy(answers.test_taker),
-    [answers.test_taker]
+    () => buildInt8DiagnosticDrivenCopy(answers),
+    [answers]
   );
 
   useEffect(() => {

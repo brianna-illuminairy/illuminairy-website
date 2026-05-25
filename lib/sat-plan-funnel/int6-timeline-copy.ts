@@ -1,3 +1,4 @@
+import { profilePatternLine } from "@/lib/sat-plan-funnel/diagnosis-copy";
 import {
   resolveTimelineFromTestDate,
   type TimelineMeta
@@ -32,12 +33,18 @@ function examHeadline(meta: TimelineMeta): string {
 export function buildInt6TimelineCopy(answers: SatPlanAnswers): Int6TimelineCopy {
   const { possessive } = voice(answers.test_taker);
   const meta = resolveTimelineFromTestDate(answers.test_date);
+  const mirror =
+    profilePatternLine(answers, {
+      includePrep: true,
+      includeScoreBand: true
+    }) ?? null;
 
   if (meta.mode === "not_planning") {
+    const lead = mirror ? `${mirror}. ` : "";
     return {
       headline: "If you decide to test later, the clock still matters.",
       paragraphs: [
-        `Even without a date on the calendar, a guided plan still runs about ${meta.hoursPerWeek} hrs/week on ${possessive} gaps — not random review.`,
+        `${lead}Even without a date on the calendar, a guided plan still runs about ${meta.hoursPerWeek} hrs/week on ${possessive} gaps — not random review.`,
         "When you're ready to pick a test date, we'll map weeks to focused hours."
       ],
       footnote: null
@@ -45,20 +52,22 @@ export function buildInt6TimelineCopy(answers: SatPlanAnswers): Int6TimelineCopy
   }
 
   if (meta.mode === "not_sure") {
+    const lead = mirror ? `${mirror}. ` : "";
     return {
       headline: "Once you pick a test date, we'll map weeks to hours.",
       paragraphs: [
-        `For a typical 12-week runway, a guided plan runs about ${meta.hoursPerWeek} hrs/week on ${possessive} gaps — not random review.`,
+        `${lead}For a typical 12-week runway, a guided plan runs about ${meta.hoursPerWeek} hrs/week on ${possessive} gaps — not random review.`,
         "Lock in a date when you're ready — the timeline drives how many focused hours fit before test day."
       ],
       footnote: "Based on ~80 hours of guided prep cited by College Board research."
     };
   }
 
+  const lead = mirror ? `${mirror}. ` : "";
   return {
     headline: examHeadline(meta),
     paragraphs: [
-      `For a runway like that, a guided plan typically runs ${meta.hoursPerWeek} hrs/week on ${possessive} gaps — not random review.`
+      `${lead}For a runway like that, a guided plan typically runs ${meta.hoursPerWeek} hrs/week on ${possessive} gaps — not random review.`
     ],
     footnote: "Based on ~80 hours of guided prep cited by College Board research."
   };

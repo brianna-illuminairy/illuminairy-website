@@ -13,7 +13,7 @@ type SatPlanReportProps = {
 
 export function SatPlanReport({ onBack, onContinue }: SatPlanReportProps) {
   const answers = useSatPlanAnswers();
-  const rows = useMemo(() => buildReportSummary(answers), [answers]);
+  const { rows } = useMemo(() => buildReportSummary(answers), [answers]);
 
   useEffect(() => {
     trackSatPlanFunnelEvent("intake_step_view", {

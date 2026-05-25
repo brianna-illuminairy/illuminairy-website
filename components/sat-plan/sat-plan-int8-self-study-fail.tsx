@@ -18,8 +18,8 @@ export function SatPlanInt8SelfStudyFail({
 }: SatPlanInt8SelfStudyFailProps) {
   const answers = useSatPlanAnswers();
   const copy = useMemo(
-    () => buildInt8SelfStudyFailCopy(answers.test_taker),
-    [answers.test_taker]
+    () => buildInt8SelfStudyFailCopy(answers),
+    [answers]
   );
 
   useEffect(() => {

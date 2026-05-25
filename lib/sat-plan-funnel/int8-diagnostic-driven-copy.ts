@@ -1,3 +1,6 @@
+import { basedOnWhatYouShared } from "@/lib/sat-plan-funnel/diagnosis-copy";
+import type { SatPlanAnswers } from "@/lib/sat-plan-funnel/types";
+
 export type DiagnosticSkillTag = "strong" | "developing" | "high-impact" | "low-impact";
 
 export type DiagnosticSkill = {
@@ -116,7 +119,15 @@ function subheadCopy(testTaker?: string): string {
   }
 }
 
-export function buildInt8DiagnosticDrivenCopy(testTaker?: string): Int8DiagnosticDrivenCopy {
+function readySummary(testTaker?: string): string {
+  const mirror = basedOnWhatYouShared(testTaker);
+  return `${mirror}, the skills most likely to move the score are the ones we prioritize first — not all 28 areas.`;
+}
+
+export function buildInt8DiagnosticDrivenCopy(
+  answers: SatPlanAnswers
+): Int8DiagnosticDrivenCopy {
+  const testTaker = answers.test_taker;
   const skills = SKILLS.map((skill) => ({ ...skill }));
 
   return {
@@ -141,8 +152,7 @@ export function buildInt8DiagnosticDrivenCopy(testTaker?: string): Int8Diagnosti
       },
       ready: {
         title: "12 Week SAT Improvement Plan is ready.",
-        summary:
-          "Students improve faster when they focus on the skills most likely to move their score."
+        summary: readySummary(testTaker)
       }
     },
     graphicAriaLabel:

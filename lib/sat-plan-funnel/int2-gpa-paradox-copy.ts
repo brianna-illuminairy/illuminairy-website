@@ -1,3 +1,8 @@
+import {
+  basedOnWhatYouShared,
+  profilePatternLine,
+  wrongMirrorSnippet
+} from "@/lib/sat-plan-funnel/diagnosis-copy";
 import type { SatPlanAnswers } from "@/lib/sat-plan-funnel/types";
 
 export type Int2CopyPart = {
@@ -68,17 +73,30 @@ function subjectForms(testTaker?: string): {
 export function buildInt2GpaParadoxCopy(answers: SatPlanAnswers): Int2GpaParadoxCopy {
   const self = answers.test_taker === "test_taker_self";
   const { possessive, optimizedClosing } = subjectForms(answers.test_taker);
+  const mirror =
+    profilePatternLine(answers, { includePrep: true, includeScoreBand: true }) ??
+    basedOnWhatYouShared(answers.test_taker);
+  const wrongBit = wrongMirrorSnippet(answers.wrong_reasons);
 
   const headlinePrefix = self
     ? "We help students like you "
     : "We help high-GPA students ";
   const headlineAccent = self ? "raise your SAT score." : "raise their SAT scores.";
 
+  const quoteLead: Int2CopyPart[] = [{ text: `${mirror}. ` }];
+  if (wrongBit) {
+    quoteLead.push({
+      text: `Often ${wrongBit}. `,
+      italic: true
+    });
+  }
+  quoteLead.push({ text: `${patternLine(answers.test_taker)} ` });
+
   return {
     headlinePrefix,
     headlineAccent,
     quoteParts: [
-      { text: `${patternLine(answers.test_taker)} ` },
+      ...quoteLead,
       { text: "The " },
       { text: "same habits", italic: true },
       { text: ` that earn ${possessive} A's in class ` },

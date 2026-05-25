@@ -1,4 +1,8 @@
 import { satProgramOutcomes } from "@/lib/site";
+import {
+  familiesAimingForGoal,
+  worryEchoClause
+} from "@/lib/sat-plan-funnel/diagnosis-copy";
 import type { SatPlanAnswers } from "@/lib/sat-plan-funnel/types";
 import type { TargetScoreId } from "@/lib/sat-plan-funnel/target-score-options";
 
@@ -48,12 +52,19 @@ export type Int1TrustCopy = {
 
 export const INT1_TRUST_HEADLINE = "You're in good hands.";
 
-function buildLead(voice: ChildVoice): string {
+function buildLead(answers: SatPlanAnswers, voice: ChildVoice): string {
+  const worry = worryEchoClause(answers.worries);
+  const families = familiesAimingForGoal(answers);
+
   if (voice.isSelf) {
-    return "Most students came to us to build a plan after their first SAT score came back too low.";
+    const base =
+      "Based on what you shared, most students came to us to build a plan after their first SAT score came back too low.";
+    return [worry, base, families].filter(Boolean).join(" ");
   }
 
-  return "Most parents came to us to build them a plan after their first SAT score came back too low.";
+  const base =
+    "Based on what you shared, most parents came to us to build a plan after their first SAT score came back too low.";
+  return [worry, base, families].filter(Boolean).join(" ");
 }
 
 function buildBridge(
@@ -80,7 +91,7 @@ export function buildInt1TrustCopy(answers: SatPlanAnswers): Int1TrustCopy {
   const targetGoal = targetGoalPhrase(answers.target_score);
 
   return {
-    lead: buildLead(voice),
+    lead: buildLead(answers, voice),
     ...buildBridge(voice, targetGoal)
   };
 }

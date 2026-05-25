@@ -1,3 +1,10 @@
+import {
+  profilePatternLine,
+  studentsWithProfileTypically
+} from "@/lib/sat-plan-funnel/diagnosis-copy";
+import { targetBandLabel } from "@/lib/sat-plan-funnel/score-gap";
+import type { SatPlanAnswers } from "@/lib/sat-plan-funnel/types";
+
 export type Int8MistakeProgressionStep = {
   title: string;
   status: "miss" | "tutor" | "hint" | "solo" | "mastery";
@@ -44,13 +51,35 @@ const PROGRESSION_STEPS: Int8MistakeProgressionStep[] = [
   }
 ];
 
-export function buildInt8MistakeDrivenCopy(): Int8MistakeDrivenCopy {
+function introParagraph(answers: SatPlanAnswers): string {
+  const mirror = profilePatternLine(answers, { includePrep: true });
+  const lead = mirror ? `${mirror} ` : "";
+
+  if (answers.test_taker === "test_taker_self") {
+    return `${lead}You don't improve from more lectures — you improve by fixing mistakes until they stick.`;
+  }
+
+  return `${lead}More lectures rarely move the score. Fixing mistakes until they stick does.`;
+}
+
+function closingParagraph(answers: SatPlanAnswers): string {
+  const goal = targetBandLabel(answers.target_score);
+  const profileLead = studentsWithProfileTypically(answers);
+
+  if (answers.test_taker === "test_taker_self") {
+    return `${profileLead} close gaps one at a time through mistake-driven practice — often 100–250 points when prep targets the right skills for ${goal}.`;
+  }
+
+  return `${profileLead} close gaps one at a time through mistake-driven practice — often 100–250 points when prep targets the right skills on the way to ${goal}.`;
+}
+
+export function buildInt8MistakeDrivenCopy(
+  answers: SatPlanAnswers
+): Int8MistakeDrivenCopy {
   return {
     headline: "Improve faster through mistake-driven learning",
-    introParagraph:
-      "Students don't improve from more lectures. They improve by fixing mistakes until mastery.",
-    closingParagraph:
-      "This is how our students who had plateaued in the 1100s or 1200s get their score up 100-250 points.",
+    introParagraph: introParagraph(answers),
+    closingParagraph: closingParagraph(answers),
     sessionBannerLead: "One session · One skill",
     sessionSkillLabel: "Geometry: Right Triangles",
     progressionSteps: PROGRESSION_STEPS.map((step) => ({ ...step })),

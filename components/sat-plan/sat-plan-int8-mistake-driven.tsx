@@ -5,6 +5,7 @@ import { Int8MistakeDrivenBody } from "@/components/sat-plan/int8-mistake-driven
 import { QuizStepTemplate } from "@/components/sat-plan/quiz-step-template";
 import { trackSatPlanFunnelEvent } from "@/lib/sat-plan-funnel/analytics";
 import { buildInt8MistakeDrivenCopy } from "@/lib/sat-plan-funnel/int8-mistake-driven-copy";
+import { useSatPlanAnswers } from "@/lib/sat-plan-funnel/use-sat-plan-answers";
 
 type SatPlanInt8MistakeDrivenProps = {
   onBack: () => void;
@@ -15,7 +16,8 @@ export function SatPlanInt8MistakeDriven({
   onBack,
   onContinue
 }: SatPlanInt8MistakeDrivenProps) {
-  const copy = useMemo(() => buildInt8MistakeDrivenCopy(), []);
+  const answers = useSatPlanAnswers();
+  const copy = useMemo(() => buildInt8MistakeDrivenCopy(answers), [answers]);
 
   useEffect(() => {
     trackSatPlanFunnelEvent("intake_step_view", {

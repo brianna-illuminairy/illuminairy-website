@@ -16,6 +16,7 @@ landing → worries → who → target → INT1 → history → [INT3] → prep 
 
 ## Recent changes (2026-05-25)
 
+- **Diagnosis voice** — `lib/sat-plan-funnel/diagnosis-copy.ts`, `prep-labels.ts`; interstitial + report copy mirrors prep/target/score/wrong; quizfunnel [`files/funnel-diagnosis-voice.md`](../quizfunnel/files/funnel-diagnosis-voice.md)
 - **INT2 `gpa-paradox`** — tutor-note layout (headline eyebrow, quote, In school / On the SAT cards, closing copy, Maya signature); **no 200+ stat banner**
 - **Q `wrong`** — tile art as dashboard widgets (`ico-wrong-*` in `wrong-reason-icons.tsx` + `funnel.css`)
 - **INT12 `sat-changed`** — mockup layout (Digital headline, baseball subhead, two-panel contrast w/ year badges, 3 stat rows, closing line); May 2026 art

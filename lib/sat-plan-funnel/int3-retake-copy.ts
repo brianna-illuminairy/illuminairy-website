@@ -1,4 +1,5 @@
 import { satRetakeResearch } from "@/lib/site";
+import { basedOnWhatYouShared } from "@/lib/sat-plan-funnel/diagnosis-copy";
 import type { SatPlanAnswers } from "@/lib/sat-plan-funnel/types";
 
 const INT3_RETAKE_HEADLINE =
@@ -8,14 +9,20 @@ type RetakeVoice = {
   tutorParagraph: string;
 };
 
-function introAboveChart(testTaker?: string): string {
+function introAboveChart(answers: SatPlanAnswers): string {
   const { cohortSizeLabel, avgPointsWithoutNewApproach } = satRetakeResearch;
-  const ineffectiveLead =
-    testTaker === "test_taker_self"
-      ? "That's because most students use videos and practice problems to prepare, which isn't very effective."
-      : "That's because most kids use videos and practice problems to prepare, which isn't very effective.";
+  const mirror = basedOnWhatYouShared(answers.test_taker);
+  const historyNote =
+    answers.test_history === "history_three_plus"
+      ? "After multiple retakes without changing approach, "
+      : "Retaking without changing approach, ";
 
-  return `College Board data from ${cohortSizeLabel} retakers shows the average score goes up by only ~${avgPointsWithoutNewApproach} points when retesting. ${ineffectiveLead}`;
+  const ineffectiveLead =
+    answers.test_taker === "test_taker_self"
+      ? "the same videos-and-practice loop usually is not enough."
+      : "the same videos-and-practice loop usually is not enough for them.";
+
+  return `${mirror} — ${historyNote}College Board data from ${cohortSizeLabel} retakers shows the average score goes up by only ~${avgPointsWithoutNewApproach} points. ${ineffectiveLead}`;
 }
 
 function retakeVoice(testTaker?: string): RetakeVoice {
@@ -55,7 +62,7 @@ export function buildInt3RetakeCopy(answers: SatPlanAnswers): Int3RetakeCopy {
 
   return {
     headline: INT3_RETAKE_HEADLINE,
-    introAboveChart: introAboveChart(answers.test_taker),
+    introAboveChart: introAboveChart(answers),
     paragraphs: [voice.tutorParagraph]
   };
 }

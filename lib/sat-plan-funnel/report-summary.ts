@@ -9,11 +9,16 @@ import type { SatPlanAnswers } from "@/lib/sat-plan-funnel/types";
 import { TEST_TAKER_OPTIONS } from "@/lib/sat-plan-funnel/test-taker-options";
 import { wrongReasonLabels } from "@/lib/sat-plan-funnel/wrong-options";
 import { kidProblemLabels } from "@/lib/sat-plan-funnel/kid-problem-options";
+import { reportDiagnosisIntro } from "@/lib/sat-plan-funnel/diagnosis-copy";
 import { WORRY_OPTIONS } from "@/lib/sat-plan-funnel/worry-options";
 
 export type ReportSummaryRow = {
   label: string;
   value: string;
+};
+
+export type ReportSummary = {
+  rows: ReportSummaryRow[];
 };
 
 function labelFromOptions(
@@ -33,8 +38,13 @@ function prepLabels(prep?: string | string[]): string | null {
   return labels.length ? labels.join(", ") : null;
 }
 
-export function buildReportSummary(answers: SatPlanAnswers): ReportSummaryRow[] {
-  const rows: ReportSummaryRow[] = [];
+export function buildReportSummary(answers: SatPlanAnswers): ReportSummary {
+  const rows: ReportSummaryRow[] = [
+    {
+      label: "From your answers",
+      value: reportDiagnosisIntro(answers)
+    }
+  ];
 
   const who = labelFromOptions(answers.test_taker, TEST_TAKER_OPTIONS);
   if (who) rows.push({ label: "Student", value: who });
@@ -81,5 +91,5 @@ export function buildReportSummary(answers: SatPlanAnswers): ReportSummaryRow[] 
     .join(", ");
   if (worries) rows.push({ label: "Top worries", value: worries });
 
-  return rows;
+  return { rows };
 }

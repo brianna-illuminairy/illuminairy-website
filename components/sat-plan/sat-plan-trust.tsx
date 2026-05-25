@@ -5,7 +5,7 @@ import { Int1TrustBody } from "@/components/sat-plan/int1-trust-body";
 import { QuizStepTemplate } from "@/components/sat-plan/quiz-step-template";
 import { trackSatPlanFunnelEvent } from "@/lib/sat-plan-funnel/analytics";
 import { buildInt1TrustCopy, INT1_TRUST_HEADLINE } from "@/lib/sat-plan-funnel/int1-trust-copy";
-import { loadSatPlanState } from "@/lib/sat-plan-funnel/state";
+import { useSatPlanAnswers } from "@/lib/sat-plan-funnel/use-sat-plan-answers";
 
 type SatPlanTrustProps = {
   onBack: () => void;
@@ -13,7 +13,8 @@ type SatPlanTrustProps = {
 };
 
 export function SatPlanTrust({ onBack, onContinue }: SatPlanTrustProps) {
-  const copy = useMemo(() => buildInt1TrustCopy(loadSatPlanState().answers), []);
+  const answers = useSatPlanAnswers();
+  const copy = useMemo(() => buildInt1TrustCopy(answers), [answers]);
 
   useEffect(() => {
     trackSatPlanFunnelEvent("intake_step_view", {

@@ -1,4 +1,9 @@
 import { normalizePrepMethods } from "@/lib/sat-plan-funnel/prep-options";
+import {
+  basedOnWhatYouShared,
+  wrongMirrorSnippet
+} from "@/lib/sat-plan-funnel/diagnosis-copy";
+import { subjectPronouns } from "@/lib/sat-plan-funnel/subject-pronouns";
 import type { SatPlanAnswers } from "@/lib/sat-plan-funnel/types";
 
 export type Int12CopyPart = {
@@ -21,15 +26,36 @@ export type Int12SatChangedCopy = {
   statRows: Int12StatRow[];
   closingParts: Int12CopyPart[];
   prepLine: string | null;
+  wrongLine: string | null;
 };
 
-function prepPersonalizationLine(
-  prepIds: ReturnType<typeof normalizePrepMethods>
-): string | null {
-  if (prepIds.includes("prep_class")) {
-    return "Many classes still run paper drills; test day is on a laptop.";
+function prepPersonalizationLines(
+  prepIds: ReturnType<typeof normalizePrepMethods>,
+  testTaker?: string
+): string[] {
+  const { subject } = subjectPronouns(testTaker);
+  const lines: string[] = [];
+
+  if (prepIds.includes("prep_bluebook") || prepIds.includes("prep_youtube")) {
+    lines.push(
+      "Practice on paper or scattered videos does not teach the full digital interface — scrolling, highlighting, and Desmos under time pressure."
+    );
   }
-  return null;
+  if (prepIds.includes("prep_class")) {
+    lines.push("Many classes still run paper drills; test day is on a laptop.");
+  }
+  if (prepIds.includes("prep_khan") || prepIds.includes("prep_app")) {
+    lines.push(
+      `Apps help — but if ${subject} never trains timed digital reps, test day still feels foreign.`
+    );
+  }
+  if (prepIds.includes("prep_tutor")) {
+    lines.push(
+      "Even a strong tutor can stall without a diagnostic, timed Digital full tests, and a written plan you can track week to week."
+    );
+  }
+
+  return lines;
 }
 
 const STAT_ROWS: Int12StatRow[] = [
@@ -69,7 +95,18 @@ const STAT_ROWS: Int12StatRow[] = [
 
 export function buildInt12SatChangedCopy(answers: SatPlanAnswers): Int12SatChangedCopy {
   const prepIds = normalizePrepMethods(answers.prep_method);
-  const prepLine = prepPersonalizationLine(prepIds);
+  const prepBits = prepPersonalizationLines(prepIds, answers.test_taker);
+  const wrongBit = wrongMirrorSnippet(answers.wrong_reasons);
+  const mirror = basedOnWhatYouShared(answers.test_taker);
+
+  const prepLine =
+    prepBits.length > 0
+      ? `${mirror} — ${prepBits[0]}`
+      : null;
+
+  const wrongLine = wrongBit
+    ? `You also flagged that ${wrongBit}. Digital-native reps address that directly.`
+    : null;
 
   return {
     headlinePrefix: "The SAT is ",
@@ -85,6 +122,7 @@ export function buildInt12SatChangedCopy(answers: SatPlanAnswers): Int12SatChang
       { text: ", they need to answer " },
       { text: "faster and more accurately on test day.", bold: true }
     ],
-    prepLine
+    prepLine,
+    wrongLine
   };
 }

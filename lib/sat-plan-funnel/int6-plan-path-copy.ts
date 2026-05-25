@@ -1,4 +1,5 @@
 import { satProgramOutcomes } from "@/lib/site";
+import { diagnosisProfileLabel } from "@/lib/sat-plan-funnel/diagnosis-copy";
 import {
   conservativeScoreGap,
   scoreGapChartPoints,
@@ -51,7 +52,11 @@ export function buildInt6PlanPathCopy(answers: SatPlanAnswers): Int6PlanPathCopy
       ? `You've got a ${gapPts}-point gap to your goal.`
       : `${gapPts} points stand between ${subject} and ${band}.`;
 
-  const proofLine = `Students who complete our 12-week program improve by an average of ${avgGain} points.`;
+  const profile = diagnosisProfileLabel(answers);
+  const proofLine =
+    subject === "you"
+      ? `For a ${gapPts}-point gap like yours (${profile}), students who complete our 12-week program improve by an average of ${avgGain} points.`
+      : `For a ${gapPts}-point gap like this (${profile}), students who complete our 12-week program improve by an average of ${avgGain} points.`;
 
   let supportingLine: string;
   if (answers.test_date === "test_date_not_planning") {
