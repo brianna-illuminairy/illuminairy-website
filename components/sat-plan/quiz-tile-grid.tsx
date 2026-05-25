@@ -39,7 +39,8 @@ type QuizTileGridProps = {
   onToggle: (id: string) => void;
   groupLabel: string;
   hintId?: string;
-  className?: string;
+  /** Dense wrong-reasons step — avoids layout className on step files (layout guard). */
+  variant?: "wrong-reasons";
   renderIcon: (id: string) => ReactNode;
 };
 
@@ -49,10 +50,15 @@ export function QuizTileGrid({
   onToggle,
   groupLabel,
   hintId,
-  className,
+  variant,
   renderIcon
 }: QuizTileGridProps) {
-  const gridClass = ["quiz-tile-grid", className].filter(Boolean).join(" ");
+  const gridClass = [
+    "quiz-tile-grid",
+    variant === "wrong-reasons" ? "quiz-tile-grid--wrong-reasons" : ""
+  ]
+    .filter(Boolean)
+    .join(" ");
   return (
     <div
       className={gridClass}

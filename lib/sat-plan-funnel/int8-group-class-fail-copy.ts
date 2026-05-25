@@ -1,18 +1,47 @@
+import { yourStudentPhrase } from "@/lib/sat-plan-funnel/subject-pronouns";
+
 export type Int8GroupClassFailCopy = {
   headline: string;
   paragraphs: string[];
   graphicAriaLabel: string;
 };
 
-export function buildInt8GroupClassFailCopy(): Int8GroupClassFailCopy {
+const SAT_SKILL_COUNT = 28;
+const FOCUS_SKILL_COUNT = 5;
+
+function scoreLiftPhrase(testTaker?: string): string {
+  const student = yourStudentPhrase(testTaker);
+
+  if (testTaker === "test_taker_self") {
+    return "your score";
+  }
+
+  if (student === "your son") {
+    return "your son's score";
+  }
+
+  if (student === "your daughter") {
+    return "your daughter's score";
+  }
+
+  return "their score";
+}
+
+function buildParagraphs(testTaker?: string): string[] {
+  const scoreLift = scoreLiftPhrase(testTaker);
+
+  return [
+    `Most SAT classes try to cover all ${SAT_SKILL_COUNT} SAT skills, moving every student through the same topics at the same pace. But students stuck in the 1100s and 1200s usually aren't struggling with everything equally.`,
+    `They're losing points from a smaller number of recurring skill weaknesses that never get diagnosed or fully fixed. Classes teaching ${SAT_SKILL_COUNT} skills can't afford to go deep on the ${FOCUS_SKILL_COUNT} that will actually improve ${scoreLift}.`
+  ];
+}
+
+export function buildInt8GroupClassFailCopy(
+  testTaker?: string
+): Int8GroupClassFailCopy {
   return {
-    headline: "Why group SAT classes rarely work for plateaued students",
-    paragraphs: [
-      "Most SAT classes move every student through the same topics at the same pace.",
-      "But students stuck in the 1100s and 1200s usually aren't struggling with everything equally.",
-      "They're losing points from a smaller number of recurring weaknesses that never get fully fixed.",
-      "So while classes keep moving forward, those gaps compound test after test."
-    ],
+    headline: "Why group SAT classes fail",
+    paragraphs: buildParagraphs(testTaker),
     graphicAriaLabel:
       "Classroom with fifteen students, each highlighting a different weak area, while the teacher delivers one broad lesson. Overlay: one curriculum, different weaknesses. Score progression shows minimal movement: 1100 to 1120 to 1110 to 1140."
   };

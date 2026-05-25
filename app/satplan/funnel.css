@@ -340,8 +340,17 @@
   --quiz-gap-headline-hint: 6px;
   --quiz-gap-hint-body: 14px;
   --quiz-gap-copy: 14px;
+  /** Space above and below images, charts, and illustrations in copy/interstitial steps */
+  --quiz-gap-copy-media: 14px;
   --quiz-gap-body-cta: 24px;
   --quiz-hint-line: 21px;
+  /* Body copy on copy/interstitial steps — one scale for all screens */
+  --quiz-copy-font-size: 16px;
+  --quiz-copy-line-height: 1.4;
+  --quiz-copy-font-weight: 500;
+  --quiz-copy-letter-spacing: -0.005em;
+  --quiz-copy-color: var(--ink);
+  --quiz-copy-align: left;
 }
 
 .funnel-shell {
@@ -560,6 +569,13 @@
   letter-spacing: -0.035em;
 }
 
+/* Set via QuizStepTemplate headlineTier="compact" — not :has(.int8-…) per screen */
+.quiz-step-headline-tier--compact .quiz-step-headline {
+  font-size: clamp(20px, 5.6vw, 26px);
+  line-height: 1.14;
+  letter-spacing: -0.03em;
+}
+
 .quiz-step-hint {
   margin: 0 0 var(--quiz-gap-hint-body);
   font-size: 15px;
@@ -573,6 +589,19 @@
   min-height: var(--quiz-hint-line);
   margin-bottom: var(--quiz-gap-hint-body);
   padding: 0;
+}
+
+/*
+ * Tile/option steps: keep reserved hint band for rhythm with hinted questions.
+ * Copy steps (interstitials + body content, no hint): collapse phantom hint row.
+ */
+.quiz-step--copy .quiz-step-hint--reserved {
+  min-height: 0;
+  margin-bottom: 10px;
+}
+
+.quiz-step--copy:has(.quiz-step-hint--reserved) .quiz-step-headline {
+  margin-bottom: 4px;
 }
 
 .quiz-step-body {
@@ -591,9 +620,11 @@
 
 .quiz-step-copy {
   margin: 0;
-  font-size: 16px;
-  line-height: 1.45;
-  font-weight: 500;
+  font-size: var(--quiz-copy-font-size);
+  line-height: var(--quiz-copy-line-height);
+  font-weight: var(--quiz-copy-font-weight);
+  letter-spacing: var(--quiz-copy-letter-spacing);
+  color: var(--quiz-copy-color);
 }
 
 .quiz-step-copy + .quiz-step-copy {
@@ -601,16 +632,29 @@
 }
 
 .quiz-step-trust-content {
-  text-align: center;
+  text-align: left;
 }
 
 .quiz-step-trust-content .quiz-step-copy {
-  text-align: center;
+  text-align: var(--quiz-copy-align);
 }
 
 .quiz-step--copy:has(.quiz-step-trust-content) .quiz-step-headline {
-  text-align: center;
+  text-align: left;
   color: var(--ink);
+}
+
+/* INT1 trust — centered mirror beat (graphic-first); opt in with --center */
+.quiz-step-trust-content.quiz-step-trust-content--center {
+  text-align: center;
+}
+
+.quiz-step-trust-content--center .quiz-step-copy {
+  text-align: center;
+}
+
+.quiz-step--copy:has(.quiz-step-trust-content--center) .quiz-step-headline {
+  text-align: center;
 }
 
 .quiz-step-trust-target {
@@ -618,10 +662,24 @@
   font-weight: 800;
 }
 
+/* Copy-step media rhythm — use .quiz-step-trust-graphic on every image/chart/illustration root */
 .quiz-step-trust-graphic {
-  margin: 0 0 var(--quiz-gap-copy);
+  margin-top: var(--quiz-gap-copy-media);
+  margin-bottom: var(--quiz-gap-copy-media);
   width: 100%;
   max-width: var(--funnel-col-max);
+}
+
+.quiz-step-trust-content > .quiz-step-trust-graphic:first-child {
+  margin-top: 0;
+}
+
+.quiz-step-trust-content > .quiz-step-copy + .quiz-step-trust-graphic {
+  margin-top: var(--quiz-gap-copy-media);
+}
+
+.quiz-step-trust-content > .quiz-step-trust-graphic + .quiz-step-copy {
+  margin-top: var(--quiz-gap-copy-media);
 }
 
 .quiz-step-trust-card {
@@ -708,12 +766,7 @@
   font-weight: 800;
 }
 
-/* INT8 — prep comparison (left-aligned copy + bar chart) */
-/* Contrast bar chart styles (INT3 retake, INT8 proof) — shared via ContrastBarChart */
-.quiz-step--copy:has(.int8-prep-comparison) .quiz-step-headline {
-  text-align: left;
-}
-
+/* INT8 proof — stat emphasis in headline (content-specific) */
 .quiz-step--copy:has(.int8-prep-comparison) .quiz-step-headline strong {
   color: var(--tomato);
   font-weight: 800;
@@ -723,36 +776,12 @@
   text-align: left;
 }
 
-.int8-prep-comparison .quiz-step-copy {
-  text-align: left;
-}
-
-.int8-prep-comparison__mirror {
-  margin-bottom: var(--quiz-gap-copy);
-}
-
-.int3-retake-chart {
-  margin-bottom: 10px;
-}
-
 .int3-retake-chart .int8-prep-chart__column {
   width: 72px;
 }
 
-/* INT3 — fit 390×844: chart carries ~40 pt stat; copy is 2 tight paragraphs */
-.quiz-step--copy:has(.int3-retake) .quiz-step-headline {
-  font-size: clamp(22px, 6.2vw, 28px);
-  line-height: 1.12;
-  letter-spacing: -0.03em;
-}
-
 .int3-retake__intro {
-  margin: 0 0 10px;
-  text-align: center;
-}
-
-.int3-retake .quiz-step-trust-graphic {
-  margin-bottom: 10px;
+  margin: 0;
 }
 
 .int3-retake-chart .int8-prep-chart__card {
@@ -770,22 +799,6 @@
 
 .int3-retake-chart .int8-prep-chart__baseline {
   bottom: 24px;
-}
-
-.int3-retake .quiz-step-copy {
-  font-size: 14px;
-  line-height: 1.35;
-}
-
-.int3-retake .quiz-step-copy + .quiz-step-copy {
-  margin-top: 10px;
-}
-
-/* INT2 — GPA vs SAT paradox: expert frame + split diagnostic */
-.quiz-step--copy:has(.int2-gpa-paradox) .quiz-step-headline {
-  font-size: clamp(20px, 5.6vw, 26px);
-  line-height: 1.14;
-  letter-spacing: -0.03em;
 }
 
 .int2-gpa-paradox .quiz-step-eyebrow {
@@ -862,15 +875,6 @@
   color: var(--ink-soft);
 }
 
-.int2-gpa-paradox .quiz-step-copy {
-  font-size: 12px;
-  line-height: 1.32;
-}
-
-.int2-gpa-paradox .quiz-step-copy + .quiz-step-copy {
-  margin-top: 7px;
-}
-
 .int2-gpa-split {
   margin-bottom: 8px;
 }
@@ -904,14 +908,10 @@
   background: #0a0a0a;
 }
 
-/* INT8 — group class / self-study fail: compact interstitial copy */
-.quiz-step--copy:has(.int8-group-class-fail) .quiz-step-headline,
-.quiz-step--copy:has(.int8-self-study-fail) .quiz-step-headline,
-.quiz-step--copy:has(.int8-diagnostic-driven) .quiz-step-headline {
-  font-size: clamp(20px, 5.6vw, 26px);
-  line-height: 1.14;
-  letter-spacing: -0.03em;
-  text-align: left;
+.int8-diagnostic-driven__intro {
+  margin: 0 0 10px;
+  font-size: 15px;
+  line-height: 1.35;
 }
 
 .int8-diagnostic-driven-headline {
@@ -928,20 +928,6 @@
 
 .int8-diagnostic-driven-headline__accent {
   color: var(--tomato);
-}
-
-.int8-group-class-fail .quiz-step-copy {
-  font-size: 12px;
-  line-height: 1.28;
-  text-align: left;
-}
-
-.int8-group-class-fail .quiz-step-copy + .quiz-step-copy {
-  margin-top: 6px;
-}
-
-.int8-group-class-graphic {
-  margin-top: 8px;
 }
 
 .int8-group-class-graphic__card {
@@ -1084,39 +1070,6 @@
   text-transform: uppercase;
   text-align: center;
   color: var(--ink-soft);
-}
-
-/* INT8 — self-study fail (slide 2): effort list + messy dashboard graphic */
-.int8-self-study-fail .quiz-step-copy {
-  font-size: 12px;
-  line-height: 1.28;
-  text-align: left;
-}
-
-.int8-self-study-fail .quiz-step-copy + .quiz-step-copy,
-.int8-self-study-fail__effort-list + .quiz-step-copy {
-  margin-top: 6px;
-}
-
-.int8-self-study-fail__effort-list {
-  margin: 4px 0 6px;
-  padding: 0 0 0 14px;
-  list-style: disc;
-  text-align: left;
-}
-
-.int8-self-study-fail__effort-list li {
-  font-size: 12px;
-  line-height: 1.28;
-  color: var(--ink);
-}
-
-.int8-self-study-fail__effort-list li + li {
-  margin-top: 2px;
-}
-
-.int8-self-study-graphic {
-  margin-top: 8px;
 }
 
 .int8-self-study-graphic__card {
@@ -1265,7 +1218,7 @@
 
 /* INT8 — diagnostic-driven (slide 3): sequential analysis animation */
 .int8-diagnostic-driven .int8-diagnostic-analysis--inset {
-  margin: 8px auto 12px;
+  margin: 10px auto;
   width: 100%;
   max-width: var(--funnel-col-max);
 }
@@ -1282,26 +1235,26 @@
 
 .int8-diagnostic-analysis__title {
   margin: 0;
-  font-size: 11px;
+  font-size: clamp(13px, 3.5vw, 15px);
   font-weight: 700;
-  line-height: 1.25;
+  line-height: 1.22;
   letter-spacing: -0.01em;
   color: var(--ink);
 }
 
 .int8-diagnostic-analysis__subtext {
-  margin: 3px 0 0;
+  margin: 4px 0 0;
   font-family: var(--mono);
-  font-size: 8px;
+  font-size: 10px;
   font-weight: 600;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--ink-soft);
 }
 
 .int8-diagnostic-analysis__stage {
   position: relative;
-  min-height: 168px;
+  min-height: 178px;
 }
 
 .int8-diagnostic-analysis__scan-panel {
@@ -1333,11 +1286,11 @@
 
 .int8-diagnostic-analysis__skill-track {
   margin: 0;
-  padding: 4px 6px;
+  padding: 5px 7px;
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 4px;
   animation: int8-diag-skill-scroll 18s linear infinite;
 }
 
@@ -1358,13 +1311,13 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 6px;
-  padding: 3px 5px;
+  gap: 8px;
+  padding: 4px 6px;
   border: 1px solid var(--hair);
   background: var(--paper);
-  font-size: 9px;
+  font-size: 12px;
   font-weight: 600;
-  line-height: 1.2;
+  line-height: 1.25;
   color: var(--ink-soft);
   transition: opacity 0.55s ease, border-color 0.55s ease, background 0.55s ease;
 }
@@ -1422,9 +1375,9 @@
 .int8-diagnostic-analysis__skill-tag {
   flex-shrink: 0;
   font-family: var(--mono);
-  font-size: 6px;
+  font-size: 9px;
   font-weight: 700;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
   opacity: 0;
 }
 
@@ -1474,9 +1427,9 @@
   padding: 4px 6px;
   border: 1px solid rgba(200, 62, 44, 0.22);
   background: rgba(200, 62, 44, 0.04);
-  font-size: 9px;
+  font-size: 12px;
   font-weight: 700;
-  line-height: 1.2;
+  line-height: 1.25;
   color: var(--ink-soft);
   opacity: 0;
   transform: translateY(8px);
@@ -1508,11 +1461,11 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 12px;
-  height: 12px;
+  width: 14px;
+  height: 14px;
   flex-shrink: 0;
   font-family: var(--mono);
-  font-size: 7px;
+  font-size: 8px;
   font-weight: 700;
   border-radius: 50%;
   background: var(--ink);
@@ -1527,7 +1480,7 @@
 .int8-diagnostic-analysis__priority-pts {
   flex-shrink: 0;
   font-family: var(--mono);
-  font-size: 7px;
+  font-size: 9px;
   font-weight: 700;
   letter-spacing: 0.04em;
   color: var(--tomato);
@@ -1552,7 +1505,7 @@
   align-items: center;
   gap: 3px;
   font-family: var(--mono);
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.03em;
   color: var(--ink-soft);
@@ -1607,7 +1560,7 @@
 .int8-diagnostic-analysis__week-label {
   display: block;
   font-family: var(--mono);
-  font-size: 6px;
+  font-size: 7px;
   font-weight: 700;
   letter-spacing: 0.04em;
   line-height: 1.2;
@@ -1637,7 +1590,7 @@
 .int8-diagnostic-analysis__timeline {
   margin: 4px 0 0;
   font-family: var(--mono);
-  font-size: 7px;
+  font-size: 8px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -1653,6 +1606,159 @@
   font-weight: 500;
   line-height: 1.35;
   color: var(--ink-soft);
+}
+
+/*
+ * Building beat — ranked skills + roadmap animating in (match ready readability).
+ */
+.int8-diagnostic-analysis--building .int8-diagnostic-analysis__title {
+  font-size: clamp(14px, 3.7vw, 16px);
+  line-height: 1.2;
+}
+
+.int8-diagnostic-analysis--building .int8-diagnostic-analysis__priority-list {
+  gap: 3px;
+}
+
+.int8-diagnostic-analysis--building .int8-diagnostic-analysis__priority-item {
+  padding: 5px 7px;
+  font-size: 13px;
+  line-height: 1.25;
+}
+
+.int8-diagnostic-analysis--building .int8-diagnostic-analysis__priority-rank {
+  width: 16px;
+  height: 16px;
+  font-size: 9px;
+}
+
+.int8-diagnostic-analysis--building .int8-diagnostic-analysis__priority-pts {
+  font-size: 10px;
+  letter-spacing: 0.03em;
+}
+
+.int8-diagnostic-analysis--building .int8-diagnostic-analysis__score-chip {
+  font-size: 11px;
+}
+
+.int8-diagnostic-analysis--building .int8-diagnostic-analysis__score-arrow {
+  font-size: 9px;
+}
+
+.int8-diagnostic-analysis--building .int8-diagnostic-analysis__week-label {
+  font-size: 8px;
+}
+
+.int8-diagnostic-analysis--building .int8-diagnostic-analysis__timeline {
+  font-size: 8px;
+}
+
+/* Filtering beat — same priority row scale when skills lock in */
+.int8-diagnostic-analysis--filtering .int8-diagnostic-analysis__priority-item {
+  padding: 5px 7px;
+  font-size: 13px;
+  line-height: 1.25;
+}
+
+.int8-diagnostic-analysis--filtering .int8-diagnostic-analysis__priority-rank {
+  width: 16px;
+  height: 16px;
+  font-size: 9px;
+}
+
+.int8-diagnostic-analysis--filtering .int8-diagnostic-analysis__priority-pts {
+  font-size: 10px;
+}
+
+/*
+ * Ready beat — largest type that still fits 390×844 with headline + intro + CTA.
+ * Ready beat scales up again on top of animation-phase sizes.
+ */
+.int8-diagnostic-analysis--ready .int8-diagnostic-analysis__card {
+  padding: 8px 10px 8px;
+  min-height: 0;
+}
+
+.int8-diagnostic-analysis--ready .int8-diagnostic-analysis__header {
+  margin-bottom: 6px;
+}
+
+.int8-diagnostic-analysis--ready .int8-diagnostic-analysis__title {
+  font-size: clamp(14px, 3.8vw, 16px);
+  line-height: 1.2;
+}
+
+.int8-diagnostic-analysis--ready .int8-diagnostic-analysis__stage {
+  min-height: 0;
+}
+
+.int8-diagnostic-analysis--ready .int8-diagnostic-analysis__priority-list {
+  gap: 3px;
+  margin-bottom: 6px;
+}
+
+.int8-diagnostic-analysis--ready .int8-diagnostic-analysis__priority-item {
+  padding: 5px 7px;
+  font-size: 13px;
+  line-height: 1.25;
+}
+
+.int8-diagnostic-analysis--ready .int8-diagnostic-analysis__priority-rank {
+  width: 16px;
+  height: 16px;
+  font-size: 9px;
+}
+
+.int8-diagnostic-analysis--ready .int8-diagnostic-analysis__priority-pts {
+  font-size: 10px;
+  letter-spacing: 0.03em;
+}
+
+.int8-diagnostic-analysis--ready .int8-diagnostic-analysis__roadmap {
+  padding-top: 5px;
+}
+
+.int8-diagnostic-analysis--ready .int8-diagnostic-analysis__score-row {
+  min-height: 24px;
+  gap: 4px;
+}
+
+.int8-diagnostic-analysis--ready .int8-diagnostic-analysis__score-chip {
+  font-size: 12px;
+}
+
+.int8-diagnostic-analysis--ready .int8-diagnostic-analysis__score-arrow {
+  font-size: 10px;
+}
+
+.int8-diagnostic-analysis--ready .int8-diagnostic-analysis__progress-wrap {
+  margin-top: 5px;
+}
+
+.int8-diagnostic-analysis--ready .int8-diagnostic-analysis__week-map {
+  gap: 2px;
+  margin-bottom: 4px;
+}
+
+.int8-diagnostic-analysis--ready .int8-diagnostic-analysis__week-block {
+  padding: 4px 2px;
+}
+
+.int8-diagnostic-analysis--ready .int8-diagnostic-analysis__week-label {
+  font-size: 8px;
+}
+
+.int8-diagnostic-analysis--ready .int8-diagnostic-analysis__timeline {
+  margin-top: 3px;
+  font-size: 8px;
+}
+
+.int8-diagnostic-analysis--ready .int8-diagnostic-analysis__summary {
+  margin-top: 6px;
+  padding-top: 6px;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--ink);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1674,31 +1780,8 @@
   }
 }
 
-/* INT8 — mistake-driven (slide 4): progression + drill — type matches prep-failed-proof */
-.quiz-step--copy:has(.int8-mistake-driven) .quiz-step-headline {
-  text-align: left;
-}
-
-.quiz-step--copy:has(.int8-mistake-driven) .quiz-step-trust-content,
-.quiz-step--copy:has(.int8-mistake-driven) .quiz-step-trust-content .quiz-step-copy {
-  text-align: left;
-}
-
-.int8-mistake-driven .quiz-step-copy {
-  margin: 0;
-}
-
-.int8-mistake-driven__body-copy {
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 1.45;
-  letter-spacing: -0.005em;
-  color: var(--ink);
-  text-align: left;
-}
-
 .int8-mistake-driven__intro {
-  margin: 0 0 20px;
+  margin: 0 0 var(--quiz-gap-copy);
 }
 
 .int8-mistake-driven__closing {
@@ -1706,7 +1789,8 @@
 }
 
 .int8-mistake-driven .int8-mistake-graphic--inset {
-  margin: 8px auto 32px;
+  margin-left: auto;
+  margin-right: auto;
   width: 85%;
   max-width: calc(var(--funnel-col-max) * 0.85);
 }
@@ -2015,10 +2099,6 @@
   }
 }
 
-.int8-prep-path-triptych {
-  margin-bottom: var(--quiz-gap-copy);
-}
-
 .int8-prep-path-triptych__card {
   padding: 10px 10px 12px;
 }
@@ -2045,15 +2125,6 @@
 
 .int8-prep-path-triptych__img {
   object-fit: cover;
-}
-
-.int8-prep-comparison--guided-only .int8-prep-path-triptych {
-  margin-bottom: var(--quiz-gap-copy);
-}
-
-/* INT8 — two-up contrast (home vs guided, crowd vs guided) */
-.int8-prep-contrast-pair {
-  margin-bottom: var(--quiz-gap-copy);
 }
 
 .int8-prep-contrast-pair__card {
@@ -2343,11 +2414,6 @@
   margin-top: 0;
 }
 
-/* INT8 — guided score impact map (example diagnostic) */
-.int8-score-impact-map {
-  margin: 0 0 var(--quiz-gap-copy);
-}
-
 .int8-score-impact-map__card {
   padding: 12px 12px 10px;
   text-align: left;
@@ -2494,20 +2560,12 @@
   flex-shrink: 0;
 }
 
-.int8-prep-comparison--guided-only .int8-score-impact-map {
-  margin-bottom: 0;
-}
-
 .int8-prep-comparison__proof-lead {
-  margin: 0 0 var(--quiz-gap-copy);
+  margin: 0;
   text-align: left;
 }
 
 .int8-prep-comparison--proof-only .int8-prep-comparison__proof-lead {
-  margin-top: 0;
-}
-
-.int8-prep-comparison--proof-only .int8-prep-chart {
   margin-top: 0;
 }
 
@@ -2987,6 +3045,85 @@
 .quiz-tile-grid--kid-problem .quiz-tile-label {
   font-size: 13px;
   line-height: 1.2;
+}
+
+.quiz-tile-grid--wrong-reasons .quiz-tile {
+  --tile-art-h: 76px;
+  --tile-label-gap: 8px;
+  padding: 8px;
+}
+
+.quiz-tile-grid--wrong-reasons .quiz-tile-label {
+  font-size: 12px;
+  line-height: 1.2;
+  letter-spacing: -0.012em;
+}
+
+.quiz-tile-grid--wrong-reasons .worry-ico-box {
+  max-width: 100%;
+  height: 100%;
+}
+
+/* Wrong-reason tiles — line illustrations (reference: struggle-moment icons) */
+.quiz-tile-grid .wrong-illu {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-height: 76px;
+  color: var(--ink);
+}
+
+.quiz-tile-grid .wrong-illu__ink {
+  stroke: currentColor;
+  fill: none;
+}
+
+.quiz-tile-grid .wrong-illu__accent-stroke {
+  stroke: var(--tomato);
+  fill: none;
+}
+
+.quiz-tile-grid .wrong-illu__accent-fill {
+  fill: var(--tomato);
+  stroke: none;
+}
+
+.quiz-tile-grid .wrong-illu__text {
+  fill: currentColor;
+  font-family: var(--mono);
+  letter-spacing: -0.02em;
+}
+
+.quiz-tile-grid .wrong-illu__accent-text {
+  fill: var(--tomato);
+}
+
+.quiz-tile-grid .wrong-illu__underline {
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 1px;
+}
+
+.quiz-tile-grid .wrong-illu__script {
+  font-family: var(--display);
+  font-style: italic;
+}
+
+.quiz-tile-grid .quiz-tile--selected .wrong-illu,
+.quiz-tile-grid .quiz-tile[aria-pressed="true"] .wrong-illu {
+  color: #fff;
+}
+
+.quiz-tile-grid .quiz-tile--selected .wrong-illu__accent-stroke,
+.quiz-tile-grid .quiz-tile[aria-pressed="true"] .wrong-illu__accent-stroke {
+  stroke: var(--cream-2, #ede0c4);
+}
+
+.quiz-tile-grid .quiz-tile--selected .wrong-illu__accent-fill,
+.quiz-tile-grid .quiz-tile[aria-pressed="true"] .wrong-illu__accent-fill,
+.quiz-tile-grid .quiz-tile--selected .wrong-illu__accent-text,
+.quiz-tile-grid .quiz-tile[aria-pressed="true"] .wrong-illu__accent-text {
+  fill: var(--cream-2, #ede0c4);
 }
 
 .quiz-tile-grid .ico-kid-time {
@@ -3561,14 +3698,6 @@
   margin: 8px 0 4px;
 }
 
-/* INT12 — digital SAT (compact interstitial) */
-.quiz-step--copy:has(.int12-sat-changed) .quiz-step-headline {
-  font-size: clamp(20px, 5.4vw, 26px);
-  line-height: 1.14;
-  letter-spacing: -0.03em;
-  text-align: left;
-}
-
 .int12-sat-changed-headline {
   display: inline;
   font-size: inherit;
@@ -3581,38 +3710,16 @@
   color: var(--ink);
 }
 
-.int12-sat-changed-headline__sub {
+.int12-sat-changed-headline__accent {
   color: var(--tomato);
 }
 
-.quiz-step--copy:has(.int12-sat-changed) .quiz-step-trust-content,
-.quiz-step--copy:has(.int12-sat-changed) .quiz-step-trust-content .quiz-step-copy {
-  text-align: left;
-}
-
-.quiz-step--copy:has(.int12-sat-changed) .quiz-step-eyebrow {
-  margin: 0 0 6px;
-  text-align: left;
-}
-
-.int12-sat-changed .quiz-step-copy {
-  font-size: 12px;
-  line-height: 1.28;
-  margin: 0;
-}
-
-.int12-sat-changed .quiz-step-copy + .quiz-step-copy {
-  margin-top: 6px;
-}
-
-.int12-sat-changed .int12-format-split + .quiz-step-copy,
-.int12-sat-changed .int12-format-contrast + .quiz-step-copy {
-  margin-top: 8px;
+.int12-sat-changed__intro {
+  margin: 0 0 8px;
 }
 
 /* INT12 — digital vs paper contrast (680×510 @2x) */
 .int12-format-contrast {
-  margin: 0;
   width: 100%;
 }
 
@@ -3634,6 +3741,7 @@
 
 .int12-format-contrast__img {
   object-fit: cover;
+  object-position: top center;
 }
 
 .int12-sat-changed .quiz-step-footnote {
@@ -3648,7 +3756,6 @@
   grid-template-columns: 1fr 1fr;
   gap: 6px;
   width: 100%;
-  margin: 0;
 }
 
 .int12-format-split__panel {
@@ -3688,6 +3795,7 @@
 }
 
 .quiz-step-copy--accent {
+  font-size: calc(var(--quiz-copy-font-size) * 0.875);
   font-weight: 700;
 }
 

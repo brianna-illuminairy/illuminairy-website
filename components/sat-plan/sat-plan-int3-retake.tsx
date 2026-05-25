@@ -33,6 +33,7 @@ export function SatPlanInt3Retake({ onBack, onContinue }: SatPlanInt3RetakeProps
     <QuizStepTemplate
       stepId="int3-retake"
       headline={copy.headline}
+      headlineTier="compact"
       bodyVariant="copy"
       onContinue={handleContinue}
       onBack={onBack}

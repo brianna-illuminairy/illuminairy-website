@@ -13,22 +13,15 @@ export function Int8SelfStudyFailBody({ copy, testTaker }: Int8SelfStudyFailBody
 
   return (
     <div className="quiz-step-trust-content int8-self-study-fail">
-      <p className="quiz-step-copy">{copy.intro}</p>
-      <ul className="int8-self-study-fail__effort-list">
-        {copy.effortItems.map((item) => (
-          <li key={item}>{item}</li>
-        ))}
-      </ul>
-      {copy.paragraphs.map((paragraph, index) => (
-        <p key={index} className="quiz-step-copy">
-          {paragraph}
-        </p>
-      ))}
+      <p className="quiz-step-copy int8-self-study-fail__lead">{copy.leadParagraph}</p>
       {showContrastImage ? (
         <Int8PrepContrastPair pair="home" testTaker={testTaker} />
       ) : (
         <Int8SelfStudyDashboardGraphic ariaLabel={copy.graphicAriaLabel} />
       )}
+      <p className="quiz-step-copy int8-self-study-fail__closing">
+        {copy.closingParagraph}
+      </p>
     </div>
   );
 }

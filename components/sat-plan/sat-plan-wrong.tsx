@@ -62,6 +62,7 @@ export function SatPlanWrong({ onBack, onContinue }: SatPlanWrongProps) {
       onBack={onBack}
     >
       <QuizTileGrid
+        variant="wrong-reasons"
         options={WRONG_TILE_OPTIONS}
         selectedIds={selected}
         onToggle={toggle}

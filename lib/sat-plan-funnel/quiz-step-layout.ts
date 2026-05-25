@@ -15,6 +15,23 @@ export const QUIZ_STEP_BODY_VARIANTS = {
 
 export type QuizStepBodyVariant = keyof typeof QUIZ_STEP_BODY_VARIANTS;
 
+/** Headline scale for `copy` steps — set on QuizStepTemplate, not per-screen CSS. */
+export const QUIZ_STEP_HEADLINE_TIERS = {
+  hero: "quiz-step-headline-tier--hero",
+  compact: "quiz-step-headline-tier--compact"
+} as const;
+
+export type QuizStepHeadlineTier = keyof typeof QUIZ_STEP_HEADLINE_TIERS;
+
+export function headlineTierClassFor(
+  tier: QuizStepHeadlineTier | undefined
+): string | null {
+  if (!tier || tier === "hero") {
+    return QUIZ_STEP_HEADLINE_TIERS.hero;
+  }
+  return QUIZ_STEP_HEADLINE_TIERS[tier];
+}
+
 /** Files that define layout — guard script blocks agent edits unless unlocked. */
 export const FUNNEL_LAYOUT_LOCKED_PATHS = [
   "app/satplan/funnel.css",

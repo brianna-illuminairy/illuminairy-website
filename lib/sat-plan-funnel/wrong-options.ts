@@ -4,23 +4,13 @@ export type WrongOption = {
   ariaLabel: string;
 };
 
-/** Six-tile multiselect on `?step=wrong` — matches worries / kid-problem grid. */
+/**
+ * Six-tile multiselect on `?step=wrong` — 2×3 grid order (row-major):
+ * Math | Reading & Writing
+ * Test Anxiety | Ran out of time
+ * Focus or Stamina | Lack of preparation
+ */
 export const WRONG_TILE_OPTIONS: WrongOption[] = [
-  {
-    id: "wrong_cat_time",
-    label: "Ran out of time",
-    ariaLabel: "Ran out of time on the test"
-  },
-  {
-    id: "wrong_cat_focus",
-    label: "Struggled with stamina",
-    ariaLabel: "Struggled with focus or stamina during the test"
-  },
-  {
-    id: "wrong_cat_anxiety",
-    label: "Overthought",
-    ariaLabel: "Overthought or second-guessed answers"
-  },
   {
     id: "wrong_cat_math",
     label: "Math",
@@ -28,13 +18,28 @@ export const WRONG_TILE_OPTIONS: WrongOption[] = [
   },
   {
     id: "wrong_cat_reading",
-    label: "Reading & writing",
+    label: "Reading & Writing",
     ariaLabel: "Struggled with reading and writing"
   },
   {
+    id: "wrong_cat_anxiety",
+    label: "Test Anxiety",
+    ariaLabel: "Test anxiety"
+  },
+  {
+    id: "wrong_cat_time",
+    label: "Ran out of time",
+    ariaLabel: "Ran out of time on the test"
+  },
+  {
+    id: "wrong_cat_focus",
+    label: "Focus or Stamina",
+    ariaLabel: "Focus or stamina during the test"
+  },
+  {
     id: "wrong_cat_prep",
-    label: "Not enough preparation",
-    ariaLabel: "Not enough preparation or practice"
+    label: "Lack of preparation",
+    ariaLabel: "Lack of preparation or practice"
   }
 ];
 

@@ -42,12 +42,7 @@ export function SatPlanInt8DiagnosticDriven({
   return (
     <QuizStepTemplate
       stepId="prep-failed-guided"
-      headlineNode={
-        <span className="int8-diagnostic-driven-headline">
-          <span className="int8-diagnostic-driven-headline__lead">{copy.headlineLead}</span>{" "}
-          <span className="int8-diagnostic-driven-headline__accent">{copy.headlineAccent}</span>
-        </span>
-      }
+      headline={copy.headline}
       bodyVariant="copy"
       onContinue={handleContinue}
       onBack={onBack}

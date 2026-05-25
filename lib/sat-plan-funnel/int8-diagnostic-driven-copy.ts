@@ -12,8 +12,8 @@ export type DiagnosticSkill = {
 export type DiagnosticPhaseKey = "analyzing" | "filtering" | "building" | "ready";
 
 export type Int8DiagnosticDrivenCopy = {
-  headlineLead: string;
-  headlineAccent: string;
+  headline: string;
+  subhead: string;
   skillAreaCount: number;
   skills: DiagnosticSkill[];
   prioritySkillIds: string[];
@@ -102,12 +102,26 @@ const PRIORITY_SKILL_IDS = [
 
 const FOCUS_WEEK_RANGES = ["2–3", "4–5", "6–7", "8–9", "10–11"];
 
-export function buildInt8DiagnosticDrivenCopy(_testTaker?: string): Int8DiagnosticDrivenCopy {
+function subheadCopy(testTaker?: string): string {
+  switch (testTaker) {
+    case "test_taker_son":
+      return "A personalized SAT improvement plan focused on the few skills that will raise his score the fastest, prioritizing the highest-impact areas first.";
+    case "test_taker_daughter":
+      return "A personalized SAT improvement plan focused on the few skills that will raise her score the fastest, prioritizing the highest-impact areas first.";
+    case "test_taker_self":
+      return "A personalized SAT improvement plan focused on the few skills that will raise your score the fastest, prioritizing the highest-impact areas first.";
+    case "test_taker_other":
+    default:
+      return "A personalized SAT improvement plan focused on the few skills that will raise their score the fastest, prioritizing the highest-impact areas first.";
+  }
+}
+
+export function buildInt8DiagnosticDrivenCopy(testTaker?: string): Int8DiagnosticDrivenCopy {
   const skills = SKILLS.map((skill) => ({ ...skill }));
 
   return {
-    headlineLead: "Here's what works better.",
-    headlineAccent: "We focus on what moves the score fastest.",
+    headline: "What actually works",
+    subhead: subheadCopy(testTaker),
     skillAreaCount: 28,
     skills,
     prioritySkillIds: [...PRIORITY_SKILL_IDS],
@@ -126,7 +140,7 @@ export function buildInt8DiagnosticDrivenCopy(_testTaker?: string): Int8Diagnost
         title: "Building the focus plan…"
       },
       ready: {
-        title: "Focused roadmap ready.",
+        title: "12 Week SAT Improvement Plan is ready.",
         summary:
           "Students improve faster when they focus on the skills most likely to move their score."
       }

@@ -19,7 +19,7 @@ export function Int12FormatContrast() {
             fill
             sizes="(max-width: 480px) 100vw, 360px"
             className="int12-format-contrast__img"
-            style={{ objectFit: "cover", objectPosition: "center" }}
+            style={{ objectFit: "cover", objectPosition: "top center" }}
             priority
           />
         </div>

@@ -50,7 +50,7 @@ export function buildInt8MistakeDrivenCopy(): Int8MistakeDrivenCopy {
     introParagraph:
       "Students don't improve from more lectures. They improve by fixing mistakes until mastery.",
     closingParagraph:
-      "This is how students who had plateaued in the 1100s or 1200s get their score up 100-250 points.",
+      "This is how our students who had plateaued in the 1100s or 1200s get their score up 100-250 points.",
     sessionBannerLead: "One session · One skill",
     sessionSkillLabel: "Geometry: Right Triangles",
     progressionSteps: PROGRESSION_STEPS.map((step) => ({ ...step })),

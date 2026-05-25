@@ -10,7 +10,9 @@ import type { SatPlanAnswers } from "@/lib/sat-plan-funnel/types";
 import {
   guidedGapOverGroupClassPoints,
   guidedGapOverSelfStudyPoints,
-  satPrepComparison
+  satPrepComparison,
+  satProgramOutcomes,
+  satRetakeResearch
 } from "@/lib/site";
 
 type PrepVoice = {
@@ -128,6 +130,14 @@ function groupClassPlateauCopy(testTaker?: string): string {
 const BLOOM_TWO_SIGMA_COPY =
   "Bloom's research compared 1:1 tutoring to classroom teaching and found tutored students pulled ahead by two standard deviations. That is one of the largest effects in education research.";
 
+function proofAfterChartCopy(): string {
+  const retakeAvg = satRetakeResearch.avgPointsWithoutNewApproach;
+  const guidedAvg = satProgramOutcomes.avgPointsGained;
+  const gap = guidedGapOverSelfStudyPoints();
+
+  return `College Board reports the average student only gains ${retakeAvg} points between retakes, while Illuminairy's students gain on average ${guidedAvg} points between retakes, that's ${gap} pts higher than self-study.`;
+}
+
 const SAT_SKILL_AREA_COUNT = 28;
 const SCORE_IMPACT_SKIPPED_COUNT = 23;
 
@@ -139,8 +149,22 @@ const ILLUSTRATIVE_SCORE_IMPACT_ROWS = [
   { rank: "05", label: "Transitions", points: 24 }
 ] as const;
 
-function guidedSubheadCopy(): string {
-  return "We focus on what moves the score fastest.";
+function guidedHeadlineCopy(): string {
+  return "What actually works";
+}
+
+function guidedSubheadCopy(testTaker?: string): string {
+  switch (testTaker) {
+    case "test_taker_son":
+      return "A personalized SAT improvement plan focused on the few skills that will raise his score the fastest, prioritizing the highest-impact areas first.";
+    case "test_taker_daughter":
+      return "A personalized SAT improvement plan focused on the few skills that will raise her score the fastest, prioritizing the highest-impact areas first.";
+    case "test_taker_self":
+      return "A personalized SAT improvement plan focused on the few skills that will raise your score the fastest, prioritizing the highest-impact areas first.";
+    case "test_taker_other":
+    default:
+      return "A personalized SAT improvement plan focused on the few skills that will raise their score the fastest, prioritizing the highest-impact areas first.";
+  }
 }
 
 function guidedIntroCopy(testTaker?: string): string {
@@ -304,6 +328,7 @@ export type Int8PrepComparisonCopy = {
   plateauFollowUp: string | null;
   chartTitle: string;
   proofBloomCopy: string;
+  proofAfterChartCopy: string;
   tutorProcessCopy: string;
   plateauHeadline: string;
   proofHeadlineGap: number;
@@ -357,12 +382,13 @@ export function buildInt8PrepComparisonCopy(
       : null,
     chartTitle: satPrepComparison.bloomChartTitle,
     proofBloomCopy: BLOOM_TWO_SIGMA_COPY,
+    proofAfterChartCopy: proofAfterChartCopy(),
     tutorProcessCopy: buildAfterChartCopy(scope, answers.test_taker),
     plateauHeadline: "That explains a lot.",
     proofHeadlineGap:
       scope === "self_study" ? gapOverSelfStudy : gapOverGroupClass,
-    guidedHeadline: "Here's what works better.",
-    guidedSubhead: guidedSubheadCopy(),
+    guidedHeadline: guidedHeadlineCopy(),
+    guidedSubhead: guidedSubheadCopy(answers.test_taker),
     guidedIntro: guidedIntroCopy(answers.test_taker),
     scoreImpactMap: buildScoreImpactMapCopy(answers.test_taker),
     selfStudyPoints: satPrepComparison.selfStudyAvgPoints,

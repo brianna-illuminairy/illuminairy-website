@@ -17,7 +17,10 @@ export function SatPlanInt8GroupClassFail({
   onContinue
 }: SatPlanInt8GroupClassFailProps) {
   const answers = useSatPlanAnswers();
-  const copy = useMemo(() => buildInt8GroupClassFailCopy(), []);
+  const copy = useMemo(
+    () => buildInt8GroupClassFailCopy(answers.test_taker),
+    [answers.test_taker]
+  );
 
   useEffect(() => {
     trackSatPlanFunnelEvent("intake_step_view", {
@@ -40,6 +43,7 @@ export function SatPlanInt8GroupClassFail({
     <QuizStepTemplate
       stepId="prep-failed-group-class"
       headline={copy.headline}
+      headlineTier="compact"
       bodyVariant="copy"
       onContinue={handleContinue}
       onBack={onBack}

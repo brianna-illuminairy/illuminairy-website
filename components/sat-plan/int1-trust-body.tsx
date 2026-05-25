@@ -7,7 +7,7 @@ type Int1TrustBodyProps = {
 
 export function Int1TrustBody({ copy }: Int1TrustBodyProps) {
   return (
-    <div className="quiz-step-trust-content">
+    <div className="quiz-step-trust-content quiz-step-trust-content--center">
       <Int1TrustGraphic />
       <p className="quiz-step-copy">{copy.lead}</p>
       <p className="quiz-step-copy">

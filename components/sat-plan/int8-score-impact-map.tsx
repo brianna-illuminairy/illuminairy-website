@@ -17,7 +17,11 @@ export function Int8ScoreImpactMap({ map }: Int8ScoreImpactMapProps) {
   }, []);
 
   return (
-    <div className="int8-score-impact-map" role="img" aria-label={map.ariaLabel}>
+    <div
+      className="int8-score-impact-map quiz-step-trust-graphic"
+      role="img"
+      aria-label={map.ariaLabel}
+    >
       <div className="quiz-step-trust-card int8-score-impact-map__card">
         <div className="int8-score-impact-map__header">
           <p className="int8-score-impact-map__title">{map.title}</p>

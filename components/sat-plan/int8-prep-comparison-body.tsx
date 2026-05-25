@@ -106,6 +106,12 @@ export function Int8PrepComparisonBody({
         />
       ) : null}
 
+      {showChart && beat === "proof" ? (
+        <p className="quiz-step-copy int8-prep-comparison__after-chart">
+          {copy.proofAfterChartCopy}
+        </p>
+      ) : null}
+
       {showGuidedTriptych ? (
         <Int8PrepPathTriptych
           focus={copy.triptychFocusGuided!}
@@ -116,9 +122,11 @@ export function Int8PrepComparisonBody({
       {showGuided ? (
         beat === "guided" ? (
           <>
-            <p className="quiz-step-copy int8-prep-comparison__guided-subhead">
-              {copy.guidedSubhead}
-            </p>
+            {copy.guidedSubhead ? (
+              <p className="quiz-step-copy int8-prep-comparison__guided-subhead">
+                {copy.guidedSubhead}
+              </p>
+            ) : null}
             <p className="quiz-step-copy int8-prep-comparison__guided-intro">
               {copy.guidedIntro}
             </p>

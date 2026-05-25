@@ -5,7 +5,9 @@ import { FunnelCta } from "@/components/sat-plan/funnel-cta";
 import { FunnelShell } from "@/components/sat-plan/funnel-shell";
 import {
   bodyClassForVariant,
-  type QuizStepBodyVariant
+  headlineTierClassFor,
+  type QuizStepBodyVariant,
+  type QuizStepHeadlineTier
 } from "@/lib/sat-plan-funnel/quiz-step-layout";
 import type { SatPlanStep } from "@/lib/sat-plan-funnel/types";
 
@@ -16,6 +18,8 @@ type QuizStepTemplateProps = {
   hint?: string | null;
   hintId?: string | null;
   bodyVariant: QuizStepBodyVariant;
+  /** `copy` interstitials: `hero` (default) or `compact` when a tall graphic needs a shorter title. */
+  headlineTier?: QuizStepHeadlineTier;
   children: ReactNode;
   showBack?: boolean;
   onBack?: () => void;
@@ -31,6 +35,7 @@ export function QuizStepTemplate({
   hint = null,
   hintId = null,
   bodyVariant,
+  headlineTier = "hero",
   children,
   showBack = true,
   onBack,
@@ -40,6 +45,10 @@ export function QuizStepTemplate({
 }: QuizStepTemplateProps) {
   const resolvedHintId = hintId ?? (hint ? `quiz-step-hint-${stepId}` : null);
   const bodyClassName = bodyClassForVariant(bodyVariant);
+  const headlineTierClass = headlineTierClassFor(headlineTier);
+  const stepClassName = ["quiz-step", bodyClassName, headlineTierClass]
+    .filter(Boolean)
+    .join(" ");
 
   const footerNode = onContinue ? (
     <div className="cta-wrap cta-wrap--quiz">
@@ -59,7 +68,7 @@ export function QuizStepTemplate({
       variant="quiz"
       footer={footerNode}
     >
-      <div className={["quiz-step", bodyClassName].filter(Boolean).join(" ")}>
+      <div className={stepClassName}>
         <h1 className="quiz-step-headline">
           {headlineNode ??
             headline ??

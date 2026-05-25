@@ -8,13 +8,13 @@ type Int8MistakeDrivenBodyProps = {
 export function Int8MistakeDrivenBody({ copy }: Int8MistakeDrivenBodyProps) {
   return (
     <div className="quiz-step-trust-content int8-mistake-driven">
-      <p className="quiz-step-copy int8-mistake-driven__body-copy int8-mistake-driven__intro">
+      <p className="quiz-step-copy int8-mistake-driven__intro">
         {copy.introParagraph}
       </p>
 
       <Int8MistakeDrivenGraphic copy={copy} />
 
-      <p className="quiz-step-copy int8-mistake-driven__body-copy int8-mistake-driven__closing">
+      <p className="quiz-step-copy int8-mistake-driven__closing">
         {copy.closingParagraph}
       </p>
     </div>

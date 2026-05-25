@@ -31,7 +31,11 @@ export function Int8GroupClassClassroomGraphic({
   ariaLabel
 }: Int8GroupClassClassroomGraphicProps) {
   return (
-    <div className="int8-group-class-graphic" role="img" aria-label={ariaLabel}>
+    <div
+      className="int8-group-class-graphic quiz-step-trust-graphic"
+      role="img"
+      aria-label={ariaLabel}
+    >
       <div className="quiz-step-trust-card int8-group-class-graphic__card">
         <div className="int8-group-class-graphic__teacher-row">
           <div className="int8-group-class-graphic__teacher" aria-hidden>
@@ -40,7 +44,7 @@ export function Int8GroupClassClassroomGraphic({
           </div>
           <div className="int8-group-class-graphic__board" aria-hidden>
             <span className="int8-group-class-graphic__board-label">One lesson for everyone</span>
-            <span className="int8-group-class-graphic__board-topic">All SAT topics · same pace</span>
+            <span className="int8-group-class-graphic__board-topic">All 28 SAT skills · same pace</span>
           </div>
         </div>
 

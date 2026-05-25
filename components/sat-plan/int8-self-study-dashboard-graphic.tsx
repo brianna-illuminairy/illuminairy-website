@@ -16,7 +16,11 @@ export function Int8SelfStudyDashboardGraphic({
   ariaLabel
 }: Int8SelfStudyDashboardGraphicProps) {
   return (
-    <div className="int8-self-study-graphic" role="img" aria-label={ariaLabel}>
+    <div
+      className="int8-self-study-graphic quiz-step-trust-graphic"
+      role="img"
+      aria-label={ariaLabel}
+    >
       <div className="quiz-step-trust-card int8-self-study-graphic__card">
         <div className="int8-self-study-graphic__dashboard" aria-hidden>
           <div className="int8-self-study-graphic__tiles">

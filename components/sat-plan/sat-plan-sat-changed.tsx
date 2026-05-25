@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo } from "react";
 import { Int12SatChangedBody } from "@/components/sat-plan/int12-sat-changed-body";
+import { Int12SatChangedHeadline } from "@/components/sat-plan/int12-sat-changed-headline";
 import { QuizStepTemplate } from "@/components/sat-plan/quiz-step-template";
 import { trackSatPlanFunnelEvent } from "@/lib/sat-plan-funnel/analytics";
 import { buildInt12SatChangedCopy } from "@/lib/sat-plan-funnel/int12-sat-changed-copy";
@@ -37,12 +38,8 @@ export function SatPlanSatChanged({ onBack, onContinue }: SatPlanSatChangedProps
   return (
     <QuizStepTemplate
       stepId="sat-changed"
-      headlineNode={
-        <span className="int12-sat-changed-headline">
-          <span className="int12-sat-changed-headline__lead">{copy.headline}</span>{" "}
-          <span className="int12-sat-changed-headline__sub">{copy.subhead}</span>
-        </span>
-      }
+      headlineNode={<Int12SatChangedHeadline copy={copy} />}
+      headlineTier="compact"
       bodyVariant="copy"
       onContinue={handleContinue}
       onBack={onBack}

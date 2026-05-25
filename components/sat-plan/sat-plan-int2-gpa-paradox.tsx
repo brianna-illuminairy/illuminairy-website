@@ -33,6 +33,7 @@ export function SatPlanInt2GpaParadox({ onBack, onContinue }: SatPlanInt2GpaPara
     <QuizStepTemplate
       stepId="gpa-paradox"
       headline={copy.headline}
+      headlineTier="compact"
       bodyVariant="copy"
       onContinue={handleContinue}
       onBack={onBack}

@@ -17,7 +17,10 @@ export function SatPlanInt8SelfStudyFail({
   onContinue
 }: SatPlanInt8SelfStudyFailProps) {
   const answers = useSatPlanAnswers();
-  const copy = useMemo(() => buildInt8SelfStudyFailCopy(), []);
+  const copy = useMemo(
+    () => buildInt8SelfStudyFailCopy(answers.test_taker),
+    [answers.test_taker]
+  );
 
   useEffect(() => {
     trackSatPlanFunnelEvent("intake_step_view", {

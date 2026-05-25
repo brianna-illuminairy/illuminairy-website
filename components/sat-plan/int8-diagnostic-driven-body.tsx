@@ -8,6 +8,7 @@ type Int8DiagnosticDrivenBodyProps = {
 export function Int8DiagnosticDrivenBody({ copy }: Int8DiagnosticDrivenBodyProps) {
   return (
     <div className="quiz-step-trust-content int8-diagnostic-driven">
+      <p className="quiz-step-copy int8-diagnostic-driven__intro">{copy.subhead}</p>
       <Int8DiagnosticAnalysisGraphic copy={copy} />
     </div>
   );

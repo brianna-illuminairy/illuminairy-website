@@ -6,7 +6,7 @@
 
 | File pattern | Allowed |
 |--------------|---------|
-| `sat-plan-worries.tsx`, `sat-plan-who.tsx`, `sat-plan-target.tsx`, future `sat-plan-*.tsx` steps | `headline`, `hint`, `bodyVariant`, options/copy, state, analytics, `onContinue` / `onBack` |
+| `sat-plan-worries.tsx`, `sat-plan-who.tsx`, `sat-plan-target.tsx`, future `sat-plan-*.tsx` steps | `headline`, `hint`, `bodyVariant`, `headlineTier` (`hero` \| `compact` on copy steps), options/copy, state, analytics, `onContinue` / `onBack` |
 | Body components | `QuizTileGrid`, `QuizOptionList` — **data + handlers only** |
 
 ## What is locked

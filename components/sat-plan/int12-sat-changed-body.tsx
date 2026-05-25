@@ -11,12 +11,12 @@ export function Int12SatChangedBody({ copy }: Int12SatChangedBodyProps) {
 
   return (
     <div className="quiz-step-trust-content int12-sat-changed">
-      <p className="quiz-step-eyebrow">{copy.eyebrow}</p>
+      <p className="quiz-step-copy int12-sat-changed__intro">{copy.introAboveVisual}</p>
 
       {formatVisual ? (
         <Int12FormatContrast />
       ) : (
-        <div className="int12-format-split" aria-hidden="true">
+        <div className="int12-format-split quiz-step-trust-graphic" aria-hidden="true">
           <div className="int12-format-split__panel int12-format-split__panel--digital">
             <span className="int12-format-split__label">Digital SAT</span>
             <span className="int12-format-split__detail">Laptop · Desmos · formula sheet</span>
@@ -36,11 +36,7 @@ export function Int12SatChangedBody({ copy }: Int12SatChangedBodyProps) {
 
       {copy.prepLine ? <p className="quiz-step-copy quiz-step-copy--accent">{copy.prepLine}</p> : null}
 
-      {copy.analogy.map((line, index) => (
-        <p key={`analogy-${index}`} className="quiz-step-copy quiz-step-copy--quote">
-          {line}
-        </p>
-      ))}
+      <p className="quiz-step-copy quiz-step-copy--quote">{copy.closingLine}</p>
 
       <p className="quiz-step-footnote">{copy.footnote}</p>
     </div>
