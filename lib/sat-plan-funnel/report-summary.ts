@@ -10,6 +10,7 @@ import { TEST_TAKER_OPTIONS } from "@/lib/sat-plan-funnel/test-taker-options";
 import { wrongReasonLabels } from "@/lib/sat-plan-funnel/wrong-options";
 import { kidProblemLabels } from "@/lib/sat-plan-funnel/kid-problem-options";
 import { reportDiagnosisIntro } from "@/lib/sat-plan-funnel/diagnosis-copy";
+import { MEANING_OPTIONS } from "@/lib/sat-plan-funnel/meaning-options";
 import { WORRY_OPTIONS } from "@/lib/sat-plan-funnel/worry-options";
 
 export type ReportSummaryRow = {
@@ -84,6 +85,12 @@ export function buildReportSummary(answers: SatPlanAnswers): ReportSummary {
   if (answers.target_schools?.trim()) {
     rows.push({ label: "Target schools", value: answers.target_schools.trim() });
   }
+
+  const meaning = answers.meaning
+    ?.map((id) => MEANING_OPTIONS.find((row) => row.id === id)?.label)
+    .filter(Boolean)
+    .join(", ");
+  if (meaning) rows.push({ label: "What it means", value: meaning });
 
   const worries = answers.worries
     ?.map((id) => WORRY_OPTIONS.find((row) => row.id === id)?.label)

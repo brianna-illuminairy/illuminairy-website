@@ -34,12 +34,6 @@ export function Int12SatChangedBody({ copy }: Int12SatChangedBodyProps) {
 
       <Int12StatRows rows={copy.statRows} />
 
-      {copy.prepLine ? <p className="quiz-step-copy quiz-step-copy--accent">{copy.prepLine}</p> : null}
-
-      {copy.wrongLine ? (
-        <p className="quiz-step-copy quiz-step-copy--accent">{copy.wrongLine}</p>
-      ) : null}
-
       <p className="quiz-step-copy int12-sat-changed__closing">
         <Int12RichCopy parts={copy.closingParts} />
       </p>

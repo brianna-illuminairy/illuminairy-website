@@ -12,33 +12,45 @@ const DEFAULT_STATE: SatPlanFunnelState = {
 
 export const SAT_PLAN_STEPS: Record<SatPlanStep, SatPlanStepMeta> = {
   landing: { progress: 0, label: null },
-  worries: { progress: 6, label: "Question 1 of 10", labelUpper: true },
-  who: { progress: 12, label: "Question 2 of 10", labelUpper: true },
-  target: { progress: 18, label: "Question 3 of 10", labelUpper: true },
+  meaning: { progress: 3, label: "Question 1 of 12", labelUpper: true },
+  worries: { progress: 5, label: "Question 2 of 12", labelUpper: true },
+  who: { progress: 10, label: "Question 3 of 12", labelUpper: true },
+  "student-name": { progress: 14, label: "Question 4 of 12", labelUpper: true },
+  target: { progress: 18, label: "Question 5 of 12", labelUpper: true },
   trust: { progress: 24, label: null },
-  history: { progress: 30, label: "Question 4 of 10", labelUpper: true },
+  history: { progress: 24, label: "Question 6 of 12", labelUpper: true },
   "int3-retake": { progress: 33, label: null },
-  prep: { progress: 36, label: "Question 5 of 10", labelUpper: true },
+  prep: { progress: 34, label: "Question 8 of 12", labelUpper: true },
   "prep-failed-group-class": { progress: 38, label: null },
   "prep-failed-self-study": { progress: 38, label: null },
   "prep-failed-plateau": { progress: 39, label: null },
-  "prep-failed-proof": { progress: 42, label: null },
+  "prep-failed-proof": { progress: 30, label: null },
   "prep-failed-mentors": { progress: 44, label: null },
   "prep-failed-guided": { progress: 46, label: null },
-  "prep-failed-mistake-driven": { progress: 48, label: null },
-  score: { progress: 52, label: "Question 6 of 10", labelUpper: true },
-  wrong: { progress: 62, label: "Question 7 of 10", labelUpper: true },
+  "prep-failed-mistake-driven": { progress: 50, label: null },
+  score: { progress: 28, label: "Question 7 of 12", labelUpper: true },
+  wrong: { progress: 48, label: "Question 9 of 12", labelUpper: true },
   "sat-changed": { progress: 65, label: null },
-  gpa: { progress: 68, label: "Question 8 of 10", labelUpper: true },
+  gpa: { progress: 56, label: "Question 10 of 12", labelUpper: true },
   "gpa-paradox": { progress: 72, label: null },
-  "test-date": { progress: 76, label: "Question 9 of 10", labelUpper: true },
-  timeline: { progress: 80, label: null },
-  schools: { progress: 84, label: "Question 10 of 10", labelUpper: true },
-  "plan-path": { progress: 88, label: null },
+  "test-date": { progress: 62, label: "Question 11 of 12", labelUpper: true },
+  timeline: { progress: 66, label: null },
+  schools: { progress: 70, label: "Question 12 of 12", labelUpper: true },
+  "score-fit": { progress: 74, label: null },
+  "plan-path": { progress: 78, label: null },
+  "ch3-social": { progress: 81, label: null },
+  "ch3-method": { progress: 84, label: null },
+  "ch3-preview": { progress: 87, label: null },
+  "ch3-path": { progress: 90, label: null },
   contact: { progress: 92, label: null },
-  "plan-ready": { progress: 95, label: null },
-  report: { progress: 98, label: null },
-  book: { progress: 100, label: null }
+  "reveal-stakes": { progress: 94, label: null },
+  "reveal-diagnosis": { progress: 96, label: null },
+  "reveal-bottlenecks": { progress: 97, label: null },
+  "reveal-proof": { progress: 98, label: null },
+  "plan-ready": { progress: 94, label: null },
+  report: { progress: 96, label: null },
+  book: { progress: 99, label: null },
+  booked: { progress: 100, label: null }
 };
 
 export function loadSatPlanState(): SatPlanFunnelState {
@@ -85,7 +97,9 @@ const LEGACY_STEP_ALIASES: Record<string, SatPlanStep> = {
   "gpa-stub": "gpa",
   "int13-kid-problem": "score",
   "kid-problem": "score",
-  "prep-failed-stub": "prep-failed-proof"
+  "prep-failed-stub": "prep-failed-proof",
+  "plan-ready": "reveal-stakes",
+  report: "reveal-diagnosis"
 };
 
 export function stepFromSearchParam(value: string | null): SatPlanStep {

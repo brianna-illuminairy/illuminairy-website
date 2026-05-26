@@ -1,4 +1,3 @@
-import { basedOnWhatYouShared } from "@/lib/sat-plan-funnel/diagnosis-copy";
 import type { SatPlanAnswers } from "@/lib/sat-plan-funnel/types";
 
 export type DiagnosticSkillTag = "strong" | "developing" | "high-impact" | "low-impact";
@@ -34,7 +33,15 @@ export type Int8DiagnosticDrivenCopy = {
   graphicAriaLabel: string;
 };
 
+/** Sample shown in the scan UI — full program still covers 28 skill areas. */
 const SKILLS: DiagnosticSkill[] = [
+  {
+    id: "right-triangles",
+    label: "Right triangles & trig",
+    tag: "high-impact",
+    priorityRank: 1,
+    pointsGain: 90
+  },
   {
     id: "linear-functions",
     label: "Linear functions",
@@ -43,26 +50,18 @@ const SKILLS: DiagnosticSkill[] = [
     pointsGain: 70
   },
   {
-    id: "systems",
-    label: "Systems of equations",
-    tag: "high-impact",
-    priorityRank: 4,
-    pointsGain: 40
-  },
-  {
-    id: "right-triangles",
-    label: "Right triangles & trig",
-    tag: "high-impact",
-    priorityRank: 1,
-    pointsGain: 90
-  },
-  { id: "probability", label: "Probability", tag: "developing" },
-  {
     id: "boundaries",
     label: "Boundaries",
     tag: "high-impact",
     priorityRank: 3,
     pointsGain: 60
+  },
+  {
+    id: "systems",
+    label: "Systems of equations",
+    tag: "high-impact",
+    priorityRank: 4,
+    pointsGain: 40
   },
   {
     id: "transitions",
@@ -74,25 +73,10 @@ const SKILLS: DiagnosticSkill[] = [
   { id: "main-idea", label: "Main idea", tag: "strong" },
   { id: "vocab-context", label: "Vocabulary in context", tag: "strong" },
   { id: "geometry", label: "Geometry", tag: "strong" },
+  { id: "probability", label: "Probability", tag: "developing" },
   { id: "inferences", label: "Inferences", tag: "developing" },
   { id: "rhetorical", label: "Rhetorical synthesis", tag: "developing" },
-  { id: "ratios", label: "Ratios & rates", tag: "low-impact" },
-  { id: "quadratic", label: "Quadratic functions", tag: "low-impact" },
-  { id: "data-interpretation", label: "Data interpretation", tag: "low-impact" },
-  { id: "command-evidence", label: "Command of evidence", tag: "strong" },
-  { id: "words-context", label: "Words in context", tag: "developing" },
-  { id: "exponential", label: "Exponential functions", tag: "low-impact" },
-  { id: "circle-theorems", label: "Circle theorems", tag: "developing" },
-  { id: "standard-english", label: "Standard English conventions", tag: "strong" },
-  { id: "cross-text", label: "Cross-text connections", tag: "developing" },
-  { id: "percent-change", label: "Percent change", tag: "low-impact" },
-  { id: "scatterplots", label: "Scatterplots", tag: "low-impact" },
-  { id: "central-ideas", label: "Central ideas & details", tag: "strong" },
-  { id: "form-structure", label: "Form, structure & sense", tag: "developing" },
-  { id: "equivalent-expressions", label: "Equivalent expressions", tag: "low-impact" },
-  { id: "nonlinear-systems", label: "Nonlinear systems", tag: "developing" },
-  { id: "text-structure", label: "Text structure & purpose", tag: "strong" },
-  { id: "volume-surface", label: "Volume & surface area", tag: "low-impact" }
+  { id: "ratios", label: "Ratios & rates", tag: "low-impact" }
 ];
 
 const PRIORITY_SKILL_IDS = [
@@ -119,11 +103,6 @@ function subheadCopy(testTaker?: string): string {
   }
 }
 
-function readySummary(testTaker?: string): string {
-  const mirror = basedOnWhatYouShared(testTaker);
-  return `${mirror}, the skills most likely to move the score are the ones we prioritize first — not all 28 areas.`;
-}
-
 export function buildInt8DiagnosticDrivenCopy(
   answers: SatPlanAnswers
 ): Int8DiagnosticDrivenCopy {
@@ -142,7 +121,7 @@ export function buildInt8DiagnosticDrivenCopy(
     phases: {
       analyzing: {
         title: "Diagnosing SAT skill performance…",
-        subtext: "28 SAT skill areas evaluated"
+        subtext: "28 skill areas · scanning gaps"
       },
       filtering: {
         title: "Identifying highest-impact weaknesses…"
@@ -151,12 +130,11 @@ export function buildInt8DiagnosticDrivenCopy(
         title: "Building personalized plan…"
       },
       ready: {
-        title: "12 Week SAT Improvement Plan is ready.",
-        summary: readySummary(testTaker)
+        title: "12 Week SAT Improvement Plan is ready."
       }
     },
     graphicAriaLabel:
-      "Animated diagnosis: SAT skill performance evaluated, highest-impact weaknesses ranked with illustrative point impact, then scheduled across weeks 2 through 11 of a 12-week personalized plan with score range rising from 1180 toward 1380–1410."
+      "Animated diagnosis: skill gaps scanned across 28 areas, top weaknesses ranked with illustrative point impact, then scheduled across weeks 2 through 11 of a 12-week personalized plan with score range rising from 1180 toward 1380–1410."
   };
 }
 

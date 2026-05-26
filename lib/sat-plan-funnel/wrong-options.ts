@@ -7,7 +7,7 @@ export type WrongOption = {
 /**
  * Six-tile multiselect on `?step=wrong` — 2×3 grid order (row-major):
  * Math | Reading & Writing
- * Test Anxiety | Ran out of time
+ * Ran out of time | Test Anxiety
  * Focus or Stamina | Lack of preparation
  */
 export const WRONG_TILE_OPTIONS: WrongOption[] = [
@@ -22,14 +22,14 @@ export const WRONG_TILE_OPTIONS: WrongOption[] = [
     ariaLabel: "Struggled with reading and writing"
   },
   {
-    id: "wrong_cat_anxiety",
-    label: "Test Anxiety",
-    ariaLabel: "Test anxiety"
-  },
-  {
     id: "wrong_cat_time",
     label: "Ran out of time",
     ariaLabel: "Ran out of time on the test"
+  },
+  {
+    id: "wrong_cat_anxiety",
+    label: "Test Anxiety",
+    ariaLabel: "Test anxiety"
   },
   {
     id: "wrong_cat_focus",

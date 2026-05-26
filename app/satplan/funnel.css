@@ -852,8 +852,8 @@
 
 .int2-gpa-paradox__note-body {
   margin: 0;
-  font-size: 15px;
-  line-height: 1.45;
+  font-size: var(--quiz-copy-font-size);
+  line-height: var(--quiz-copy-line-height);
   color: var(--ink);
 }
 
@@ -1441,7 +1441,7 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
-  animation: int8-diag-skill-scroll 14s linear infinite;
+  animation: int8-diag-skill-scroll 7s linear infinite;
 }
 
 .int8-diagnostic-analysis--filtering .int8-diagnostic-analysis__skill-track {
@@ -4115,9 +4115,6 @@
 }
 
 .int12-format-contrast__img {
-  display: block;
-  width: 100%;
-  height: 100%;
   object-fit: cover;
   object-position: center;
 }

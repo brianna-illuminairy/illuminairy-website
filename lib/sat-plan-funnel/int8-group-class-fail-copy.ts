@@ -32,11 +32,16 @@ function scoreLiftPhrase(testTaker?: string): string {
   return "their score";
 }
 
+function patternAuthorityFallback(): string {
+  const line = thePatternWeUsuallySee();
+  return line.charAt(0).toUpperCase() + line.slice(1);
+}
+
 function buildParagraphs(answers: SatPlanAnswers): string[] {
   const scoreLift = scoreLiftPhrase(answers.test_taker);
   const mirror =
     profilePatternLine(answers, { includePrep: true }) ??
-    thePatternWeUsuallySee();
+    patternAuthorityFallback();
 
   const opening = `${mirror} the same few skill gaps costing points, not weakness in every topic.`;
 

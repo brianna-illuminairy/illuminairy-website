@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { FunnelSchoolsBody } from "@/components/sat-plan/funnel-schools-body";
 import { QuizStepTemplate } from "@/components/sat-plan/quiz-step-template";
 import { trackSatPlanFunnelEvent } from "@/lib/sat-plan-funnel/analytics";
 import { schoolsHeadline } from "@/lib/sat-plan-funnel/personalization";
@@ -14,7 +15,10 @@ type SatPlanSchoolsProps = {
 export function SatPlanSchools({ onBack, onContinue }: SatPlanSchoolsProps) {
   const answers = loadSatPlanState().answers;
   const [schools, setSchools] = useState(() => answers.target_schools ?? "");
-  const headline = useMemo(() => schoolsHeadline(answers.test_taker), [answers.test_taker]);
+  const headline = useMemo(
+    () => schoolsHeadline(answers.test_taker, answers.student_first_name),
+    [answers.student_first_name, answers.test_taker]
+  );
 
   useEffect(() => {
     trackSatPlanFunnelEvent("intake_step_view", {
@@ -43,17 +47,7 @@ export function SatPlanSchools({ onBack, onContinue }: SatPlanSchoolsProps) {
       onContinue={handleContinue}
       onBack={onBack}
     >
-      <label className="sf-field" htmlFor="satplan-schools-input">
-        <span className="sf-field__label">School names</span>
-        <textarea
-          id="satplan-schools-input"
-          className="sf-textarea"
-          rows={4}
-          value={schools}
-          placeholder="e.g. UGA, Georgia Tech, Emory…"
-          onChange={(event) => setSchools(event.target.value)}
-        />
-      </label>
+      <FunnelSchoolsBody schools={schools} onSchoolsChange={setSchools} />
     </QuizStepTemplate>
   );
 }

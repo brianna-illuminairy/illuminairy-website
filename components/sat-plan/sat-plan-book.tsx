@@ -1,8 +1,11 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
+import { FunnelBookBody } from "@/components/sat-plan/funnel-book-body";
 import { QuizStepTemplate } from "@/components/sat-plan/quiz-step-template";
 import { trackSatPlanFunnelEvent } from "@/lib/sat-plan-funnel/analytics";
+import { buildBookCtaCopy } from "@/lib/sat-plan-funnel/final-reveal-copy";
+import { useSatPlanAnswers } from "@/lib/sat-plan-funnel/use-sat-plan-answers";
 import { site } from "@/lib/site";
 
 type SatPlanBookProps = {
@@ -10,8 +13,31 @@ type SatPlanBookProps = {
   onContinue: () => void;
 };
 
+function calendlyEmbedUrl(base: string): string {
+  try {
+    const url = new URL(base);
+    url.searchParams.set("hide_event_type_details", "1");
+    url.searchParams.set("hide_gdpr_banner", "1");
+    url.searchParams.set("background_color", "ffffff");
+    url.searchParams.set("text_color", "1a1a2e");
+    url.searchParams.set("primary_color", "0d9488");
+    return url.toString();
+  } catch {
+    return base;
+  }
+}
+
 export function SatPlanBook({ onBack, onContinue }: SatPlanBookProps) {
+  const answers = useSatPlanAnswers();
+  const copy = useMemo(() => buildBookCtaCopy(answers), [answers]);
+  const embedSrc = useMemo(() => calendlyEmbedUrl(site.calendlyUrl), []);
+
   useEffect(() => {
+    trackSatPlanFunnelEvent("calendly_open", {
+      step_id: "book",
+      path: "spine",
+      layout: "conversion"
+    });
     trackSatPlanFunnelEvent("intake_step_view", {
       step_id: "book",
       path: "spine",
@@ -21,28 +47,25 @@ export function SatPlanBook({ onBack, onContinue }: SatPlanBookProps) {
 
   const handleContinue = () => {
     trackSatPlanFunnelEvent("intake_step_complete", { step_id: "book" });
-    window.open(site.calendlyUrl, "_blank", "noopener,noreferrer");
     onContinue();
   };
 
   return (
     <QuizStepTemplate
       stepId="book"
-      headline="Book your free SAT plan review"
+      headline={copy.headline}
+      hint="15 minutes — no obligation."
       bodyVariant="copy"
-      continueLabel="Open scheduling"
+      continueLabel="I scheduled my call"
       onContinue={handleContinue}
       onBack={onBack}
     >
-      <div className="quiz-step-int3-content quiz-step-trust-content">
-        <p className="quiz-step-copy">
-          Pick a 20-minute call with our team. We will walk through your plan snapshot and answer
-          questions about the August SAT Accelerator program.
-        </p>
-        <p className="quiz-step-footnote">
-          Opens Calendly in a new tab — {site.calendlyUrl.replace("https://", "")}
-        </p>
-      </div>
+      <FunnelBookBody
+        embedSrc={embedSrc}
+        intro={copy.intro}
+        agenda={copy.agenda}
+        footnote={copy.footnote}
+      />
     </QuizStepTemplate>
   );
 }

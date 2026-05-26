@@ -22,8 +22,8 @@ export function SatPlanTarget({ onBack, onContinue }: SatPlanTargetProps) {
   const advancingRef = useRef(false);
 
   const headline = useMemo(
-    () => targetScoreHeadline(answers.test_taker),
-    [answers.test_taker]
+    () => targetScoreHeadline(answers.test_taker, answers.student_first_name),
+    [answers.student_first_name, answers.test_taker]
   );
 
   useEffect(() => {

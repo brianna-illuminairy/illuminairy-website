@@ -21,7 +21,10 @@ export function SatPlanGpa({ onBack, onContinue }: SatPlanGpaProps) {
   const [selectedId, setSelectedId] = useState<string | null>(saved ?? null);
   const advancingRef = useRef(false);
 
-  const headline = useMemo(() => gpaHeadline(answers.test_taker), [answers.test_taker]);
+  const headline = useMemo(
+    () => gpaHeadline(answers.test_taker, answers.student_first_name),
+    [answers.student_first_name, answers.test_taker]
+  );
 
   useEffect(() => {
     trackSatPlanFunnelEvent("intake_step_view", {

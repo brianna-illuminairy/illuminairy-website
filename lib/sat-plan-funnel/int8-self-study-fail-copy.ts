@@ -1,9 +1,13 @@
+import { formatPrepLabels } from "@/lib/sat-plan-funnel/prep-labels";
 import {
-  prepMirrorPhrase,
-  profilePatternLine
-} from "@/lib/sat-plan-funnel/diagnosis-copy";
+  normalizePrepMethods,
+  PREP_SELF_STUDY_IDS,
+  type PrepId
+} from "@/lib/sat-plan-funnel/prep-options";
+import { concreteTargetBandLabel } from "@/lib/sat-plan-funnel/score-gap";
+import { subjectPronouns } from "@/lib/sat-plan-funnel/subject-pronouns";
+import { studentVoice } from "@/lib/sat-plan-funnel/student-voice";
 import type { SatPlanAnswers } from "@/lib/sat-plan-funnel/types";
-import { subjectPronouns, yourStudentPhrase } from "@/lib/sat-plan-funnel/subject-pronouns";
 
 export type Int8SelfStudyFailCopy = {
   headline: string;
@@ -12,31 +16,79 @@ export type Int8SelfStudyFailCopy = {
   graphicAriaLabel: string;
 };
 
-const EFFORT_INLINE =
-  "Bluebook, Khan Academy, Practice Tests, YouTube";
+const SAT_SKILL_COUNT = 28;
 
-const FOCUS_GAP =
-  "which of the 28 SAT skills to focus on that would actually improve";
+const DEFAULT_SELF_STUDY_TOOLS = "Khan Academy and Bluebook";
 
-function leadParagraph(answers: SatPlanAnswers): string {
-  const testTaker = answers.test_taker;
-  const { subject } = subjectPronouns(testTaker);
-  const student = yourStudentPhrase(testTaker);
-  const mirror = prepMirrorPhrase(answers) ?? profilePatternLine(answers, { includePrep: true });
-  const prefix = mirror ? `${mirror} ` : "";
+function selfStudyPrepIds(answers: SatPlanAnswers): PrepId[] {
+  return normalizePrepMethods(answers.prep_method).filter(
+    (id) => id !== "prep_little_none" && id !== "prep_class"
+  );
+}
 
-  if (testTaker === "test_taker_self") {
-    return `${prefix}You probably studied hard: ${EFFORT_INLINE}. But you likely struggled to identify ${FOCUS_GAP} your score.`;
+function selectedSelfStudyPrep(answers: SatPlanAnswers): boolean {
+  return selfStudyPrepIds(answers).some((id) => PREP_SELF_STUDY_IDS.has(id));
+}
+
+function selfStudyToolsLabel(answers: SatPlanAnswers): string {
+  const labels = formatPrepLabels(selfStudyPrepIds(answers));
+  return labels ?? DEFAULT_SELF_STUDY_TOOLS;
+}
+
+function openerSubject(answers: SatPlanAnswers): string {
+  const raw = answers.student_first_name?.trim();
+  const voice = studentVoice(answers);
+
+  if (voice.isSelf) {
+    return "You";
   }
 
-  if (student) {
-    const who = student.charAt(0).toUpperCase() + student.slice(1);
-    const scoreWord =
-      subject === "he" ? "his" : subject === "she" ? "her" : "their";
-    return `${prefix}${who} probably studied hard: ${EFFORT_INLINE}. But ${subject} likely struggled to identify ${FOCUS_GAP} ${scoreWord} score.`;
+  if (raw) {
+    return raw;
   }
 
-  return `${prefix}They probably studied hard: ${EFFORT_INLINE}. But they likely struggled to identify ${FOCUS_GAP} their score.`;
+  switch (answers.test_taker) {
+    case "test_taker_son":
+      return "Your son";
+    case "test_taker_daughter":
+      return "Your daughter";
+    default:
+      return "They";
+  }
+}
+
+function studiedHardOpener(answers: SatPlanAnswers): string {
+  const who = openerSubject(answers);
+  const tools = selfStudyToolsLabel(answers);
+  const target = concreteTargetBandLabel(answers.target_score);
+  const voice = studentVoice(answers);
+
+  if (target) {
+    return `${who} studied hard with ${tools}, but still didn't achieve ${target}.`;
+  }
+
+  if (voice.isSelf) {
+    return `${who} studied hard with ${tools}, but your score still hasn't moved.`;
+  }
+
+  return `${who} studied hard with ${tools}, but ${voice.possessive} score still hasn't moved.`;
+}
+
+function skillsStruggleSentence(answers: SatPlanAnswers): string {
+  const voice = studentVoice(answers);
+  const subject = voice.isSelf ? "you" : voice.subject;
+
+  return `The SAT tests ${SAT_SKILL_COUNT} skills, ${subject} probably struggled to identify which ones to focus on to actually improve ${voice.possessive} score.`;
+}
+
+function buildLeadParagraph(answers: SatPlanAnswers): string {
+  return `${studiedHardOpener(answers)} ${skillsStruggleSentence(answers)}`;
+}
+
+function headline(answers: SatPlanAnswers): string {
+  return selectedSelfStudyPrep(answers)
+    ? "Why self-study failed"
+    : "Why self-study fails";
 }
 
 const CLOSING_HELP_STEPS =
@@ -46,26 +98,26 @@ function closingParagraph(testTaker?: string): string {
   const { subject } = subjectPronouns(testTaker);
 
   if (testTaker === "test_taker_self") {
-    return `Without someone to help you ${CLOSING_HELP_STEPS}, simply doing practice problems won't help raise your score.`;
+    return `Without someone to help you ${CLOSING_HELP_STEPS}, simply doing practice problems doesn't help raise your score.`;
   }
 
   if (subject === "he") {
-    return `Without someone to help him ${CLOSING_HELP_STEPS}, simply doing practice problems won't help raise his score.`;
+    return `Without someone to help him ${CLOSING_HELP_STEPS}, simply doing practice problems doesn't help raise his score.`;
   }
 
   if (subject === "she") {
-    return `Without someone to help her ${CLOSING_HELP_STEPS}, simply doing practice problems won't help raise her score.`;
+    return `Without someone to help her ${CLOSING_HELP_STEPS}, simply doing practice problems doesn't help raise her score.`;
   }
 
-  return `Without someone to help them ${CLOSING_HELP_STEPS}, simply doing practice problems won't help raise their score.`;
+  return `Without someone to help them ${CLOSING_HELP_STEPS}, simply doing practice problems doesn't help raise their score.`;
 }
 
 export function buildInt8SelfStudyFailCopy(
   answers: SatPlanAnswers
 ): Int8SelfStudyFailCopy {
   return {
-    headline: "Why self-study fails",
-    leadParagraph: leadParagraph(answers),
+    headline: headline(answers),
+    leadParagraph: buildLeadParagraph(answers),
     closingParagraph: closingParagraph(answers.test_taker),
     graphicAriaLabel:
       "Messy self-study dashboard with practice tests, random videos, scattered SAT topics, and a long checklist. An overwhelmed student sits in the middle. Overlay: more studying does not equal targeted improvement. Bottom line: lots of effort, little score movement."

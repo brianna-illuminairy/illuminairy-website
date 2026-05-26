@@ -403,6 +403,27 @@ export function guidedGapOverGroupClassPoints(): number {
   );
 }
 
+/**
+ * Benjamin Bloom tutoring study — funnel uses plain language, not “two standard deviations.”
+ * ~2σ ≈ average tutored student at ~98th percentile vs conventional classroom control.
+ * Source: Educational Researcher, 1984 — verify before changing claims.
+ */
+export const bloomOneToOneResearch = {
+  sourceLabel: "Benjamin Bloom (Educational Researcher, 1984)",
+  /** SAT funnel / INT8 — parent-readable summary. */
+  funnelPlainLanguage:
+    "Bloom's research compared one-to-one tutoring with classroom teaching. On average, tutored students learned at about the level of the top 2% of students in a conventional class."
+} as const;
+
+/**
+ * INT8 mistake-driven — cited research + contrast vs lecture-style class time.
+ */
+export const satMistakeDrivenResearch = {
+  bloomLine: bloomOneToOneResearch.funnelPlainLanguage,
+  mistakeVsLectureLine:
+    "Progress comes from correcting each missed question in real time, not from replaying the same lesson for everyone in the room."
+} as const;
+
 /** 182 ÷ 40 → one decimal for headline (4.6×). */
 export function guidedVsSelfStudyMultiplier(): number {
   return (

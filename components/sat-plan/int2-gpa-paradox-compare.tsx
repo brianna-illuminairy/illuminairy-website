@@ -10,7 +10,7 @@ export function Int2GpaParadoxCompare({ school, sat }: Int2GpaParadoxCompareProp
     <div
       className="int2-gpa-compare quiz-step-trust-graphic"
       role="img"
-      aria-label="In school rewards depth; on the SAT rewards speed."
+      aria-label="In school rewards taking your time; on the SAT rewards speed."
     >
       <div className="int2-gpa-compare__grid">
         <CompareCard card={school} variant="school" />

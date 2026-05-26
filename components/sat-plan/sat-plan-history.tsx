@@ -5,7 +5,7 @@ import { QuizOptionList } from "@/components/sat-plan/quiz-option-list";
 import { QuizStepTemplate } from "@/components/sat-plan/quiz-step-template";
 import { trackSatPlanFunnelEvent } from "@/lib/sat-plan-funnel/analytics";
 import { HISTORY_OPTIONS } from "@/lib/sat-plan-funnel/history-options";
-import { historyHeadline } from "@/lib/sat-plan-funnel/personalization";
+import { historyHeadline, historyHint } from "@/lib/sat-plan-funnel/personalization";
 import { loadSatPlanState, patchSatPlanAnswers } from "@/lib/sat-plan-funnel/state";
 
 type SatPlanHistoryProps = {
@@ -22,8 +22,12 @@ export function SatPlanHistory({ onBack, onContinue }: SatPlanHistoryProps) {
   const advancingRef = useRef(false);
 
   const headline = useMemo(
-    () => historyHeadline(answers.test_taker),
-    [answers.test_taker]
+    () => historyHeadline(answers.test_taker, answers.student_first_name),
+    [answers.student_first_name, answers.test_taker]
+  );
+  const hint = useMemo(
+    () => historyHint(answers.worries),
+    [answers.worries]
   );
 
   useEffect(() => {
@@ -57,6 +61,8 @@ export function SatPlanHistory({ onBack, onContinue }: SatPlanHistoryProps) {
     <QuizStepTemplate
       stepId="history"
       headline={headline}
+      hint={hint}
+      hintId={hint ? "quiz-step-hint-history" : null}
       bodyVariant="option-list"
       continueDisabled
       onContinue={() => {}}

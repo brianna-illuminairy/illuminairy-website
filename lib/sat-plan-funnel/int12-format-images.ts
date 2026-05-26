@@ -52,3 +52,10 @@ export function int12FormatPanelSpecs(): Int12FormatPanelSpec[] | null {
     }
   ];
 }
+
+/** Preload on prior funnel steps (~2 screens before sat-changed). */
+export function int12FormatPanelImageSrcs(): readonly string[] {
+  const panels = int12FormatPanelSpecs();
+  if (!panels) return [];
+  return panels.map((panel) => panel.src);
+}

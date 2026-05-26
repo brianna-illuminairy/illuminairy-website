@@ -16,14 +16,14 @@ type Int8DiagnosticAnalysisGraphicProps = {
 };
 
 const PHASE_MS: Record<Exclude<DiagnosticPhaseKey, "ready">, number> = {
-  analyzing: 4800,
-  filtering: 4800,
-  building: 5200
+  analyzing: 2200,
+  filtering: 2200,
+  building: 2600
 };
 
-const TAG_REVEAL_MS = 158;
-const FILTER_SLOT_MS = 780;
-const BUILD_STEP_MS = 880;
+const TAG_REVEAL_MS = 72;
+const FILTER_SLOT_MS = 400;
+const BUILD_STEP_MS = 420;
 
 function usePrefersReducedMotion(): boolean {
   const [reduced, setReduced] = useState(false);

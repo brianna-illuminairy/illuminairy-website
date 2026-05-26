@@ -4,7 +4,11 @@ import {
   type PrepId
 } from "@/lib/sat-plan-funnel/prep-options";
 import { SCORE_OPTIONS, type ScoreId } from "@/lib/sat-plan-funnel/score-options";
-import { targetBandLabel } from "@/lib/sat-plan-funnel/score-gap";
+import {
+  concreteTargetBandLabel,
+  hasConcreteTargetBand,
+  targetBandLabel
+} from "@/lib/sat-plan-funnel/score-gap";
 import { subjectPronouns } from "@/lib/sat-plan-funnel/subject-pronouns";
 import type { SatPlanAnswers } from "@/lib/sat-plan-funnel/types";
 import { wrongReasonMatches } from "@/lib/sat-plan-funnel/wrong-options";
@@ -49,7 +53,7 @@ export function basedOnWhatYouShared(_testTaker?: string): string {
 }
 
 export function thePatternWeUsuallySee(): string {
-  return "The pattern we usually see here is";
+  return "the pattern we usually see here is";
 }
 
 function meaningfulPrepIds(answers: SatPlanAnswers): PrepId[] {
@@ -158,15 +162,15 @@ export function studentsWithProfileTypically(answers: SatPlanAnswers): string {
   const label = diagnosisProfileLabel(answers);
 
   if (answers.test_taker === "test_taker_self") {
-    return `Students with a profile like yours — ${label} — typically`;
+    return `Students with a profile like yours (${label}) typically`;
   }
   if (subject === "he") {
-    return `Students with his profile — ${label} — typically`;
+    return `Students with his profile (${label}) typically`;
   }
   if (subject === "she") {
-    return `Students with her profile — ${label} — typically`;
+    return `Students with her profile (${label}) typically`;
   }
-  return `Students with their profile — ${label} — typically`;
+  return `Students with their profile (${label}) typically`;
 }
 
 export type ProfilePatternOptions = {
@@ -180,7 +184,7 @@ export function profilePatternLine(
   answers: SatPlanAnswers,
   options: ProfilePatternOptions = {}
 ): string | null {
-  const target = targetBandLabel(answers.target_score);
+  const targetLabel = concreteTargetBandLabel(answers.target_score);
   const scoreBand =
     options.includeScoreBand && answers.recent_score
       ? recentScoreBandLabel(answers.recent_score)
@@ -197,14 +201,14 @@ export function profilePatternLine(
   const mirrorParts: string[] = [basedOnWhatYouShared(answers.test_taker)];
   const detail: string[] = [];
   if (prepBit) detail.push(prepBit);
-  if (target && target !== "your goal") {
-    detail.push(`a goal of ${target}`);
-  }
+  if (targetLabel) detail.push(`a goal of ${targetLabel}`);
   if (scoreBand) detail.push(`a recent score around ${scoreBand}`);
 
-  if (detail.length === 0) return `${mirrorParts[0]} — ${thePatternWeUsuallySee()}`;
+  if (detail.length === 0) {
+    return `${mirrorParts[0]}, ${thePatternWeUsuallySee()}`;
+  }
 
-  return `${mirrorParts[0]} — ${detail.join(" and ")} — ${thePatternWeUsuallySee()}`;
+  return `${mirrorParts[0]} (${detail.join(" and ")}), ${thePatternWeUsuallySee()}`;
 }
 
 export function wrongMirrorSnippet(wrongReasons?: string[]): string | null {
@@ -237,7 +241,7 @@ export function wrongMirrorSnippet(wrongReasons?: string[]): string | null {
 
 export function familiesAimingForGoal(answers: SatPlanAnswers): string | null {
   const band = targetBandLabel(answers.target_score);
-  if (!band || band === "your goal") return null;
+  if (!hasConcreteTargetBand(answers.target_score)) return null;
   if (answers.test_taker === "test_taker_self") {
     return `Families aiming for ${band} often feel the same pressure you described.`;
   }

@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { FunnelContactBody } from "@/components/sat-plan/funnel-contact-body";
 import { QuizStepTemplate } from "@/components/sat-plan/quiz-step-template";
 import { trackSatPlanFunnelEvent } from "@/lib/sat-plan-funnel/analytics";
-import { contactHeadline } from "@/lib/sat-plan-funnel/personalization";
+import { studentPossessiveLabel } from "@/lib/sat-plan-funnel/student-voice";
 import { loadSatPlanState, patchSatPlanAnswers } from "@/lib/sat-plan-funnel/state";
 
 type SatPlanContactProps = {
@@ -16,9 +17,15 @@ function isValidEmail(value: string): boolean {
 }
 
 export function SatPlanContact({ onBack, onContinue }: SatPlanContactProps) {
-  const saved = loadSatPlanState().answers;
-  const [email, setEmail] = useState(saved.parent_email ?? "");
-  const [phone, setPhone] = useState(saved.parent_phone ?? "");
+  const answers = loadSatPlanState().answers;
+  const [email, setEmail] = useState(answers.parent_email ?? "");
+  const [phone, setPhone] = useState(answers.parent_phone ?? "");
+  const [consent, setConsent] = useState(false);
+
+  const headline = useMemo(() => {
+    const label = studentPossessiveLabel(answers);
+    return `Get ${label} SAT improvement plan`;
+  }, [answers]);
 
   useEffect(() => {
     trackSatPlanFunnelEvent("intake_step_view", {
@@ -28,11 +35,17 @@ export function SatPlanContact({ onBack, onContinue }: SatPlanContactProps) {
     });
   }, []);
 
+  const canContinue = isValidEmail(email) && consent;
+
   const handleContinue = () => {
-    if (!isValidEmail(email)) return;
+    if (!canContinue) return;
     patchSatPlanAnswers({
       parent_email: email.trim(),
       parent_phone: phone.trim() || undefined
+    });
+    trackSatPlanFunnelEvent("contact_submit", {
+      step_id: "contact",
+      has_phone: Boolean(phone.trim())
     });
     trackSatPlanFunnelEvent("intake_step_complete", {
       step_id: "contact",
@@ -44,41 +57,22 @@ export function SatPlanContact({ onBack, onContinue }: SatPlanContactProps) {
   return (
     <QuizStepTemplate
       stepId="contact"
-      headline={contactHeadline()}
-      hint="We'll email your personalized plan — no spam."
+      headline={headline}
+      hint="Parent email required. We'll show the full plan on the next screen."
       bodyVariant="copy"
-      continueDisabled={!isValidEmail(email)}
+      continueLabel="See the plan"
+      continueDisabled={!canContinue}
       onContinue={handleContinue}
       onBack={onBack}
     >
-      <div className="sf-form">
-        <label className="sf-field" htmlFor="satplan-contact-email">
-          <span className="sf-field__label">Email</span>
-          <input
-            id="satplan-contact-email"
-            className="sf-input"
-            type="email"
-            autoComplete="email"
-            inputMode="email"
-            value={email}
-            placeholder="you@email.com"
-            onChange={(event) => setEmail(event.target.value)}
-          />
-        </label>
-        <label className="sf-field" htmlFor="satplan-contact-phone">
-          <span className="sf-field__label">Phone (optional)</span>
-          <input
-            id="satplan-contact-phone"
-            className="sf-input"
-            type="tel"
-            autoComplete="tel"
-            inputMode="tel"
-            value={phone}
-            placeholder="(555) 555-5555"
-            onChange={(event) => setPhone(event.target.value)}
-          />
-        </label>
-      </div>
+      <FunnelContactBody
+        email={email}
+        phone={phone}
+        consent={consent}
+        onEmailChange={setEmail}
+        onPhoneChange={setPhone}
+        onConsentChange={setConsent}
+      />
     </QuizStepTemplate>
   );
 }

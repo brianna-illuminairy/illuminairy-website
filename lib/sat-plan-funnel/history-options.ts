@@ -7,28 +7,28 @@ export type HistoryOption = {
 export const HISTORY_OPTIONS: HistoryOption[] = [
   {
     id: "history_none",
-    label: "No — neither SAT nor PSAT",
-    ariaLabel: "No, neither SAT nor PSAT"
+    label: "Not yet — no SAT or PSAT",
+    ariaLabel: "Not yet, no SAT or PSAT"
   },
   {
     id: "history_psat_only",
-    label: "PSAT only",
-    ariaLabel: "PSAT only, not the SAT"
+    label: "PSAT only (not SAT yet)",
+    ariaLabel: "PSAT only, not the SAT yet"
   },
   {
     id: "history_once",
-    label: "Once",
-    ariaLabel: "Taken the SAT or PSAT once before"
+    label: "SAT once",
+    ariaLabel: "SAT once before"
   },
   {
     id: "history_twice",
-    label: "Twice",
-    ariaLabel: "Taken the SAT or PSAT twice before"
+    label: "SAT twice",
+    ariaLabel: "SAT twice before"
   },
   {
     id: "history_three_plus",
-    label: "Three or more times",
-    ariaLabel: "Taken the SAT or PSAT three or more times"
+    label: "SAT 3+ times",
+    ariaLabel: "SAT three or more times before"
   }
 ];
 

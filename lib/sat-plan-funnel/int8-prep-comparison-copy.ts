@@ -9,6 +9,7 @@ import type { PrepContrastPair } from "@/lib/sat-plan-funnel/prep-path-images";
 import { prepContrastPairAvailable } from "@/lib/sat-plan-funnel/prep-path-images";
 import type { SatPlanAnswers } from "@/lib/sat-plan-funnel/types";
 import {
+  bloomOneToOneResearch,
   guidedGapOverGroupClassPoints,
   guidedGapOverSelfStudyPoints,
   satPrepComparison,
@@ -113,15 +114,13 @@ function groupClassPlateauCopy(testTaker?: string): string {
   return `${intro} Most courses touch every topic at a surface level${tail}`;
 }
 
-const BLOOM_TWO_SIGMA_COPY =
-  "Bloom's research compared 1:1 tutoring to classroom teaching and found tutored students pulled ahead by two standard deviations. That is one of the largest effects in education research.";
+const BLOOM_TWO_SIGMA_COPY = bloomOneToOneResearch.funnelPlainLanguage;
 
 function proofAfterChartCopy(): string {
   const retakeAvg = satRetakeResearch.avgPointsWithoutNewApproach;
   const guidedAvg = satProgramOutcomes.avgPointsGained;
-  const gap = guidedGapOverSelfStudyPoints();
 
-  return `College Board reports the average student only gains ${retakeAvg} points between retakes, while Illuminairy's students gain on average ${guidedAvg} points between retakes, that's ${gap} pts higher than self-study.`;
+  return `College Board reports the average student only gains ${retakeAvg} points between retakes, while Illuminairy's students gain on average ${guidedAvg} points between retakes.`;
 }
 
 const SAT_SKILL_AREA_COUNT = 28;
@@ -376,7 +375,11 @@ export function buildInt8PrepComparisonCopy(
     tutorProcessCopy: buildAfterChartCopy(scope, answers.test_taker),
     plateauHeadline: "That explains a lot.",
     proofHeadlineGap:
-      scope === "self_study" ? gapOverSelfStudy : gapOverGroupClass,
+      prepIds.length === 0
+        ? Math.max(gapOverSelfStudy, gapOverGroupClass)
+        : scope === "self_study"
+          ? gapOverSelfStudy
+          : gapOverGroupClass,
     guidedHeadline: guidedHeadlineCopy(),
     guidedSubhead: guidedSubheadCopy(answers.test_taker),
     guidedIntro: guidedIntroCopy(answers.test_taker),

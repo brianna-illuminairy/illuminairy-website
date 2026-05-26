@@ -77,6 +77,18 @@ export function targetBandLabel(targetScore?: string): string {
   return TARGET_SCORE_BAND_LABEL.target_not_sure;
 }
 
+/** True when the parent picked a numeric band (not "Not sure yet" / missing). */
+export function hasConcreteTargetBand(
+  targetScore?: string
+): targetScore is Exclude<TargetScoreId, "target_not_sure"> {
+  return isTargetId(targetScore) && targetScore !== "target_not_sure";
+}
+
+export function concreteTargetBandLabel(targetScore?: string): string | null {
+  if (!hasConcreteTargetBand(targetScore)) return null;
+  return TARGET_SCORE_BAND_LABEL[targetScore];
+}
+
 export type ScoreGapChartPoints = {
   current: number;
   target: number;

@@ -1,7 +1,9 @@
 export type SatPlanStep =
   | "landing"
+  | "meaning"
   | "worries"
   | "who"
+  | "student-name"
   | "target"
   | "trust"
   | "history"
@@ -22,15 +24,29 @@ export type SatPlanStep =
   | "test-date"
   | "timeline"
   | "schools"
+  | "score-fit"
   | "plan-path"
+  | "ch3-social"
+  | "ch3-method"
+  | "ch3-preview"
+  | "ch3-path"
   | "contact"
+  | "reveal-stakes"
+  | "reveal-diagnosis"
+  | "reveal-bottlenecks"
+  | "reveal-proof"
+  /** @deprecated Legacy URL — redirects to reveal-stakes */
   | "plan-ready"
+  /** @deprecated Legacy URL — redirects to reveal-diagnosis */
   | "report"
-  | "book";
+  | "book"
+  | "booked";
 
 export type SatPlanAnswers = {
+  meaning?: string[];
   worries?: string[];
   test_taker?: string;
+  student_first_name?: string;
   target_score?: string;
   test_history?: string;
   prep_method?: string | string[];
@@ -59,8 +75,10 @@ export type SatPlanStepMeta = {
 
 /** All routable steps except landing — used for URL validation. */
 export const SAT_PLAN_ROUTABLE_STEPS: SatPlanStep[] = [
+  "meaning",
   "worries",
   "who",
+  "student-name",
   "target",
   "trust",
   "history",
@@ -81,9 +99,17 @@ export const SAT_PLAN_ROUTABLE_STEPS: SatPlanStep[] = [
   "test-date",
   "timeline",
   "schools",
+  "score-fit",
   "plan-path",
+  "ch3-social",
+  "ch3-method",
+  "ch3-preview",
+  "ch3-path",
   "contact",
-  "plan-ready",
-  "report",
-  "book"
+  "reveal-stakes",
+  "reveal-diagnosis",
+  "reveal-bottlenecks",
+  "reveal-proof",
+  "book",
+  "booked"
 ];

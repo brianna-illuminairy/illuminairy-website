@@ -1,8 +1,4 @@
 import { satProgramOutcomes } from "@/lib/site";
-import {
-  familiesAimingForGoal,
-  worryEchoClause
-} from "@/lib/sat-plan-funnel/diagnosis-copy";
 import type { SatPlanAnswers } from "@/lib/sat-plan-funnel/types";
 import type { TargetScoreId } from "@/lib/sat-plan-funnel/target-score-options";
 
@@ -43,6 +39,30 @@ function childVoice(testTaker?: string): ChildVoice {
   }
 }
 
+/** Worry echo on INT1 — no “You flagged …” phrasing. */
+function int1WorryLead(worries?: string[]): string | null {
+  if (!worries?.length) return null;
+
+  if (worries.includes("recent_test")) {
+    return "You're looking for help after a recent score came back too low.";
+  }
+
+  return null;
+}
+
+function planPossessivePhrase(answers: SatPlanAnswers): string {
+  if (answers.test_taker === "test_taker_self") {
+    return "your";
+  }
+
+  const raw = answers.student_first_name?.trim();
+  if (raw) {
+    return `${raw}'s`;
+  }
+
+  return childVoice(answers.test_taker).planPossessive;
+}
+
 export type Int1TrustCopy = {
   lead: string;
   bridgeBefore: string;
@@ -53,34 +73,30 @@ export type Int1TrustCopy = {
 export const INT1_TRUST_HEADLINE = "You're in good hands.";
 
 function buildLead(answers: SatPlanAnswers, voice: ChildVoice): string {
-  const worry = worryEchoClause(answers.worries);
-  const families = familiesAimingForGoal(answers);
+  const worry = int1WorryLead(answers.worries);
+  const base = voice.isSelf
+    ? "Most students came to us to build a plan after their first SAT score came back too low."
+    : "Most parents came to us to build a plan after their first SAT score came back too low.";
 
-  if (voice.isSelf) {
-    const base =
-      "Based on what you shared, most students came to us to build a plan after their first SAT score came back too low.";
-    return [worry, base, families].filter(Boolean).join(" ");
-  }
-
-  const base =
-    "Based on what you shared, most parents came to us to build a plan after their first SAT score came back too low.";
-  return [worry, base, families].filter(Boolean).join(" ");
+  return [worry, base].filter(Boolean).join(" ");
 }
 
 function buildBridge(
-  voice: ChildVoice,
+  answers: SatPlanAnswers,
   targetGoal: string
 ): Pick<Int1TrustCopy, "bridgeBefore" | "bridgeTarget" | "bridgeAfter"> {
+  const planPossessive = planPossessivePhrase(answers);
+
   if (targetGoal === "") {
     return {
-      bridgeBefore: `Let's build ${voice.planPossessive} plan.`,
+      bridgeBefore: `Let's build ${planPossessive} plan.`,
       bridgeTarget: "",
       bridgeAfter: ""
     };
   }
 
   return {
-    bridgeBefore: `Let's build ${voice.planPossessive} plan to hit `,
+    bridgeBefore: `Let's build ${planPossessive} plan to hit `,
     bridgeTarget: targetGoal,
     bridgeAfter: "."
   };
@@ -92,6 +108,6 @@ export function buildInt1TrustCopy(answers: SatPlanAnswers): Int1TrustCopy {
 
   return {
     lead: buildLead(answers, voice),
-    ...buildBridge(voice, targetGoal)
+    ...buildBridge(answers, targetGoal)
   };
 }

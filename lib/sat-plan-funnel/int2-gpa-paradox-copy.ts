@@ -1,8 +1,5 @@
-import {
-  basedOnWhatYouShared,
-  profilePatternLine,
-  wrongMirrorSnippet
-} from "@/lib/sat-plan-funnel/diagnosis-copy";
+import { GPA_OPTIONS } from "@/lib/sat-plan-funnel/gpa-options";
+import { studentPossessiveLabel } from "@/lib/sat-plan-funnel/student-voice";
 import type { SatPlanAnswers } from "@/lib/sat-plan-funnel/types";
 
 export type Int2CopyPart = {
@@ -29,113 +26,108 @@ export type Int2GpaParadoxCopy = {
   tutorTitle: string;
 };
 
-function patternLine(testTaker?: string): string {
-  switch (testTaker) {
-    case "test_taker_daughter":
-      return "It's not her. It's a known pattern.";
-    case "test_taker_son":
-      return "It's not him. It's a known pattern.";
-    case "test_taker_self":
-      return "It's not you. It's a known pattern.";
-    default:
-      return "It's not them. It's a known pattern.";
-  }
+function gpaDisplayLabel(gpaBand?: string): string | null {
+  if (!gpaBand) return null;
+  return GPA_OPTIONS.find((row) => row.id === gpaBand)?.label ?? null;
 }
 
 function subjectForms(testTaker?: string): {
   possessive: string;
+  costing: string;
+  train: string;
   optimizedClosing: string;
 } {
   switch (testTaker) {
     case "test_taker_daughter":
       return {
         possessive: "her",
+        costing: "her",
+        train: "her",
         optimizedClosing: "She's optimized for the wrong scoring environment."
       };
     case "test_taker_son":
       return {
         possessive: "his",
+        costing: "him",
+        train: "him",
         optimizedClosing: "He's optimized for the wrong scoring environment."
       };
     case "test_taker_self":
       return {
         possessive: "your",
+        costing: "you",
+        train: "you",
         optimizedClosing: "You're optimized for the wrong scoring environment."
       };
     default:
       return {
         possessive: "their",
+        costing: "them",
+        train: "them",
         optimizedClosing: "They're optimized for the wrong scoring environment."
       };
   }
 }
 
+function gpaParadoxLead(answers: SatPlanAnswers): string {
+  const gpa = gpaDisplayLabel(answers.gpa_band) ?? "strong";
+  const intelligenceOwner = studentPossessiveLabel(answers);
+  return `Given a ${gpa} GPA, it's not ${intelligenceOwner} intelligence that's the issue.`;
+}
+
 export function buildInt2GpaParadoxCopy(answers: SatPlanAnswers): Int2GpaParadoxCopy {
   const self = answers.test_taker === "test_taker_self";
-  const { possessive, optimizedClosing } = subjectForms(answers.test_taker);
-  const mirror =
-    profilePatternLine(answers, { includePrep: true, includeScoreBand: true }) ??
-    basedOnWhatYouShared(answers.test_taker);
-  const wrongBit = wrongMirrorSnippet(answers.wrong_reasons);
+  const { possessive, costing, train, optimizedClosing } =
+    subjectForms(answers.test_taker);
 
   const headlinePrefix = self
     ? "We help students like you "
     : "We help high-GPA students ";
   const headlineAccent = self ? "raise your SAT score." : "raise their SAT scores.";
 
-  const quoteLead: Int2CopyPart[] = [{ text: `${mirror}. ` }];
-  if (wrongBit) {
-    quoteLead.push({
-      text: `Often ${wrongBit}. `,
-      italic: true
-    });
-  }
-  quoteLead.push({ text: `${patternLine(answers.test_taker)} ` });
-
   return {
     headlinePrefix,
     headlineAccent,
     quoteParts: [
-      ...quoteLead,
-      { text: "The " },
-      { text: "same habits", italic: true },
-      { text: ` that earn ${possessive} A's in class ` },
-      { text: "quietly cost points", bold: true, accent: true },
-      { text: " on a test scored on pace. " },
-      { text: optimizedClosing },
+      { text: `${gpaParadoxLead(answers)} ` },
+      {
+        text: "It's common for smart students with high GPAs to score lower than expected on the SAT. "
+      },
+      { text: "The same habits that earn " },
+      { text: `${possessive} ` },
+      { text: "A's in class quietly cost points on a test scored on pace. " },
+      { text: optimizedClosing }
     ],
     schoolCard: {
       contextLabel: "In school",
-      rewardHeading: "Rewards depth.",
+      rewardHeading: "Rewards taking your time.",
       habits: [
-        "Persistence",
-        "Revision & precision",
-        "Showing your work",
-        "Long-term effort",
-      ],
+        "Reading/Re-Reading Passages",
+        "Showing Work by Hand",
+        "Double Checking",
+        "Sticking With Hard Problems"
+      ]
     },
     satCard: {
       contextLabel: "On the SAT",
       rewardHeading: "Rewards speed.",
       habits: [
-        "Pattern recognition",
-        "Pacing under pressure",
-        "Calculator-first math",
-        "Cognitive endurance",
-      ],
+        "Skimming Passages",
+        "Calculator Shortcuts",
+        "Moving on Quickly",
+        "Recognizing Patterns"
+      ]
     },
     insightParts: [
-      { text: "It's not a knowledge test.", bold: true },
-      { text: " It's a " },
-      { text: "speed & stamina test", bold: true, accent: true },
-      { text: ", scored on a 2 hr 14 min clock. " },
-      { text: "A lower SAT score usually has more to do with " },
-      { text: "pacing and test strategy than intelligence.", bold: true },
-      { text: " The good news: " },
-      { text: "those skills are trainable.", bold: true, accent: true },
-      { text: " With the right plan, fast." },
+      { text: "The SAT is timed over " },
+      { text: "2hr 14 mins", bold: true, accent: true },
+      { text: ", and also tests " },
+      { text: "focus, stamina, and speed.", bold: true },
+      {
+        text: ` We pinpoint the few skills still costing ${costing} points and train ${train} under a clock until accuracy and speed both improve.`
+      }
     ],
     tutorName: "Maya Reinhart",
-    tutorTitle: "Head tutor · Illuminairy",
+    tutorTitle: "Head tutor · Illuminairy"
   };
 }

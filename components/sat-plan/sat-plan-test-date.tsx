@@ -22,8 +22,13 @@ export function SatPlanTestDate({ onBack, onContinue }: SatPlanTestDateProps) {
   const advancingRef = useRef(false);
 
   const headline = useMemo(
-    () => testDateHeadline(answers.test_taker, answers.test_history),
-    [answers.test_history, answers.test_taker]
+    () =>
+      testDateHeadline(
+        answers.test_taker,
+        answers.test_history,
+        answers.student_first_name
+      ),
+    [answers.student_first_name, answers.test_history, answers.test_taker]
   );
 
   const options = useMemo(() => getSatTestDateOptions(), []);

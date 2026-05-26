@@ -20,7 +20,10 @@ export function SatPlanPrep({ onBack, onContinue }: SatPlanPrepProps) {
     normalizePrepMethods(answers.prep_method)
   );
 
-  const headline = useMemo(() => prepHeadline(answers.test_taker), [answers.test_taker]);
+  const headline = useMemo(
+    () => prepHeadline(answers.test_taker, answers.student_first_name),
+    [answers.student_first_name, answers.test_taker]
+  );
 
   const options = useMemo(
     () => prepOptionsForTaker(answers.test_taker),
