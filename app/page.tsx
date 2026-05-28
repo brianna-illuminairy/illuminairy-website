@@ -1,200 +1,169 @@
 import Link from "next/link";
-import { WaitlistSignup } from "@/components/waitlist-signup";
-import { site } from "@/lib/site";
+import type { Metadata } from "next";
+import "./quiz-funnel.css";
+import "./quiz-globals.css";
 
-const palette = [
-  ["pink", "#e4abc4"],
-  ["tomato", "#f24822"],
-  ["mustard", "#dfc653"],
-  ["green", "#2f8b55"],
-  ["clock", "#379bd0"],
-  ["blush", "#eee3e0"],
-  ["peach", "#ecc8a4"],
-  ["off-white", "#f5ecd9"],
-  ["mint", "#c8e2c4"],
-  ["lagoon", "#90bdc1"]
-];
+export const metadata: Metadata = {
+  title: "High GPA, low SAT? · Illuminairy",
+  description:
+    "Find out why they're struggling, what score improvement is realistic, and how to fix it before their next SAT.",
+  openGraph: {
+    title: "High GPA, low SAT? · Illuminairy",
+    description:
+      "Free 2-minute diagnostic for parents. Backed by data from 250,000+ students.",
+    images: [{ url: "/brand/logo-square.png", width: 1200, height: 630 }]
+  },
+  robots: { index: true, follow: true }
+};
 
-const satFacts = [
-  ["12", "weeks"],
-  ["30", "live sessions"],
-  ["24", "small group"],
-  ["6", "private 1:1"],
-  ["10", "student cap"],
-  ["1450+", "mentor standard"]
-];
-
-const paths = [
-  ["SAT", "Structured test preparation for ambitious college-bound students."],
-  ["AI", "Applied AI upskilling for professionals and business owners."],
-  ["Mentors", "A selective network of high-performing educated talent."],
-  ["Labs", "Future experiments in technical education and applied expertise."]
-];
-
-const iconNames = [
-  "rise",
-  "window",
-  "stack",
-  "circle",
-  "corner",
-  "steps",
-  "burst",
-  "flag",
-  "grid",
-  "path",
-  "dot",
-  "spark"
-];
-
-function BoardMeta({
-  n,
-  label,
-  title
+function ApplicationCard({
+  gpa,
+  sat,
+  satColor,
+  status,
+  statusColor
 }: {
-  n: string;
-  label: string;
-  title: string;
+  gpa: string;
+  sat: string;
+  satColor: string;
+  status: string;
+  statusColor: string;
 }) {
   return (
-    <div className="board-meta">
-      <span>{n}</span>
-      <i aria-hidden="true" />
-      <span>{label}</span>
-      <strong>{title}</strong>
+    <div
+      style={{
+        background: "var(--qf-paper)",
+        padding: 18,
+        display: "flex",
+        flexDirection: "column",
+        gap: 4,
+        borderRadius: 12,
+        border: "1px solid var(--qf-line)"
+      }}
+    >
+      <div className="qf-meta" style={{ marginBottom: 6 }}>
+        APPLICATION
+      </div>
+      <div style={{ height: 1, background: "rgba(20,20,20,0.1)", marginBottom: 8 }} />
+      <div className="qf-meta">GPA</div>
+      <div
+        style={{
+          fontFamily: "var(--qf-display)",
+          fontWeight: 500,
+          fontSize: 28,
+          letterSpacing: "-0.02em",
+          marginBottom: 8
+        }}
+      >
+        {gpa}
+      </div>
+      <div className="qf-meta">SAT</div>
+      <div
+        style={{
+          fontFamily: "var(--qf-display)",
+          fontWeight: 500,
+          fontSize: 36,
+          letterSpacing: "-0.02em",
+          color: satColor,
+          lineHeight: 1
+        }}
+      >
+        {sat}
+      </div>
+      <div style={{ height: 1, background: "rgba(20,20,20,0.1)", margin: "10px 0 8px" }} />
+      <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+        <span style={{ display: "inline-block", width: 9, height: 9, background: statusColor }} />
+        <span className="qf-meta" style={{ color: statusColor }}>
+          {status}
+        </span>
+      </div>
     </div>
   );
 }
 
-export default function Home() {
+export default function HomePage() {
   return (
-    <section className="brand-board-page">
-      <div className="brand-board-grid">
-        <article className="brand-sheet brand-sheet--hero brand-sheet--wide">
-          <BoardMeta n="01" label="identity" title="company home" />
-          <div className="hero-spec">
-            <p className="spec-note">
-              Modern mentorship and applied learning for ambitious students,
-              professionals, and business owners.
-            </p>
-            <h1 className="brand-display">
-              illumin<span>ai</span>ry
-            </h1>
-            <div className="word-rule" aria-hidden="true">
-              <b>ai</b>
-            </div>
-          </div>
-          <div className="sheet-footer">
-            <span>{site.legalName}</span>
-            <span>{site.location}</span>
-          </div>
-        </article>
-
-        <article className="brand-sheet brand-sheet--palette">
-          <BoardMeta n="02" label="color" title="brand palette" />
-          <div className="palette-grid">
-            {palette.map(([name, color]) => (
-              <div key={name} className="palette-tile" style={{ backgroundColor: color }}>
-                <span>{name}</span>
-                <small>{color}</small>
-              </div>
-            ))}
-          </div>
-          <div className="sheet-footer">
-            <span>flat color only</span>
-            <span>no gradients</span>
-          </div>
-        </article>
-
-        <article className="brand-sheet brand-sheet--type">
-          <BoardMeta n="03" label="type" title="voice" />
-          <div>
-            <p className="type-stack">
-              learn.
-              <br />
-              build.
-              <br />
-              ship.
-            </p>
-            <p className="type-copy">
-              Premium mentor-led programs with a high signal-to-noise ratio.
-              Calm, sharp, and direct.
-            </p>
-          </div>
-          <div className="type-panel">
-            <span>medium</span>
-            <span>regular</span>
-            <span>tight</span>
-            <b>AaBbCcDdEeFfGg</b>
-          </div>
-        </article>
-
-        <article className="brand-sheet brand-sheet--mustard" id="program">
-          <BoardMeta n="04" label="program" title="sat accelerator" />
-          <div className="vertical-word">cohort</div>
-          <div className="sat-facts">
-            {satFacts.map(([value, label]) => (
-              <div key={label}>
-                <strong>{value}</strong>
-                <span>{label}</span>
-              </div>
-            ))}
-          </div>
-          <p className="program-note">
-            Georgia Tech-led SAT preparation for the {site.satDate} SAT. No
-            guaranteed scores, just structure and accountability.
-          </p>
-        </article>
-
-        <article className="brand-sheet brand-sheet--center">
-          <BoardMeta n="05" label="positioning" title="platform" />
-          <p className="slash-title">
-            mentor-led /
-            <br />
-            applied learning
-          </p>
-          <div className="path-list">
-            {paths.map(([name, text]) => (
-              <div key={name}>
-                <strong>{name}</strong>
-                <span>{text}</span>
-              </div>
-            ))}
-          </div>
-        </article>
-
-        <article className="brand-sheet brand-sheet--icons" id="system">
-          <BoardMeta n="06" label="system" title="icons" />
-          <div className="icon-board" aria-label="Flat Illuminairy icon system">
-            {iconNames.map((name) => (
-              <span key={name} className={`shape-icon shape-icon--${name}`} />
-            ))}
-          </div>
-        </article>
-
-        <article className="brand-sheet brand-sheet--contact brand-sheet--wide">
-          <BoardMeta n="07" label="next step" title="request details" />
-          <div className="contact-layout" id="waitlist">
-            <div>
-              <h2>
-                Start with SAT.
-                <br />
-                Expand into AI.
-              </h2>
-              <p>
-                Ask about the SAT cohort, mentor applications, partnerships, or
-                the broader Illuminairy platform.
-              </p>
-              <div className="contact-actions">
-                <Link href={`mailto:${site.email}`}>email us</Link>
-                <Link href={`mailto:${site.email}?subject=SAT%20consultation`}>
-                  book consult
-                </Link>
-              </div>
-            </div>
-            <WaitlistSignup compact />
-          </div>
-        </article>
+    <div className="qf-page" style={{ minHeight: "100dvh" }}>
+      <div className="qf-top">
+        <div className="qf-top-row">
+          <div style={{ width: 30 }} />
+          <img
+            src="/brand/logo-horizontal.png"
+            alt="illuminairy"
+            style={{ height: 24, width: "auto" }}
+          />
+          <div style={{ width: 30 }} />
+        </div>
       </div>
-    </section>
+
+      <div className="qf-body" style={{ background: "var(--qf-bg)", overflow: "auto" }}>
+        <div style={{ padding: "24px 22px 0" }}>
+          <h1 className="qf-h1" style={{ fontSize: 40, lineHeight: 1.02 }}>
+            <span style={{ color: "var(--qf-ink)" }}>High GPA,</span>
+            <br />
+            low SAT?
+          </h1>
+        </div>
+
+        <div style={{ padding: "22px 22px 28px" }}>
+          <p
+            style={{
+              textAlign: "center",
+              fontSize: 16,
+              lineHeight: 1.5,
+              color: "var(--qf-ink-mid)"
+            }}
+          >
+            Find out why they&apos;re struggling.
+            <br />
+            What score improvement is realistic.
+            <br />
+            And how to fix it before their next test.
+            <br />
+            <strong>Backed by College Board data from 250,000+ students.</strong>
+          </p>
+        </div>
+
+        <div
+          style={{
+            padding: "0 22px 22px",
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            gap: 12
+          }}
+        >
+          <ApplicationCard
+            gpa="3.9"
+            sat="1180"
+            satColor="var(--qf-celestial)"
+            status="OUT OF RANGE"
+            statusColor="var(--qf-celestial)"
+          />
+          <ApplicationCard
+            gpa="3.9"
+            sat="1400"
+            satColor="var(--qf-forest)"
+            status="COMPETITIVE"
+            statusColor="var(--qf-forest)"
+          />
+        </div>
+
+        <div style={{ padding: "6px 22px 18px", textAlign: "center" }}>
+          <div className="qf-meta" style={{ letterSpacing: "0.15em" }}>
+            +220 PTS · 12 WEEKS
+          </div>
+        </div>
+
+        <div style={{ padding: "0 22px 24px" }}>
+          <Link href="/quiz?step=q1" className="btn qf-btn forest" style={{ display: "block", textAlign: "center" }}>
+            Get my answers <span className="arrow">→</span>
+          </Link>
+        </div>
+
+        <div style={{ padding: "0 22px 40px", textAlign: "center" }}>
+          <p className="qf-disclaimer">Free · 2 minutes · No account needed</p>
+        </div>
+      </div>
+    </div>
   );
 }

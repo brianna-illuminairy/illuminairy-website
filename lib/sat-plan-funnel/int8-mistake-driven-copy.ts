@@ -6,6 +6,7 @@ import {
 import { concreteTargetBandLabel } from "@/lib/sat-plan-funnel/score-gap";
 import { studentVoice } from "@/lib/sat-plan-funnel/student-voice";
 import type { SatPlanAnswers } from "@/lib/sat-plan-funnel/types";
+import { formatWrongStruggleLabels } from "@/lib/sat-plan-funnel/wrong-options";
 
 export type Int8MistakeProgressionStep = {
   title: string;
@@ -116,29 +117,24 @@ function satHistoryClause(testHistory?: string, forSelf = false): string | null 
   }
 }
 
-function targetGapClauseSelf(answers: SatPlanAnswers): string | null {
-  const band = concreteTargetBandLabel(answers.target_score);
-  if (!band) return null;
-
-  const tested =
-    answers.test_history &&
-    answers.test_history !== "history_none" &&
-    answers.test_history !== "history_psat_only";
-
-  if (tested) {
-    return `and still need to reach ${band}`;
-  }
-
-  return `and are aiming for ${band}`;
-}
-
 function prepMethodsClause(answers: SatPlanAnswers): string | null {
   const labels = formatPrepLabels(meaningfulPrepIds(answers));
   if (!labels) return null;
   return `using ${labels}`;
 }
 
-function targetGapClause(answers: SatPlanAnswers): string | null {
+function strugglesClause(answers: SatPlanAnswers): string | null {
+  const list = formatWrongStruggleLabels(answers.wrong_reasons);
+  if (!list) return null;
+
+  if (answers.test_taker === "test_taker_self") {
+    return `and struggled with ${list}`;
+  }
+
+  return `and who struggled with ${list}`;
+}
+
+function targetGapClause(answers: SatPlanAnswers, useBut: boolean): string | null {
   const band = concreteTargetBandLabel(answers.target_score);
   if (!band) return null;
 
@@ -147,50 +143,70 @@ function targetGapClause(answers: SatPlanAnswers): string | null {
     answers.test_history !== "history_none" &&
     answers.test_history !== "history_psat_only";
 
+  const lead = useBut ? "but still need" : "and still need";
+  const aim = useBut ? "but are aiming" : "and are aiming";
+
   if (tested) {
-    return `and still need to reach ${band}`;
+    return `${lead} to reach ${band}`;
   }
 
-  return `and are aiming for ${band}`;
+  return `${aim} for ${band}`;
 }
 
-const LECTURE_UNLIKELY =
-  "lecture-based learning is unlikely to move the needle.";
+function lectureOutcomePhrase(answers: SatPlanAnswers): string {
+  const voice = studentVoice(answers);
+
+  if (voice.isSelf) {
+    return "lecture-based learning is unlikely to help get your score up.";
+  }
+
+  if (voice.subject === "he") {
+    return "lecture-based learning is unlikely to help get his score up.";
+  }
+
+  if (voice.subject === "she") {
+    return "lecture-based learning is unlikely to help get her score up.";
+  }
+
+  return "lecture-based learning is unlikely to help get their score up.";
+}
 
 function lectureUnlikelySentence(answers: SatPlanAnswers): string {
   const likeLead = forStudentsLikeLead(answers);
   const isSelf = answers.test_taker === "test_taker_self";
   const history = satHistoryClause(answers.test_history, isSelf);
   const methods = prepMethodsClause(answers);
-  const target = isSelf
-    ? targetGapClauseSelf(answers)
-    : targetGapClause(answers);
+  const struggles = strugglesClause(answers);
+  const useButTarget = Boolean(struggles);
+  const target = targetGapClause(answers, useButTarget);
+  const outcome = lectureOutcomePhrase(answers);
 
   const whoParts: string[] = [];
   if (history) whoParts.push(history);
   if (methods) whoParts.push(methods);
+  if (struggles) whoParts.push(struggles);
   if (target) whoParts.push(target);
 
   if (isSelf) {
     if (whoParts.length === 0) {
-      return `If you're in this situation, ${LECTURE_UNLIKELY}`;
+      return `If you're in this situation, ${outcome}`;
     }
-    return `If ${whoParts.join(", ")}, ${LECTURE_UNLIKELY}`;
+    return `If ${whoParts.join(", ")}, ${outcome}`;
   }
 
   if (likeLead) {
     if (whoParts.length === 0) {
-      return `${likeLead}, ${LECTURE_UNLIKELY}`;
+      return `${likeLead}, ${outcome}`;
     }
-    return `${likeLead}, ${whoParts.join(", ")}, ${LECTURE_UNLIKELY}`;
+    return `${likeLead}, ${whoParts.join(", ")}, ${outcome}`;
   }
 
   if (whoParts.length === 0) {
-    return `For students in a similar situation, ${LECTURE_UNLIKELY}`;
+    return `For students in a similar situation, ${outcome}`;
   }
 
   const whoClause = whoParts.join(", ");
-  return `Students ${whoClause}, ${LECTURE_UNLIKELY}`;
+  return `Students ${whoClause}, ${outcome}`;
 }
 
 function buildLeadParagraph(answers: SatPlanAnswers): string {

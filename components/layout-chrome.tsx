@@ -1,23 +1,20 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { Footer } from "@/components/footer";
-import { Header } from "@/components/header";
 
 export function LayoutChrome({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isMinimalFunnel =
-    pathname?.startsWith("/go/") || pathname === "/satplan" || pathname?.startsWith("/satplan/");
+    pathname === "/" ||
+    pathname?.startsWith("/quiz") ||
+    pathname === "/privacy" ||
+    pathname === "/terms" ||
+    pathname === "/support-policy" ||
+    pathname === "/refund-policy";
 
   if (isMinimalFunnel) {
     return <main>{children}</main>;
   }
 
-  return (
-    <>
-      <Header />
-      <main>{children}</main>
-      <Footer />
-    </>
-  );
+  return <main>{children}</main>;
 }

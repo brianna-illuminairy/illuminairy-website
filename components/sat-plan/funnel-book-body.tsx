@@ -9,7 +9,7 @@ type FunnelBookBodyProps = {
 
 export function FunnelBookBody({ embedSrc, intro, agenda, footnote }: FunnelBookBodyProps) {
   return (
-    <div className="quiz-step-int3-content quiz-step-trust-content">
+    <div className="quiz-step-int3-content quiz-step-trust-content funnel-book">
       <p className="quiz-step-copy">{intro}</p>
       <ul className="promises">
         {agenda.map((item) => (

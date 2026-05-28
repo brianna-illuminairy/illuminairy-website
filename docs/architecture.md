@@ -39,6 +39,7 @@ flowchart TB
 | Path | Purpose |
 |------|---------|
 | **`/satplan`** | **SAT assessment funnel (Meta)** — lagoon LP + quiz steps; `noindex` until launch |
+| **`/assessment`** | **SAT assessment funnel v2 (Aurora Light)** — standalone shell (no site header/footer); LP + intake + insights; `noindex` |
 | `/` | Home, program cards, hero |
 | `/sat-accelerator` | SAT program detail + schedule CTA |
 | `/programs` | All programs (live + coming soon) |

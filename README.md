@@ -83,7 +83,7 @@ Until `RESEND_API_KEY` is set, the form on `/contact` shows an error and visitor
 **Public SAT consultation** (embedded on `/contact#schedule` and `/sat-accelerator#schedule`):
 
 ```bash
-NEXT_PUBLIC_CALENDLY_URL=https://calendly.com/brianna-illuminairy/august-sat
+NEXT_PUBLIC_CALENDLY_URL=https://calendly.com/satprep-illuminairy/august-sat
 ```
 
 **Invite-only mentor interview** (never on the public site — email this link after you review an application):

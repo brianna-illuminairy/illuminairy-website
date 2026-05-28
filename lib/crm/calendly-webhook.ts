@@ -1,6 +1,7 @@
 import { appendTouchEvent } from "@/lib/crm/touch";
 import { trackKlaviyoEvent } from "@/lib/klaviyo-server";
 import { getSupabaseAdmin } from "@/lib/supabase/server";
+import { makeMetaEventId, sendMetaCapiEvent } from "@/lib/meta-capi";
 
 type CalendlyInviteePayload = {
   email?: string;
@@ -64,11 +65,21 @@ export async function handleCalendlyInviteeCreated(body: CalendlyWebhookBody) {
     });
   }
 
+  void trackKlaviyoEvent(email, "Quiz Call Booked", {
+    calendly_uri: invitee?.uri ?? "",
+    funnel: "sat_quiz"
+  });
   void trackKlaviyoEvent(email, "Consultation Booked", {
     calendly_uri: invitee?.uri ?? ""
   });
 
-  return { ok: true as const, leadId: lead?.id };
+  const eventId = makeMetaEventId(
+    "schedule",
+    lead?.id ?? invitee?.uri?.split("/").pop() ?? email
+  );
+  void sendMetaCapiEvent("Schedule", eventId, { email });
+
+  return { ok: true as const, leadId: lead?.id, eventId };
 }
 
 export async function handleCalendlyInviteeCanceled(body: CalendlyWebhookBody) {

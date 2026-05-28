@@ -5,48 +5,73 @@ const nextConfig = {
   async redirects() {
     return [
       {
+        source: "/assessment",
+        destination: "/quiz?step=q1",
+        permanent: true
+      },
+      {
+        source: "/assessment/:path*",
+        destination: "/quiz?step=q1",
+        permanent: true
+      },
+      {
+        source: "/satplan",
+        destination: "/quiz?step=q1",
+        permanent: true
+      },
+      {
+        source: "/satplan/:path*",
+        destination: "/quiz?step=q1",
+        permanent: true
+      },
+      {
+        source: "/go/:path*",
+        destination: "/",
+        permanent: true
+      },
+      {
         source: "/guides/uga-gatech-emory-sat-bands",
-        destination: "/go/guide",
+        destination: "/",
         permanent: true
       },
       {
         source: "/guides/uga-gatech-emory-sat-bands/download",
-        destination: "/go/guide/download",
+        destination: "/",
         permanent: true
       },
       {
         source: "/guides/uga-gatech-emory-sat-scores",
-        destination: "/go/guide",
+        destination: "/",
         permanent: true
       },
       {
         source: "/guides/uga-gatech-emory-sat-scores/download",
-        destination: "/go/guide/download",
+        destination: "/",
         permanent: true
       },
       {
         source: "/guides",
-        destination: "/go/guide",
+        destination: "/",
         permanent: true
       },
       {
         source: "/guides/:slug",
-        destination: "/go/guide",
+        destination: "/",
         permanent: true
       },
       {
         source: "/guides/:slug/download",
-        destination: "/go/guide/download",
+        destination: "/",
         permanent: true
       },
       {
         source: "/go/guide/:slug",
-        destination: "/go/guide",
+        destination: "/",
         permanent: true
       },
       {
         source: "/go/guide/:slug/download",
-        destination: "/go/guide/download",
+        destination: "/",
         permanent: true
       }
     ];

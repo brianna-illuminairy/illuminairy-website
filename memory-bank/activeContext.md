@@ -1,12 +1,21 @@
 # Active context
 
-*Last updated: 2026-05-25*
+*Last updated: 2026-05-26*
 
 ## Current focus
 
-- **SAT plan funnel (production)** — https://illuminairy.com/satplan — **Phase A UI** through **booked** (Ch.2 name + score-fit, Ch.3 interstitials, report/book/confirm); **Phase B** (lead API, server-side CRM) not wired
-- **`noindex`** until Brianna review + launch QA
-- Specs/copy tracked in **quizfunnel** repo; code in this repo
+- **Assessment funnel v2** — https://illuminairy.com/assessment — Hims LP + short intake; **Aurora Light** (paper UI, DM Sans 600/700); `funnel_id: assessment`; ends at **complete** (no Calendly/offer until Phase C spec).
+- **SAT plan funnel v1** — https://illuminairy.com/satplan — unchanged; Phase B (lead API) not wired.
+- Both routes **`noindex`** until launch QA.
+- Specs in **quizfunnel** repo; code in this repo.
+
+## `/assessment` (new)
+
+`app/assessment/`, `components/assessment/`, `lib/assessment-funnel/` — isolated from sat-plan layout lock. **Standalone shell:** `LayoutChrome` excludes site Header/Footer (same as `/satplan`).
+
+Spine: landing → situation → who → target → current → tried → test-date → insight-situation → insight-path → complete.
+
+Copy workflow: quizfunnel [`assessment-hims-question-map.md`](../quizfunnel/files/assessment-hims-question-map.md) → `lib/assessment-funnel/question-copy.ts` when approved.
 
 ## Production spine (tested path)
 

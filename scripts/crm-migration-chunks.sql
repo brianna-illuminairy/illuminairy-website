@@ -22,7 +22,15 @@ create table leads (
   stage lead_stage not null default 'intake_submitted',
   booked_call_at timestamptz, attended_at timestamptz, closed_at timestamptz,
   lost_reason text, sales_notes text, converted_at timestamptz, converted_client_id uuid,
-  calendly_event_uri text, klaviyo_profile_id text
+  calendly_event_uri text, klaviyo_profile_id text,
+  funnel text not null default 'legacy',
+  intake_submitted_at timestamptz,
+  quiz_trigger text, quiz_stakes text, quiz_tests_taken text,
+  sat_next_test text, gpa_band text, target_score text,
+  quiz_blockers text[], quiz_prep_tried text[],
+  showed_gpa_gap boolean, promised_gain_pts integer, weeks_until_test integer,
+  tcpa_consent boolean not null default false, tcpa_consent_at timestamptz,
+  quiz_answers jsonb not null default '{}'::jsonb
 );
 create table clients (
   id uuid primary key default gen_random_uuid(),
@@ -79,6 +87,9 @@ create index touch_events_lead_id_idx on touch_events (lead_id);
 create index touch_events_created_at_idx on touch_events (created_at desc);
 create index leads_stage_idx on leads (stage);
 create index leads_lead_source_idx on leads (lead_source);
+create index if not exists leads_funnel_idx on leads (funnel);
+create index if not exists leads_sat_next_test_idx on leads (sat_next_test);
+create index if not exists leads_stage_funnel_idx on leads (stage, funnel);
 alter table leads enable row level security;
 alter table clients enable row level security;
 alter table students enable row level security;

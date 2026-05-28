@@ -56,6 +56,7 @@ export function SatPlanBook({ onBack, onContinue }: SatPlanBookProps) {
       headline={copy.headline}
       hint="15 minutes — no obligation."
       bodyVariant="copy"
+      headlineTier="compact"
       continueLabel="I scheduled my call"
       onContinue={handleContinue}
       onBack={onBack}

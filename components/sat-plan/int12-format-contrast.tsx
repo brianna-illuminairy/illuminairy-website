@@ -1,10 +1,7 @@
-import Image from "next/image";
 import {
   int12FormatPanelSpecs,
   int12FormatContrastImageSpec
 } from "@/lib/sat-plan-funnel/int12-format-images";
-
-const INT12_PANEL_SIZES = "(max-width: 480px) 48vw, 170px";
 
 export function Int12FormatContrast() {
   const panels = int12FormatPanelSpecs();
@@ -22,14 +19,15 @@ export function Int12FormatContrast() {
         {panels.map((panel) => (
           <div key={panel.id} className="int12-format-contrast__panel">
             <div className="int12-format-contrast__viewport">
-              <Image
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
                 src={panel.src}
                 alt=""
-                fill
-                sizes={INT12_PANEL_SIZES}
+                width={panel.width}
+                height={panel.height}
                 className="int12-format-contrast__img"
-                style={{ objectFit: "cover", objectPosition: "center" }}
-                priority
+                loading="eager"
+                decoding="async"
               />
               <span
                 className={`int12-format-contrast__badge int12-format-contrast__badge--${panel.id}`}

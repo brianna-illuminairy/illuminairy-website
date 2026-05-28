@@ -4,6 +4,7 @@
  * Requires CALENDLY_API_TOKEN in .env.local (Personal Access Token)
  */
 import { readFileSync, existsSync } from "fs";
+import { randomBytes } from "crypto";
 import { resolve, dirname } from "path";
 import { fileURLToPath } from "url";
 
@@ -44,11 +45,17 @@ async function main() {
   const me = await meRes.json();
   const orgUri = me.resource.current_organization;
 
+  const signingKey =
+    env.CALENDLY_WEBHOOK_SIGNING_KEY ||
+    process.env.CALENDLY_WEBHOOK_SIGNING_KEY ||
+    randomBytes(32).toString("base64url");
+
   const body = {
     url: callbackUrl,
     events: ["invitee.created", "invitee.canceled"],
     organization: orgUri,
-    scope: "organization"
+    scope: "organization",
+    signing_key: signingKey
   };
 
   const subRes = await fetch("https://api.calendly.com/webhook_subscriptions", {
@@ -66,12 +73,11 @@ async function main() {
     process.exit(1);
   }
 
-  const signingKey = sub.resource?.signing_key;
+  const signingKeyOut =
+    sub.resource?.signing_key ?? signingKey;
   console.log("✓ Calendly webhook created:", callbackUrl);
-  if (signingKey) {
-    console.log("\nAdd to .env.local and Vercel:");
-    console.log(`CALENDLY_WEBHOOK_SIGNING_KEY=${signingKey}`);
-  }
+  console.log("\nAdd to .env.local and Vercel:");
+  console.log(`CALENDLY_WEBHOOK_SIGNING_KEY=${signingKeyOut}`);
 }
 
 main().catch((e) => {

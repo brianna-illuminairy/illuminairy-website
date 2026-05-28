@@ -1,41 +1,56 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans } from "next/font/google";
+import { Fraunces, Schibsted_Grotesk, DM_Mono } from "next/font/google";
 import { LayoutChrome } from "@/components/layout-chrome";
-import { ThemeProvider } from "@/components/theme-provider";
 import { GoogleAnalytics } from "@/components/google-analytics";
 import { KlaviyoScript } from "@/components/klaviyo";
 import { AttributionProvider } from "@/components/attribution-provider";
 import { PostHogProvider } from "@/components/posthog-provider";
+import { MetaPixel } from "@/components/meta-pixel";
 import { site } from "@/lib/site";
 import "./globals.css";
 
-const jakarta = Plus_Jakarta_Sans({
+const fraunces = Fraunces({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  variable: "--font-fraunces",
   display: "swap",
-  variable: "--font-jakarta"
+  axes: ["opsz"],
+  weight: "variable"
+});
+
+const schibstedGrotesk = Schibsted_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-schibsted",
+  display: "swap",
+  weight: ["400", "500", "600", "700"]
+});
+
+const dmMono = DM_Mono({
+  subsets: ["latin"],
+  variable: "--font-dm-mono",
+  display: "swap",
+  weight: ["300", "400", "500"]
 });
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: "Illuminairy — Modern Mentorship and Applied Learning",
+    default: "Illuminairy — SAT Prep for Ambitious Families",
     template: "%s · Illuminairy"
   },
   description:
-    "Illuminairy is a modern mentorship and applied learning company launching first with structured SAT cohorts.",
+    "Find out what's holding your kid's SAT score back and build a personalized plan before their next test.",
   alternates: {
     canonical: "/"
   },
   openGraph: {
-    title: "Illuminairy — Modern Mentorship and Applied Learning",
+    title: "Illuminairy — SAT Prep for Ambitious Families",
     description:
-      "Premium mentor-led learning for ambitious students, professionals, and business owners.",
+      "Free diagnostic for parents. Realistic score improvement plans before the next SAT.",
     url: site.url,
     siteName: "Illuminairy",
     images: [
       {
-        url: "/og-image.svg",
+        url: "/brand/logo-square.png",
         width: 1200,
         height: 630,
         alt: "Illuminairy"
@@ -47,11 +62,11 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Illuminairy",
-    description: "Modern mentorship and applied learning."
+    description: "SAT prep for ambitious families."
   },
   icons: {
-    icon: "/icon.svg",
-    apple: "/apple-icon.svg"
+    icon: "/brand/logo-square.png",
+    apple: "/brand/logo-square.png"
   }
 };
 
@@ -67,26 +82,28 @@ export default function RootLayout({
     legalName: site.legalName,
     url: site.url,
     email: site.supportEmail,
-    description:
-      "Modern mentorship and applied learning for ambitious students, professionals, and business owners."
+    description: "SAT prep and personalized score improvement plans for ambitious families."
   };
 
   return (
-    <html lang="en" className={jakarta.variable} suppressHydrationWarning>
-      <body className="min-h-screen bg-surface font-sans text-primary antialiased">
-        <ThemeProvider>
-          <PostHogProvider>
-            <AttributionProvider>
-              <LayoutChrome>{children}</LayoutChrome>
-              <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-              />
-              <GoogleAnalytics />
-              <KlaviyoScript />
-            </AttributionProvider>
-          </PostHogProvider>
-        </ThemeProvider>
+    <html
+      lang="en"
+      className={`${fraunces.variable} ${schibstedGrotesk.variable} ${dmMono.variable}`}
+      suppressHydrationWarning
+    >
+      <body className="min-h-screen antialiased" style={{ margin: 0 }}>
+        <PostHogProvider>
+          <AttributionProvider>
+            <LayoutChrome>{children}</LayoutChrome>
+            <script
+              type="application/ld+json"
+              dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+            />
+            <GoogleAnalytics />
+            <MetaPixel />
+            <KlaviyoScript />
+          </AttributionProvider>
+        </PostHogProvider>
       </body>
     </html>
   );

@@ -5,12 +5,35 @@
  * Or:
  *   SUPABASE_DB_PASSWORD="your-db-password" npm run crm:migrate
  */
-import { readFileSync } from "fs";
+import { readFileSync, existsSync } from "fs";
 import { resolve, dirname } from "path";
 import { fileURLToPath } from "url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const projectRef = "agujbietvwcudihfgkef";
+
+function loadEnvLocal() {
+  const envPath = resolve(root, ".env.local");
+  if (!existsSync(envPath)) return;
+  for (const line of readFileSync(envPath, "utf8").split("\n")) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith("#")) continue;
+    const eq = trimmed.indexOf("=");
+    if (eq === -1) continue;
+    const key = trimmed.slice(0, eq);
+    if (process.env[key]) continue;
+    let val = trimmed.slice(eq + 1);
+    if (
+      (val.startsWith('"') && val.endsWith('"')) ||
+      (val.startsWith("'") && val.endsWith("'"))
+    ) {
+      val = val.slice(1, -1);
+    }
+    process.env[key] = val;
+  }
+}
+
+loadEnvLocal();
 
 async function main() {
   let connectionString = process.env.DATABASE_URL;

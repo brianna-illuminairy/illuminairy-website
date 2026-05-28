@@ -6,7 +6,7 @@ type FunnelRevealDiagnosisBodyProps = {
 
 export function FunnelRevealDiagnosisBody({ copy }: FunnelRevealDiagnosisBodyProps) {
   return (
-    <div className="quiz-step-int3-content quiz-step-trust-content">
+    <div className="quiz-step-int3-content quiz-step-trust-content reveal-diagnosis">
       {copy.paragraphs.map((paragraph) => (
         <p key={paragraph.slice(0, 32)} className="quiz-step-copy">
           {paragraph}

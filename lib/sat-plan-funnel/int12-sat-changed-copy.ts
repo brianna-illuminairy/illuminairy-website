@@ -1,3 +1,11 @@
+import {
+  hasGroupClassPrep,
+  isTestedHistory
+} from "@/lib/sat-plan-funnel/funnel-routing";
+import { studentVoice } from "@/lib/sat-plan-funnel/student-voice";
+import type { SatPlanAnswers } from "@/lib/sat-plan-funnel/types";
+import { wrongReasonMatches } from "@/lib/sat-plan-funnel/wrong-options";
+
 export type Int12CopyPart = {
   text: string;
   bold?: boolean;
@@ -53,7 +61,134 @@ const STAT_ROWS: Int12StatRow[] = [
   }
 ];
 
-export function buildInt12SatChangedCopy(): Int12SatChangedCopy {
+const CLOSING_PARTS: Int12CopyPart[] = [
+  { text: "We train students on the same digital interface tools, like the " },
+  { text: "Desmos calculator", bold: true },
+  { text: ", they need to answer " },
+  { text: "faster and more accurately on test day.", bold: true }
+];
+
+function bridgeForTime(answers: SatPlanAnswers): Int12CopyPart[] {
+  const voice = studentVoice(answers);
+
+  if (voice.isSelf) {
+    return [
+      {
+        text: "If you ran out of time, knowing when to use the built-in calculator is often what turns a long problem into a quick one."
+      }
+    ];
+  }
+
+  if (voice.subject === "he") {
+    return [
+      {
+        text: "If he ran out of time, knowing when to use the built-in calculator is often what turns a long problem into a quick one."
+      }
+    ];
+  }
+
+  if (voice.subject === "she") {
+    return [
+      {
+        text: "If she ran out of time, knowing when to use the built-in calculator is often what turns a long problem into a quick one."
+      }
+    ];
+  }
+
+  return [
+    {
+      text: "If pacing was an issue, knowing when to use the built-in calculator is often what turns a long problem into a quick one."
+    }
+  ];
+}
+
+function bridgeForMath(answers: SatPlanAnswers): Int12CopyPart[] {
+  const voice = studentVoice(answers);
+
+  if (voice.isSelf) {
+    return [
+      {
+        text: "If math held you back, not using the built-in calculator on Desmos-ready questions is one common reason scores stay flat."
+      }
+    ];
+  }
+
+  if (voice.subject === "he") {
+    return [
+      {
+        text: "If math held him back, not using the built-in calculator on Desmos-ready questions is one common reason scores stay flat."
+      }
+    ];
+  }
+
+  if (voice.subject === "she") {
+    return [
+      {
+        text: "If math held her back, not using the built-in calculator on Desmos-ready questions is one common reason scores stay flat."
+      }
+    ];
+  }
+
+  return [
+    {
+      text: "If math was a weak spot, not using the built-in calculator on Desmos-ready questions is one common reason scores stay flat."
+    }
+  ];
+}
+
+function bridgeForPaperClass(answers: SatPlanAnswers): Int12CopyPart[] {
+  const voice = studentVoice(answers);
+
+  if (voice.isSelf) {
+    return [
+      {
+        text: "If most of your prep was on paper, test day on a laptop—including the built-in calculator—is a different skill set."
+      }
+    ];
+  }
+
+  return [
+    {
+      text: "If most of their prep was on paper, test day on a laptop—including the built-in calculator—is a different skill set."
+    }
+  ];
+}
+
+function buildBridgeParts(answers: SatPlanAnswers): Int12CopyPart[] | null {
+  const wrong = answers.wrong_reasons;
+  const tested = isTestedHistory(answers.test_history);
+  const lowScore =
+    tested &&
+    answers.recent_score &&
+    answers.recent_score !== "score_1300_plus";
+
+  if (wrongReasonMatches(wrong, "time")) {
+    return bridgeForTime(answers);
+  }
+
+  if (wrongReasonMatches(wrong, "math")) {
+    return bridgeForMath(answers);
+  }
+
+  if (lowScore) {
+    return bridgeForMath(answers);
+  }
+
+  if (hasGroupClassPrep(answers.prep_method)) {
+    return bridgeForPaperClass(answers);
+  }
+
+  return null;
+}
+
+function buildClosingParts(answers: SatPlanAnswers): Int12CopyPart[] {
+  const closing = CLOSING_PARTS.map((part) => ({ ...part }));
+  const bridge = buildBridgeParts(answers);
+  if (!bridge?.length) return closing;
+  return [...bridge, { text: " " }, ...closing];
+}
+
+export function buildInt12SatChangedCopy(answers: SatPlanAnswers): Int12SatChangedCopy {
   return {
     headlinePrefix: "The SAT is ",
     headlineAccent: "Digital.",
@@ -64,12 +199,10 @@ export function buildInt12SatChangedCopy(): Int12SatChangedCopy {
       { text: "You wouldn't train for a baseball game on a football field. " },
       { text: "So why prep for a digital test on paper?", bold: true }
     ],
-    statRows: STAT_ROWS.map((row) => ({ ...row, parts: row.parts.map((part) => ({ ...part })) })),
-    closingParts: [
-      { text: "We train students on the same digital interface tools, like the " },
-      { text: "Desmos calculator", bold: true },
-      { text: ", they need to answer " },
-      { text: "faster and more accurately on test day.", bold: true }
-    ]
+    statRows: STAT_ROWS.map((row) => ({
+      ...row,
+      parts: row.parts.map((part) => ({ ...part }))
+    })),
+    closingParts: buildClosingParts(answers)
   };
 }

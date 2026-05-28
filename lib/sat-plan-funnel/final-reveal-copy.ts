@@ -154,6 +154,19 @@ export function buildRevealDiagnosisCopy(answers: SatPlanAnswers): RevealDiagnos
       ? `${name.charAt(0).toUpperCase()}${name.slice(1)} already has many of the traits we see in strong SAT students: ${traitBits.join(", ")}.`
       : `${name.charAt(0).toUpperCase()}${name.slice(1)} already has many of the traits we see in strong SAT students: ${traitBits.join(", ")}.`;
 
+  const hasRetakeWindow =
+    Boolean(answers.test_date) &&
+    answers.test_date !== "test_date_not_planning" &&
+    Boolean(timeline.weeks);
+
+  const retakeConfidenceSuffix = voice.isSelf
+    ? " With time before application deadlines, a retake is a realistic path to meaningful improvement."
+    : voice.subject === "he"
+      ? " With time before application deadlines, a retake is a realistic path to meaningful improvement."
+      : voice.subject === "she"
+        ? " With time before application deadlines, a retake is a realistic path to meaningful improvement."
+        : " With time before application deadlines, there's a realistic path to meaningful improvement.";
+
   const paragraphs: string[] = [traitsLine];
 
   if (tested && current) {
@@ -162,11 +175,10 @@ export function buildRevealDiagnosisCopy(answers: SatPlanAnswers): RevealDiagnos
         ? `But based on what you shared, your current ${current} SAT score likely doesn't reflect your full academic potential yet.`
         : `But based on what you shared, ${voice.possessive} current ${current} SAT score likely doesn't reflect ${voice.possessive} full academic potential yet.`
     );
-    paragraphs.push(
-      voice.isSelf
-        ? `You're about ${gapPts} points from your ${target} goal range. Students with similar GPAs and prep history often improve faster once they stop studying everything equally and focus on the smaller set of skills costing the most points.`
-        : `${voice.subject.charAt(0).toUpperCase()}${voice.subject.slice(1)}'s about ${gapPts} points from a ${target} goal range. Students with similar GPAs and prep history often improve faster once they stop studying everything equally and focus on the smaller set of skills costing the most points.`
-    );
+    const gapBase = voice.isSelf
+      ? `You're about ${gapPts} points from your ${target} goal range. Students with similar GPAs and prep history often improve faster once they stop studying everything equally and focus on the smaller set of skills costing the most points.`
+      : `${voice.subject.charAt(0).toUpperCase()}${voice.subject.slice(1)}'s about ${gapPts} points from a ${target} goal range. Students with similar GPAs and prep history often improve faster once they stop studying everything equally and focus on the smaller set of skills costing the most points.`;
+    paragraphs.push(hasRetakeWindow ? `${gapBase}${retakeConfidenceSuffix}` : gapBase);
   } else {
     paragraphs.push(
       voice.isSelf
@@ -176,21 +188,16 @@ export function buildRevealDiagnosisCopy(answers: SatPlanAnswers): RevealDiagnos
     paragraphs.push(
       "Students with similar GPAs often improve faster once prep focuses on the smaller set of skills the digital SAT actually rewards under time pressure."
     );
-  }
-
-  if (
-    answers.test_date &&
-    answers.test_date !== "test_date_not_planning" &&
-    timeline.weeks
-  ) {
-    const retakeLine = voice.isSelf
-      ? "Because you're planning a retake with time before application deadlines, we believe there's a realistic path to meaningful improvement before the next SAT."
-      : voice.subject === "he"
-        ? "Because he's planning a retake with time before application deadlines, we believe there's a realistic path to meaningful improvement before the next SAT."
-        : voice.subject === "she"
-          ? "Because she's planning a retake with time before application deadlines, we believe there's a realistic path to meaningful improvement before the next SAT."
-          : "Because there's still time before application deadlines, we believe there's a realistic path to meaningful improvement before the next SAT.";
-    paragraphs.push(retakeLine);
+    if (hasRetakeWindow) {
+      const retakeLine = voice.isSelf
+        ? "Because you're planning a retake with time before application deadlines, we believe there's a realistic path to meaningful improvement before the next SAT."
+        : voice.subject === "he"
+          ? "Because he's planning a retake with time before application deadlines, we believe there's a realistic path to meaningful improvement before the next SAT."
+          : voice.subject === "she"
+            ? "Because she's planning a retake with time before application deadlines, we believe there's a realistic path to meaningful improvement before the next SAT."
+            : "Because there's still time before application deadlines, we believe there's a realistic path to meaningful improvement before the next SAT.";
+      paragraphs.push(retakeLine);
+    }
   }
 
   if (prepMirror) {
@@ -198,7 +205,7 @@ export function buildRevealDiagnosisCopy(answers: SatPlanAnswers): RevealDiagnos
   }
 
   const differenceParagraph =
-    "The biggest mistake most students make is continuing the same prep strategy that produced the original score. We diagnose the highest-impact weaknesses first, build a personalized improvement plan, and train the pacing, stamina, and decision-making skills the digital SAT actually rewards.";
+    "Most students keep the same prep approach that produced the original score. We find the highest-impact gaps first and train pacing and decision-making for the digital SAT.";
 
   return { headline, paragraphs, differenceParagraph };
 }

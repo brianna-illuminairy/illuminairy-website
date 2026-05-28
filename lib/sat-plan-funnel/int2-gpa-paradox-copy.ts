@@ -33,37 +33,27 @@ function gpaDisplayLabel(gpaBand?: string): string | null {
 
 function subjectForms(testTaker?: string): {
   possessive: string;
-  costing: string;
-  train: string;
   optimizedClosing: string;
 } {
   switch (testTaker) {
     case "test_taker_daughter":
       return {
         possessive: "her",
-        costing: "her",
-        train: "her",
         optimizedClosing: "She's optimized for the wrong scoring environment."
       };
     case "test_taker_son":
       return {
         possessive: "his",
-        costing: "him",
-        train: "him",
         optimizedClosing: "He's optimized for the wrong scoring environment."
       };
     case "test_taker_self":
       return {
         possessive: "your",
-        costing: "you",
-        train: "you",
         optimizedClosing: "You're optimized for the wrong scoring environment."
       };
     default:
       return {
         possessive: "their",
-        costing: "them",
-        train: "them",
         optimizedClosing: "They're optimized for the wrong scoring environment."
       };
   }
@@ -77,8 +67,7 @@ function gpaParadoxLead(answers: SatPlanAnswers): string {
 
 export function buildInt2GpaParadoxCopy(answers: SatPlanAnswers): Int2GpaParadoxCopy {
   const self = answers.test_taker === "test_taker_self";
-  const { possessive, costing, train, optimizedClosing } =
-    subjectForms(answers.test_taker);
+  const { possessive, optimizedClosing } = subjectForms(answers.test_taker);
 
   const headlinePrefix = self
     ? "We help students like you "
@@ -122,10 +111,7 @@ export function buildInt2GpaParadoxCopy(answers: SatPlanAnswers): Int2GpaParadox
       { text: "The SAT is timed over " },
       { text: "2hr 14 mins", bold: true, accent: true },
       { text: ", and also tests " },
-      { text: "focus, stamina, and speed.", bold: true },
-      {
-        text: ` We pinpoint the few skills still costing ${costing} points and train ${train} under a clock until accuracy and speed both improve.`
-      }
+      { text: "focus, stamina, and speed.", bold: true }
     ],
     tutorName: "Maya Reinhart",
     tutorTitle: "Head tutor · Illuminairy"

@@ -33,6 +33,7 @@ export function SatPlanRevealDiagnosis({ onBack, onContinue }: SatPlanRevealDiag
     <QuizStepTemplate
       stepId="reveal-diagnosis"
       headline={copy.headline}
+      headlineTier="compact"
       bodyVariant="copy"
       onContinue={handleContinue}
       onBack={onBack}

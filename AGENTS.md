@@ -21,6 +21,7 @@ This is **not** a coursework or AIMA assignment repo. Do not apply academic “s
 | [`docs/agentic-development/`](docs/agentic-development/README.md) | Spec-driven, Ralph, autoresearch, growth experiments, gstack |
 | [`specs/`](specs/README.md) | PRDs, specs, `ACTIVE.md`, Ralph `PLAN.md` |
 | **SAT plan funnel (live UI)** | **`/satplan`** in this repo — `components/sat-plan/`, `lib/sat-plan-funnel/` |
+| **Assessment funnel v2 (live UI)** | **`/assessment`** — `components/assessment/`, `lib/assessment-funnel/`, `app/assessment/funnel.css` (Aurora Light) |
 | **SAT funnel specs / copy** | Sibling repo [brianna-illuminairy/quizfunnel](https://github.com/brianna-illuminairy/quizfunnel) — not runnable production code |
 
 ## SAT plan funnel (`/satplan`) — do not revert to Babel
@@ -30,6 +31,14 @@ This is **not** a coursework or AIMA assignment repo. Do not apply academic “s
 - New assessment screens: `QuizStepTemplate` in `components/sat-plan/`; update step map in `lib/sat-plan-funnel/state.ts`
 - **Layout lock:** step files are **content only** — swap `headline`, `hint`, `bodyVariant`, and body children. Do not edit `funnel.css`, `funnel-shell.tsx`, `quiz-step-template.tsx`, or spacing without owner approval. See `components/sat-plan/LAYOUT.lock.md` and `npm run funnel:layout-guard`.
 - Product/copy checklists stay in the **quizfunnel** git repo
+
+## Assessment funnel (`/assessment`) — parallel to satplan
+
+- **Ship here:** `npm run dev` → http://localhost:3000/assessment
+- **Specs:** quizfunnel `PLAN-assessment-funnel.md`, `design/aurora/tokens.md`
+- **Do not** import sat-plan shell/CSS into assessment step files; reuse `quiz-option-list` only
+- v1 ends at `complete` — no offer/Calendly until `files/assessment-offer.md` exists
+- Analytics: `funnel_id: "assessment"` via `trackAssessmentFunnelEvent`
 
 ## Agentic workflows
 

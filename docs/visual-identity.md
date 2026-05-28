@@ -90,6 +90,22 @@ SAT/parent-ed workshop rules below remain in repo for when those routes return f
 
 ---
 
+## Aurora SAT funnel (May 2026 — live on illuminairy.com)
+
+**Status:** Primary public brand for `/` and `/quiz`. Tokens live in `app/quiz-funnel.css`.
+
+| Element | Aurora rule |
+|---------|-------------|
+| Surfaces | Paper `#F4F0E8`, ink `#14202E`, forest `#2F6E47`, celestial `#0057A8` |
+| Type | **Fraunces** display · **Schibsted Grotesk** body · **DM Mono** labels |
+| Logo | `public/brand/logo-horizontal.png` (header) · `logo-square.png` (OG/social) |
+| Clear space | Height of the star cluster above the wordmark on all sides |
+| Layout | Mobile-first 420px column; `100dvh` with `100vh` fallback for Safari |
+
+Retired on the live site: ivory/gold/Jakarta brand board, `/assessment`, `/satplan`, `/go/*`.
+
+---
+
 ## What "YC-investible" means here
 
 - Restraint = confidence; every element serves **illuminate** or **guide**.
