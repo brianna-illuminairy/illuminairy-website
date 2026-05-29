@@ -1578,6 +1578,19 @@
   justify-content: flex-start;
   min-height: auto;
   padding-top: 0;
+  gap: 0;
+}
+.qf-page .qf-insight-hit--outcome-proof.qf-insight-hit--manual {
+  gap: 0;
+}
+.qf-page .qf-insight-hit--outcome-proof .qf-insight-hit__copy {
+  margin-bottom: 32px;
+}
+.qf-page .qf-insight-hit--outcome-proof .qf-insight-hit__copy .qf-insight-hit__line {
+  line-height: 1.45;
+}
+.qf-page .qf-insight-hit--outcome-proof .qf-insight-hit__proof {
+  margin-top: 0;
 }
 .qf-page .qf-insight-hit--outcome-proof .qf-insight-hit__line {
   font-size: clamp(17px, 4.4vw, 22px);
