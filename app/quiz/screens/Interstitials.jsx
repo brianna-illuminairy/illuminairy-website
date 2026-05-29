@@ -1076,7 +1076,7 @@ export function QFISteps({ onContinue, onBack }) {
           <div style={{
             fontFamily: 'var(--qf-body)', fontSize: 11.5,
             color: 'var(--qf-ink-2)', marginTop: 2, lineHeight: 1.3,
-          }}>Weekly 1:1 tutoring.</div>
+          }}>Focus each week.</div>
         </div>
       </div>
     </QFScreen>
