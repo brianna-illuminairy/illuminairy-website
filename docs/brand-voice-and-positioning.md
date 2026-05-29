@@ -4,7 +4,7 @@
 
 **Audience:** Founders, copywriters, sales, and anyone writing customer-facing words.
 
-**Related docs:** Visual system → [visual-identity.md](visual-identity.md). SAT competitive messaging, objection handlers, and copy bank → [sat-messaging-positioning.md](sat-messaging-positioning.md). Doc index → [designer-brief.md](designer-brief.md).
+**Related docs:** Visual system → [visual-identity.md](visual-identity.md). SAT competitive messaging, objection handlers, and copy bank → [sat-messaging-positioning.md](sat-messaging-positioning.md). **Score Path funnel messaging (stats, names, tone)** → [messaging-guide.md](messaging-guide.md). Doc index → [designer-brief.md](designer-brief.md).
 
 ---
 

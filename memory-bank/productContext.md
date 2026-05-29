@@ -11,7 +11,7 @@
 
 | Attribute | Value (see `lib/site.ts`) |
 |-----------|---------------------------|
-| Duration | 12 weeks |
+| Duration | Personalized weekly plan (timeline-flexible) |
 | Live classes | 2×/week (R&W + Math) |
 | 1:1 sessions | 6 private sessions |
 | Class cap | 10 per class |
@@ -33,6 +33,7 @@
 
 - Illuminate + guide; warm, clear, confident without hype
 - Parent-friendly; avoid jargon like “cohort”
+- **Funnel + parent copy:** [`docs/messaging-guide.md`](../docs/messaging-guide.md) — stats, product names, banned patterns (owner corrections locked; do not re-litigate)
 - Proof-oriented (mentor credentials, structure, reports)—see full rules in `docs/brand-voice-and-positioning.md`
 
 ## Canonical copy

@@ -3,6 +3,12 @@
 import { AssessmentCta } from "@/components/assessment/assessment-cta";
 import { AssessmentLogo } from "@/components/assessment/assessment-logo";
 import { trackAssessmentFunnelEvent } from "@/lib/assessment-funnel/analytics";
+import {
+  FOCUS_SKILL_COUNT,
+  KHAN_SAT_SKILL_COUNT_LABEL,
+  notAllKhanSkillsTitleCase,
+  satBreadthVsFocusLine,
+} from "@/lib/sat-skills-copy";
 
 type AssessmentLandingLowProps = {
   onStartAssessment: () => void;
@@ -15,8 +21,8 @@ function startClick(onStart: () => void, section: string) {
 }
 
 const INCLUDED_ITEMS = [
-  "Diagnostic across 28 skills",
-  "Personalized 12-week plan",
+  `Diagnostic across ${KHAN_SAT_SKILL_COUNT_LABEL} skill areas`,
+  "Personalized weekly SAT plan",
   "1:1 vetted SAT tutor",
   "Weekly progress dashboard",
   "Unlimited tutor messaging",
@@ -35,21 +41,21 @@ const HOW_IT_WORKS = [
     meta: "Instant"
   },
   {
-    title: "Get the 12-week plan",
+    title: "Get your plan",
     body: "Built around the gaps that matter.",
     meta: "Same day"
   },
   {
     title: "1:1 tutor + support",
     body: "Weekly sessions. Text in between.",
-    meta: "12 weeks"
+    meta: "Weekly"
   }
 ] as const;
 
 const REVIEWS = [
   {
     scores: "1188 → 1410",
-    quote: "12 weeks, +230 points. The diagnostic was the difference.",
+    quote: "+230 points. The diagnostic was the difference.",
     name: "David D.",
     initial: "D"
   },
@@ -104,7 +110,7 @@ export function AssessmentLandingLow({ onStartAssessment }: AssessmentLandingLow
               <span className="assessment-lp-check" aria-hidden>
                 ✓
               </span>
-              Personalized 12-week plan
+              Personalized weekly SAT plan
             </li>
             <li>
               <span className="assessment-lp-check" aria-hidden>
@@ -149,7 +155,7 @@ export function AssessmentLandingLow({ onStartAssessment }: AssessmentLandingLow
       <div className="assessment-lp-inner">
         <section className="assessment-lp-block">
           <p className="assessment-lp-body">
-            The SAT tests 28 skills. Most students lose points on the same 5. We diagnose them.
+            {satBreadthVsFocusLine()} We diagnose them.
             Then we drill them.
           </p>
           <AssessmentCta variant="full" onClick={go("diagnostic")} />
@@ -254,7 +260,7 @@ export function AssessmentLandingLow({ onStartAssessment }: AssessmentLandingLow
               <span className="assessment-lp-check assessment-lp-check--light" aria-hidden>
                 ✓
               </span>
-              Fix the gaps. Not all 28 skills.
+              Fix the gaps. {notAllKhanSkillsTitleCase()}.
             </li>
             <li>
               <span className="assessment-lp-check assessment-lp-check--light" aria-hidden>

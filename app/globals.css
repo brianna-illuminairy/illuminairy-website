@@ -20,6 +20,7 @@
   --bg-grid: none;
 }
 
+/* Legacy .dark class maps to the same light tokens — site is light-only. */
 .dark {
   color-scheme: light;
   --color-surface: #e9e7e8;

@@ -13,7 +13,7 @@ export function LayoutChrome({ children }: { children: React.ReactNode }) {
     pathname === "/refund-policy";
 
   if (isMinimalFunnel) {
-    return <main>{children}</main>;
+    return <main className="funnel-main">{children}</main>;
   }
 
   return <main>{children}</main>;

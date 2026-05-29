@@ -41,6 +41,8 @@ export function captureQuizStep(
     step: stepId,
     step_index: stepIndex,
     has_gap_screen: Boolean(options?.hasGapScreen),
+    viewport_width:
+      typeof window !== "undefined" ? window.innerWidth : undefined,
     q1: answers.q1,
     q2: answers.q2,
     q3: answers.q3,
@@ -83,6 +85,19 @@ export function captureQuizLeadSubmitted(
   } else if (typeof window !== "undefined" && window.fbq) {
     window.fbq("track", "Lead");
   }
+}
+
+export function captureQuizThankYouViewed(answers: Record<string, unknown>) {
+  if (getPostHogKey()) {
+    posthog.capture("quiz_thank_you_viewed", {
+      q4: answers.q4,
+      q5: answers.q5,
+      has_kid_name: Boolean(
+        typeof answers.kidName === "string" && answers.kidName.trim()
+      )
+    });
+  }
+  trackQuizGaEvent("quiz_thank_you_view", { funnel: "sat_quiz" });
 }
 
 export function captureQuizBookingConfirmed(eventId?: string) {

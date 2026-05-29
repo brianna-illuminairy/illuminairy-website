@@ -8,6 +8,7 @@ import { concreteTargetBandLabel } from "@/lib/sat-plan-funnel/score-gap";
 import { subjectPronouns } from "@/lib/sat-plan-funnel/subject-pronouns";
 import { studentVoice } from "@/lib/sat-plan-funnel/student-voice";
 import type { SatPlanAnswers } from "@/lib/sat-plan-funnel/types";
+import { KHAN_SAT_MATH_SKILL_COUNT, KHAN_SAT_SKILL_COUNT_LABEL } from "@/lib/sat-skills-copy";
 
 export type Int8SelfStudyFailCopy = {
   headline: string;
@@ -15,8 +16,6 @@ export type Int8SelfStudyFailCopy = {
   closingParagraph: string;
   graphicAriaLabel: string;
 };
-
-const SAT_SKILL_COUNT = 28;
 
 const DEFAULT_SELF_STUDY_TOOLS = "Khan Academy and Bluebook";
 
@@ -78,7 +77,7 @@ function skillsStruggleSentence(answers: SatPlanAnswers): string {
   const voice = studentVoice(answers);
   const subject = voice.isSelf ? "you" : voice.subject;
 
-  return `The SAT tests ${SAT_SKILL_COUNT} skills, ${subject} probably struggled to identify which ones to focus on to actually improve ${voice.possessive} score.`;
+  return `Khan's SAT course covers ${KHAN_SAT_SKILL_COUNT_LABEL} skills (${KHAN_SAT_MATH_SKILL_COUNT} in math alone) — ${subject} probably struggled to identify which ones to focus on to actually improve ${voice.possessive} score.`;
 }
 
 function buildLeadParagraph(answers: SatPlanAnswers): string {

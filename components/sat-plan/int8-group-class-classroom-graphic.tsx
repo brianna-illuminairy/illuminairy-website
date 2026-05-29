@@ -1,3 +1,5 @@
+import { KHAN_SAT_SKILL_COUNT_LABEL } from "@/lib/sat-skills-copy";
+
 type StudentWeakness = {
   id: string;
   accent: string;
@@ -44,7 +46,7 @@ export function Int8GroupClassClassroomGraphic({
           </div>
           <div className="int8-group-class-graphic__board" aria-hidden>
             <span className="int8-group-class-graphic__board-label">One lesson for everyone</span>
-            <span className="int8-group-class-graphic__board-topic">All 28 SAT skills · same pace</span>
+            <span className="int8-group-class-graphic__board-topic">All {KHAN_SAT_SKILL_COUNT_LABEL} SAT skills · same pace</span>
           </div>
         </div>
 

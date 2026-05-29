@@ -8,7 +8,7 @@ export const qualificationIntake = {
   title: "Tell us about your child before we meet.",
   /** Apply page — lead with outcome, then time + next step */
   intro:
-    "Three quick questions about your child — where they're starting, what you're aiming for, and whether our twelve-week August program is the right fit.",
+    "Three quick questions about your child — where they're starting, what you're aiming for, and whether Illuminairy is the right fit.",
   introNext:
     "About 3 minutes. When you're done, you'll pick a time for your free consultation.",
   steps: [
@@ -104,7 +104,7 @@ export function needsInvestmentBudgetConfirmation(
 export function getInvestmentBudgetConfirmationCopy() {
   return {
     title: "Quick note on program tuition",
-    lead: `The SAT Accelerator is ${satProgram.tuitionDisplay} for the full twelve-week program — one-time tuition, not hourly tutoring.`,
+    lead: `The SAT Accelerator is ${satProgram.tuitionDisplay} for the full program — one-time tuition, not hourly tutoring.`,
     payment:
       "Pay-over-time options may be available at enrollment (for example card installments through checkout). We can review what's available on your free consultation.",
     prompt: "Would you still like to apply and schedule a consultation?",

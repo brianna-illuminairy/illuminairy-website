@@ -4,9 +4,18 @@ export {
   weeksUntilQ5Test,
   maxPromisedGainForQ5,
   cappedPromisedGain,
+  funnelTimelineGain,
+  promisedGainPoints,
+  hasScheduledTestDate,
+  shouldShowGainMath,
+  MIN_WEEKS_FOR_GAIN_MATH,
+  PROGRAM_PREP_WEEKS,
+  timelineScaledGain,
+  waitUrgencyFromQuiz,
   promisedGainFromQuizAnswers,
   showedGpaGapScreen,
-  type Q5Key
+  type Q5Key,
+  type WaitUrgency,
 } from "@/lib/quiz-funnel/gains";
 
 import { maxPromisedGainForQ5 } from "@/lib/quiz-funnel/gains";

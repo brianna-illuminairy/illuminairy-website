@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import { Fraunces, Schibsted_Grotesk, DM_Mono } from "next/font/google";
+import { funnelFontClassName } from "@/lib/funnel-fonts";
 import { LayoutChrome } from "@/components/layout-chrome";
+import { ThemeProvider } from "@/components/theme-provider";
 import { GoogleAnalytics } from "@/components/google-analytics";
 import { KlaviyoScript } from "@/components/klaviyo";
 import { AttributionProvider } from "@/components/attribution-provider";
@@ -8,28 +9,6 @@ import { PostHogProvider } from "@/components/posthog-provider";
 import { MetaPixel } from "@/components/meta-pixel";
 import { site } from "@/lib/site";
 import "./globals.css";
-
-const fraunces = Fraunces({
-  subsets: ["latin"],
-  variable: "--font-fraunces",
-  display: "swap",
-  axes: ["opsz"],
-  weight: "variable"
-});
-
-const schibstedGrotesk = Schibsted_Grotesk({
-  subsets: ["latin"],
-  variable: "--font-schibsted",
-  display: "swap",
-  weight: ["400", "500", "600", "700"]
-});
-
-const dmMono = DM_Mono({
-  subsets: ["latin"],
-  variable: "--font-dm-mono",
-  display: "swap",
-  weight: ["300", "400", "500"]
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -65,9 +44,16 @@ export const metadata: Metadata = {
     description: "SAT prep for ambitious families."
   },
   icons: {
-    icon: "/brand/logo-square.png",
-    apple: "/brand/logo-square.png"
+    icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
+    apple: [{ url: "/apple-icon.svg", type: "image/svg+xml" }]
   }
+};
+
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  colorScheme: "light" as const
 };
 
 export default function RootLayout({
@@ -88,13 +74,15 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${fraunces.variable} ${schibstedGrotesk.variable} ${dmMono.variable}`}
+      className={`light ${funnelFontClassName}`}
+      style={{ colorScheme: "light" }}
       suppressHydrationWarning
     >
-      <body className="min-h-screen antialiased" style={{ margin: 0 }}>
-        <PostHogProvider>
-          <AttributionProvider>
-            <LayoutChrome>{children}</LayoutChrome>
+      <body className="min-h-screen bg-surface text-primary antialiased" style={{ margin: 0 }}>
+        <ThemeProvider>
+          <PostHogProvider>
+            <AttributionProvider>
+              <LayoutChrome>{children}</LayoutChrome>
             <script
               type="application/ld+json"
               dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
@@ -102,8 +90,9 @@ export default function RootLayout({
             <GoogleAnalytics />
             <MetaPixel />
             <KlaviyoScript />
-          </AttributionProvider>
-        </PostHogProvider>
+            </AttributionProvider>
+          </PostHogProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

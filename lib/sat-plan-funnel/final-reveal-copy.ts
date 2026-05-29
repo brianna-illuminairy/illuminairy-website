@@ -1,4 +1,6 @@
 import { GPA_OPTIONS } from "@/lib/sat-plan-funnel/gpa-options";
+import type { SatPlanAnswers } from "@/lib/sat-plan-funnel/types";
+import { KHAN_SAT_MATH_SKILL_COUNT, KHAN_SAT_SKILL_COUNT_LABEL } from "@/lib/sat-skills-copy";
 import {
   diagnosisProfileId,
   prepMirrorPhrase,
@@ -13,7 +15,6 @@ import {
   resolveTimelineFromTestDate
 } from "@/lib/sat-plan-funnel/sat-test-dates";
 import { studentDisplayName, studentVoice } from "@/lib/sat-plan-funnel/student-voice";
-import type { SatPlanAnswers } from "@/lib/sat-plan-funnel/types";
 import { wrongReasonMatches } from "@/lib/sat-plan-funnel/wrong-options";
 import { satProgramOutcomes } from "@/lib/site";
 
@@ -319,7 +320,7 @@ const PROOF_STORIES: Record<
       const prepBit = prep ? prep.toLowerCase() : "self-study and group prep";
       return [
         `A high-GPA student relied on ${prepBit} but couldn't break past a plateau.`,
-        "Nothing was diagnosing which of the 28 SAT skills were still weak under time pressure.",
+        `Nothing was diagnosing which of Khan's ${KHAN_SAT_SKILL_COUNT_LABEL} SAT skills (${KHAN_SAT_MATH_SKILL_COUNT} in math alone) were still weak under time pressure.`,
         "Once prep focused on three high-impact gaps — with a tutor correcting mistakes in real time — the score moved meaningfully before the next test date."
       ];
     }

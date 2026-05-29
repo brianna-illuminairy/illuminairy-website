@@ -26,6 +26,7 @@ export type QuizAnswersPayload = {
   kidName?: string;
   confirmTcpa?: boolean;
   planChoice?: string;
+  sat_lp_variant?: string | null;
 };
 
 function splitName(full: string) {
@@ -46,7 +47,8 @@ function buildQuizAnswersSnapshot(answers: QuizAnswersPayload) {
     q8: answers.q8 ?? null,
     q9: answers.q9 ?? null,
     planChoice: answers.planChoice ?? "full",
-    confirmTcpa: Boolean(answers.confirmTcpa)
+    confirmTcpa: Boolean(answers.confirmTcpa),
+    sat_lp_variant: answers.sat_lp_variant ?? null
   };
 }
 

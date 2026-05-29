@@ -1,0 +1,366 @@
+/* Landing — full-bleed page (no centered phone/tablet column) */
+
+.il-page.il-brand.light {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+}
+
+/* Header — dark chrome only (hero/body stay light) */
+.il-page .top-bar.il-top-bar,
+.il-page.il-brand.light .top-bar.il-top-bar {
+  background: transparent;
+  padding: 16px 22px;
+}
+
+.il-logo-wrap {
+  display: flex;
+  justify-content: center;
+}
+
+/* Real photos */
+.il-photo {
+  position: relative;
+  overflow: hidden;
+  border-radius: 4px;
+  background: var(--cream-2, #f5ecd6);
+}
+
+.il-photo.tall {
+  aspect-ratio: 3 / 4;
+}
+
+.il-photo.wide {
+  aspect-ratio: 16 / 10;
+  max-height: 200px;
+}
+
+.il-photo.il-photo-hero {
+  max-height: 180px;
+}
+
+.il-photo.il-photo-section {
+  aspect-ratio: 4 / 3;
+  margin: 18px 0 22px;
+  max-height: 180px;
+}
+
+.il-photo.il-photo-section .img-ph {
+  width: 100%;
+  height: 100%;
+  min-height: 120px;
+  aspect-ratio: 4 / 3;
+}
+
+.il-photo.il-photo-tall {
+  aspect-ratio: 4 / 5;
+  max-height: 240px;
+}
+
+.il-photo.il-photo-great-news {
+  max-height: 220px;
+}
+
+.il-photo-img {
+  object-fit: cover;
+}
+
+.il-hero-section {
+  padding-top: 14px;
+  padding-bottom: 22px;
+}
+
+.il-hero-checklist {
+  margin-top: 22px;
+}
+
+.il-hero-cta-wrap {
+  padding: 0 22px 14px;
+}
+
+.il-hero-media {
+  padding: 8px 22px 32px;
+}
+
+.il-h1-authority {
+  font-size: 36px;
+  line-height: 1.04;
+}
+
+.il-body-copy {
+  font-size: 15px;
+  line-height: 1.5;
+  margin-bottom: 14px;
+}
+
+.il-body-copy-spaced {
+  margin-bottom: 22px;
+}
+
+.il-lead-spaced {
+  margin-bottom: 18px;
+}
+
+.il-overlay-wrap {
+  position: relative;
+}
+
+.il-overlay-badge {
+  position: absolute;
+  left: 18px;
+  top: 18px;
+  background: rgba(20, 20, 20, 0.85);
+  color: white;
+  padding: 10px 14px;
+  font-weight: 700;
+  font-size: 15px;
+  max-width: 200px;
+  line-height: 1.3;
+}
+
+.il-overlay-pill {
+  position: absolute;
+  left: 18px;
+  bottom: 18px;
+  width: auto;
+}
+
+.il-included-photo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 22px;
+}
+
+.il-included-img {
+  border-radius: 4px;
+  object-fit: cover;
+  width: 140px;
+  height: 140px;
+}
+
+.il-included-placeholder {
+  margin-bottom: 18px;
+}
+
+.il-included-ph {
+  width: 100%;
+  max-height: 100px;
+  aspect-ratio: 16 / 9;
+}
+
+.il-page .review .ba.ba-scores-only {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 20px 16px;
+}
+
+.il-page .review .ba-col-score-only {
+  flex: 1;
+  text-align: center;
+}
+
+.il-page .review .ba-arrow {
+  font-family: var(--display);
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--forest, #2f6e47);
+  flex-shrink: 0;
+}
+
+.il-page .review .ba-score-large {
+  font-size: 32px;
+  margin-top: 8px;
+}
+
+.il-page .step-num-badge {
+  width: 90px;
+  height: 70px;
+  border-radius: 4px;
+  background: var(--ink);
+  color: var(--paper, #fff);
+  font-family: var(--mono);
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.il-included-list {
+  gap: 8px;
+}
+
+.il-cta-spaced {
+  margin-top: 22px;
+}
+
+.il-cta-block {
+  margin-top: 18px;
+}
+
+.il-disclaimer-spaced {
+  margin-top: 12px;
+}
+
+/* Mobile section stacks (desktop grids in landing-desktop.css) */
+.il-section-split {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-top: 18px;
+}
+
+.il-section-science .il-photo-section {
+  order: -1;
+}
+
+.il-included-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-top: 18px;
+}
+
+.il-included-layout .il-included-placeholder,
+.il-included-layout .il-included-photo {
+  order: -1;
+}
+
+.il-final-checklist {
+  margin-bottom: 22px;
+}
+
+/* Review before/after visuals */
+.il-page .review .ba {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 12px;
+}
+
+.il-page .review .ba-col {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.il-page .review .ba .pill {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 1;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  font-weight: 600;
+}
+
+.il-page .review .ba .pill.accent {
+  background: var(--accent);
+  color: white;
+}
+
+.il-page .review .ba-img-wrap {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  border-radius: 4px;
+  overflow: hidden;
+  background: var(--cream-2);
+}
+
+.il-page .review .ba-img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+
+.il-page .review .ba-score {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 22px;
+  text-align: center;
+  letter-spacing: -0.02em;
+}
+
+.il-page .review .ba-score.after-score {
+  color: var(--green);
+}
+
+.il-page .step-img-wrap {
+  width: 90px;
+  height: 70px;
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.il-page .step-img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+
+.il-page .btn {
+  min-height: 48px;
+}
+
+.il-page .footer-legal,
+.il-page .footer-copy {
+  font-size: 11px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.5);
+  margin: 0;
+}
+
+/* Flag loading skeleton — full viewport */
+.il-skeleton {
+  width: 100%;
+  max-width: none;
+  min-height: 100dvh;
+  min-height: 100vh;
+  background: #f5f8fa;
+}
+
+.il-skeleton-bar {
+  background: #121a2b;
+  padding: 16px 22px;
+  display: flex;
+  justify-content: center;
+}
+
+.il-skeleton-body {
+  height: 60vh;
+  background: linear-gradient(
+    180deg,
+    rgba(18, 26, 43, 0.04) 0%,
+    rgba(18, 26, 43, 0.02) 100%
+  );
+}
+
+/* Map brand fonts to loaded Next fonts */
+.il-page.il-brand {
+  --brand-display: var(--font-schibsted), "Schibsted Grotesk", system-ui, sans-serif;
+  --brand-em-font: var(--font-schibsted), "Schibsted Grotesk", system-ui, sans-serif;
+  --display: var(--brand-display);
+  --body: var(--font-schibsted), "Schibsted Grotesk", system-ui, sans-serif;
+  --mono: var(--font-dm-mono), "JetBrains Mono", ui-monospace, monospace;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .il-page .carousel {
+    scroll-behavior: auto;
+  }
+
+  .il-page .btn {
+    transition: none;
+  }
+}

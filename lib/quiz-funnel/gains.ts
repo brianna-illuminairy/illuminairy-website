@@ -11,6 +11,11 @@ export const Q5_TEST_DATES = {
   dec5: new Date("2026-12-05")
 } as const;
 
+/** q5 values with a concrete calendar test date (not tbd / 2027). */
+export function hasScheduledTestDate(q5: string | null | undefined): q5 is Q5Key {
+  return q5 != null && q5 in Q5_TEST_DATES;
+}
+
 const BASELINE_SCORE: Record<string, number> = {
   u1000: 1050,
   "1100-1200": 1150,
@@ -48,12 +53,122 @@ export function cappedPromisedGain(
   return Math.min(rawGap, maxPromisedGainForQ5(q5, today));
 }
 
+/** Funnel display gain: 150+ if ≤6 weeks to test, 200+ otherwise. */
+export function funnelTimelineGain(
+  q5: string | null | undefined,
+  today = FUNNEL_TODAY
+): number | null {
+  if (!hasScheduledTestDate(q5)) return null;
+  const weeks = weeksUntilQ5Test(q5, today);
+  if (weeks == null || weeks <= 0) return null;
+  return maxPromisedGainForQ5(q5, today);
+}
+
+/** @deprecated Use funnelTimelineGain for funnel copy — 150+ or 200+ only. */
+export function promisedGainPoints(
+  _rawGap: number | null | undefined,
+  q5: string | null | undefined,
+  today = FUNNEL_TODAY
+): number | null {
+  return funnelTimelineGain(q5, today);
+}
+
+/** Full program runway — gain potential scales down as test day gets closer. */
+export const PROGRAM_PREP_WEEKS = 12;
+
+/**
+ * Realistic gain given weeks until test (scales with runway to test day).
+ * Used for urgency copy — does not replace cappedPromisedGain elsewhere.
+ */
+export function timelineScaledGain(
+  rawGap: number | null | undefined,
+  q5: string | null | undefined,
+  today = FUNNEL_TODAY
+): number | null {
+  if (rawGap == null || rawGap <= 0) return null;
+  const weeks = weeksUntilQ5Test(q5, today);
+  const ceiling = cappedPromisedGain(rawGap, q5, today);
+  if (ceiling == null) return null;
+  if (weeks == null || !hasScheduledTestDate(q5)) return ceiling;
+  if (weeks <= 0) return 0;
+
+  const referenceWeeks = 12;
+  if (weeks >= referenceWeeks) return ceiling;
+  return Math.max(0, Math.round(ceiling * (weeks / referenceWeeks)));
+}
+
+/** Don't show point/gain math when the next test is fewer than this many weeks away. */
+export const MIN_WEEKS_FOR_GAIN_MATH = 4;
+
+export function shouldShowGainMath(
+  q5: string | null | undefined,
+  today = FUNNEL_TODAY
+): boolean {
+  if (!hasScheduledTestDate(q5)) return true;
+  const weeks = weeksUntilQ5Test(q5, today);
+  if (weeks == null) return true;
+  return weeks >= MIN_WEEKS_FOR_GAIN_MATH;
+}
+
+export type WaitUrgency = {
+  weeksUntil: number | null;
+  gainNow: number | null;
+  gainIfWaitOneWeek: number | null;
+  pointsLostIfWaitOneWeek: number | null;
+  pointsPerWeekWaiting: number | null;
+};
+
+/** Urgency copy — 150+ if ≤6 weeks to test, 200+ otherwise. */
+export function waitUrgencyFromQuiz(
+  q5: string | null | undefined,
+  today = FUNNEL_TODAY
+): WaitUrgency {
+  const weeksUntil = weeksUntilQ5Test(q5, today);
+
+  if (weeksUntil == null || weeksUntil <= 0 || !hasScheduledTestDate(q5)) {
+    return {
+      weeksUntil,
+      gainNow: null,
+      gainIfWaitOneWeek: null,
+      pointsLostIfWaitOneWeek: null,
+      pointsPerWeekWaiting: null,
+    };
+  }
+
+  const gainNow = funnelTimelineGain(q5, today);
+
+  if (gainNow == null || gainNow <= 0) {
+    return {
+      weeksUntil,
+      gainNow: null,
+      gainIfWaitOneWeek: null,
+      pointsLostIfWaitOneWeek: null,
+      pointsPerWeekWaiting: null,
+    };
+  }
+
+  const pointsPerWeekWaiting = Math.min(
+    50,
+    Math.max(12, Math.round(gainNow / Math.max(1, weeksUntil)))
+  );
+  const gainIfWaitOneWeek = Math.max(0, gainNow - pointsPerWeekWaiting);
+
+  return {
+    weeksUntil,
+    gainNow,
+    gainIfWaitOneWeek,
+    pointsLostIfWaitOneWeek: pointsPerWeekWaiting,
+    pointsPerWeekWaiting,
+  };
+}
+
 export function promisedGainFromQuizAnswers(
   q4: string | null | undefined,
   q5: string | null | undefined,
   q8: string | null | undefined,
   today = FUNNEL_TODAY
 ) {
+  if (!q4 || q4 === "na" || !q8 || q8 === "tbd") return null;
   const lastScore = q4 ? BASELINE_SCORE[q4] : undefined;
   const target = q8 ? TARGET_SCORE[q8] : undefined;
   if (!lastScore || !target) return null;

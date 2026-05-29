@@ -47,7 +47,7 @@ export function ScoreCards({
         {card("after")}
       </div>
       <p className="sc-caption">
-        +{delta} PTS &nbsp;·&nbsp; 12 WEEKS
+        +{delta} PTS
       </p>
     </div>
   );

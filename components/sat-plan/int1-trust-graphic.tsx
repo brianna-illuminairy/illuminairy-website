@@ -1,4 +1,4 @@
-import { satProgramOutcomes } from "@/lib/site";
+import { satProgram, satProgramOutcomes } from "@/lib/site";
 
 function TrustOutcomeRing({ pct }: { pct: number }) {
   const radius = 26;
@@ -43,18 +43,18 @@ export function Int1TrustGraphic() {
   const {
     plansBuiltCount,
     avgPointsGained,
-    programWeeks,
     targetHitRatePct,
     targetHitBefore,
     targetHitEmphasis,
     targetHitAfter
   } = satProgramOutcomes;
+  const privateSessions = satProgram.privateSessions;
 
   return (
     <div
       className="quiz-step-trust-graphic"
       role="group"
-      aria-label={`Program outcomes: ${plansBuiltCount} plus plans built, ${avgPointsGained} average points gained, ${programWeeks} week program, ${targetHitRatePct} percent target hit rate`}
+      aria-label={`Program outcomes: ${plansBuiltCount} plus plans built, ${avgPointsGained} average points gained, ${privateSessions} private sessions, ${targetHitRatePct} percent target hit rate`}
     >
       <div className="quiz-step-trust-card">
         <div className="quiz-step-trust-metrics">
@@ -70,8 +70,8 @@ export function Int1TrustGraphic() {
             <p className="quiz-step-trust-metric-label">Avg pts gained</p>
           </div>
           <div className="quiz-step-trust-metric">
-            <p className="quiz-step-trust-metric-value">{programWeeks}</p>
-            <p className="quiz-step-trust-metric-label">{programWeeks}wk</p>
+            <p className="quiz-step-trust-metric-value">{privateSessions}</p>
+            <p className="quiz-step-trust-metric-label">1:1 sessions</p>
           </div>
         </div>
 

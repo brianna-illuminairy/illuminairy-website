@@ -1,25 +1,36 @@
 ---
 description: Banned marketing phrases in customer-facing copy
-globs: "{app/**/*.tsx,lib/site.ts,components/**/*.tsx}"
-alwaysApply: false
+alwaysApply: true
 ---
 
 # Banned copy phrases
 
-Never use these words or patterns in customer-facing strings. Replace with something specific and concrete.
+**Full messaging rules:** `docs/messaging-guide.md` · **Stats:** `lib/site.ts` only.
+
+Never use these in customer-facing strings (`app/`, `components/`, `lib/*-copy.ts`, `lib/site.ts`, funnel libs).
 
 | Banned | Why | Write instead |
 |--------|-----|---------------|
+| **quiz** (for Score Path) | Parents don't take a quiz | **SAT Score Path** |
 | prep (as noun or modifier) | means nothing specific | "program," "practice," "tutoring," or name what's actually happening |
+| **gains** (funnel copy) | tutor-ad jargon | "improve," "points," "movement" |
+| **points leaking**, **cost points**, **what costs points**, **costing points** | tutor-ad jargon | "what they keep missing," "skills holding their score back" |
+| **point leak(s)**, **biggest leaks**, **points are hiding**, **see where points hide** | tutor-ad jargon | "skills they keep missing," "weakest skills," "what the diagnostic ranks" |
+| **generic prep**, **prep plan**, **generic review**, **generic lessons**, **generic advice** (SAT copy) | vague + "prep" | name what failed: "group class," "Khan course," "personalized weekly plan" |
+| **Our read** | AI voice | drop it or say what the diagnostic shows |
+| **broad review** | vague | "everything on the SAT" vs "5–6 skills" |
+| **not a Khan stat**, **our program outcome, not** | awkward meta | state Illuminairy stats plainly — no DIY/Khan disclaimers |
+| **District-wide**, **~115** (OSP), **20 hours on Official SAT Practice linked to** | implies Khan alone works | use `illuminairyFirstMonthOutcomeLine()` from `lib/site.ts` |
+| **DIY promise**, **not the same as 20 hours on Khan** | defensive, weird | first-month outcome or skill-focus contrast only |
 | engine, pivot engine | metaphor, not a feature | say what the 1:1s or sessions actually do |
-| blueprint | vague planning metaphor | "schedule" or "twelve-week program" |
+| blueprint | vague planning metaphor | "schedule" or "personalized weekly plan" |
 | rhythm, cadence | marketer shorthand for "schedule" | "the same schedule every week" |
 | leverage | corporate jargon | "use" |
 | ecosystem | meaningless in this context | name the actual parts |
 | holistic | says nothing | describe what's included |
 | empower, empowerment | empty verb | say what the student can do after |
 | unlock, unlock potential | cliché | say what happens specifically |
-| journey | vague | "twelve weeks" or "the program" |
+| journey | vague | "personalized weekly plan" or "the program" |
 | transform, transformation | overpromise | say what changes and how |
 | seamless | never true, never specific | describe the actual experience |
 | robust | filler adjective | drop it or say what makes it strong |
@@ -33,33 +44,33 @@ Never use these words or patterns in customer-facing strings. Replace with somet
 | game-changer | hyperbole | say what's different and why it matters |
 | next-level | empty modifier | drop it |
 | proven (without citing proof) | unsubstantiated | cite the study or drop it |
-| structured (as adjective for program) | brand-voice ban | "twelve-week program" or describe what's in it |
+| structured (as adjective for program) | brand-voice ban | "personalized weekly plan" or describe what's in it |
 | personalized (without saying how) | vague | say what the mentor does differently for each student |
 | reinforce / reinforces | vague | "your student works the same problem types until they stop getting them wrong" |
 | human explanation layer | marketer metaphor | "a mentor who explains why you got it wrong" |
 | score jump, big jump | tutoring-ad jargon | "a score competitive for their list," "in line with their GPA" |
 | boost (their/your) score, score boost, bump their score | app-ad tone | "a stronger August score," "improve on the August test" |
 | close the gap, add 100 points, +150 points | implied guarantee | "map their target on the consultation" |
-| costs points, what costs points | tutoring-ad jargon | "the gaps that hold the score back," "what they keep missing" |
 | sitting, sittings | stiff / clinical | "test," "attempt," "retake," "test day," "next test date" |
 | supercharge scores, skyrocket scores | hype | name program mechanics or drop |
 | get into [school], guaranteed admission | admission promise | "competitive for their list," "keeps options open" |
 | in range for admission | misreads middle 50% | "within the middle 50% of submitters — not a guarantee" |
-| fit call | off-brand CTA | "free consultation," "schedule your consultation" |
+| fit call | off-brand CTA | **Strategy Call** |
+
+## Funnel product names (required)
+
+| Wrong | Right |
+|-------|-------|
+| quiz, assessment quiz | **SAT Score Path** |
+| diagnostic on the call | **Skill Diagnostic** (2 hr 14 min, after Strategy Call) |
+| consultation / fit call | **Strategy Call** (15 min advisory) |
 
 ## No negative framing
 
 Headlines, titles, and lead copy must state what we **do**, not what we don't do or what's wrong with others.
 
-| Negative (don't use) | Positive (use instead) |
-|---|---|
-| "No empty promises." | "A progress report every week." |
-| "Built around the mistakes that matter." | "Built to find what your student gets wrong and fix it." |
-| "Not self-study, not random sessions." | "One twelve-week program with the same schedule every week." |
-| "No one hides in the back row." | "Every student answers questions out loud during every session." |
-
-Contrast clauses should describe what **we do better**, **what makes us different**, or **why what we do works** — not what others do wrong. "— your student practices on a screen that matches the real test" is fine. "— not a workbook" puts the focus on someone else's failure.
+Contrast clauses: what **we do better** — not awkward meta ("not a Khan stat") or trashing competitors.
 
 ## General rule
 
-When in doubt: if a phrase could describe any company's product, it's too vague. Replace it with something only Illuminairy can say.
+If a phrase could describe any company's product, it's too vague. If Brianna already corrected it once, check `docs/messaging-guide.md` before rewriting.

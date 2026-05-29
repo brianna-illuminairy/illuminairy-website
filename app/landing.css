@@ -1,0 +1,15 @@
+/* Mobile landing — full viewport, same shell as /quiz */
+
+.lp-page {
+  width: 100%;
+  max-width: 100%;
+  min-height: 100dvh;
+  min-height: 100vh;
+  background: var(--qf-bg);
+}
+
+.lp-page .qf-top,
+.lp-page .qf-body {
+  width: 100%;
+  max-width: 100%;
+}

@@ -1,0 +1,757 @@
+/* Aurora brand theme — overlays the base styles.css with the brand system from
+   illuminairy_brand_guide.html. Apply by adding `.il-brand` to the .il-page wrapper. */
+
+.il-page.il-brand {
+  /* Token overrides */
+  --brand-navy:       #121A2B;
+  --brand-navy-mid:   #1C2A42;
+  --brand-celestial:  #0057A8;
+  --brand-aurora:     #77C89A;
+  --brand-glow:       #B8F5D1;
+  --brand-silver:     #BCC3CC;
+  --brand-white:      #F5F8FA;
+  --brand-ink:        #121A2B;
+
+  /* Display font — swappable via data-display attribute or CSS var.
+     Default = clean modern sans (DM Sans 700). Numbers render normally.
+     Italic emphasis uses --brand-em-font separately so we can pair a sans
+     display with an editorial serif italic accent (or stay all-sans). */
+  --brand-display: 'DM Sans', system-ui, sans-serif;
+  --brand-display-weight: 700;
+  --brand-display-italic-weight: 600;
+  --brand-display-letter: -0.025em;
+
+  --brand-em-font: 'DM Sans', system-ui, sans-serif;
+  --brand-em-weight: 600;
+
+  background: var(--brand-navy);
+  color: var(--brand-white);
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-weight: 400;
+}
+
+/* Display-font presets — set on the page wrapper via data-display.
+   Each preset configures both the display font (headlines, numbers, chrome)
+   AND the em font (editorial italic accents — quotes, em tags, step titles). */
+.il-page.il-brand[data-display="dm-sans"] {
+  --brand-display: 'DM Sans', system-ui, sans-serif;
+  --brand-display-weight: 700;
+  --brand-display-italic-weight: 600;
+  --brand-display-letter: -0.025em;
+  --brand-em-font: 'DM Sans', system-ui, sans-serif;
+  --brand-em-weight: 600;
+}
+.il-page.il-brand[data-display="dm-sans-serif-em"] {
+  /* Sans display + restrained italic-serif accent on em words only.
+     Numbers stay sans; only word-level emphasis goes italic-serif. */
+  --brand-display: 'DM Sans', system-ui, sans-serif;
+  --brand-display-weight: 700;
+  --brand-display-italic-weight: 600;
+  --brand-display-letter: -0.025em;
+  --brand-em-font: 'Fraunces', Georgia, serif;
+  --brand-em-weight: 500;
+}
+.il-page.il-brand[data-display="schibsted"] {
+  --brand-display: 'Schibsted Grotesk', system-ui, sans-serif;
+  --brand-display-weight: 700;
+  --brand-display-italic-weight: 600;
+  --brand-display-letter: -0.025em;
+  --brand-em-font: 'Schibsted Grotesk', system-ui, sans-serif;
+  --brand-em-weight: 600;
+}
+.il-page.il-brand[data-display="fraunces"] {
+  --brand-display: 'Fraunces', Georgia, serif;
+  --brand-display-weight: 600;
+  --brand-display-italic-weight: 500;
+  --brand-display-letter: -0.022em;
+  --brand-em-font: 'Fraunces', Georgia, serif;
+  --brand-em-weight: 500;
+}
+.il-page.il-brand[data-display="cormorant"] {
+  --brand-display: 'Cormorant Garamond', Georgia, serif;
+  --brand-display-weight: 500;
+  --brand-display-italic-weight: 400;
+  --brand-display-letter: -0.005em;
+  --brand-em-font: 'Cormorant Garamond', Georgia, serif;
+  --brand-em-weight: 400;
+}
+
+/* Chrome */
+.il-page.il-brand .top-bar .wordmark {
+  font-family: var(--brand-display);
+  font-weight: var(--brand-display-weight);
+  font-size: 17px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--brand-white);
+}
+
+/* ── Typography ── */
+.il-page.il-brand h1 {
+  font-family: var(--brand-display);
+  font-weight: var(--brand-display-weight);
+  font-size: 46px;
+  line-height: 1.02;
+  letter-spacing: var(--brand-display-letter);
+  color: var(--brand-white);
+}
+.il-page.il-brand h2 {
+  font-family: var(--brand-display);
+  font-weight: var(--brand-display-weight);
+  font-size: 32px;
+  line-height: 1.06;
+  letter-spacing: var(--brand-display-letter);
+  color: var(--brand-white);
+}
+.il-page.il-brand h3 {
+  font-family: var(--brand-display);
+  font-weight: var(--brand-display-weight);
+  font-size: 19px;
+  letter-spacing: 0;
+  color: var(--brand-white);
+}
+.il-page.il-brand h1 em,
+.il-page.il-brand h2 em,
+.il-page.il-brand h3 em,
+.il-page.il-brand p em,
+.il-page.il-brand .lead em {
+  font-style: italic;
+  color: var(--brand-aurora);
+  font-weight: var(--brand-em-weight);
+  font-family: var(--brand-em-font);
+}
+.il-page.il-brand .lead {
+  font-size: 15px;
+  line-height: 1.65;
+  color: rgba(245,248,250,0.85);
+  font-weight: 500;
+}
+.il-page.il-brand .muted { color: var(--brand-silver); }
+.il-page.il-brand .accent {
+  /* No auto-italic — italic only via explicit <em>. Keeps numbers readable. */
+  color: var(--brand-aurora);
+}
+
+.il-page.il-brand .eyebrow {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--brand-aurora);
+  font-weight: 400;
+  opacity: 0.85;
+}
+.il-page.il-brand .eyebrow .dot {
+  display: none;
+}
+
+/* ── Buttons (pill, celestial, lowercase) ── */
+.il-page.il-brand .btn {
+  background: var(--brand-celestial);
+  color: white;
+  width: 100%;
+  padding: 18px 28px;
+  border-radius: 100px;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  letter-spacing: 0.12em;
+  text-transform: lowercase;
+  transition: background 0.2s, transform 0.06s;
+}
+.il-page.il-brand .btn:hover { background: #0064c0; }
+.il-page.il-brand .btn.btn-cream {
+  background: transparent;
+  color: var(--brand-white);
+  border: 1px solid rgba(245,248,250,0.18);
+}
+.il-page.il-brand .btn .arrow { font-size: 16px; }
+
+/* Ghost button (used between sections) */
+.il-page.il-brand .btn-ghost {
+  background: transparent;
+  border: 1px solid rgba(119,200,154,0.3);
+  color: var(--brand-aurora);
+}
+
+/* ── Cards ── */
+.il-page.il-brand .card {
+  background: var(--brand-navy-mid);
+  color: var(--brand-white);
+  border: 1px solid rgba(188,195,204,0.08);
+  border-radius: 14px;
+}
+.il-page.il-brand .card.cream {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(188,195,204,0.1);
+}
+.il-page.il-brand .card.cream-2 {
+  background: rgba(255,255,255,0.04);
+}
+.il-page.il-brand .card.dark {
+  background: rgba(0,87,168,0.15);
+  border: 1px solid rgba(0,87,168,0.3);
+}
+.il-page.il-brand .card.highlight {
+  background: linear-gradient(135deg, rgba(0,87,168,0.12) 0%, rgba(119,200,154,0.06) 100%);
+  border: 1px solid rgba(119,200,154,0.15);
+}
+.il-page.il-brand .card.bordered {
+  border-left: 2px solid var(--brand-aurora);
+}
+
+/* ── Section backgrounds ── */
+.il-page.il-brand .section.bg-paper {
+  background: var(--brand-navy-mid);
+}
+.il-page.il-brand .section.bg-cream {
+  background: rgba(255,255,255,0.02);
+  border-top: 1px solid rgba(188,195,204,0.06);
+  border-bottom: 1px solid rgba(188,195,204,0.06);
+}
+.il-page.il-brand .section.bg-ink {
+  background: #06090F;
+  position: relative;
+  overflow: hidden;
+}
+.il-page.il-brand .section.bg-ink::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 0%, rgba(0,87,168,0.18) 0%, rgba(119,200,154,0.04) 40%, transparent 70%);
+  pointer-events: none;
+}
+.il-page.il-brand .section.bg-ink > * { position: relative; z-index: 1; }
+
+/* ── Hero CTA ── */
+.il-page.il-brand .hero-cta {
+  background: var(--brand-navy-mid);
+  border: 1px solid rgba(119,200,154,0.15);
+  border-radius: 16px;
+  padding: 26px 22px 22px;
+  color: var(--brand-white);
+  position: relative;
+  overflow: hidden;
+}
+.il-page.il-brand .hero-cta::before {
+  content: '';
+  position: absolute; top: -40px; right: -40px;
+  width: 160px; height: 160px;
+  background: radial-gradient(circle, rgba(119,200,154,0.18) 0%, transparent 70%);
+  pointer-events: none;
+}
+.il-page.il-brand .hero-cta .copy {
+  font-family: var(--brand-em-font);
+  font-weight: var(--brand-em-weight);
+  font-style: italic;
+  font-size: 18px;
+  line-height: 1.45;
+  color: var(--brand-white);
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Checklist ── */
+.il-page.il-brand .checklist li {
+  color: rgba(245,248,250,0.92);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1.5;
+}
+.il-page.il-brand .checklist li .check {
+  background: transparent;
+  border: 1px solid var(--brand-aurora);
+  color: var(--brand-aurora);
+  width: 20px; height: 20px;
+  font-size: 11px;
+}
+.il-page.il-brand .checklist.on-dark li { color: rgba(245,248,250,0.85); }
+.il-page.il-brand .checklist.on-dark li .check {
+  background: transparent; border-color: var(--brand-aurora); color: var(--brand-aurora);
+}
+
+/* ── Image placeholders ── */
+.il-page.il-brand .img-ph {
+  background:
+    repeating-linear-gradient( 135deg,
+      rgba(119,200,154,0.05) 0 1px,
+      transparent 1px 14px ),
+    var(--brand-navy-mid);
+  border: 1px solid rgba(119,200,154,0.12);
+  color: rgba(188,195,204,0.7);
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+}
+.il-page.il-brand .img-ph.dark {
+  background:
+    repeating-linear-gradient( 135deg,
+      rgba(119,200,154,0.04) 0 1px,
+      transparent 1px 14px ),
+    #06090F;
+  border-color: rgba(119,200,154,0.08);
+}
+
+/* ── What's included / row items (over-ride the cream warm look) ── */
+.il-page.il-brand .row-item {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(188,195,204,0.08);
+  border-radius: 10px;
+  padding: 16px 18px;
+  margin-bottom: 6px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.il-page.il-brand .row-item + .row-item { border-top: 1px solid rgba(188,195,204,0.08); }
+.il-page.il-brand .row-item .label {
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  color: var(--brand-white);
+}
+
+/* ── Steps (how it works) ── */
+.il-page.il-brand .step {
+  background: rgba(255,255,255,0.025);
+  border: 1px solid rgba(188,195,204,0.08);
+  border-left: 1px solid rgba(119,200,154,0.4);
+  border-radius: 0 10px 10px 0;
+  padding: 18px 18px;
+  margin-bottom: 8px;
+}
+.il-page.il-brand .step .step-title {
+  font-family: var(--brand-em-font);
+  font-weight: var(--brand-em-weight);
+  font-style: italic;
+  font-size: 22px;
+  letter-spacing: 0;
+  color: var(--brand-white);
+}
+.il-page.il-brand .step .step-desc {
+  color: rgba(188,195,204,0.85);
+  font-weight: 300;
+  font-size: 13px;
+  line-height: 1.55;
+}
+.il-page.il-brand .step .step-time {
+  font-family: 'DM Mono', monospace;
+  color: var(--brand-aurora);
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  opacity: 0.7;
+}
+
+/* ── Stat row ── */
+.il-page.il-brand .stat-grid {
+  background: rgba(255,255,255,0.025);
+  border: 1px solid rgba(188,195,204,0.08);
+  border-radius: 14px;
+}
+.il-page.il-brand .stat-grid .stat {
+  border-right-color: rgba(188,195,204,0.08);
+}
+.il-page.il-brand .stat-grid .num {
+  font-family: var(--brand-display);
+  font-weight: var(--brand-display-weight);
+  font-size: 36px;
+  color: var(--brand-white);
+  letter-spacing: var(--brand-display-letter);
+}
+.il-page.il-brand .stat-grid .num.accent {
+  color: var(--brand-aurora);
+}
+.il-page.il-brand .stat-grid .lbl {
+  color: rgba(188,195,204,0.65);
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.25em;
+}
+
+/* ── Reviews ── */
+.il-page.il-brand .review {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(188,195,204,0.08);
+  border-radius: 14px;
+  overflow: hidden;
+}
+.il-page.il-brand .review .quote {
+  font-family: var(--brand-em-font);
+  font-style: italic;
+  font-weight: var(--brand-em-weight);
+  font-size: 17px;
+  line-height: 1.5;
+  color: var(--brand-white);
+  padding: 16px 20px 10px;
+}
+.il-page.il-brand .review .who {
+  padding: 12px 20px 18px;
+  border-top: 1px solid rgba(188,195,204,0.08);
+}
+.il-page.il-brand .review .who .ava {
+  background: linear-gradient(135deg, var(--brand-celestial), var(--brand-aurora));
+  color: var(--brand-white);
+  font-family: var(--brand-display);
+  font-weight: var(--brand-display-weight);
+  font-size: 14px;
+}
+.il-page.il-brand .review .who .name {
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 400;
+  font-size: 13px;
+  color: var(--brand-white);
+}
+.il-page.il-brand .review .who .verified {
+  color: var(--brand-aurora);
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+}
+
+/* ── Footer ── */
+.il-page.il-brand .footer {
+  background: #06090F;
+  border-top: 1px solid rgba(188,195,204,0.06);
+  color: rgba(188,195,204,0.5);
+  font-family: 'DM Sans', sans-serif;
+}
+.il-page.il-brand .footer .foot-head {
+  font-family: var(--brand-em-font);
+  font-weight: var(--brand-em-weight);
+  font-size: 20px;
+  color: var(--brand-white);
+  font-style: italic;
+}
+.il-page.il-brand .footer .socials a {
+  background: rgba(119,200,154,0.06);
+  border: 1px solid rgba(119,200,154,0.15);
+  color: var(--brand-aurora);
+}
+.il-page.il-brand .footer .links a {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: rgba(188,195,204,0.5);
+}
+
+/* ── Disclaimer ── */
+.il-page.il-brand .disclaimer {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  color: rgba(188,195,204,0.45);
+  text-transform: uppercase;
+  line-height: 1.6;
+}
+
+/* ── num badge (small caps) ── */
+.il-page.il-brand .num-badge {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  color: rgba(188,195,204,0.65);
+  text-transform: uppercase;
+}
+
+/* ── Decorative aurora glow on the hero ── */
+.il-page.il-brand .brand-aurora-bg {
+  position: relative;
+  overflow: hidden;
+}
+.il-page.il-brand .brand-aurora-bg::before {
+  content: '';
+  position: absolute;
+  top: -120px; left: 50%;
+  transform: translateX(-50%);
+  width: 500px; height: 320px;
+  background: radial-gradient(ellipse,
+    rgba(0,87,168,0.20) 0%,
+    rgba(119,200,154,0.08) 40%,
+    transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+.il-page.il-brand .brand-aurora-bg > * { position: relative; z-index: 1; }
+
+/* ── Constellation dots — used as separator/ornament ── */
+.il-page.il-brand .constellation {
+  display: flex; align-items: center; justify-content: center;
+  gap: 14px; padding: 28px 0;
+  opacity: 0.5;
+}
+.il-page.il-brand .constellation .dot {
+  width: 3px; height: 3px; border-radius: 50%;
+  background: var(--brand-aurora);
+}
+.il-page.il-brand .constellation .dot.big {
+  width: 5px; height: 5px; background: var(--brand-glow);
+  box-shadow: 0 0 12px rgba(184,245,209,0.6);
+}
+.il-page.il-brand .constellation .line {
+  height: 1px; flex: 0 0 30px;
+  background: linear-gradient(to right, transparent, rgba(119,200,154,0.4), transparent);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   LIGHT MODE — .il-brand.light
+   Polar-white page with navy-mid display, celestial pills, and
+   navy-anchored hero+final-CTA panels so the rhythm still has dark
+   "moments." Aurora-green is retained for borders/glows/icons but
+   em-text is darkened to a readable aurora variant for white bg.
+   ════════════════════════════════════════════════════════════════ */
+
+.il-page.il-brand.light {
+  background: #F5F8FA;
+  color: #121A2B;
+}
+
+/* Wordmark */
+.il-page.il-brand.light .top-bar .wordmark {
+  color: #121A2B;
+}
+
+/* Type — darken text colors on white. Weights inherit from --brand-display-*
+   so swapping the display font (sans→serif) keeps proportions correct. */
+.il-page.il-brand.light h1,
+.il-page.il-brand.light h2,
+.il-page.il-brand.light h3 { color: #121A2B; }
+
+.il-page.il-brand.light h1 em,
+.il-page.il-brand.light h2 em,
+.il-page.il-brand.light h3 em,
+.il-page.il-brand.light p em,
+.il-page.il-brand.light .lead em {
+  color: #2F6E47;              /* darker aurora — more contrast on white */
+}
+.il-page.il-brand.light .lead {
+  color: #2A3142;
+  font-weight: 500;
+}
+.il-page.il-brand.light p { font-weight: 500; }
+.il-page.il-brand.light .muted { color: rgba(18,26,43,0.6); }
+.il-page.il-brand.light .accent { color: #2F6E47; }
+
+.il-page.il-brand.light .eyebrow {
+  color: #2F6E47;
+  font-weight: 500;
+  opacity: 1;
+}
+
+/* Checklist — darker, weightier body (key readability fix for 45+) */
+.il-page.il-brand.light .checklist li {
+  color: #1F2638;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 1.5;
+}
+.il-page.il-brand.light .checklist li .check {
+  border-color: #2F6E47;
+  color: #2F6E47;
+  border-width: 1.5px;
+}
+
+/* Row items / steps / reviews — color + weight for older-eye readability */
+.il-page.il-brand.light .step .step-desc { color: #2A3142; font-weight: 500; }
+.il-page.il-brand.light .step .step-time { color: #2F6E47; }
+.il-page.il-brand.light .review .who .verified { color: #2F6E47; }
+.il-page.il-brand.light .row-item .label { font-weight: 600; color: #121A2B; }
+.il-page.il-brand.light .review .quote { font-weight: 500; color: #1F2638; }
+.il-page.il-brand.light .review .who .name { font-weight: 600; color: #121A2B; }
+
+/* Disclaimer / num-badge — color tuned for white bg */
+.il-page.il-brand.light .disclaimer { color: rgba(18,26,43,0.6); }
+.il-page.il-brand.light .num-badge { color: rgba(18,26,43,0.7); font-weight: 500; }
+
+/* Buttons — celestial unchanged; ghost / cream cards adjust */
+.il-page.il-brand.light .btn.btn-cream {
+  background: transparent;
+  color: #121A2B;
+  border: 1px solid rgba(18,26,43,0.18);
+}
+
+/* Cards */
+.il-page.il-brand.light .card {
+  background: #FFFFFF;
+  border: 1px solid rgba(18,26,43,0.08);
+  color: #121A2B;
+}
+.il-page.il-brand.light .card.cream {
+  background: #FFFFFF;
+  border: 1px solid rgba(18,26,43,0.08);
+}
+.il-page.il-brand.light .card.dark {
+  background: rgba(0,87,168,0.08);
+  border: 1px solid rgba(0,87,168,0.15);
+}
+.il-page.il-brand.light .card.highlight {
+  background: linear-gradient(135deg, rgba(0,87,168,0.06) 0%, rgba(119,200,154,0.10) 100%);
+  border: 1px solid rgba(119,200,154,0.25);
+}
+
+/* Section backgrounds */
+.il-page.il-brand.light .section.bg-paper {
+  background: #FFFFFF;
+  border-top: 1px solid rgba(18,26,43,0.05);
+  border-bottom: 1px solid rgba(18,26,43,0.05);
+}
+.il-page.il-brand.light .section.bg-cream {
+  background: #ECF1F4;
+  border-top: 1px solid rgba(18,26,43,0.04);
+  border-bottom: 1px solid rgba(18,26,43,0.04);
+}
+/* Dark tail only — final CTA (not hero / body) */
+.il-page.il-brand.light .section.bg-ink,
+.il-page.il-brand.light .il-premium-dark-section.bg-ink {
+  background: #121A2B;
+  color: var(--brand-white);
+}
+.il-page.il-brand.light .section.bg-ink h2,
+.il-page.il-brand.light .il-premium-dark-section.bg-ink h2 {
+  color: var(--brand-white);
+}
+.il-page.il-brand.light .section.bg-ink h2 em,
+.il-page.il-brand.light .il-premium-dark-section.bg-ink h2 em {
+  color: var(--brand-aurora);
+}
+.il-page.il-brand.light .section.bg-ink .eyebrow,
+.il-page.il-brand.light .il-premium-dark-section.bg-ink .eyebrow {
+  color: var(--brand-aurora);
+}
+.il-page.il-brand.light .section.bg-ink .lead,
+.il-page.il-brand.light .il-premium-dark-section.bg-ink .lead {
+  color: rgba(245,248,250,0.7);
+}
+.il-page.il-brand.light .section.bg-ink .checklist.on-dark li,
+.il-page.il-brand.light .il-premium-dark-section.bg-ink .checklist.on-dark li {
+  color: rgba(245,248,250,0.9);
+  font-weight: 500;
+}
+.il-page.il-brand.light .section.bg-ink .checklist.on-dark li .check,
+.il-page.il-brand.light .il-premium-dark-section.bg-ink .checklist.on-dark li .check {
+  background: transparent;
+  border-color: var(--brand-aurora);
+  color: var(--brand-aurora);
+}
+.il-page.il-brand.light .section.bg-ink .btn.btn-cream,
+.il-page.il-brand.light .il-premium-dark-section.bg-ink .btn.btn-cream {
+  background: #f5f8fa;
+  color: #121a2b;
+  border: none;
+  font-weight: 600;
+}
+.il-page.il-brand.light .section.bg-ink .btn.btn-cream:hover,
+.il-page.il-brand.light .il-premium-dark-section.bg-ink .btn.btn-cream:hover {
+  background: #ffffff;
+}
+
+/* Footer — always dark on B3 light page */
+.il-page.il-brand.light .footer.il-premium-footer {
+  background: #06090f;
+  color: rgba(188, 195, 204, 0.55);
+}
+.il-page.il-brand.light .footer.il-premium-footer .foot-head {
+  color: var(--brand-white);
+  font-style: italic;
+}
+.il-page.il-brand.light .footer.il-premium-footer .links a {
+  color: rgba(188, 195, 204, 0.55);
+}
+.il-page.il-brand.light .footer.il-premium-footer .footer-legal,
+.il-page.il-brand.light .footer.il-premium-footer .footer-copy {
+  color: rgba(188, 195, 204, 0.45);
+}
+
+/* Hero CTA — keep dark navy on light page for "premium standout" */
+.il-page.il-brand.light .hero-cta {
+  background: #121A2B;
+  border: 1px solid rgba(119,200,154,0.2);
+  color: var(--brand-white);
+}
+.il-page.il-brand.light .hero-cta .copy { color: var(--brand-white); }
+
+/* Checklist (light-bg context) */
+.il-page.il-brand.light .checklist li { color: rgba(18,26,43,0.78); }
+.il-page.il-brand.light .checklist li .check {
+  background: transparent;
+  border: 1px solid #3E8B5A;
+  color: #3E8B5A;
+}
+
+/* Image placeholders */
+.il-page.il-brand.light .img-ph {
+  background:
+    repeating-linear-gradient(135deg,
+      rgba(18,26,43,0.05) 0 1px,
+      transparent 1px 14px),
+    #E6ECF0;
+  border: 1px solid rgba(18,26,43,0.08);
+  color: rgba(18,26,43,0.5);
+}
+.il-page.il-brand.light .img-ph.dark {
+  background:
+    repeating-linear-gradient(135deg,
+      rgba(119,200,154,0.04) 0 1px,
+      transparent 1px 14px),
+    #121A2B;
+  border-color: rgba(119,200,154,0.12);
+  color: rgba(245,248,250,0.55);
+}
+
+/* Row items */
+.il-page.il-brand.light .row-item {
+  background: #FFFFFF;
+  border: 1px solid rgba(18,26,43,0.06);
+}
+.il-page.il-brand.light .row-item .label { color: #121A2B; }
+
+/* Steps */
+.il-page.il-brand.light .step {
+  background: #FFFFFF;
+  border: 1px solid rgba(18,26,43,0.06);
+  border-left: 1px solid #77C89A;
+}
+.il-page.il-brand.light .step .step-title { color: #121A2B; }
+.il-page.il-brand.light .step .step-desc { color: rgba(18,26,43,0.65); }
+.il-page.il-brand.light .step .step-time { color: #3E8B5A; }
+
+/* Stats */
+.il-page.il-brand.light .stat-grid {
+  background: #FFFFFF;
+  border: 1px solid rgba(18,26,43,0.06);
+}
+.il-page.il-brand.light .stat-grid .stat { border-right-color: rgba(18,26,43,0.06); }
+.il-page.il-brand.light .stat-grid .num { color: #121A2B; }
+.il-page.il-brand.light .stat-grid .num.accent { color: #3E8B5A; }
+.il-page.il-brand.light .stat-grid .lbl { color: rgba(18,26,43,0.5); }
+
+/* Reviews */
+.il-page.il-brand.light .review {
+  background: #FFFFFF;
+  border: 1px solid rgba(18,26,43,0.06);
+}
+.il-page.il-brand.light .review .quote { color: #121A2B; }
+.il-page.il-brand.light .review .who {
+  border-top: 1px solid rgba(18,26,43,0.06);
+}
+.il-page.il-brand.light .review .who .name { color: #121A2B; }
+.il-page.il-brand.light .review .who .verified { color: #3E8B5A; }
+
+/* Footer — keep dark to anchor the page */
+
+/* Disclaimer */
+.il-page.il-brand.light .disclaimer { color: rgba(18,26,43,0.45); }
+
+/* num badge */
+.il-page.il-brand.light .num-badge { color: rgba(18,26,43,0.55); }
+
+/* Aurora bg glow — soften for light mode */
+.il-page.il-brand.light .brand-aurora-bg::before {
+  background: radial-gradient(ellipse,
+    rgba(119,200,154,0.20) 0%,
+    rgba(0,87,168,0.05) 40%,
+    transparent 70%);
+}
+
+/* Constellation — keep aurora; dim slightly for white */
+.il-page.il-brand.light .constellation { opacity: 0.6; }
+.il-page.il-brand.light .constellation .dot.big {
+  box-shadow: 0 0 12px rgba(119,200,154,0.6);
+}

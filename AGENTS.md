@@ -58,7 +58,7 @@ Non-trivial features: start with a spec. End sessions: update memory-bank.
 ## Golden rules
 
 1. **Single source of truth for public facts** — tuition, dates, program structure, and hero copy live in `lib/site.ts` (and `lib/sat-program-schedule.ts` for the calendar). Update code and brand docs together when facts change.
-2. **Brand voice** — Follow [`docs/brand-voice-and-positioning.md`](docs/brand-voice-and-positioning.md). SAT-specific angles: [`docs/sat-messaging-positioning.md`](docs/sat-messaging-positioning.md). Avoid “cohort”; use parent-friendly language.
+2. **Brand voice** — Follow [`docs/brand-voice-and-positioning.md`](docs/brand-voice-and-positioning.md). Parent/funnel messaging (Score Path, stats, banned patterns): [`docs/messaging-guide.md`](docs/messaging-guide.md). SAT-specific angles: [`docs/sat-messaging-positioning.md`](docs/sat-messaging-positioning.md). Avoid “cohort”; use parent-friendly language.
 3. **Secrets** — Never commit `.env.local`, API keys, or webhook secrets. Use `.env.example` as the template.
 4. **Invite-only links** — `TUTOR_CALENDLY_URL` / `lib/internal-links.ts` tutor interview URL is **email-only after vetting**. Never surface it in public pages, sitemaps, or client bundles.
 5. **Deploy path** — Vercel production; DNS for `illuminairy.com` points to Vercel. Env sync: `npm run env:sync` then `npm run deploy:prod` (or `npm run release`).

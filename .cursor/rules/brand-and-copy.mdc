@@ -6,8 +6,10 @@ alwaysApply: false
 
 # Brand & copy
 
-- Factual constants (tuition, weeks, dates, structure) live in `lib/site.ts`.
+- Factual constants (tuition, weeks, dates, structure, **outcome stats**) live in `lib/site.ts`.
+- **Messaging guide (funnel + parent copy):** `docs/messaging-guide.md` — enforced by `.cursor/rules/messaging-guide.mdc`.
 - Voice: warm, clear, parent-friendly; avoid "cohort."
-- SAT angles: `docs/sat-messaging-positioning.md`.
+- SAT angles: `docs/sat-messaging-positioning.md`; voice: `docs/brand-voice-and-positioning.md`.
+- Banned phrases: `.cursor/rules/banned-copy-phrases.mdc`.
 - When changing hero or program facts, sync `docs/` if positioning text references them.
 - Tutor interview scheduling is invite-only — see `lib/internal-links.ts`.

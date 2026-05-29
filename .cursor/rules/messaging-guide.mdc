@@ -1,0 +1,52 @@
+---
+description: Parent-facing messaging — Score Path funnel, stats, tone, banned patterns
+alwaysApply: true
+---
+
+# Messaging guide (enforce in all customer-facing copy)
+
+**Full guide:** `docs/messaging-guide.md` — read before writing or editing parent-facing strings.
+
+## Audience & names
+
+- **Parents** are the reader (SAT funnel, LP, emails, ads).
+- **SAT Score Path** — never "quiz."
+- **Strategy Call** = 15 min advisory. **Skill Diagnostic** = 2 hr 14 min proctored — separate, after the call.
+- Say **personalized weekly plan** — not blueprint, cohort, or structured program.
+
+## Core contrast
+
+The SAT is **everything**; score movement is usually **5–6 skills** ranked by diagnostic + mistake-driven tutoring.
+
+**Locked effort line:** `~5–7 hrs/week · mistake-driven SAT tutoring on their weakest skills` (`lib/quiz-funnel/score-path-copy.ts`)
+
+## Stats — import from `lib/site.ts` only
+
+| Use | Values |
+|-----|--------|
+| Completers | n=**95**, avg **+182**, **78%** hit target |
+| First month | **90%** achieve **100+** at **20–28 hrs** / **5–7 hrs/week** |
+| Self-study bar | **~40** (College Board retakers — footnote required) |
+
+**Never promote:** College Board **~115 at ~20 hrs** OSP/Khan stat, "District-wide" DIY lines, or meta phrases like **"not a Khan stat."** State Illuminairy outcomes plainly.
+
+**First-month canonical line:** `illuminairyFirstMonthOutcomeLine()` in `lib/site.ts`.
+
+## Tone — avoid
+
+AI/tutor-ad jargon: cost points, points leaking/hiding, point leak(s), gains, Our read, broad review, generic prep/plan/review/lessons/advice, boost, close the gap, score jump, supercharge.
+
+Weird defensive framing, negative headlines, implied score guarantees, "prep" as noun.
+
+Full banned table → `.cursor/rules/banned-copy-phrases.mdc`
+
+## Funnel specifics
+
+- **q7 = Khan** insight → first-month **outcome** stat, not Khan video counts as results proof.
+- Khan breadth (**200+** skills) OK for **why past self-study spread too wide** — not for outcome claims.
+- Plan reveal: label illustrative numbers; next steps = Strategy Call → Skill Diagnostic → weekly plan.
+- Always pair outcome stats with **"Results vary"** (or equivalent).
+
+## Before claiming done
+
+Scan new strings against banned-copy-phrases and this guide. Update `lib/site.ts` if stats change — never duplicate numbers in components.

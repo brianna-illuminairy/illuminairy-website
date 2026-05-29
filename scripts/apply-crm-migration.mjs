@@ -46,10 +46,6 @@ async function main() {
       `postgresql://postgres:${password}@db.${projectRef}.supabase.co:5432/postgres`
     ];
     const pg = await import("pg");
-    const sql = readFileSync(
-      resolve(root, "supabase/migrations/20260518120000_crm_schema.sql"),
-      "utf8"
-    );
     let lastErr;
     for (const cs of hosts) {
       const client = new pg.default.Client({
@@ -58,8 +54,7 @@ async function main() {
       });
       try {
         await client.connect();
-        await client.query(sql);
-        console.log("✓ Migration applied.");
+        await applyAllMigrations(client);
         await client.end();
         return;
       } catch (err) {
@@ -80,11 +75,6 @@ async function main() {
   }
 
   const pg = await import("pg");
-  const sql = readFileSync(
-    resolve(root, "supabase/migrations/20260518120000_crm_schema.sql"),
-    "utf8"
-  );
-
   const client = new pg.default.Client({
     connectionString,
     ssl: { rejectUnauthorized: false }
@@ -92,17 +82,34 @@ async function main() {
 
   await client.connect();
   try {
-    await client.query(sql);
-    console.log("✓ Migration applied.");
-  } catch (err) {
-    const msg = String(err?.message ?? err);
-    if (msg.includes("already exists")) {
-      console.log("✓ Tables already exist.");
-    } else {
-      throw err;
-    }
+    await applyAllMigrations(client);
   } finally {
     await client.end();
+  }
+}
+
+const migrationFiles = [
+  "20260518120000_crm_schema.sql",
+  "20260528190000_quiz_funnel_lead_columns.sql"
+];
+
+async function applyAllMigrations(client) {
+  for (const file of migrationFiles) {
+    const sql = readFileSync(
+      resolve(root, "supabase/migrations", file),
+      "utf8"
+    );
+    try {
+      await client.query(sql);
+      console.log(`✓ Applied ${file}`);
+    } catch (err) {
+      const msg = String(err?.message ?? err);
+      if (msg.includes("already exists")) {
+        console.log(`✓ ${file} (already applied)`);
+      } else {
+        throw err;
+      }
+    }
   }
 }
 

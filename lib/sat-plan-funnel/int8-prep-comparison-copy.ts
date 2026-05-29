@@ -16,6 +16,7 @@ import {
   satProgramOutcomes,
   satRetakeResearch
 } from "@/lib/site";
+import { KHAN_SAT_SKILL_COUNT, FOCUS_SKILL_COUNT } from "@/lib/sat-skills-copy";
 
 type PrepVoice = {
   subject: string;
@@ -123,8 +124,8 @@ function proofAfterChartCopy(): string {
   return `College Board reports the average student only gains ${retakeAvg} points between retakes, while Illuminairy's students gain on average ${guidedAvg} points between retakes.`;
 }
 
-const SAT_SKILL_AREA_COUNT = 28;
-const SCORE_IMPACT_SKIPPED_COUNT = 23;
+const SAT_SKILL_AREA_COUNT = KHAN_SAT_SKILL_COUNT;
+const SCORE_IMPACT_SKIPPED_COUNT = KHAN_SAT_SKILL_COUNT - FOCUS_SKILL_COUNT;
 
 const ILLUSTRATIVE_SCORE_IMPACT_ROWS = [
   { rank: "01", label: "Right triangles & trigonometry", points: 38 },

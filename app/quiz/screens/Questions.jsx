@@ -1,12 +1,13 @@
 'use client'; // @ts-nocheck
 import { QFScreen, QFOption, QFButton, QFQuestionHead, QFOptOut, QFWhyWeAsk } from '../components/QFShell';
+import { Q2_STAKES_OPTIONS } from '@/lib/quiz-funnel/stakes-copy';
 
 export function QFQ1Trigger({ value, onSelect, onBack }) {
   const opts = [
     { id: 'score-low', label: "SAT score too low" },
     { id: 'test-soon', label: "SAT test date coming up" },
     { id: 'app-soon',  label: "Upcoming app deadlines (EA, ED, RD)" },
-    { id: 'gpa-sat',   label: "Good grades, low SAT — why?" },
+    { id: 'gpa-sat',   label: "Good grades, low SAT: why?" },
     { id: 'get-ahead', label: "Starting prep early" },
   ];
   return (
@@ -23,17 +24,11 @@ export function QFQ1Trigger({ value, onSelect, onBack }) {
 }
 
 export function QFQ2Stakes({ value, onSelect, onBack }) {
-  const opts = [
-    { id: 'top-choice', label: "Top-choice school" },
-    { id: 'merit',      label: "Merit scholarships" },
-    { id: 'selective',  label: "Selective colleges" },
-    { id: 'app-rounds', label: "Missing early app rounds" },
-  ];
   return (
     <QFScreen stepIdx={2} onBack={onBack}>
-      <QFQuestionHead title="What would you <em>lose</em> if their SAT didn't improve?" />
+      <QFQuestionHead title="What would a higher SAT score help them <em>achieve</em>?" />
       <div className="qf-options">
-        {opts.map(o => (
+        {Q2_STAKES_OPTIONS.map(o => (
           <QFOption key={o.id} selected={value === o.id} onClick={() => onSelect(o.id)}>{o.label}</QFOption>
         ))}
       </div>
@@ -61,7 +56,8 @@ export function QFQ3TimesTaken({ value, onSelect, onBack }) {
   );
 }
 
-export function QFQ4RecentScore({ value, onSelect, onBack }) {
+export function QFQ4RecentScore({ value, onSelect, onBack, q3 = 'sat-1' }) {
+  const hasSat = ['sat-1', 'sat-2', 'sat-3+'].includes(q3);
   const opts = [
     { id: 'u1000',     label: 'Under 1100' },
     { id: '1100-1200', label: '1100–1200' },
@@ -71,14 +67,23 @@ export function QFQ4RecentScore({ value, onSelect, onBack }) {
   ];
   return (
     <QFScreen stepIdx={4} onBack={onBack}>
-      <QFQuestionHead title="What's the <em>most recent</em> SAT score?" />
+      <QFQuestionHead
+        title={hasSat
+          ? "What's the <em>most recent</em> SAT score?"
+          : "Best estimate of where they'd score <em>today</em>?"}
+      />
       <div className="qf-options">
         {opts.map(o => (
           <QFOption key={o.id} selected={value === o.id} onClick={() => onSelect(o.id)}>{o.label}</QFOption>
         ))}
       </div>
+      {!hasSat && (
+        <QFOptOut onClick={() => onSelect('na')}>No official SAT yet (skip for now)</QFOptOut>
+      )}
       <QFWhyWeAsk>
-        This helps us estimate the most realistic score improvement range for the upcoming test date.
+        {hasSat
+          ? 'This helps us estimate a realistic improvement range before test day.'
+          : 'Optional. The diagnostic sets the real starting point. A rough band helps us preview the plan.'}
       </QFWhyWeAsk>
     </QFScreen>
   );
@@ -118,8 +123,7 @@ export function QFQ6Blocker({ value = [], onToggle, onContinue, onBack }) {
     <QFScreen stepIdx={7} onBack={onBack}
       footer={<QFButton kind="forest" onClick={onContinue}>Continue</QFButton>}
     >
-      <QFQuestionHead title="What seems to be the <em>problem</em>?" />
-      <div className="qf-multi-hint">Select all that apply</div>
+      <QFQuestionHead title="What seems to be the <em>problem</em>?" multiSelect />
       <div className="qf-options">
         {opts.map(o => (
           <QFOption key={o.id} multi selected={value.includes(o.id)} onClick={() => onToggle(o.id)}>{o.label}</QFOption>
@@ -144,10 +148,13 @@ export function QFQ7Tried({ value = [], onToggle, onContinue, onBack, q3 = 'sat-
   ];
   return (
     <QFScreen stepIdx={8} onBack={onBack}
-      footer={<QFButton kind="forest" onClick={onContinue}>Continue</QFButton>}
+      footer={
+        <QFButton kind="forest" onClick={onContinue} disabled={value.length === 0}>
+          Continue
+        </QFButton>
+      }
     >
-      <QFQuestionHead title={title} />
-      <div className="qf-multi-hint">Select all that apply</div>
+      <QFQuestionHead title={title} multiSelect />
       <div className="qf-options">
         {opts.map(o => (
           <QFOption key={o.id} multi selected={value.includes(o.id)} onClick={() => onToggle(o.id)}>{o.label}</QFOption>

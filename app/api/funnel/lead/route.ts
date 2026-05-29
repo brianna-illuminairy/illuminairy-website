@@ -8,6 +8,8 @@ type Body = QuizAnswersPayload & {
   visitorId?: string;
   attribution?: AttributionSnapshot;
   company?: string;
+  fbp?: string;
+  fbc?: string;
 };
 
 function splitName(full: string) {
@@ -30,7 +32,7 @@ export async function POST(request: Request) {
 
   if (!body.confirmTcpa) {
     return NextResponse.json(
-      { error: "Please confirm we may call you about the SAT program." },
+      { error: "Please confirm we may contact you about the SAT program." },
       { status: 400 }
     );
   }
@@ -53,10 +55,18 @@ export async function POST(request: Request) {
   });
 
   if (!result.ok) {
-    return NextResponse.json(
-      { error: "Could not save your details. Please try again." },
-      { status: 500 }
-    );
+    console.error("[funnel/lead]", result.error);
+    const isDev = process.env.NODE_ENV === "development";
+    let error = "Could not save your details. Please try again.";
+    if (isDev) {
+      if (result.error === "supabase_not_configured") {
+        error =
+          "Database not configured: add SUPABASE_SERVICE_ROLE_KEY to .env.local (Supabase → Project Settings → API → service_role), then restart the dev server.";
+      } else {
+        error = `Could not save your details: ${result.error}`;
+      }
+    }
+    return NextResponse.json({ error }, { status: 500 });
   }
 
   const { first, last } = splitName(name);
@@ -75,7 +85,8 @@ export async function POST(request: Request) {
     promised_gain_pts: result.promisedGain ?? "",
     showed_gpa_gap: result.showedGpaGap ? "yes" : "no",
     lead_source: result.leadSource,
-    funnel: "sat_quiz"
+    funnel: "sat_quiz",
+    sat_lp_variant: body.sat_lp_variant ?? ""
   };
 
   void upsertKlaviyoProfile(result.email, {
@@ -96,8 +107,15 @@ export async function POST(request: Request) {
   void sendMetaCapiEvent(
     "Lead",
     eventId,
-    { email: result.email, phone, clientIp, clientUserAgent },
-    { funnel: "sat_quiz", q4: body.q4 ?? "" },
+    {
+      email: result.email,
+      phone,
+      clientIp,
+      clientUserAgent,
+      fbp: body.fbp,
+      fbc: body.fbc
+    },
+    { funnel: "sat_quiz", q4: body.q4 ?? "", sat_lp_variant: body.sat_lp_variant ?? "" },
     result.attribution
   );
 

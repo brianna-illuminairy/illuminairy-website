@@ -1,4 +1,5 @@
 import type { SatPlanAnswers } from "@/lib/sat-plan-funnel/types";
+import { KHAN_SAT_SKILL_COUNT, KHAN_SAT_SKILL_COUNT_LABEL } from "@/lib/sat-skills-copy";
 
 export type DiagnosticSkillTag = "strong" | "developing" | "high-impact" | "low-impact";
 
@@ -33,7 +34,7 @@ export type Int8DiagnosticDrivenCopy = {
   graphicAriaLabel: string;
 };
 
-/** Sample shown in the scan UI — full program still covers 28 skill areas. */
+/** Sample shown in the scan UI — full map aligns with Khan's 200+ skill course scale. */
 const SKILLS: DiagnosticSkill[] = [
   {
     id: "right-triangles",
@@ -112,7 +113,7 @@ export function buildInt8DiagnosticDrivenCopy(
   return {
     headline: "What actually works",
     subhead: subheadCopy(testTaker),
-    skillAreaCount: 28,
+    skillAreaCount: KHAN_SAT_SKILL_COUNT,
     skills,
     prioritySkillIds: [...PRIORITY_SKILL_IDS],
     focusWeekRanges: [...FOCUS_WEEK_RANGES],
@@ -121,7 +122,7 @@ export function buildInt8DiagnosticDrivenCopy(
     phases: {
       analyzing: {
         title: "Diagnosing SAT skill performance…",
-        subtext: "28 skill areas · scanning gaps"
+        subtext: `${KHAN_SAT_SKILL_COUNT_LABEL} skill areas · scanning gaps`
       },
       filtering: {
         title: "Identifying highest-impact weaknesses…"
@@ -130,11 +131,11 @@ export function buildInt8DiagnosticDrivenCopy(
         title: "Building personalized plan…"
       },
       ready: {
-        title: "12 Week SAT Improvement Plan is ready."
+        title: "Your weekly SAT plan is ready."
       }
     },
     graphicAriaLabel:
-      "Animated diagnosis: skill gaps scanned across 28 areas, top weaknesses ranked with illustrative point impact, then scheduled across weeks 2 through 11 of a 12-week personalized plan with score range rising from 1180 toward 1380–1410."
+      `Animated diagnosis: skill gaps scanned across ${KHAN_SAT_SKILL_COUNT_LABEL} areas, top weaknesses ranked with illustrative point impact, then scheduled week by week in a personalized plan with score range rising from 1180 toward 1380–1410.`
   };
 }
 

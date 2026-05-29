@@ -1,74 +1,166 @@
 'use client'; // @ts-nocheck
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { QFScreen, QFButton, QFQuestionHead, QFConstellation } from '../components/QFShell';
+import { QFBarChart } from '../components/QFBarChart';
+import {
+  S2_MISTAKE_DRIVEN_LEAD,
+  S2_MISTAKE_DRIVEN_RESEARCH,
+} from '@/lib/quiz-funnel/score-path-copy';
+import { buildPlanReveal } from '@/lib/quiz-funnel/plan-reveal';
+import { satProgramOutcomes, satRetakeResearch } from '@/lib/site';
 
-// ─── S1 · Summary of Inputs (Hims-style: no headline, sectioned card) ────────
-export function QFS1Summary({ answers = {}, onContinue, onBack }) {
-  const {
-    q3 = 'sat-1', q4 = '1200-1300', q5 = 'oct3',
-    q6 = ['math'], q7 = ['khan'], q8 = '1450', q9 = '3.8-4.0',
-  } = answers;
+function PlanRevealSection({ title, children }) {
+  return (
+    <section className="qf-plan-reveal-section">
+      <p className="qf-plan-reveal-section__title">{title}</p>
+      {children}
+    </section>
+  );
+}
 
-  const Q4_LABEL = { 'u1000': 'Under 1100', '1100-1200': '1100–1200', '1200-1300': '1200–1300', '1300-1400': '1300–1400', '1400plus': '1400+' };
-  const Q5_LABEL = { 'aug22': 'Aug 22, 2026', 'oct3': 'Oct 3, 2026', 'nov7': 'Nov 7, 2026', 'dec5': 'Dec 5, 2026', '2027': 'Spring 2027', 'tbd': 'TBD' };
-  const Q3_LABEL = { 'sat-1': 'Once', 'sat-2': 'Twice', 'sat-3+': 'Three+ times', 'psat-only': 'PSAT only', 'none': 'First time' };
-  const Q8_LABEL = { '1250': '1250', '1300': '1300', '1350': '1350', '1400': '1400', '1450': '1450+', 'tbd': 'Not sure' };
-  const Q9_LABEL = { 'u3.0': 'Under 3.0', '3.0-3.3': '3.0 – 3.3', '3.3-3.5': '3.3 – 3.5', '3.5-3.7': '3.5 – 3.7', '3.7-3.9': '3.7 – 3.9', '4.0+': '4.0+' };
-  const Q7_LABELS = { 'khan': 'Khan / Bluebook', 'group': 'Group class', 'online': 'Online course', 'app': 'SAT App', 'book': 'Prep book', 'nothing': 'No prep' };
-  const Q6_LABELS = { 'math': 'Math', 'reading': 'Reading & writing', 'self-study': "Self-study", 'no-plan': 'No clear plan', 'wont': "Won't study alone", 'too-busy': 'Too busy' };
-
-  const tried = (q7 || []).map(id => Q7_LABELS[id] || id).join(' + ');
-  const gaps = (q6 || []).map(id => Q6_LABELS[id] || id).join(', ');
-
-  const sectionLabel = { fontFamily: 'var(--qf-mono)', fontSize: 9, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--qf-ink-mute)', fontWeight: 600, padding: '12px 18px 6px', borderTop: '1px solid var(--qf-line)' };
-  const row = (lbl, val) => (
-    <div style={{ display: 'flex', padding: '9px 18px 9px 26px', gap: 12, alignItems: 'flex-start' }}>
-      <span style={{ width: 4, flexShrink: 0, height: 16, background: 'rgba(20,32,46,0.12)', borderRadius: 2, marginTop: 3 }} />
-      <span style={{ fontFamily: 'var(--qf-body)', fontSize: 13, color: 'var(--qf-ink-mute)', minWidth: 90 }}>{lbl}</span>
-      <span style={{ fontFamily: 'var(--qf-body)', fontSize: 13, color: 'var(--qf-ink)', textAlign: 'right', flex: 1 }}>{val}</span>
+function MetricCell({ label, value, qualifier, highlight = false }) {
+  return (
+    <div className={`qf-plan-reveal-metric${highlight ? ' qf-plan-reveal-metric--hot' : ''}`}>
+      <span className="qf-plan-reveal-metric__label">{label}</span>
+      <span className="qf-plan-reveal-metric__value">{value}</span>
+      {qualifier ? (
+        <span className="qf-plan-reveal-metric__qual">{qualifier}</span>
+      ) : null}
     </div>
   );
+}
+
+function InputRow({ label, value }) {
+  return (
+    <div className="qf-plan-reveal-input-row">
+      <span className="qf-plan-reveal-input-row__label">{label}</span>
+      <span className="qf-plan-reveal-input-row__value">{value}</span>
+    </div>
+  );
+}
+
+function InputGroup({ title, rows }) {
+  if (!rows.length) return null;
+  return (
+    <div className="qf-plan-reveal-input-group">
+      <p className="qf-plan-reveal-input-group__title">{title}</p>
+      {rows.map((row) => (
+        <InputRow key={`${title}-${row.label}`} label={row.label} value={row.value} />
+      ))}
+    </div>
+  );
+}
+
+// ─── Plan reveal · Personalized SAT improvement assessment ───────────────────
+export function QFSPlanReveal({ answers = {}, onContinue, onBack }) {
+  const plan = useMemo(() => buildPlanReveal(answers), [answers]);
 
   return (
-    <QFScreen stepIdx={14} onBack={onBack}
-      footer={<QFButton kind="forest" onClick={onContinue}>Next</QFButton>}
+    <QFScreen stepIdx={14} ornament="glow" onBack={onBack}
+      footer={<QFButton kind="forest" onClick={onContinue}>See your score path</QFButton>}
     >
-      <div style={{ padding: '8px 0' }}>
-        <div style={{
-          background: 'var(--qf-paper)',
-          border: '1px solid var(--qf-line)',
-          borderRadius: 14,
-          overflow: 'hidden',
-        }}>
-          {/* Card header */}
-          <div style={{
-            background: 'var(--qf-bg-2)', padding: '14px 18px',
-            fontFamily: 'var(--qf-display)', fontSize: 17, fontWeight: 500,
-            letterSpacing: '-0.01em', color: 'var(--qf-ink-2)',
-          }}>
-            Your Plan Inputs
-          </div>
-
-          {/* THE STUDENT */}
-          <div style={sectionLabel}>The Student</div>
-          {row('Current SAT', Q4_LABEL[q4] || q4)}
-          {row('Target score', Q8_LABEL[q8] || q8)}
-          {row('GPA', Q9_LABEL[q9] || q9)}
-          {row('Sittings', Q3_LABEL[q3] || q3)}
-
-          {/* TIMELINE */}
-          <div style={sectionLabel}>Timeline</div>
-          {row('Next test', Q5_LABEL[q5] || q5)}
-
-          {/* CONTEXT */}
-          <div style={sectionLabel}>Context</div>
-          {tried && row('Tried', tried)}
-          {gaps && row('Biggest gaps', gaps)}
+      <div className="gap-22 qf-plan-reveal">
+        <div>
+          <h1 className="qf-h1" style={{ marginBottom: 8 }}>
+            Your SAT improvement <em>assessment</em>
+          </h1>
+          <p className="qf-lead" style={{ margin: 0 }}>{plan.subhead}</p>
         </div>
+
+        <section className="qf-plan-reveal-panel qf-plan-reveal-panel--heard">
+          <p className="qf-plan-reveal-panel__eyebrow">What you told us</p>
+          <p className="qf-plan-reveal-heard">{plan.heardSummary}</p>
+          <div className="qf-plan-reveal-inputs">
+            {plan.inputGroups.map((group) => (
+              <InputGroup key={group.title} title={group.title} rows={group.rows} />
+            ))}
+          </div>
+        </section>
+
+        <div className="qf-plan-reveal-bridge" aria-hidden="true">
+          <span />
+        </div>
+
+        <section className="qf-plan-reveal-panel qf-plan-reveal-panel--assessment">
+          <p className="qf-plan-reveal-panel__eyebrow">{plan.assessmentHeadline}</p>
+          <p className="qf-plan-reveal-verdict">{plan.assessmentVerdict}</p>
+
+          <div className="qf-plan-reveal-metrics">
+            <MetricCell
+              label="Start"
+              value={plan.metrics.start.value}
+              qualifier={plan.metrics.start.qualifier}
+            />
+            <MetricCell
+              label="Target"
+              value={plan.metrics.target.value}
+              qualifier={plan.metrics.target.qualifier}
+            />
+            <MetricCell
+              label="Likely improvement"
+              value={plan.metrics.gainRange}
+              highlight
+            />
+            <MetricCell label="Runway" value={plan.metrics.weeks} />
+            <MetricCell label="Effort" value={plan.metrics.effort} />
+          </div>
+        </section>
+
+        <PlanRevealSection title="Skills to work first (examples until diagnostic)">
+          <ul className="qf-plan-reveal-levers">
+            {plan.topLevers.map((lever) => (
+              <li key={lever.rank}>
+                <span className="qf-plan-reveal-levers__rank">{lever.rank}</span>
+                <span className="qf-plan-reveal-levers__name">{lever.name}</span>
+              </li>
+            ))}
+          </ul>
+          <p className="qf-plan-reveal-note">{plan.leversNote}</p>
+        </PlanRevealSection>
+
+        <PlanRevealSection title="Why last time didn't help">
+          <p className="qf-plan-reveal-body">{plan.whyLastTimeFailed}</p>
+        </PlanRevealSection>
+
+        <PlanRevealSection title="How this time is different">
+          <p className="qf-plan-reveal-body">{plan.howThisTimeDifferent}</p>
+        </PlanRevealSection>
+
+        {plan.honestyLines.length > 0 && (
+          <PlanRevealSection title="What we're being straight about">
+            <ul className="qf-plan-reveal-honesty">
+              {plan.honestyLines.map((line) => (
+                <li key={line}>{line}</li>
+              ))}
+            </ul>
+          </PlanRevealSection>
+        )}
+
+        <PlanRevealSection title="What you see as a parent">
+          <ul className="qf-plan-reveal-list">
+            {plan.parentVisibility.map((line) => (
+              <li key={line}>{line}</li>
+            ))}
+          </ul>
+        </PlanRevealSection>
+
+        <PlanRevealSection title="Next steps">
+          <ol className="qf-plan-reveal-steps">
+            {plan.nextSteps.map((step) => (
+              <li key={step.title}>
+                <strong>{step.title}</strong>
+                <span>{step.detail}</span>
+              </li>
+            ))}
+          </ol>
+        </PlanRevealSection>
       </div>
     </QFScreen>
   );
 }
+
+/** @deprecated use QFSPlanReveal — kept for deep links */
+export const QFS1Summary = QFSPlanReveal;
 
 // ─── S2 · Method — mistake-driven learning, 6-step mastery loop ──────────────
 const S2_EXAMPLE_SKILL = {
@@ -128,10 +220,13 @@ export function QFS2Science({ onContinue, onBack, q6 = ['math'] }) {
       <div className="gap-22">
         <div>
           <h1 className="qf-h1" style={{ marginBottom: 8 }}>
-            We teach through <em>examples</em>.
+            <em>Skill 1</em> gets mistake-driven tutoring.
           </h1>
-          <p className="qf-lead">
-            We show how to solve it, practice together, then they solve it.
+          <p className="qf-lead" style={{ margin: 0 }}>
+            {S2_MISTAKE_DRIVEN_LEAD}
+          </p>
+          <p className="qf-lead" style={{ margin: '12px 0 0', fontSize: 14, color: 'var(--qf-ink-mid)' }}>
+            {S2_MISTAKE_DRIVEN_RESEARCH}
           </p>
         </div>
 
@@ -144,9 +239,10 @@ export function QFS2Science({ onContinue, onBack, q6 = ['math'] }) {
             display: 'flex', justifyContent: 'space-between', alignItems: 'center',
           }}>
             <span style={{
-              fontFamily: 'var(--qf-mono)', fontSize: 9, letterSpacing: '0.2em',
-              color: 'rgba(245,248,250,0.6)',
-            }}>ONE SESSION · ONE SKILL</span>
+              fontFamily: 'var(--qf-body)', fontSize: 12, letterSpacing: '0.06em',
+              fontWeight: 600, textTransform: 'uppercase',
+              color: 'rgba(245,248,250,0.75)',
+            }}>Skill 1 · example session</span>
             <span style={{
               fontFamily: 'var(--qf-body)', fontSize: 13, fontWeight: 600,
               color: 'var(--qf-glow)',
@@ -177,11 +273,11 @@ export function QFS2Science({ onContinue, onBack, q6 = ['math'] }) {
                   color: 'var(--qf-ink)',
                 }}>{s.label}</div>
                 <span style={{
-                  fontFamily: 'var(--qf-mono)', fontSize: 9, letterSpacing: '0.06em',
+                  fontFamily: 'var(--qf-body)', fontSize: 12, fontWeight: 600,
                   textAlign: 'right',
                   color: shown ? (isLast ? 'var(--qf-forest)' : 'var(--qf-ink-mute)') : 'transparent',
                   transition: 'color 0.3s ease',
-                }}>Example {i + 1}</span>
+                }}>Step {i + 1}</span>
               </div>
             );
           })}
@@ -195,9 +291,10 @@ export function QFS2Science({ onContinue, onBack, q6 = ['math'] }) {
             transition: 'opacity 0.4s ease',
           }}>
             <span style={{
-              fontFamily: 'var(--qf-mono)', fontSize: 9, letterSpacing: '0.2em',
+              fontFamily: 'var(--qf-body)', fontSize: 12, fontWeight: 600,
+              letterSpacing: '0.04em', textTransform: 'uppercase',
               color: 'var(--qf-forest)',
-            }}>{example.tag} · MASTERY</span>
+            }}>{example.tag} · mastery</span>
             <span style={{
               fontFamily: 'var(--qf-display)', fontSize: 15, color: 'var(--qf-forest)',
               fontWeight: 500,
@@ -211,15 +308,14 @@ export function QFS2Science({ onContinue, onBack, q6 = ['math'] }) {
 
 // ─── S3 · Stats (vertical bar chart — asymmetry is the point) ────────────────
 export function QFS3Stats({ onContinue, onBack }) {
+  const { avgPointsGained, plansBuiltCount } = satProgramOutcomes;
+  const retakeAvg = satRetakeResearch.avgPointsWithoutNewApproach;
   const bars = [
-    { lbl: 'Self-study', val: 12,  color: 'rgba(20,32,46,0.18)' },
-    { lbl: 'Khan',       val: 25,  color: 'rgba(20,32,46,0.28)' },
-    { lbl: 'CB avg',     val: 40,  color: 'rgba(20,32,46,0.45)' },
-    { lbl: 'Tutor',      val: 70,  color: 'rgba(20,32,46,0.65)' },
-    { lbl: 'illuminairy',val: 182, color: 'var(--qf-forest)', hot: true },
+    { lbl: 'On their own', val: retakeAvg, color: 'rgba(20,32,46,0.30)' },
+    { lbl: 'Group class', val: 70, color: 'rgba(20,32,46,0.55)' },
+    { lbl: 'Illuminairy', val: avgPointsGained, color: 'var(--qf-forest)', hot: true },
   ];
-  const MAX = 182;
-  const CHART_H = 160;
+  const MAX = avgPointsGained;
 
   return (
     <QFScreen stepIdx={16} tone="bg-2" onBack={onBack}
@@ -227,62 +323,20 @@ export function QFS3Stats({ onContinue, onBack }) {
     >
       <div className="gap-22">
         <h1 className="qf-h1">
-          <em>4.5X</em> the avg score improvement.
+          <em>+{avgPointsGained}</em> avg on completed plans.
         </h1>
         <p className="qf-lead">
-          The College Board's published avg gain on retest is +40 points. Our students average +182.
+          College Board retakers without a new approach average about +{retakeAvg} points. Across{' '}
+          {plansBuiltCount} completed Illuminairy plans, students averaged +{avgPointsGained}.
         </p>
 
-        {/* Vertical bar chart */}
         <div className="qf-card" style={{ padding: 20 }}>
-          <div style={{
-            display: 'flex', alignItems: 'flex-end', gap: 6,
-            height: CHART_H + 48, paddingBottom: 0,
-          }}>
-            {bars.map((b, i) => {
-              const heightPct = (b.val / MAX) * CHART_H;
-              return (
-                <div key={i} style={{
-                  flex: 1, display: 'flex', flexDirection: 'column',
-                  alignItems: 'center', gap: 0,
-                }}>
-                  {/* Value label above bar */}
-                  <div style={{
-                    fontFamily: 'var(--qf-display)',
-                    fontSize: b.hot ? 18 : 13,
-                    fontWeight: b.hot ? 600 : 500,
-                    color: b.hot ? 'var(--qf-forest)' : 'var(--qf-ink-mid)',
-                    letterSpacing: '-0.01em',
-                    marginBottom: 4,
-                    lineHeight: 1,
-                  }}>+{b.val}</div>
-                  {/* Bar */}
-                  <div style={{
-                    width: '100%', height: heightPct,
-                    background: b.color, borderRadius: '4px 4px 0 0',
-                  }} />
-                  {/* Baseline */}
-                  <div style={{
-                    width: '100%', height: 2,
-                    background: 'rgba(20,32,46,0.1)',
-                  }} />
-                  {/* Label below */}
-                  <div style={{
-                    fontFamily: 'var(--qf-mono)', fontSize: b.hot ? 9 : 8,
-                    letterSpacing: '0.08em', textTransform: 'none',
-                    color: b.hot ? 'var(--qf-forest)' : 'var(--qf-ink-mute)',
-                    fontWeight: b.hot ? 600 : 400,
-                    marginTop: 6, textAlign: 'center', lineHeight: 1.3,
-                  }}>{b.lbl}</div>
-                </div>
-              );
-            })}
-          </div>
-          <div className="qf-meta" style={{ marginTop: 8, textAlign: 'right' }}>Avg point gain · retake</div>
+          <QFBarChart bars={bars} max={MAX} chartH={160} />
         </div>
 
         <p className="qf-disclaimer">
-          Comparison data: College Board public retake reports + 95 completed illuminairy plans through Q1 2026. Self-study and tutor averages from published Princeton Review / ACT Inc. studies. Individual results vary.
+          Source: College Board retest summaries; Illuminairy completed plans (n={plansBuiltCount}).
+          Group class bar is illustrative. Individual results vary.
         </p>
       </div>
     </QFScreen>
@@ -339,6 +393,10 @@ export function QFS4Authority({ onContinue, onBack }) {
             </div>
           ))}
         </div>
+
+        <p className="qf-lead" style={{ fontSize: 14, color: 'var(--qf-ink-mid)', margin: 0 }}>
+          Next: a free Strategy Call, step 1 to your child&apos;s diagnostic and a personalized weekly plan.
+        </p>
       </div>
     </QFScreen>
   );

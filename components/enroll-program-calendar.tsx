@@ -69,7 +69,7 @@ export function EnrollProgramCalendar() {
       <div
         className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4"
         role="img"
-        aria-label={`Twelve week SAT Accelerator from ${SAT_PROGRAM_START} through ${SAT_EXAM_DAY}: diagnostics in week one, live classes, three to five practice sets per week, full-length timed practice tests every three weeks, six private sessions, weekly progress reports, and the August 22 SAT exam`}
+        aria-label={`SAT Accelerator from ${SAT_PROGRAM_START} through ${SAT_EXAM_DAY}: diagnostics in week one, live classes, three to five practice sets per week, full-length timed practice tests every three weeks, six private sessions, weekly progress reports, and the August 22 SAT exam`}
       >
         {weeks.map((w) => (
           <div

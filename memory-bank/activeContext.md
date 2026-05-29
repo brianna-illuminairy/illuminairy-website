@@ -1,67 +1,53 @@
 # Active context
 
-*Last updated: 2026-05-26*
+*Last updated: 2026-05-28*
 
 ## Current focus
 
-- **Assessment funnel v2** — https://illuminairy.com/assessment — Hims LP + short intake; **Aurora Light** (paper UI, DM Sans 600/700); `funnel_id: assessment`; ends at **complete** (no Calendly/offer until Phase C spec).
-- **SAT plan funnel v1** — https://illuminairy.com/satplan — unchanged; Phase B (lead API) not wired.
-- Both routes **`noindex`** until launch QA.
-- Specs in **quizfunnel** repo; code in this repo.
+- **SAT Score Path funnel** — `/quiz` — parent intake → insight hits → plan reveal → Strategy Call booking. Primary copy surface.
+- **B3 landing** — `/` — PostHog A/B variants; hands off to Score Path.
+- **SAT plan funnel v1** — `/satplan` — layout-locked; separate from Score Path.
+- **Assessment funnel** — `/assessment` — Hims-style intake; `noindex` until launch QA.
 
-## `/assessment` (new)
+## Messaging (do not re-debate — locked)
 
-`app/assessment/`, `components/assessment/`, `lib/assessment-funnel/` — isolated from sat-plan layout lock. **Standalone shell:** `LayoutChrome` excludes site Header/Footer (same as `/satplan`).
+**Single source of truth:** [`docs/messaging-guide.md`](../docs/messaging-guide.md)  
+**Enforced by:** `.cursor/rules/messaging-guide.mdc` + `.cursor/rules/banned-copy-phrases.mdc` (both always-on)
 
-Spine: landing → situation → who → target → current → tried → test-date → insight-situation → insight-path → complete.
+Owner corrections already baked in — agents should read the guide, not ask again:
 
-Copy workflow: quizfunnel [`assessment-hims-question-map.md`](../quizfunnel/files/assessment-hims-question-map.md) → `lib/assessment-funnel/question-copy.ts` when approved.
+| Topic | Locked decision |
+|-------|-----------------|
+| Audience | Parents — never call Score Path a "quiz" |
+| Product names | Score Path · Strategy Call (15 min) · Skill Diagnostic (2 hr 14 min, after call) |
+| Core contrast | Everything on SAT vs **5–6 skills** from diagnostic |
+| Effort | `~5–7 hrs/week · mistake-driven SAT tutoring on their weakest skills` |
+| First-month stat | **90%** at **20–28 hrs** → **100+** month one — after **i-steps**, not q7 |
+| Q2 | Positive stakes — “What would a higher SAT score help them achieve?” |
+| Insight hits | Autoprogress ~6s (scales with copy); closed-loop copy |
+| Education slides | q3=none, q5=tbd/2027, q8=tbd — see messaging-guide §8 |
+| Booking | s5/s9 tie to q2 goal phrase (no extra Yes/No screen) |
+| Do NOT use | CB ~115/20hr OSP, "District-wide," "not a Khan stat," gains/cost points/leaking/hiding, point leak(s), generic prep/plan/review, Our read |
+| Stats | Import only from `lib/site.ts` — pair with "Results vary" |
 
-## Production spine (tested path)
+## Score Path spine
 
-landing → **meaning** → worries → … → **ch3-path** → contact → **reveal-stakes** → **reveal-diagnosis** → **reveal-bottlenecks** → **reveal-proof** → book → **booked**
+`q1–q5` → … → `i1` → `q6` → `q7` → `hit-q7` (prep × section) → `i-compare` (proof) → …
 
-**Removed from spine (2026-05):** `plan-ready`, `report` — legacy `?step=` aliases redirect into reveal chain.
+Key libs: `lib/quiz-funnel/plan-reveal.ts`, `insight-hits.ts`, `stakes-copy.ts`, `education-slides.ts`, `score-path-copy.ts`, `lib/sat-skills-copy.ts`
 
-**Never-tested:** INT8 → INT12 → GPA → … *(skips prep, score, wrong)*
+## Production spine (satplan — legacy)
 
-## Recent changes (2026-05-25)
+landing → meaning → … → reveal chain → book → booked
 
-- **INT8 diagnostic-driven animation** — 12-skill scan sample (28 in copy only); phase timings ~7s total; faster build-plan steps
-- **INT8 self-study fail copy** — lead uses `prepMirrorPhrase` + effort stack + 28-skill gap; dropped awkward `profilePatternLine` prefix on `prep-failed-self-study`
-- **`meaning` intake step** — positive multiselect before worries (`sat-plan-meaning.tsx`, `meaning-options.ts`); landing → `?step=meaning`; progress labels 1–12 of 12
-- **Ch.2 + Ch.3 + tail** — `student-name`, `score-fit` (INT6-prediction), Ch.3 block (`ch3-social` … `ch3-path`), structured **report** (`report-plan.ts`), **book** (Calendly embed), **booked**; layout bodies in `funnel-*-body.tsx` (layout guard clean)
-- **Screen 16** — no fake calculating step; `plan-ready` is honest copy, instant continue
-- **Diagnosis voice** — `lib/sat-plan-funnel/diagnosis-copy.ts`, `prep-labels.ts`; interstitial + report copy mirrors prep/target/score/wrong; quizfunnel [`files/funnel-diagnosis-voice.md`](../quizfunnel/files/funnel-diagnosis-voice.md)
-- **INT2 `gpa-paradox`** — tutor-note layout (headline eyebrow, quote, In school / On the SAT cards, closing copy, Maya signature); **no 200+ stat banner**
-- **Q `wrong`** — tile art as dashboard widgets (`ico-wrong-*` in `wrong-reason-icons.tsx` + `funnel.css`)
-- **INT12 `sat-changed`** — mockup layout (Digital headline, baseball subhead, two-panel contrast w/ year badges, 3 stat rows, closing line); May 2026 art
-- **quizfunnel docs** synced (README, memory-bank, SPEC, FUNNEL-MASTER-FLOW)
+## Next steps (Score Path)
 
-## Recent changes (2026-05-24)
-
-- Tail: contact → post-contact reveal (stakes, diagnosis, bottlenecks, proof) → book (Calendly embed)
-- INT8: proof → guided → mistake-driven (mentors step in types but not routed)
-- Helpers: `score-gap.ts`, `wrong-options.ts`, `report-summary.ts`
-- Key paths: `components/sat-plan/sat-plan-funnel.tsx`, `lib/sat-plan-funnel/funnel-routing.ts`, `app/satplan/funnel.css`
-
-## Removed (permanent)
-
-- `hours` study-time Q (2026-05-24)
-- INT13 kid-problem (2026-05)
-
-## Next steps
-
-- [ ] **Phase B** — `POST /api/funnel/lead`, Supabase upsert, Klaviyo, Calendly webhook
-- [ ] **Contact** — TCPA checkbox shipped in UI; wire to API + legal review in Phase B
-- [ ] **Brianna review** — copy/tone on INT6, report layout
-- [ ] **Schools step** — optional skip today; remove from routing if product approves
-- [ ] Replace default `prep-paths-triptych.png` with son/neutral art
-- [ ] Meta IAB QA on 390×844
+- [ ] Fog/Illuminate reveal animation (discussed, not built)
+- [ ] Klaviyo/Calendly automation verify on prod
 - [ ] Remove `noindex` when launch-ready
 
 ## Session notes
 
-- Local: `npm run dev` → http://localhost:3000/satplan?step=wrong (etc.)
-- Verify: `FUNNEL_LAYOUT_UNLOCK=1 npm run agent:verify`
-- INT2 video (optional): `NEXT_PUBLIC_SATPLAN_INT2_VIDEO_URL`
+- Local: `npm run dev` → http://localhost:3000/quiz?step=reveal
+- Answers: `localStorage` key `qf_answers`
+- Verify: `npm run agent:verify`

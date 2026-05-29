@@ -1,7 +1,17 @@
-Drop the following photos here:
+# Landing page photos
 
-- `team-hero.jpg` — group photo of the tutors with branded shirts (S4 editorial hero; source: `method-hero.png` / `uploads/team-group-11-tutors.png`)
-- `method-hero.png` — editorial shot of a tutor + student in a 1:1 session (I-Method editorial interstitial, 4:3 crop)
-- `student-a.jpg` — David D. student photo (S7 testimonial, square or 4:3)
+**Full shot list:** [growth/b3-lp-photo-shot-list.md](../../growth/b3-lp-photo-shot-list.md)
 
-Until the files are dropped here the components render an aurora-gradient fallback in place of the photo (`onError` removes the broken `<img>`).
+Drop files here using the **exact filenames** in that doc. Each filename maps to **one** slot on the page — we do not reuse the same image in multiple sections.
+
+Until a file exists, that slot shows a dashed **“Photo needed”** placeholder (or score-only text for reviews).
+
+## Currently wired (temporary)
+
+| File | Slot |
+|------|------|
+| `male-student.png` | B3a hero — student |
+| `tutor-student-session.png` | B3a hero — session |
+| `team-hero.jpg` | Good news — team (once) |
+
+Everything else is waiting on your assets from the shot list.

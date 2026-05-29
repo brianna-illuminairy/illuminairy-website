@@ -2,6 +2,7 @@ import {
   profilePatternLine,
   thePatternWeUsuallySee
 } from "@/lib/sat-plan-funnel/diagnosis-copy";
+import { KHAN_SAT_SKILL_COUNT, FOCUS_SKILL_COUNT } from "@/lib/sat-skills-copy";
 import type { SatPlanAnswers } from "@/lib/sat-plan-funnel/types";
 import { yourStudentPhrase } from "@/lib/sat-plan-funnel/subject-pronouns";
 
@@ -11,8 +12,7 @@ export type Int8GroupClassFailCopy = {
   graphicAriaLabel: string;
 };
 
-const SAT_SKILL_COUNT = 28;
-const FOCUS_SKILL_COUNT = 5;
+const SAT_SKILL_COUNT = KHAN_SAT_SKILL_COUNT;
 
 function scoreLiftPhrase(testTaker?: string): string {
   const student = yourStudentPhrase(testTaker);

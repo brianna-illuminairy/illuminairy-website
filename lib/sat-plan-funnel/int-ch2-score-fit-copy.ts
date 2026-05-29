@@ -61,8 +61,8 @@ export function buildIntCh2ScoreFitCopy(answers: SatPlanAnswers): IntCh2ScoreFit
 
   paragraphs.push(
     voice.isSelf
-      ? `Students with a similar starting profile often land in a realistic range with about 12 weeks of guided tutoring. Our program completers average ${avgGain} points of improvement.`
-      : `Students with a similar starting profile often land in a realistic range with about 12 weeks of guided tutoring. Our program completers average ${avgGain} points of improvement.`
+      ? `Students with a similar starting profile often land in a realistic range with guided tutoring matched to their timeline. Our plan completers average ${avgGain} points of improvement.`
+      : `Students with a similar starting profile often land in a realistic range with guided tutoring matched to their timeline. Our plan completers average ${avgGain} points of improvement.`
   );
 
   if (timeline.weeks && answers.test_date !== "test_date_not_planning") {

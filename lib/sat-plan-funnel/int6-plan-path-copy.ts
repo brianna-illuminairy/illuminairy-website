@@ -55,8 +55,8 @@ export function buildInt6PlanPathCopy(answers: SatPlanAnswers): Int6PlanPathCopy
   const profile = diagnosisProfileLabel(answers);
   const proofLine =
     subject === "you"
-      ? `For a ${gapPts}-point gap like yours (${profile}), students who complete our 12-week program improve by an average of ${avgGain} points.`
-      : `For a ${gapPts}-point gap like this (${profile}), students who complete our 12-week program improve by an average of ${avgGain} points.`;
+      ? `For a ${gapPts}-point gap like yours (${profile}), students who complete their plan improve by an average of ${avgGain} points.`
+      : `For a ${gapPts}-point gap like this (${profile}), students who complete their plan improve by an average of ${avgGain} points.`;
 
   let supportingLine: string;
   if (answers.test_date === "test_date_not_planning") {

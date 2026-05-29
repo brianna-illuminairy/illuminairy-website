@@ -1,7 +1,6 @@
 "use client";
 
 import { Logo } from "@/components/logo";
-import { ThemeToggle } from "@/components/theme-toggle";
 import { ButtonLink } from "@/components/ui";
 
 export function Header() {
@@ -19,7 +18,6 @@ export function Header() {
           <a href="#waitlist">contact</a>
         </nav>
         <div className="flex items-center gap-2 sm:gap-3">
-          <ThemeToggle />
           <ButtonLink
             href="/#waitlist"
             variant="primary"

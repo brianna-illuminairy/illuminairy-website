@@ -11,7 +11,7 @@ export const QUIZ_TESTIMONIALS: QuizTestimonial[] = [
     photo: '/photos/male-student.png',
     ba: '1180 → 1410',
     quote:
-      "I was skeptical of online tutoring. But the diagnostic showed me exactly what was wrong, and 12 weeks later he's at 1410.",
+      "I was skeptical of online tutoring. But the diagnostic showed me exactly what was wrong. He's at 1410 now.",
     attribution: 'David D. · Dad of a junior · CA',
   },
   {

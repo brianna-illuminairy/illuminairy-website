@@ -4,6 +4,7 @@ import {
   useContext,
   useReducer,
   useEffect,
+  useState,
   type ReactNode,
   type Dispatch
 } from 'react';
@@ -69,20 +70,32 @@ function reducer(state: QuizAnswers, action: QuizAction): QuizAnswers {
 type QuizContextValue = {
   answers: QuizAnswers;
   dispatch: Dispatch<QuizAction>;
+  /** false until saved answers are read from localStorage (client). */
+  hydrated: boolean;
 };
 
 const QuizCtx = createContext<QuizContextValue | null>(null);
 
+function readStoredAnswers(): Partial<QuizAnswers> {
+  if (typeof window === "undefined") return {};
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    return saved ? (JSON.parse(saved) as Partial<QuizAnswers>) : {};
+  } catch {
+    return {};
+  }
+}
+
 export function QuizProvider({ children }: { children: ReactNode }) {
   const [answers, dispatch] = useReducer(reducer, initialState);
+  const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) dispatch({ type: 'LOAD', data: JSON.parse(saved) as Partial<QuizAnswers> });
-    } catch {
-      /* ignore */
+    const stored = readStoredAnswers();
+    if (Object.keys(stored).length > 0) {
+      dispatch({ type: "LOAD", data: stored });
     }
+    setHydrated(true);
   }, []);
 
   useEffect(() => {
@@ -94,7 +107,7 @@ export function QuizProvider({ children }: { children: ReactNode }) {
   }, [answers]);
 
   return (
-    <QuizCtx.Provider value={{ answers, dispatch }}>{children}</QuizCtx.Provider>
+    <QuizCtx.Provider value={{ answers, dispatch, hydrated }}>{children}</QuizCtx.Provider>
   );
 }
 
@@ -108,8 +121,9 @@ export function showGapScreen(answers: QuizAnswers) {
   const highGpa = ['3.0-3.3', '3.3-3.5', '3.5-3.7', '3.7-3.9', '4.0+'].includes(
     answers.q9 ?? ''
   );
-  const lowScore = ['u1000', '1100-1200', '1200-1300', '1300-1400'].includes(
-    answers.q4 ?? ''
-  );
+  const q4 = answers.q4 ?? '';
+  const lowScore =
+    q4 !== 'na' &&
+    ['u1000', '1100-1200', '1200-1300', '1300-1400'].includes(q4);
   return highGpa && lowScore;
 }

@@ -56,8 +56,8 @@ export function buildInt6TimelineCopy(answers: SatPlanAnswers): Int6TimelineCopy
     return {
       headline: "Once you pick a test date, we'll map weeks to hours.",
       paragraphs: [
-        `${lead}For a typical 12-week runway, a guided plan runs about ${meta.hoursPerWeek} hrs/week on ${possessive} gaps — not random review.`,
-        "Lock in a date when you're ready — the timeline drives how many focused hours fit before test day."
+        `${lead}A guided plan typically runs about ${meta.hoursPerWeek} hrs/week on ${possessive} gaps — not random review. The right pace depends on their test date.`,
+        "Lock in a date when you're ready — we'll map focused hours to the weeks you have."
       ],
       footnote: "Based on ~80 hours of guided prep cited by College Board research."
     };

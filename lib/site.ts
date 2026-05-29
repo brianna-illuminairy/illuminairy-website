@@ -1,3 +1,5 @@
+import { KHAN_SAT_SKILL_COUNT_LABEL } from "@/lib/sat-skills-copy";
+
 import {
   ArrowRight,
   BadgeCheck,
@@ -312,7 +314,7 @@ export const satProgram = {
   privateSessions: 6,
   maxPerClass: 10,
   headline:
-    "A twelve-week plan — not self-study, not random à la carte sessions.",
+    "A personalized weekly plan — not self-study, not random à la carte sessions.",
   tracking:
     "Week-one diagnostics tell your mentor exactly what to focus on in six private 1:1s. Live classes cover the material. Assigned practice makes sure it sticks. You get a report every week.",
   structureLine:
@@ -341,6 +343,40 @@ export const satProgramOutcomes = {
   targetHitAfter: " on the next test.",
   varyDisclaimer: "Results vary."
 } as const;
+
+/**
+ * First-month program outcomes — Illuminairy students with diagnostic + plan + tutor.
+ * Use this instead of College Board OSP (~115 at ~20 hrs) in parent-facing copy.
+ */
+export const satFirstMonthOutcomes = {
+  footnoteLabel: "ILLUMINAIRY OUTCOMES · FIRST MONTH · 2024–25",
+  hoursPerWeekLabel: "5–7 hours a week",
+  hit100PlusPct: 90,
+  minPointsFirstMonth: 100,
+  varyDisclaimer: "Results vary.",
+} as const;
+
+export type OutcomeCopyPart = { text: string; em?: boolean };
+
+/** One-line first-month outcome for parent-facing copy. */
+export function illuminairyFirstMonthOutcomeLine(): string {
+  const o = satFirstMonthOutcomes;
+  return `${o.hit100PlusPct}% of students who follow their diagnostic-driven plan achieve ${o.minPointsFirstMonth}+ points their first month with just ${o.hoursPerWeekLabel} of effort.`;
+}
+
+/** Insight-card parts (e.g. after i-steps). */
+export function illuminairyFirstMonthOutcomeParts(): OutcomeCopyPart[] {
+  const o = satFirstMonthOutcomes;
+  return [
+    { text: `${o.hit100PlusPct}% of students who follow their ` },
+    { text: "diagnostic-driven plan", em: true },
+    { text: " achieve " },
+    { text: `${o.minPointsFirstMonth}+ points`, em: true },
+    { text: " their first month with just " },
+    { text: o.hoursPerWeekLabel, em: true },
+    { text: " of effort." },
+  ];
+}
 
 /**
  * College Board retake research — INT3, parent reports, landing cred.
@@ -496,7 +532,7 @@ export const mentorApplyFallbackLink = mentorApplyLink;
 export const inquiryLink = site.typeformUrl || mentorApplyLink;
 
 export const programStats = [
-  { value: "12", label: "Weeks of live instruction" },
+  { value: KHAN_SAT_SKILL_COUNT_LABEL, label: "Skills in Khan's SAT course" },
   { value: "2", label: "Live classes each week (R&W + Math)" },
   { value: "6", label: "Private 1:1 sessions" },
   { value: "1450+", label: "SAT mentor score standard" }
@@ -515,7 +551,7 @@ export const acceleratorModel = {
   eyebrow: "How it works",
   title: "Your student's diagnostic results tell the mentor what to teach.",
   intro:
-    "Self-study means guessing what to work on. Random tutoring sessions start from scratch every time. Illuminairy runs one twelve-week program — diagnostics first, then weekly classes, 1:1s, and assigned practice — so the mentor always knows exactly where your student is.",
+    "Self-study means guessing what to work on. Random tutoring sessions start from scratch every time. Illuminairy builds a personalized weekly plan from diagnostics — then weekly classes, 1:1s, and assigned practice — so the mentor always knows exactly where your student is.",
   steps: [
     {
       title: "Week-one diagnostics",
@@ -541,7 +577,7 @@ export const programDifferentiation = {
   eyebrow: "The difference",
   title: "Better mentors and instructors. A better program.",
   intro:
-    "Illuminairy is not a tutoring center and not a tutor marketplace. It is one twelve-week program: your student gets a named mentor, week-one diagnostics, six private 1:1s based on those results, two live classes per week, and assigned practice with a report sent to you every week.",
+    "Illuminairy is not a tutoring center and not a tutor marketplace. Your student gets a named mentor, week-one diagnostics, six private 1:1s based on those results, two live classes per week, assigned practice, and a personalized weekly plan — with a report sent to you every week.",
   rows: [
     {
       aspect: "Who teaches",
@@ -553,7 +589,7 @@ export const programDifferentiation = {
       aspect: "The program",
       typical: "Self-study books, or à la carte sessions with no real plan",
       illuminairy:
-        "One twelve-week program with a set schedule: diagnostics, then personalized 1:1s, live classes, and practice every week"
+        "A personalized weekly plan: diagnostics, then personalized 1:1s, live classes, and practice every week"
     },
     {
       aspect: "1:1 attention",
@@ -600,7 +636,7 @@ export const satFeatures = [
   {
     icon: CalendarCheck,
     title: "A plan that beats self-study",
-    text: "Twelve weeks with the same schedule every week — not a book on the shelf or sessions booked whenever you remember."
+    text: "A personalized weekly plan — same rhythm every week, not a book on the shelf or sessions booked whenever you remember."
   },
   {
     icon: Target,
@@ -629,7 +665,7 @@ export const platformAreas = [
     icon: GraduationCap,
     title: "Illuminairy SAT",
     status: "Live now",
-    text: "Twelve weeks: R&W and Math classes every week, Georgia Tech mentors who scored 1450+, six private 1:1s, and a report sent to parents every week."
+    text: "Personalized weekly plan: R&W and Math classes every week, Georgia Tech mentors who scored 1450+, six private 1:1s, and a report sent to parents every week."
   },
   {
     icon: BrainCircuit,
@@ -673,8 +709,8 @@ export const trustPillars = [
   },
   {
     icon: CalendarCheck,
-    title: "Twelve-week plan",
-    text: "One twelve-week program with the same schedule every week — diagnostics, 1:1s, classes, and practice all decided before you start."
+    title: "Personalized weekly plan",
+    text: "Diagnostics, 1:1s, classes, and practice — scheduled week by week based on their timeline, mapped before you start."
   },
   {
     icon: UserCheck,
@@ -793,7 +829,7 @@ export const inPersonComparison = {
 export const commitments = [
   "You get a progress report every week — what your student worked on, where they're improving, and what's next.",
   "Every mentor scored 1450+ on the SAT, attends or graduated from a selective university, and was screened for how they teach — not just what they scored.",
-  "The program runs exactly as described: 12 weeks, 2 live classes per week, 6 private 1:1s, diagnostics in week one, practice assigned between every session.",
+  "The plan runs as described: weekly classes, six private 1:1s, diagnostics in week one, and practice assigned between every session.",
   "Every student speaks, solves problems out loud, and explains their reasoning multiple times per session — no one hides in the back row.",
   "We don't guarantee a score. We give you the plan, the mentors, and the weekly proof that the work is happening."
 ];
@@ -805,7 +841,7 @@ export const noGuarantee = {
   summary:
     "Most SAT companies offer score guarantees with fine print that voids them if you miss a single assignment or deadline. That's not a guarantee — it's a loophole. We skip the marketing number and commit to the things we actually control.",
   commitments: [
-    "The program runs exactly as described: twelve weeks, two live classes per week, six private 1:1s, diagnostics in week one, and assigned practice every week.",
+    "The plan runs as described: two live classes per week, six private 1:1s, diagnostics in week one, and assigned practice every week.",
     "Your student's mentor scored 1450+ on the SAT, comes from a selective university, and was chosen because they can teach — not just because they tested well.",
     "You get a progress report every week showing what was covered, what's due next, and whether the assigned practice was completed.",
     "Before you enroll, we talk about whether this program is actually the right fit. If it's not, we'll say so — we'd rather lose the enrollment than take one we can't deliver on.",
@@ -820,7 +856,7 @@ export const satPillars = {
   eyebrow: "What sets us apart",
   title: "Built around the mistakes that matter.",
   intro:
-    "The SAT Accelerator finds the specific question types your student gets wrong, figures out why, and works on them until test day.",
+    "The SAT Accelerator finds the specific question types your student gets wrong, figures out why, and works on them week by week.",
   cards: [
     {
       icon: Microscope,
@@ -835,7 +871,7 @@ export const satPillars = {
     {
       icon: Map,
       title: "One plan, not fifty links",
-      text: "One twelve-week schedule: same classes, same days, same mentor. Practice is assigned after every session — not suggested, not optional."
+      text: "One weekly schedule: same classes, same days, same mentor. Practice is assigned after every session — not suggested, not optional."
     },
     {
       icon: Clock,
@@ -859,13 +895,13 @@ export const satPillars = {
 export const consultationCopy = {
   eyebrow: "Book a consultation",
   title: "Start with a conversation — no pressure.",
-  text: "This is a free, no-pressure conversation. We'll talk about where your student is starting, what score they're aiming for, and whether the twelve-week SAT Accelerator is the right fit. If it's not — maybe they need something different, or maybe self-study is genuinely enough — we'll tell you honestly."
+  text: "This is a free, no-pressure conversation. We'll talk about where your student is starting, what score they're aiming for, and whether Illuminairy is the right fit. If it's not — maybe they need something different, or maybe self-study is genuinely enough — we'll tell you honestly."
 };
 
 /** SAT page hero — copy bank variant #1 */
 export const satHero = {
   title: "Better mentors. A clear plan. No empty promises.",
-  lead: "Twelve weeks with Georgia Tech mentors who scored 1450+. Week-one diagnostics, six private 1:1s, live R&W and Math classes, assigned practice, and a progress report sent to you every week — for the August 22, 2026 SAT."
+  lead: "Georgia Tech mentors who scored 1450+. Week-one diagnostics, six private 1:1s, live R&W and Math classes, assigned practice, and a progress report sent to you every week."
 };
 
 /** Digital SAT callout — brand-voice § parent education */

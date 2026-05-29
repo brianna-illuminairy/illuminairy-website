@@ -1,5 +1,6 @@
 'use client';
 
+import { FunnelHeaderLogo } from '@/components/funnel-header-logo';
 import type { CSSProperties, ReactNode } from 'react';
 
 const TOTAL_STEPS = 22;
@@ -44,11 +45,14 @@ export function QFScreen({
             aria-label="Back"
             onClick={onBack}
           >←</button>
-          {wordmark
-            ? <div className="qf-wordmark">illuminairy</div>
-            : <div />
-          }
-          <div style={{ width: 30 }} />
+          {wordmark ? (
+            <div className="qf-logo-wrap">
+              <FunnelHeaderLogo />
+            </div>
+          ) : (
+            <div className="qf-logo-wrap" aria-hidden />
+          )}
+          <div className="qf-top-row-spacer" aria-hidden />
         </div>
         {showProgress && (
           <div className="qf-progress">
@@ -158,18 +162,25 @@ export function QFQuestionHead({
   eyebrow,
   title,
   lead,
-}: { eyebrow?: ReactNode; title?: string; lead?: ReactNode }) {
+  multiSelect,
+}: {
+  eyebrow?: ReactNode;
+  title?: string;
+  lead?: ReactNode;
+  multiSelect?: boolean;
+}) {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 28 }}>
+    <div className={`qf-question-head${multiSelect ? ' qf-question-head--multi' : ''}`}>
       {eyebrow && <div className="qf-eyebrow">{eyebrow}</div>}
       <h1 className="qf-h1" style={{ marginBottom: 0 }} dangerouslySetInnerHTML={{ __html: title ?? '' }} />
+      {multiSelect && <p className="qf-multi-hint">Select all that apply</p>}
       {lead && <p className="qf-lead">{lead}</p>}
     </div>
   );
 }
 
 export function QFOptOut({
-  children = "None of these — help me figure it out",
+  children = "None of these (help me figure it out)",
   onClick,
 }: ClickProps & { children?: ReactNode }) {
   return (
