@@ -7,8 +7,6 @@ import {
   S3_PERSONALIZE_CTA,
   S3_PERSONALIZE_HEADLINE,
   S3_PERSONALIZE_LEAD,
-  S4_CALL_CTA,
-  S4_CALL_HEADLINE,
   S4_CALL_LINE,
 } from '@/lib/quiz-funnel/score-path-copy';
 
@@ -306,7 +304,7 @@ export function QFS2Science({ onContinue, onBack, q6 = ['math'] }) {
   );
 }
 
-// ─── S3 · Personalize plan bridge (before Strategy Call) ─────────────────────
+// ─── S3 · Personalize plan + advisor trust (merged former s4) ─────────────────
 export function QFS3Stats({ onContinue, onBack }) {
   return (
     <QFScreen stepIdx={16} tone="bg-2" onBack={onBack}
@@ -315,18 +313,6 @@ export function QFS3Stats({ onContinue, onBack }) {
       <div className="gap-22">
         <h1 className="qf-h1">{S3_PERSONALIZE_HEADLINE}</h1>
         <p className="qf-lead" style={{ margin: 0 }}>{S3_PERSONALIZE_LEAD}</p>
-      </div>
-    </QFScreen>
-  );
-}
-
-// ─── S4 · Who you'll meet on the Strategy Call ───────────────────────────────
-export function QFS4Authority({ onContinue, onBack }) {
-  return (
-    <QFScreen stepIdx={17} onBack={onBack}
-      footer={<QFButton kind="forest" onClick={onContinue}>{S4_CALL_CTA}</QFButton>}
-    >
-      <div className="gap-12 qf-s4-tight">
         <div style={{
           width: '100%', maxHeight: 210, borderRadius: 16, overflow: 'hidden',
           position: 'relative',
@@ -342,8 +328,6 @@ export function QFS4Authority({ onContinue, onBack }) {
             onError={(e) => { e.currentTarget.style.display = 'none'; }}
           />
         </div>
-
-        <h1 className="qf-h1 qf-s4-headline">{S4_CALL_HEADLINE}</h1>
         <p className="qf-lead" style={{ margin: 0 }}>{S4_CALL_LINE}</p>
       </div>
     </QFScreen>

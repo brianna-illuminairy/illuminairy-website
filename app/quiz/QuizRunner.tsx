@@ -23,7 +23,7 @@ import {
   educationHitOutcomeMonthOne,
 } from '@/lib/quiz-funnel/education-slides';
 import {
-  QFSPlanReveal, QFS2Science, QFS3Stats, QFS4Authority,
+  QFSPlanReveal, QFS2Science, QFS3Stats,
 } from './screens/Results';
 import {
   QFS5Approved, QFS7PlanDetails, QFS9Booking, QFS9ThankYou,
@@ -224,7 +224,6 @@ export default function QuizRunner() {
     case 'v1':  return <QFV1Projection onContinue={next} onBack={back} q2={a.q2} q4={a.q4} q5={a.q5} q8={a.q8} />;
     case 's2':  return <QFS2Science   onContinue={next} onBack={back} q6={a.q6 as any} />;
     case 's3':  return <QFS3Stats     onContinue={next} onBack={back} />;
-    case 's4':  return <QFS4Authority onContinue={next} onBack={back} />;
     case 's5':  return <QFS5Approved  onContinue={next} onBack={back} answers={a} dispatch={dispatch as (action: { type: string; key?: string; value?: unknown }) => void} />;
     case 's7':  return <QFS7PlanDetails onContinue={next} onBack={back} answers={a} />;
     case 's9':

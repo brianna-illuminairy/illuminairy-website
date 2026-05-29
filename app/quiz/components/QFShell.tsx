@@ -3,7 +3,7 @@
 import { FunnelHeaderLogo } from '@/components/funnel-header-logo';
 import type { CSSProperties, ReactNode } from 'react';
 
-const TOTAL_STEPS = 22;
+const TOTAL_STEPS = 21;
 
 type QFScreenProps = {
   stepIdx?: number;

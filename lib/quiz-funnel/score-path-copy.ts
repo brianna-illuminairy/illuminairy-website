@@ -50,13 +50,9 @@ export const S3_PERSONALIZE_LEAD =
 
 export const S3_PERSONALIZE_CTA = "Personalize my plan";
 
-/** s4 · call credibility (no program bullets). */
-export const S4_CALL_HEADLINE = "Who you'll talk to on your free Strategy Call";
-
+/** s3 · advisor credibility (team photo + one line). */
 export const S4_CALL_LINE =
   "Every SAT advisor scored 1450+ on the Digital SAT.";
-
-export const S4_CALL_CTA = "Book your free 15-min Strategy Call";
 
 /** hit-outcome-month-one · score report caption */
 export const OUTCOME_SCORE_CAPTION = "Ethan scored +230 pts in 12 weeks";
