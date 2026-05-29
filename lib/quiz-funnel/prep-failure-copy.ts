@@ -19,12 +19,6 @@ const KHAN_MATH_HAYSTACK_IMAGE = {
   alt: "Student facing a wall of 111 numbered SAT math lesson books",
 } as const;
 
-const NEEDLE_FOLLOW_UP: InsightHitPart[] = [
-  { text: "They're looking for a " },
-  { text: "needle in a haystack", em: true },
-  { text: "." },
-];
-
 const DIAGNOSTIC_FOLLOW_UP: InsightHitPart[] = [
   {
     text: `The Skill Diagnostic ranks their ${FOCUS_SKILL_COUNT}–6 highest-impact gaps first — that's where the plan starts.`,
@@ -45,6 +39,14 @@ function primaryPrepId(q7: unknown): string {
   return Q7_PREP_PRIORITY.find((id) => ids.includes(id)) ?? "nothing";
 }
 
+const KHAN_NEEDLE_CLOSE: InsightHitPart[] = [
+  {
+    text: ". Without a diagnostic there's no way for them to know what to focus on to actually improve their score. They're looking for a ",
+  },
+  { text: "needle in a haystack", em: true },
+  { text: "." },
+];
+
 function khanHit(section: SectionFocus): InsightHit {
   if (section === "reading") {
     return {
@@ -52,13 +54,9 @@ function khanHit(section: SectionFocus): InsightHit {
       parts: [
         { text: "Khan's Reading & Writing course spans " },
         { text: `${KHAN_SAT_RW_UNITS} domain units`, em: true },
-        { text: " and hundreds of practice items. Without a diagnostic there's no way to identify which " },
-        { text: "inference and pacing gaps", em: true },
-        {
-          text: " were holding their score back — so they couldn't focus on what would actually improve it.",
-        },
+        { text: " and hundreds of practice items" },
+        ...KHAN_NEEDLE_CLOSE,
       ],
-      followUp: NEEDLE_FOLLOW_UP,
     };
   }
 
@@ -72,15 +70,12 @@ function khanHit(section: SectionFocus): InsightHit {
         { text: `${KHAN_SAT_RW_UNITS} Reading & Writing units`, em: true },
         { text: ", and " },
         { text: `${KHAN_SAT_YOUTUBE_VIDEO_COUNT} videos`, em: true },
-        {
-          text: ". Without a diagnostic there's no way to pick the handful that move their score — so they spread time across all of it.",
-        },
+        ...KHAN_NEEDLE_CLOSE,
       ],
-      followUp: NEEDLE_FOLLOW_UP,
     };
   }
 
-  // math + general — canonical Khan math copy
+  // math + general — canonical Khan math copy (hit-q7 haystack image)
   return {
     type: "surprise",
     parts: [
@@ -88,17 +83,9 @@ function khanHit(section: SectionFocus): InsightHit {
       { text: `${KHAN_SAT_MATH_LESSON_COUNT} lessons`, em: true },
       { text: " and " },
       { text: `${KHAN_SAT_YOUTUBE_VIDEO_COUNT} videos`, em: true },
-      { text: ". " },
-      { text: "Without a diagnostic", em: true },
-      { text: " there's no way to identify the ones " },
-      { text: "costing the most points", em: true },
-      { text: " so they can focus on " },
-      { text: "what'll actually improve their score", em: true },
-      { text: "." },
+      ...KHAN_NEEDLE_CLOSE,
     ],
-    followUp: NEEDLE_FOLLOW_UP,
     image: KHAN_MATH_HAYSTACK_IMAGE,
-    autoAdvanceMs: 5800,
   };
 }
 

@@ -61,11 +61,70 @@
   }
 
   .qf-funnel-column .qf-page .qf-body {
-    padding: 32px 26px 28px;
+    padding: 24px 26px 16px;
   }
 
   .qf-funnel-column .qf-page .qf-footer {
-    padding: 18px 28px 26px;
+    padding: 14px 28px 20px;
+    position: sticky;
+    bottom: 0;
+    z-index: 4;
+    box-shadow: 0 -12px 24px rgba(18, 26, 43, 0.06);
+  }
+
+  /* Multi-select questions (q6, q7): keep headline on one line, CTA above the fold */
+  .qf-funnel-column .qf-page .qf-question-head--multi {
+    margin-bottom: 14px;
+    gap: 6px;
+  }
+
+  .qf-funnel-column .qf-page .qf-question-head--multi .qf-h1 {
+    font-size: 24px;
+    line-height: 1.15;
+    letter-spacing: -0.012em;
+    text-wrap: pretty;
+    max-width: 100%;
+  }
+
+  .qf-funnel-column .qf-page .qf-question-head--multi .qf-multi-hint {
+    margin-top: 0;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+  }
+
+  .qf-funnel-column .qf-page .qf-question-head--multi + .qf-options {
+    margin-top: 0;
+    gap: 8px;
+  }
+
+  .qf-funnel-column .qf-page .qf-question-head--multi + .qf-options .qf-opt.multi {
+    min-height: 52px;
+    padding: 12px 16px;
+    font-size: 14px;
+    line-height: 1.3;
+  }
+
+  .qf-funnel-column .qf-page .qf-top {
+    padding: 48px 26px 18px;
+  }
+
+  .qf-funnel-column .qf-page .qf-insight-hit--manual.qf-insight-hit--visual {
+    gap: 10px;
+    padding-bottom: 4px;
+  }
+
+  .qf-funnel-column .qf-page .qf-insight-hit--manual.qf-insight-hit--visual .qf-insight-hit__line {
+    font-size: 17px;
+    line-height: 1.32;
+  }
+
+  .qf-funnel-column .qf-page .qf-insight-hit--manual .qf-insight-hit__visual img {
+    max-height: 128px;
+  }
+
+  .qf-funnel-column .qf-page .qf-insight-hit--manual .qf-insight-hit__eyebrow {
+    font-size: 11px;
+    margin-bottom: 2px;
   }
 
   .lp-page .lp-hero-title {

@@ -524,7 +524,7 @@
   letter-spacing: -0.014em;
   color: var(--qf-ink);
   margin: 0;
-  text-wrap: balance;
+  text-wrap: pretty;
 }
 .qf-page .qf-h1 em { font-style: normal; color: var(--qf-forest); font-weight: 500; }
 
@@ -1532,15 +1532,21 @@
   min-height: 40vh;
   justify-content: center;
 }
+.qf-page .qf-insight-hit--manual {
+  min-height: 0;
+  justify-content: flex-start;
+  padding: 0 0 8px;
+  gap: 12px;
+}
 .qf-page .qf-insight-hit--visual {
   justify-content: flex-start;
   min-height: auto;
   padding-top: 0;
-  gap: 14px;
+  gap: 12px;
 }
 .qf-page .qf-insight-hit--visual .qf-insight-hit__line {
-  font-size: clamp(18px, 4.6vw, 24px);
-  line-height: 1.4;
+  font-size: clamp(17px, 4.2vw, 20px);
+  line-height: 1.35;
 }
 .qf-page .qf-insight-hit--outcome-proof {
   justify-content: flex-start;
@@ -1591,7 +1597,8 @@
   height: auto;
   display: block;
   object-fit: cover;
-  max-height: min(42vw, 220px);
+  object-position: center top;
+  max-height: min(38vw, 180px);
 }
 .qf-page .qf-insight-hit__follow-up {
   margin-top: 16px;

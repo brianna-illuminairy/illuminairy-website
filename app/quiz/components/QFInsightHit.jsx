@@ -102,16 +102,16 @@ export function QFInsightHit({
         )
       }
     >
-      <div className={`qf-insight-hit${hit.image ? ' qf-insight-hit--visual' : ''}${hit.showScoreReports ? ' qf-insight-hit--outcome-proof' : ''}`}>
+      <div className={`qf-insight-hit${hit.image ? ' qf-insight-hit--visual' : ''}${hit.showScoreReports ? ' qf-insight-hit--outcome-proof' : ''}${manual ? ' qf-insight-hit--manual' : ''}`}>
         <span className={`qf-insight-hit__eyebrow qf-insight-hit__eyebrow--${hit.type}`}>
           {INSIGHT_HIT_EYEBROW[hit.type]}
         </span>
+        <InsightLine parts={hit.parts} />
         {hit.image ? (
           <div className="qf-insight-hit__visual">
             <img src={hit.image.src} alt={hit.image.alt} />
           </div>
         ) : null}
-        <InsightLine parts={hit.parts} />
         {hit.showScoreReports ? (
           <div style={{ marginTop: 8 }}>
             <QFScoreReportPair caption={OUTCOME_SCORE_CAPTION} />

@@ -136,10 +136,10 @@ export function QFQ6Blocker({ value = [], onToggle, onContinue, onBack }) {
 export function QFQ7Tried({ value = [], onToggle, onContinue, onBack, q3 = 'sat-1' }) {
   const hasSat = ['sat-1', 'sat-2', 'sat-3+'].includes(q3);
   const title = hasSat
-    ? "How did they prepare for their <em>last SAT</em>?"
+    ? "How did they prep for their <em>last SAT</em>?"
     : "How have they <em>prepared</em> so far?";
   const opts = [
-    { id: 'khan',    label: 'Khan Academy / Bluebook / YouTube' },
+    { id: 'khan',    label: 'Khan / Bluebook / YouTube' },
     { id: 'group',   label: 'In-person group class' },
     { id: 'online',  label: 'Online course or class' },
     { id: 'app',     label: 'SAT App' },
