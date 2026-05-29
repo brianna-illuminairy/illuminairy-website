@@ -21,7 +21,7 @@ import {
 } from "@/lib/sat-skills-copy";
 import { methodScreenLeadParts } from '@/lib/quiz-funnel/method-lead-copy';
 import { iCompareHeadlineMultiplier, iCompareProofBridgeLine } from '@/lib/quiz-funnel/i-compare-copy';
-import { SCORE_PATH_EFFORT_LINE, V1_TO_METHOD_BRIDGE } from '@/lib/quiz-funnel/score-path-copy';
+import { v1EmotionalBridgeParts } from '@/lib/quiz-funnel/score-path-copy';
 import { stakesOutcome } from '@/lib/quiz-funnel/stakes-copy';
 
 export { gainTargetForQ5 };
@@ -453,10 +453,6 @@ const V1_Q5_DATE = {
   'aug22': 'Aug 22', 'oct3': 'Oct 3', 'nov7': 'Nov 7', 'dec5': 'Dec 5',
   '2027': 'spring 2027', 'tbd': 'test day',
 };
-const V1_TEST_DATES = {
-  'aug22': new Date('2026-08-22'), 'oct3': new Date('2026-10-03'),
-  'nov7': new Date('2026-11-07'), 'dec5': new Date('2026-12-05'),
-};
 const SKILL_GAIN_RATIOS = [60, 48, 38, 26, 18];
 const V1_SKILL_DELAYS = [400, 450, 480, 520, 550];
 
@@ -517,12 +513,6 @@ export function QFV1Projection({
   const skillPts = scaleSkillGains(gap);
   const testDate = V1_Q5_DATE[q5] ?? 'test day';
   const showGainMath = shouldShowGainMath(q5);
-  const avgGain = v1AvgGainForBand(current);
-  const today = funnelToday();
-  const retakeDate = V1_TEST_DATES[q5];
-  const weeks = retakeDate
-    ? Math.max(2, Math.round((retakeDate - today) / (7 * 86400000)))
-    : chartWeeks;
 
   const [skillStep, setSkillStep] = useState(0);
   const [showCopy, setShowCopy] = useState(false);
@@ -718,21 +708,6 @@ export function QFV1Projection({
                   {displayTarget}
                 </text>
               </svg>
-              <p
-                className="qf-lead"
-                style={{
-                  margin: '12px 0 0',
-                  textAlign: 'center',
-                  fontSize: 14,
-                  lineHeight: 1.45,
-                  color: 'var(--qf-ink-mid)',
-                  opacity: showCopy ? 1 : 0,
-                  transition: 'opacity 0.5s ease',
-                }}
-              >
-                Each zone is one high-impact skill, worked in order. Across <em>95+</em> similar students,
-                our plans averaged <em>+{avgGain}</em> points in <em>{weeks}</em> weeks.
-              </p>
             </div>
           </>
         )}
@@ -742,10 +717,13 @@ export function QFV1Projection({
           transition: 'opacity 0.5s ease',
         }}>
           <p className="qf-lead" style={{ margin: 0 }}>
-            {V1_TO_METHOD_BRIDGE}
-          </p>
-          <p className="qf-lead" style={{ margin: '10px 0 0', fontSize: 14, color: 'var(--qf-ink-mid)' }}>
-            {SCORE_PATH_EFFORT_LINE}
+            {v1EmotionalBridgeParts(displayTarget).map((part, i) =>
+              part.em ? (
+                <em key={i}>{part.text}</em>
+              ) : (
+                <span key={i}>{part.text}</span>
+              )
+            )}
           </p>
         </div>
       </div>
