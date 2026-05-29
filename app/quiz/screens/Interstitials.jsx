@@ -848,8 +848,6 @@ export function QFIDiagnosis({ onContinue, onBack, q3 = 'sat-1', q4 = '1200-1300
   const hasScore = q4 && q4 !== 'na' && Q4_SCORE_PHRASE[q4];
   const scorePhrase = Q4_SCORE_PHRASE[q4] ?? 'around 1100';
   const untilTest = formatWeeksUntilTest(weeks, dateMonth);
-  const firstSat = q3 === 'none' || q4 === 'na';
-  const testMilestone = firstSat ? 'next test' : 'next retake';
 
   return (
     <QFScreen stepIdx={9} onBack={onBack}
@@ -966,16 +964,15 @@ export function QFIDiagnosis({ onContinue, onBack, q3 = 'sat-1', q4 = '1200-1300
           <p className="qf-lead" style={{ margin: '18px 0 0' }}>
             {untilTest ? (
               <>
-                With <em>{untilTest.weeks} {untilTest.unit}</em> until the{' '}
-                <em>{untilTest.monthName}</em> SAT, the first step to getting their score up is
-                identifying the <em>{FOCUS_SKILL_COUNT}–6 skills</em> that can add the most points
-                on their {testMilestone}.
+                To get their score up by the <em>{untilTest.monthName}</em> SAT, which is in just{' '}
+                <em>{untilTest.weeks} {untilTest.unit}</em>, we need to start with a{' '}
+                <em>diagnostic</em> to identify the <em>{FOCUS_SKILL_COUNT}–6 skills</em> worth the
+                most points.
               </>
             ) : (
               <>
-                The first step to getting their score up is identifying the{' '}
-                <em>{FOCUS_SKILL_COUNT}–6 skills</em> that can add the most points on their{' '}
-                {testMilestone}.
+                To get their score up, we need to start with a <em>diagnostic</em> to identify the{' '}
+                <em>{FOCUS_SKILL_COUNT}–6 skills</em> worth the most points.
               </>
             )}
           </p>
