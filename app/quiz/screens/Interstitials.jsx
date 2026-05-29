@@ -433,8 +433,7 @@ export function QFIComparePrep({ onContinue, onBack, q7 = ['khan'] }) {
         </p>
 
         <p className="qf-disclaimer" style={{ margin: 0 }}>
-          Source: College Board retest summaries; Illuminairy completed plans (n=95). Individual
-          results vary.
+          Source: College Board retest summaries. Individual results vary.
         </p>
       </div>
     </QFScreen>
