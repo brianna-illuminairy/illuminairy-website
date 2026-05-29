@@ -18,7 +18,7 @@ import {
   KHAN_SAT_YOUTUBE_VIDEO_COUNT,
   KHAN_SAT_SKILL_COUNT_LABEL,
 } from "@/lib/sat-skills-copy";
-import { iCompareProofBridgeLine } from '@/lib/quiz-funnel/i-compare-copy';
+import { iCompareHeadlineMultiplier, iCompareProofBridgeLine } from '@/lib/quiz-funnel/i-compare-copy';
 import { SCORE_PATH_EFFORT_LINE, V1_TO_METHOD_BRIDGE } from '@/lib/quiz-funnel/score-path-copy';
 import { stakesOutcome } from '@/lib/quiz-funnel/stakes-copy';
 
@@ -399,6 +399,7 @@ function compareBar1Short(q7 = []) {
 
 export function QFIComparePrep({ onContinue, onBack, q7 = ['khan'] }) {
   const bar1Short = compareBar1Short(q7);
+  const multiplier = iCompareHeadlineMultiplier();
   const bars = [
     { lbl: bar1Short, val: 40, color: 'rgba(20,32,46,0.30)' },
     { lbl: 'Group class', val: 70, color: 'rgba(20,32,46,0.55)' },
@@ -411,14 +412,10 @@ export function QFIComparePrep({ onContinue, onBack, q7 = ['khan'] }) {
       footer={<QFButton kind="forest" onClick={onContinue}>See what actually works</QFButton>}
     >
       <div className="gap-22" style={{ marginTop: 4 }}>
-        <div>
-          <h1 className="qf-h1" style={{ marginBottom: 8 }}>
-            They worked <em>hard</em>.
-          </h1>
-          <p className="qf-lead" style={{ margin: 0 }}>
-            The problem was how they <em>prepared</em>.
-          </p>
-        </div>
+        <h1 className="qf-h1" style={{ marginBottom: 0 }}>
+          <em>{multiplier}×</em> better results with a{' '}
+          <em>diagnostic-driven SAT plan</em>.
+        </h1>
 
         <div className="qf-card gap-14" style={{ padding: 20 }}>
           <QFBarChart bars={bars} max={MAX} />
