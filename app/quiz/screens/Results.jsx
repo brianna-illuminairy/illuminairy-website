@@ -2,7 +2,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { QFScreen, QFButton, QFQuestionHead, QFConstellation } from '../components/QFShell';
 import { QFBarChart } from '../components/QFBarChart';
-import { S2_MISTAKE_DRIVEN_LEAD } from '@/lib/quiz-funnel/score-path-copy';
+import { S2_EXAMPLES_LEAD } from '@/lib/quiz-funnel/score-path-copy';
 import { buildPlanReveal } from '@/lib/quiz-funnel/plan-reveal';
 import { satProgramOutcomes, satRetakeResearch } from '@/lib/site';
 
@@ -217,13 +217,10 @@ export function QFS2Science({ onContinue, onBack, q6 = ['math'] }) {
       <div className="gap-22">
         <div>
           <h1 className="qf-h1" style={{ marginBottom: 8 }}>
-            <em>Skill 1</em> gets mistake-driven tutoring.
+            We teach each skill through <em>examples</em>.
           </h1>
           <p className="qf-lead" style={{ margin: 0 }}>
-            {S2_MISTAKE_DRIVEN_LEAD}
-          </p>
-          <p className="qf-lead" style={{ margin: '12px 0 0', fontSize: 14, color: 'var(--qf-ink-mid)' }}>
-            {S2_MISTAKE_DRIVEN_RESEARCH}
+            {S2_EXAMPLES_LEAD}
           </p>
         </div>
 

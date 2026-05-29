@@ -26,6 +26,8 @@ export function v1EmotionalBridgeParts(targetScore?: number | null): ScorePathCo
   ];
 }
 
-/** s2 opener — picks up from Skill 1 on the projection chart. */
-export const S2_MISTAKE_DRIVEN_LEAD =
-  "We start with their highest-impact gap. A tutor finds the mistake on a real SAT question, fixes it together, then has them practice until they can get it right alone.";
+/** s2 — how we teach each skill (example session). */
+export const S2_EXAMPLES_HEADLINE = "We teach each skill through examples.";
+
+export const S2_EXAMPLES_LEAD =
+  "We show how to solve it, practice together, then they solve it.";
