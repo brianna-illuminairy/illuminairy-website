@@ -1,3 +1,5 @@
+import { stakesRealisticTarget } from "@/lib/quiz-funnel/stakes-copy";
+
 /** Canonical effort line for Score Path / quiz funnel — no "prep" or vague "guided/structured". */
 export const SCORE_PATH_EFFORT_LINE =
   "~5–7 hrs/week · mistake-driven SAT tutoring on their weakest skills";
@@ -5,25 +7,33 @@ export const SCORE_PATH_EFFORT_LINE =
 export type ScorePathCopyPart = { text: string; em?: boolean };
 
 /** v1 → s2 bridge — emotional so-what after the projection chart (parent voice). */
-export function v1EmotionalBridgeParts(targetScore?: number | null): ScorePathCopyPart[] {
-  const targetLabel =
-    targetScore != null && targetScore > 0 ? `${targetScore}+` : "their target";
+export function v1EmotionalBridgeParts(
+  q2?: string,
+  targetScore?: number | null
+): ScorePathCopyPart[] {
+  const { noun, verb } = stakesRealisticTarget(q2);
+  const hasTarget = targetScore != null && targetScore > 0;
 
-  return [
-    {
-      text: "Many students who score low on their first SAT stop believing they can reach ",
-    },
-    { text: targetLabel, em: true },
-    {
-      text: ". The diagnostic finds ",
-    },
-    { text: "one skill", em: true },
-    { text: " first — often " },
+  const parts: ScorePathCopyPart[] = [
+    { text: "After a low SAT score, students start wondering if their " },
+    { text: noun, em: true },
+    { text: ` ${verb} still realistic. We focus on the ` },
+    { text: "highest-impact skill", em: true },
+    { text: " first—often worth " },
     { text: "50+ points", em: true },
-    {
-      text: " on its own. That quick win restores belief and gets them putting in the work again.",
-    },
+    { text: "—so they see a quick win and believe " },
   ];
+
+  if (hasTarget) {
+    parts.push({ text: `${targetScore}+`, em: true });
+    parts.push({ text: " is possible again." });
+  } else {
+    parts.push({ text: "their " });
+    parts.push({ text: "goal score", em: true });
+    parts.push({ text: " is possible again." });
+  }
+
+  return parts;
 }
 
 /** s2 — how we teach each skill (example session). */

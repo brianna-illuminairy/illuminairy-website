@@ -485,6 +485,7 @@ function v1ScoreLabelY(y, plotTop, baselineY, nearTop) {
 
 export function QFV1Projection({
   onContinue, onBack,
+  q2 = 'top-choice',
   q4 = '1200-1300', q5 = 'oct3', q8 = '1400',
 }) {
   const hasScore = q4 && q4 !== 'na' && V1_Q4_TO_SCORE[q4];
@@ -708,7 +709,7 @@ export function QFV1Projection({
           transition: 'opacity 0.5s ease',
         }}>
           <p className="qf-lead" style={{ margin: 0 }}>
-            {v1EmotionalBridgeParts(displayTarget).map((part, i) =>
+            {v1EmotionalBridgeParts(q2, displayTarget).map((part, i) =>
               part.em ? (
                 <em key={i}>{part.text}</em>
               ) : (

@@ -50,6 +50,24 @@ export function stakesGoalLabel(q2?: string): string {
   return STAKES_GOAL_LABEL[q2 ?? ""] ?? STAKES_GOAL_LABEL["top-choice"];
 }
 
+/** v1 bridge — "their ___ is/are still realistic" (grammar matches q2 goal). */
+export const STAKES_REALISTIC_TARGET: Record<
+  string,
+  { noun: string; verb: "is" | "are" }
+> = {
+  "top-choice": { noun: "top-choice school", verb: "is" },
+  merit: { noun: "merit scholarships", verb: "are" },
+  selective: { noun: "selective colleges", verb: "are" },
+  "app-rounds": { noun: "early application rounds", verb: "are" },
+  early: { noun: "early application rounds", verb: "are" },
+};
+
+export function stakesRealisticTarget(q2?: string) {
+  return (
+    STAKES_REALISTIC_TARGET[q2 ?? ""] ?? STAKES_REALISTIC_TARGET["top-choice"]
+  );
+}
+
 /** Plan reveal subhead opener */
 export function stakesSubheadOpener(q2?: string): string {
   const label = stakesGoalLabel(q2);

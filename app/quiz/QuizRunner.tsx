@@ -221,7 +221,7 @@ export default function QuizRunner() {
     case 'reveal':
     case 's1':
       return <QFSPlanReveal answers={a} onContinue={next} onBack={back} />;
-    case 'v1':  return <QFV1Projection onContinue={next} onBack={back} q4={a.q4} q5={a.q5} q8={a.q8} />;
+    case 'v1':  return <QFV1Projection onContinue={next} onBack={back} q2={a.q2} q4={a.q4} q5={a.q5} q8={a.q8} />;
     case 's2':  return <QFS2Science   onContinue={next} onBack={back} q6={a.q6 as any} />;
     case 's3':  return <QFS3Stats     onContinue={next} onBack={back} />;
     case 's4':  return <QFS4Authority onContinue={next} onBack={back} />;
