@@ -18,6 +18,7 @@ import {
   KHAN_SAT_YOUTUBE_VIDEO_COUNT,
   KHAN_SAT_SKILL_COUNT_LABEL,
 } from "@/lib/sat-skills-copy";
+import { methodScreenLeadParts } from '@/lib/quiz-funnel/method-lead-copy';
 import { iCompareHeadlineMultiplier, iCompareProofBridgeLine } from '@/lib/quiz-funnel/i-compare-copy';
 import { SCORE_PATH_EFFORT_LINE, V1_TO_METHOD_BRIDGE } from '@/lib/quiz-funnel/score-path-copy';
 import { stakesOutcome } from '@/lib/quiz-funnel/stakes-copy';
@@ -983,57 +984,30 @@ export function QFIDiagnosis({ onContinue, onBack, q3 = 'sat-1', q4 = '1200-1300
 }
 
 // ─── Product-outcome (Hims-style: offer + outcome collage, 1 sentence) ───────
-function buildMethodLead(q5, gain, showGainMath) {
-  const testLabel = q5DisplayLabel(q5);
-  const hasTest =
-    testLabel && testLabel !== 'Not sure yet' && testLabel !== 'Spring 2027 or later';
-
-  if (showGainMath && gain) {
-    if (hasTest) {
-      return (
-        <>
-          Great news: we&apos;ve helped parents like you create a plan to raise their child&apos;s
-          SAT score by <em>{gain}+ points</em> before the <em>{testLabel}</em> and applications are
-          due.
-        </>
-      );
-    }
-    return (
-      <>
-        Great news: we&apos;ve helped parents like you create a plan to raise their child&apos;s SAT
-        score by <em>{gain}+ points</em> before applications are due.
-      </>
-    );
-  }
-
-  if (hasTest) {
-    return (
-      <>
-        Great news: we&apos;ve helped parents like you create a plan to get their child&apos;s SAT
-        score up before the <em>{testLabel}</em> and applications are due.
-      </>
-    );
-  }
-
+function MethodLeadLine({ parts }) {
   return (
-    <>
-      Great news: we&apos;ve helped parents like you create a plan to get their child&apos;s SAT
-      score up before applications are due.
-    </>
+    <p className="qf-lead" style={{ margin: 0 }}>
+      {parts.map((part, i) =>
+        part.em ? (
+          <em key={i}>{part.text}</em>
+        ) : (
+          <span key={i}>{part.text}</span>
+        )
+      )}
+    </p>
   );
 }
 
 export function QFIMethod({ onContinue, onBack, q5 = 'oct3' }) {
   const showGainMath = shouldShowGainMath(q5);
   const gain = gainTargetForQ5(q5);
+  const methodLead = methodScreenLeadParts(gain, showGainMath);
   return (
     <QFScreen stepIdx={10} onBack={onBack}
       footer={<QFButton kind="forest" onClick={onContinue}>How it works</QFButton>}
     >
       <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
-        <p className="qf-lead" style={{ margin: 0 }}>
-          {buildMethodLead(q5, gain, showGainMath)}
-        </p>
+        <MethodLeadLine parts={methodLead} />
 
         {/* Hero — tutor + student (primary visual) */}
         <div style={{
