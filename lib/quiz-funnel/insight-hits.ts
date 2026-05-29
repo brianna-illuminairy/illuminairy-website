@@ -25,6 +25,8 @@ export type InsightHit = {
   followUp?: InsightHitPart[];
   /** Optional hero visual (e.g. Khan math haystack) */
   image?: InsightHitImage;
+  /** Before/after score report pair (Results slide) */
+  showScoreReports?: boolean;
   /** Fixed auto-advance duration when set (ms) */
   autoAdvanceMs?: number;
 };

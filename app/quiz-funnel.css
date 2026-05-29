@@ -1542,6 +1542,15 @@
   font-size: clamp(18px, 4.6vw, 24px);
   line-height: 1.4;
 }
+.qf-page .qf-insight-hit--outcome-proof {
+  justify-content: flex-start;
+  min-height: auto;
+  padding-top: 0;
+}
+.qf-page .qf-insight-hit--outcome-proof .qf-insight-hit__line {
+  font-size: clamp(17px, 4.4vw, 22px);
+  line-height: 1.4;
+}
 .qf-page .qf-insight-hit__eyebrow {
   font-family: var(--qf-body);
   font-size: 12px;

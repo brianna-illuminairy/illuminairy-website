@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { QFScreen, QFButton } from './QFShell';
 import { INSIGHT_HIT_EYEBROW } from '@/lib/quiz-funnel/insight-hits';
+import { QFScoreReportPair } from './QFPlanVisuals';
 
 function InsightLine({ parts }) {
   return (
@@ -100,7 +101,7 @@ export function QFInsightHit({
         )
       }
     >
-      <div className={`qf-insight-hit${hit.image ? ' qf-insight-hit--visual' : ''}`}>
+      <div className={`qf-insight-hit${hit.image ? ' qf-insight-hit--visual' : ''}${hit.showScoreReports ? ' qf-insight-hit--outcome-proof' : ''}`}>
         <span className={`qf-insight-hit__eyebrow qf-insight-hit__eyebrow--${hit.type}`}>
           {INSIGHT_HIT_EYEBROW[hit.type]}
         </span>
@@ -110,6 +111,11 @@ export function QFInsightHit({
           </div>
         ) : null}
         <InsightLine parts={hit.parts} />
+        {hit.showScoreReports ? (
+          <div style={{ marginTop: 8 }}>
+            <QFScoreReportPair />
+          </div>
+        ) : null}
         {hit.followUp?.length ? (
           <div className="qf-insight-hit__follow-up">
             <InsightLine parts={hit.followUp} />

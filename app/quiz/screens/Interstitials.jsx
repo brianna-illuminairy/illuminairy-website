@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { funnelToday } from "@/lib/funnel-today";
 import { QFScreen, QFButton, QFConstellation } from '../components/QFShell';
 import { QFBarChart } from '../components/QFBarChart';
+import { QFSophiaPlanCard } from '../components/QFPlanVisuals';
 import { gainTargetForQ5, shouldShowGainMath, weeksUntilQ5Test } from '../gains';
 import { q5DisplayLabel } from '@/lib/quiz-funnel/quiz-profile';
 import { SCORE_PATH_DEFAULT_START, SCORE_PATH_DEFAULT_WEEKS } from '@/lib/quiz-funnel/quiz-profile';
@@ -1013,72 +1014,7 @@ export function QFIMethod({ onContinue, onBack, q5 = 'oct3' }) {
     >
       <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
         <MethodLeadLine parts={methodLead} />
-
-        {/* Hero — tutor + student (primary visual) */}
-        <div style={{
-          width: '100%', aspectRatio: '16 / 10', borderRadius: 14, overflow: 'hidden',
-          position: 'relative',
-          background: 'linear-gradient(135deg, #1A4D2F 0%, #2F6E47 50%, #0057A8 100%)',
-        }}>
-          <img
-            src="/photos/tutor-student-session.png"
-            alt="An Illuminairy tutor working through an SAT plan with a student"
-            style={{
-              position: 'absolute', inset: 0,
-              width: '100%', height: '100%',
-              objectFit: 'cover', objectPosition: 'top', display: 'block',
-            }}
-            onError={(e) => { e.currentTarget.style.display = 'none'; }}
-          />
-        </div>
-
-        {/* Before / after — smaller, grouped below with breathing room */}
-        <div style={{
-          display: 'flex', flexDirection: 'column', gap: 8,
-          width: '72%', maxWidth: 248, margin: '10px auto 0', alignSelf: 'center',
-        }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
-            <div style={{
-              aspectRatio: '4 / 5', borderRadius: 12, overflow: 'hidden',
-              position: 'relative', background: '#1f4099',
-            }}>
-              <img
-                src="/photos/before-score-report.png"
-                alt="Score report before: 1180"
-                style={{
-                  position: 'absolute', inset: 0,
-                  width: '100%', height: '100%',
-                  objectFit: 'cover', objectPosition: 'center 32%', display: 'block',
-                }}
-                onError={(e) => { e.currentTarget.style.display = 'none'; }}
-              />
-            </div>
-            <div style={{
-              aspectRatio: '4 / 5', borderRadius: 12, overflow: 'hidden',
-              position: 'relative', background: '#1f4099',
-            }}>
-              <img
-                src="/photos/score-report.png"
-                alt="Score report after: 1410"
-                style={{
-                  position: 'absolute', inset: 0,
-                  width: '100%', height: '100%',
-                  objectFit: 'cover', objectPosition: 'center 32%', display: 'block',
-                }}
-                onError={(e) => { e.currentTarget.style.display = 'none'; }}
-              />
-            </div>
-          </div>
-
-          <div style={{
-            textAlign: 'center',
-            fontFamily: 'var(--qf-body)', fontSize: 14, lineHeight: 1.4,
-            color: 'var(--qf-forest)', fontWeight: 600,
-          }}>
-            1180 <span style={{ color: 'var(--qf-ink-mute)', fontWeight: 500 }}>→</span> 1410{' '}
-            <span style={{ color: 'var(--qf-ink-mute)', fontWeight: 500 }}>·</span> +230 pts
-          </div>
-        </div>
+        <QFSophiaPlanCard compact />
       </div>
     </QFScreen>
   );
@@ -1086,16 +1022,6 @@ export function QFIMethod({ onContinue, onBack, q5 = 'oct3' }) {
 
 // ─── I · Steps (Slide 2: large plan visual + 3 Hims-style labels overlaid) ────
 export function QFISteps({ onContinue, onBack }) {
-  const skills = [
-    { rank: '01', name: 'Linear Functions',   pts: 50 },
-    { rank: '02', name: 'Right Triangles',    pts: 45 },
-    { rank: '03', name: 'Quadratics',         pts: 40 },
-    { rank: '04', name: 'Word Problems',      pts: 35 },
-    { rank: '05', name: 'Functions & Graphs', pts: 30 },
-  ];
-  const maxPts = 50;
-  const totalGain = skills.reduce((s, x) => s + x.pts, 0);
-
   return (
     <QFScreen stepIdx={11} onBack={onBack}
       footer={<QFButton kind="forest" onClick={onContinue}>Build their plan</QFButton>}
@@ -1104,99 +1030,8 @@ export function QFISteps({ onContinue, onBack }) {
         We build your plan around the few skills most likely to raise their score fastest.
       </p>
       <div style={{ position: 'relative', paddingTop: 16, paddingBottom: 20 }}>
-        {/* Large plan visual (the "image") */}
-        <div style={{
-          background: 'var(--qf-paper)',
-          border: '1px solid var(--qf-line)',
-          borderRadius: 18,
-          overflow: 'hidden',
-          boxShadow: '0 10px 30px rgba(20,32,46,0.12)',
-          margin: '0 8px',
-        }}>
-          {/* Header */}
-          <div style={{
-            background: 'var(--qf-ink)', padding: '16px 20px',
-            display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-          }}>
-            <div>
-              <div style={{
-                fontFamily: 'var(--qf-mono)', fontSize: 9, letterSpacing: '0.22em',
-                color: 'rgba(245,248,250,0.55)', textTransform: 'uppercase', fontWeight: 600,
-              }}>illuminairy plan</div>
-              <div style={{
-                fontFamily: 'var(--qf-display)', fontSize: 18, fontWeight: 500,
-                color: '#fff', marginTop: 3, letterSpacing: '-0.01em',
-              }}>Sophia M.</div>
-            </div>
-            <div style={{ textAlign: 'right' }}>
-              <div style={{
-                fontFamily: 'var(--qf-mono)', fontSize: 9, letterSpacing: '0.18em',
-                color: 'rgba(245,248,250,0.55)', textTransform: 'uppercase', fontWeight: 600,
-              }}>Goal</div>
-              <div style={{
-                fontFamily: 'var(--qf-display)', fontSize: 20, fontWeight: 600,
-                color: 'var(--qf-glow)', marginTop: 2, letterSpacing: '-0.01em',
-              }}>1400</div>
-            </div>
-          </div>
-
-          {/* Ranked skill rows with impact bars */}
-          <div style={{ padding: '6px 0' }}>
-            {skills.map((s, i) => {
-              const fillPct = (s.pts / maxPts) * 100;
-              return (
-                <div key={i} style={{
-                  display: 'grid', gridTemplateColumns: '34px 1fr 52px',
-                  alignItems: 'center', gap: 12,
-                  padding: '14px 20px',
-                  borderTop: i > 0 ? '1px solid var(--qf-line)' : 'none',
-                }}>
-                  <div style={{
-                    fontFamily: 'var(--qf-mono)', fontSize: 11,
-                    color: 'var(--qf-forest)', fontWeight: 600, letterSpacing: '0.08em',
-                  }}>{s.rank}</div>
-                  <div>
-                    <div style={{
-                      fontFamily: 'var(--qf-display)', fontSize: 14.5, fontWeight: 500,
-                      color: 'var(--qf-ink)', letterSpacing: '-0.005em', marginBottom: 6,
-                    }}>{s.name}</div>
-                    <div style={{
-                      height: 6, background: 'rgba(20,32,46,0.08)', borderRadius: 3,
-                      overflow: 'hidden',
-                    }}>
-                      <div style={{
-                        width: `${fillPct}%`, height: '100%',
-                        background: 'linear-gradient(to right, var(--qf-forest), var(--qf-glow))',
-                        borderRadius: 3,
-                      }} />
-                    </div>
-                  </div>
-                  <div style={{
-                    fontFamily: 'var(--qf-mono)', fontSize: 12,
-                    color: 'var(--qf-forest)', fontWeight: 600, letterSpacing: '0.04em',
-                    textAlign: 'right',
-                  }}>+{s.pts}</div>
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Total gain footer */}
-          <div style={{
-            background: 'var(--qf-forest-soft)',
-            padding: '12px 20px',
-            display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-            borderTop: '1px solid rgba(47,110,71,0.25)',
-          }}>
-            <span style={{
-              fontFamily: 'var(--qf-mono)', fontSize: 10, letterSpacing: '0.16em',
-              color: 'var(--qf-forest)', fontWeight: 600, textTransform: 'uppercase',
-            }}>Personalized plan · +{totalGain} pts</span>
-            <span style={{
-              fontFamily: 'var(--qf-display)', fontSize: 14, color: 'var(--qf-forest)',
-              fontWeight: 600, letterSpacing: '-0.005em',
-            }}>1180 → 1400</span>
-          </div>
+        <div style={{ margin: '0 8px' }}>
+          <QFSophiaPlanCard />
         </div>
 
         {/* Floating Hims-style labels — pointing at parts */}

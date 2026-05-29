@@ -7,7 +7,7 @@ import {
   QFQ6Blocker, QFQ7Tried, QFQ8Goal, QFQ9GPA,
 } from './screens/Questions';
 import {
-  QFI1Proof, QFI2Compute, QFI3Bridge, QFIGPAGap, QFV1Projection, QFIDiagnosis, QFIMethod, QFISteps,
+  QFI1Proof, QFI2Compute, QFIGPAGap, QFV1Projection, QFIDiagnosis, QFIMethod, QFISteps,
   QFIComparePrep,
 } from './screens/Interstitials';
 import { QFInsightHit } from './components/QFInsightHit';
@@ -37,7 +37,7 @@ const BASE_STEPS = [
   'i-diag',
   'i-method',
   'i-steps',
-  'i2','q8','i3','q9',
+  'i2','q8','q9',
   'reveal',
   'v1',
   's2','s3','s4',
@@ -71,8 +71,8 @@ function getSteps(answers: QuizAnswers) {
   if (iStepsIdx >= 0) steps.splice(iStepsIdx + 1, 0, 'hit-outcome-month-one');
 
   if (answers.q8 === 'tbd') {
-    const i3Idx = steps.indexOf('i3');
-    if (i3Idx >= 0) steps.splice(i3Idx, 0, 'hit-q8-scores');
+    const q9Idx = steps.indexOf('q9');
+    if (q9Idx >= 0) steps.splice(q9Idx, 0, 'hit-q8-scores');
   }
 
   if (showGapScreen(answers)) {
@@ -215,7 +215,7 @@ export default function QuizRunner() {
           stepIdx={10}
         />
       );
-    case 'i3':  return <QFI3Bridge    onContinue={next} onBack={back} q5={a.q5} />;
+
     case 'q9':  return <QFQ9GPA       value={a.q9} onSelect={(v: string) => { setQ('q9', v); setTimeout(next, 120); }} onBack={back} />;
     case 'i-gap': return <QFIGPAGap   onContinue={next} onBack={back} q4={a.q4} q9={a.q9} />;
     case 'reveal':

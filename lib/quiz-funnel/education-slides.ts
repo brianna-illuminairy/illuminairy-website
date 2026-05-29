@@ -89,5 +89,6 @@ export function educationHitOutcomeMonthOne(): EducationSlideHit {
   return {
     type: "outcome",
     parts: illuminairyFirstMonthOutcomeParts(),
+    showScoreReports: true,
   };
 }
