@@ -29,6 +29,3 @@ export function v1EmotionalBridgeParts(targetScore?: number | null): ScorePathCo
 /** s2 opener — picks up from Skill 1 on the projection chart. */
 export const S2_MISTAKE_DRIVEN_LEAD =
   "We start with their highest-impact gap. A tutor finds the mistake on a real SAT question, fixes it together, then has them practice until they can get it right alone.";
-
-export const S2_MISTAKE_DRIVEN_RESEARCH =
-  "Fixing recurring mistake types beats re-watching the same lessons for everyone — students remember more when they retrieve and correct errors, not passively review.";

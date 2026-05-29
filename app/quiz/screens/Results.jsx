@@ -2,10 +2,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { QFScreen, QFButton, QFQuestionHead, QFConstellation } from '../components/QFShell';
 import { QFBarChart } from '../components/QFBarChart';
-import {
-  S2_MISTAKE_DRIVEN_LEAD,
-  S2_MISTAKE_DRIVEN_RESEARCH,
-} from '@/lib/quiz-funnel/score-path-copy';
+import { S2_MISTAKE_DRIVEN_LEAD } from '@/lib/quiz-funnel/score-path-copy';
 import { buildPlanReveal } from '@/lib/quiz-funnel/plan-reveal';
 import { satProgramOutcomes, satRetakeResearch } from '@/lib/site';
 
