@@ -940,15 +940,13 @@ export function QFIDiagnosis({ onContinue, onBack, q3 = 'sat-1', q4 = '1200-1300
           <p className="qf-lead" style={{ margin: '18px 0 0' }}>
             {untilTest ? (
               <>
-                To get their score up by the <em>{untilTest.monthName}</em> SAT, which is in just{' '}
-                <em>{untilTest.weeks} {untilTest.unit}</em>, we need to start with a{' '}
-                <em>diagnostic</em> to identify the <em>{FOCUS_SKILL_COUNT}–6 skills</em> worth the
-                most points.
+                Start with a <em>diagnostic</em> to identify the <em>{FOCUS_SKILL_COUNT}–6 skills</em>{' '}
+                worth the most points to get their score up by the <em>{untilTest.monthName}</em> SAT.
               </>
             ) : (
               <>
-                To get their score up, we need to start with a <em>diagnostic</em> to identify the{' '}
-                <em>{FOCUS_SKILL_COUNT}–6 skills</em> worth the most points.
+                Start with a <em>diagnostic</em> to identify the <em>{FOCUS_SKILL_COUNT}–6 skills</em>{' '}
+                worth the most points to get their score up.
               </>
             )}
           </p>
