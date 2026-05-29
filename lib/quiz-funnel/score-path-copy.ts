@@ -50,6 +50,3 @@ export const S4_CALL_CTA = "Book your free 15-min Strategy Call";
 
 /** hit-outcome-month-one · score report caption */
 export const OUTCOME_SCORE_CAPTION = "Ethan scored +230 pts in 12 weeks";
-
-/** i-method · score reports under tutor session hero */
-export const I_METHOD_SCORE_CAPTION = "Ethan scored +230 pts in 12 weeks";

@@ -4,8 +4,6 @@ import { funnelToday } from "@/lib/funnel-today";
 import { QFScreen, QFButton, QFConstellation } from '../components/QFShell';
 import { QFBarChart } from '../components/QFBarChart';
 import { QFSophiaPlanCard } from '../components/QFPlanVisuals';
-import { I_METHOD_SCORE_CAPTION } from '@/lib/quiz-funnel/score-path-copy';
-import { QFScoreReportPair } from '../components/QFPlanVisuals';
 import { gainTargetForQ5, shouldShowGainMath, weeksUntilQ5Test } from '../gains';
 import { q5DisplayLabel } from '@/lib/quiz-funnel/quiz-profile';
 import { SCORE_PATH_DEFAULT_START, SCORE_PATH_DEFAULT_WEEKS } from '@/lib/quiz-funnel/quiz-profile';
@@ -987,25 +985,19 @@ export function QFIMethod({ onContinue, onBack, q5 = 'oct3' }) {
       <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
         <MethodLeadLine parts={methodLead} />
         <div style={{
-          width: '100%', aspectRatio: '16 / 10', borderRadius: 14, overflow: 'hidden',
-          position: 'relative',
-          background: 'linear-gradient(135deg, #1A4D2F 0%, #2F6E47 50%, #0057A8 100%)',
+          width: '100%', borderRadius: 14, overflow: 'hidden',
+          background: 'var(--qf-paper)',
+          border: '1px solid var(--qf-line)',
+          boxShadow: '0 10px 30px rgba(20,32,46,0.10)',
         }}>
           <img
             src="/photos/tutor-student-session.png"
-            alt="An Illuminairy tutor and student working on their SAT plan together"
+            alt="Sophia with her tutor and her personalized 12-week SAT plan"
             style={{
-              position: 'absolute', inset: 0,
-              width: '100%', height: '100%',
-              objectFit: 'cover', objectPosition: 'top', display: 'block',
+              width: '100%', height: 'auto', display: 'block', verticalAlign: 'top',
             }}
             onError={(e) => { e.currentTarget.style.display = 'none'; }}
           />
-        </div>
-        <div style={{
-          width: '72%', maxWidth: 248, margin: '0 auto', alignSelf: 'center',
-        }}>
-          <QFScoreReportPair caption={I_METHOD_SCORE_CAPTION} />
         </div>
       </div>
     </QFScreen>
