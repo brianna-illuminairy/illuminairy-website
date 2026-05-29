@@ -91,6 +91,10 @@ const CQ6_PHRASE = {
   'no-plan': 'a clear, structured plan', 'too-busy': 'an efficient, time-boxed plan',
 };
 
+function formatPrepStartDate(today) {
+  return today.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
 const STARS = [
   [22,40,0.55,1.1],[68,18,0.45,0.7],[120,52,0.65,0.7],[180,28,0.4,1.0],
   [245,62,0.55,0.7],[310,22,0.5,0.7],[44,140,0.4,0.7],[150,112,0.55,1.2],
@@ -113,6 +117,7 @@ export function QFI2Compute({ onContinue, onBack, q4 = '1200-1300', q5 = 'oct3',
     'nov7': new Date('2026-11-07'), 'dec5': new Date('2026-12-05'),
   };
   const today = funnelToday();
+  const prepStart = formatPrepStartDate(today);
   const daysToTest = TEST_DATES[q5]
     ? Math.round((TEST_DATES[q5] - today) / (1000 * 60 * 60 * 24))
     : null;
@@ -128,7 +133,7 @@ export function QFI2Compute({ onContinue, onBack, q4 = '1200-1300', q5 = 'oct3',
   if (CSCORE_RETURN[q5]) items.push({ type: 'row', content: <>Score return: <span className="v">{CSCORE_RETURN[q5]}</span></> });
 
   items.push({ type: 'header', label: 'Building plan frame', section: 2 });
-  if (daysToTest) items.push({ type: 'row', content: <>Building <span className="v">{daysToTest}-day</span> prep window: <span className="v">May 26 → {CQ5_SHORT[q5]}</span></> });
+  if (daysToTest) items.push({ type: 'row', content: <>Building <span className="v">{daysToTest}-day</span> prep window: <span className="v">{prepStart} → {CQ5_SHORT[q5]}</span></> });
   else            items.push({ type: 'row', content: <>Building <span className="v">flexible</span> prep window</> });
   if (hasQ4)          items.push({ type: 'row', content: <>Plan anchor score: <span className="v">{CANCHOR_SCORES[q4]}</span></> });
   if (problemSummary) items.push({ type: 'row', content: <>Optimizing for: <span className="v">{problemSummary}</span></> });
@@ -173,7 +178,7 @@ export function QFI2Compute({ onContinue, onBack, q4 = '1200-1300', q5 = 'oct3',
 
   return (
     <QFScreen stepIdx={9} tone="ink" onBack={onBack}
-      footer={showMissing ? <QFButton kind="forest" onClick={onContinue}>Continue</QFButton> : undefined}
+      footer={showMissing ? <QFButton kind="forest" onClick={onContinue}>Finalize inputs</QFButton> : undefined}
     >
       <svg className="qf-starfield" viewBox="0 0 360 700" preserveAspectRatio="xMidYMid slice">
         {STARS.map(([x, y, o, r], i) => (
