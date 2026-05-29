@@ -464,14 +464,6 @@ function scaleSkillGains(gap) {
   return scaled;
 }
 
-function v1AvgGainForBand(current) {
-  if (current >= 1400) return 95;
-  if (current >= 1300) return 150;
-  if (current >= 1200) return 180;
-  if (current >= 1100) return 210;
-  return 240;
-}
-
 /** Padded score domain so endpoint labels and +pts tags stay inside the plot. */
 function v1PlotScale(current, displayTarget, plotTop, plotH) {
   const gap = Math.max(displayTarget - current, 1);
