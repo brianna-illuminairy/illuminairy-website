@@ -40,13 +40,14 @@ function resolveAutoAdvanceMs(hit, autoAdvanceMs) {
   );
 }
 
-/** Insight / education card — auto-advances unless reduced motion (manual Continue). */
+/** Insight / education card — auto-advances unless reduced motion or manual Continue. */
 export function QFInsightHit({
   hit,
   onContinue,
   onBack,
   stepIdx = 7,
   autoAdvanceMs = DEFAULT_AUTO_MS,
+  manual = false,
 }) {
   const [progress, setProgress] = useState(0);
 
@@ -54,7 +55,8 @@ export function QFInsightHit({
     typeof window !== 'undefined' &&
     window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  const duration = hit && !reducedMotion ? resolveAutoAdvanceMs(hit, autoAdvanceMs) : null;
+  const duration =
+    hit && !manual && !reducedMotion ? resolveAutoAdvanceMs(hit, autoAdvanceMs) : null;
 
   useEffect(() => {
     if (!hit || duration == null) return;

@@ -187,7 +187,7 @@ export default function QuizRunner() {
           onContinue={next}
           onBack={back}
           stepIdx={7}
-          autoAdvanceMs={null}
+          manual
         />
       );
     case 'i-compare': return <QFIComparePrep onContinue={next} onBack={back} q7={a.q7 as any} />;
