@@ -1,5 +1,13 @@
+import path from "path";
+import { fileURLToPath } from "url";
+
+const projectRoot = path.dirname(fileURLToPath(import.meta.url));
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  turbopack: {
+    root: projectRoot
+  },
   reactStrictMode: true,
   skipTrailingSlashRedirect: true,
   async redirects() {
@@ -11,16 +19,6 @@ const nextConfig = {
       },
       {
         source: "/assessment/:path*",
-        destination: "/quiz?step=q1",
-        permanent: true
-      },
-      {
-        source: "/satplan",
-        destination: "/quiz?step=q1",
-        permanent: true
-      },
-      {
-        source: "/satplan/:path*",
         destination: "/quiz?step=q1",
         permanent: true
       },
