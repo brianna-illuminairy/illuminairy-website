@@ -979,20 +979,14 @@ export function QFIMethod({ onContinue, onBack, q5 = 'oct3' }) {
     <QFScreen stepIdx={10} onBack={onBack}
       footer={<QFButton kind="forest" onClick={onContinue}>How it works</QFButton>}
     >
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
-        <MethodLeadLine parts={methodLead} />
-        <div style={{
-          width: '100%', borderRadius: 14, overflow: 'hidden',
-          background: 'var(--qf-paper)',
-          border: '1px solid var(--qf-line)',
-          boxShadow: '0 10px 30px rgba(20,32,46,0.10)',
-        }}>
+      <div className="qf-i-method">
+        <div className="qf-i-method__copy">
+          <MethodLeadLine parts={methodLead} />
+        </div>
+        <div className="qf-i-method__visual">
           <img
             src="/photos/tutor-student-session.png"
             alt="Sophia with her tutor and her personalized 12-week SAT plan"
-            style={{
-              width: '100%', height: 'auto', display: 'block', verticalAlign: 'top',
-            }}
             onError={(e) => { e.currentTarget.style.display = 'none'; }}
           />
         </div>

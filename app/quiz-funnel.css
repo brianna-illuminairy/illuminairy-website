@@ -1523,6 +1523,32 @@
   color: var(--qf-ink);
 }
 
+/* i-method — lead copy separated from busy plan composite */
+.qf-page .qf-i-method {
+  display: flex;
+  flex-direction: column;
+}
+.qf-page .qf-i-method__copy {
+  margin-bottom: 32px;
+}
+.qf-page .qf-i-method__copy .qf-lead {
+  line-height: 1.5;
+}
+.qf-page .qf-i-method__visual {
+  width: 100%;
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--qf-paper);
+  border: 1px solid var(--qf-line);
+  box-shadow: 0 10px 30px rgba(20, 32, 46, 0.10);
+}
+.qf-page .qf-i-method__visual img {
+  width: 100%;
+  height: auto;
+  display: block;
+  vertical-align: top;
+}
+
 /* Insight hits — one-line dopamine cards */
 .qf-page .qf-insight-hit {
   display: flex;
