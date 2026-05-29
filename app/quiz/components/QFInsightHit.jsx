@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { QFScreen, QFButton } from './QFShell';
 import { INSIGHT_HIT_EYEBROW } from '@/lib/quiz-funnel/insight-hits';
 import { QFScoreReportPair } from './QFPlanVisuals';
+import { OUTCOME_SCORE_CAPTION } from '@/lib/quiz-funnel/score-path-copy';
 
 function InsightLine({ parts }) {
   return (
@@ -113,7 +114,7 @@ export function QFInsightHit({
         <InsightLine parts={hit.parts} />
         {hit.showScoreReports ? (
           <div style={{ marginTop: 8 }}>
-            <QFScoreReportPair />
+            <QFScoreReportPair caption={OUTCOME_SCORE_CAPTION} />
           </div>
         ) : null}
         {hit.followUp?.length ? (

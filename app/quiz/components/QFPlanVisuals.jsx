@@ -8,7 +8,7 @@ const SOPHIA_PLAN_SKILLS = [
   { rank: '05', name: 'Functions & Graphs', pts: 30 },
 ];
 
-/** Sophia-style ranked plan card — hero on i-method; annotated on i-steps. */
+/** Sophia-style ranked plan card — annotated on i-steps only. */
 export function QFSophiaPlanCard({ compact = false }) {
   const maxPts = 50;
   const totalGain = SOPHIA_PLAN_SKILLS.reduce((s, x) => s + x.pts, 0);
@@ -111,7 +111,7 @@ export function QFSophiaPlanCard({ compact = false }) {
 }
 
 /** Before/after score reports — social proof on Results insight. */
-export function QFScoreReportPair({ className = '' }) {
+export function QFScoreReportPair({ className = '', caption = 'Ethan scored +230 pts in 12 weeks' }) {
   return (
     <div className={className} style={{
       display: 'flex', flexDirection: 'column', gap: 8,
@@ -149,14 +149,15 @@ export function QFScoreReportPair({ className = '' }) {
           />
         </div>
       </div>
-      <div style={{
-        textAlign: 'center',
-        fontFamily: 'var(--qf-body)', fontSize: 14, lineHeight: 1.4,
-        color: 'var(--qf-forest)', fontWeight: 600,
-      }}>
-        1180 <span style={{ color: 'var(--qf-ink-mute)', fontWeight: 500 }}>→</span> 1410{' '}
-        <span style={{ color: 'var(--qf-ink-mute)', fontWeight: 500 }}>·</span> +230 pts
-      </div>
+      {caption ? (
+        <div style={{
+          textAlign: 'center',
+          fontFamily: 'var(--qf-body)', fontSize: 14, lineHeight: 1.4,
+          color: 'var(--qf-forest)', fontWeight: 600,
+        }}>
+          {caption}
+        </div>
+      ) : null}
     </div>
   );
 }

@@ -1,10 +1,16 @@
 'use client'; // @ts-nocheck
 import { useState, useEffect, useMemo } from 'react';
 import { QFScreen, QFButton, QFQuestionHead, QFConstellation } from '../components/QFShell';
-import { QFBarChart } from '../components/QFBarChart';
 import { S2_EXAMPLES_LEAD } from '@/lib/quiz-funnel/score-path-copy';
 import { buildPlanReveal } from '@/lib/quiz-funnel/plan-reveal';
-import { satProgramOutcomes, satRetakeResearch } from '@/lib/site';
+import {
+  S3_PERSONALIZE_CTA,
+  S3_PERSONALIZE_HEADLINE,
+  S3_PERSONALIZE_LEAD,
+  S4_CALL_CTA,
+  S4_CALL_HEADLINE,
+  S4_CALL_LINE,
+} from '@/lib/quiz-funnel/score-path-copy';
 
 function PlanRevealSection({ title, children }) {
   return (
@@ -300,54 +306,25 @@ export function QFS2Science({ onContinue, onBack, q6 = ['math'] }) {
   );
 }
 
-// ─── S3 · Stats (vertical bar chart — asymmetry is the point) ────────────────
+// ─── S3 · Personalize plan bridge (before Strategy Call) ─────────────────────
 export function QFS3Stats({ onContinue, onBack }) {
-  const { avgPointsGained, plansBuiltCount } = satProgramOutcomes;
-  const retakeAvg = satRetakeResearch.avgPointsWithoutNewApproach;
-  const bars = [
-    { lbl: 'On their own', val: retakeAvg, color: 'rgba(20,32,46,0.30)' },
-    { lbl: 'Group class', val: 70, color: 'rgba(20,32,46,0.55)' },
-    { lbl: 'Illuminairy', val: avgPointsGained, color: 'var(--qf-forest)', hot: true },
-  ];
-  const MAX = avgPointsGained;
-
   return (
     <QFScreen stepIdx={16} tone="bg-2" onBack={onBack}
-      footer={<QFButton kind="forest" onClick={onContinue}>Continue</QFButton>}
+      footer={<QFButton kind="forest" onClick={onContinue}>{S3_PERSONALIZE_CTA}</QFButton>}
     >
       <div className="gap-22">
-        <h1 className="qf-h1">
-          <em>+{avgPointsGained}</em> avg on completed plans.
-        </h1>
-        <p className="qf-lead">
-          College Board retakers without a new approach average about +{retakeAvg} points. Across{' '}
-          {plansBuiltCount} completed Illuminairy plans, students averaged +{avgPointsGained}.
-        </p>
-
-        <div className="qf-card" style={{ padding: 20 }}>
-          <QFBarChart bars={bars} max={MAX} chartH={160} />
-        </div>
-
-        <p className="qf-disclaimer">
-          Source: College Board retest summaries; Illuminairy completed plans (n={plansBuiltCount}).
-          Group class bar is illustrative. Individual results vary.
-        </p>
+        <h1 className="qf-h1">{S3_PERSONALIZE_HEADLINE}</h1>
+        <p className="qf-lead" style={{ margin: 0 }}>{S3_PERSONALIZE_LEAD}</p>
       </div>
     </QFScreen>
   );
 }
 
-// ─── S4 · Editorial team feature ─────────────────────────────────────────────
+// ─── S4 · Who you'll meet on the Strategy Call ───────────────────────────────
 export function QFS4Authority({ onContinue, onBack }) {
-  const benefits = [
-    'Weekly 1:1 sessions',
-    'Messaging between sessions',
-    'Weekly progress reports',
-  ];
-
   return (
     <QFScreen stepIdx={17} onBack={onBack}
-      footer={<QFButton kind="forest" onClick={onContinue}>I'm ready</QFButton>}
+      footer={<QFButton kind="forest" onClick={onContinue}>{S4_CALL_CTA}</QFButton>}
     >
       <div className="gap-12 qf-s4-tight">
         <div style={{
@@ -357,7 +334,7 @@ export function QFS4Authority({ onContinue, onBack }) {
         }}>
           <img
             src="/photos/team-hero.jpg"
-            alt="The illuminairy tutors"
+            alt="Illuminairy SAT advisors"
             style={{
               width: '100%', height: 210, objectFit: 'cover', objectPosition: 'center top',
               display: 'block',
@@ -366,31 +343,8 @@ export function QFS4Authority({ onContinue, onBack }) {
           />
         </div>
 
-        <h1 className="qf-h1 qf-s4-headline">
-          All our tutors scored <em>1450+</em> on the Digital SAT.
-        </h1>
-
-        <div style={{ borderTop: '1px solid var(--qf-line)' }}>
-          {benefits.map((b, i) => (
-            <div key={i} style={{
-              display: 'flex', alignItems: 'flex-start', gap: 10,
-              padding: '10px 0',
-              borderBottom: '1px solid var(--qf-line)',
-              fontFamily: 'var(--qf-display)', fontSize: 15,
-              color: 'var(--qf-ink-2)', fontWeight: 500,
-              letterSpacing: '-0.005em', lineHeight: 1.35,
-            }}>
-              <span style={{
-                color: 'var(--qf-forest)', fontWeight: 600, flexShrink: 0, lineHeight: 1.35,
-              }} aria-hidden="true">✓</span>
-              <span>{b}</span>
-            </div>
-          ))}
-        </div>
-
-        <p className="qf-lead" style={{ fontSize: 14, color: 'var(--qf-ink-mid)', margin: 0 }}>
-          Next: a free Strategy Call, step 1 to your child&apos;s diagnostic and a personalized weekly plan.
-        </p>
+        <h1 className="qf-h1 qf-s4-headline">{S4_CALL_HEADLINE}</h1>
+        <p className="qf-lead" style={{ margin: 0 }}>{S4_CALL_LINE}</p>
       </div>
     </QFScreen>
   );

@@ -15,7 +15,7 @@ export function v1EmotionalBridgeParts(targetScore?: number | null): ScorePathCo
     },
     { text: targetLabel, em: true },
     {
-      text: ". Confidence slips — and some start aiming smaller than they used to. We don't ask them to fix the whole test at once. The diagnostic finds ",
+      text: ". The diagnostic finds ",
     },
     { text: "one skill", em: true },
     { text: " first — often " },
@@ -31,3 +31,25 @@ export const S2_EXAMPLES_HEADLINE = "We teach each skill through examples.";
 
 export const S2_EXAMPLES_LEAD =
   "We show how to solve it, practice together, then they solve it.";
+
+/** Results · before call — personalize plan (replaces late-funnel +182 stat screen). */
+export const S3_PERSONALIZE_HEADLINE = "Next we'll personalize their plan.";
+
+export const S3_PERSONALIZE_LEAD =
+  "On a free 15-minute Strategy Call, an SAT advisor reviews their Score Path with you — timeline, target, and schools — and schedules the Skill Diagnostic if you want to move forward.";
+
+export const S3_PERSONALIZE_CTA = "Personalize my plan";
+
+/** s4 · call credibility (no program bullets). */
+export const S4_CALL_HEADLINE = "Who you'll talk to on your free Strategy Call";
+
+export const S4_CALL_LINE =
+  "Every SAT advisor scored 1450+ on the Digital SAT.";
+
+export const S4_CALL_CTA = "Book your free 15-min Strategy Call";
+
+/** hit-outcome-month-one · score report caption */
+export const OUTCOME_SCORE_CAPTION = "Ethan scored +230 pts in 12 weeks";
+
+/** i-method · score reports under tutor session hero */
+export const I_METHOD_SCORE_CAPTION = "Ethan scored +230 pts in 12 weeks";
