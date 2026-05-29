@@ -201,6 +201,7 @@ export default function QuizRunner() {
           onContinue={next}
           onBack={back}
           stepIdx={11}
+          manual
         />
       );
     case 'i2':  return <QFI2Compute   onContinue={next} onBack={back} q4={a.q4} q5={a.q5} q6={a.q6} />;
