@@ -34,7 +34,7 @@ export const INSIGHT_HIT_EYEBROW: Record<InsightHitType, string> = {
   recognition: "Sound familiar?",
   mirror: "What we noticed",
   progress: "Building your plan",
-  outcome: "What we see in month one",
+  outcome: "Results",
 };
 
 /** After q4 — recognition when parent flagged GPA/SAT mismatch (q1). */
