@@ -10,7 +10,6 @@ import {
 } from '@/lib/quiz-funnel/plan-scheduler-copy';
 import { timezoneLabel } from '@/lib/calendly/funnel-availability';
 import {
-  BOOKING_PHONE_HINT,
   countPhoneDigits,
   isValidBookingPhone,
 } from '@/lib/calendly/phone-e164';
@@ -35,6 +34,7 @@ import { QFBookingAlert } from './QFBookingAlert';
  *   selectedSlot: object | null;
  *   onSelectSlot: (slot: object | null) => void;
  *   onAvailabilityReady?: (ready: boolean) => void;
+ *   onLoadingChange?: (loading: boolean) => void;
  *   onSlotRequired?: () => void;
  *   onRegisterReload?: (reload: () => void) => void;
  * }} props
@@ -51,6 +51,7 @@ export function QFPlanScheduler({
   selectedSlot,
   onSelectSlot,
   onAvailabilityReady,
+  onLoadingChange,
   onSlotRequired,
   onRegisterReload,
 }) {
@@ -60,6 +61,18 @@ export function QFPlanScheduler({
   const [availabilityAlert, setAvailabilityAlert] = useState(null);
   const [reloadKey, setReloadKey] = useState(0);
   const reloadOptionsRef = useRef({ skipAutoSelect: false });
+
+  // Keep parent callbacks in refs so loadAvailability stays stable. Parents pass
+  // new inline handlers each render; depending on their identity caused an
+  // infinite availability refetch loop on s5.
+  const onSelectSlotRef = useRef(onSelectSlot);
+  const onAvailabilityReadyRef = useRef(onAvailabilityReady);
+  const onLoadingChangeRef = useRef(onLoadingChange);
+  useEffect(() => {
+    onSelectSlotRef.current = onSelectSlot;
+    onAvailabilityReadyRef.current = onAvailabilityReady;
+    onLoadingChangeRef.current = onLoadingChange;
+  });
 
   const phoneValid = useMemo(
     () => isValidBookingPhone(String(parentPhone)),
@@ -72,6 +85,7 @@ export function QFPlanScheduler({
     const skipAutoSelect = reloadOptionsRef.current.skipAutoSelect;
     reloadOptionsRef.current.skipAutoSelect = false;
     setLoading(true);
+    onLoadingChangeRef.current?.(true);
     setAvailabilityAlert(null);
     try {
       const res = await fetch('/api/funnel/calendly-availability?fresh=1', {
@@ -83,8 +97,8 @@ export function QFPlanScheduler({
       if (!parsed.ok) {
         setDays([]);
         setActiveDayKey('');
-        onSelectSlot(null);
-        onAvailabilityReady?.(false);
+        onSelectSlotRef.current(null);
+        onAvailabilityReadyRef.current?.(false);
         setAvailabilityAlert({
           title: 'Times did not load',
           message: parsed.message,
@@ -100,26 +114,26 @@ export function QFPlanScheduler({
         return;
       }
 
-      onAvailabilityReady?.(true);
+      onAvailabilityReadyRef.current?.(true);
       setDays(parsed.days);
       const firstDay = parsed.days[0];
       setActiveDayKey(firstDay.dateKey);
       if (skipAutoSelect) {
-        onSelectSlot(null);
+        onSelectSlotRef.current(null);
         return;
       }
       const firstSlot = firstDay.slots?.[0];
       if (firstSlot) {
-        onSelectSlot({
+        onSelectSlotRef.current({
           ...firstSlot,
           weekdayShort: firstDay.weekdayShort,
           dayTitle: firstDay.dayTitle,
         });
       }
     } catch {
-      onAvailabilityReady?.(false);
+      onAvailabilityReadyRef.current?.(false);
       setDays([]);
-      onSelectSlot(null);
+      onSelectSlotRef.current(null);
       const message = BOOKING_FEEDBACK.availabilityFailed;
       setAvailabilityAlert({
         title: 'Connection problem',
@@ -134,8 +148,9 @@ export function QFPlanScheduler({
       });
     } finally {
       setLoading(false);
+      onLoadingChangeRef.current?.(false);
     }
-  }, [onAvailabilityReady, onSelectSlot]);
+  }, []);
 
   useEffect(() => {
     onRegisterReload?.(() => {
@@ -244,37 +259,27 @@ export function QFPlanScheduler({
             type="tel"
             inputMode="tel"
             autoComplete="tel-national"
-            placeholder="404-555-1234 (10 digits)"
+            placeholder="404-555-1234"
             aria-invalid={
               Boolean(showErr('parentPhone')) ||
               (String(parentPhone).trim().length > 0 && !phoneValid && showFieldErrors)
             }
-            aria-describedby="qf-plan-scheduler-phone-hint"
+            aria-describedby={
+              showErr('parentPhone') ? 'qf-plan-scheduler-phone-hint' : undefined
+            }
             value={String(parentPhone)}
             onChange={(e) => onFieldChange('parentPhone', e.target.value)}
           />
-          <p
-            id="qf-plan-scheduler-phone-hint"
-            className={showErr('parentPhone') ? 'qf-field-error' : 'qf-meta'}
-            style={
-              showErr('parentPhone')
-                ? { margin: '6px 0 0' }
-                : {
-                    margin: '6px 0 0',
-                    color:
-                      String(parentPhone).trim().length > 0 && !phoneValid
-                        ? '#b42318'
-                        : 'var(--qf-ink-mid)',
-                  }
-            }
-            role={showErr('parentPhone') ? 'alert' : undefined}
-          >
-            {showErr('parentPhone')
-              ? showErr('parentPhone')
-              : String(parentPhone).trim().length > 0 && phoneValid
-                ? 'Looks good — we will text your confirmation to this number.'
-                : BOOKING_PHONE_HINT}
-          </p>
+          {showErr('parentPhone') ? (
+            <p
+              id="qf-plan-scheduler-phone-hint"
+              className="qf-field-error"
+              style={{ margin: '6px 0 0' }}
+              role="alert"
+            >
+              {showErr('parentPhone')}
+            </p>
+          ) : null}
         </div>
         <div className="qf-field">
           <span className="qf-label">Student&apos;s name</span>

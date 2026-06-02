@@ -2,7 +2,7 @@ import { strategyCallStartFromCalendlyWebhook } from "@/lib/crm/calendly-payload
 import { appendTouchEvent } from "@/lib/crm/touch";
 import { trackKlaviyoEvent, upsertKlaviyoProfile } from "@/lib/klaviyo-server";
 import { getSupabaseAdmin } from "@/lib/supabase/server";
-import { makeMetaEventId, sendMetaCapiEvent } from "@/lib/meta-capi";
+import { sendMetaCapiEvent } from "@/lib/meta-capi";
 
 type CalendlyWebhookBody = {
   event?: string;
@@ -30,7 +30,7 @@ export async function handleCalendlyInviteeCreated(body: CalendlyWebhookBody) {
 
   const { data: lead } = await supabase
     .from("leads")
-    .select("id, visitor_id, parent_first, parent_last")
+    .select("id, visitor_id, parent_first, parent_last, parent_phone")
     .eq("parent_email", email)
     .maybeSingle();
 
@@ -84,11 +84,17 @@ export async function handleCalendlyInviteeCreated(body: CalendlyWebhookBody) {
     strategy_call_at: strategyCallAt
   });
 
-  const eventId = makeMetaEventId(
-    "schedule",
-    lead?.id ?? calendlyUri?.split("/").pop() ?? email
-  );
-  void sendMetaCapiEvent("Schedule", eventId, { email });
+  // Deterministic event_id shared with the client pixel — Finale.tsx fires
+  // `schedule_${inviteeUri.split('/').pop()}`, so deriving the same id from the
+  // invitee uri lets Meta dedupe the pixel + CAPI Schedule into one conversion.
+  const inviteeId = calendlyUri ? calendlyUri.split("/").pop() : null;
+  const eventId = inviteeId
+    ? `schedule_${inviteeId}`
+    : `schedule_${lead?.id ?? email}`;
+  void sendMetaCapiEvent("Schedule", eventId, {
+    email,
+    phone: lead?.parent_phone ?? undefined,
+  });
 
   return { ok: true as const, leadId: lead?.id, eventId, strategyCallAt };
 }

@@ -39,7 +39,7 @@ export const BOOKING_FEEDBACK = {
   slotTaken: "That time was just taken. Choose another open slot.",
   /** Shown after we refresh the slot list from Calendly. */
   slotTakenStale:
-    "That time just filled up (someone else may have booked it). We refreshed the open times below — pick another.",
+    "That time just filled up (someone else may have booked it). We refreshed the open times below. Pick another.",
   leadSaveFailed:
     "We could not save your details. Check your connection and try again.",
   bookingFailed:

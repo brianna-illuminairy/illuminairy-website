@@ -9,7 +9,7 @@
 export const BOOKING_PHONE_REGION = "US" as const;
 
 export const BOOKING_PHONE_HINT =
-  "US mobile with area code — 10 digits (example: 404-555-1234). You do not need +1; we add the US country code for confirmation texts.";
+  "US mobile with area code (example: 404-555-1234). You do not need +1; we add the US country code for confirmation texts.";
 
 export const BOOKING_PHONE_INVALID_MSG =
   "Enter a valid US mobile with area code: 10 digits, or 11 digits starting with 1 (example: 404-555-1234 or 1-404-555-1234). International numbers are not supported on this form.";

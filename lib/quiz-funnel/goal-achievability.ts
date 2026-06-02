@@ -221,7 +221,10 @@ export function computeFeasibilityTier(path: ScorePathOutput): GoalFeasibilityTi
   );
 }
 
-function verdictForTier(tier: GoalFeasibilityTier): { lead: string; em: string } {
+function verdictForTier(
+  tier: GoalFeasibilityTier,
+  hasScheduledTestDate = true
+): { lead: string; em: string } {
   switch (tier) {
     case "effortless":
       return { lead: "Comfortably", em: "achievable" };
@@ -232,7 +235,9 @@ function verdictForTier(tier: GoalFeasibilityTier): { lead: string; em: string }
     case "aggressive":
       return { lead: "Tight timeline,", em: "still possible" };
     case "extreme":
-      return { lead: "Unlikely by test day,", em: "let's map options" };
+      return hasScheduledTestDate
+        ? { lead: "Unlikely by test day,", em: "let's map options" }
+        : { lead: "Unlikely in this window,", em: "let's map options" };
     default:
       return { lead: "Ambitious, but", em: "achievable" };
   }
@@ -402,7 +407,7 @@ export function buildGoalAchievability(
 ): GoalAchievability {
   const tier = computeFeasibilityTier(path);
   const tierIndex = GOAL_FEASIBILITY_TIER_ORDER.indexOf(tier);
-  const verdict = verdictForTier(tier);
+  const verdict = verdictForTier(tier, path.hasScheduledTestDate);
   const insight = buildInsightParts(answers, path);
   const pointsLine = buildPointsLine(path, answers.q5);
 
@@ -464,7 +469,7 @@ export function buildGoalAchievabilityFallback(
   };
 }
 
-/** Eyebrow for reveal assessment screen. */
+/** Eyebrow for reveal score-projection screen. */
 export function achievabilityEyebrow(_q2?: string): string {
-  return "Your SAT Score Assessment";
+  return "Your SAT score projection";
 }

@@ -25,7 +25,7 @@ type Case = {
     skillSubject?: string | null;
     skillDetailIncludes?: string;
     stakesIncludes?: string;
-    tier?: string;
+    tier?: string | string[];
     pointsIncludes?: string | string[];
     pointsExcludes?: string;
     prepIncludes?: string;
@@ -147,10 +147,10 @@ const Q2_CASES: Case[] = [
 
 const SCORE_CASES: Case[] = [
   {
-    name: "canonical 1100→1400 sept12 ambitious",
+    name: "canonical 1100→1400 sept12 ambitious/aggressive (runway-dependent)",
     answers: BASE,
     expect: {
-      tier: "ambitious",
+      tier: ["ambitious", "aggressive"],
       pointsIncludes: ["Sept 12", "+250"],
       outcomesIncludes: "1,500+",
       insightIncludes: "smart and capable",
@@ -313,8 +313,11 @@ function assertCase(testCase: Case): string[] {
   if (exp.stakesIncludes && !result.stakesLead.includes(exp.stakesIncludes)) {
     errors.push(`stakesLead missing "${exp.stakesIncludes}": ${result.stakesLead}`);
   }
-  if (exp.tier && result.tier !== exp.tier) {
-    errors.push(`tier: expected ${exp.tier}, got ${result.tier}`);
+  if (exp.tier) {
+    const allowedTiers = Array.isArray(exp.tier) ? exp.tier : [exp.tier];
+    if (!allowedTiers.includes(result.tier)) {
+      errors.push(`tier: expected ${allowedTiers.join(" or ")}, got ${result.tier}`);
+    }
   }
   if (exp.pointsIncludes) {
     const needles = Array.isArray(exp.pointsIncludes) ? exp.pointsIncludes : [exp.pointsIncludes];

@@ -153,6 +153,7 @@ export function QFS5Approved({
   } | null>(null);
   const [selectedSlot, setSelectedSlot] = useState<PlanSchedulerSlot | null>(null);
   const [slotsAvailable, setSlotsAvailable] = useState(true);
+  const [availabilityLoading, setAvailabilityLoading] = useState(true);
   const reloadSlotsRef = useRef<(() => void) | null>(null);
 
   const contact = useMemo(
@@ -175,7 +176,7 @@ export function QFS5Approved({
     [contact, confirmTcpa, selectedSlot?.startTime]
   );
 
-  const canSubmit = !submitting && slotsAvailable;
+  const canSubmit = !submitting && !availabilityLoading && slotsAvailable;
 
   function setField(key: string, value: unknown) {
     dispatch?.({ type: 'SET_FIELD', key, value });
@@ -343,12 +344,13 @@ export function QFS5Approved({
     }
   }
 
-  const footerLabel =
-    selectedSlot && slotsAvailable
-      ? planSchedulerConfirmLabel(selectedSlot.weekdayShort, selectedSlot.label)
-      : slotsAvailable
-        ? 'Pick a time'
-        : 'Reload times to continue';
+  const footerLabel = availabilityLoading
+    ? 'Loading open times…'
+    : !slotsAvailable
+      ? 'Reload times to continue'
+      : selectedSlot
+        ? planSchedulerConfirmLabel(selectedSlot.weekdayShort, selectedSlot.label)
+        : 'Pick a time';
 
   return (
     <QFScreen stepIdx={18} ornament="glow" onBack={onBack}
@@ -373,6 +375,7 @@ export function QFS5Approved({
           setBookingAlert(null);
         }}
         onAvailabilityReady={setSlotsAvailable}
+        onLoadingChange={setAvailabilityLoading}
         onSlotRequired={() => setSubmitAttempted(true)}
         onRegisterReload={(reload) => {
           reloadSlotsRef.current = reload;
