@@ -62,7 +62,7 @@ export function QFScreen({
       </div>
 
       <div
-        className={"qf-body" + (flushBody ? ' flush' : '')}
+        className={"qf-body" + (flushBody ? ' flush' : '') + (tone === 'ink' ? ' qf-body--ink' : '')}
         style={{ background: bodyBg, position: 'relative' }}
       >
         {ornament === 'glow' && <div className="qf-glow" />}

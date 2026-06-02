@@ -6,12 +6,13 @@ export type Q5Key = keyof typeof Q5_TEST_DATES;
 
 export const Q5_TEST_DATES = {
   aug22: new Date("2026-08-22"),
+  sept12: new Date("2026-09-12"),
   oct3: new Date("2026-10-03"),
   nov7: new Date("2026-11-07"),
   dec5: new Date("2026-12-05")
 } as const;
 
-/** q5 values with a concrete calendar test date (not tbd / 2027). */
+/** q5 values with a concrete calendar test date (not tbd). */
 export function hasScheduledTestDate(q5: string | null | undefined): q5 is Q5Key {
   return q5 != null && q5 in Q5_TEST_DATES;
 }

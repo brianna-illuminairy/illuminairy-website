@@ -2,6 +2,13 @@
 
 import posthog from "posthog-js";
 import { getPostHogKey } from "@/lib/posthog";
+import {
+  promisedGainFromQuizAnswers,
+  showedGpaGapScreen,
+  weeksUntilQ5Test
+} from "@/lib/quiz-funnel/gains";
+import { readPersistedLpVariant } from "@/lib/landing/variant-storage";
+import { PLAN_BUILDER_PATH } from "@/lib/plan-builder-routes";
 
 declare global {
   interface Window {
@@ -30,6 +37,15 @@ export function trackQuizSchedule() {
   trackQuizGaEvent("schedule", { funnel: "sat_quiz" });
 }
 
+export function captureQuizStarted(answers: Record<string, unknown>) {
+  if (!getPostHogKey()) return;
+  posthog.capture("quiz_started", {
+    sat_lp_variant: readPersistedLpVariant() ?? undefined,
+    q1: answers.q1
+  });
+  trackQuizGaEvent("quiz_started", { funnel: "sat_quiz" });
+}
+
 export function captureQuizStep(
   stepId: string,
   stepIndex: number,
@@ -55,7 +71,7 @@ export function captureQuizStep(
   };
   posthog.capture("quiz_step_viewed", props);
   posthog.capture("$pageview", {
-    $current_url: `${window.location.origin}/quiz?step=${stepId}`
+    $current_url: `${window.location.origin}${PLAN_BUILDER_PATH}?step=${stepId}`
   });
   trackQuizStepView(stepId, stepIndex);
 }
@@ -72,11 +88,37 @@ export function identifyQuizLead(email: string, answers: Record<string, unknown>
 
 export function captureQuizLeadSubmitted(
   answers: Record<string, unknown>,
-  eventId?: string
+  eventId?: string,
+  options?: { hasGapScreen?: boolean }
 ) {
+  const q4 = answers.q4 as string | undefined;
+  const q5 = answers.q5 as string | undefined;
+  const q8 = answers.q8 as string | undefined;
+  const promisedGain = promisedGainFromQuizAnswers(q4, q5, q8);
+  const props = {
+    q1: answers.q1,
+    q2: answers.q2,
+    q3: answers.q3,
+    q4: answers.q4,
+    q5: answers.q5,
+    q6: answers.q6,
+    q7: answers.q7,
+    q8: answers.q8,
+    q9: answers.q9,
+    sat_lp_variant:
+      (answers.sat_lp_variant as string | undefined) ??
+      readPersistedLpVariant() ??
+      undefined,
+    has_gap_screen: Boolean(options?.hasGapScreen),
+    showed_gpa_gap: showedGpaGapScreen(q4, answers.q9 as string | undefined),
+    promised_gain_pts: promisedGain ?? undefined,
+    weeks_until_test: weeksUntilQ5Test(q5),
+    booking_source: "client" as const
+  };
   if (getPostHogKey()) {
-    posthog.capture("quiz_lead_submitted", { q4: answers.q4, q5: answers.q5, q8: answers.q8 });
-    const email = typeof answers.parentEmail === "string" ? answers.parentEmail.trim() : "";
+    posthog.capture("quiz_lead_submitted", props);
+    const email =
+      typeof answers.parentEmail === "string" ? answers.parentEmail.trim() : "";
     if (email) identifyQuizLead(email, answers);
   }
   trackQuizLeadSubmitted();
@@ -100,11 +142,67 @@ export function captureQuizThankYouViewed(answers: Record<string, unknown>) {
   trackQuizGaEvent("quiz_thank_you_view", { funnel: "sat_quiz" });
 }
 
-export function captureQuizBookingConfirmed(eventId?: string) {
+export function capturePlanShareCreated(props: {
+  shareId: string;
+  includeName: boolean;
+}) {
   if (getPostHogKey()) {
-    posthog.capture("quiz_booking_confirmed");
+    posthog.capture("plan_share_created", props);
   }
-  trackQuizSchedule();
+  trackQuizGaEvent("plan_share_created", props);
+}
+
+export function capturePlanShareLinkCopied(props: {
+  shareId?: string;
+  native?: boolean;
+}) {
+  if (getPostHogKey()) {
+    posthog.capture("plan_share_link_copied", props);
+  }
+  trackQuizGaEvent("plan_share_link_copied", props);
+}
+
+export function capturePlanShareViewed(props: { shareId: string }) {
+  if (getPostHogKey()) {
+    posthog.capture("plan_share_viewed", props);
+  }
+  trackQuizGaEvent("plan_share_viewed", props);
+}
+
+export type QuizBookingErrorProps = {
+  error_code: string;
+  error_message: string;
+  http_status?: number;
+  step?: string;
+  phone_digit_count?: number;
+  slot_weekday?: string;
+  slots_available?: boolean;
+  field?: string;
+  retryable?: boolean;
+};
+
+/** s5 lead save, Calendly book API, availability load, validation. */
+export function captureQuizBookingError(props: QuizBookingErrorProps) {
+  const payload = {
+    funnel: "sat_quiz",
+    step: props.step ?? "s5",
+    ...props,
+  };
+  if (getPostHogKey()) {
+    posthog.capture("quiz_booking_error", payload);
+  }
+  trackQuizGaEvent("quiz_booking_error", payload);
+}
+
+export function captureQuizBookingConfirmed(
+  eventId?: string,
+  options?: { booking_source?: "api" | "client" }
+) {
+  const bookingSource = options?.booking_source ?? "client";
+  if (getPostHogKey()) {
+    posthog.capture("quiz_booking_confirmed", { booking_source: bookingSource });
+  }
+  trackQuizGaEvent("schedule", { funnel: "sat_quiz", booking_source: bookingSource });
   if (typeof window !== "undefined" && window.fbq && eventId) {
     window.fbq("track", "Schedule", {}, { eventID: eventId });
   } else if (typeof window !== "undefined" && window.fbq) {

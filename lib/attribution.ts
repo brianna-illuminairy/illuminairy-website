@@ -98,3 +98,15 @@ export function attributionToTouchColumns(snap: AttributionSnapshot) {
     msclkid: snap.msclkid ?? null
   };
 }
+
+/** Read persisted first-touch attribution from sessionStorage (browser only). */
+export function readSessionAttribution(): Partial<AttributionSnapshot> {
+  if (typeof window === "undefined") return {};
+  try {
+    const raw = sessionStorage.getItem(ATTRIBUTION_SESSION_KEY);
+    if (!raw) return {};
+    return JSON.parse(raw) as AttributionSnapshot;
+  } catch {
+    return {};
+  }
+}

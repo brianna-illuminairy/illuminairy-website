@@ -10,8 +10,13 @@ export const landingPhotoSlots = {
   greatNews: "/photos/team-hero.jpg",
   included: null as string | null,
   stepAssessment: null as string | null,
+  stepStrategyCall: null as string | null,
   stepDiagnostic: null as string | null,
+  /** Step 04 — personalized weekly plan (file: lp-step-weekly-plan.jpg) */
+  stepWeeklyPlan: null as string | null,
+  /** @deprecated use stepStrategyCall */
   stepPlan: null as string | null,
+  /** @deprecated use stepWeeklyPlan */
   stepTutor: null as string | null,
   review1Before: null as string | null,
   review1After: null as string | null,
@@ -33,9 +38,11 @@ export const landingAssets = {
   greatNews: landingPhotoSlots.greatNews,
   programIncluded: landingPhotoSlots.included,
   stepAssessment: landingPhotoSlots.stepAssessment,
+  stepStrategyCall: landingPhotoSlots.stepStrategyCall,
   stepDiagnostic: landingPhotoSlots.stepDiagnostic,
-  stepPlan: landingPhotoSlots.stepPlan,
-  stepTutor: landingPhotoSlots.stepTutor,
+  stepWeeklyPlan: landingPhotoSlots.stepWeeklyPlan,
+  stepPlan: landingPhotoSlots.stepStrategyCall,
+  stepTutor: landingPhotoSlots.stepWeeklyPlan,
   reviewBefore: landingPhotoSlots.review1Before,
   reviewAfter: landingPhotoSlots.review1After
 } as const;

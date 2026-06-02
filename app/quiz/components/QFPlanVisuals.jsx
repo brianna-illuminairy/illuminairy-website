@@ -33,7 +33,7 @@ export function QFSophiaPlanCard({ compact = false }) {
             fontFamily: 'var(--qf-mono)', fontSize: 9, letterSpacing: '0.22em',
             color: 'rgba(245,248,250,0.55)', textTransform: 'uppercase', fontWeight: 600,
           }}>
-            {compact ? '12-week plan' : 'illuminairy plan'}
+            {compact ? 'Weekly plan' : 'Improvement Plan'}
           </div>
           <div style={{
             fontFamily: 'var(--qf-display)', fontSize: compact ? 16 : 18, fontWeight: 500,

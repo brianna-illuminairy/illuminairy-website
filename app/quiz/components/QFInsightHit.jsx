@@ -5,9 +5,12 @@ import { INSIGHT_HIT_EYEBROW } from '@/lib/quiz-funnel/insight-hits';
 import { QFScoreReportPair } from './QFPlanVisuals';
 import { OUTCOME_SCORE_CAPTION } from '@/lib/quiz-funnel/score-path-copy';
 
-function InsightLine({ parts }) {
+/** Headlines → .qf-h1; body / follow-up → .qf-lead (same as i-steps, questions, reveal). */
+function InsightParts({ parts, variant = 'headline' }) {
+  const Tag = variant === 'headline' ? 'h1' : 'p';
+  const className = variant === 'headline' ? 'qf-h1' : 'qf-lead';
   return (
-    <p className="qf-insight-hit__line">
+    <Tag className={className}>
       {parts.map((part, i) =>
         part.em ? (
           <em key={i}>{part.text}</em>
@@ -15,7 +18,7 @@ function InsightLine({ parts }) {
           <span key={i}>{part.text}</span>
         )
       )}
-    </p>
+    </Tag>
   );
 }
 
@@ -27,7 +30,8 @@ const AUTO_MS_PER_CHAR = 32;
 
 function hitCharacterCount(hit) {
   if (!hit) return 0;
-  const parts = [...(hit.parts ?? []), ...(hit.followUp ?? [])];
+  const blocks = hit.followUpBlocks?.flat() ?? [];
+  const parts = [...(hit.parts ?? []), ...(hit.followUp ?? []), ...blocks];
   return parts.reduce((n, part) => n + (part.text?.length ?? 0), 0);
 }
 
@@ -107,21 +111,48 @@ export function QFInsightHit({
           {INSIGHT_HIT_EYEBROW[hit.type]}
         </span>
         <div className={hit.showScoreReports ? 'qf-insight-hit__copy' : undefined}>
-          <InsightLine parts={hit.parts} />
+          <InsightParts parts={hit.parts} variant="headline" />
         </div>
         {hit.image ? (
           <div className="qf-insight-hit__visual">
             <img src={hit.image.src} alt={hit.image.alt} />
+            {hit.imageCaption?.length ? (
+              <p className="qf-lead qf-insight-hit__visual-caption">
+                {hit.imageCaption.map((part, i) =>
+                  part.em ? (
+                    <em key={i}>{part.text}</em>
+                  ) : (
+                    <span key={i}>{part.text}</span>
+                  )
+                )}
+              </p>
+            ) : null}
           </div>
+        ) : hit.imageCaption?.length ? (
+          <p className="qf-lead qf-insight-hit__visual-caption qf-insight-hit__visual-caption--solo">
+            {hit.imageCaption.map((part, i) =>
+              part.em ? (
+                <em key={i}>{part.text}</em>
+              ) : (
+                <span key={i}>{part.text}</span>
+              )
+            )}
+          </p>
         ) : null}
         {hit.showScoreReports ? (
           <div className="qf-insight-hit__proof">
             <QFScoreReportPair caption={OUTCOME_SCORE_CAPTION} />
           </div>
         ) : null}
-        {hit.followUp?.length ? (
+        {hit.followUpBlocks?.length ? (
+          <div className="qf-insight-hit__follow-up qf-insight-hit__follow-up--blocks">
+            {hit.followUpBlocks.map((block, i) => (
+              <InsightParts key={i} parts={block} variant="body" />
+            ))}
+          </div>
+        ) : hit.followUp?.length ? (
           <div className="qf-insight-hit__follow-up">
-            <InsightLine parts={hit.followUp} />
+            <InsightParts parts={hit.followUp} variant="body" />
           </div>
         ) : null}
       </div>

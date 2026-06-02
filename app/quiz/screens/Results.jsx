@@ -1,161 +1,34 @@
 'use client'; // @ts-nocheck
 import { useState, useEffect, useMemo } from 'react';
 import { QFScreen, QFButton, QFQuestionHead, QFConstellation } from '../components/QFShell';
-import { S2_EXAMPLES_LEAD } from '@/lib/quiz-funnel/score-path-copy';
+import { S2_EXAMPLES_HEADLINE, S2_EXAMPLES_LEAD } from '@/lib/quiz-funnel/score-path-copy';
 import { buildPlanReveal } from '@/lib/quiz-funnel/plan-reveal';
-import {
-  S3_PERSONALIZE_CTA,
-  S3_PERSONALIZE_HEADLINE,
-  S3_PERSONALIZE_LEAD,
-  S4_CALL_LINE,
-} from '@/lib/quiz-funnel/score-path-copy';
+import { REVEAL_CTA, S3_PERSONALIZE_CTA } from '@/lib/quiz-funnel/score-path-copy';
+import { QFVerifiedCaseStudy } from '../components/QFVerifiedCaseStudy';
+import { PlanRevealContent } from '../components/PlanRevealContent';
+import { PlanHeardSummary } from '../components/PlanHeardSummary';
+import { HEARD_SUMMARY_CTA } from '@/lib/quiz-funnel/heard-summary-copy';
 
-function PlanRevealSection({ title, children }) {
+// ─── Pre-reveal · confirm what we heard ─────────────────────────────────────
+export function QFSHeardSummary({ answers = {}, onContinue, onBack }) {
   return (
-    <section className="qf-plan-reveal-section">
-      <p className="qf-plan-reveal-section__title">{title}</p>
-      {children}
-    </section>
+    <QFScreen stepIdx={13} ornament="glow" onBack={onBack}
+      footer={<QFButton kind="forest" onClick={onContinue}>{HEARD_SUMMARY_CTA}</QFButton>}
+    >
+      <PlanHeardSummary answers={answers} />
+    </QFScreen>
   );
 }
 
-function MetricCell({ label, value, qualifier, highlight = false }) {
-  return (
-    <div className={`qf-plan-reveal-metric${highlight ? ' qf-plan-reveal-metric--hot' : ''}`}>
-      <span className="qf-plan-reveal-metric__label">{label}</span>
-      <span className="qf-plan-reveal-metric__value">{value}</span>
-      {qualifier ? (
-        <span className="qf-plan-reveal-metric__qual">{qualifier}</span>
-      ) : null}
-    </div>
-  );
-}
-
-function InputRow({ label, value }) {
-  return (
-    <div className="qf-plan-reveal-input-row">
-      <span className="qf-plan-reveal-input-row__label">{label}</span>
-      <span className="qf-plan-reveal-input-row__value">{value}</span>
-    </div>
-  );
-}
-
-function InputGroup({ title, rows }) {
-  if (!rows.length) return null;
-  return (
-    <div className="qf-plan-reveal-input-group">
-      <p className="qf-plan-reveal-input-group__title">{title}</p>
-      {rows.map((row) => (
-        <InputRow key={`${title}-${row.label}`} label={row.label} value={row.value} />
-      ))}
-    </div>
-  );
-}
-
-// ─── Plan reveal · Personalized SAT improvement assessment ───────────────────
+// ─── Plan reveal · SAT Improvement Plan + score projection ───────────────────
 export function QFSPlanReveal({ answers = {}, onContinue, onBack }) {
   const plan = useMemo(() => buildPlanReveal(answers), [answers]);
 
   return (
     <QFScreen stepIdx={14} ornament="glow" onBack={onBack}
-      footer={<QFButton kind="forest" onClick={onContinue}>See your score path</QFButton>}
+      footer={<QFButton kind="forest" onClick={onContinue}>{REVEAL_CTA}</QFButton>}
     >
-      <div className="gap-22 qf-plan-reveal">
-        <div>
-          <h1 className="qf-h1" style={{ marginBottom: 8 }}>
-            Your SAT improvement <em>assessment</em>
-          </h1>
-          <p className="qf-lead" style={{ margin: 0 }}>{plan.subhead}</p>
-        </div>
-
-        <section className="qf-plan-reveal-panel qf-plan-reveal-panel--heard">
-          <p className="qf-plan-reveal-panel__eyebrow">What you told us</p>
-          <p className="qf-plan-reveal-heard">{plan.heardSummary}</p>
-          <div className="qf-plan-reveal-inputs">
-            {plan.inputGroups.map((group) => (
-              <InputGroup key={group.title} title={group.title} rows={group.rows} />
-            ))}
-          </div>
-        </section>
-
-        <div className="qf-plan-reveal-bridge" aria-hidden="true">
-          <span />
-        </div>
-
-        <section className="qf-plan-reveal-panel qf-plan-reveal-panel--assessment">
-          <p className="qf-plan-reveal-panel__eyebrow">{plan.assessmentHeadline}</p>
-          <p className="qf-plan-reveal-verdict">{plan.assessmentVerdict}</p>
-
-          <div className="qf-plan-reveal-metrics">
-            <MetricCell
-              label="Start"
-              value={plan.metrics.start.value}
-              qualifier={plan.metrics.start.qualifier}
-            />
-            <MetricCell
-              label="Target"
-              value={plan.metrics.target.value}
-              qualifier={plan.metrics.target.qualifier}
-            />
-            <MetricCell
-              label="Likely improvement"
-              value={plan.metrics.gainRange}
-              highlight
-            />
-            <MetricCell label="Runway" value={plan.metrics.weeks} />
-            <MetricCell label="Effort" value={plan.metrics.effort} />
-          </div>
-        </section>
-
-        <PlanRevealSection title="Skills to work first (examples until diagnostic)">
-          <ul className="qf-plan-reveal-levers">
-            {plan.topLevers.map((lever) => (
-              <li key={lever.rank}>
-                <span className="qf-plan-reveal-levers__rank">{lever.rank}</span>
-                <span className="qf-plan-reveal-levers__name">{lever.name}</span>
-              </li>
-            ))}
-          </ul>
-          <p className="qf-plan-reveal-note">{plan.leversNote}</p>
-        </PlanRevealSection>
-
-        <PlanRevealSection title="Why last time didn't help">
-          <p className="qf-plan-reveal-body">{plan.whyLastTimeFailed}</p>
-        </PlanRevealSection>
-
-        <PlanRevealSection title="How this time is different">
-          <p className="qf-plan-reveal-body">{plan.howThisTimeDifferent}</p>
-        </PlanRevealSection>
-
-        {plan.honestyLines.length > 0 && (
-          <PlanRevealSection title="What we're being straight about">
-            <ul className="qf-plan-reveal-honesty">
-              {plan.honestyLines.map((line) => (
-                <li key={line}>{line}</li>
-              ))}
-            </ul>
-          </PlanRevealSection>
-        )}
-
-        <PlanRevealSection title="What you see as a parent">
-          <ul className="qf-plan-reveal-list">
-            {plan.parentVisibility.map((line) => (
-              <li key={line}>{line}</li>
-            ))}
-          </ul>
-        </PlanRevealSection>
-
-        <PlanRevealSection title="Next steps">
-          <ol className="qf-plan-reveal-steps">
-            {plan.nextSteps.map((step) => (
-              <li key={step.title}>
-                <strong>{step.title}</strong>
-                <span>{step.detail}</span>
-              </li>
-            ))}
-          </ol>
-        </PlanRevealSection>
-      </div>
+      <PlanRevealContent plan={plan} q2={answers.q2} />
     </QFScreen>
   );
 }
@@ -221,7 +94,7 @@ export function QFS2Science({ onContinue, onBack, q6 = ['math'] }) {
       <div className="gap-22">
         <div>
           <h1 className="qf-h1" style={{ marginBottom: 8 }}>
-            We teach each skill through <em>examples</em>.
+            {S2_EXAMPLES_HEADLINE}
           </h1>
           <p className="qf-lead" style={{ margin: 0 }}>
             {S2_EXAMPLES_LEAD}
@@ -304,32 +177,13 @@ export function QFS2Science({ onContinue, onBack, q6 = ['math'] }) {
   );
 }
 
-// ─── S3 · Personalize plan + advisor trust (merged former s4) ─────────────────
+// ─── S3 · Verified parent case study (Ethan) ─────────────────────────────────
 export function QFS3Stats({ onContinue, onBack }) {
   return (
-    <QFScreen stepIdx={16} tone="bg-2" onBack={onBack}
+    <QFScreen stepIdx={16} onBack={onBack}
       footer={<QFButton kind="forest" onClick={onContinue}>{S3_PERSONALIZE_CTA}</QFButton>}
     >
-      <div className="gap-22">
-        <h1 className="qf-h1">{S3_PERSONALIZE_HEADLINE}</h1>
-        <p className="qf-lead" style={{ margin: 0 }}>{S3_PERSONALIZE_LEAD}</p>
-        <div style={{
-          width: '100%', maxHeight: 210, borderRadius: 16, overflow: 'hidden',
-          position: 'relative',
-          background: 'linear-gradient(135deg, #1A4D2F 0%, #2F6E47 35%, #0057A8 75%, #121A2B 100%)',
-        }}>
-          <img
-            src="/photos/team-hero.jpg"
-            alt="Illuminairy SAT advisors"
-            style={{
-              width: '100%', height: 210, objectFit: 'cover', objectPosition: 'center top',
-              display: 'block',
-            }}
-            onError={(e) => { e.currentTarget.style.display = 'none'; }}
-          />
-        </div>
-        <p className="qf-lead" style={{ margin: 0 }}>{S4_CALL_LINE}</p>
-      </div>
+      <QFVerifiedCaseStudy />
     </QFScreen>
   );
 }

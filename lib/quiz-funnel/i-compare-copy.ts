@@ -9,7 +9,7 @@ export function iCompareHeadlineMultiplier(): number {
 export function iCompareProofBridgeLine(): string {
   const pts = satProgramOutcomes.avgPointsGained;
   return (
-    `Our students averaged +${pts} on their next SAT using our custom SAT improvement plan ` +
+    `Our students averaged +${pts} using a custom improvement plan ` +
     `built around the skills hurting their score the most:`
   );
 }

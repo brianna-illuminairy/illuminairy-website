@@ -83,7 +83,7 @@ export function QFQ4RecentScore({ value, onSelect, onBack, q3 = 'sat-1' }) {
       <QFWhyWeAsk>
         {hasSat
           ? 'This helps us estimate a realistic improvement range before test day.'
-          : 'Optional. The diagnostic sets the real starting point. A rough band helps us preview the plan.'}
+          : 'Optional. The Skill Diagnostic sets the real starting point. A rough band helps us preview your Improvement Plan.'}
       </QFWhyWeAsk>
     </QFScreen>
   );
@@ -92,11 +92,11 @@ export function QFQ4RecentScore({ value, onSelect, onBack, q3 = 'sat-1' }) {
 export function QFQ5Clock({ value, onSelect, onBack }) {
   const opts = [
     { id: 'aug22', label: 'August 22, 2026' },
-    { id: 'oct3',  label: 'October 3, 2026' },
-    { id: 'nov7',  label: 'November 7, 2026' },
-    { id: 'dec5',  label: 'December 5, 2026' },
-    { id: '2027',  label: 'Spring 2027 or later' },
-    { id: 'tbd',   label: 'Not sure yet' },
+    { id: 'sept12', label: 'September 12, 2026' },
+    { id: 'oct3', label: 'October 3, 2026' },
+    { id: 'nov7', label: 'November 7, 2026' },
+    { id: 'dec5', label: 'December 5, 2026' },
+    { id: 'tbd', label: 'Not sure yet' },
   ];
   return (
     <QFScreen stepIdx={5} onBack={onBack}>
@@ -203,7 +203,7 @@ export function QFQ9GPA({ value, onSelect, onBack }) {
         ))}
       </div>
       <QFWhyWeAsk>
-        Their GPA helps us set a realistic score target and build a plan that fits their timeline.
+        Their GPA helps us set a realistic score target and shape their Improvement Plan for their timeline.
       </QFWhyWeAsk>
     </QFScreen>
   );

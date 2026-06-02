@@ -128,10 +128,10 @@ Each row = **title + one line + time + small thumb** (Hims labels: QUIZ / DIAGNO
 
 | Step copy | File | What the thumb should show |
 |-----------|------|----------------------------|
-| Take the assessment · GPA, target, prior tutoring · ~2 min | `lp-step-assessment.jpg` | Quiz / intake on phone |
-| Skill diagnostic · Map the 5 gaps · Instant | `lp-step-diagnostic.jpg` | Diagnostic / skill map screen |
-| Get your plan · Built around the gaps · Same day | `lp-step-plan.jpg` | Weekly plan timeline UI |
-| 1:1 tutor + support · Weekly sessions · Weekly | `lp-step-tutor.jpg` | Single tutor on video |
+| Answer a few questions · Plan Builder · ~2 min | `lp-step-assessment.jpg` | Parent phone — quiz q1 |
+| SAT Strategy Call · 15 min · After plan | `lp-step-strategy-call.jpg` | Calendly / video call scheduling |
+| Skill Diagnostic · Proctored · After call | `lp-step-diagnostic.jpg` | Proctored exam UI |
+| Personalized weekly plan · Ongoing | `lp-step-weekly-plan.jpg` | Weekly plan / mentor session |
 
 Until files exist → **01–04 badges** only.
 

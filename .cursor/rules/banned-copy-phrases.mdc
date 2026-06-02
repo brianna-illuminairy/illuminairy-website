@@ -11,6 +11,7 @@ Never use these in customer-facing strings (`app/`, `components/`, `lib/*-copy.t
 
 | Banned | Why | Write instead |
 |--------|-----|---------------|
+| **—** (em dash) | AI/marketer voice; hard to read on mobile | Use a period, comma, colon, or parentheses instead |
 | **quiz** (for Score Path) | Parents don't take a quiz | **SAT Score Path** |
 | prep (as noun or modifier) | means nothing specific | "program," "practice," "tutoring," or name what's actually happening |
 | **gains** (funnel copy) | tutor-ad jargon | "improve," "points," "movement" |

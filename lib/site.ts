@@ -337,6 +337,19 @@ export const satProgramOutcomes = {
   plansBuiltCount: 95,
   avgPointsGained: 182,
   programWeeks: satProgram.weeks,
+  /** Reveal gauge meta — students represented in outcome modeling (broader than plan completers). */
+  achievabilityOutcomesSampleLabel: "1,500+",
+  /**
+   * Typical point movement by runway — gauge “Ambitious” when gap ≈ anchor at that week count.
+   * Interpolate between knots for other week counts (e.g. 15 wk between 14 and 16).
+   */
+  achievabilityGainAnchors: [
+    { weeks: 4, gain: 100 },
+    { weeks: 6, gain: 150 },
+    { weeks: 12, gain: 182 },
+    { weeks: 14, gain: 200 },
+    { weeks: 16, gain: 240 },
+  ] as const,
   targetHitRatePct: 78,
   targetHitBefore: "of students who complete their plan ",
   targetHitEmphasis: "hit their target score",
@@ -351,6 +364,8 @@ export const satProgramOutcomes = {
 export const satFirstMonthOutcomes = {
   footnoteLabel: "ILLUMINAIRY OUTCOMES · FIRST MONTH · 2024–25",
   hoursPerWeekLabel: "5–7 hours a week",
+  /** Emphasis fragment — "invests {phrase} of effort per week" on outcome insight */
+  hoursPerWeekEffortPhrase: "5–7 hours",
   hit100PlusPct: 90,
   minPointsFirstMonth: 100,
   varyDisclaimer: "Results vary.",

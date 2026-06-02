@@ -1,15 +1,11 @@
 'use client'; // @ts-nocheck
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { funnelToday } from "@/lib/funnel-today";
 import { QFScreen, QFButton, QFConstellation } from '../components/QFShell';
 import { QFBarChart } from '../components/QFBarChart';
 import { QFSophiaPlanCard } from '../components/QFPlanVisuals';
-import { gainTargetForQ5, shouldShowGainMath, weeksUntilQ5Test } from '../gains';
-import { q5DisplayLabel } from '@/lib/quiz-funnel/quiz-profile';
-import { SCORE_PATH_DEFAULT_START, SCORE_PATH_DEFAULT_WEEKS } from '@/lib/quiz-funnel/quiz-profile';
-import {
-  modeledGainForTimeline,
-} from '@/lib/quiz-funnel/score-path-gain';
+import { gainTargetForQ5, shouldShowGainMath } from '../gains';
+import { buildV1Projection } from '@/lib/quiz-funnel/v1-projection';
 import {
   formatWeeksUntilTest,
 } from '@/lib/quiz-funnel/prep-copy';
@@ -21,15 +17,19 @@ import {
 } from "@/lib/sat-skills-copy";
 import { methodScreenLeadParts } from '@/lib/quiz-funnel/method-lead-copy';
 import { iCompareHeadlineMultiplier, iCompareProofBridgeLine } from '@/lib/quiz-funnel/i-compare-copy';
-import { v1EmotionalBridgeParts } from '@/lib/quiz-funnel/score-path-copy';
+import {
+  formatSatScoreLabel,
+  v1FastWinBridgeParts,
+} from '@/lib/quiz-funnel/score-path-copy';
+import { QFV1ProjectionChart } from '../components/QFV1ProjectionChart';
 import { stakesOutcome } from '@/lib/quiz-funnel/stakes-copy';
 
 export { gainTargetForQ5 };
 
 // ─── I1 · Proof bridge ───────────────────────────────────────────────────────
 const I1_DATE_PHRASE = {
-  'aug22': 'August 22', 'oct3': 'October 3', 'nov7': 'November 7',
-  'dec5': 'December 5', '2027': null, 'tbd': null,
+  'aug22': 'August 22', 'sept12': 'September 12', 'oct3': 'October 3', 'nov7': 'November 7',
+  'dec5': 'December 5', 'tbd': null,
 };
 
 export function QFI1Proof({ onContinue, onBack, q2 = 'top-choice', q3 = 'sat-1', q5 = 'oct3', vars = {} }) {
@@ -52,9 +52,9 @@ export function QFI1Proof({ onContinue, onBack, q2 = 'top-choice', q3 = 'sat-1',
       <div className="gap-22" style={{ marginTop: 4 }}>
         <p className="qf-lead">
           {hasDate ? (
-            <>We're building a plan to help your kid get their SAT score up by the <em>{v.test_date_phrase}</em> SAT, so that <em>{v.stakes_outcome}</em>.</>
+            <>We&apos;re building an Improvement Plan to help your child get their SAT score up by the <em>{v.test_date_phrase}</em> SAT, so that <em>{v.stakes_outcome}</em>.</>
           ) : (
-            <>We're building a plan to help your kid get their SAT score up, so that <em>{v.stakes_outcome}</em>.</>
+            <>We&apos;re building an Improvement Plan to help your child get their SAT score up, so that <em>{v.stakes_outcome}</em>.</>
           )}
         </p>
         <p className="qf-lead">
@@ -71,15 +71,15 @@ const CQ4_BANDS = {
   '1300-1400': '1300–1400', '1400plus': '1400+',
 };
 const CQ5_LONG = {
-  'aug22': 'August 22, 2026', 'oct3': 'October 3, 2026', 'nov7': 'November 7, 2026',
-  'dec5': 'December 5, 2026', '2027': 'Spring 2027', 'tbd': 'TBD',
+  'aug22': 'August 22, 2026', 'sept12': 'September 12, 2026', 'oct3': 'October 3, 2026',
+  'nov7': 'November 7, 2026', 'dec5': 'December 5, 2026', 'tbd': 'TBD',
 };
 const CQ5_SHORT = {
-  'aug22': 'Aug 22', 'oct3': 'Oct 3', 'nov7': 'Nov 7', 'dec5': 'Dec 5',
-  '2027': 'Spring 2027', 'tbd': 'TBD',
+  'aug22': 'Aug 22', 'sept12': 'Sept 12', 'oct3': 'Oct 3', 'nov7': 'Nov 7', 'dec5': 'Dec 5',
+  'tbd': 'TBD',
 };
 const CSCORE_RETURN = {
-  'aug22': 'September 5, 2026', 'oct3': 'October 18, 2026',
+  'aug22': 'September 5, 2026', 'sept12': 'September 25, 2026', 'oct3': 'October 18, 2026',
   'nov7': 'November 21, 2026', 'dec5': 'December 19, 2026',
 };
 const CANCHOR_SCORES = {
@@ -110,11 +110,10 @@ const STARS = [
 
 export function QFI2Compute({ onContinue, onBack, q4 = '1200-1300', q5 = 'oct3', q6 = ['math', 'no-plan'] }) {
   const hasQ4 = q4 && q4 !== 'na' && CQ4_BANDS[q4];
-  const hasDate = q5 && q5 !== 'tbd' && q5 !== '2027';
-  const isEarlyApp = q5 === 'aug22' || q5 === 'oct3';
+  const hasDate = q5 && q5 !== 'tbd' && q5 !== '2027' && CQ5_LONG[q5];
   const problemSummary = q6.slice(0, 2).map(id => CQ6_PHRASE[id] || id).join(' + ');
   const TEST_DATES = {
-    'aug22': new Date('2026-08-22'), 'oct3': new Date('2026-10-03'),
+    'aug22': new Date('2026-08-22'), 'sept12': new Date('2026-09-12'), 'oct3': new Date('2026-10-03'),
     'nov7': new Date('2026-11-07'), 'dec5': new Date('2026-12-05'),
   };
   const today = funnelToday();
@@ -128,9 +127,8 @@ export function QFI2Compute({ onContinue, onBack, q4 = '1200-1300', q5 = 'oct3',
   items.push({ type: 'header', label: 'Reviewing your inputs', section: 1 });
   if (hasQ4) items.push({ type: 'row', content: <>Starting score range: <span className="v">{CQ4_BANDS[q4]}</span></> });
   else       items.push({ type: 'row', content: <>No official SAT yet: <span className="v">planning for first sit</span></> });
-  if (hasDate)    items.push({ type: 'row', content: <>Next test date: <span className="v">{CQ5_LONG[q5]}</span></> });
-  if (isEarlyApp) items.push({ type: 'row', content: <>Early Action deadlines: <span className="v">Nov 1</span></> });
-  items.push({ type: 'row', content: <>Regular Decision deadlines: <span className="v">Jan 1</span></> });
+  if (hasDate) items.push({ type: 'row', content: <>Next test date: <span className="v">{CQ5_LONG[q5]}</span></> });
+  items.push({ type: 'row', content: <>Early Decision deadlines: <span className="v">Nov 1</span></> });
   if (CSCORE_RETURN[q5]) items.push({ type: 'row', content: <>Score return: <span className="v">{CSCORE_RETURN[q5]}</span></> });
 
   items.push({ type: 'header', label: 'Building plan frame', section: 2 });
@@ -201,7 +199,7 @@ export function QFI2Compute({ onContinue, onBack, q4 = '1200-1300', q5 = 'oct3',
           if (item.type === 'header') {
             return (
               <div key={i} className="compute-header"
-                style={{ ...style, marginTop: item.section > 1 ? 18 : 0 }}>
+                style={{ ...style, marginTop: item.section > 1 ? 12 : 0 }}>
                 <span className="ck">✓</span> {item.label}
               </div>
             );
@@ -214,7 +212,7 @@ export function QFI2Compute({ onContinue, onBack, q4 = '1200-1300', q5 = 'oct3',
         })}
 
         {showBar && (
-          <div style={{ marginTop: 22, opacity: 1, animation: 'fadeIn 0.4s ease' }}>
+          <div style={{ marginTop: 14, opacity: 1, animation: 'fadeIn 0.4s ease' }}>
             <div className="compute-status">
               {barLabel}… {barPct < 100 ? `${barPct}%` : '100%'}
             </div>
@@ -231,14 +229,14 @@ export function QFI2Compute({ onContinue, onBack, q4 = '1200-1300', q5 = 'oct3',
         )}
 
         {showMissing && (
-          <div style={{ marginTop: 18, opacity: 1, animation: 'fadeIn 0.4s ease' }}>
+          <div style={{ marginTop: 10, opacity: 1, animation: 'fadeIn 0.4s ease' }}>
             <div className="compute-arrow" style={{ marginBottom: 8 }}>
               → <span className="v" style={{ opacity: 0.5 }}>Target score: ___</span>
-              <span style={{ opacity: 0.7, marginLeft: 8, fontSize: 13 }}>next question</span>
+              <span className="compute-hint">next question</span>
             </div>
             <div className="compute-arrow">
               → <span className="v" style={{ opacity: 0.5 }}>GPA: ___</span>
-              <span style={{ opacity: 0.7, marginLeft: 8, fontSize: 13 }}>after that</span>
+              <span className="compute-hint">after that</span>
             </div>
           </div>
         )}
@@ -249,10 +247,12 @@ export function QFI2Compute({ onContinue, onBack, q4 = '1200-1300', q5 = 'oct3',
 
 // ─── I3 · Bridge ─────────────────────────────────────────────────────────────
 const BR_TEST_DATES = {
-  'aug22': new Date('2026-08-22'), 'oct3': new Date('2026-10-03'),
+  'aug22': new Date('2026-08-22'), 'sept12': new Date('2026-09-12'), 'oct3': new Date('2026-10-03'),
   'nov7': new Date('2026-11-07'), 'dec5': new Date('2026-12-05'),
 };
-const BR_DATE_NUMERIC = { 'aug22': '8/22', 'oct3': '10/3', 'nov7': '11/7', 'dec5': '12/5' };
+const BR_DATE_NUMERIC = {
+  'aug22': '8/22', 'sept12': '9/12', 'oct3': '10/3', 'nov7': '11/7', 'dec5': '12/5',
+};
 
 export function QFI3Bridge({ onContinue, onBack, q5 = 'oct3' }) {
   const today = funnelToday();
@@ -274,7 +274,7 @@ export function QFI3Bridge({ onContinue, onBack, q5 = 'oct3' }) {
           )}
         </p>
         <p className="qf-lead">
-          One more question about their <em>GPA</em>. Then we'll show a realistic <em>score projection</em> and their plan.
+          One more question about their <em>GPA</em>. Then we&apos;ll show a realistic <em>score projection</em> and their Improvement Plan.
         </p>
       </div>
     </QFScreen>
@@ -302,7 +302,7 @@ export function QFIGPAGap({ onContinue, onBack, q4 = '1200-1300', q9 = '3.8-4.0'
 
         <p className="qf-lead">
           It's common for smart students with high GPAs to score lower than expected on the SAT.
-          The same habits that earn his A's in class quietly cost points on a test scored on pace.
+          The same habits that earn their A&apos;s in class quietly cost points on a test scored on pace.
         </p>
 
         {/* Side-by-side contrast table */}
@@ -440,154 +440,21 @@ export function QFIComparePrep({ onContinue, onBack, q7 = ['khan'] }) {
   );
 }
 
-// ─── V1 · Skill-zone projection ───────────────────────────────────────────────
-const V1_Q4_TO_SCORE = {
-  'u1000': 1050, '1100-1200': 1150, '1200-1300': 1250,
-  '1300-1400': 1350, '1400plus': 1430,
-};
-const V1_Q8_TO_TARGET = {
-  '1250': 1250, '1300': 1300, '1350': 1350, '1400': 1400, '1450': 1450,
-};
-const V1_Q5_DATE = {
-  'aug22': 'Aug 22', 'oct3': 'Oct 3', 'nov7': 'Nov 7', 'dec5': 'Dec 5',
-  '2027': 'spring 2027', 'tbd': 'test day',
-};
-const SKILL_GAIN_RATIOS = [60, 48, 38, 26, 18];
-const V1_SKILL_DELAYS = [400, 450, 480, 520, 550];
-
-function scaleSkillGains(gap) {
-  const sum = SKILL_GAIN_RATIOS.reduce((a, b) => a + b, 0);
-  const scaled = SKILL_GAIN_RATIOS.map(r => Math.round((r / sum) * gap));
-  const diff = gap - scaled.reduce((a, b) => a + b, 0);
-  scaled[4] += diff;
-  return scaled;
-}
-
-/** Padded score domain so endpoint labels and +pts tags stay inside the plot. */
-function v1PlotScale(current, displayTarget, plotTop, plotH) {
-  const gap = Math.max(displayTarget - current, 1);
-  const pad = Math.max(30, Math.round(gap * 0.08));
-  const min = current - pad * 0.35;
-  const max = displayTarget + pad;
-  const span = Math.max(max - min, 1);
-  const py = (score) => plotTop + plotH - ((score - min) / span) * plotH;
-  return { py, min, max, span };
-}
-
-function v1ScoreLabelY(y, plotTop, baselineY, nearTop) {
-  const above = y - 14;
-  const below = y + 16;
-  if (nearTop) {
-    return above >= plotTop + 2 ? above : below;
-  }
-  return below <= baselineY - 6 ? below : above;
-}
-
 export function QFV1Projection({
   onContinue, onBack,
   q2 = 'top-choice',
   q4 = '1200-1300', q5 = 'oct3', q8 = '1400',
 }) {
-  const hasScore = q4 && q4 !== 'na' && V1_Q4_TO_SCORE[q4];
-  const hasTarget = q8 && q8 !== 'tbd';
-  const current = hasScore ? V1_Q4_TO_SCORE[q4] : SCORE_PATH_DEFAULT_START;
-  let target = hasTarget
-    ? (V1_Q8_TO_TARGET[q8] ?? Math.min(1600, current + 150))
-    : Math.min(1600, current + 150);
-  if (target <= current) target = Math.min(1600, current + 100);
-  const rawGap = target - current;
-
-  const weeksUntil = weeksUntilQ5Test(q5);
-  const hasDate = weeksUntil != null && weeksUntil > 0;
-  const chartWeeks = hasDate ? Math.max(2, weeksUntil) : SCORE_PATH_DEFAULT_WEEKS;
-  const gap = modeledGainForTimeline(rawGap, hasDate ? chartWeeks : null) ?? rawGap;
-  const displayTarget = current + gap;
-  const skillPts = scaleSkillGains(gap);
-  const testDate = V1_Q5_DATE[q5] ?? 'test day';
+  const projection = buildV1Projection({ q2, q4, q5, q8 });
   const showGainMath = shouldShowGainMath(q5);
+  const reachScore = formatSatScoreLabel(projection.displayTarget);
+  const goalScore = projection.goalTarget ?? projection.displayTarget;
 
-  const [skillStep, setSkillStep] = useState(0);
-  const [showCopy, setShowCopy] = useState(false);
-  const [targetPulse, setTargetPulse] = useState(false);
+  const [showCopy, setShowCopy] = useState(!projection.showChart);
 
-  useEffect(() => {
-    if (!showGainMath) {
-      setShowCopy(true);
-      return;
-    }
-    const reduced = typeof window !== 'undefined'
-      && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduced) {
-      setSkillStep(5);
-      setShowCopy(true);
-      return;
-    }
-    const timers = [];
-    let t = 400;
-    for (let i = 0; i < 5; i++) {
-      timers.push(setTimeout(() => setSkillStep(i + 1), t));
-      t += V1_SKILL_DELAYS[i];
-    }
-    timers.push(setTimeout(() => setTargetPulse(true), t + 200));
-    timers.push(setTimeout(() => setShowCopy(true), t + 500));
-    return () => timers.forEach(clearTimeout);
-  }, [showGainMath]);
-
-  const CW = 340;
-  const CH = 204;
-  const PAD_X = 16;
-  const PAD_TOP = 28;
-  const PAD_BOTTOM = 52;
-  const plotTop = PAD_TOP;
-  const baselineY = CH - PAD_BOTTOM;
-  const plotH = baselineY - plotTop;
-  const chartW = CW - PAD_X * 2;
-  const skillLabelY = baselineY + 16;
-
-  const zoneWidths = skillPts.map(p => (p / gap) * chartW);
-  let xCursor = PAD_X;
-  const zones = skillPts.map((pts, i) => {
-    const x = xCursor;
-    const w = zoneWidths[i];
-    xCursor += w;
-    const scoreAtStart = current + skillPts.slice(0, i).reduce((a, b) => a + b, 0);
-    const scoreAtEnd = scoreAtStart + pts;
-    return { i, x, w, pts, scoreAtStart, scoreAtEnd };
-  });
-
-  const { py } = v1PlotScale(current, displayTarget, plotTop, plotH);
-  const startX = PAD_X;
-  const startY = py(current);
-  const endX = PAD_X + chartW;
-  const endY = py(displayTarget);
-  const startLabelY = v1ScoreLabelY(startY, plotTop, baselineY, false);
-  const endLabelY = v1ScoreLabelY(endY, plotTop, baselineY, true);
-
-  const pathPoints = [{ x: startX, y: startY }];
-  zones.forEach((z, idx) => {
-    if (idx < skillStep) {
-      pathPoints.push({ x: z.x + z.w, y: py(z.scoreAtEnd) });
-    }
-  });
-  const pathD = pathPoints.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ');
-
-  const zoneFills = [
-    'rgba(47,110,71,0.07)',
-    'rgba(47,110,71,0.11)',
-    'rgba(47,110,71,0.08)',
-    'rgba(47,110,71,0.12)',
-    'rgba(47,110,71,0.09)',
-  ];
-  const dividerXs = [PAD_X, ...zones.map(z => z.x + z.w)];
-
-  const ptsLabelY = (y1, y2) => {
-    const lineY = (y1 + y2) / 2;
-    const above = lineY - 8;
-    const below = lineY + 10;
-    if (above >= plotTop + 4) return above;
-    if (below <= baselineY - 18) return below;
-    return Math.min(baselineY - 18, lineY + 6);
-  };
+  const handleChartAnim = useCallback(() => {
+    setShowCopy(true);
+  }, []);
 
   return (
     <QFScreen stepIdx={14} ornament="glow" onBack={onBack}
@@ -600,107 +467,28 @@ export function QFV1Projection({
       <div className="gap-22">
         {showGainMath && (
           <>
-            <h1 className="qf-h1" style={{ marginBottom: 4 }}>
-              {hasDate ? (
-                <>By <em>{testDate}</em>, they could reach about <em>{displayTarget}</em>.</>
+            <h1 className="qf-h1" style={{ marginBottom: 0 }}>
+              {projection.hasDate ? (
+                <>
+                  By <em>{projection.testDateLabel}</em>, they could reach <em>{reachScore}</em>.
+                </>
               ) : (
-                <>By test day, they could reach about <em>{displayTarget}</em>.</>
+                <>
+                  By test day, they could reach <em>{reachScore}</em>.
+                </>
               )}
             </h1>
-            {(!hasScore || !hasTarget) && (
-              <p className="qf-lead" style={{ margin: 0, fontSize: 14, color: 'var(--qf-ink-mid)' }}>
-                {!hasScore && !hasTarget
-                  ? 'Illustrative path. The diagnostic and Strategy Call set real starting and target scores.'
-                  : !hasScore
-                    ? 'Illustrative starting point. The diagnostic sets the real baseline.'
-                    : 'Target score gets confirmed on your Strategy Call.'}
-              </p>
-            )}
 
-            <div className="qf-graph" style={{ padding: '14px 12px 10px' }}>
-              <svg viewBox={`0 0 ${CW} ${CH}`} style={{ width: '100%', display: 'block', overflow: 'visible' }}>
-                {dividerXs.map((x, i) => (
-                  <line
-                    key={`div-${i}`}
-                    x1={x} y1={plotTop} x2={x} y2={baselineY}
-                    stroke="rgba(20,32,46,0.14)" strokeWidth={i === 0 || i === dividerXs.length - 1 ? 1 : 0.75}
-                    strokeDasharray={i === 0 || i === dividerXs.length - 1 ? undefined : '2 3'}
-                  />
-                ))}
-
-                <line x1={PAD_X} y1={baselineY} x2={PAD_X + chartW} y2={baselineY} stroke="rgba(20,32,46,0.18)" strokeWidth="1" />
-
-                {zones.map((z, idx) => {
-                  const active = idx < skillStep;
-                  const x1 = z.x;
-                  const x2 = z.x + z.w;
-                  const y1 = py(z.scoreAtStart);
-                  const y2 = py(z.scoreAtEnd);
-                  return (
-                    <g key={`zone-${z.i}`} opacity={active ? 1 : 0} style={{ transition: 'opacity 0.45s ease' }}>
-                      <path
-                        d={`M ${x1} ${baselineY} L ${x1} ${y1} L ${x2} ${y2} L ${x2} ${baselineY} Z`}
-                        fill={zoneFills[idx]}
-                        stroke="rgba(47,110,71,0.14)"
-                        strokeWidth="0.5"
-                      />
-                    </g>
-                  );
-                })}
-
-                {pathD && skillStep > 0 && (
-                  <path d={pathD} fill="none" stroke="#2F6E47" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
-                )}
-
-                {zones.map((z, idx) => {
-                  const active = idx < skillStep;
-                  const x1 = z.x;
-                  const x2 = z.x + z.w;
-                  const y1 = py(z.scoreAtStart);
-                  const y2 = py(z.scoreAtEnd);
-                  const cx = idx === 0 ? x1 + z.w * 0.58 : (x1 + x2) / 2;
-                  return (
-                    <g key={`lbl-${z.i}`} opacity={active ? 1 : 0} style={{ transition: 'opacity 0.45s ease' }}>
-                      {active && (
-                        <text x={cx} y={ptsLabelY(y1, y2)} fontFamily="var(--qf-display)"
-                          fontSize="12" fontWeight="600" fill="var(--qf-forest)" textAnchor="middle"
-                          dominantBaseline="middle">
-                          +{z.pts}
-                        </text>
-                      )}
-                      <text x={cx} y={skillLabelY} fontFamily="var(--qf-body)" fontSize="12"
-                        fill="var(--qf-ink-mid)" textAnchor="middle" fontWeight="600">
-                        Skill {idx + 1}
-                      </text>
-                    </g>
-                  );
-                })}
-
-                <circle cx={startX} cy={startY} r="3.5" fill="var(--qf-ink-2)" opacity={0.85} />
-                {skillStep >= 5 && (
-                  <circle cx={endX} cy={endY} r="3.5" fill="var(--qf-forest)" opacity={targetPulse ? 1 : 0.7} />
-                )}
-
-                <text
-                  x={startX} y={startLabelY}
-                  fontFamily="var(--qf-display)" fontSize="13" fontWeight="600"
-                  fill="var(--qf-ink-2)" textAnchor="start"
-                  dominantBaseline="middle"
-                >
-                  {current}
-                </text>
-                <text
-                  x={endX} y={endLabelY}
-                  fontFamily="var(--qf-display)" fontSize="13" fontWeight="600"
-                  fill="var(--qf-forest)" textAnchor="end"
-                  dominantBaseline="middle"
-                  opacity={skillStep >= 5 ? (targetPulse ? 1 : 0.5) : 0}
-                  style={{ transition: 'opacity 0.4s ease' }}
-                >
-                  {displayTarget}
-                </text>
-              </svg>
-            </div>
+            {projection.showChart ? (
+              <QFV1ProjectionChart
+                current={projection.current}
+                displayTarget={projection.displayTarget}
+                goalTarget={projection.goalTarget}
+                skillPts={projection.skillPts}
+                gapExceedsModeled={projection.gapExceedsModeled}
+                onAnimationComplete={handleChartAnim}
+              />
+            ) : null}
           </>
         )}
 
@@ -709,7 +497,7 @@ export function QFV1Projection({
           transition: 'opacity 0.5s ease',
         }}>
           <p className="qf-lead" style={{ margin: 0 }}>
-            {v1EmotionalBridgeParts(q2, displayTarget).map((part, i) =>
+            {v1FastWinBridgeParts(goalScore).map((part, i) =>
               part.em ? (
                 <em key={i}>{part.text}</em>
               ) : (
@@ -725,20 +513,21 @@ export function QFV1Projection({
 
 // ─── I · Diagnosis (content skills, no tricks) ───────────────────────────────
 const D_TEST_DATE_SHORT = {
-  'aug22': 'August 22', 'oct3': 'October 3', 'nov7': 'November 7', 'dec5': 'December 5',
+  'aug22': 'August 22', 'sept12': 'September 12', 'oct3': 'October 3', 'nov7': 'November 7',
+  'dec5': 'December 5',
 };
 const D_TEST_DATES = {
-  'aug22': new Date('2026-08-22'), 'oct3': new Date('2026-10-03'),
+  'aug22': new Date('2026-08-22'), 'sept12': new Date('2026-09-12'), 'oct3': new Date('2026-10-03'),
   'nov7': new Date('2026-11-07'), 'dec5': new Date('2026-12-05'),
 };
 
 const PREP_WHY_FAILED = {
-  'khan':    `Khan's SAT math course has ${KHAN_SAT_MATH_SKILL_COUNT} lessons and ${KHAN_SAT_YOUTUBE_VIDEO_COUNT} videos — without a diagnostic, it's a needle in a haystack. We rank the ${FOCUS_SKILL_COUNT}–6 that move their score.`,
+  'khan':    `Khan's SAT math course has ${KHAN_SAT_MATH_SKILL_COUNT} lessons and ${KHAN_SAT_YOUTUBE_VIDEO_COUNT} videos. Without the Skill Diagnostic, it's a needle in a haystack. We rank the ${FOCUS_SKILL_COUNT}–6 that move their score.`,
   'group':   "Group classes pace to the middle of the room. Nobody built a plan for the few skills actually holding their score back.",
   'online':  "One syllabus for everyone. It doesn't find their weakest skills and rank them.",
   'app':     "SAT apps keep serving questions. They don't tell you which content skills to master first.",
   'book':    "Paper prep trains the wrong test. The digital SAT rewards Desmos and on-screen pacing, not flipping pages.",
-  'nothing': "Without a diagnostic, students guess where to start and lose months on low-impact review.",
+  'nothing': "Without the Skill Diagnostic, students guess where to start and lose months on low-impact review.",
 };
 // Real SAT content skills (not tricks) tied to Q6 selections.
 const MATH_SKILLS = [
@@ -774,13 +563,13 @@ function pickContentSkills(q6 = []) {
 // Short-timeline (≤6 weeks) rescale: skill points sum to 150 instead of 200
 const SHORT_PTS = [40, 35, 30, 25, 20];
 
-/** Full phrase tail for i-diag headline — reads naturally after "still scored" */
-const Q4_SCORE_PHRASE = {
-  u1000: 'under 1100',
-  '1100-1200': 'in the low 1100s',
-  '1200-1300': 'in the low 1200s',
-  '1300-1400': 'in the mid-1300s',
-  '1400plus': 'above 1400',
+/** Score band for i-diag “Break out of …” — q4 is a range only, not low/high within it */
+const Q4_BREAK_OUT_BAND = {
+  u1000: 'the 1100s',
+  '1100-1200': 'the 1100s',
+  '1200-1300': 'the 1200s',
+  '1300-1400': 'the 1300s',
+  '1400plus': 'the 1400s',
 };
 
 export function QFIDiagnosis({ onContinue, onBack, q3 = 'sat-1', q4 = '1200-1300', q6 = ['math', 'no-plan'], q7 = [], q5 = 'oct3' }) {
@@ -796,7 +585,6 @@ export function QFIDiagnosis({ onContinue, onBack, q3 = 'sat-1', q4 = '1200-1300
   const skills = pickContentSkills(q6).map((s, i) =>
     isShort ? { ...s, pts: SHORT_PTS[i] ?? s.pts } : s
   );
-  const totalPts = skills.reduce((s, x) => s + x.pts, 0);
   const showGainMath = shouldShowGainMath(q5);
 
   // Constellation reveal: chaotic many skills → 5 illuminated + connected
@@ -822,8 +610,8 @@ export function QFIDiagnosis({ onContinue, onBack, q3 = 'sat-1', q4 = '1200-1300
     [73,42],[245,32],[300,40],[353,72],[20,72],
   ];
 
-  const hasScore = q4 && q4 !== 'na' && Q4_SCORE_PHRASE[q4];
-  const scorePhrase = Q4_SCORE_PHRASE[q4] ?? 'around 1100';
+  const hasScore = q4 && q4 !== 'na' && Q4_BREAK_OUT_BAND[q4];
+  const breakOutBand = Q4_BREAK_OUT_BAND[q4];
   const untilTest = formatWeeksUntilTest(weeks, dateMonth);
 
   return (
@@ -831,12 +619,9 @@ export function QFIDiagnosis({ onContinue, onBack, q3 = 'sat-1', q4 = '1200-1300
       footer={<QFButton kind="forest" onClick={onContinue}>See what works</QFButton>}
     >
       <div className="gap-22" style={{ marginTop: 4 }}>
-        <h1 className="qf-h1">
-          {hasScore ? (
-            <>Still scoring <em>{scorePhrase}</em>.</>
-          ) : (
-            <>Most students lose points on the <em>same few skills</em>.</>
-          )}
+        <h1 className="qf-h1" style={{ marginBottom: 0 }}>
+          Our Skill Diagnostic identifies the{' '}
+          <em>{FOCUS_SKILL_COUNT}–6 highest-impact skills</em>.
         </h1>
         <div style={{ position: 'relative', padding: 0 }}>
           <svg viewBox="0 0 360 140"
@@ -913,45 +698,42 @@ export function QFIDiagnosis({ onContinue, onBack, q3 = 'sat-1', q4 = '1200-1300
               );
             })}
           </svg>
+        </div>
 
-          {/* Score callout — sum of all 5 */}
-          {showGainMath && (
-          <div style={{
-            textAlign: 'center', marginTop: 6,
+        <p
+          className="qf-lead"
+          style={{
+            margin: 0,
             opacity: revealed ? 1 : 0,
             transition: 'opacity 0.6s ease 0.7s',
-          }}>
-            <div style={{
-              fontFamily: 'var(--qf-mono)', fontSize: 10,
-              letterSpacing: '0.22em', color: 'var(--qf-ink-mute)',
-              textTransform: 'uppercase',
-            }}>
-              Your fastest path
-            </div>
-            <div style={{
-              fontFamily: 'var(--qf-display)', fontSize: 28,
-              letterSpacing: '-0.02em', color: 'var(--qf-forest)',
-              fontWeight: 500, marginTop: 2, lineHeight: 1,
-            }}>
-              <em>+{totalPts} points</em>
-            </div>
-          </div>
+          }}
+        >
+          {hasScore ? (
+            <>
+              Your fastest path out of <em>{breakOutBand}</em>
+              {untilTest ? (
+                <>
+                  {' '}
+                  before the <em>{untilTest.monthName}</em> SAT.
+                </>
+              ) : (
+                '.'
+              )}
+            </>
+          ) : (
+            <>
+              Your fastest path to a stronger score
+              {untilTest ? (
+                <>
+                  {' '}
+                  before the <em>{untilTest.monthName}</em> SAT.
+                </>
+              ) : (
+                '.'
+              )}
+            </>
           )}
-
-          <p className="qf-lead" style={{ margin: '18px 0 0' }}>
-            {untilTest ? (
-              <>
-                Start with a <em>diagnostic</em> to identify the <em>{FOCUS_SKILL_COUNT}–6 skills</em>{' '}
-                worth the most points to get their score up by the <em>{untilTest.monthName}</em> SAT.
-              </>
-            ) : (
-              <>
-                Start with a <em>diagnostic</em> to identify the <em>{FOCUS_SKILL_COUNT}–6 skills</em>{' '}
-                worth the most points to get their score up.
-              </>
-            )}
-          </p>
-        </div>
+        </p>
       </div>
     </QFScreen>
   );
@@ -987,7 +769,7 @@ export function QFIMethod({ onContinue, onBack, q5 = 'oct3' }) {
         <div className="qf-i-method__visual">
           <img
             src="/photos/tutor-student-session.png"
-            alt="Sophia with her tutor and her personalized 12-week SAT plan"
+            alt="Sophia with her tutor and her personalized weekly SAT Improvement Plan"
             onError={(e) => { e.currentTarget.style.display = 'none'; }}
           />
         </div>
@@ -1003,7 +785,7 @@ export function QFISteps({ onContinue, onBack }) {
       footer={<QFButton kind="forest" onClick={onContinue}>Build their plan</QFButton>}
     >
       <p className="qf-lead" style={{ margin: '0 0 4px' }}>
-        We build your plan around the few skills most likely to raise their score fastest.
+        We build their Improvement Plan around the few skills most likely to raise their score fastest.
       </p>
       <div style={{ position: 'relative', paddingTop: 16, paddingBottom: 20 }}>
         <div style={{ margin: '0 8px' }}>
@@ -1027,7 +809,7 @@ export function QFISteps({ onContinue, onBack }) {
           <div style={{
             fontFamily: 'var(--qf-display)', fontSize: 15, fontWeight: 600,
             color: 'var(--qf-forest)', letterSpacing: '-0.01em',
-          }}>Diagnose</div>
+          }}>Skill Diagnostic</div>
           <div style={{
             fontFamily: 'var(--qf-body)', fontSize: 11.5,
             color: 'var(--qf-ink-2)', marginTop: 2, lineHeight: 1.3,

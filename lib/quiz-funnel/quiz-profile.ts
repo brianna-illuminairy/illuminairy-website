@@ -31,12 +31,12 @@ export const Q8_TARGET_SCORE: Record<string, number> = {
   "1450": 1450
 };
 
-export const Q5_DATE_NUMERIC: Partial<Record<Q5Key | "2027" | "tbd", string>> = {
+export const Q5_DATE_NUMERIC: Partial<Record<Q5Key | "tbd", string>> = {
   aug22: "8/22",
+  sept12: "9/12",
   oct3: "10/3",
   nov7: "11/7",
   dec5: "12/5",
-  "2027": "Spring 2027",
   tbd: "TBD"
 };
 
@@ -81,8 +81,7 @@ export function quizPromisedGain(
 
 export function q5DisplayLabel(q5?: string | null): string | null {
   if (!q5) return null;
-  if (q5 === "tbd") return "Not sure yet";
-  if (q5 === "2027") return "Spring 2027 or later";
+  if (q5 === "tbd" || q5 === "2027") return "Not sure yet";
   const numeric = Q5_DATE_NUMERIC[q5 as Q5Key];
   return numeric ? `${numeric} SAT` : null;
 }

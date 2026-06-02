@@ -172,6 +172,34 @@ declare global {
   interface Window {
     Calendly?: {
       initInlineWidget: (opts: ReturnType<typeof buildCalendlyInlineWidgetOptions>) => void;
+      initPopupWidget: (opts: { url: string }) => void;
     };
   }
+}
+
+/** Open Calendly popup — URL includes quiz prefill so details are not re-entered. */
+export function openCalendlyPopup(
+  schedulingUrl: string,
+  prefill?: CalendlyPrefill
+): Promise<void> {
+  if (typeof window === "undefined") {
+    return Promise.reject(new Error("Calendly requires a browser"));
+  }
+  const url = calendlyEmbedUrl(schedulingUrl, prefill);
+  return new Promise((resolve, reject) => {
+    const start = Date.now();
+    const tick = () => {
+      if (window.Calendly?.initPopupWidget) {
+        window.Calendly.initPopupWidget({ url });
+        resolve();
+        return;
+      }
+      if (Date.now() - start >= 15000) {
+        reject(new Error("Calendly widget did not load"));
+        return;
+      }
+      window.setTimeout(tick, 50);
+    };
+    tick();
+  });
 }

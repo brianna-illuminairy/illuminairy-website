@@ -1,13 +1,73 @@
 /**
- * Khan Digital SAT breadth — source of truth for contrast copy vs Illuminairy's 5-skill focus.
+ * SAT breadth copy — two layers:
  *
- * Digital SAT course (Khan UI, 2025):
+ * 1) **Digital SAT test structure** (domains / topics) — use for hit-q7, prep failure, diagnostic contrast.
+ *    Aligns with MentoMind reports: Section → Domain → Topic.
+ *
+ * 2) **Khan course scale** (111 math lessons, 175 R&W lessons, 260 videos) — legacy contrast only;
+ *    do not use in parent-facing hit-q7 after breadth refresh.
+ */
+
+/** Digital SAT Math — one section, two modules, 44 questions. */
+export const DIGITAL_SAT_MATH = {
+  modules: 2,
+  questions: 44,
+  domains: 4,
+  /** Measurable topic areas (MentoMind “Topic” column). */
+  topics: 15,
+} as const;
+
+/** Digital SAT Reading & Writing — two modules, 64 minutes total. */
+export const DIGITAL_SAT_RW = {
+  modules: 2,
+  minutesTotal: 64,
+  domains: 4,
+  topics: 11,
+} as const;
+
+/** Domain + topic nodes the Skill Diagnostic can rank (15 + 11). */
+export const DIGITAL_SAT_TOPIC_COUNT_TOTAL =
+  DIGITAL_SAT_MATH.topics + DIGITAL_SAT_RW.topics;
+
+/** Parent-facing school-curriculum span (paired with domain/topic counts). */
+export const SAT_MATH_SCHOOL_COURSES_LABEL = "3–4 years of high school math";
+export const SAT_RW_SCHOOL_COURSES_LABEL = "3 years of language arts";
+
+export function satMathTestBreadthPhrase(): string {
+  const m = DIGITAL_SAT_MATH;
+  return `${m.domains} domains and ${m.topics} topic areas across ${m.questions} questions`;
+}
+
+export function satRwTestBreadthPhrase(): string {
+  const r = DIGITAL_SAT_RW;
+  return `${r.domains} domains and ${r.topics} topic areas across 2 modules`;
+}
+
+export function satBothTestBreadthPhrase(): string {
+  return `${satMathTestBreadthPhrase()}, plus Reading & Writing's ${DIGITAL_SAT_RW.domains} domains and ${DIGITAL_SAT_RW.topics} topic areas`;
+}
+
+/** School span + test structure — for hit-q7 body after prep-method headline. */
+export function satMathCurriculumAndTopicsPhrase(): string {
+  return `${SAT_MATH_SCHOOL_COURSES_LABEL}, ${satMathTestBreadthPhrase()}`;
+}
+
+export function satRwCurriculumAndTopicsPhrase(): string {
+  return `${SAT_RW_SCHOOL_COURSES_LABEL}, ${satRwTestBreadthPhrase()}`;
+}
+
+export function satBothCurriculumAndTopicsPhrase(): string {
+  return `${SAT_MATH_SCHOOL_COURSES_LABEL} and ${SAT_RW_SCHOOL_COURSES_LABEL}, ${DIGITAL_SAT_TOPIC_COUNT_TOTAL} topic areas the diagnostic can rank`;
+}
+
+export function satDiagnosticGranularityPhrase(): string {
+  return "domain and topic, the same breakdown as their Skill Diagnostic report";
+}
+
+/**
+ * Khan Digital SAT course (Khan UI, 2025) — not the test's 15/11 topic map.
  * - SAT Math: 111 skills across 13 units; ~2–3 videos per skill → ~220–330 math videos
- * - SAT Reading & Writing: similar unit/skill structure (11 units); dozens of skills
- * - Total instructional videos: ~300–500+ short clips (many 3–7 min); dedicated SAT YouTube ~260
- * - Thousands of practice questions, lessons, and hints
- *
- * We use 200+ for total skill breadth (111 math + similar R&W scale). Update when R&W count is confirmed.
+ * - SAT Reading & Writing: 175 lessons (11 units)
  */
 
 /** SAT Math lesson nodes in Khan's Digital SAT course (Layer C — say "lessons," not "skills"). */
@@ -18,6 +78,9 @@ export const KHAN_SAT_MATH_SKILL_COUNT = KHAN_SAT_MATH_LESSON_COUNT;
 
 export const KHAN_SAT_MATH_UNITS = 13;
 export const KHAN_SAT_RW_UNITS = 11;
+
+/** SAT Reading & Writing lesson nodes in Khan's Digital SAT course. */
+export const KHAN_SAT_RW_LESSON_COUNT = 175;
 
 /** Total skill nodes for breadth copy (111 math + ~100 R&W at similar granularity). */
 export const KHAN_SAT_SKILL_COUNT = 200;
@@ -52,7 +115,7 @@ export function khanSatPrepSkillVideoPhrase(): string {
 
 /** @deprecated Moved to lib/quiz-funnel/i-compare-copy.ts */
 export function iComparePrepBodyLine(): string {
-  return `Our students averaged +182 on their next SAT. We start with a diagnostic that finds the ${FOCUS_SKILL_COUNT}–6 skills hurting their score most — then tutors work those first.`;
+  return `Our students averaged +182 on their next SAT. We start with a diagnostic that finds the ${FOCUS_SKILL_COUNT}–6 skills hurting their score most, then tutors work those first.`;
 }
 
 export function khanAllSkillsPhrase(): string {
@@ -80,5 +143,5 @@ export function khanVideoBreadthPhrase(): string {
 }
 
 export function satBreadthVsFocusLine(): string {
-  return `Khan's Digital SAT course has ${KHAN_SAT_MATH_SKILL_COUNT} math skills alone — plus dozens in Reading & Writing. Most students lose points on the same ${FOCUS_SKILL_COUNT}.`;
+  return `Khan's Digital SAT course has ${KHAN_SAT_MATH_SKILL_COUNT} math skills alone, plus dozens in Reading & Writing. Most students lose points on the same ${FOCUS_SKILL_COUNT}.`;
 }

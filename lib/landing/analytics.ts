@@ -2,6 +2,7 @@
 
 import posthog from "posthog-js";
 import type { AttributionSnapshot } from "@/lib/attribution";
+import { readSessionAttribution } from "@/lib/attribution";
 import { AnalyticsEvents } from "@/lib/analytics-events";
 import { getPostHogKey } from "@/lib/posthog";
 import type { LpVariant } from "@/lib/quiz-funnel/experiments";
@@ -30,14 +31,7 @@ export type LandingEventProps = {
 };
 
 function readAttribution(): Partial<AttributionSnapshot> {
-  if (typeof window === "undefined") return {};
-  try {
-    const raw = sessionStorage.getItem("ia_attribution");
-    if (!raw) return {};
-    return JSON.parse(raw) as AttributionSnapshot;
-  } catch {
-    return {};
-  }
+  return readSessionAttribution();
 }
 
 function baseProps(

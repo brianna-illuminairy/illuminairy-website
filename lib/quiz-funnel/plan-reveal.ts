@@ -18,6 +18,7 @@ import {
 import { weeksUntilQ5Test, hasScheduledTestDate } from "@/lib/quiz-funnel/gains";
 import { satProgramOutcomes } from "@/lib/site";
 import { stakesGoalLabel, stakesSubheadOpener, stakesVerdictPrefix } from "@/lib/quiz-funnel/stakes-copy";
+import { buildGoalAchievability, type GoalAchievability } from "@/lib/quiz-funnel/goal-achievability";
 
 /** Diagnostic ranks 5–6 skills; examples on this page show 5. */
 const DIAGNOSTIC_SKILL_RANGE = "5–6";
@@ -36,10 +37,10 @@ const Q4_INPUT_LABEL: Record<string, string> = {
 
 const Q5_INPUT_LABEL: Record<string, string> = {
   aug22: "Aug 22, 2026",
+  sept12: "Sept 12, 2026",
   oct3: "Oct 3, 2026",
   nov7: "Nov 7, 2026",
   dec5: "Dec 5, 2026",
-  "2027": "Spring 2027 or later",
   tbd: "Not sure yet",
 };
 
@@ -92,17 +93,17 @@ const Q6_INPUT_LABEL: Record<string, string> = {
 
 const Q7_WHY_FAILED: Record<string, string> = {
   khan:
-    "Khan walks through the whole course — not the 5–6 skills the diagnostic will show matter most for them.",
+    "Khan walks through the whole course, not the 5–6 skills the Skill Diagnostic will show matter most for them.",
   group:
-    "The class taught every topic at the same pace — nobody sorted out which skills your student was actually missing.",
+    "The class taught every topic at the same pace. Nobody sorted out which skills your student was actually missing.",
   online:
-    "Everyone got the same syllabus — no one ranked what your student should work on first.",
+    "Everyone got the same syllabus. No one ranked what your student should work on first.",
   app:
-    "The app kept giving practice questions — it never named which skills to fix first.",
+    "The app kept giving practice questions. It never named which skills to fix first.",
   book:
-    "The book covers the whole test — it doesn't tell you where to start for your student.",
+    "The book covers the whole test. It doesn't tell you where to start for your student.",
   nothing:
-    "Without a diagnostic, they had to guess where to start — and spent time on the wrong topics.",
+    "Without the Skill Diagnostic, they had to guess where to start and spent time on the wrong topics.",
 };
 
 const Q7_PRIORITY = ["khan", "group", "online", "app", "book", "nothing"] as const;
@@ -158,7 +159,7 @@ function improvementRangeLabel(path: ScorePathOutput): string {
   if (path.mode === "process_only" || !path.showGainMath) {
     return `~${SCORE_PATH_DEFAULT_GAIN} pts (example)`;
   }
-  return "Confirm on Strategy Call";
+  return "Confirm on SAT Strategy Call";
 }
 
 function weeksLabel(path: ScorePathOutput): string {
@@ -166,9 +167,6 @@ function weeksLabel(path: ScorePathOutput): string {
   const unit = w === 1 ? "week" : "weeks";
   if (path.hasScheduledTestDate && path.testDateLabel) {
     return `${w} ${unit} until ${path.testDateLabel}`;
-  }
-  if (path.testDateStatus === "2027") {
-    return `~${w} weeks (Spring 2027+ runway)`;
   }
   if (path.chartWeeksSource === "default_16") {
     return `~${SCORE_PATH_DEFAULT_WEEKS} weeks (typical runway)`;
@@ -217,7 +215,7 @@ export type PlanRevealInputGroup = {
   rows: PlanRevealInputRow[];
 };
 
-function buildInputGroups(answers: QuizAnswersLike): PlanRevealInputGroup[] {
+export function buildInputGroups(answers: QuizAnswersLike): PlanRevealInputGroup[] {
   const {
     q2 = "selective",
     q3 = "sat-1",
@@ -300,7 +298,9 @@ function buildHeardSummary(answers: QuizAnswersLike, path: ScorePathOutput): str
   const datePhrase =
     q5 === "tbd" || q5 === "2027"
       ? `with ${dateLabel.toLowerCase()}`
-      : `testing ${dateLabel}`;
+      : hasScheduledTestDate(q5)
+        ? `testing ${dateLabel}`
+        : `with ${dateLabel.toLowerCase()}`;
 
   let sentence = `${startPhrase}, ${targetPhrase}, ${datePhrase}.`;
   if (prep.length) {
@@ -313,7 +313,7 @@ function buildHeardSummary(answers: QuizAnswersLike, path: ScorePathOutput): str
   return sentence;
 }
 
-function buildAssessmentVerdict(
+function buildProjectionVerdict(
   answers: QuizAnswersLike,
   path: ScorePathOutput
 ): string {
@@ -328,7 +328,7 @@ function buildAssessmentVerdict(
 
   const profileParts: string[] = [`starting around ${start}`];
   if (gpa) profileParts.push(`a ${gpa} GPA`);
-  const profileLine = `Students like yours — ${profileParts.join(", ")} —`;
+  const profileLine = `Students like yours (${profileParts.join(", ")})`;
 
   if (
     path.showGainMath &&
@@ -342,7 +342,7 @@ function buildAssessmentVerdict(
       low !== high
         ? `${low}–${high} points`
         : `about ${path.modeledGain} points`;
-    return `${stakesLine}${cohortLine} ${profileLine} with ${weeks} ${weekWord} before the ${path.testDateLabel} test, often improve ${improveText} — enough to reach about ${path.scoreRange.typical} — when they work the ${DIAGNOSTIC_SKILL_RANGE} skills from the diagnostic, not everything on the SAT.`;
+    return `${stakesLine}${cohortLine} ${profileLine} with ${weeks} ${weekWord} before the ${path.testDateLabel} test, often improve ${improveText}, enough to reach about ${path.scoreRange.typical}, when they work the ${DIAGNOSTIC_SKILL_RANGE} skills from the Skill Diagnostic, not everything on the SAT.`;
   }
 
   if (path.showGainMath && path.gainBand && path.scoreRange.typical != null) {
@@ -351,24 +351,26 @@ function buildAssessmentVerdict(
       low !== high
         ? `${low}–${high} points`
         : `about ${path.modeledGain} points`;
-    return `${stakesLine}${cohortLine} ${profileLine} over ${weeks} ${weekWord}, often improve ${improveText} — toward about ${path.scoreRange.typical} — when they work the ${DIAGNOSTIC_SKILL_RANGE} skills from the diagnostic, not everything on the SAT. Your Strategy Call confirms the numbers.`;
+    return `${stakesLine}${cohortLine} ${profileLine} over ${weeks} ${weekWord}, often improve ${improveText}, toward about ${path.scoreRange.typical}, when they work the ${DIAGNOSTIC_SKILL_RANGE} skills from the Skill Diagnostic, not everything on the SAT. Your SAT Strategy Call confirms the numbers.`;
   }
 
   if (path.mode === "process_only" || !path.showGainMath) {
-    return `${stakesLine}${cohortLine} ${profileLine} often improve about ${SCORE_PATH_DEFAULT_GAIN} points over ${SCORE_PATH_DEFAULT_WEEKS} weeks when they work the ${DIAGNOSTIC_SKILL_RANGE} skills from the diagnostic — not the whole test. The Strategy Call and diagnostic make this specific to your student.`;
+    return `${stakesLine}${cohortLine} ${profileLine} often improve about ${SCORE_PATH_DEFAULT_GAIN} points over ${SCORE_PATH_DEFAULT_WEEKS} weeks when they work the ${DIAGNOSTIC_SKILL_RANGE} skills from the Skill Diagnostic, not the whole test. Your SAT Strategy Call and Skill Diagnostic make this specific to your student.`;
   }
 
-  return `${stakesLine}${cohortLine} The diagnostic finds the ${DIAGNOSTIC_SKILL_RANGE} skills holding their score back. Your Strategy Call walks through timeline and targets.`;
+  return `${stakesLine}${cohortLine} The Skill Diagnostic finds the ${DIAGNOSTIC_SKILL_RANGE} skills holding their score back. Your SAT Strategy Call walks through timeline and targets.`;
 }
 
 export type PlanRevealLever = { rank: number; name: string; pts: number };
 
 export type PlanRevealModel = {
+  q2?: string;
+  achievability: GoalAchievability;
   subhead: string;
   heardSummary: string;
   inputGroups: PlanRevealInputGroup[];
-  assessmentHeadline: string;
-  assessmentVerdict: string;
+  projectionHeadline: string;
+  projectionVerdict: string;
   metrics: {
     start: { value: string; qualifier: string | null };
     target: { value: string; qualifier: string | null };
@@ -396,15 +398,17 @@ export function buildPlanReveal(answers: QuizAnswersLike): PlanRevealModel {
 
   const leversNote =
     path.mode === "process_only" || path.starting.confidence !== "known"
-      ? "Examples from similar students — the diagnostic names their 5–6 skills."
-      : "Examples from similar students — the diagnostic confirms their 5–6 skills.";
+      ? "Example skills from similar students. Your Skill Diagnostic names their exact 5–6."
+      : "Example skills from similar students. Your Skill Diagnostic confirms their exact 5–6.";
 
   return {
+    q2: answers.q2,
+    achievability: buildGoalAchievability(answers, path),
     subhead: buildSubhead(answers.q2),
     heardSummary: buildHeardSummary(answers, path),
     inputGroups: buildInputGroups(answers),
-    assessmentHeadline: "What this usually looks like",
-    assessmentVerdict: buildAssessmentVerdict(answers, path),
+    projectionHeadline: "Your score projection",
+    projectionVerdict: buildProjectionVerdict(answers, path),
     metrics: {
       start: {
         value: startMetricLabel(path),
@@ -422,7 +426,7 @@ export function buildPlanReveal(answers: QuizAnswersLike): PlanRevealModel {
     leversNote,
     whyLastTimeFailed: whyLastPrepFailed(answers.q7),
     howThisTimeDifferent:
-      `The diagnostic finds the ${DIAGNOSTIC_SKILL_RANGE} SAT skills holding their score back. We teach those first — not the whole test.`,
+      `The Skill Diagnostic finds the ${DIAGNOSTIC_SKILL_RANGE} SAT skills holding their score back. We teach those first, not the whole test.`,
     honestyLines: path.disclaimers,
     parentVisibility: [
       "Weekly update: which skills they worked on, what practice they did, and what's next",
@@ -431,19 +435,24 @@ export function buildPlanReveal(answers: QuizAnswersLike): PlanRevealModel {
     ],
     nextSteps: [
       {
-        title: "Free Strategy Call (15 min)",
+        title: "Free SAT Strategy Call (15 min)",
         detail:
-          "Walk through test date, scores, school list, and timeline. Schedule the diagnostic if you want to move forward.",
+          "Walk through test date, scores, school list, and timeline, then schedule Week 1 on your Improvement Plan.",
       },
       {
-        title: "Proctored Skill Diagnostic (2 hr 14 min)",
+        title: "Week 1 · Skill Diagnostic",
         detail:
-          `Finds the ${DIAGNOSTIC_SKILL_RANGE} skills that matter most for your student — separate from the call, not on the call.`,
+          "Part 1 Mon + Part 2 Wed (proctored, 2 hr 14 min total). Finds the 5–6 skills that matter most, separate from the call.",
       },
       {
-        title: "Personal weekly plan",
+        title: "Personalized plan review (Fri Week 1)",
         detail:
-          "Built from the diagnostic: which skills, in what order, week by week until test day.",
+          "An SAT advisor walks diagnostic results with you and activates their weekly skill order.",
+      },
+      {
+        title: "Activated Improvement Plan",
+        detail:
+          "Same document, now with exact skills, missed questions, and lessons. Tutor + weekly focus until test day.",
       },
     ],
   };

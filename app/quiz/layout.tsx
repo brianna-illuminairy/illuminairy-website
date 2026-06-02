@@ -7,9 +7,9 @@ import "../quiz-globals.css";
 import "../funnel-responsive.css";
 
 export const metadata: Metadata = {
-  title: "SAT Score Path · Illuminairy",
+  title: "SAT Improvement Plan · Illuminairy",
   description:
-    "Find out what's really holding your kid's SAT score back, and what improvement is realistic before their next test.",
+    "Free ~2-minute Plan Builder for parents. Get an SAT Improvement Plan with score projection for what's realistic before their next test. Your child doesn't take a test yet.",
   robots: { index: true, follow: true }
 };
 

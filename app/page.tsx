@@ -7,20 +7,20 @@ import "./landing/landing-overrides.css";
 import "./landing/landing-premium.css";
 
 export const metadata: Metadata = {
-  title: "Personalized SAT plan for your child · Illuminairy",
+  title: "SAT Improvement Plan for your child · Illuminairy",
   description:
-    "Free ~2-minute assessment for parents. See which skills are costing points, what improvement is realistic, and how a personalized weekly plan works — backed by data from 250,000+ student scores.",
+    "Free ~2-minute plan builder for parents. Get an SAT Improvement Plan with score projection — which skills to focus on first and what improvement is realistic. Your child doesn't take a test yet.",
   openGraph: {
-    title: "Personalized SAT plan for your child · Illuminairy",
+    title: "SAT Improvement Plan for your child · Illuminairy",
     description:
-      "Free assessment for parents. Diagnostic-driven weekly SAT plan with vetted tutors.",
+      "For parents · ~2 minutes · free score projection. Skill Diagnostic and weekly plan follow your Strategy Call.",
     images: [{ url: "/brand/logo-square.png", width: 1200, height: 630 }]
   },
   twitter: {
     card: "summary_large_image",
-    title: "Personalized SAT plan for your child · Illuminairy",
+    title: "SAT Improvement Plan for your child · Illuminairy",
     description:
-      "Free assessment for parents. Diagnostic-driven weekly SAT plan with vetted tutors."
+      "For parents · ~2 minutes · free score projection. Skill Diagnostic after your Strategy Call."
   },
   robots: { index: true, follow: true }
 };

@@ -146,7 +146,7 @@ export function B3Body({ onCta }: BodyProps) {
               desc={landingShared.howItWorks.steps[0].desc}
               time={landingShared.howItWorks.steps[0].time}
               imageSrc={landingPhotoSlots.stepAssessment}
-              imageAlt="SAT assessment step"
+              imageAlt="Plan Builder on phone — parent answers questions"
               slotLabel="lp-step-assessment.jpg"
             />
             <StepCard
@@ -154,27 +154,27 @@ export function B3Body({ onCta }: BodyProps) {
               title={landingShared.howItWorks.steps[1].title}
               desc={landingShared.howItWorks.steps[1].desc}
               time={landingShared.howItWorks.steps[1].time}
-              imageSrc={landingPhotoSlots.stepDiagnostic}
-              imageAlt="Skill diagnostic step"
-              slotLabel="lp-step-diagnostic.jpg"
+              imageSrc={landingPhotoSlots.stepStrategyCall}
+              imageAlt="SAT Strategy Call scheduling"
+              slotLabel="lp-step-strategy-call.jpg"
             />
             <StepCard
               stepNum="03"
               title={landingShared.howItWorks.steps[2].title}
               desc={landingShared.howItWorks.steps[2].desc}
               time={landingShared.howItWorks.steps[2].time}
-              imageSrc={landingPhotoSlots.stepPlan}
-              imageAlt="SAT plan step"
-              slotLabel="lp-step-plan.jpg"
+              imageSrc={landingPhotoSlots.stepDiagnostic}
+              imageAlt="Skill Diagnostic step"
+              slotLabel="lp-step-diagnostic.jpg"
             />
             <StepCard
               stepNum="04"
               title={landingShared.howItWorks.steps[3].title}
               desc={landingShared.howItWorks.steps[3].desc}
               time={landingShared.howItWorks.steps[3].time}
-              imageSrc={landingPhotoSlots.stepTutor}
-              imageAlt="1:1 SAT tutor session"
-              slotLabel="lp-step-tutor.jpg"
+              imageSrc={landingPhotoSlots.stepWeeklyPlan}
+              imageAlt="Personalized weekly SAT plan"
+              slotLabel="lp-step-weekly-plan.jpg"
             />
           </div>
           <div className="il-cta-spaced">

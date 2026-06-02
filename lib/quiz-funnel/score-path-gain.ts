@@ -56,6 +56,23 @@ export const SCORE_PATH_GAIN_PHASES: readonly GainPhase[] = [
 /** Relative weight per ranked skill (skill 1 = largest jump). Sums to 100. */
 export const RANKED_SKILL_GAIN_WEIGHTS = [28, 24, 20, 16, 12] as const;
 
+/** V1 projection chart — front-loaded weights by skill count (sum 100). */
+export const RANKED_SKILL_GAIN_WEIGHTS_6 = [26, 22, 18, 15, 12, 7] as const;
+export const RANKED_SKILL_GAIN_WEIGHTS_7 = [22, 18, 16, 14, 12, 10, 8] as const;
+
+/** V1 chart skill zones: under 12 wk → 5 · 12 wk → 6 · 13+ wk → 7. */
+export function v1ChartSkillCount(weeks: number): 5 | 6 | 7 {
+  if (weeks >= 13) return 7;
+  if (weeks === 12) return 6;
+  return 5;
+}
+
+export function rankedSkillGainWeights(skillCount: number): readonly number[] {
+  if (skillCount >= 7) return RANKED_SKILL_GAIN_WEIGHTS_7;
+  if (skillCount === 6) return RANKED_SKILL_GAIN_WEIGHTS_6;
+  return RANKED_SKILL_GAIN_WEIGHTS;
+}
+
 export type WeeklyGainPoint = {
   week: number;
   weeklyGain: number;
@@ -143,14 +160,15 @@ export function buildWeeklyGainCurve(weeks: number): WeeklyGainPoint[] {
 }
 
 /**
- * Split total modeled gain across 5 ranked skills (front-loaded).
- * `skillLabels` optional — defaults to Skill 1…5 for charts.
+ * Split total modeled gain across ranked skills (front-loaded).
+ * `skillCount` defaults to 5; V1 chart uses `v1ChartSkillCount(weeks)`.
  */
 export function allocateGainToRankedSkills(
   totalGain: number,
-  skillLabels: string[] = []
+  skillLabels: string[] = [],
+  skillCount = 5
 ): RankedSkillGain[] {
-  const weights = RANKED_SKILL_GAIN_WEIGHTS;
+  const weights = rankedSkillGainWeights(skillCount);
   const sum = weights.reduce((a, b) => a + b, 0);
   const scaled = weights.map((w) => Math.round((w / sum) * totalGain));
   const diff = totalGain - scaled.reduce((a, b) => a + b, 0);

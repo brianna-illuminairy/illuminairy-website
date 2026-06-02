@@ -14,6 +14,15 @@ supabase db push
 
 Or paste `migrations/20260518120000_crm_schema.sql` into the SQL editor in the Supabase Dashboard.
 
+**Plan share table** (`plan_shares`, for reveal share links):
+
+```bash
+npm run crm:migrate:plan-shares
+```
+
+Requires `DATABASE_URL` or `SUPABASE_DB_PASSWORD` in `.env.local` (Dashboard → Project Settings → Database → password).  
+Applied on prod **2026-06-01** via SQL Editor.
+
 ## Env (`.env.local`)
 
 ```bash

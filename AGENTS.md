@@ -50,6 +50,7 @@ Patterns for multi-session AI work (full guide: [`docs/agentic-development/READM
 | Ralph (one task per session) | `npm run ralph:next` → `specs/ralph/PLAN.md` |
 | Engineering verify gate | `npm run agent:verify` (do not edit `scripts/agent-verify.mjs`) |
 | Growth experiments | `agent/growth-program.md`, `growth/experiments/`, `lib/analytics-events.ts` |
+| Marketing skills (Cursor) | `.agents/skills/` + [`growth/marketingskills-usage.md`](growth/marketingskills-usage.md) · context [`.agents/product-marketing.md`](.agents/product-marketing.md) |
 | Cursor skills | `.cursor/skills/` (plan, review, ship, investigate, ralph-iteration) |
 | Claude Code | [`docs/agentic-development/claude-code-and-gstack.md`](docs/agentic-development/claude-code-and-gstack.md) |
 

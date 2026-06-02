@@ -1,0 +1,33 @@
+---
+description: When using marketingskills (copywriting, cro, emails, ads, etc.) for Illuminairy customer-facing work
+globs:
+  - .agents/**
+  - growth/**
+  - lib/landing/**
+  - lib/quiz-funnel/**
+  - docs/messaging-guide.md
+alwaysApply: false
+---
+
+# Marketing skills + Illuminairy copy
+
+**Installed skills:** `.agents/skills/` from [marketingskills](https://github.com/coreyhaines31/marketingskills). Usage map: [`growth/marketingskills-usage.md`](../../growth/marketingskills-usage.md).
+
+## Required read order
+
+1. [`.agents/product-marketing.md`](../../.agents/product-marketing.md)
+2. [`docs/messaging-guide.md`](../../docs/messaging-guide.md) and [`growth/funnel-strategy.md`](../../growth/funnel-strategy.md)
+3. [`.cursor/rules/banned-copy-phrases.mdc`](banned-copy-phrases.mdc)
+
+**Illuminairy rules override** generic marketing skill output (product names, banned phrases, stats from `lib/site.ts` only).
+
+## Locked vocabulary
+
+- **SAT Improvement Plan** (not quiz, not Score Path)
+- **SAT Strategy Call** · **Skill Diagnostic** · **personalized weekly plan**
+- Cold LP: **staged disclosure** — plan-first CTA; defer tutor/tuition until after Plan Builder
+
+## Do not
+
+- Install all 43 upstream skills into this repo without owner approval
+- Let skills suggest "free quiz," score guarantees, or College Board ~115 Khan stat

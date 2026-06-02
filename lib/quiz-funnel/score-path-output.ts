@@ -44,11 +44,9 @@ export type QuizAnswersLike = {
   q9?: string;
 };
 
-const LONG_RUNWAY_WEEKS = 19;
+export type TestDateStatus = "scheduled" | "tbd";
 
-export type TestDateStatus = "scheduled" | "tbd" | "2027";
-
-export type ChartWeeksSource = "q5" | "default_16" | "default_19";
+export type ChartWeeksSource = "q5" | "default_16";
 
 /** Illustrative starting score when q4 = na (see quiz-profile SCORE_PATH_DEFAULT_START). */
 export { SCORE_PATH_DEFAULT_START, SCORE_PATH_DEFAULT_START_BAND, SCORE_PATH_DEFAULT_WEEKS, SCORE_PATH_DEFAULT_GAIN } from "@/lib/quiz-funnel/quiz-profile";
@@ -233,17 +231,6 @@ function resolveTestTimeline(q5?: string, today = funnelToday()) {
     };
   }
 
-  if (q5 === "2027") {
-    return {
-      testDateStatus: "2027" as const,
-      hasScheduledTestDate: false,
-      chartWeeks: LONG_RUNWAY_WEEKS,
-      chartWeeksSource: "default_19" as const,
-      pastTestDate: false,
-      shortRunway: false
-    };
-  }
-
   return {
     testDateStatus: "tbd" as const,
     hasScheduledTestDate: false,
@@ -365,7 +352,7 @@ export function buildScorePathOutput(
   }
   if (starting.confidence === "estimate") {
     disclaimers.push(
-      "Starting score is your best estimate. The diagnostic replaces this with a measured baseline."
+      "Starting score is your best estimate. The Skill Diagnostic replaces this with a measured baseline."
     );
   }
   if (starting.confidence === "inferred") {
@@ -378,27 +365,22 @@ export function buildScorePathOutput(
   }
   if (target.confidence === "inferred") {
     disclaimers.push(
-      `Target range (${target.bandLabel}) is typical for your stakes, confirmed on the Strategy Call.`
+      `Target range (${target.bandLabel}) is typical for your stakes, confirmed on your SAT Strategy Call.`
     );
   }
   if (target.confidence === "missing") {
-    disclaimers.push("Target score TBD. Set on the Strategy Call.");
+    disclaimers.push("Target score TBD. Set on your SAT Strategy Call.");
   }
   if (chartWeeksSource === "default_16") {
     disclaimers.push(
       "No test date yet. Chart shows a typical ~16-week window (~+250 pts illustrative), not a deadline."
     );
   }
-  if (chartWeeksSource === "default_19") {
-    disclaimers.push(
-      "Spring 2027+. Chart uses a longer ~19-week illustrative runway until you pick a date on the Strategy Call."
-    );
-  }
   if (gapExceedsModeledGain && target.value != null && scoreRange.typical != null) {
     disclaimers.push(
       hasDate
-        ? `Modeled gain may not reach ${target.label} by test day. The Strategy Call can adjust target or timeline.`
-        : `Modeled +${modeledGain} may not close the full gap to ${target.label}. The Strategy Call sets date and runway.`
+        ? `Modeled gain may not reach ${target.label} by test day. Your SAT Strategy Call can adjust target or timeline.`
+        : `Modeled +${modeledGain} may not close the full gap to ${target.label}. Your SAT Strategy Call sets date and runway.`
     );
   }
 
@@ -407,12 +389,12 @@ export function buildScorePathOutput(
     callHooks.push("Pick a test date and backwards-plan prep weeks");
   }
   if (isFirstOfficialSit || starting.confidence !== "known") {
-    callHooks.push("Baseline timed diagnostic before first official SAT");
+    callHooks.push("Baseline Skill Diagnostic before first official SAT");
   }
   if (target.confidence !== "known") {
     callHooks.push("Confirm target score and timeline");
   }
-  callHooks.push("Schedule diagnostic and review the weekly plan shape");
+    callHooks.push("Schedule Skill Diagnostic and review the Improvement Plan");
 
   void buildWeeklyGainCurve(chartWeeks);
   void q6;

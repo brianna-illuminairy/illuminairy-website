@@ -3,6 +3,8 @@
 *Parent-facing copy for the SAT funnel, landing pages, emails, and ads.*  
 *Voice & positioning depth → [brand-voice-and-positioning.md](brand-voice-and-positioning.md). SAT competitive copy bank → [sat-messaging-positioning.md](sat-messaging-positioning.md). Banned phrases → `.cursor/rules/banned-copy-phrases.mdc`.*
 
+**Funnel strategy (ICP, conversion ladder, Improvement Plan artifact, DR principles):** [`../growth/funnel-strategy.md`](../growth/funnel-strategy.md).
+
 **Stats source of truth:** `lib/site.ts` — never hardcode numbers elsewhere.
 
 ---
@@ -23,12 +25,19 @@
 
 | Term | Meaning |
 |------|---------|
-| **SAT Score Path** | The free ~2-minute parent questionnaire. **Never call it a "quiz."** |
-| **Strategy Call** | Free 15-minute advisory call — timeline, scores, school list. **Not** where the diagnostic happens. |
-| **Skill Diagnostic** | Proctored **2 hr 14 min** assessment — separate step, **after** Strategy Call if they move forward. |
-| **Personalized weekly plan** | What they get from diagnostic + tutor — not "blueprint," not "structured program." |
+| **SAT Improvement Plan** | Parent Plan Builder output (~2 min). Includes free **score projection**. **Never call it a "quiz."** Retire customer-facing "SAT Score Path." |
+| **SAT Strategy Call** | Free 15-minute advisory call — targets, schools, timeline; schedules Week 1 diagnostic. **Not** where the diagnostic happens. |
+| **Skill Diagnostic** | Proctored **2 hr 14 min** exam — Part 1 + Part 2 in Week 1, **after** Strategy Call. |
+| **Activated Improvement Plan** | Same document after diagnostic — exact skills, missed questions, lessons filled in. |
+| **Personalized weekly plan** | Ongoing execution with tutor after activation — not "blueprint," not "structured program." |
 
-**CTA defaults:** "See their Score Path" · "Schedule your Strategy Call" · "Book the Skill Diagnostic"
+**CTA defaults:** "Get their improvement plan" · "Book your free SAT Strategy Call" · "Book the Skill Diagnostic"
+
+**Banned:** bare "assessment," "Take the assessment," "if you want to move forward"
+
+**Strategy doc:** [`../growth/funnel-strategy.md`](../growth/funnel-strategy.md)
+
+**Canonical funnel URL:** `https://illuminairy.com/plan?step=q1` — not `/quiz` (legacy `/quiz` redirects).
 
 ---
 
@@ -97,7 +106,7 @@ Import from `lib/site.ts`. Always pair with **"Results vary"** or an equivalent 
 | Implied guarantees (+100, close the gap, hit Tech) | Legal/trust risk — use "often," "typical," "about" |
 | Khan video/skill counts as outcome proof | OK for **breadth contrast** (200+ skills vs 5–6), not as a results claim |
 
-Khan breadth copy (`lib/sat-skills-copy.ts`): **111 math skills**, **260 SAT videos**, **3+ years** curriculum span, **200+** total skills — for "they went broad" framing only.
+Khan breadth copy (`lib/sat-skills-copy.ts`): **111 math skills**, **260 SAT videos**, **3+ years** curriculum span, **200+** total skills, for "they went broad" framing only. **No em dashes (—)** in parent-facing copy; use periods or commas (see banned-copy-phrases).
 
 ---
 
@@ -127,7 +136,7 @@ everything on the SAT instead of the few skills that actually move their score
 - Name what happens: diagnostic → ranked skills → tutor on misses → weekly plan.
 - Use **"your student" / "their score"** — not "your child" overload, not "the learner."
 - Positive framing: what **we do**, not what others fail at (see banned-copy rule).
-- Label illustrative numbers: "example," "typical," "confirm on Strategy Call."
+- Label illustrative numbers: "example," "typical," "confirm on SAT Strategy Call."
 
 ### Don't
 
@@ -136,7 +145,7 @@ everything on the SAT instead of the few skills that actually move their score
 - Weird meta lines: "not a Khan stat," "our program outcome vs…"
 - Negative headlines: "No empty promises," "Not self-study."
 - **"Prep"** as a noun — say program, tutoring, practice, or name the step.
-- **"Quiz"** for Score Path.
+- **"Quiz"** for the Plan Builder / Improvement Plan.
 - **"Cohort"** — say students, families, or program.
 
 Full banned list → `.cursor/rules/banned-copy-phrases.mdc`
@@ -145,7 +154,7 @@ Full banned list → `.cursor/rules/banned-copy-phrases.mdc`
 
 ## 8. Funnel copy patterns
 
-### Score Path (questions)
+### Plan Builder (questions)
 
 - Short prompts. Parent answers about **their student**.
 - **Q2 (stakes):** positive frame — *“What would a higher SAT score help them achieve?”* (not loss framing).
@@ -180,7 +189,7 @@ Two panels:
 
 Metrics row: Start · Target · Likely improvement · Weeks · **Effort: 5–7 hrs/week**
 
-Next steps order: **Strategy Call → Skill Diagnostic → Personal weekly plan**
+Next steps order: **SAT Strategy Call → Skill Diagnostic (Week 1) → Activated Improvement Plan**
 
 ### i-compare chart
 
@@ -196,7 +205,7 @@ Disclaimer required. Do not imply group bar is a cited College Board stat.
 
 | OK | Not OK |
 |----|--------|
-| "Khan walks through the whole course — not the 5–6 skills the diagnostic shows matter most." | "~20 hours on Khan = ~115 points" |
+| "Khan walks through the whole course — not the 5–6 skills the Skill Diagnostic shows matter most." | "~20 hours on Khan = ~115 points" |
 | "200+ skills and 300–500+ videos — most movement comes from 5–6." | "Our program outcome, not a Khan stat" |
 | First-month Illuminairy outcome after they pick Khan | Passive-aggressive DIY disclaimers |
 
@@ -205,7 +214,7 @@ Disclaimer required. Do not imply group bar is a cited College Board stat.
 ## 10. Honesty & disclaimers
 
 - **No score or admission guarantees.**
-- Illustrative projections → dashed lines, footnotes, "confirm on Strategy Call."
+- Illustrative projections → dashed lines, footnotes, "confirm on SAT Strategy Call."
 - Before/after photos → "shared by parents," "not independently verified," "results vary."
 - College Board trademark footer on SAT pages.
 - When showing +182 or 90%: **completers / first-month investors in the program** — not all visitors.
@@ -217,12 +226,12 @@ Disclaimer required. Do not imply group bar is a cited College Board stat.
 | Bad | Good |
 |-----|------|
 | "District-wide, 20 hours on Official SAT Practice was linked to 115 points…" | "90% of students who invest 20–28 hours in the first month achieve 100+ in month one — at 5–7 hrs/week." |
-| "Take our quiz to see your score boost." | "See their Score Path — free, ~2 minutes." |
-| "Khan spans 400 videos — costing them points." | "Khan covers 200+ skills. The diagnostic finds the 5–6 that matter for your student." |
+| "Take our quiz to see your score boost." | "Get their Improvement Plan — free, ~2 minutes." |
+| "Khan spans 400 videos — costing them points." | "Khan covers 200+ skills. The Skill Diagnostic finds the 5–6 that matter for your student." |
 | "Our program outcome, not a Khan stat." | (Delete — just state your stat.) |
 | "They'll gain 150 points by August." | "Students with a similar profile often improve 120–180 points over 16 weeks when they work the ranked skills." |
-| "See where points are hiding on the SAT." | "The diagnostic ranks the 5–6 skills they keep missing." |
-| "A prep plan built around their leaks." | "A personalized weekly plan built from the diagnostic." |
+| "See where points are hiding on the SAT." | "The Skill Diagnostic ranks the 5–6 skills they keep missing." |
+| "A prep plan built around their leaks." | "A personalized weekly plan built from the Skill Diagnostic." |
 
 ---
 
@@ -235,4 +244,4 @@ Disclaimer required. Do not imply group bar is a cited College Board stat.
 
 ---
 
-*Last updated: May 2026 — reflects Score Path funnel, first-month outcomes, and CB OSP removal from parent copy.*
+*Last updated: May 2026 — SAT Improvement Plan funnel, first-month outcomes, CB OSP removal from parent copy.*

@@ -6,7 +6,29 @@ export const SCORE_PATH_EFFORT_LINE =
 
 export type ScorePathCopyPart = { text: string; em?: boolean };
 
-/** v1 → s2 bridge — emotional so-what after the projection chart (parent voice). */
+/** Parent-facing SAT score with thousands separator (e.g. 1,400). */
+export function formatSatScoreLabel(score: number): string {
+  return score.toLocaleString("en-US");
+}
+
+/** v1 → s2 bridge — after projection chart (parent voice). */
+export function v1FastWinBridgeParts(goalScore: number | null | undefined): ScorePathCopyPart[] {
+  const hasGoal = goalScore != null && goalScore > 0;
+  const parts: ScorePathCopyPart[] = [
+    { text: "The fastest way to achieve " },
+  ];
+  if (hasGoal) {
+    parts.push({ text: formatSatScoreLabel(goalScore), em: true });
+  } else {
+    parts.push({ text: "their goal score", em: true });
+  }
+  parts.push({
+    text: " is to attack skills one at a time in the order of highest impact.",
+  });
+  return parts;
+}
+
+/** @deprecated use v1FastWinBridgeParts */
 export function v1EmotionalBridgeParts(
   q2?: string,
   targetScore?: number | null
@@ -19,9 +41,9 @@ export function v1EmotionalBridgeParts(
     { text: noun, em: true },
     { text: ` ${verb} still realistic. We focus on the ` },
     { text: "highest-impact skill", em: true },
-    { text: " first—often worth " },
+    { text: " first, often worth " },
     { text: "50+ points", em: true },
-    { text: "—so they see a quick win and believe " },
+    { text: ", so they see a quick win and believe " },
   ];
 
   if (hasTarget) {
@@ -36,19 +58,21 @@ export function v1EmotionalBridgeParts(
   return parts;
 }
 
-/** s2 — how we teach each skill (example session). */
-export const S2_EXAMPLES_HEADLINE = "We teach each skill through examples.";
+/** s2 — example-session method (6-step card below). */
+export const S2_EXAMPLES_HEADLINE =
+  "Using a proven method to teach each skill by examples.";
 
 export const S2_EXAMPLES_LEAD =
   "We show how to solve it, practice together, then they solve it.";
 
-/** Results · before call — personalize plan (replaces late-funnel +182 stat screen). */
-export const S3_PERSONALIZE_HEADLINE = "Next we'll personalize their plan.";
+/** s3 verified case study — see `s3-verified-case-study.ts` + `QFVerifiedCaseStudy`. */
 
-export const S3_PERSONALIZE_LEAD =
-  "On a free 15-minute Strategy Call, an SAT advisor reviews their Score Path with you — timeline, target, and schools — and schedules the Skill Diagnostic if you want to move forward.";
+export const REVEAL_CTA = "See the plan";
 
-export const S3_PERSONALIZE_CTA = "Personalize my plan";
+export const REVEAL_SCORE_PROJECTION_NOTE =
+  "Starter plan with free score projection. Exact skills, missed questions, and lessons unlock after the Skill Diagnostic.";
+
+export const S3_PERSONALIZE_CTA = "Continue to book your call";
 
 /** s3 · advisor credibility (team photo + one line). */
 export const S4_CALL_LINE =

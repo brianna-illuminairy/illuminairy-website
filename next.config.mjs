@@ -13,13 +13,23 @@ const nextConfig = {
   async redirects() {
     return [
       {
+        source: "/quiz",
+        destination: "/plan",
+        permanent: false
+      },
+      {
+        source: "/quiz/:path*",
+        destination: "/plan/:path*",
+        permanent: false
+      },
+      {
         source: "/assessment",
-        destination: "/quiz?step=q1",
+        destination: "/plan?step=q1",
         permanent: true
       },
       {
         source: "/assessment/:path*",
-        destination: "/quiz?step=q1",
+        destination: "/plan?step=q1",
         permanent: true
       },
       {
@@ -75,12 +85,18 @@ const nextConfig = {
     ];
   },
   async rewrites() {
+    const planBuilderRewrites = [
+      { source: "/plan", destination: "/quiz" },
+      { source: "/plan/:path*", destination: "/quiz/:path*" }
+    ];
+
     const host = process.env.NEXT_PUBLIC_POSTHOG_HOST ?? "";
     const region = host.includes("eu") ? "eu" : "us";
     const ingest = `https://${region}.i.posthog.com`;
     const assets = `https://${region}-assets.i.posthog.com`;
 
     return [
+      ...planBuilderRewrites,
       {
         source: "/ia/static/:path*",
         destination: `${assets}/static/:path*`

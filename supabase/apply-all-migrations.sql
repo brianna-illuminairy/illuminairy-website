@@ -205,3 +205,17 @@ create index if not exists leads_stage_funnel_idx on leads (stage, funnel);
 comment on column leads.funnel is 'Lead origin: sat_quiz, intake, legacy, etc.';
 comment on column leads.quiz_answers is 'Raw SAT quiz payload snapshot at S5 submit';
 comment on column leads.promised_gain_pts is 'Capped score gain shown on S5 approval screen';
+
+-- Plan share snapshots (reveal virality)
+create table if not exists plan_shares (
+  id text primary key,
+  payload jsonb not null,
+  visitor_id text,
+  view_count integer not null default 0,
+  created_at timestamptz not null default now(),
+  expires_at timestamptz not null default (now() + interval '90 days')
+);
+
+create index if not exists plan_shares_expires_at_idx on plan_shares (expires_at);
+
+comment on table plan_shares is 'Public read-only Improvement Plan snapshots; no PII in payload.';

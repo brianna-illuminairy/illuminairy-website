@@ -1,53 +1,67 @@
 # Active context
 
-*Last updated: 2026-05-28*
+*Last updated: 2026-06-01*
+
+## Resume here
+
+**Full session handoff (start next chat with this):** [`session-handoff-2026-05-29-funnel-qa.md`](./session-handoff-2026-05-29-funnel-qa.md)
 
 ## Current focus
 
-- **SAT Score Path funnel** — `/quiz` — parent intake → insight hits → plan reveal → Strategy Call booking. Primary copy surface.
-- **B3 landing** — `/` — PostHog A/B variants; hands off to Score Path.
-- **SAT plan funnel v1** — `/satplan` — layout-locked; separate from Score Path.
-- **Assessment funnel** — `/assessment` — Hims-style intake; `noindex` until launch QA.
+- **SAT Improvement Plan funnel** — `/quiz` — parent Plan Builder → reveal → SAT Strategy Call → Week 1 Skill Diagnostic → activated plan.
+- **B3 landing** — `/` — PostHog A/B (`b3a` / `b3b` / `b3c`); hands off to `/quiz?step=q1`.
+- **Separate funnels (out of scope unless asked):** `/satplan`, `/assessment`.
 
-## Messaging (do not re-debate — locked)
+## Messaging (locked — do not re-debate)
 
-**Single source of truth:** [`docs/messaging-guide.md`](../docs/messaging-guide.md)  
-**Enforced by:** `.cursor/rules/messaging-guide.mdc` + `.cursor/rules/banned-copy-phrases.mdc` (both always-on)
+**Strategy:** [`growth/funnel-strategy.md`](../growth/funnel-strategy.md)  
+**Tactical copy:** [`docs/messaging-guide.md`](../docs/messaging-guide.md)  
+**Rules:** `.cursor/rules/messaging-guide.mdc`, `banned-copy-phrases.mdc`
 
-Owner corrections already baked in — agents should read the guide, not ask again:
+| Topic | Decision |
+|-------|----------|
+| Product | **SAT Improvement Plan** (+ score projection). Retire customer-facing **SAT Score Path**. |
+| Call | **SAT Strategy Call** (15 min) — before Week 1. |
+| Diagnostic | **Skill Diagnostic** — Part 1 Mon + Part 2 Wed; Fri plan review. |
+| Audience | Parents — never “quiz” or bare “assessment” on LP/step 1. |
+| Banned | “if you want to move forward,” “Take the assessment,” student plan-generator SEO. |
+| Stats | `lib/site.ts` only; “Results vary.” |
 
-| Topic | Locked decision |
-|-------|-----------------|
-| Audience | Parents — never call Score Path a "quiz" |
-| Product names | Score Path · Strategy Call (15 min) · Skill Diagnostic (2 hr 14 min, after call) |
-| Core contrast | Everything on SAT vs **5–6 skills** from diagnostic |
-| Effort | `~5–7 hrs/week · mistake-driven SAT tutoring on their weakest skills` |
-| First-month stat | **90%** at **20–28 hrs** → **100+** month one — after **i-steps**, not q7 |
-| Q2 | Positive stakes — “What would a higher SAT score help them achieve?” |
-| Insight hits | Autoprogress ~6s (scales with copy); closed-loop copy |
-| Education slides | q3=none, q5=tbd/2027, q8=tbd — see messaging-guide §8 |
-| Booking | s5/s9 tie to q2 goal phrase (no extra Yes/No screen) |
-| Do NOT use | CB ~115/20hr OSP, "District-wide," "not a Khan stat," gains/cost points/leaking/hiding, point leak(s), generic prep/plan/review, Our read |
-| Stats | Import only from `lib/site.ts` — pair with "Results vary" |
+## Funnel spine
 
-## Score Path spine
+`q1–q5` → `i1` → `q6` → `q7` → `hit-q7` → `i-compare` → … → `reveal` → `v1` → `s2` → `s3` → `s5` → `s7` → `s9` → `booked`
 
-`q1–q5` → … → `i1` → `q6` → `q7` → `hit-q7` (prep × section) → `i-compare` (proof) → …
+Key libs: `plan-reveal.ts`, `score-path-copy.ts`, `stakes-copy.ts`, `education-slides.ts`, `prep-failure-copy.ts`, `thank-you-copy.ts`
 
-Key libs: `lib/quiz-funnel/plan-reveal.ts`, `insight-hits.ts`, `stakes-copy.ts`, `education-slides.ts`, `score-path-copy.ts`, `lib/sat-skills-copy.ts`
+## Recently shipped (2026-05-29)
 
-## Production spine (satplan — legacy)
+- `growth/funnel-strategy.md` + LP/quiz P0 vocabulary + analytics enrichment + full slide messaging pass + reveal→booked polish.
+- `npm run funnel:step-registry` — step/switch guard.
 
-landing → meaning → … → reveal chain → book → booked
+## Recently shipped (2026-06-01)
 
-## Next steps (Score Path)
+- UGC Icon revisions doc, staged-disclosure LP copy, Klaviyo nurture doc, image production checklist
+- Calendly webhook `strategy_call_at` + show-up copy (s7/s9/booked)
+- LP slots: `stepStrategyCall`, `stepWeeklyPlan`
+- **marketingskills** (11 skills in `.agents/skills/`) + [`.agents/product-marketing.md`](../.agents/product-marketing.md) + [`growth/marketingskills-usage.md`](../growth/marketingskills-usage.md)
+- **Plan share virality** — reveal share panel + `/quiz/share/[id]` + API; see [`growth/plan-share-virality.md`](../growth/plan-share-virality.md). **`plan_shares` table applied on prod** (2026-06-01).
 
-- [ ] Fog/Illuminate reveal animation (discussed, not built)
-- [ ] Klaviyo/Calendly automation verify on prod
-- [ ] Remove `noindex` when launch-ready
+## Next (pending)
 
-## Session notes
+- [ ] QA share link end-to-end on prod (reveal → copy link → incognito → CTA)
+- [ ] Prod Supabase/UTM + Calendly webhook QA (checklist in `growth/quiz-funnel-qa-log.md`)
+- [ ] Klaviyo Flows B/C/D in UI per `docs/klaviyo-quiz-funnel-nurture.md`
+- [ ] Lighthouse + viewport matrix → `growth/quiz-funnel-qa-log.md`
+- [ ] LP photos #1–#6 per `growth/b3-lp-image-production-checklist.md`
+- [ ] Icon script re-approval + paste from `growth/icon-fall-sat-2026.md`
+- [ ] Parked: late-funnel s3→s9 carrot UI
 
-- Local: `npm run dev` → http://localhost:3000/quiz?step=reveal
-- Answers: `localStorage` key `qf_answers`
-- Verify: `npm run agent:verify`
+## Dev quick ref
+
+```bash
+npm run dev                              # http://localhost:3000/quiz?step=reveal
+npm run funnel:step-registry && npm run build
+```
+
+- Answers: `localStorage` `qf_answers`
+- Plan file: `.cursor/plans/funnel_qa_and_analytics_d046016d.plan.md` — **do not edit** unless user asks

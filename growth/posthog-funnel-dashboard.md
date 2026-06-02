@@ -20,9 +20,40 @@ Create one dashboard: **SAT LP → Quiz → Lead → Book**
 
 1. `funnel_landing_view`
 2. `funnel_cta_click`
-3. `quiz_step_viewed` (filter `step = q1`)
-4. `quiz_lead_submitted`
-5. `quiz_booking_confirmed`
+3. `quiz_started` (once on first `q1` — distinct from step views)
+4. `quiz_step_viewed` (filter `step = q1` for LP → quiz handoff)
+5. `quiz_lead_submitted`
+6. `quiz_booking_confirmed`
+7. `quiz_thank_you_viewed` (`booked` step)
+
+## Event notes
+
+### `quiz_step_viewed` vs `$pageview`
+
+Each step also fires a synthetic PostHog `$pageview` with `$current_url=/plan?step=…` (canonical URL; `/quiz` redirects). Funnel dashboards should use **`quiz_step_viewed`** as the step metric; `$pageview` is optional for path-based views.
+
+### Booking confirmation (API vs webhook)
+
+| Source | Event | When |
+|--------|-------|------|
+| s5 server book | `quiz_booking_confirmed` with `booking_source: api` | `POST /api/funnel/calendly-book` success |
+| Legacy Calendly iframe | `quiz_booking_confirmed` with `booking_source: client` | `calendly.event_scheduled` (deep link only) |
+| Webhook | `call_booked` touch + CRM stage | [`lib/crm/calendly-webhook.ts`](../lib/crm/calendly-webhook.ts) |
+
+**Authoritative** booking for CRM/ops is the **Calendly webhook**. Client/API events are for real-time funnel analytics; reconcile drops if webhook fails.
+
+### Booking errors (s5)
+
+| Event | When |
+|-------|------|
+| `quiz_booking_error` (PostHog + GA4) | Lead save fail, invalid phone, slot taken, Calendly API 5xx, availability load fail, network |
+| `booking_error` (touch_events, server) | Same failures on `POST /api/funnel/calendly-book` |
+
+Break down `quiz_booking_error` by `error_code`: `invalid_phone`, `lead_save_failed`, `no_slot`, `slot_taken`, `calendly_api`, `availability_load`, `network`.
+
+### Lead submit props
+
+`quiz_lead_submitted` includes `q1–q9`, `sat_lp_variant`, `has_gap_screen`, `showed_gpa_gap`, `promised_gain_pts`, `weeks_until_test`, `booking_source: client`.
 
 ## Primary experiment metric
 
@@ -51,3 +82,36 @@ After ~200 views/arm, compare CTA rate and `quiz_lead_submitted` rate. To scale 
 3. Keep `sat_lp_variant` on Supabase/Klaviyo for segment reporting
 
 See also: [meta-lp-events.md](./meta-lp-events.md), [ad-message-match-qa.md](./ad-message-match-qa.md)
+
+## Message-match QA (before scaling spend)
+
+Run [`ad-message-match-qa.md`](./ad-message-match-qa.md) so ad hook = LP hero within ~3s:
+
+| Variant | `utm_campaign` | Hero echo |
+|---------|----------------|-----------|
+| b3a | `sat-lp-b3a-problem` | High GPA. Low SAT. Fixable. |
+| b3b | `sat-lp-b3b-results` | +182 points. On a focused path. |
+| b3c | `sat-lp-b3c-authority` | improvement path · 250k+ scores |
+
+UTMs must persist LP → `/plan?step=q1` → s5 lead row (`sat_lp_variant` on `quiz_lead_submitted`).
+
+## Prioritized A/B tests (2026-06)
+
+Full hypotheses: [`2026-06-full-funnel-conversion-plan.md`](./2026-06-full-funnel-conversion-plan.md) § CRO / A/B.
+
+| Priority | Test | Primary metric | Sample | Implementation |
+|----------|------|----------------|--------|----------------|
+| **1** | b3a vs b3b vs b3c hero | `funnel_cta_click` / `funnel_landing_view` | ~200 views/arm or 14d | PostHog flag `sat-lp-variant` |
+| **2** | Hero micro-copy on winner (CTA label or checklist order) | CTA + `quiz_lead_submitted` | ~200 views/arm | After test 1 winner only |
+
+**Do not** scale Meta creative to a new hook until LP variant wins and [`ad-message-match-qa.md`](./ad-message-match-qa.md) is re-signed for that pair.
+
+### UTM + variant breakdown (funnel diagnostics)
+
+On `quiz_lead_submitted` and `funnel_cta_click`, always break down by:
+
+- `sat_lp_variant`
+- `utm_campaign` (expect `sat-lp-b3a-problem` | `sat-lp-b3b-results` | `sat-lp-b3c-authority` | `fall_sat_retake` for Icon)
+- `utm_source` (e.g. `icon`, `facebook`)
+
+Icon traffic (June 2026, fall retakers): `utm_campaign=fall_sat_retake` + `utm_content=script_1` … `script_6` — compare completion to LP arms.

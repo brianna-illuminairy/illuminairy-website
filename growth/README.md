@@ -1,7 +1,7 @@
-# Growth experiments
+# Growth
 
-Experiment logs for copy, CTA, and funnel tests. See [`docs/agentic-development/growth-autoresearch.md`](../docs/agentic-development/growth-autoresearch.md).
+**Icon / Meta (June 2026):** [`icon-fall-sat-2026.md`](./icon-fall-sat-2026.md) — **only file you need for ads.**
 
-Copy [`experiments/_template.md`](experiments/_template.md) to `experiments/YYYY-MM-DD-slug.md` for each run.
+**Map of everything else:** [`WHATS-ACTIVE.md`](./WHATS-ACTIVE.md)
 
-Human strategy: [`agent/growth-program.md`](../agent/growth-program.md).
+Experiments: [`experiments/_template.md`](./experiments/_template.md) · strategy: [`funnel-strategy.md`](./funnel-strategy.md)

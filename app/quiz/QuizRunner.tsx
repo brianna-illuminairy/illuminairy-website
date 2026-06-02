@@ -18,16 +18,16 @@ import {
 import {
   educationHitQ3None,
   educationHitQ5Tbd,
-  educationHitQ5Timing,
   educationHitQ8Scores,
   educationHitOutcomeMonthOne,
 } from '@/lib/quiz-funnel/education-slides';
 import {
-  QFSPlanReveal, QFS2Science, QFS3Stats,
+  QFSHeardSummary, QFSPlanReveal, QFS2Science, QFS3Stats,
 } from './screens/Results';
 import {
-  QFS5Approved, QFS7PlanDetails, QFS9Booking, QFS9ThankYou,
+  QFS4PlanHandoff, QFS5Approved, QFS7PlanDetails, QFS9Booking, QFS9ThankYou,
 } from './screens/Finale';
+import { PLAN_HANDOFF_CTA } from '@/lib/quiz-funnel/plan-handoff-copy';
 
 const BASE_STEPS = [
   'q1','q2','q3','q4','q5',
@@ -38,10 +38,11 @@ const BASE_STEPS = [
   'i-method',
   'i-steps',
   'i2','q8','q9',
+  'heard',
   'reveal',
   'v1',
   's2','s3','s4',
-  's5','s7','s9',
+  's5',
 ];
 
 function getSteps(answers: QuizAnswers) {
@@ -59,12 +60,9 @@ function getSteps(answers: QuizAnswers) {
     if (q5Idx >= 0) steps.splice(q5Idx, 0, 'hit-q4');
   }
 
-  if (answers.q5 === 'tbd') {
+  if (answers.q5 === 'tbd' || answers.q5 === '2027') {
     const i1Idx = steps.indexOf('i1');
     if (i1Idx >= 0) steps.splice(i1Idx, 0, 'hit-q5-tbd');
-  } else if (answers.q5 === '2027') {
-    const i1Idx = steps.indexOf('i1');
-    if (i1Idx >= 0) steps.splice(i1Idx, 0, 'hit-q5-timing');
   }
 
   const iStepsIdx = steps.indexOf('i-steps');
@@ -76,8 +74,8 @@ function getSteps(answers: QuizAnswers) {
   }
 
   if (showGapScreen(answers)) {
-    const idx = steps.indexOf('reveal');
-    steps.splice(idx, 0, 'i-gap');
+    const idx = steps.indexOf('heard');
+    if (idx >= 0) steps.splice(idx, 0, 'i-gap');
   }
 
   return steps;
@@ -99,9 +97,15 @@ export default function QuizRunner() {
     router.replace(`/quiz?step=${id}`);
   }
 
+  function advanceAfterAnswer(pending: Partial<QuizAnswers>) {
+    const merged = { ...answers, ...pending };
+    const routeSteps = getSteps(merged);
+    const idx = routeSteps.indexOf(stepId);
+    if (idx < routeSteps.length - 1) goTo(routeSteps[idx + 1]);
+  }
+
   function next() {
-    const idx = steps.indexOf(stepId);
-    if (idx < steps.length - 1) goTo(steps[idx + 1]);
+    advanceAfterAnswer({});
   }
 
   function back() {
@@ -118,9 +122,15 @@ export default function QuizRunner() {
     dispatch({ type: 'TOGGLE_Q', key, id });
   }
 
-  function setQAndAdvance(key: string, value?: string) {
+  function setQAndAdvance(key: string, value?: string, extra?: Partial<QuizAnswers>) {
     dispatch({ type: 'SET_Q', key, value });
-    setTimeout(next, 120);
+    if (extra) {
+      for (const [k, v] of Object.entries(extra)) {
+        if (v !== undefined) dispatch({ type: 'SET_Q', key: k, value: v as string });
+      }
+    }
+    const pending = { [key]: value, ...extra };
+    setTimeout(() => advanceAfterAnswer(pending), 120);
   }
 
   const a = answers;
@@ -133,8 +143,7 @@ export default function QuizRunner() {
         <QFQ3TimesTaken
           value={a.q3}
           onSelect={(v: string) => {
-            if (v === 'none') dispatch({ type: 'SET_Q', key: 'q4', value: 'na' });
-            setQAndAdvance('q3', v);
+            setQAndAdvance('q3', v, v === 'none' ? { q4: 'na' } : undefined);
           }}
           onBack={back}
         />
@@ -163,15 +172,6 @@ export default function QuizRunner() {
       return (
         <QFInsightHit
           hit={educationHitQ5Tbd()}
-          onContinue={next}
-          onBack={back}
-          stepIdx={6}
-        />
-      );
-    case 'hit-q5-timing':
-      return (
-        <QFInsightHit
-          hit={educationHitQ5Timing()}
           onContinue={next}
           onBack={back}
           stepIdx={6}
@@ -216,16 +216,37 @@ export default function QuizRunner() {
         />
       );
 
-    case 'q9':  return <QFQ9GPA       value={a.q9} onSelect={(v: string) => { setQ('q9', v); setTimeout(next, 120); }} onBack={back} />;
+    case 'q9':  return <QFQ9GPA       value={a.q9} onSelect={(v: string) => setQAndAdvance('q9', v)} onBack={back} />;
     case 'i-gap': return <QFIGPAGap   onContinue={next} onBack={back} q4={a.q4} q9={a.q9} />;
+    case 'heard':
+      return <QFSHeardSummary answers={a} onContinue={next} onBack={back} />;
     case 'reveal':
     case 's1':
       return <QFSPlanReveal answers={a} onContinue={next} onBack={back} />;
     case 'v1':  return <QFV1Projection onContinue={next} onBack={back} q2={a.q2} q4={a.q4} q5={a.q5} q8={a.q8} />;
     case 's2':  return <QFS2Science   onContinue={next} onBack={back} q6={a.q6 as any} />;
     case 's3':  return <QFS3Stats     onContinue={next} onBack={back} />;
-    case 's5':  return <QFS5Approved  onContinue={next} onBack={back} answers={a} dispatch={dispatch as (action: { type: string; key?: string; value?: unknown }) => void} />;
-    case 's7':  return <QFS7PlanDetails onContinue={next} onBack={back} answers={a} />;
+    case 's4':
+      return (
+        <QFS4PlanHandoff
+          onContinue={next}
+          onBack={back}
+          answers={a}
+          ctaLabel={PLAN_HANDOFF_CTA}
+        />
+      );
+    case 's5':
+      return (
+        <QFS5Approved
+          onContinue={next}
+          onBack={back}
+          answers={a}
+          dispatch={dispatch as (action: { type: string; key?: string; value?: unknown }) => void}
+          onBooked={() => goTo('booked')}
+        />
+      );
+    case 's7':
+      return <QFS7PlanDetails onContinue={() => goTo('s5')} onBack={back} answers={a} />;
     case 's9':
       return (
         <QFS9Booking

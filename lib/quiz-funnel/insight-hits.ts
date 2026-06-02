@@ -23,6 +23,10 @@ export type InsightHit = {
   type: InsightHitType;
   parts: InsightHitPart[];
   followUp?: InsightHitPart[];
+  /** Level-2 body: each block is its own paragraph under the headline. */
+  followUpBlocks?: InsightHitPart[][];
+  /** Caption under image, or standalone line between lead and followUp when no image */
+  imageCaption?: InsightHitPart[];
   /** Optional hero visual (e.g. Khan math haystack) */
   image?: InsightHitImage;
   /** Before/after score report pair (Results slide) */
@@ -39,19 +43,27 @@ export const INSIGHT_HIT_EYEBROW: Record<InsightHitType, string> = {
   outcome: "Results",
 };
 
+export function flattenInsightParts(parts: InsightHitPart[] = []): string {
+  return parts
+    .map((p) => p.text)
+    .join("")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 /** After q4 — recognition when parent flagged GPA/SAT mismatch (q1). */
 export function insightHitAfterQ4(q1?: string): InsightHit | null {
   if (q1 !== "gpa-sat") return null;
   return {
     type: "recognition",
     parts: [
-      { text: "They passed Algebra in school — but SAT algebra is " },
+      { text: "They passed Algebra in school, but SAT algebra is " },
       { text: "multiple-choice under a clock", em: true },
       { text: "." },
     ],
     followUp: [
       {
-        text: "The Skill Diagnostic finds where school math and test-day math diverge — then we teach those skills first.",
+        text: "The Skill Diagnostic finds where school math and test-day math diverge, then we teach those skills first.",
       },
     ],
   };
@@ -66,7 +78,7 @@ export function insightHitAfterQ6(q6: string[] = []): InsightHit {
     return {
       type: "surprise",
       parts: [
-        { text: "Most students run out of time on math before finishing — and " },
+        { text: "Most students run out of time on math before finishing, and " },
         { text: "word problems", em: true },
         { text: " are where those lost points usually show up." },
       ],
@@ -83,11 +95,11 @@ export function insightHitAfterQ6(q6: string[] = []): InsightHit {
       parts: [
         { text: "Most missed reading points come from " },
         { text: "inference under time pressure", em: true },
-        { text: " — not vocabulary lists." },
+        { text: ", not vocabulary lists." },
       ],
       followUp: [
         {
-          text: "The diagnostic ranks inference and pacing gaps first — then a tutor works their real misses.",
+          text: "The Skill Diagnostic ranks inference and pacing gaps first, then a tutor works their real misses.",
         },
       ],
     };
@@ -102,7 +114,7 @@ export function insightHitAfterQ6(q6: string[] = []): InsightHit {
         { text: `${KHAN_SAT_YOUTUBE_VIDEO_COUNT} videos`, em: true },
         { text: ". Most score movement comes from " },
         { text: `${FOCUS_SKILL_COUNT}–6`, em: true },
-        { text: " recurring misses — not a pass through everything." },
+        { text: " recurring misses, not a pass through everything." },
       ],
       followUp: [
         {
@@ -116,11 +128,11 @@ export function insightHitAfterQ6(q6: string[] = []): InsightHit {
     parts: [
       { text: "The SAT covers " },
       { text: `${KHAN_SAT_SKILL_COUNT_LABEL} skill areas`, em: true },
-      { text: ` — but most score movement comes from ${FOCUS_SKILL_COUNT}–6 recurring misses.` },
+      { text: `, but most score movement comes from ${FOCUS_SKILL_COUNT}–6 recurring misses.` },
     ],
     followUp: [
       {
-        text: "The Skill Diagnostic names those skills — then the weekly plan focuses there first.",
+        text: "The Skill Diagnostic names those skills, then the weekly plan focuses there first.",
       },
     ],
   };

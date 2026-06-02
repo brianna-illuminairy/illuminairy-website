@@ -1,25 +1,20 @@
 'use client';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { useQuiz } from '../state';
+import { useQuiz, showGapScreen } from '../state';
 import { QFScreen, QFButton, QFConstellation } from '../components/QFShell';
 import { CalendlyInlineEmbed } from '@/components/calendly-inline-embed';
-import {
-  waitUrgencyFromQuiz,
-  hasScheduledTestDate,
-  funnelTimelineGain,
-} from '../gains';
-import {
-  hasTargetScore,
-  Q8_TARGET_SCORE,
-  q5DisplayLabel,
-} from '@/lib/quiz-funnel/quiz-profile';
-import { S5_LEAD_VALUE_BULLETS, STRATEGY_CALL_VALUE_BULLETS } from '@/lib/quiz-funnel/thank-you-copy';
+import { waitUrgencyFromQuiz, hasScheduledTestDate } from '../gains';
+import { q5DisplayLabel } from '@/lib/quiz-funnel/quiz-profile';
+import { STRATEGY_CALL_VALUE_BULLETS } from '@/lib/quiz-funnel/thank-you-copy';
 import {
   captureQuizLeadSubmitted,
   captureQuizBookingConfirmed,
+  captureQuizBookingError,
   captureQuizThankYouViewed,
 } from '@/lib/quiz-funnel/analytics';
+import { sanitizeBookingErrorMessage } from '@/lib/calendly/booking-errors';
+import { countPhoneDigits } from '@/lib/calendly/phone-e164';
 import { QUIZ_TESTIMONIALS } from '@/lib/quiz-funnel/testimonials';
 import { getClientAttributionPayload } from '@/lib/quiz-funnel/client-attribution';
 import { readMetaCookies } from '@/lib/landing/analytics';
@@ -31,15 +26,36 @@ import {
   hasQuizContactForBooking,
 } from '@/lib/calendly-embed';
 import {
+  BEFORE_STRATEGY_CALL_STEPS,
   formatStrategyCallDateTime,
   kidJoinCallLine,
+  S9_SCHEDULING_SUBHEAD,
   strategyCallStartFromCalendlyPayload,
   STRATEGY_CALL_LEAD_SUMMARY,
+  STRATEGY_CALL_PARENT_ON_CALL,
+  STRATEGY_CALL_PREP_ITEMS,
   THANK_YOU_TESTIMONIAL,
 } from '@/lib/quiz-funnel/thank-you-copy';
-import { stakesGoalPhrase } from '@/lib/quiz-funnel/stakes-copy';
+import { QFPlanHandoff } from '../components/QFPlanHandoff';
+import { QFPlanScheduler } from '../components/QFPlanScheduler';
+import { planSchedulerConfirmLabel } from '@/lib/quiz-funnel/plan-scheduler-copy';
+import {
+  BOOKING_FEEDBACK,
+  parseFunnelApiError,
+  validateBookingContact,
+  type BookingFieldKey,
+} from '@/lib/quiz-funnel/booking-feedback';
+import { QFBookingAlert } from '../components/QFBookingAlert';
 
-// Funnel payoff: Strategy Call schedules diagnostic; skill ranking comes after diagnostic.
+type PlanSchedulerSlot = {
+  startTime: string;
+  schedulingUrl: string;
+  label: string;
+  weekdayShort: string;
+  dayTitle: string;
+};
+
+// Funnel payoff: SAT Strategy Call schedules Week 1 Skill Diagnostic; activation after plan review.
 
 function WhyNowCard({ q5 }: { q5?: string }) {
   if (!hasScheduledTestDate(q5)) {
@@ -86,75 +102,150 @@ function WhyNowCard({ q5 }: { q5?: string }) {
   );
 }
 
-function buildS5Subhead(q2?: string, q5?: string, q8?: string, kidName?: string) {
-  const name = kidName?.trim() || 'your student';
-  const goal = stakesGoalPhrase(q2);
-  const timelineGain = funnelTimelineGain(q5);
-  const testLabel = q5DisplayLabel(q5);
-  const target = hasTargetScore(q8) ? Q8_TARGET_SCORE[q8!] : null;
-
-  if (timelineGain && testLabel && target) {
-    return (
-      <>
-        You saw a <em>{timelineGain}+ point</em> Score Path toward <em>{target}</em> for the{' '}
-        <em>{testLabel}</em> — to help {name} {goal}. Review it with an SAT advisor on a free
-        15-minute Strategy Call.
-      </>
-    );
-  }
-  if (timelineGain && testLabel) {
-    return (
-      <>
-        You saw a <em>{timelineGain}+ point</em> Score Path for the <em>{testLabel}</em> — to help{' '}
-        {name} {goal}. Review it with an SAT advisor on a free 15-minute Strategy Call.
-      </>
-    );
-  }
-  if (timelineGain) {
-    return (
-      <>
-        You saw a <em>{timelineGain}+ point</em> Score Path — to help {name} {goal}. Review it with
-        an SAT advisor on a free 15-minute Strategy Call.
-      </>
-    );
-  }
+/** s4 · Plan review handoff (before lead form). */
+export function QFS4PlanHandoff({
+  onContinue,
+  onBack,
+  answers = {},
+  ctaLabel = 'Get my plan',
+}: {
+  onContinue: () => void;
+  onBack: () => void;
+  answers?: Record<string, unknown>;
+  ctaLabel?: string;
+}) {
   return (
-    <>
-      Review your Score Path with an SAT advisor — to help {name} {goal} — on a free 15-minute
-      Strategy Call.
-    </>
+    <QFScreen stepIdx={17} ornament="glow" onBack={onBack}
+      footer={<QFButton kind="forest" onClick={onContinue}>{ctaLabel}</QFButton>}
+    >
+      <QFPlanHandoff answers={answers} />
+    </QFScreen>
   );
 }
 
-
-export function QFS5Approved({ onContinue, onBack, answers = {}, dispatch }: {
+export function QFS5Approved({
+  onContinue,
+  onBack,
+  answers = {},
+  dispatch,
+  onBooked,
+}: {
   onContinue: () => void;
   onBack: () => void;
   answers?: Record<string, unknown>;
   dispatch?: (action: { type: string; key?: string; value?: unknown }) => void;
+  /** When set, Calendly confirm goes to booked (skips s7/s9). */
+  onBooked?: () => void;
 }) {
   const {
-    q2, q5, q8,
     parentName = '', parentEmail = '', parentPhone = '', kidName = '',
     confirmTcpa = false,
   } = answers as Record<string, string | boolean>;
 
   const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState('');
+  const [submitAttempted, setSubmitAttempted] = useState(false);
+  const [bookingAlert, setBookingAlert] = useState<{
+    title?: string;
+    message: string;
+    retryable?: boolean;
+    field?: BookingFieldKey;
+    error_code?: string;
+  } | null>(null);
+  const [selectedSlot, setSelectedSlot] = useState<PlanSchedulerSlot | null>(null);
+  const [slotsAvailable, setSlotsAvailable] = useState(true);
+  const reloadSlotsRef = useRef<(() => void) | null>(null);
 
-  const formComplete =
-    String(parentName).trim().length > 0 &&
-    String(parentEmail).trim().includes('@') &&
-    String(parentPhone).trim().length >= 7 &&
-    String(kidName).trim().length > 0 &&
-    Boolean(confirmTcpa);
+  const contact = useMemo(
+    () => ({
+      parentName: String(parentName),
+      parentEmail: String(parentEmail),
+      parentPhone: String(parentPhone),
+      kidName: String(kidName),
+    }),
+    [parentName, parentEmail, parentPhone, kidName]
+  );
 
-  const setField = (key: string, value: unknown) => dispatch?.({ type: 'SET_FIELD', key, value });
+  const validation = useMemo(
+    () =>
+      validateBookingContact({
+        ...contact,
+        confirmTcpa: Boolean(confirmTcpa),
+        hasSlot: Boolean(selectedSlot?.startTime),
+      }),
+    [contact, confirmTcpa, selectedSlot?.startTime]
+  );
+
+  const canSubmit = !submitting && slotsAvailable;
+
+  function setField(key: string, value: unknown) {
+    dispatch?.({ type: 'SET_FIELD', key, value });
+    if (bookingAlert?.field === key) setBookingAlert(null);
+  }
+
+  function trackBookingError(
+    errorCode: string,
+    errorMessage: string,
+    extra?: { http_status?: number; field?: BookingFieldKey; retryable?: boolean }
+  ) {
+    captureQuizBookingError({
+      error_code: errorCode,
+      error_message: sanitizeBookingErrorMessage(errorMessage),
+      http_status: extra?.http_status,
+      phone_digit_count: countPhoneDigits(String(parentPhone)),
+      slot_weekday: selectedSlot?.weekdayShort,
+      slots_available: slotsAvailable,
+      field: extra?.field,
+      retryable: extra?.retryable,
+    });
+  }
+
+  function fieldToErrorCode(field: BookingFieldKey): string {
+    if (field === 'parentPhone') return 'invalid_phone';
+    if (field === 'slot') return 'no_slot';
+    if (field === 'confirmTcpa') return 'unknown';
+    return 'unknown';
+  }
+
+  function showValidationErrors(): boolean {
+    const field = Object.keys(validation.errors)[0] as BookingFieldKey | undefined;
+    if (!field) return false;
+    const message = validation.errors[field] ?? BOOKING_FEEDBACK.bookingFailed;
+    trackBookingError(fieldToErrorCode(field), message, { field });
+    setBookingAlert(null);
+    return false;
+  }
+
+  useEffect(() => {
+    function onMessage(e: MessageEvent) {
+      if (e.origin !== 'https://calendly.com') return;
+      if (e.data?.event !== 'calendly.event_scheduled') return;
+      const payload = e.data?.payload as Record<string, unknown> | undefined;
+      const startTime = strategyCallStartFromCalendlyPayload(payload);
+      if (startTime) {
+        dispatch?.({ type: 'SET_FIELD', key: 'strategyCallStart', value: startTime });
+      }
+      const inviteeUri = (payload?.invitee as { uri?: string } | undefined)?.uri ?? '';
+      const eventId = inviteeUri
+        ? `schedule_${inviteeUri.split('/').pop()}`
+        : `schedule_${Date.now()}`;
+      captureQuizBookingConfirmed(eventId);
+      if (onBooked) onBooked();
+      else onContinue();
+    }
+    window.addEventListener('message', onMessage);
+    return () => window.removeEventListener('message', onMessage);
+  }, [onBooked, onContinue, dispatch]);
 
   async function handleContinue() {
-    if (!formComplete || submitting) return;
+    setSubmitAttempted(true);
+    if (!validation.valid) {
+      showValidationErrors();
+      return;
+    }
+    if (!canSubmit) return;
+
     setSubmitting(true);
-    setError('');
+    setBookingAlert(null);
     const { visitorId, attribution } = getClientAttributionPayload();
     const { fbp, fbc } = readMetaCookies();
     const sat_lp_variant = readPersistedLpVariant();
@@ -174,101 +265,134 @@ export function QFS5Approved({ onContinue, onBack, answers = {}, dispatch }: {
       });
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error ?? 'Could not save. Check your connection and try again.');
+        const parsed = parseFunnelApiError(
+          data as Record<string, unknown>,
+          res.status
+        );
+        trackBookingError(parsed.error_code, parsed.message, {
+          http_status: res.status,
+          field: parsed.field,
+          retryable: parsed.retryable,
+        });
+        setBookingAlert(parsed);
         setSubmitting(false);
         return;
       }
-      captureQuizLeadSubmitted(answers as Record<string, unknown>, data.eventId);
-      onContinue();
+      captureQuizLeadSubmitted(answers as Record<string, unknown>, data.eventId, {
+        hasGapScreen: showGapScreen(answers as Parameters<typeof showGapScreen>[0]),
+      });
+
+      const slotStart = selectedSlot?.startTime;
+      if (!slotStart) {
+        showValidationErrors();
+        setSubmitting(false);
+        return;
+      }
+
+      const bookRes = await fetch('/api/funnel/calendly-book', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          startTime: slotStart,
+          parentName: contact.parentName,
+          parentEmail: contact.parentEmail,
+          parentPhone: contact.parentPhone,
+          kidName: contact.kidName,
+          visitorId,
+        }),
+      });
+      const bookData = await bookRes.json().catch(() => ({}));
+
+      if (!bookRes.ok || !bookData.ok) {
+        const parsed = parseFunnelApiError(
+          bookData as Record<string, unknown>,
+          bookRes.status
+        );
+        trackBookingError(parsed.error_code, parsed.message, {
+          http_status: bookRes.status,
+          field: parsed.field,
+          retryable: parsed.retryable,
+        });
+        setBookingAlert(parsed);
+        if (parsed.field === 'slot') {
+          setSelectedSlot(null);
+        }
+        if (parsed.refresh_slots) {
+          reloadSlotsRef.current?.();
+        }
+        setSubmitting(false);
+        return;
+      }
+
+      const startTime =
+        typeof bookData.startTime === 'string' ? bookData.startTime : selectedSlot.startTime;
+      dispatch?.({ type: 'SET_FIELD', key: 'strategyCallStart', value: startTime });
+      const inviteeUri = typeof bookData.inviteeUri === 'string' ? bookData.inviteeUri : '';
+      const eventId = inviteeUri
+        ? `schedule_${inviteeUri.split('/').pop()}`
+        : `schedule_${Date.now()}`;
+      captureQuizBookingConfirmed(eventId, { booking_source: 'api' });
+      setSubmitting(false);
+      if (onBooked) onBooked();
+      else onContinue();
     } catch {
-      setError('Could not save. Check your connection and try again.');
+      const parsed = parseFunnelApiError(null, 0);
+      trackBookingError('network', parsed.message, { retryable: true });
+      setBookingAlert({ ...parsed, title: 'Connection problem' });
       setSubmitting(false);
     }
   }
 
+  const footerLabel =
+    selectedSlot && slotsAvailable
+      ? planSchedulerConfirmLabel(selectedSlot.weekdayShort, selectedSlot.label)
+      : slotsAvailable
+        ? 'Pick a time'
+        : 'Reload times to continue';
+
   return (
     <QFScreen stepIdx={18} ornament="glow" onBack={onBack}
       footer={
-        <QFButton kind="forest" onClick={handleContinue} disabled={!formComplete || submitting}>
-          {submitting ? 'Saving…' : 'Book my Strategy Call'}
+        <QFButton kind="forest" onClick={handleContinue} disabled={!canSubmit}>
+          {submitting ? BOOKING_FEEDBACK.confirming : footerLabel}
         </QFButton>
       }
     >
-      <div className="gap-22">
-        <div>
-          <p className="qf-meta" style={{ color: 'var(--qf-forest)', marginBottom: 8 }}>Step 1 of 2</p>
-          <h1 className="qf-h1" style={{ marginBottom: 10 }}>
-            Book your free <em>Strategy Call</em>.
-          </h1>
-          <p className="qf-lead" style={{ marginBottom: 0 }}>
-            {buildS5Subhead(
-              typeof q2 === 'string' ? q2 : undefined,
-              typeof q5 === 'string' ? q5 : undefined,
-              typeof q8 === 'string' ? q8 : undefined,
-              typeof kidName === 'string' ? kidName : undefined,
-            )}
-          </p>
-        </div>
-
-        <WhyNowCard q5={typeof q5 === 'string' ? q5 : undefined} />
-
-        <div className="qf-card gap-12" style={{ padding: 18, borderColor: 'rgba(47,110,71,0.22)' }}>
-          <p className="qf-meta" style={{ color: 'var(--qf-forest)', margin: 0 }}>What you get (free)</p>
-          <ul style={{ margin: 0, padding: '0 0 0 18px', display: 'flex', flexDirection: 'column', gap: 8 }}>
-            {S5_LEAD_VALUE_BULLETS.map((item) => (
-              <li key={item} style={{ fontSize: 14, lineHeight: 1.45, color: 'var(--qf-ink-2)' }}>
-                {item}
-              </li>
-            ))}
-          </ul>
-          <p className="qf-meta" style={{ margin: 0 }}>15 minutes · no payment · no obligation</p>
-        </div>
-
-        <div className="qf-card gap-14" style={{ padding: 18 }}>
-          <p className="qf-meta" style={{ color: 'var(--qf-ink-mid)', margin: 0 }}>Your details</p>
-          <div className="qf-field">
-            <span className="qf-label">Your name</span>
-            <input className="qf-input" placeholder="First and last" value={String(parentName)}
-              onChange={e => setField('parentName', e.target.value)} />
-          </div>
-          <div className="qf-field">
-            <span className="qf-label">Your email</span>
-            <input className="qf-input" type="email" placeholder="you@email.com" value={String(parentEmail)}
-              onChange={e => setField('parentEmail', e.target.value)} />
-          </div>
-          <div className="qf-field">
-            <span className="qf-label">Mobile</span>
-            <input className="qf-input" type="tel" placeholder="(555) 123-4567" value={String(parentPhone)}
-              onChange={e => setField('parentPhone', e.target.value)} />
-          </div>
-          <div className="qf-field">
-            <span className="qf-label">Your child&apos;s name</span>
-            <input className="qf-input" placeholder="First name" value={String(kidName)}
-              onChange={e => setField('kidName', e.target.value)} />
-          </div>
-          <label style={{ display: 'flex', gap: 10, alignItems: 'flex-start', fontSize: 13, lineHeight: 1.45, color: 'var(--qf-ink-mid)' }}>
-            <input
-              type="checkbox"
-              checked={Boolean(confirmTcpa)}
-              onChange={e => setField('confirmTcpa', e.target.checked)}
-              style={{ marginTop: 3 }}
-            />
-            <span>
-              I agree Illuminairy may contact me about the SAT program. See{' '}
-              <a href="/privacy" style={{ color: 'var(--qf-forest)' }}>Privacy</a> and{' '}
-              <a href="/terms" style={{ color: 'var(--qf-forest)' }}>Terms</a>.
-            </span>
-          </label>
-        </div>
-
-        {error && (
-          <p style={{ color: '#b42318', fontSize: 14, margin: 0 }}>{error}</p>
-        )}
-
-        <p className="qf-disclaimer">
-          We never share or sell your details. Free call · no payment · no obligation.
-        </p>
-      </div>
+      <QFPlanScheduler
+        parentName={String(parentName)}
+        parentEmail={String(parentEmail)}
+        parentPhone={String(parentPhone)}
+        kidName={String(kidName)}
+        confirmTcpa={Boolean(confirmTcpa)}
+        fieldErrors={validation.errors}
+        showFieldErrors={submitAttempted}
+        onFieldChange={setField}
+        selectedSlot={selectedSlot}
+        onSelectSlot={(slot) => {
+          setSelectedSlot(slot as PlanSchedulerSlot | null);
+          setBookingAlert(null);
+        }}
+        onAvailabilityReady={setSlotsAvailable}
+        onSlotRequired={() => setSubmitAttempted(true)}
+        onRegisterReload={(reload) => {
+          reloadSlotsRef.current = reload;
+        }}
+      />
+      {bookingAlert ? (
+        <QFBookingAlert
+          title={bookingAlert.title}
+          message={bookingAlert.message}
+          retryable={bookingAlert.retryable}
+          onRetry={
+            bookingAlert.retryable
+              ? () => {
+                  setBookingAlert(null);
+                  void handleContinue();
+                }
+              : undefined
+          }
+        />
+      ) : null}
     </QFScreen>
   );
 }
@@ -286,16 +410,16 @@ export function QFS7PlanDetails({
 
   return (
     <QFScreen stepIdx={20} onBack={onBack}
-      footer={<QFButton kind="forest" onClick={onContinue}>Book my Strategy Call</QFButton>}
+      footer={<QFButton kind="forest" onClick={onContinue}>Book my SAT Strategy Call</QFButton>}
     >
       <div className="gap-22">
         <div>
-          <p className="qf-meta" style={{ color: 'var(--qf-forest)', marginBottom: 8 }}>Step 1 · Strategy Call</p>
-          <h1 className="qf-h1">Book your free <em>Strategy Call</em>.</h1>
+          <p className="qf-meta" style={{ color: 'var(--qf-forest)', marginBottom: 8 }}>Step 1 · SAT Strategy Call</p>
+          <h1 className="qf-h1">Book your free <em>SAT Strategy Call</em>.</h1>
           <p className="qf-lead" style={{ marginTop: 12 }}>
-            Review your plan with an SAT advisor for personalized feedback — score history, school
-            targets, the gap and timeline, and the fastest path. The Skill Diagnostic comes next if
-            you decide to move forward (proctored, 2 hr 14 min, taken separately).
+            Review your Improvement Plan with an SAT advisor: score history, school targets, the gap
+            and timeline, and the fastest path. Next: schedule Skill Diagnostic Part 1 and Part 2 for
+            Week 1 (proctored, 2 hr 14 min, split across two sessions).
           </p>
         </div>
 
@@ -311,14 +435,25 @@ export function QFS7PlanDetails({
             ))}
           </ul>
           <p style={{ fontSize: 13, lineHeight: 1.45, color: 'var(--qf-ink-mid)', margin: '4px 0 0' }}>
-            15 minutes · free · no obligation
+            15 minutes · free · no obligation · {STRATEGY_CALL_PARENT_ON_CALL}
           </p>
         </div>
 
+        <div className="qf-card gap-10" style={{ padding: 16 }}>
+          <p className="qf-meta" style={{ color: 'var(--qf-ink-mid)', margin: 0 }}>What to have ready</p>
+          <ul style={{ margin: 0, padding: '0 0 0 18px', display: 'flex', flexDirection: 'column', gap: 6 }}>
+            {STRATEGY_CALL_PREP_ITEMS.map((item) => (
+              <li key={item} style={{ fontSize: 14, lineHeight: 1.45, color: 'var(--qf-ink-2)' }}>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+
         <div className="qf-card gap-10" style={{ padding: 16, borderColor: 'rgba(47,110,71,0.25)' }}>
-          <p className="qf-meta" style={{ color: 'var(--qf-forest)', margin: 0 }}>Step 2 · After the diagnostic</p>
+          <p className="qf-meta" style={{ color: 'var(--qf-forest)', margin: 0 }}>Step 2 · After the Skill Diagnostic</p>
           <p style={{ fontSize: 14, lineHeight: 1.5, color: 'var(--qf-ink-2)', margin: 0 }}>
-            Your child&apos;s personalized SAT plan (which skills to fix, in what order, week by week) is built from what the diagnostic shows. Not from guesses.
+            Your child&apos;s personalized weekly SAT plan (which skills to fix, in what order, week by week) is built from what the Skill Diagnostic shows. Not from guesses.
           </p>
         </div>
 
@@ -363,7 +498,9 @@ export function QFS7PlanDetails({
                   )}
                 </div>
               )}
-              <p style={{ fontFamily: 'var(--qf-display)', fontSize: 15.5, lineHeight: 1.5, fontWeight: 500, color: 'var(--qf-ink-2)', margin: 0 }}>"{r.quote}"</p>
+              <p style={{ fontFamily: 'var(--qf-display)', fontSize: 15.5, lineHeight: 1.5, fontWeight: 500, color: 'var(--qf-ink-2)', margin: 0 }}>
+                &ldquo;{r.quote}&rdquo;
+              </p>
               <div className="qf-meta" style={{ marginTop: 10 }}>{r.attribution}</div>
             </div>
           ))}
@@ -377,6 +514,7 @@ export function QFS7PlanDetails({
 
 const TEST_DATE_LABEL: Record<string, string> = {
   aug22: 'the August SAT',
+  sept12: 'the September SAT',
   oct3: 'the October SAT',
   nov7: 'the November SAT',
   dec5: 'the December SAT',
@@ -405,9 +543,7 @@ export function QFS9ThankYou({
   const callWhen = formatStrategyCallDateTime(callStartIso);
   const testWhen = hasScheduledTestDate(q5)
     ? TEST_DATE_LABEL[q5] ?? 'their next test'
-    : q5 === '2027'
-      ? 'their Spring 2027 test'
-      : 'test day';
+    : 'their next test';
   const testimonial = THANK_YOU_TESTIMONIAL;
 
   useEffect(() => {
@@ -415,10 +551,9 @@ export function QFS9ThankYou({
   }, [answers]);
 
   const beforeCallSteps = [
-    'Accept the calendar invite and add it to your calendar',
+    ...BEFORE_STRATEGY_CALL_STEPS,
     kidJoinCallLine(kidName),
-    'Have their SAT score history and target schools handy',
-    `Ask: "Are you willing to put in real effort each week until ${testWhen}?"`,
+    `Ask: Are you willing to put in real effort each week until ${testWhen}?`,
   ];
 
   return (
@@ -428,8 +563,8 @@ export function QFS9ThankYou({
       <div className="qf-thank-you">
         <h1 className="qf-h1">
           {parentFirst
-            ? `${parentFirst}, your Strategy Call is confirmed.`
-            : 'Your Strategy Call is confirmed.'}
+            ? `${parentFirst}, your SAT Strategy Call is confirmed.`
+            : 'Your SAT Strategy Call is confirmed.'}
         </h1>
 
         <p className="qf-lead">
@@ -481,10 +616,7 @@ export function QFS9Booking({
     parentPhone: typeof answers.parentPhone === "string" ? answers.parentPhone : "",
     kidName: typeof answers.kidName === "string" ? answers.kidName : "",
   };
-  const q2 = typeof answers.q2 === "string" ? answers.q2 : undefined;
   const q5 = typeof answers.q5 === "string" ? answers.q5 : undefined;
-  const goalPhrase = stakesGoalPhrase(q2);
-  const studentName = contact.kidName.trim() || "your student";
   const testLabel = q5DisplayLabel(q5) || "your next test";
   const contactReady = hasQuizContactForBooking(contact);
 
@@ -537,16 +669,17 @@ export function QFS9Booking({
   return (
     <QFScreen stepIdx={21} onBack={onBack}>
       <div className="gap-22">
+        <p className="qf-meta" style={{ color: 'var(--qf-forest)', marginBottom: 8 }}>Step 2 of 2</p>
         <h1 className="qf-h1">
-          Pick a time to help {studentName} {goalPhrase}.
+          Pick a time for your free <em>SAT Strategy Call</em>.
         </h1>
         <p className="qf-lead">
-          15 minutes with an SAT expert before the {testLabel}. We&apos;ll schedule the Skill
-          Diagnostic, review your Score Path, and map timeline and targets. Your name and email are
-          pre-filled.
+          15 minutes with an SAT advisor before the {testLabel}. We&apos;ll review your Improvement
+          Plan, schedule the Skill Diagnostic for Week 1, and map timeline and targets. Your name
+          and email are pre-filled. {STRATEGY_CALL_PARENT_ON_CALL}
         </p>
         <p className="qf-lead" style={{ fontSize: 14, color: 'var(--qf-ink-mid)' }}>
-          Pick a time below, then tap <strong>Schedule Event</strong>.
+          {S9_SCHEDULING_SUBHEAD} Pick a time below, then tap <strong>Schedule Event</strong>.
         </p>
         {hydrated && contactReady ? (
           <CalendlyInlineEmbed prefill={prefill} utm={utm} />
