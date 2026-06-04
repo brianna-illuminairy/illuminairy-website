@@ -2,6 +2,7 @@
 import { QFScreen, QFOption, QFButton, QFQuestionHead, QFOptOut, QFWhyWeAsk } from '../components/QFShell';
 import { Q2_STAKES_OPTIONS } from '@/lib/quiz-funnel/stakes-copy';
 import { DOUBTS_OPTIONS } from '@/lib/quiz-funnel/doubts-copy';
+import { NAME_CTA } from '@/lib/quiz-funnel/score-path-copy';
 
 export function QFQ1Trigger({ value, onSelect, onBack }) {
   const opts = [
@@ -228,7 +229,7 @@ export function QFQ9GPA({ value, onSelect, onBack }) {
 export function QFQName({ value = '', onChange, onContinue, onBack }) {
   return (
     <QFScreen stepIdx={13} onBack={onBack}
-      footer={<QFButton kind="forest" onClick={onContinue}>Continue</QFButton>}
+      footer={<QFButton kind="forest" onClick={onContinue}>{NAME_CTA}</QFButton>}
     >
       <div className="qf-question-head">
         <div className="qf-eyebrow">One last detail</div>

@@ -26,16 +26,21 @@ import {
   hasQuizContactForBooking,
 } from '@/lib/calendly-embed';
 import {
-  BEFORE_STRATEGY_CALL_STEPS,
+  buildThankYouBeforeCallItems,
+  buildThankYouCoverItems,
   formatStrategyCallDateTime,
-  kidJoinCallLine,
   S9_SCHEDULING_SUBHEAD,
   strategyCallStartFromCalendlyPayload,
-  STRATEGY_CALL_LEAD_SUMMARY,
   STRATEGY_CALL_PARENT_ON_CALL,
   STRATEGY_CALL_PREP_ITEMS,
-  THANK_YOU_TESTIMONIAL,
+  THANK_YOU_ADD_CALENDAR_CTA,
+  THANK_YOU_BEFORE_SECTION,
+  THANK_YOU_COVER_SECTION,
+  THANK_YOU_DONE_CTA,
+  thankYouHeadline,
+  thankYouWhenLine,
 } from '@/lib/quiz-funnel/thank-you-copy';
+import { strategyCallGoogleCalendarUrl } from '@/lib/quiz-funnel/strategy-call-calendar';
 import { QFPlanHandoff } from '../components/QFPlanHandoff';
 import { QFPlanScheduler } from '../components/QFPlanScheduler';
 import { planSchedulerConfirmLabel } from '@/lib/quiz-funnel/plan-scheduler-copy';
@@ -516,15 +521,22 @@ export function QFS7PlanDetails({
 
 // ─── S9 · Booking (Calendly inline embed) ────────────────────────────────────
 
-const TEST_DATE_LABEL: Record<string, string> = {
-  aug22: 'the August SAT',
-  sept12: 'the September SAT',
-  oct3: 'the October SAT',
-  nov7: 'the November SAT',
-  dec5: 'the December SAT',
-};
-
 // ─── Post-book thank you (show-up + student alignment) ───────────────────────
+
+function ThankYouChecklist({ items }: { items: readonly string[] }) {
+  return (
+    <ul className="qf-thank-you-checklist">
+      {items.map((item) => (
+        <li key={item} className="qf-thank-you-checklist__item">
+          <span className="qf-thank-you-checklist__check" aria-hidden="true">
+            ✓
+          </span>
+          <span className="qf-thank-you-checklist__text">{item}</span>
+        </li>
+      ))}
+    </ul>
+  );
+}
 
 export function QFS9ThankYou({
   onDone,
@@ -537,65 +549,64 @@ export function QFS9ThankYou({
     typeof answers.parentName === 'string'
       ? answers.parentName.trim().split(/\s+/)[0]
       : '';
-  const kidName =
-    typeof answers.kidName === 'string' && answers.kidName.trim()
-      ? answers.kidName.trim()
-      : 'your child';
-  const q5 = typeof answers.q5 === 'string' ? answers.q5 : undefined;
-  const parentPhone = typeof answers.parentPhone === 'string' ? answers.parentPhone.trim() : '';
-  const callStartIso = typeof answers.strategyCallStart === 'string' ? answers.strategyCallStart : undefined;
+  const callStartIso =
+    typeof answers.strategyCallStart === 'string' ? answers.strategyCallStart : undefined;
   const callWhen = formatStrategyCallDateTime(callStartIso);
-  const testWhen = hasScheduledTestDate(q5)
-    ? TEST_DATE_LABEL[q5] ?? 'their next test'
-    : 'their next test';
-  const testimonial = THANK_YOU_TESTIMONIAL;
+  const calendarUrl = callStartIso
+    ? strategyCallGoogleCalendarUrl(callStartIso)
+    : null;
+
+  const coverItems = useMemo(
+    () => buildThankYouCoverItems(answers as Parameters<typeof buildThankYouCoverItems>[0]),
+    [answers]
+  );
+  const beforeCallItems = useMemo(
+    () => buildThankYouBeforeCallItems(answers as Parameters<typeof buildThankYouBeforeCallItems>[0]),
+    [answers]
+  );
 
   useEffect(() => {
     captureQuizThankYouViewed(answers);
   }, [answers]);
 
-  const beforeCallSteps = [
-    ...BEFORE_STRATEGY_CALL_STEPS,
-    kidJoinCallLine(kidName),
-    `Ask: Are you willing to put in real effort each week until ${testWhen}?`,
-  ];
+  function openCalendar() {
+    if (!calendarUrl) return;
+    window.open(calendarUrl, '_blank', 'noopener,noreferrer');
+  }
 
   return (
     <QFScreen stepIdx={22} showBack={false} onBack={onDone}
-      footer={<QFButton kind="forest" onClick={onDone}>Got it</QFButton>}
+      footer={
+        <div className="qf-thank-you-footer">
+          <QFButton kind="forest" onClick={onDone}>
+            {THANK_YOU_DONE_CTA}
+          </QFButton>
+          {calendarUrl ? (
+            <QFButton kind="ghost" onClick={openCalendar}>
+              {THANK_YOU_ADD_CALENDAR_CTA}
+            </QFButton>
+          ) : null}
+        </div>
+      }
     >
       <div className="qf-thank-you">
-        <h1 className="qf-h1">
-          {parentFirst
-            ? `${parentFirst}, your SAT Strategy Call is confirmed.`
-            : 'Your SAT Strategy Call is confirmed.'}
+        <h1 className="qf-h1" style={{ marginBottom: 0 }}>
+          {thankYouHeadline(parentFirst)}
         </h1>
 
-        <p className="qf-lead">
-          {callWhen
-            ? `Your free 15-minute call is set for ${callWhen}. `
-            : 'Check your email for the calendar invite with your call time. '}
-          {STRATEGY_CALL_LEAD_SUMMARY}
+        <p className="qf-lead" style={{ margin: 0 }}>
+          {thankYouWhenLine(callWhen)}
         </p>
 
         <div>
-          <p className="qf-meta" style={{ marginBottom: 14 }}>Before the call</p>
-          <ol className="qf-thank-you-steps">
-            {beforeCallSteps.map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-          </ol>
+          <p className="qf-meta qf-thank-you-section-label">{THANK_YOU_COVER_SECTION}</p>
+          <ThankYouChecklist items={coverItems} />
         </div>
 
-        <p className="qf-thank-you-foot">
-          We&apos;ll email reminders 24 hours and 1 hour before.
-          {parentPhone.length >= 7 ? ' We may text the number you provided.' : ''}
-          {' '}Have their score history and target schools handy if you know them.
-        </p>
-
-        <p className="qf-thank-you-quote">
-          &ldquo;{testimonial.quote}&rdquo; {testimonial.attribution}
-        </p>
+        <div>
+          <p className="qf-meta qf-thank-you-section-label">{THANK_YOU_BEFORE_SECTION}</p>
+          <ThankYouChecklist items={beforeCallItems} />
+        </div>
       </div>
     </QFScreen>
   );

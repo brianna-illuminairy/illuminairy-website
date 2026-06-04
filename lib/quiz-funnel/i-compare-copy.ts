@@ -1,5 +1,7 @@
 import { guidedVsSelfStudyMultiplier, satProgramOutcomes } from "@/lib/site";
 
+export const I_COMPARE_CTA = "Finalize my plan";
+
 /** i-compare headline multiplier — guided avg ÷ self-study retake avg (e.g. 4.6×). */
 export function iCompareHeadlineMultiplier(): number {
   return guidedVsSelfStudyMultiplier();

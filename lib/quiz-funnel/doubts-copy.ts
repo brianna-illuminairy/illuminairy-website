@@ -57,5 +57,5 @@ export const DOUBTS_INSIGHT_COPY = {
     "Most students who say these things are capable of much higher scores. Here's what we actually find and work on.",
   sayingLabel: "What you heard",
   uncoverLabel: "How we fix it",
-  cta: "What's Really Holding Them Back?",
+  cta: "Continue building my plan",
 } as const;

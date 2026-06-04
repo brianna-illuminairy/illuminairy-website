@@ -14,7 +14,8 @@ import {
   KHAN_SAT_YOUTUBE_VIDEO_COUNT,
   KHAN_SAT_SKILL_COUNT_LABEL,
 } from "@/lib/sat-skills-copy";
-import { iCompareHeadlineMultiplier, iCompareProofBridgeLine } from '@/lib/quiz-funnel/i-compare-copy';
+import { I_COMPARE_CTA, iCompareHeadlineMultiplier, iCompareProofBridgeLine } from '@/lib/quiz-funnel/i-compare-copy';
+import { I_GAP_CTA, V1_CTA } from '@/lib/quiz-funnel/score-path-copy';
 import {
   formatSatScoreLabel,
 } from '@/lib/quiz-funnel/score-path-copy';
@@ -322,7 +323,7 @@ const GAP_Q9_LABEL = {
 export function QFIGPAGap({ onContinue, onBack, q4 = '1200-1300', q9 = '3.8-4.0' }) {
   return (
     <QFScreen stepIdx={13} onBack={onBack}
-      footer={<QFButton kind="forest" onClick={onContinue}>Continue</QFButton>}
+      footer={<QFButton kind="forest" onClick={onContinue}>{I_GAP_CTA}</QFButton>}
     >
       <div className="gap-22" style={{ marginTop: 4 }}>
         <h1 className="qf-h1">
@@ -445,7 +446,7 @@ export function QFIComparePrep({ onContinue, onBack, q7 = ['khan'] }) {
 
   return (
     <QFScreen stepIdx={9} onBack={onBack}
-      footer={<QFButton kind="forest" onClick={onContinue}>See what actually works</QFButton>}
+      footer={<QFButton kind="forest" onClick={onContinue}>{I_COMPARE_CTA}</QFButton>}
     >
       <div className="gap-22" style={{ marginTop: 4 }}>
         <h1 className="qf-h1" style={{ marginBottom: 0 }}>
@@ -544,7 +545,7 @@ export function QFV1Projection({ onContinue, onBack, answers = {} }) {
 
   return (
     <QFScreen stepIdx={15} ornament="glow" onBack={onBack}
-      footer={<QFButton kind="forest" onClick={onContinue}>Continue to schedule your SAT Strategy Call</QFButton>}
+      footer={<QFButton kind="forest" onClick={onContinue}>{V1_CTA}</QFButton>}
     >
       <div className="gap-22">
         {/* Plan — one container so it reads as a real plan */}

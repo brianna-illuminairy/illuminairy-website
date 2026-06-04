@@ -1496,42 +1496,84 @@
 .qf-page .gap-18 { display: flex; flex-direction: column; gap: 18px; }
 .qf-page .gap-22 { display: flex; flex-direction: column; gap: 22px; }
 
-/* Post-book thank-you: calm hierarchy (h1 → lead → one list → footnote) */
+/* Post-book thank-you: headline → time → checklists → student callout */
 .qf-page .qf-thank-you {
   display: flex;
   flex-direction: column;
-  gap: 28px;
+  gap: 24px;
   padding-top: 8px;
 }
-.qf-page .qf-thank-you-steps {
+.qf-page .qf-thank-you-section-label {
+  margin: 0 0 12px;
+  color: var(--qf-forest);
+}
+.qf-page .qf-thank-you-checklist {
+  list-style: none;
   margin: 0;
-  padding: 0 0 0 1.15rem;
+  padding: 0;
   display: flex;
   flex-direction: column;
   gap: 12px;
-  list-style: decimal;
 }
-.qf-page .qf-thank-you-steps li {
+.qf-page .qf-thank-you-checklist__item {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.qf-page .qf-thank-you-checklist__check {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--qf-forest-soft);
+  color: var(--qf-forest);
+  font-size: 11px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1px;
+}
+.qf-page .qf-thank-you-checklist__text {
   font-family: var(--qf-body);
   font-size: 15px;
+  font-weight: 500;
+  line-height: 1.45;
+  color: var(--qf-ink-2);
+}
+.qf-page .qf-thank-you-callout {
+  padding: 16px 18px;
+  border-radius: 12px;
+  background: var(--qf-forest-soft);
+  border: 1px solid rgba(47, 110, 71, 0.22);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.qf-page .qf-thank-you-callout__title {
+  font-family: var(--qf-body);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--qf-forest);
+  margin: 0;
+}
+.qf-page .qf-thank-you-callout__body {
+  font-family: var(--qf-body);
+  font-size: 14px;
+  font-weight: 500;
   line-height: 1.5;
   color: var(--qf-ink-2);
-  padding-left: 4px;
-}
-.qf-page .qf-thank-you-foot {
-  font-family: var(--qf-body);
-  font-size: 13px;
-  line-height: 1.55;
-  color: var(--qf-ink-mute);
   margin: 0;
 }
-.qf-page .qf-thank-you-quote {
-  font-family: var(--qf-body);
-  font-size: 13px;
-  line-height: 1.55;
-  color: var(--qf-ink-mute);
-  margin: 0;
-  font-style: italic;
+.qf-page .qf-thank-you-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+.qf-page .qf-thank-you-footer .qf-btn {
+  width: 100%;
 }
 
 .qf-page .gap-28 { display: flex; flex-direction: column; gap: 28px; }

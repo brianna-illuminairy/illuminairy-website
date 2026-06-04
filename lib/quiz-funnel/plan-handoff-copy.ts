@@ -25,9 +25,9 @@ export const PLAN_HANDOFF_EYEBROW = "ELIGIBLE FOR THE SKILL DIAGNOSTIC";
 export const PLAN_HANDOFF_HEADLINE = "You're approved for the Skill Diagnostic.";
 
 export const PLAN_HANDOFF_SUBHEADLINE =
-  "Next we'll identify the 5–6 skills most responsible for raising your child's score and finalize their SAT plan.";
+  "Next we'll identify the 5–6 skills most likely to raise your child's score and finalize their plan.";
 
-export const PLAN_HANDOFF_CALL_TITLE = "Your free SAT Plan Review Call";
+export const PLAN_HANDOFF_CALL_TITLE = "Free SAT Plan Review";
 
 export const PLAN_HANDOFF_CALL_DURATION = "15 min";
 

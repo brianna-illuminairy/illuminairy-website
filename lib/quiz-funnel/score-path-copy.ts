@@ -60,7 +60,13 @@ export function v1EmotionalBridgeParts(
 
 /** s3 verified case study — see `s3-verified-case-study.ts` + `QFVerifiedCaseStudy`. */
 
-export const REVEAL_CTA = "See the plan";
+export const REVEAL_CTA = "Continue to their plan";
+
+export const I_GAP_CTA = "Final question";
+
+export const NAME_CTA = "Build my plan";
+
+export const V1_CTA = "Get Started →";
 
 export const REVEAL_SCORE_PROJECTION_NOTE =
   "Starter plan with free score projection. Exact skills, missed questions, and lessons unlock after the Skill Diagnostic.";
