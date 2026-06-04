@@ -4,7 +4,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   PLAN_SCHEDULER_EYEBROW,
   PLAN_SCHEDULER_HEADLINE,
-  PLAN_SCHEDULER_LEAD,
   PLAN_SCHEDULER_PHONE_LABEL,
   planSchedulerConfirmLabel,
 } from '@/lib/quiz-funnel/plan-scheduler-copy';
@@ -26,7 +25,6 @@ import { QFBookingAlert } from './QFBookingAlert';
  *   parentName?: string;
  *   parentEmail?: string;
  *   parentPhone?: string;
- *   kidName?: string;
  *   confirmTcpa?: boolean;
  *   fieldErrors?: Record<string, string>;
  *   showFieldErrors?: boolean;
@@ -43,7 +41,6 @@ export function QFPlanScheduler({
   parentName = '',
   parentEmail = '',
   parentPhone = '',
-  kidName = '',
   confirmTcpa = false,
   fieldErrors = {},
   showFieldErrors = false,
@@ -208,12 +205,9 @@ export function QFPlanScheduler({
     <div className="gap-22 qf-plan-scheduler">
       <div>
         <p className="qf-meta qf-plan-scheduler__eyebrow">{PLAN_SCHEDULER_EYEBROW}</p>
-        <h1 className="qf-h1" style={{ marginBottom: 8 }}>
+        <h1 className="qf-h1" style={{ marginBottom: 0 }}>
           {PLAN_SCHEDULER_HEADLINE}
         </h1>
-        <p className="qf-lead" style={{ margin: 0 }}>
-          {PLAN_SCHEDULER_LEAD}
-        </p>
       </div>
 
       <div className="qf-card gap-14" style={{ padding: 18 }}>
@@ -278,22 +272,6 @@ export function QFPlanScheduler({
               role="alert"
             >
               {showErr('parentPhone')}
-            </p>
-          ) : null}
-        </div>
-        <div className="qf-field">
-          <span className="qf-label">Student&apos;s name</span>
-          <input
-            className={fieldClass('kidName')}
-            placeholder="First name"
-            value={String(kidName)}
-            aria-invalid={Boolean(showErr('kidName'))}
-            aria-describedby={showErr('kidName') ? 'qf-err-kidName' : undefined}
-            onChange={(e) => onFieldChange('kidName', e.target.value)}
-          />
-          {showErr('kidName') ? (
-            <p id="qf-err-kidName" className="qf-field-error" role="alert">
-              {showErr('kidName')}
             </p>
           ) : null}
         </div>

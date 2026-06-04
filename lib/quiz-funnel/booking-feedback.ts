@@ -72,14 +72,12 @@ export function validateBookingContact(
   const name = input.parentName.trim();
   const email = input.parentEmail.trim();
   const phone = input.parentPhone.trim();
-  const kid = input.kidName.trim();
 
   if (!name) errors.parentName = BOOKING_FEEDBACK.nameRequired;
   if (!email) errors.parentEmail = BOOKING_FEEDBACK.emailRequired;
   else if (!isValidEmail(email)) errors.parentEmail = BOOKING_FEEDBACK.emailInvalid;
   if (!phone) errors.parentPhone = BOOKING_FEEDBACK.phoneRequired;
   else if (!isValidBookingPhone(phone)) errors.parentPhone = BOOKING_FEEDBACK.phoneInvalid;
-  if (!kid) errors.kidName = BOOKING_FEEDBACK.kidRequired;
   if (!input.confirmTcpa) errors.confirmTcpa = BOOKING_FEEDBACK.tcpaRequired;
   if (!input.hasSlot) errors.slot = BOOKING_FEEDBACK.slotRequired;
 

@@ -366,7 +366,6 @@ export function QFS5Approved({
         parentName={String(parentName)}
         parentEmail={String(parentEmail)}
         parentPhone={String(parentPhone)}
-        kidName={String(kidName)}
         confirmTcpa={Boolean(confirmTcpa)}
         fieldErrors={validation.errors}
         showFieldErrors={submitAttempted}
