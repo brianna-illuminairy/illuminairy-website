@@ -2348,12 +2348,12 @@
   margin: 0;
   color: var(--qf-ink-mid);
 }
-.qf-page .qf-plan-handoff__call-body {
+.qf-page .qf-plan-handoff__call-note {
   font-family: var(--qf-body);
-  font-size: 15px;
-  font-weight: 500;
-  line-height: 1.5;
-  color: var(--qf-ink-2);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.45;
+  color: var(--qf-forest);
   margin: 0;
 }
 .qf-page .qf-plan-handoff__list {

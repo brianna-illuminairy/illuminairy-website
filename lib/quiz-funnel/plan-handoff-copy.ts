@@ -31,8 +31,6 @@ export const PLAN_HANDOFF_CALL_TITLE = "Free SAT Plan Review";
 
 export const PLAN_HANDOFF_CALL_DURATION = "15 min";
 
-export const PLAN_HANDOFF_CALL_BODY = `We'll confirm the goal, answer your questions, and schedule the diagnostic that identifies your child's ${FOCUS_SKILL_COUNT}–6 highest-impact skills.`;
-
 export const PLAN_HANDOFF_CTA = "Reserve My SAT Plan Review";
 
 export type PlanHandoffItem = {
