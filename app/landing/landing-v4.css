@@ -1,0 +1,180 @@
+/* ════════════════════════════════════════════════════════════════
+   Illuminairy · SAT Landing v4 (production port)
+   Source: growth/lp-designs/sat-landing-v4.standalone.html (decoded).
+   Light-mode only · mobile-first · single promise.
+   Fonts come from next/font (lib/funnel-fonts.ts); no @font-face here.
+   ════════════════════════════════════════════════════════════════ */
+
+.lp, .lp *, .lp *::before, .lp *::after { box-sizing: border-box; }
+
+.lp {
+  --navy:        #121A2B;
+  --navy-deep:   #0A0F19;
+  --celestial:   #0057A8;
+  --aurora:      #77C89A;
+  --aurora-deep: #2F6E47;
+  --glow:        #B8F5D1;
+  --white:       #F5F8FA;
+
+  --page-bg:   #F5F8FA;
+  --page-fg:   #121A2B;
+  --surface:   #FFFFFF;
+  --surface-2: #ECF1F4;
+  --hairline:  rgba(18, 26, 43, 0.10);
+  --hairline-2: rgba(18, 26, 43, 0.06);
+  --fg-soft:   rgba(18, 26, 43, 0.66);
+  --fg-mute:   rgba(18, 26, 43, 0.5);
+  --em:        #2F6E47;
+
+  --display: var(--font-schibsted), "Schibsted Grotesk", system-ui, sans-serif;
+  --body:    var(--font-dm-sans), "DM Sans", system-ui, sans-serif;
+  --mono:    var(--font-dm-mono), "DM Mono", ui-monospace, monospace;
+  --radius:  16px;
+
+  font-family: var(--body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  background: var(--page-bg);
+  color: var(--page-fg);
+  line-height: 1.45;
+  font-size: 16px;
+
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+.lp-grow { flex: 1 0 auto; }
+
+.lp-container { width: min(1120px, calc(100% - 36px)); margin-inline: auto; }
+.lp [hidden] { display: none !important; }
+
+/* ════════ Header — funnel logo lockup on navy ════════ */
+.lp-chrome { background: var(--navy); }
+.lp-topbar { display: flex; align-items: center; justify-content: center; padding: 14px 0; }
+.lp-topbar svg { display: block; }
+
+/* ════════ Hero ════════ */
+.lp-hero { padding: 30px 0 36px; }
+
+/* v4 single-column hero — left-aligned, capped width */
+.lp-hero-single { max-width: 620px; }
+.lp-hero-single .lp-h1 { font-size: clamp(26px, 6.2vw, 46px); line-height: 1.05; text-wrap: balance; }
+.lp-hero-single .lp-h1 .line { display: block; }
+.lp-hero-single .lp-authority-line { margin-top: 18px; }
+.lp-hero-single .lp-cta-card { margin-top: 24px; }
+
+.lp-h1 {
+  font-family: var(--display); font-weight: 700;
+  line-height: 1.04; letter-spacing: -0.03em; margin: 0;
+  text-wrap: balance; color: var(--page-fg);
+}
+.lp-h1 em { font-style: normal; color: var(--em); }
+
+/* Authority cue — small supporting credential under the H1 */
+.lp-authority-line {
+  display: flex; align-items: center; gap: 10px;
+  margin: 14px 0 0;
+  font-family: var(--body); font-size: 14px; font-weight: 500; line-height: 1.4;
+  color: var(--fg-soft); text-wrap: balance;
+}
+.lp-authority-line .bars { display: inline-flex; align-items: flex-end; gap: 2.5px; flex-shrink: 0; height: 14px; }
+.lp-authority-line .bars i { width: 4px; border-radius: 1.5px; background: var(--em); display: block; }
+.lp-authority-line .bars i:nth-child(1) { height: 45%; opacity: 0.5; }
+.lp-authority-line .bars i:nth-child(2) { height: 72%; opacity: 0.75; }
+.lp-authority-line .bars i:nth-child(3) { height: 100%; }
+
+/* ── CTA card (navy premium standout) — value bullets + button ── */
+.lp-cta-card {
+  margin-top: 22px; background: var(--navy);
+  border: 1px solid rgba(119, 200, 154, 0.22); border-radius: var(--radius);
+  padding: 22px 20px 18px; color: var(--white); position: relative; overflow: hidden;
+}
+.lp-cta-card::before {
+  content: ''; position: absolute; top: -50px; right: -50px; width: 180px; height: 180px;
+  background: radial-gradient(circle, rgba(119, 200, 154, 0.20) 0%, transparent 70%); pointer-events: none;
+}
+.lp-cta-card > * { position: relative; z-index: 1; }
+.lp-cta-intro { margin: 0 0 14px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(119, 200, 154, 0.9); }
+.lp-cta-value { list-style: none; margin: 0 0 18px; padding: 0; display: grid; gap: 11px; }
+.lp-cta-value li { display: flex; gap: 11px; align-items: flex-start; font-size: 16px; line-height: 1.4; color: rgba(245, 248, 250, 0.96); font-weight: 500; }
+.lp-cta-value .check { flex-shrink: 0; width: 22px; height: 22px; margin-top: 1px; display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; background: rgba(119, 200, 154, 0.18); color: var(--aurora); font-size: 12px; }
+
+.lp-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 9px; width: 100%;
+  padding: 18px 22px; border: none; border-radius: 100px;
+  background: var(--aurora); color: var(--navy);
+  font-family: var(--display); font-size: 17.5px; font-weight: 700; letter-spacing: -0.01em;
+  cursor: pointer; text-decoration: none;
+  transition: transform 0.08s ease, background 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 6px 22px rgba(119, 200, 154, 0.25);
+}
+.lp-btn:hover { background: var(--glow); transform: translateY(-1px); }
+.lp-btn:active { transform: translateY(0); }
+.lp-btn .arrow { font-size: 17px; transition: transform 0.2s ease; }
+.lp-btn:hover .arrow { transform: translateX(3px); }
+
+.lp-cta-sub { margin: 14px 0 0; width: 100%; text-align: center; font-family: var(--body); font-size: 13px; color: rgba(245, 248, 250, 0.75); font-weight: 500; line-height: 1.4; }
+
+/* ════════ Trust bar (static, before footer) ════════ */
+.lp-trust {
+  background: var(--surface);
+  border-top: 1px solid var(--hairline);
+  border-bottom: 1px solid var(--hairline);
+}
+.lp-trust-grid { display: grid; grid-template-columns: repeat(3, 1fr); align-items: center; }
+.lp-trust-cell { padding: 22px 14px; text-align: center; position: relative; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.lp-trust-cell + .lp-trust-cell::before { content: ''; position: absolute; left: 0; top: 18%; bottom: 18%; width: 1px; background: var(--hairline); }
+.lp-trust-num { font-family: var(--display); font-weight: 700; font-size: clamp(26px, 3vw, 34px); letter-spacing: -0.03em; line-height: 1; color: var(--page-fg); display: inline-flex; align-items: center; gap: 4px; }
+.lp-trust-num.em { color: var(--em); }
+.lp-trust-num .star { color: var(--em); font-size: 0.85em; line-height: 1; }
+.lp-trust-num .unit { font-size: 0.45em; font-weight: 600; color: var(--fg-soft); letter-spacing: 0; text-transform: uppercase; font-family: var(--mono); align-self: center; margin-left: 2px; }
+.lp-trust-lbl { font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--fg-mute); line-height: 1.5; text-wrap: balance; }
+
+@media (max-width: 620px) {
+  .lp-trust-cell { padding: 18px 6px; gap: 6px; }
+  .lp-trust-num { font-size: clamp(22px, 6.5vw, 28px); }
+  .lp-trust-lbl { font-size: 8.5px; letter-spacing: 0.12em; }
+}
+
+/* ════════ Footer ════════ */
+.lp-footer { background: var(--navy-deep); color: rgba(245, 248, 250, 0.5); padding: 26px 0 30px; }
+.lp-footer .links { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 18px; margin: 0 0 12px; padding: 0; list-style: none; }
+.lp-footer .links a { font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(245, 248, 250, 0.5); text-decoration: none; }
+.lp-footer .links a:hover { color: var(--aurora); }
+.lp-footer .legal, .lp-footer .copy { margin: 0 auto; max-width: 60ch; text-align: center; font-size: 10.5px; line-height: 1.55; color: rgba(245, 248, 250, 0.4); }
+.lp-footer .copy { margin-top: 8px; }
+
+/* ════════ Desktop (≥920px) ════════ */
+@media (min-width: 920px) {
+  .lp-hero { padding: 56px 0 64px; }
+}
+
+/* ════════ Phones (≤500px) ════════ */
+@media (max-width: 500px) {
+  .lp-hero { padding: 20px 0 28px; }
+  .lp-hero-single .lp-h1 { font-size: clamp(30px, 8.2vw, 40px); line-height: 1.05; letter-spacing: -0.025em; }
+  .lp-authority-line { margin-top: 12px; font-size: 13px; }
+  .lp-cta-card { margin-top: 18px; padding: 20px 18px 16px; }
+  .lp-cta-intro { font-size: 11px; letter-spacing: 0.16em; margin-bottom: 12px; }
+  .lp-cta-value li { font-size: 15.5px; }
+  .lp-btn { padding: 16px 20px; font-size: 17px; }
+  .lp-container { width: calc(100% - 28px); }
+  .lp-topbar { padding: 12px 0; }
+}
+
+/* ════════ Short viewports — Meta in-app browsers (FB/IG webviews) ════════
+   FB/IG in-app browsers shrink the usable height with their own chrome.
+   Compress the hero rhythm so the CTA button stays at/above the fold. */
+@media (max-height: 720px) {
+  .lp-hero { padding: 12px 0 18px; }
+  .lp-topbar { padding: 9px 0; }
+  .lp-hero-single .lp-h1 { font-size: clamp(24px, 6.6vw, 34px); line-height: 1.04; }
+  .lp-authority-line { margin-top: 9px; font-size: 12.5px; }
+  .lp-cta-card { margin-top: 12px; padding: 16px 16px 14px; }
+  .lp-cta-intro { margin-bottom: 9px; }
+  .lp-cta-value { gap: 8px; margin-bottom: 14px; }
+  .lp-cta-value li { font-size: 14.5px; line-height: 1.35; }
+  .lp-btn { padding: 14px 18px; font-size: 16.5px; }
+  .lp-cta-sub { margin-top: 10px; }
+}

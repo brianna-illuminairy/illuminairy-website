@@ -17,7 +17,7 @@ import { sanitizeBookingErrorMessage } from '@/lib/calendly/booking-errors';
 import { countPhoneDigits } from '@/lib/calendly/phone-e164';
 import { QUIZ_TESTIMONIALS } from '@/lib/quiz-funnel/testimonials';
 import { getClientAttributionPayload } from '@/lib/quiz-funnel/client-attribution';
-import { readMetaCookies } from '@/lib/landing/analytics';
+import { resolveMetaClickIds } from '@/lib/meta-click-ids';
 import { readPersistedLpVariant } from '@/lib/landing/variant-storage';
 import { site } from '@/lib/site';
 import {
@@ -248,7 +248,9 @@ export function QFS5Approved({
     setSubmitting(true);
     setBookingAlert(null);
     const { visitorId, attribution } = getClientAttributionPayload();
-    const { fbp, fbc } = readMetaCookies();
+    const resolved = resolveMetaClickIds(attribution.fbclid);
+    const fbp = resolved.fbp ?? attribution.fbp;
+    const fbc = resolved.fbc ?? attribution.fbc;
     const sat_lp_variant = readPersistedLpVariant();
     try {
       const res = await fetch('/api/funnel/lead', {

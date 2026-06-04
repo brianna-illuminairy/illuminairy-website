@@ -38,6 +38,15 @@ Key libs: `plan-reveal.ts`, `score-path-copy.ts`, `stakes-copy.ts`, `education-s
 - `growth/funnel-strategy.md` + LP/quiz P0 vocabulary + analytics enrichment + full slide messaging pass + reveal→booked polish.
 - `npm run funnel:step-registry` — step/switch guard.
 
+## Recently shipped (2026-06-03)
+
+- **LP redesign → v4** — `/` now renders the ported "SAT Landing v4" (`components/landing/v4/*`, `app/landing/landing-v4.css`), replacing the compact B3 LP. Funnel logo header (`IlluminairyLogoV7`), navy CTA card, 3-stat trust bar. Hook-aware H1 (script_5 gap etc.). CTA → `/plan?step=q1` with UTMs.
+- **No sticky CTA** — compact, minimal-scroll page; hero CTA above fold (short-viewport `@media (max-height:720px)` for FB/IG in-app browsers).
+- **Safari/ITP click IDs** — `lib/meta-click-ids.ts` captures/persists `_fbp`/`_fbc` (+ synth from `fbclid`) at LP load; `AttributionSnapshot` gained `fbp`/`fbc`; Finale Lead CAPI now resolves with fallback.
+- **Design archive** — `growth/lp-designs/` (v1–v4/AB/compact + decoded v4) for A/B refs; eslint-ignored.
+- **Copy flags (verbatim)** — "500+ families", "4.8 rating", "College Board 250,000+" not in `lib/site.ts` (owner call).
+- **Verify** — `npm run build` PASS, `/` static; my files lint-clean. `agent:verify` lint blocked by **pre-existing** quiz-file errors (untouched). Session: [`growth/2026-06-03-lp-v4-port-session.md`](../growth/2026-06-03-lp-v4-port-session.md).
+
 ## Recently shipped (2026-06-02)
 
 - **B3 LP compact layout** — default `compact` (hero + trust + legal); `?lp_layout=full` for full scroll QA; sticky mobile CTA; `sat_lp_layout` analytics

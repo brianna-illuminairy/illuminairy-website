@@ -8,6 +8,7 @@ import {
   type AttributionSnapshot,
   VISITOR_COOKIE
 } from "@/lib/attribution";
+import { persistMetaClickIds } from "@/lib/meta-click-ids";
 
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 180;
 
@@ -90,6 +91,11 @@ export function AttributionProvider({ children }: { children: React.ReactNode })
       landing_page: window.location.href,
       referrer: document.referrer || undefined
     });
+
+    // Capture Meta click IDs early + persist first-party (Safari/ITP resilience).
+    const metaIds = persistMetaClickIds(merged.fbclid);
+    if (metaIds.fbp && !merged.fbp) merged.fbp = metaIds.fbp;
+    if (metaIds.fbc && !merged.fbc) merged.fbc = metaIds.fbc;
 
     saveSessionAttribution(merged);
 

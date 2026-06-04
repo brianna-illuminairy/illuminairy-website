@@ -12,6 +12,9 @@ export type AttributionSnapshot = {
   gclid?: string;
   fbclid?: string;
   msclkid?: string;
+  /** Meta click IDs captured at landing — bridges LP -> quiz under Safari ITP. */
+  fbp?: string;
+  fbc?: string;
   landing_page?: string;
   referrer?: string;
 };

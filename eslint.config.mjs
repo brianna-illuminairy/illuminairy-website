@@ -3,7 +3,13 @@ import nextVitals from "eslint-config-next/core-web-vitals";
 const config = [
   ...nextVitals,
   {
-    ignores: [".next/**", "node_modules/**", "next-env.d.ts", "quizfunnel/**"]
+    ignores: [
+      ".next/**",
+      "node_modules/**",
+      "next-env.d.ts",
+      "quizfunnel/**",
+      "growth/lp-designs/**"
+    ]
   }
 ];
 

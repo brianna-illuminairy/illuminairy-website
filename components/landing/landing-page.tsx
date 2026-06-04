@@ -2,14 +2,13 @@
 
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { B3Page } from "@/components/landing/b3/b3-page";
+import { V4Page } from "@/components/landing/v4/v4-page";
 import { trackLandingCtaClick, trackLandingView } from "@/lib/landing/analytics";
 import { persistLpLayout } from "@/lib/landing/layout-storage";
 import { persistLpVariant } from "@/lib/landing/variant-storage";
 import type { LandingSectionId } from "@/lib/landing/content";
 import { landingShared } from "@/lib/landing/content";
 import { resolveMetaLandingContext } from "@/lib/landing/meta-traffic";
-import { resolveTrustBarVariant } from "@/lib/landing/trust-bar-variant";
 import { planBuilderEntryFromLanding } from "@/lib/plan-builder-routes";
 import {
   devOverrideFromSearch,
@@ -37,7 +36,6 @@ export function LandingPage() {
   const layout = devLayoutOverrideFromSearch(query) ?? LP_LAYOUT;
   const variant = devOverrideFromSearch(query) ?? LP_VARIANT;
   const metaContext = useMemo(() => resolveMetaLandingContext(query), [query]);
-  const trustBarVariant = useMemo(() => resolveTrustBarVariant(query), [query]);
 
   useEffect(() => {
     if (trackedRef.current) return;
@@ -68,17 +66,7 @@ export function LandingPage() {
     [layout, router, search, variant]
   );
 
-  return (
-    <B3Page
-      variant={variant}
-      layout={layout}
-      search={query}
-      preferredMetroId={metaContext.metro.metroId}
-      heroHook={metaContext.heroHook}
-      trustBarVariant={trustBarVariant}
-      onCta={handleCta}
-    />
-  );
+  return <V4Page search={query} heroHook={metaContext.heroHook} onCta={handleCta} />;
 }
 
 /** Exported for tests — flag key constants */
