@@ -1698,6 +1698,15 @@
   flex-direction: column;
   gap: 12px;
 }
+.qf-page .qf-goal-assess__scale {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: 1px solid var(--qf-line);
+  border-radius: 14px;
+  background: var(--qf-paper);
+  padding: 14px 16px;
+}
 .qf-page .qf-achv-stats {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -1913,7 +1922,32 @@
   height: auto;
   display: block;
 }
-.qf-page .qf-hope-stat {
+.qf-page .qf-stat-callout {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--qf-forest-soft);
+  border: 1px solid rgba(47, 110, 71, 0.22);
+  border-radius: 14px;
+  padding: 16px 18px;
+}
+.qf-page .qf-stat-callout__pct {
+  flex-shrink: 0;
+  font-family: var(--qf-display);
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--qf-forest);
+}
+.qf-page .qf-stat-callout__text {
+  margin: 0;
+  font-family: var(--qf-body);
+  font-size: 15px;
+  line-height: 1.4;
+  color: var(--qf-ink-2);
+}
+.qf-page .qf-stat-callout__text strong {
   color: var(--qf-forest);
   font-weight: 700;
 }
@@ -1943,17 +1977,17 @@
   grid-template-columns: 0.85fr 1.15fr;
 }
 .qf-page .qf-doubts-th {
-  padding: 9px 12px;
+  padding: 10px 13px;
   font-family: var(--qf-body);
-  font-size: 10px;
+  font-size: 11.5px;
   font-weight: 700;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 .qf-page .qf-doubts-cell {
-  padding: 11px 12px;
+  padding: 13px 13px;
   font-family: var(--qf-body);
-  font-size: 12.5px;
+  font-size: 15px;
   line-height: 1.4;
 }
 /* Left column — the quotes, de-emphasized */

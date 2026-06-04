@@ -242,16 +242,18 @@ export function QFIHopeScreen({ onContinue, onBack, q5 = 'oct3' }) {
       <div className="gap-22" style={{ marginTop: 4 }}>
         <h1 className="qf-h1" style={{ marginBottom: 0 }}>
           {days && days > 0 ? (
-            <><em>{days} days</em> is enough time to get their score up.</>
+            <>You still have <em>{days} days</em> to get their score up.</>
           ) : (
-            <>There&apos;s still enough time to get their score up.</>
+            <>You still have time to get their score up.</>
           )}
         </h1>
-        <p className="qf-lead" style={{ margin: 0 }}>
-          <span className="qf-hope-stat">{o.hit100PlusPct}%</span> of students who follow their diagnostic-driven plan improve{' '}
-          <span className="qf-hope-stat">{o.minPointsFirstMonth}+ points</span> in their{' '}
-          <span className="qf-hope-stat">first 30 days</span>.
-        </p>
+        <div className="qf-stat-callout">
+          <span className="qf-stat-callout__pct">{o.hit100PlusPct}%</span>
+          <p className="qf-stat-callout__text">
+            of students who follow their diagnostic-driven plan improve{' '}
+            <strong>{o.minPointsFirstMonth}+ points</strong> in their <strong>first 30 days</strong>.
+          </p>
+        </div>
         <QFScoreReportPair caption={null} />
         <p
           className="qf-lead"
@@ -264,7 +266,7 @@ export function QFIHopeScreen({ onContinue, onBack, q5 = 'oct3' }) {
             lineHeight: 1.45,
           }}
         >
-          Ethan&apos;s score went up +230 points in 12 weeks with 5-7 hours per week following his personalized plan.
+          Ethan raised his SAT score by 230 points in 12 weeks following his personalized plan for 5–7 hours per week.
         </p>
       </div>
     </QFScreen>

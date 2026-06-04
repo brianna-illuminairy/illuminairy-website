@@ -38,8 +38,9 @@ export function PlanRevealContent({ plan, title, introNote, q2 }) {
         <p className="qf-lead">{assessment.stakesLead}</p>
       </div>
 
-      <div className="qf-goal-assess__callout">
-        <AchievabilityStatBar stats={assessment.stats} />
+      <AchievabilityStatBar stats={assessment.stats} />
+
+      <div className="qf-goal-assess__scale">
         <p className="qf-meta qf-achv-rating-label">Goal score achievability rating</p>
         <AchievabilityPills
           tierIndex={assessment.tierIndex}
@@ -52,15 +53,16 @@ export function PlanRevealContent({ plan, title, introNote, q2 }) {
 
       <p className="qf-lead">{assessment.insightParagraph}</p>
 
-      <div className="qf-card wash qf-goal-assess__stat">
-        <p className="qf-lead">
-          <strong>
-            {assessment.hitRatePct}% {assessment.hitRateBefore}
-            <em>{assessment.hitRateEmphasis}</em>
+      <div>
+        <div className="qf-stat-callout">
+          <span className="qf-stat-callout__pct">{assessment.hitRatePct}%</span>
+          <p className="qf-stat-callout__text">
+            {assessment.hitRateBefore}
+            <strong>{assessment.hitRateEmphasis}</strong>
             {assessment.hitRateAfter}
-          </strong>
-        </p>
-        <p className="qf-caption">{assessment.varyDisclaimer}</p>
+          </p>
+        </div>
+        <p className="qf-caption" style={{ marginTop: 8 }}>{assessment.varyDisclaimer}</p>
       </div>
     </div>
   );
