@@ -1,36 +1,54 @@
 'use client';
 
 import {
-  GOAL_FEASIBILITY_TIER_LABELS,
   GOAL_FEASIBILITY_TIER_ORDER,
   achievabilityEyebrow,
   buildGoalAchievabilityFallback,
 } from '@/lib/quiz-funnel/goal-achievability';
 
-function GoalFeasibilityGauge({ tier, tierIndex }) {
-  const markerLeft = `${tierIndex * 20 + 10}%`;
+const AMBITIOUS_INDEX = GOAL_FEASIBILITY_TIER_ORDER.indexOf('ambitious');
 
+function AchievabilityStatBar({ stats }) {
+  const cells = [
+    { value: stats.scoreGap != null ? `+${stats.scoreGap}` : '—', label: 'Score gap', accent: true },
+    { value: stats.testDateShort ?? 'Flexible', label: 'Test date', accent: false },
+    { value: stats.daysToTest != null ? String(stats.daysToTest) : '—', label: 'Days to test', accent: true },
+    { value: stats.ptsPerWeek != null ? `+${stats.ptsPerWeek}` : '—', label: 'Pts / wk', accent: false },
+  ];
   return (
-    <div className="qf-feasibility-gauge" aria-hidden="true">
-      <div className="qf-feasibility-gauge__track">
-        {GOAL_FEASIBILITY_TIER_ORDER.map((id, index) => (
-          <span
-            key={id}
-            className={`qf-feasibility-gauge__segment${index === tierIndex ? ' qf-feasibility-gauge__segment--active' : ''}`}
-          />
-        ))}
-        <span className="qf-feasibility-gauge__marker" style={{ left: markerLeft }} />
-      </div>
-      <div className="qf-feasibility-gauge__labels">
-        {GOAL_FEASIBILITY_TIER_ORDER.map((id) => (
-          <span
-            key={id}
-            className={`qf-caption qf-feasibility-gauge__label${id === tier ? ' qf-feasibility-gauge__label--active' : ''}`}
-          >
-            {GOAL_FEASIBILITY_TIER_LABELS[id]}
+    <div className="qf-achv-stats" aria-hidden="true">
+      {cells.map((cell) => (
+        <div key={cell.label} className="qf-achv-stats__cell">
+          <span className={`qf-achv-stats__value${cell.accent ? ' qf-achv-stats__value--accent' : ''}`}>
+            {cell.value}
           </span>
-        ))}
-      </div>
+          <span className="qf-achv-stats__label">{cell.label}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function AchievabilityPills({ tierIndex, tierRanges, educational }) {
+  // No real goal yet → highlight the average student (Ambitious) as the reference point.
+  const refIndex = educational ? AMBITIOUS_INDEX : tierIndex;
+  return (
+    <div className="qf-achv-pills">
+      {tierRanges.map((range, index) => {
+        const state = index < refIndex ? 'before' : index === refIndex ? 'active' : 'after';
+        return (
+          <div key={range.tier} className={`qf-achv-pill qf-achv-pill--${state}`}>
+            <span className="qf-achv-pill__label">{range.label}</span>
+            {educational ? (
+              <span className="qf-achv-pill__range">
+                {range.maxGain == null
+                  ? `+${range.minGain}+`
+                  : `+${range.minGain}–${range.maxGain}`}
+              </span>
+            ) : null}
+          </div>
+        );
+      })}
     </div>
   );
 }
@@ -67,8 +85,14 @@ export function PlanRevealContent({ plan, title, introNote, q2 }) {
         <p className="qf-lead">{assessment.stakesLead}</p>
       </div>
 
-      <div className="qf-card wash qf-goal-assess__callout">
-        <GoalFeasibilityGauge tier={assessment.tier} tierIndex={assessment.tierIndex} />
+      <div className="qf-goal-assess__callout">
+        <AchievabilityStatBar stats={assessment.stats} />
+        <p className="qf-meta qf-achv-rating-label">Goal score achievability rating</p>
+        <AchievabilityPills
+          tierIndex={assessment.tierIndex}
+          tierRanges={assessment.tierRanges}
+          educational={!assessment.stats.hasKnownGoal}
+        />
         <p className="qf-caption">{assessment.outcomesMeta}</p>
         {introNote ? <p className="qf-caption">{introNote}</p> : null}
       </div>

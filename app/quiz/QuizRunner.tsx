@@ -22,7 +22,7 @@ import {
   educationHitOutcomeMonthOne,
 } from '@/lib/quiz-funnel/education-slides';
 import {
-  QFSHeardSummary, QFSPlanReveal, QFS2Science, QFS3Stats,
+  QFSHeardSummary, QFSPlanReveal, QFS3Stats,
 } from './screens/Results';
 import {
   QFS4PlanHandoff, QFS5Approved, QFS7PlanDetails, QFS9Booking, QFS9ThankYou,
@@ -30,17 +30,19 @@ import {
 import { PLAN_HANDOFF_CTA } from '@/lib/quiz-funnel/plan-handoff-copy';
 
 const BASE_STEPS = [
-  'q1','q2','q3','q4','q5',
+  'q1','q2','q3',
+  'i-steps',
+  'q4','q5',
   'q6','q7','hit-q7',
   'i-diag',
   'i-compare',
   'i-method',
-  'i-steps',
-  'i2','q8','q9',
-  'heard',
+  'i2','q8',
   'reveal',
+  'q9',
+  'heard',
   'v1',
-  's2','s3','s4',
+  's3','s4',
   's5',
 ];
 
@@ -64,8 +66,8 @@ function getSteps(answers: QuizAnswers) {
     if (q6Idx >= 0) steps.splice(q6Idx, 0, 'hit-q5-tbd');
   }
 
-  const iStepsIdx = steps.indexOf('i-steps');
-  if (iStepsIdx >= 0) steps.splice(iStepsIdx + 1, 0, 'hit-outcome-month-one');
+  const iMethodIdx = steps.indexOf('i-method');
+  if (iMethodIdx >= 0) steps.splice(iMethodIdx + 1, 0, 'hit-outcome-month-one');
 
   if (answers.q8 === 'tbd') {
     const q9Idx = steps.indexOf('q9');
@@ -222,7 +224,6 @@ export default function QuizRunner() {
     case 's1':
       return <QFSPlanReveal answers={a} onContinue={next} onBack={back} />;
     case 'v1':  return <QFV1Projection onContinue={next} onBack={back} q2={a.q2} q4={a.q4} q5={a.q5} q8={a.q8} />;
-    case 's2':  return <QFS2Science   onContinue={next} onBack={back} q6={a.q6 as any} />;
     case 's3':  return <QFS3Stats     onContinue={next} onBack={back} />;
     case 's4':
       return (

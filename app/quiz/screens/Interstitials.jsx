@@ -420,7 +420,7 @@ export function QFV1Projection({
     <QFScreen stepIdx={14} ornament="glow" onBack={onBack}
       footer={
         <QFButton kind="forest" onClick={onContinue} disabled={!showCopy}>
-          See how we teach Skill 1
+          Continue to my plan
         </QFButton>
       }
     >
@@ -727,10 +727,10 @@ export function QFIMethod({ onContinue, onBack, q5 = 'oct3' }) {
   );
 }
 
-// ─── I · Steps (Slide 2: large plan visual + 3 Hims-style labels overlaid) ────
+// ─── I · Steps (early plan preview: large plan visual + 3 Hims-style labels) ──
 export function QFISteps({ onContinue, onBack }) {
   return (
-    <QFScreen stepIdx={11} onBack={onBack}
+    <QFScreen stepIdx={4} onBack={onBack}
       footer={<QFButton kind="forest" onClick={onContinue}>Build their plan</QFButton>}
     >
       <p className="qf-lead" style={{ margin: '0 0 4px' }}>

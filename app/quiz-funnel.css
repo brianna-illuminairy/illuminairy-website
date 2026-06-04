@@ -1694,58 +1694,95 @@
   max-width: 36em;
 }
 .qf-page .qf-goal-assess__callout {
-  padding: 16px 18px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
-.qf-page .qf-feasibility-gauge {
-  margin: 0;
-}
-.qf-page .qf-feasibility-gauge__track {
-  position: relative;
-  display: flex;
-  height: 10px;
-  border-radius: 999px;
-  overflow: hidden;
-  background: var(--qf-bg-2);
-  border: 1px solid var(--qf-line);
-}
-.qf-page .qf-feasibility-gauge__segment {
-  flex: 1;
-  background: transparent;
-}
-.qf-page .qf-feasibility-gauge__segment--active {
-  background: linear-gradient(
-    90deg,
-    rgba(47, 110, 71, 0.18),
-    rgba(47, 110, 71, 0.32)
-  );
-}
-.qf-page .qf-feasibility-gauge__marker {
-  position: absolute;
-  top: 50%;
-  width: 18px;
-  height: 18px;
-  margin-top: -9px;
-  border-radius: 50%;
-  background: var(--qf-forest);
-  border: 3px solid var(--qf-paper);
-  box-shadow: 0 1px 4px rgba(18, 26, 43, 0.18);
-  transform: translateX(-50%);
-}
-.qf-page .qf-feasibility-gauge__labels {
+.qf-page .qf-achv-stats {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 4px;
-  margin-top: 8px;
+  grid-template-columns: repeat(4, 1fr);
+  border: 1px solid var(--qf-line);
+  border-radius: 14px;
+  background: var(--qf-paper);
+  overflow: hidden;
 }
-.qf-page .qf-feasibility-gauge__label {
+.qf-page .qf-achv-stats__cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 12px 6px;
   text-align: center;
 }
-.qf-page .qf-feasibility-gauge__label--active {
+.qf-page .qf-achv-stats__cell + .qf-achv-stats__cell {
+  border-left: 1px solid var(--qf-line);
+}
+.qf-page .qf-achv-stats__value {
+  font-family: var(--qf-display);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  color: var(--qf-ink);
+}
+.qf-page .qf-achv-stats__value--accent {
   color: var(--qf-forest);
+}
+.qf-page .qf-achv-stats__label {
+  font-family: var(--qf-body);
+  font-size: 9.5px;
   font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--qf-ink-mute);
+}
+.qf-page .qf-achv-rating-label {
+  margin: 2px 0 0;
+  text-align: center;
+  color: var(--qf-ink-mute);
+}
+.qf-page .qf-achv-pills {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+}
+.qf-page .qf-achv-pill {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 11px 3px;
+  border-radius: 11px;
+  text-align: center;
+  background: var(--qf-bg-2);
+}
+.qf-page .qf-achv-pill__label {
+  font-family: var(--qf-body);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.1;
+  color: var(--qf-ink-2);
+}
+.qf-page .qf-achv-pill__range {
+  font-family: var(--qf-mono);
+  font-size: 9.5px;
+  font-weight: 600;
+  color: var(--qf-ink-mute);
+}
+.qf-page .qf-achv-pill--before {
+  background: rgba(47, 110, 71, 0.1);
+}
+.qf-page .qf-achv-pill--before .qf-achv-pill__label {
+  color: var(--qf-forest);
+}
+.qf-page .qf-achv-pill--active {
+  background: var(--qf-forest);
+}
+.qf-page .qf-achv-pill--active .qf-achv-pill__label {
+  color: #fff;
+}
+.qf-page .qf-achv-pill--active .qf-achv-pill__range {
+  color: rgba(255, 255, 255, 0.82);
 }
 .qf-page .qf-goal-assess__stat {
   padding: 16px 18px;

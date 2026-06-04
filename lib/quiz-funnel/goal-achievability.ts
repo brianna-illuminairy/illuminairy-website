@@ -1,7 +1,9 @@
 import { satProgramOutcomes } from "@/lib/site";
+import { funnelToday } from "@/lib/funnel-today";
 import type { QuizAnswersLike, ScorePathOutput } from "@/lib/quiz-funnel/score-path-output";
 import { buildScorePathOutput } from "@/lib/quiz-funnel/score-path-output";
-import { SCORE_PATH_DEFAULT_GAIN, SCORE_PATH_DEFAULT_WEEKS } from "@/lib/quiz-funnel/quiz-profile";
+import { SCORE_PATH_DEFAULT_GAIN, SCORE_PATH_DEFAULT_WEEKS, hasTargetScore } from "@/lib/quiz-funnel/quiz-profile";
+import { Q5_TEST_DATES } from "@/lib/quiz-funnel/gains";
 import {
   buildPrepStruggleLead,
   buildRevealInsightParagraph,
@@ -20,7 +22,7 @@ import {
  *
  * Tier gauge uses satProgramOutcomes.achievabilityGainAnchors (100@4w, 150@6w, 182@12w…).
  * **Ambitious** when gap ≈ expected gain for their week count; more weeks or smaller gap → easier tier.
- * | q9 | GPA | Insight opener (“A 3.8+ GPA means…”) |
+ * | q9 | GPA | Asked after the reveal; insight line stays GPA-agnostic |
  * | q2 | Why a higher SAT matters | Subheadline (scholarships, schools, etc.) |
  * | q6 | What seems to be the problem | “But to improve…” bridge + typical need |
  * | q7 | What they tried last time | Optional “after …” clause in insight |
@@ -75,9 +77,32 @@ const Q9_GPA_SHORT: Record<string, string> = {
   "4.0+": "4.0+",
 };
 
+/** Stat-bar values shown above the achievability rating. */
+export type AchievabilityStats = {
+  /** Target − starting, when a real goal is set (null when goal is tbd). */
+  scoreGap: number | null;
+  /** Short test date, e.g. "Oct 3" (null when no scheduled date). */
+  testDateShort: string | null;
+  daysToTest: number | null;
+  /** Points per week needed to close the gap (null when goal is tbd). */
+  ptsPerWeek: number | null;
+  /** Whether q8 gave a real target score (vs tbd/na). */
+  hasKnownGoal: boolean;
+};
+
+/** Point-gain band for each tier at the student's runway. */
+export type AchievabilityTierRange = {
+  tier: GoalFeasibilityTier;
+  label: string;
+  minGain: number;
+  maxGain: number | null;
+};
+
 export type GoalAchievability = {
   tier: GoalFeasibilityTier;
   tierIndex: number;
+  stats: AchievabilityStats;
+  tierRanges: AchievabilityTierRange[];
   /** H1 — e.g. “+250 pts in 16 weeks.” */
   pointsLine: string;
   /** H2 — tier verdict (“Realistic and” / “Tight timeline,”). */
@@ -147,6 +172,49 @@ export function expectedGainForWeeks(weeks: number): number {
 /** @deprecated Use expectedGainForWeeks(weeks) / weeks */
 export function achievabilityBenchmarkPtsPerWeek(weeks = satProgramOutcomes.programWeeks): number {
   return expectedGainForWeeks(weeks) / Math.max(1, weeks);
+}
+
+/** Calendar days until the q5 test date (null when no scheduled date / past). */
+function daysUntilTestDate(q5?: string): number | null {
+  const date = Q5_TEST_DATES[q5 as keyof typeof Q5_TEST_DATES];
+  if (!date) return null;
+  const days = Math.round((date.getTime() - funnelToday().getTime()) / 86400000);
+  return days > 0 ? days : null;
+}
+
+/**
+ * Point-gain band each tier represents at this runway. Anchored on the average
+ * student (+182 over 12 weeks ≈ Ambitious). Mirrors tierFromFeasibilityPressure
+ * thresholds so the legend matches where a real goal would land.
+ */
+export function buildTierRanges(weeks: number): AchievabilityTierRange[] {
+  const expected = expectedGainForWeeks(Math.max(1, weeks));
+  const r = (x: number) => Math.round((x * expected) / 10) * 10;
+  const cuts = { effortless: r(0.65), realistic: r(0.85), ambitious: r(1.15), aggressive: r(1.42) };
+  return [
+    { tier: "effortless", label: GOAL_FEASIBILITY_TIER_LABELS.effortless, minGain: 0, maxGain: cuts.effortless },
+    { tier: "realistic", label: GOAL_FEASIBILITY_TIER_LABELS.realistic, minGain: cuts.effortless, maxGain: cuts.realistic },
+    { tier: "ambitious", label: GOAL_FEASIBILITY_TIER_LABELS.ambitious, minGain: cuts.realistic, maxGain: cuts.ambitious },
+    { tier: "aggressive", label: GOAL_FEASIBILITY_TIER_LABELS.aggressive, minGain: cuts.ambitious, maxGain: cuts.aggressive },
+    { tier: "extreme", label: GOAL_FEASIBILITY_TIER_LABELS.extreme, minGain: cuts.aggressive, maxGain: null },
+  ];
+}
+
+function buildAchievabilityStats(
+  path: ScorePathOutput,
+  pressure: FeasibilityPressure | null,
+  q5: string | undefined,
+  q8: string | undefined
+): AchievabilityStats {
+  const hasKnownGoal = hasTargetScore(q8);
+  return {
+    scoreGap: hasKnownGoal ? path.rawGap : null,
+    testDateShort: q5 ? (Q5_HEADLINE_DATE[q5] ?? null) : null,
+    daysToTest: daysUntilTestDate(q5),
+    ptsPerWeek:
+      hasKnownGoal && pressure ? Math.max(1, Math.round(pressure.neededPtsPerWeek)) : null,
+    hasKnownGoal,
+  };
 }
 
 export type FeasibilityPressure = {
@@ -410,10 +478,13 @@ export function buildGoalAchievability(
   const verdict = verdictForTier(tier, path.hasScheduledTestDate);
   const insight = buildInsightParts(answers, path);
   const pointsLine = buildPointsLine(path, answers.q5);
+  const pressure = computeFeasibilityPressure(path);
 
   return {
     tier,
     tierIndex: tierIndex >= 0 ? tierIndex : 2,
+    stats: buildAchievabilityStats(path, pressure, answers.q5, answers.q8),
+    tierRanges: buildTierRanges(pressure?.weeks ?? path.chartWeeks),
     pointsLine,
     verdictLead: verdict.lead,
     verdictEm: verdict.em,
@@ -448,6 +519,14 @@ export function buildGoalAchievabilityFallback(
   return {
     tier,
     tierIndex: 2,
+    stats: {
+      scoreGap: null,
+      testDateShort: null,
+      daysToTest: null,
+      ptsPerWeek: null,
+      hasKnownGoal: false,
+    },
+    tierRanges: buildTierRanges(Number(weeksText) || 12),
     pointsLine,
     verdictLead: verdict.lead,
     verdictEm: verdict.em,
@@ -469,7 +548,7 @@ export function buildGoalAchievabilityFallback(
   };
 }
 
-/** Eyebrow for reveal score-projection screen. */
+/** Eyebrow for the goal-achievability screen (shown before the score projection). */
 export function achievabilityEyebrow(_q2?: string): string {
-  return "Your SAT score projection";
+  return "Goal score achievability";
 }

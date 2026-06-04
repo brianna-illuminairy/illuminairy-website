@@ -1,7 +1,7 @@
 /**
- * Reveal specifics — two sentences under the achievability gauge:
- * 1) GPA + weekly pace they need
- * 2) Similar students’ first-month movement (from lib/site.ts)
+ * Reveal specifics — one sentence under the achievability gauge:
+ * a GPA-agnostic capability statement (weekly pace) that bridges into the GPA
+ * question (q9), which now follows the reveal screen.
  *
  * No echoing Q6 back. No last-test claims. No diagnostic/plan pitch. No em dashes.
  */
@@ -62,22 +62,6 @@ const Q7_ROOT_CAUSE_BRIDGE: Record<string, string> = {
   nothing: "Without focused practice, there is often no list of which types to work first.",
 };
 
-const Q9_GPA_INSIGHT: Record<string, string> = {
-  "u3.0": "2.9",
-  "3.0-3.3": "3.2",
-  "3.3-3.5": "3.4",
-  "3.5-3.7": "3.6",
-  "3.7-3.9": "3.8",
-  "4.0+": "4.0+",
-};
-
-function gpaInsightLabel(q9?: string): string | null {
-  if (!q9 || !Q9_GPA_INSIGHT[q9]) return null;
-  if (q9 === "u3.0") return Q9_GPA_INSIGHT[q9];
-  if (q9 === "4.0+") return "4.0+";
-  return `${Q9_GPA_INSIGHT[q9]}+`;
-}
-
 export function selectedQ6Blockers(q6: unknown): Q6BlockerId[] {
   const ids = Array.isArray(q6) ? q6.filter(Boolean) : [];
   return Q6_BLOCKER_ORDER.filter((id) => ids.includes(id));
@@ -118,14 +102,12 @@ export function buildContentFixPhrase(q6: unknown): string {
   return Q6_CONTENT_FIX[behavioral[0]];
 }
 
-function buildCapabilityOpener(gpa: string | null, ptsPerWeek?: number): string {
+function buildCapabilityOpener(ptsPerWeek?: number): string {
   const pace =
     ptsPerWeek != null && ptsPerWeek > 0
-      ? `the ${ptsPerWeek} pts per week they need`
+      ? `${ptsPerWeek} pts per week`
       : "the steady weekly movement they need";
-  return gpa
-    ? `A ${gpa} GPA means they're smart and capable of ${pace}.`
-    : `Your student's grades mean they're smart and capable of ${pace}.`;
+  return `Students with high GPAs are smart and capable of ${pace}.`;
 }
 
 /** Second reveal sentence — first-month outcome stat only. */
@@ -169,14 +151,12 @@ export function buildPrepStruggleLead(q7: unknown, _q6: unknown = []): string | 
 }
 
 export function buildRevealInsightParagraph(
-  answers: QuizAnswersLike,
+  _answers: QuizAnswersLike,
   context: RevealAchievabilityContext = {}
 ): string {
-  const gpa = gpaInsightLabel(answers.q9);
-  const opener = buildCapabilityOpener(gpa, context.ptsPerWeek);
-  const movement = buildFirstMonthMovementSentence();
-
-  return `${opener} ${movement}`.replace(/\s+/g, " ").trim();
+  // Shown before the GPA question — a general capability statement that bridges
+  // into q9, so it stays GPA-agnostic and carries the weekly pace only.
+  return buildCapabilityOpener(context.ptsPerWeek).replace(/\s+/g, " ").trim();
 }
 
 export function countInsightSentences(text: string): number {

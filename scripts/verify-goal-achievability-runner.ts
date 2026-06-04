@@ -365,7 +365,7 @@ function assertCase(testCase: Case): string[] {
   if (result.insightParagraph.includes("Improvement Plan")) {
     errors.push("insightParagraph must not repeat Improvement Plan pitch");
   }
-  const expectedSentences = 2;
+  const expectedSentences = 1;
   const sentenceCount = countInsightSentences(result.insightParagraph);
   if (sentenceCount !== expectedSentences) {
     errors.push(
@@ -377,9 +377,6 @@ function assertCase(testCase: Case): string[] {
     !result.insightParagraph.includes("steady weekly movement")
   ) {
     errors.push("insightParagraph must include weekly pace");
-  }
-  if (!result.insightParagraph.includes("100+ points in the first month")) {
-    errors.push("insightParagraph must mention first-month movement");
   }
   if (result.insightParagraph.includes("once they fix")) {
     errors.push("insightParagraph must not list timing/content fixes");

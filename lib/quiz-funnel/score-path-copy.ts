@@ -11,7 +11,7 @@ export function formatSatScoreLabel(score: number): string {
   return score.toLocaleString("en-US");
 }
 
-/** v1 → s2 bridge — after projection chart (parent voice). */
+/** v1 projection lead — after projection chart (parent voice). */
 export function v1FastWinBridgeParts(goalScore: number | null | undefined): ScorePathCopyPart[] {
   const hasGoal = goalScore != null && goalScore > 0;
   const parts: ScorePathCopyPart[] = [
@@ -57,13 +57,6 @@ export function v1EmotionalBridgeParts(
 
   return parts;
 }
-
-/** s2 — example-session method (6-step card below). */
-export const S2_EXAMPLES_HEADLINE =
-  "Using a proven method to teach each skill by examples.";
-
-export const S2_EXAMPLES_LEAD =
-  "We show how to solve it, practice together, then they solve it.";
 
 /** s3 verified case study — see `s3-verified-case-study.ts` + `QFVerifiedCaseStudy`. */
 
