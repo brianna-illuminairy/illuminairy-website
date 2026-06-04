@@ -134,7 +134,7 @@ export function buildThankYouCoverItems(answers: QuizAnswersLike = {}): string[]
 
 /** Before the call — invite line uses student first name when known. */
 export function buildThankYouBeforeCallItems(
-  answers: QuizAnswersLike = {}
+  answers: QuizAnswersLike & { kidName?: string } = {}
 ): string[] {
   const kidName =
     typeof answers.kidName === "string" ? answers.kidName : "";
