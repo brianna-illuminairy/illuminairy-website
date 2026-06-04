@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import { funnelToday } from "@/lib/funnel-today";
 import { QFScreen, QFButton, QFConstellation } from '../components/QFShell';
 import { QFBarChart } from '../components/QFBarChart';
-import { QFSophiaPlanCard } from '../components/QFPlanVisuals';
 import { gainTargetForQ5, shouldShowGainMath } from '../gains';
 import { buildV1Projection } from '@/lib/quiz-funnel/v1-projection';
 import {
@@ -20,41 +19,37 @@ import {
   formatSatScoreLabel,
 } from '@/lib/quiz-funnel/score-path-copy';
 import { QFV1ProjectionChart } from '../components/QFV1ProjectionChart';
-import { selectedDoubtLabels, DOUBTS_INSIGHT_COPY } from '@/lib/quiz-funnel/doubts-copy';
-import { buildGoalAchievability } from '@/lib/quiz-funnel/goal-achievability';
+import { selectedDoubts, DOUBTS_INSIGHT_COPY } from '@/lib/quiz-funnel/doubts-copy';
+import { buildGoalAchievability, buildTierRanges } from '@/lib/quiz-funnel/goal-achievability';
 import { AchievabilityStatBar, AchievabilityPills } from '../components/AchievabilityRating';
+import { QFScoreReportPair } from '../components/QFPlanVisuals';
+import { Q5_TEST_DATES } from '@/lib/quiz-funnel/gains';
+import { satFirstMonthOutcomes } from '@/lib/site';
 
 export { gainTargetForQ5 };
 
-// ─── I · Doubts mirror (echoes selected q-doubts, reframes to the Diagnostic) ─
+// ─── I · Doubts mirror (echoes selected q-doubts, reframes what we uncover) ───
 export function QFIDoubtsInsight({ onContinue, onBack, qDoubts = [] }) {
-  const quotes = selectedDoubtLabels(qDoubts);
+  const rows = selectedDoubts(qDoubts);
   const c = DOUBTS_INSIGHT_COPY;
   return (
     <QFScreen stepIdx={4} ornament="glow" onBack={onBack}
-      footer={<QFButton kind="forest" onClick={onContinue}>Continue</QFButton>}
+      footer={<QFButton kind="forest" onClick={onContinue}>{c.cta}</QFButton>}
     >
       <div className="gap-22" style={{ marginTop: 4 }}>
-        <h1 className="qf-h1" style={{ marginBottom: 0 }}>{c.headline}…</h1>
-        <p className="qf-lead" style={{ margin: 0 }}>{c.intro}</p>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-          {quotes.map((q, i) => (
-            <p key={i} style={{
-              margin: 0,
-              fontFamily: 'var(--qf-display)',
-              fontStyle: 'italic',
-              fontSize: 16,
-              lineHeight: 1.4,
-              color: 'var(--qf-ink)',
-              borderLeft: '3px solid var(--qf-forest)',
-              paddingLeft: 12,
-            }}>{q}</p>
+        <h1 className="qf-h1" style={{ marginBottom: 0 }}>{c.headline}</h1>
+        <p className="qf-lead" style={{ margin: 0 }}>{c.subheadline}</p>
+        <div className="qf-doubts-table">
+          {rows.map((row) => (
+            <div key={row.id} className="qf-doubts-row">
+              <p className="qf-doubts-row__say">{row.label}</p>
+              <div className="qf-doubts-row__find">
+                <span className="qf-doubts-row__find-label">{c.uncoverLabel}</span>
+                <span>{row.uncover}</span>
+              </div>
+            </div>
           ))}
         </div>
-        <p className="qf-lead" style={{ margin: 0 }}>{c.common}</p>
-        <p className="qf-lead" style={{ margin: 0 }}>{c.notAbility}</p>
-        <p className="qf-lead" style={{ margin: 0 }}>{c.realIssue}</p>
-        <p className="qf-lead" style={{ margin: 0 }}>{c.diagnostic}</p>
       </div>
     </QFScreen>
   );
@@ -229,6 +224,33 @@ export function QFI2Compute({
             </div>
           </div>
         )}
+      </div>
+    </QFScreen>
+  );
+}
+
+// ─── Hope screen (post-q5): enough time + first-month proof ──────────────────
+export function QFIHopeScreen({ onContinue, onBack, q5 = 'oct3' }) {
+  const date = Q5_TEST_DATES[q5];
+  const days = date ? Math.round((date.getTime() - funnelToday().getTime()) / 86400000) : null;
+  const o = satFirstMonthOutcomes;
+  return (
+    <QFScreen stepIdx={6} ornament="glow" onBack={onBack}
+      footer={<QFButton kind="forest" onClick={onContinue}>Continue Building My Plan</QFButton>}
+    >
+      <div className="gap-22" style={{ marginTop: 4 }}>
+        <h1 className="qf-h1" style={{ marginBottom: 0 }}>
+          {days && days > 0 ? (
+            <><em>{days} days</em> is enough time to get their score up.</>
+          ) : (
+            <>There&apos;s still enough time to get their score up.</>
+          )}
+        </h1>
+        <p className="qf-lead" style={{ margin: 0 }}>
+          {o.hit100PlusPct}% of students who follow their <em>diagnostic-driven plan</em> improve{' '}
+          <em>{o.minPointsFirstMonth}+ points</em> in their first month.
+        </p>
+        <QFScoreReportPair caption="+230 points in 12 weeks with 5-7 hours per week following his personalized plan." />
       </div>
     </QFScreen>
   );
@@ -739,76 +761,65 @@ export function QFIDiagnosis({ onContinue, onBack, q3 = 'sat-1', q4 = '1200-1300
   );
 }
 
-// ─── I · Steps (early plan preview: large plan visual + 3 Hims-style labels) ──
-const I_STEPS_LABELS = [
-  { title: 'Skill Diagnostic', sub: 'The 5–6 gap skills.', rot: -3, pos: { top: 110, left: -6 }, maxWidth: 150 },
-  { title: 'Rank', sub: 'By point impact.', rot: 3, pos: { top: 235, right: -6 }, maxWidth: 150 },
-  { title: 'Plan', sub: 'Focus each week.', rot: -2, pos: { bottom: 14, left: -6 }, maxWidth: 160 },
+// ─── I · Steps (early preview: example of the plan we build by the end) ──────
+const EXAMPLE_PLAN_SKILLS = [
+  { name: 'Linear equations & systems', pts: 54 },
+  { name: 'Problem solving & data analysis', pts: 46 },
+  { name: 'Standard English conventions', pts: 36 },
+  { name: 'Calculator pacing & timing', pts: 32 },
+  { name: 'Command of evidence', pts: 28 },
+  { name: 'Words in context', pts: 24 },
 ];
+const EXAMPLE_PLAN_STATS = {
+  scoreGap: 220, testDateShort: 'Oct 4', daysToTest: 122, ptsPerWeek: 15, hasKnownGoal: true,
+};
+
+function QFExamplePlanCard() {
+  const tierRanges = buildTierRanges(15);
+  const skillPts = EXAMPLE_PLAN_SKILLS.map((s) => s.pts);
+  const total = skillPts.reduce((a, b) => a + b, 0);
+  return (
+    <div className="qf-example-plan">
+      <div className="qf-example-plan__head">
+        <span className="qf-example-plan__eyebrow">Personalized SAT plan</span>
+        <span className="qf-example-plan__weeks">15 weeks to Oct 4</span>
+      </div>
+      <div className="qf-example-plan__name">Sophia L.</div>
+
+      <QFV1ProjectionChart current={1180} displayTarget={1400} goalTarget={1400} skillPts={skillPts} />
+
+      <AchievabilityStatBar stats={EXAMPLE_PLAN_STATS} />
+      <p className="qf-meta qf-achv-rating-label">Goal score achievability rating</p>
+      <AchievabilityPills tierIndex={2} tierRanges={tierRanges} educational={false} />
+
+      <div className="qf-example-plan__skills-head">Sophia&apos;s highest-impact skills</div>
+      <div className="qf-example-plan__skills">
+        {EXAMPLE_PLAN_SKILLS.map((s, i) => (
+          <div key={s.name} className="qf-example-plan__skill">
+            <span className="qf-example-plan__skill-rank">Skill {i + 1}</span>
+            <span className="qf-example-plan__skill-name">{s.name}</span>
+            <span className="qf-example-plan__skill-pts">+{s.pts}</span>
+          </div>
+        ))}
+      </div>
+      <div className="qf-example-plan__total">
+        <span className="qf-example-plan__total-label">Total points</span>
+        <span className="qf-example-plan__total-pts">+{total}</span>
+      </div>
+    </div>
+  );
+}
 
 export function QFISteps({ onContinue, onBack }) {
-  const [revealed, setRevealed] = useState(0);
-
-  // Stagger the three labels in order; reveal all at once for reduced motion.
-  useEffect(() => {
-    const reduced = typeof window !== 'undefined'
-      && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const timers = [];
-    if (reduced) {
-      timers.push(setTimeout(() => setRevealed(I_STEPS_LABELS.length), 0));
-    } else {
-      const FIRST = 450;
-      const STAGGER = 600;
-      for (let i = 0; i < I_STEPS_LABELS.length; i++) {
-        timers.push(setTimeout(() => setRevealed(i + 1), FIRST + i * STAGGER));
-      }
-    }
-    return () => timers.forEach(clearTimeout);
-  }, []);
-
   return (
     <QFScreen stepIdx={4} onBack={onBack}
       footer={<QFButton kind="forest" onClick={onContinue}>Build their plan</QFButton>}
     >
-      <p className="qf-lead" style={{ margin: '0 0 4px' }}>
-        Here&apos;s how we build a personalized SAT improvement plan.
-      </p>
-      <div style={{ position: 'relative', paddingTop: 16, paddingBottom: 20 }}>
-        <div style={{ margin: '0 8px' }}>
-          <QFSophiaPlanCard />
-        </div>
-
-        {/* Floating Hims-style labels — animate in order */}
-        {I_STEPS_LABELS.map((lbl, i) => {
-          const shown = i < revealed;
-          return (
-            <div key={lbl.title} style={{
-              position: 'absolute',
-              ...lbl.pos,
-              background: 'var(--qf-paper)',
-              border: '1.5px solid var(--qf-forest)',
-              borderRadius: 12,
-              padding: '8px 14px',
-              boxShadow: '0 8px 20px rgba(47,110,71,0.25)',
-              zIndex: 2,
-              maxWidth: lbl.maxWidth,
-              opacity: shown ? 1 : 0,
-              transform: shown
-                ? `rotate(${lbl.rot}deg) translateY(0) scale(1)`
-                : `rotate(${lbl.rot}deg) translateY(10px) scale(0.94)`,
-              transition: 'opacity 0.4s ease, transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1)',
-            }}>
-              <div style={{
-                fontFamily: 'var(--qf-display)', fontSize: 15, fontWeight: 600,
-                color: 'var(--qf-forest)', letterSpacing: '-0.01em',
-              }}>{lbl.title}</div>
-              <div style={{
-                fontFamily: 'var(--qf-body)', fontSize: 11.5,
-                color: 'var(--qf-ink-2)', marginTop: 2, lineHeight: 1.3,
-              }}>{lbl.sub}</div>
-            </div>
-          );
-        })}
+      <div className="gap-22">
+        <h1 className="qf-h1" style={{ marginBottom: 0 }}>
+          By the end of this quiz, we&apos;ll build a SAT plan.
+        </h1>
+        <QFExamplePlanCard />
       </div>
     </QFScreen>
   );

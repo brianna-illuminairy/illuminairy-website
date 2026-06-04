@@ -8,7 +8,7 @@ import {
 } from './screens/Questions';
 import {
   QFI2Compute, QFIGPAGap, QFV1Projection, QFIDiagnosis, QFISteps,
-  QFIComparePrep, QFIDoubtsInsight,
+  QFIComparePrep, QFIDoubtsInsight, QFIHopeScreen,
 } from './screens/Interstitials';
 import { QFInsightHit } from './components/QFInsightHit';
 import { prepFailureInsight } from '@/lib/quiz-funnel/prep-failure-copy';
@@ -16,7 +16,6 @@ import {
   educationHitQ3None,
   educationHitQ5Tbd,
   educationHitQ8Scores,
-  educationHitOutcomeMonthOne,
 } from '@/lib/quiz-funnel/education-slides';
 import {
   QFSPlanReveal, QFS3Stats,
@@ -183,15 +182,7 @@ export default function QuizRunner() {
     case 'i-diag': return <QFIDiagnosis onContinue={next} onBack={back} q3={a.q3} q4={a.q4} q6={a.q6 as any} q7={a.q7 as any} q5={a.q5} />;
     case 'i-steps': return <QFISteps onContinue={next} onBack={back} />;
     case 'hit-outcome-month-one':
-      return (
-        <QFInsightHit
-          hit={educationHitOutcomeMonthOne()}
-          onContinue={next}
-          onBack={back}
-          stepIdx={6}
-          manual
-        />
-      );
+      return <QFIHopeScreen onContinue={next} onBack={back} q5={a.q5} />;
     case 'i2':  return <QFI2Compute   onContinue={next} onBack={back} q2={a.q2} q4={a.q4} q5={a.q5} q6={a.q6} q7={a.q7 as any} q8={a.q8} q9={a.q9} name={a.kidName as string} />;
     case 'q8':  return <QFQ8Goal      value={a.q8} onSelect={(v: string) => setQAndAdvance('q8', v)} onBack={back} />;
     case 'hit-q8-scores':

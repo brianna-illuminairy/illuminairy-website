@@ -1807,6 +1807,147 @@
   box-shadow: 0 0 0 3px rgba(47, 110, 71, 0.12);
 }
 
+/* i-steps · example "Sophia L." plan card (preview of the end reward) */
+.qf-page .qf-example-plan {
+  border: 1px solid var(--qf-line);
+  border-radius: 16px;
+  background: var(--qf-paper);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-shadow: 0 10px 30px rgba(20, 32, 46, 0.08);
+}
+.qf-page .qf-example-plan__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.qf-page .qf-example-plan__eyebrow,
+.qf-page .qf-example-plan__weeks {
+  font-family: var(--qf-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.qf-page .qf-example-plan__eyebrow { color: var(--qf-forest); }
+.qf-page .qf-example-plan__weeks { color: var(--qf-ink-mute); }
+.qf-page .qf-example-plan__name {
+  font-family: var(--qf-display);
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--qf-ink);
+  margin-top: -8px;
+}
+.qf-page .qf-example-plan__skills-head {
+  font-family: var(--qf-body);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--qf-ink-mute);
+  text-align: center;
+}
+.qf-page .qf-example-plan__skills {
+  display: flex;
+  flex-direction: column;
+}
+.qf-page .qf-example-plan__skill {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  border-top: 1px solid var(--qf-line);
+}
+.qf-page .qf-example-plan__skill:first-child { border-top: none; }
+.qf-page .qf-example-plan__skill-rank {
+  font-family: var(--qf-mono);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--qf-forest);
+  background: var(--qf-forest-soft);
+  padding: 3px 7px;
+  border-radius: 6px;
+}
+.qf-page .qf-example-plan__skill-name {
+  font-family: var(--qf-body);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--qf-ink);
+  line-height: 1.25;
+}
+.qf-page .qf-example-plan__skill-pts {
+  font-family: var(--qf-display);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--qf-forest);
+}
+.qf-page .qf-example-plan__total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 2px solid var(--qf-line);
+  padding-top: 12px;
+}
+.qf-page .qf-example-plan__total-label {
+  font-family: var(--qf-body);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--qf-ink-2);
+}
+.qf-page .qf-example-plan__total-pts {
+  font-family: var(--qf-display);
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--qf-forest);
+}
+
+/* doubts-insight · what they're saying → what we uncover */
+.qf-page .qf-doubts-table {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.qf-page .qf-doubts-row {
+  border: 1px solid var(--qf-line);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.qf-page .qf-doubts-row__say {
+  margin: 0;
+  padding: 10px 14px;
+  background: var(--qf-bg-2);
+  font-family: var(--qf-display);
+  font-style: italic;
+  font-size: 14px;
+  line-height: 1.35;
+  color: var(--qf-ink-2);
+}
+.qf-page .qf-doubts-row__find {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 10px 14px;
+  font-family: var(--qf-body);
+  font-size: 13.5px;
+  line-height: 1.4;
+  color: var(--qf-ink);
+}
+.qf-page .qf-doubts-row__find-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--qf-forest);
+}
+
 /* V1 · SAT Score Roadmap (plan reveal) */
 .qf-page .qf-roadmap__eyebrow {
   color: var(--qf-forest);

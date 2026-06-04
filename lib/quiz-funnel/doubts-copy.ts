@@ -1,37 +1,67 @@
 /**
  * q-doubts — limiting beliefs a parent has heard from their child since the
- * last SAT, plus the mirror interstitial (doubts-insight) that echoes them back.
+ * last SAT, plus the mirror interstitial (doubts-insight) that echoes them back
+ * and reframes each into what the diagnostic usually uncovers.
  * Single source of truth so the question options and the recap stay in sync.
  */
 
-export type DoubtOption = { id: string; label: string };
+export type DoubtOption = {
+  id: string;
+  /** What the parent hears (quote). */
+  label: string;
+  /** What we usually uncover behind that belief. */
+  uncover: string;
+};
 
 export const DOUBTS_OPTIONS: DoubtOption[] = [
-  { id: "not-test-taker", label: `"I'm just not a good test taker."` },
-  { id: "studied-no-help", label: `"I already studied and it didn't help."` },
-  { id: "cant-raise", label: `"There's no way I can raise my score that much."` },
-  { id: "bad-at-sat", label: `"Maybe I'm just bad at the SAT."` },
-  { id: "no-months", label: `"I don't want to spend months studying again."` },
-  { id: "no-top-choice", label: `"I don't think I can get into my top-choice school anymore."` },
+  {
+    id: "not-test-taker",
+    label: `"I'm just not a good test taker."`,
+    uncover:
+      "They were never taught the SAT-specific patterns and strategies that strong scorers use.",
+  },
+  {
+    id: "studied-no-help",
+    label: `"I already studied and it didn't help."`,
+    uncover:
+      "They focused on the wrong skills and spent time where the score impact was small.",
+  },
+  {
+    id: "cant-raise",
+    label: `"There's no way I can raise my score that much."`,
+    uncover:
+      "They don't know which 5-6 skills are responsible for most of their lost points.",
+  },
+  {
+    id: "bad-at-sat",
+    label: `"Maybe I'm just bad at the SAT."`,
+    uncover:
+      "They're repeating the same question-type mistakes without knowing it.",
+  },
+  {
+    id: "no-months",
+    label: `"I don't want to spend months studying again."`,
+    uncover: "They need a prioritized plan, not more hours of studying.",
+  },
+  {
+    id: "no-top-choice",
+    label: `"I don't think I can get into my top-choice school anymore."`,
+    uncover:
+      "They haven't seen how much improvement is still available before test day.",
+  },
 ];
 
-/** Max quotes echoed back on the mirror interstitial (keeps it tight). */
-export const DOUBTS_INSIGHT_MAX_QUOTES = 3;
-
-/** Selected doubt labels, in option order, capped for the recap screen. */
-export function selectedDoubtLabels(qDoubts: string[] = []): string[] {
-  return DOUBTS_OPTIONS.filter((o) => qDoubts.includes(o.id))
-    .map((o) => o.label)
-    .slice(0, DOUBTS_INSIGHT_MAX_QUOTES);
+/** Selected doubts (label + uncover), in option order. */
+export function selectedDoubts(qDoubts: string[] = []): DoubtOption[] {
+  return DOUBTS_OPTIONS.filter((o) => qDoubts.includes(o.id));
 }
 
 export const DOUBTS_INSIGHT_COPY = {
-  headline: "We noticed something",
-  intro: "You mentioned that your child has said:",
-  common:
-    "These are some of the most common things we hear from students with good grades but lower-than-expected SAT scores.",
-  notAbility: "The problem isn't ability or effort.",
-  realIssue:
-    "It's that no one has identified the few skills responsible for most of the points, the same skills that caused them to struggle on the SAT last time.",
-  diagnostic: "That's exactly what our Diagnostic is designed to uncover.",
+  headline:
+    "Good news. We've helped hundreds of students who felt the exact same way raise their SAT scores.",
+  subheadline:
+    "A disappointing SAT score doesn't mean your child isn't capable of a much higher score.",
+  sayingLabel: "What they're saying",
+  uncoverLabel: "What we usually uncover",
+  cta: "What's Really Holding Them Back?",
 } as const;
