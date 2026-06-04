@@ -41,8 +41,8 @@ export function QFIDoubtsInsight({ onContinue, onBack, qDoubts = [] }) {
         <p className="qf-lead" style={{ margin: 0 }}>{c.subheadline}</p>
         <div className="qf-doubts-table">
           <div className="qf-doubts-table__header">
-            <span className="qf-doubts-th">{c.sayingLabel}</span>
-            <span className="qf-doubts-th">{c.uncoverLabel}</span>
+            <span className="qf-doubts-th qf-doubts-th--say">{c.sayingLabel}</span>
+            <span className="qf-doubts-th qf-doubts-th--find">{c.uncoverLabel}</span>
           </div>
           {rows.map((row) => (
             <div key={row.id} className="qf-doubts-row">

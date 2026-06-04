@@ -1931,7 +1931,7 @@
   color: var(--qf-ink-mute);
 }
 
-/* doubts-insight · two-column table: what you heard | what we find */
+/* doubts-insight · two-column table: what you heard | how we fix it (fix emphasized) */
 .qf-page .qf-doubts-table {
   border: 1px solid var(--qf-line);
   border-radius: 12px;
@@ -1942,9 +1942,6 @@
   display: grid;
   grid-template-columns: 0.85fr 1.15fr;
 }
-.qf-page .qf-doubts-table__header {
-  background: var(--qf-forest-soft);
-}
 .qf-page .qf-doubts-th {
   padding: 9px 12px;
   font-family: var(--qf-body);
@@ -1952,14 +1949,6 @@
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: var(--qf-forest);
-}
-.qf-page .qf-doubts-th + .qf-doubts-th,
-.qf-page .qf-doubts-cell--find {
-  border-left: 1px solid var(--qf-line);
-}
-.qf-page .qf-doubts-row {
-  border-top: 1px solid var(--qf-line);
 }
 .qf-page .qf-doubts-cell {
   padding: 11px 12px;
@@ -1967,12 +1956,27 @@
   font-size: 12.5px;
   line-height: 1.4;
 }
+/* Left column — the quotes, de-emphasized */
+.qf-page .qf-doubts-th--say {
+  background: var(--qf-bg-2);
+  color: var(--qf-ink-mute);
+}
 .qf-page .qf-doubts-cell--say {
-  font-weight: 600;
+  background: var(--qf-bg-2);
   color: var(--qf-ink-2);
+  font-weight: 500;
+  border-top: 1px solid var(--qf-line);
+}
+/* Right column — the fix, emphasized (navy + white) */
+.qf-page .qf-doubts-th--find {
+  background: var(--qf-ink);
+  color: rgba(255, 255, 255, 0.7);
 }
 .qf-page .qf-doubts-cell--find {
-  color: var(--qf-ink);
+  background: var(--qf-ink);
+  color: #fff;
+  font-weight: 600;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
 }
 
 /* V1 · SAT Score Roadmap (plan reveal) */

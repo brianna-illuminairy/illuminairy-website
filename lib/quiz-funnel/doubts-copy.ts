@@ -17,37 +17,32 @@ export const DOUBTS_OPTIONS: DoubtOption[] = [
   {
     id: "not-test-taker",
     label: `"I'm just not a good test taker."`,
-    uncover:
-      "They were never taught the SAT-specific patterns and strategies that strong scorers use.",
+    uncover: "SAT strategy and pattern recognition.",
   },
   {
     id: "studied-no-help",
     label: `"I already studied and it didn't help."`,
-    uncover:
-      "They focused on the wrong skills and spent time where the score impact was small.",
+    uncover: "A focus on the 5-6 skills worth the most points.",
   },
   {
     id: "cant-raise",
     label: `"There's no way I can raise my score that much."`,
-    uncover:
-      "They don't know which 5-6 skills are responsible for most of their lost points.",
+    uncover: "A plan that prioritizes the fastest score gains.",
   },
   {
     id: "bad-at-sat",
     label: `"Maybe I'm just bad at the SAT."`,
-    uncover:
-      "They're repeating the same question-type mistakes without knowing it.",
+    uncover: "To learn how the SAT works differently from school.",
   },
   {
     id: "no-months",
     label: `"I don't want to spend months studying again."`,
-    uncover: "They need a prioritized plan, not more hours of studying.",
+    uncover: "A more focused study plan, not more hours.",
   },
   {
     id: "no-top-choice",
     label: `"I don't think I can get into my top-choice school anymore."`,
-    uncover:
-      "They haven't seen how much improvement is still available before test day.",
+    uncover: "A realistic roadmap from today's score to test day.",
   },
 ];
 
@@ -61,6 +56,6 @@ export const DOUBTS_INSIGHT_COPY = {
   subheadline:
     "Most students who say these things are capable of much higher scores. Here's what we actually find and work on.",
   sayingLabel: "What you heard",
-  uncoverLabel: "What we find",
+  uncoverLabel: "How we fix it",
   cta: "What's Really Holding Them Back?",
 } as const;
