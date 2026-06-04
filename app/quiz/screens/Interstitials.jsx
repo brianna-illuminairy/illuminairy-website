@@ -22,48 +22,8 @@ import {
   v1FastWinBridgeParts,
 } from '@/lib/quiz-funnel/score-path-copy';
 import { QFV1ProjectionChart } from '../components/QFV1ProjectionChart';
-import { stakesOutcome } from '@/lib/quiz-funnel/stakes-copy';
 
 export { gainTargetForQ5 };
-
-// ─── I1 · Proof bridge ───────────────────────────────────────────────────────
-const I1_DATE_PHRASE = {
-  'aug22': 'August 22', 'sept12': 'September 12', 'oct3': 'October 3', 'nov7': 'November 7',
-  'dec5': 'December 5', 'tbd': null,
-};
-
-export function QFI1Proof({ onContinue, onBack, q2 = 'top-choice', q3 = 'sat-1', q5 = 'oct3', vars = {} }) {
-  const hasSat = ['sat-1', 'sat-2', 'sat-3+'].includes(q3);
-  const v = {
-    test_date_phrase: I1_DATE_PHRASE[q5] ?? null,
-    stakes_outcome: stakesOutcome(q2),
-    ...vars,
-  };
-  const hasDate = !!v.test_date_phrase;
-  const followUp = hasSat
-    ? 'But first, we need to better understand why they struggled on the SAT.'
-    : q3 === 'psat-only'
-      ? 'But first, we need to understand where the gaps are before their first official SAT.'
-      : 'But first, we need to understand what to focus on before their first official SAT.';
-  return (
-    <QFScreen stepIdx={6} ornament="glow" onBack={onBack}
-      footer={<QFButton kind="forest" onClick={onContinue}>Continue</QFButton>}
-    >
-      <div className="gap-22" style={{ marginTop: 4 }}>
-        <p className="qf-lead">
-          {hasDate ? (
-            <>We&apos;re building an Improvement Plan to help your child get their SAT score up by the <em>{v.test_date_phrase}</em> SAT, so that <em>{v.stakes_outcome}</em>.</>
-          ) : (
-            <>We&apos;re building an Improvement Plan to help your child get their SAT score up, so that <em>{v.stakes_outcome}</em>.</>
-          )}
-        </p>
-        <p className="qf-lead">
-          {followUp}
-        </p>
-      </div>
-    </QFScreen>
-  );
-}
 
 // ─── I2 · Compute ────────────────────────────────────────────────────────────
 const CQ4_BANDS = {

@@ -7,7 +7,7 @@ import {
   QFQ6Blocker, QFQ7Tried, QFQ8Goal, QFQ9GPA,
 } from './screens/Questions';
 import {
-  QFI1Proof, QFI2Compute, QFIGPAGap, QFV1Projection, QFIDiagnosis, QFIMethod, QFISteps,
+  QFI2Compute, QFIGPAGap, QFV1Projection, QFIDiagnosis, QFIMethod, QFISteps,
   QFIComparePrep,
 } from './screens/Interstitials';
 import { QFInsightHit } from './components/QFInsightHit';
@@ -31,7 +31,6 @@ import { PLAN_HANDOFF_CTA } from '@/lib/quiz-funnel/plan-handoff-copy';
 
 const BASE_STEPS = [
   'q1','q2','q3','q4','q5',
-  'i1',
   'q6','q7','hit-q7',
   'i-compare',
   'i-diag',
@@ -61,8 +60,8 @@ function getSteps(answers: QuizAnswers) {
   }
 
   if (answers.q5 === 'tbd' || answers.q5 === '2027') {
-    const i1Idx = steps.indexOf('i1');
-    if (i1Idx >= 0) steps.splice(i1Idx, 0, 'hit-q5-tbd');
+    const q6Idx = steps.indexOf('q6');
+    if (q6Idx >= 0) steps.splice(q6Idx, 0, 'hit-q5-tbd');
   }
 
   const iStepsIdx = steps.indexOf('i-steps');
@@ -177,7 +176,6 @@ export default function QuizRunner() {
           stepIdx={6}
         />
       );
-    case 'i1':  return <QFI1Proof     onContinue={next} onBack={back} q2={a.q2} q3={a.q3} q5={a.q5} />;
     case 'q6':  return <QFQ6Blocker   value={a.q6 as any} onToggle={(id: string) => toggleQ('q6', id)} onContinue={next} onBack={back} />;
     case 'q7':  return <QFQ7Tried     value={a.q7 as any} onToggle={(id: string) => toggleQ('q7', id)} onContinue={next} onBack={back} q3={a.q3} />;
     case 'hit-q7':
