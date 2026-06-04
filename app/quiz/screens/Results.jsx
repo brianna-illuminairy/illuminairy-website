@@ -2,8 +2,7 @@
 import { useMemo } from 'react';
 import { QFScreen, QFButton, QFQuestionHead, QFConstellation } from '../components/QFShell';
 import { buildPlanReveal } from '@/lib/quiz-funnel/plan-reveal';
-import { REVEAL_CTA, S3_PERSONALIZE_CTA } from '@/lib/quiz-funnel/score-path-copy';
-import { QFVerifiedCaseStudy } from '../components/QFVerifiedCaseStudy';
+import { REVEAL_CTA } from '@/lib/quiz-funnel/score-path-copy';
 import { PlanRevealContent } from '../components/PlanRevealContent';
 import { PlanHeardSummary } from '../components/PlanHeardSummary';
 import { HEARD_SUMMARY_CTA } from '@/lib/quiz-funnel/heard-summary-copy';
@@ -35,13 +34,3 @@ export function QFSPlanReveal({ answers = {}, onContinue, onBack }) {
 /** @deprecated use QFSPlanReveal — kept for deep links */
 export const QFS1Summary = QFSPlanReveal;
 
-// ─── S3 · Verified parent case study (Ethan) ─────────────────────────────────
-export function QFS3Stats({ onContinue, onBack }) {
-  return (
-    <QFScreen stepIdx={16} onBack={onBack}
-      footer={<QFButton kind="forest" onClick={onContinue}>{S3_PERSONALIZE_CTA}</QFButton>}
-    >
-      <QFVerifiedCaseStudy />
-    </QFScreen>
-  );
-}

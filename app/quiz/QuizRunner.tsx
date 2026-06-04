@@ -18,7 +18,7 @@ import {
   educationHitQ8Scores,
 } from '@/lib/quiz-funnel/education-slides';
 import {
-  QFSPlanReveal, QFS3Stats,
+  QFSPlanReveal,
 } from './screens/Results';
 import {
   QFS4PlanHandoff, QFS5Approved, QFS7PlanDetails, QFS9Booking, QFS9ThankYou,
@@ -37,7 +37,7 @@ const BASE_STEPS = [
   'name',
   'i2',
   'v1',
-  's3','s4',
+  's4',
   's5',
 ];
 
@@ -211,7 +211,6 @@ export default function QuizRunner() {
     case 's1':
       return <QFSPlanReveal answers={a} onContinue={next} onBack={back} />;
     case 'v1':  return <QFV1Projection onContinue={next} onBack={back} answers={a} />;
-    case 's3':  return <QFS3Stats     onContinue={next} onBack={back} />;
     case 's4':
       return (
         <QFS4PlanHandoff

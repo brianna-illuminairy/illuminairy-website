@@ -20,13 +20,18 @@ const Q5_HANDOFF_DATE: Record<string, string> = {
   dec5: "Dec 5",
 };
 
-export const PLAN_HANDOFF_EYEBROW = "Approved";
+export const PLAN_HANDOFF_EYEBROW = "ELIGIBLE FOR THE SKILL DIAGNOSTIC";
 
-export const PLAN_HANDOFF_CALL_TITLE = "Your free SAT Strategy Call";
+export const PLAN_HANDOFF_HEADLINE = "You're approved for the Skill Diagnostic.";
+
+export const PLAN_HANDOFF_SUBHEADLINE =
+  "Next we'll identify the 5–6 skills most responsible for raising your child's score and finalize their SAT plan.";
+
+export const PLAN_HANDOFF_CALL_TITLE = "Your free SAT Plan Review Call";
 
 export const PLAN_HANDOFF_CALL_DURATION = "15 min";
 
-export const PLAN_HANDOFF_CTA = "Get my plan";
+export const PLAN_HANDOFF_CTA = "Reserve My SAT Plan Review";
 
 export type PlanHandoffItem = {
   title: string;

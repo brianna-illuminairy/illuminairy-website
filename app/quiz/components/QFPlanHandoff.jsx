@@ -6,6 +6,8 @@ import {
   PLAN_HANDOFF_CALL_DURATION,
   PLAN_HANDOFF_CALL_TITLE,
   PLAN_HANDOFF_EYEBROW,
+  PLAN_HANDOFF_HEADLINE,
+  PLAN_HANDOFF_SUBHEADLINE,
 } from '@/lib/quiz-funnel/plan-handoff-copy';
 
 /**
@@ -24,20 +26,12 @@ export function QFPlanHandoff({ answers = {} }) {
       </p>
 
       <h1 className="qf-h1" style={{ marginBottom: 0 }}>
-        You&apos;re approved for a personalized plan to get your child to{' '}
-        {handoff.hasTarget ? (
-          <em>{handoff.targetLabel}</em>
-        ) : (
-          <em>their goal score</em>
-        )}
-        {handoff.hasDate ? (
-          <>
-            {' '}
-            <em>{handoff.testDateLabel}</em>
-          </>
-        ) : null}
-        .
+        {PLAN_HANDOFF_HEADLINE}
       </h1>
+
+      <p className="qf-lead" style={{ margin: 0 }}>
+        {PLAN_HANDOFF_SUBHEADLINE}
+      </p>
 
       <div className="qf-card wash qf-plan-handoff__call">
         <div className="qf-plan-handoff__call-head">

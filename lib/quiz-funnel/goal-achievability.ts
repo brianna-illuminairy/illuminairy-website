@@ -110,6 +110,8 @@ export type GoalAchievability = {
   verdictEm: string;
   /** Subheadline — q2 stakes. */
   stakesLead: string;
+  /** Phrase within stakesLead to emphasize (green). */
+  stakesEmphasis: string;
   /** Inside callout box, under the gauge. */
   outcomesMeta: string;
   /** Specifics paragraph — GPA + improve bridge + typical need. */
@@ -137,6 +139,14 @@ const STAKES_ACHIEVABILITY_LEAD: Record<string, string> = {
   selective: "A higher score keeps selective colleges on the table.",
   "app-rounds": "A higher score helps them be ready for early application rounds.",
   early: "A higher score helps them be ready for early application rounds.",
+};
+
+const STAKES_ACHIEVABILITY_EMPHASIS: Record<string, string> = {
+  merit: "thousands of dollars",
+  "top-choice": "their top-choice school",
+  selective: "selective colleges",
+  "app-rounds": "early application rounds",
+  early: "early application rounds",
 };
 
 function roundGainPoints(gain: number): number {
@@ -469,6 +479,13 @@ function buildStakesLead(q2?: string): string {
   );
 }
 
+function buildStakesEmphasis(q2?: string): string {
+  return (
+    STAKES_ACHIEVABILITY_EMPHASIS[q2 ?? ""] ??
+    STAKES_ACHIEVABILITY_EMPHASIS["top-choice"]
+  );
+}
+
 export function buildGoalAchievability(
   answers: QuizAnswersLike,
   path: ScorePathOutput = buildScorePathOutput(answers)
@@ -489,6 +506,7 @@ export function buildGoalAchievability(
     verdictLead: verdict.lead,
     verdictEm: verdict.em,
     stakesLead: buildStakesLead(answers.q2),
+    stakesEmphasis: buildStakesEmphasis(answers.q2),
     outcomesMeta: achievabilityOutcomesMeta(),
     insightParagraph: insight.insightParagraph,
     gpaLabel: insight.gpaLabel,
@@ -531,6 +549,7 @@ export function buildGoalAchievabilityFallback(
     verdictLead: verdict.lead,
     verdictEm: verdict.em,
     stakesLead: plan.subhead ?? buildStakesLead("merit"),
+    stakesEmphasis: buildStakesEmphasis("merit"),
     outcomesMeta: achievabilityOutcomesMeta(),
     insightParagraph: buildRevealInsightParagraph(
       { q9: undefined, q6: [] },

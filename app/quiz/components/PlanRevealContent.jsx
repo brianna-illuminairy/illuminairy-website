@@ -6,6 +6,19 @@ import {
 } from '@/lib/quiz-funnel/goal-achievability';
 import { AchievabilityStatBar, AchievabilityPills } from './AchievabilityRating';
 
+/** Render the stakes lead with one phrase emphasized green. */
+function renderStakesLead(text, emphasis) {
+  if (!emphasis || !text || !text.includes(emphasis)) return text;
+  const idx = text.indexOf(emphasis);
+  return (
+    <>
+      {text.slice(0, idx)}
+      <span className="qf-stakes-em">{emphasis}</span>
+      {text.slice(idx + emphasis.length)}
+    </>
+  );
+}
+
 /**
  * @param {{
  *   plan: import('@/lib/quiz-funnel/plan-reveal').PlanRevealModel,
@@ -25,17 +38,15 @@ export function PlanRevealContent({ plan, title, introNote, q2 }) {
         <p className="qf-meta qf-goal-assess__eyebrow">{eyebrow}</p>
 
         {title ?? (
-          <>
-            <h1 className="qf-h1 qf-goal-assess__headline-l1">{assessment.pointsLine}</h1>
-            <p className="qf-h1 qf-goal-assess__headline-l2">
-              {assessment.verdictLead}{' '}
-              <em>{assessment.verdictEm}</em>.
-            </p>
-          </>
+          <h1 className="qf-h1" style={{ margin: 0 }}>
+            {assessment.pointsLine}
+            <br />
+            {assessment.verdictLead} <em>{assessment.verdictEm}</em>.
+          </h1>
         )}
         {title}
 
-        <p className="qf-lead">{assessment.stakesLead}</p>
+        <p className="qf-lead">{renderStakesLead(assessment.stakesLead, assessment.stakesEmphasis)}</p>
       </div>
 
       <AchievabilityStatBar stats={assessment.stats} />
@@ -47,22 +58,19 @@ export function PlanRevealContent({ plan, title, introNote, q2 }) {
           tierRanges={assessment.tierRanges}
           educational={!assessment.stats.hasKnownGoal}
         />
-        <p className="qf-caption">{assessment.outcomesMeta}</p>
+        <p className="qf-meta qf-achv-outcomes-label">{assessment.outcomesMeta}</p>
         {introNote ? <p className="qf-caption">{introNote}</p> : null}
       </div>
 
       <p className="qf-lead">{assessment.insightParagraph}</p>
 
-      <div>
-        <div className="qf-stat-callout">
-          <span className="qf-stat-callout__pct">{assessment.hitRatePct}%</span>
-          <p className="qf-stat-callout__text">
-            {assessment.hitRateBefore}
-            <strong>{assessment.hitRateEmphasis}</strong>
-            {assessment.hitRateAfter}
-          </p>
-        </div>
-        <p className="qf-caption" style={{ marginTop: 8 }}>{assessment.varyDisclaimer}</p>
+      <div className="qf-stat-callout">
+        <span className="qf-stat-callout__pct">{assessment.hitRatePct}%</span>
+        <p className="qf-stat-callout__text">
+          {assessment.hitRateBefore}
+          <strong>{assessment.hitRateEmphasis}</strong>
+          {assessment.hitRateAfter}
+        </p>
       </div>
     </div>
   );

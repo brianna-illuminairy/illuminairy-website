@@ -18,9 +18,10 @@ import { iCompareHeadlineMultiplier, iCompareProofBridgeLine } from '@/lib/quiz-
 import {
   formatSatScoreLabel,
 } from '@/lib/quiz-funnel/score-path-copy';
-import { QFV1ProjectionChart } from '../components/QFV1ProjectionChart';
 import { selectedDoubts, DOUBTS_INSIGHT_COPY } from '@/lib/quiz-funnel/doubts-copy';
-import { buildGoalAchievability, buildTierRanges } from '@/lib/quiz-funnel/goal-achievability';
+import { buildGoalAchievability, buildTierRanges, GOAL_FEASIBILITY_TIER_LABELS } from '@/lib/quiz-funnel/goal-achievability';
+import { buildScorePathOutput } from '@/lib/quiz-funnel/score-path-output';
+import { selectedPrepLabels, formatEnglishList } from '@/lib/quiz-funnel/prep-copy';
 import { AchievabilityStatBar, AchievabilityPills } from '../components/AchievabilityRating';
 import { QFScoreReportPair } from '../components/QFPlanVisuals';
 import { Q5_TEST_DATES } from '@/lib/quiz-funnel/gains';
@@ -477,80 +478,166 @@ function RoadmapSection({ eyebrow, children }) {
   );
 }
 
+function planStruggledCopy(q7) {
+  const ids = Array.isArray(q7) ? q7 : [];
+  if (ids.includes('khan')) {
+    return 'Khan Academy has over 475 pieces of SAT content, far too much to simply study. Your child likely barely scratched the surface.';
+  }
+  const labels = selectedPrepLabels(q7);
+  if (labels.length) {
+    return `${formatEnglishList(labels)} spread time across the whole SAT instead of the few skills actually holding their score back.`;
+  }
+  return 'Studying without a ranked plan spreads time across the whole SAT instead of the few skills actually holding their score back.';
+}
+
+function planDelayCost(skillPts, ptsPerWeek) {
+  const pts = Array.isArray(skillPts) ? skillPts : [];
+  const base = pts.length ? Math.max(...pts) : ptsPerWeek ? ptsPerWeek * 2 : 60;
+  return Math.max(40, Math.ceil(base / 10) * 10);
+}
+
 export function QFV1Projection({ onContinue, onBack, answers = {} }) {
-  const { q2 = 'top-choice', q4 = '1200-1300', q5 = 'oct3', q6 = [], q7 = [], q8 = '1400', q9, kidName } = answers;
+  const { q7 = [], kidName } = answers;
   const projection = buildV1Projection(answers);
   const assessment = buildGoalAchievability(answers);
+  const path = buildScorePathOutput(answers);
 
   const displayName = kidName && String(kidName).trim() ? String(kidName).trim() : null;
   const possessive = displayName ? `${displayName}'s` : 'Your';
-  const current = formatSatScoreLabel(projection.current);
-  const goalScore = formatSatScoreLabel(projection.goalTarget ?? projection.displayTarget);
-
-  const challengeLabel = firstComputeLabel(q6, CCHALLENGE_LABEL) ?? 'The right skills';
-  const prepLabel = firstComputeLabel(q7, CPREP_LABEL) ?? 'Past prep';
+  const currentNum = projection.current;
+  const goalNum = projection.goalTarget ?? projection.displayTarget;
+  const goalScore = formatSatScoreLabel(goalNum);
+  const weeks = projection.chartWeeks || 12;
+  const dateShort = assessment.stats.testDateShort;
   const skillCount = Math.min(projection.skillCount || 6, 6);
-  const skillRows = Array.from({ length: skillCount }, (_, i) => i + 1);
+
+  const tierWord = (GOAL_FEASIBILITY_TIER_LABELS[assessment.tier] || 'personalized').toLowerCase();
+  const tierArticle = /^[aeiou]/.test(tierWord) ? 'an' : 'a';
+
+  const band = path.gainBand;
+  const hasBand = !!band && band.low > 0 && band.high > 0;
+  // Reasonable range — never promote more than +260; keep a sensible low end (~180).
+  const MAX_PROMO_GAIN = 260;
+  const rangeHigh = hasBand ? Math.min(MAX_PROMO_GAIN, Math.round(band.high / 10) * 10) : 0;
+  const rangeLow = hasBand ? Math.min(Math.round(band.low / 10) * 10, rangeHigh - 40) : 0;
+  const delayCost = planDelayCost(projection.skillPts, assessment.stats.ptsPerWeek);
+
+  const stakesLead = assessment.stakesLead;
+  const stakesEm = assessment.stakesEmphasis;
+  const stakesIdx = stakesEm && stakesLead.includes(stakesEm) ? stakesLead.indexOf(stakesEm) : -1;
+
+  // Reveal the locked skill rows one at a time.
+  const [revealed, setRevealed] = useState(0);
+  useEffect(() => {
+    const reduced = typeof window !== 'undefined'
+      && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const timers = [];
+    if (reduced) {
+      timers.push(setTimeout(() => setRevealed(skillCount), 0));
+    } else {
+      for (let i = 0; i < skillCount; i++) {
+        timers.push(setTimeout(() => setRevealed(i + 1), 450 + i * 300));
+      }
+    }
+    return () => timers.forEach(clearTimeout);
+  }, [skillCount]);
 
   return (
     <QFScreen stepIdx={15} ornament="glow" onBack={onBack}
       footer={<QFButton kind="forest" onClick={onContinue}>Continue to schedule your SAT Strategy Call</QFButton>}
     >
       <div className="gap-22">
-        <div>
-          <p className="qf-meta qf-roadmap__eyebrow">Personalized SAT plan</p>
-          <h1 className="qf-h1" style={{ margin: '2px 0 0' }}>{possessive} SAT Score Roadmap</h1>
-          <p className="qf-roadmap__score">
-            <span>{current}</span>
-            <span className="qf-roadmap__arrow"> → </span>
-            <em>{goalScore}</em>
-          </p>
-        </div>
-
-        {projection.showChart ? (
-          <QFV1ProjectionChart
-            current={projection.current}
-            displayTarget={projection.displayTarget}
-            goalTarget={projection.goalTarget}
-            skillPts={projection.skillPts}
-            gapExceedsModeled={projection.gapExceedsModeled}
-          />
-        ) : null}
-
-        <div className="qf-goal-assess__callout">
-          <AchievabilityStatBar stats={assessment.stats} />
-          <p className="qf-meta qf-achv-rating-label">Goal score achievability rating</p>
-          <AchievabilityPills
-            tierIndex={assessment.tierIndex}
-            tierRanges={assessment.tierRanges}
-            educational={!assessment.stats.hasKnownGoal}
-          />
-        </div>
-
-        <RoadmapSection eyebrow="Last time">
-          <p className="qf-lead" style={{ margin: 0 }}>{challengeLabel} was a challenge.</p>
-          <p className="qf-lead" style={{ margin: 0 }}>{prepLabel} didn&apos;t produce the score increase you wanted.</p>
-        </RoadmapSection>
-
-        <RoadmapSection eyebrow="This time">
-          <p className="qf-lead" style={{ margin: 0 }}>
-            We&apos;ll identify the <em>{FOCUS_SKILL_COUNT}–6 skills</em> worth the most points.
-          </p>
-          <p className="qf-lead" style={{ margin: 0 }}>
-            Then we&apos;ll build a personalized plan around those specific skills.
-          </p>
-        </RoadmapSection>
-
-        <RoadmapSection eyebrow="Skills to identify">
-          <div className="qf-roadmap-skills">
-            {skillRows.map((n) => (
-              <div key={n} className="qf-roadmap-skill">
-                <span className="qf-roadmap-skill__name">Skill {n}</span>
-                <span className="qf-roadmap-skill__tbd">TBD</span>
-              </div>
-            ))}
+        {/* Plan — one container so it reads as a real plan */}
+        <div className="qf-example-plan">
+          <div className="qf-example-plan__head">
+            <span className="qf-example-plan__eyebrow">Personalized SAT plan</span>
+            {dateShort ? <span className="qf-example-plan__weeks">{weeks} weeks to {dateShort}</span> : null}
           </div>
-          <p className="qf-caption" style={{ marginTop: 8 }}>Found through the Skill Diagnostic.</p>
+          <div className="qf-example-plan__name">{possessive} SAT Plan</div>
+
+          <QFPlanChart current={currentNum} projected={goalNum} skillCount={skillCount} totalDays={weeks * 7} />
+
+          <AchievabilityStatBar stats={assessment.stats} />
+          <div className="qf-goal-assess__scale">
+            <p className="qf-meta qf-achv-rating-label">Goal score achievability rating</p>
+            <AchievabilityPills
+              tierIndex={assessment.tierIndex}
+              tierRanges={assessment.tierRanges}
+              educational={!assessment.stats.hasKnownGoal}
+            />
+            <p className="qf-meta qf-achv-outcomes-label">{assessment.outcomesMeta}</p>
+          </div>
+
+          <div className="qf-example-plan__skills-head">Skills to identify</div>
+          <div className="qf-example-plan__skills">
+            {Array.from({ length: skillCount }, (_, i) => {
+              const shown = i < revealed;
+              return (
+                <div key={i} className="qf-example-plan__skill" style={{
+                  opacity: shown ? 1 : 0,
+                  transform: shown ? 'translateY(0)' : 'translateY(6px)',
+                  transition: 'opacity 0.35s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                }}>
+                  <span className="qf-example-plan__skill-rank">Skill {i + 1}</span>
+                  <span className="qf-example-plan__skill-name">Highest-impact skill</span>
+                  <span className="qf-example-plan__skill-pts">TBD</span>
+                </div>
+              );
+            })}
+          </div>
+          <p className="qf-caption" style={{ textAlign: 'center', margin: 0 }}>Found through the Skill Diagnostic.</p>
+        </div>
+
+        {/* Narrative — plan → why a call + diagnostic is the next step */}
+        <RoadmapSection eyebrow="Why they struggled last test">
+          <p className="qf-lead" style={{ margin: 0 }}>{planStruggledCopy(q7)}</p>
+        </RoadmapSection>
+
+        <RoadmapSection eyebrow="What to do differently this time">
+          <p className="qf-lead" style={{ margin: 0 }}>
+            Start with the Skill Diagnostic to rank the <em>{FOCUS_SKILL_COUNT}–6 skills</em> worth the most points, then work those first.
+          </p>
+        </RoadmapSection>
+
+        <RoadmapSection eyebrow={dateShort ? `What score is reasonable by ${dateShort}` : 'What score is reasonable'}>
+          <p className="qf-lead" style={{ margin: 0 }}>
+            We built {tierArticle} <em>{tierWord}</em> plan toward your <em>{goalScore}</em> target.{' '}
+            {hasBand ? (
+              <>Students with a similar start and {weeks}-week timeline typically improve <em>+{rangeLow}&ndash;+{rangeHigh}</em>, and a Skill Diagnostic plus starting within 7 days makes the upper end realistic.</>
+            ) : (
+              <>A Skill Diagnostic plus starting within 7 days sets a realistic improvement range for their timeline.</>
+            )}
+          </p>
+        </RoadmapSection>
+
+        <RoadmapSection eyebrow="How much effort it takes">
+          <p className="qf-lead" style={{ margin: 0 }}>~5&ndash;7 hours per week of mistake-driven practice on their weakest skills.</p>
+        </RoadmapSection>
+
+        <RoadmapSection eyebrow="Biggest risk to the plan">
+          <p className="qf-lead" style={{ margin: 0 }}>
+            <em>Delay.</em> Putting this off 2 weeks could cost up to <em>{delayCost} points</em>. The early weeks target the highest-impact skills, so starting now has outsized rewards.
+          </p>
+        </RoadmapSection>
+
+        <RoadmapSection eyebrow="What's on the line">
+          <p className="qf-lead" style={{ margin: 0 }}>
+            {stakesIdx >= 0 ? (
+              <>
+                {stakesLead.slice(0, stakesIdx)}
+                <em>{stakesEm}</em>
+                {stakesLead.slice(stakesIdx + stakesEm.length)}
+              </>
+            ) : (
+              stakesLead
+            )}
+          </p>
+        </RoadmapSection>
+
+        <RoadmapSection eyebrow="How to get started">
+          <p className="qf-lead" style={{ margin: 0 }}>
+            Schedule a call so we can get started diagnosing your child&apos;s <em>{FOCUS_SKILL_COUNT}&ndash;6 highest-impact skills</em> to finalize their plan.
+          </p>
         </RoadmapSection>
       </div>
     </QFScreen>
@@ -794,19 +881,22 @@ const EXAMPLE_PLAN_STATS = {
 const MONO_FONT = 'DM Mono, ui-monospace, monospace';
 const DISPLAY_FONT = "var(--qf-display), 'Source Serif 4', Georgia, serif";
 
-/** Static illustrative projection (1180 → 1400 over ~15 weeks), matching the example card. */
-function QFExamplePlanChart() {
+/** Static projection chart (days + skills + curve, no animation). Defaults = the Sophia example. */
+function QFPlanChart({ current = 1180, projected = 1400, skillCount = 6, totalDays = 105 }) {
   const line = 'M14,150 C72,148 116,104 180,84 C242,66 296,54 320,50';
   const area = `${line} L320,162 L14,162 Z`;
-  const days = [
-    { x: 72, n: 20 }, { x: 131, n: 40 }, { x: 190, n: 60 }, { x: 249, n: 80 },
-  ];
-  const skills = Array.from({ length: 6 }, (_, i) => ({
-    x: 14 + (306 * (i + 0.5)) / 6,
+  const count = Math.min(Math.max(skillCount || 6, 5), 6);
+  const td = totalDays > 0 ? totalDays : 105;
+  const dayNums = [...new Set(
+    [0.2, 0.4, 0.6, 0.8].map((f) => Math.round((td * f) / 5) * 5)
+  )].filter((d) => d > 0 && d < td);
+  const days = dayNums.map((n) => ({ x: 14 + (n / td) * 306, n }));
+  const skills = Array.from({ length: count }, (_, i) => ({
+    x: 14 + (306 * (i + 0.5)) / count,
     n: i + 1,
   }));
   return (
-    <svg viewBox="0 0 340 190" className="qf-ex-chart" role="img" aria-label="Projected score from 1180 to 1400">
+    <svg viewBox="0 0 340 190" className="qf-ex-chart" role="img" aria-label={`Projected score from ${current} to ${projected}`}>
       <defs>
         <linearGradient id="qf-ex-fill" x1="0" x2="0" y1="0" y2="1">
           <stop offset="0%" stopColor="#2F6E47" stopOpacity="0.16" />
@@ -816,14 +906,14 @@ function QFExamplePlanChart() {
 
       {days.map((d) => (
         <g key={d.n}>
-          <text x={d.x} y={9} textAnchor="middle" fontFamily={MONO_FONT} fontSize="6.5" fill="#8A94A6" letterSpacing="1">DAY</text>
-          <text x={d.x} y={21} textAnchor="middle" fontFamily={DISPLAY_FONT} fontSize="12" fontWeight="700" fill="#121A2B">{d.n}</text>
+          <text x={d.x} y={9} textAnchor="middle" fontFamily={MONO_FONT} fontSize="8" fill="#8A94A6" letterSpacing="1">DAY</text>
+          <text x={d.x} y={22} textAnchor="middle" fontFamily={DISPLAY_FONT} fontSize="13" fontWeight="700" fill="#121A2B">{d.n}</text>
           <line x1={d.x} x2={d.x} y1={28} y2={162} stroke="rgba(20,32,46,0.10)" strokeWidth="1" strokeDasharray="3 4" />
         </g>
       ))}
 
-      <text x={326} y={30} textAnchor="end" fontFamily={DISPLAY_FONT} fontSize="15" fontWeight="700" fill="#2F6E47">1400</text>
-      <text x={326} y={40} textAnchor="end" fontFamily={MONO_FONT} fontSize="6.5" fill="#8A94A6" letterSpacing="1">PROJECTED</text>
+      <text x={326} y={30} textAnchor="end" fontFamily={DISPLAY_FONT} fontSize="16" fontWeight="700" fill="#2F6E47">{projected}</text>
+      <text x={326} y={41} textAnchor="end" fontFamily={MONO_FONT} fontSize="8" fill="#8A94A6" letterSpacing="1">PROJECTED</text>
 
       <path d={area} fill="url(#qf-ex-fill)" />
       <path d={line} fill="none" stroke="#2F6E47" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
@@ -831,11 +921,11 @@ function QFExamplePlanChart() {
       <circle cx={14} cy={150} r={5} fill="#121A2B" />
       <circle cx={320} cy={50} r={6} fill="#2F6E47" stroke="#fff" strokeWidth="2" />
 
-      <text x={6} y={134} fontFamily={DISPLAY_FONT} fontSize="15" fontWeight="700" fill="#5B6472">1180</text>
-      <text x={6} y={144} fontFamily={MONO_FONT} fontSize="6.5" fill="#8A94A6" letterSpacing="1">STARTING</text>
+      <text x={6} y={132} fontFamily={DISPLAY_FONT} fontSize="16" fontWeight="700" fill="#5B6472">{current}</text>
+      <text x={6} y={143} fontFamily={MONO_FONT} fontSize="8" fill="#8A94A6" letterSpacing="1">STARTING</text>
 
       {skills.map((s) => (
-        <text key={s.n} x={s.x} y={180} textAnchor="middle" fontFamily={MONO_FONT} fontSize="7" fill="#8A94A6" letterSpacing="0.8">SKILL {s.n}</text>
+        <text key={s.n} x={s.x} y={181} textAnchor="middle" fontFamily={MONO_FONT} fontSize="8" fill="#8A94A6" letterSpacing="0.5">SKILL {s.n}</text>
       ))}
     </svg>
   );
@@ -852,7 +942,7 @@ function QFExamplePlanCard() {
       </div>
       <div className="qf-example-plan__name">Sophia L.</div>
 
-      <QFExamplePlanChart />
+      <QFPlanChart />
 
       <AchievabilityStatBar stats={EXAMPLE_PLAN_STATS} />
       <p className="qf-meta qf-achv-rating-label">Goal score achievability rating</p>

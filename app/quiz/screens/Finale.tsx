@@ -107,7 +107,7 @@ export function QFS4PlanHandoff({
   onContinue,
   onBack,
   answers = {},
-  ctaLabel = 'Get my plan',
+  ctaLabel = 'Reserve My SAT Plan Review',
 }: {
   onContinue: () => void;
   onBack: () => void;

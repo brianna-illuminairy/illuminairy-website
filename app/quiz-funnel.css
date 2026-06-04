@@ -1739,7 +1739,7 @@
 }
 .qf-page .qf-achv-stats__label {
   font-family: var(--qf-body);
-  font-size: 9.5px;
+  font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -1748,7 +1748,16 @@
 .qf-page .qf-achv-rating-label {
   margin: 2px 0 0;
   text-align: center;
+  color: var(--qf-forest);
+}
+.qf-page .qf-achv-outcomes-label {
+  margin: 0;
+  text-align: center;
   color: var(--qf-ink-mute);
+}
+.qf-page .qf-stakes-em {
+  color: var(--qf-forest);
+  font-weight: 600;
 }
 .qf-page .qf-achv-pills {
   display: grid;
@@ -1835,7 +1844,7 @@
 .qf-page .qf-example-plan__eyebrow,
 .qf-page .qf-example-plan__weeks {
   font-family: var(--qf-mono);
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -1852,7 +1861,7 @@
 }
 .qf-page .qf-example-plan__skills-head {
   font-family: var(--qf-body);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -1874,7 +1883,7 @@
 .qf-page .qf-example-plan__skill:first-child { border-top: none; }
 .qf-page .qf-example-plan__skill-rank {
   font-family: var(--qf-mono);
-  font-size: 9px;
+  font-size: 10.5px;
   font-weight: 600;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -1885,7 +1894,7 @@
 }
 .qf-page .qf-example-plan__skill-name {
   font-family: var(--qf-body);
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
   color: var(--qf-ink);
   line-height: 1.25;
@@ -2041,12 +2050,12 @@
 }
 .qf-page .qf-roadmap-section__eyebrow {
   font-family: var(--qf-body);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--qf-ink-mute);
-  margin-bottom: 4px;
+  color: var(--qf-forest);
+  margin-bottom: 5px;
 }
 .qf-page .qf-roadmap-skills {
   display: flex;
