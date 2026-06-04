@@ -1908,44 +1908,71 @@
   font-weight: 700;
   color: var(--qf-forest);
 }
-
-/* doubts-insight · what they're saying → what we uncover */
-.qf-page .qf-doubts-table {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+.qf-page .qf-ex-chart {
+  width: 100%;
+  height: auto;
+  display: block;
 }
-.qf-page .qf-doubts-row {
+.qf-page .qf-hope-stat {
+  color: var(--qf-forest);
+  font-weight: 700;
+}
+.qf-page .qf-example-plan__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--qf-line);
+  padding-top: 10px;
+  font-family: var(--qf-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--qf-ink-mute);
+}
+
+/* doubts-insight · two-column table: what you heard | what we find */
+.qf-page .qf-doubts-table {
   border: 1px solid var(--qf-line);
   border-radius: 12px;
   overflow: hidden;
 }
-.qf-page .qf-doubts-row__say {
-  margin: 0;
-  padding: 10px 14px;
-  background: var(--qf-bg-2);
-  font-family: var(--qf-display);
-  font-style: italic;
-  font-size: 14px;
-  line-height: 1.35;
-  color: var(--qf-ink-2);
+.qf-page .qf-doubts-table__header,
+.qf-page .qf-doubts-row {
+  display: grid;
+  grid-template-columns: 0.85fr 1.15fr;
 }
-.qf-page .qf-doubts-row__find {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  padding: 10px 14px;
+.qf-page .qf-doubts-table__header {
+  background: var(--qf-forest-soft);
+}
+.qf-page .qf-doubts-th {
+  padding: 9px 12px;
   font-family: var(--qf-body);
-  font-size: 13.5px;
-  line-height: 1.4;
-  color: var(--qf-ink);
-}
-.qf-page .qf-doubts-row__find-label {
   font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
+  font-weight: 700;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--qf-forest);
+}
+.qf-page .qf-doubts-th + .qf-doubts-th,
+.qf-page .qf-doubts-cell--find {
+  border-left: 1px solid var(--qf-line);
+}
+.qf-page .qf-doubts-row {
+  border-top: 1px solid var(--qf-line);
+}
+.qf-page .qf-doubts-cell {
+  padding: 11px 12px;
+  font-family: var(--qf-body);
+  font-size: 12.5px;
+  line-height: 1.4;
+}
+.qf-page .qf-doubts-cell--say {
+  font-weight: 600;
+  color: var(--qf-ink-2);
+}
+.qf-page .qf-doubts-cell--find {
+  color: var(--qf-ink);
 }
 
 /* V1 · SAT Score Roadmap (plan reveal) */

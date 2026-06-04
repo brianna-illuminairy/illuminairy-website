@@ -40,13 +40,14 @@ export function QFIDoubtsInsight({ onContinue, onBack, qDoubts = [] }) {
         <h1 className="qf-h1" style={{ marginBottom: 0 }}>{c.headline}</h1>
         <p className="qf-lead" style={{ margin: 0 }}>{c.subheadline}</p>
         <div className="qf-doubts-table">
+          <div className="qf-doubts-table__header">
+            <span className="qf-doubts-th">{c.sayingLabel}</span>
+            <span className="qf-doubts-th">{c.uncoverLabel}</span>
+          </div>
           {rows.map((row) => (
             <div key={row.id} className="qf-doubts-row">
-              <p className="qf-doubts-row__say">{row.label}</p>
-              <div className="qf-doubts-row__find">
-                <span className="qf-doubts-row__find-label">{c.uncoverLabel}</span>
-                <span>{row.uncover}</span>
-              </div>
+              <div className="qf-doubts-cell qf-doubts-cell--say">{row.label}</div>
+              <div className="qf-doubts-cell qf-doubts-cell--find">{row.uncover}</div>
             </div>
           ))}
         </div>
@@ -247,10 +248,24 @@ export function QFIHopeScreen({ onContinue, onBack, q5 = 'oct3' }) {
           )}
         </h1>
         <p className="qf-lead" style={{ margin: 0 }}>
-          {o.hit100PlusPct}% of students who follow their <em>diagnostic-driven plan</em> improve{' '}
-          <em>{o.minPointsFirstMonth}+ points</em> in their first month.
+          <span className="qf-hope-stat">{o.hit100PlusPct}%</span> of students who follow their diagnostic-driven plan improve{' '}
+          <span className="qf-hope-stat">{o.minPointsFirstMonth}+ points</span> in their{' '}
+          <span className="qf-hope-stat">first 30 days</span>.
         </p>
-        <QFScoreReportPair caption="+230 points in 12 weeks with 5-7 hours per week following his personalized plan." />
+        <QFScoreReportPair caption={null} />
+        <p
+          className="qf-lead"
+          style={{
+            margin: 0,
+            textAlign: 'center',
+            color: 'var(--qf-forest)',
+            fontWeight: 700,
+            fontSize: 17,
+            lineHeight: 1.45,
+          }}
+        >
+          Ethan&apos;s score went up +230 points in 12 weeks with 5-7 hours per week following his personalized plan.
+        </p>
       </div>
     </QFScreen>
   );
@@ -774,10 +789,59 @@ const EXAMPLE_PLAN_STATS = {
   scoreGap: 220, testDateShort: 'Oct 4', daysToTest: 122, ptsPerWeek: 15, hasKnownGoal: true,
 };
 
+const MONO_FONT = 'DM Mono, ui-monospace, monospace';
+const DISPLAY_FONT = "var(--qf-display), 'Source Serif 4', Georgia, serif";
+
+/** Static illustrative projection (1180 → 1400 over ~15 weeks), matching the example card. */
+function QFExamplePlanChart() {
+  const line = 'M14,150 C72,148 116,104 180,84 C242,66 296,54 320,50';
+  const area = `${line} L320,162 L14,162 Z`;
+  const days = [
+    { x: 72, n: 20 }, { x: 131, n: 40 }, { x: 190, n: 60 }, { x: 249, n: 80 },
+  ];
+  const skills = Array.from({ length: 6 }, (_, i) => ({
+    x: 14 + (306 * (i + 0.5)) / 6,
+    n: i + 1,
+  }));
+  return (
+    <svg viewBox="0 0 340 190" className="qf-ex-chart" role="img" aria-label="Projected score from 1180 to 1400">
+      <defs>
+        <linearGradient id="qf-ex-fill" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0%" stopColor="#2F6E47" stopOpacity="0.16" />
+          <stop offset="100%" stopColor="#2F6E47" stopOpacity="0" />
+        </linearGradient>
+      </defs>
+
+      {days.map((d) => (
+        <g key={d.n}>
+          <text x={d.x} y={9} textAnchor="middle" fontFamily={MONO_FONT} fontSize="6.5" fill="#8A94A6" letterSpacing="1">DAY</text>
+          <text x={d.x} y={21} textAnchor="middle" fontFamily={DISPLAY_FONT} fontSize="12" fontWeight="700" fill="#121A2B">{d.n}</text>
+          <line x1={d.x} x2={d.x} y1={28} y2={162} stroke="rgba(20,32,46,0.10)" strokeWidth="1" strokeDasharray="3 4" />
+        </g>
+      ))}
+
+      <text x={326} y={30} textAnchor="end" fontFamily={DISPLAY_FONT} fontSize="15" fontWeight="700" fill="#2F6E47">1400</text>
+      <text x={326} y={40} textAnchor="end" fontFamily={MONO_FONT} fontSize="6.5" fill="#8A94A6" letterSpacing="1">PROJECTED</text>
+
+      <path d={area} fill="url(#qf-ex-fill)" />
+      <path d={line} fill="none" stroke="#2F6E47" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+
+      <circle cx={14} cy={150} r={5} fill="#121A2B" />
+      <circle cx={320} cy={50} r={6} fill="#2F6E47" stroke="#fff" strokeWidth="2" />
+
+      <text x={6} y={134} fontFamily={DISPLAY_FONT} fontSize="15" fontWeight="700" fill="#5B6472">1180</text>
+      <text x={6} y={144} fontFamily={MONO_FONT} fontSize="6.5" fill="#8A94A6" letterSpacing="1">STARTING</text>
+
+      {skills.map((s) => (
+        <text key={s.n} x={s.x} y={180} textAnchor="middle" fontFamily={MONO_FONT} fontSize="7" fill="#8A94A6" letterSpacing="0.8">SKILL {s.n}</text>
+      ))}
+    </svg>
+  );
+}
+
 function QFExamplePlanCard() {
   const tierRanges = buildTierRanges(15);
-  const skillPts = EXAMPLE_PLAN_SKILLS.map((s) => s.pts);
-  const total = skillPts.reduce((a, b) => a + b, 0);
+  const total = EXAMPLE_PLAN_SKILLS.reduce((a, s) => a + s.pts, 0);
   return (
     <div className="qf-example-plan">
       <div className="qf-example-plan__head">
@@ -786,7 +850,7 @@ function QFExamplePlanCard() {
       </div>
       <div className="qf-example-plan__name">Sophia L.</div>
 
-      <QFV1ProjectionChart current={1180} displayTarget={1400} goalTarget={1400} skillPts={skillPts} />
+      <QFExamplePlanChart />
 
       <AchievabilityStatBar stats={EXAMPLE_PLAN_STATS} />
       <p className="qf-meta qf-achv-rating-label">Goal score achievability rating</p>
@@ -805,6 +869,10 @@ function QFExamplePlanCard() {
       <div className="qf-example-plan__total">
         <span className="qf-example-plan__total-label">Total points</span>
         <span className="qf-example-plan__total-pts">+{total}</span>
+      </div>
+      <div className="qf-example-plan__footer">
+        <span>6 days/wk</span>
+        <span>~1 hr/day</span>
       </div>
     </div>
   );
