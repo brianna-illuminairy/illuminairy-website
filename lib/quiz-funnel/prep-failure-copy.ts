@@ -1,6 +1,7 @@
 /**
  * After q7 — why their prep method failed on their weak spot (q6).
- * Slide 1 before i-compare proof chart. Eyebrow: Did you know (surprise).
+ * Problem-only single thought before the i-diag solution screen.
+ * Eyebrow: Did you know (surprise).
  */
 
 import { normalizeQ7, Q7_PREP_PRIORITY } from "@/lib/quiz-funnel/prep-copy";
@@ -34,18 +35,7 @@ const KHAN_HAYSTACK_UI = {
     { text: "needle in a haystack", em: true },
     { text: "." },
   ] as InsightHitPart[],
-  followUp: [
-    {
-      text: "Without a diagnostic to figure out where they're losing points, there's no way for them to know what to focus on to actually improve their score.",
-    },
-  ] as InsightHitPart[],
 };
-
-const DIAGNOSTIC_FOLLOW_UP: InsightHitPart[] = [
-  {
-    text: `The Skill Diagnostic ranks their ${FOCUS_SKILL_COUNT}–6 highest-impact gaps first. That's where the Improvement Plan starts.`,
-  },
-];
 
 export function prepSectionFocus(q6: string[] = []): SectionFocus {
   const math = q6.includes("math");
@@ -94,7 +84,6 @@ function khanHit(section: SectionFocus): InsightHit {
           { text: `${KHAN_SAT_YOUTUBE_VIDEO_COUNT} math videos`, em: true },
           { text: "." },
         ],
-        KHAN_HAYSTACK_UI.followUp,
       ],
       followUp: undefined,
     };
@@ -130,7 +119,6 @@ function groupHit(_section: SectionFocus): InsightHit {
           text: ", way too much to cover in a few weeks with enough depth to actually close gaps your child has.",
         },
       ],
-      DIAGNOSTIC_FOLLOW_UP,
     ],
   };
 }
@@ -159,11 +147,6 @@ function onlineCoursesAndAppsHit(): InsightHit {
       [
         {
           text: "It's not realistic to cover the entire SAT deeply enough to address real weaknesses.",
-        },
-      ],
-      [
-        {
-          text: `The Skill Diagnostic identifies a student's ${FOCUS_SKILL_COUNT}–6 highest-impact skill gaps, and the Improvement Plan starts there.`,
         },
       ],
     ],
@@ -230,7 +213,6 @@ function nothingHit(_section: SectionFocus): InsightHit {
           text: "Without a plan built for their gaps, weeks of effort often go to topics that wouldn't move their score.",
         },
       ],
-      DIAGNOSTIC_FOLLOW_UP,
     ],
   };
 }
@@ -243,7 +225,6 @@ function fallbackHit(): InsightHit {
       { text: "everything on the SAT", em: true },
       { text: `, not the ${FOCUS_SKILL_COUNT}–6 gaps that actually move a score.` },
     ],
-    followUp: DIAGNOSTIC_FOLLOW_UP,
   };
 }
 
@@ -251,7 +232,7 @@ function hasHigherPriorityPrepThanOnlineApp(ids: string[]): boolean {
   return ids.some((id) => id === "khan" || id === "group");
 }
 
-/** q7 × q6 — why their prep failed; autoprogress insight before i-compare. */
+/** q7 × q6 — why their prep failed; autoprogress insight before i-diag. */
 export function prepFailureInsight(q7: unknown, q6: unknown): InsightHit {
   const ids = normalizeQ7(q7);
   const section = prepSectionFocus(Array.isArray(q6) ? q6.filter(Boolean) : []);

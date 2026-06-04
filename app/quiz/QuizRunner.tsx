@@ -32,8 +32,8 @@ import { PLAN_HANDOFF_CTA } from '@/lib/quiz-funnel/plan-handoff-copy';
 const BASE_STEPS = [
   'q1','q2','q3','q4','q5',
   'q6','q7','hit-q7',
-  'i-compare',
   'i-diag',
+  'i-compare',
   'i-method',
   'i-steps',
   'i2','q8','q9',

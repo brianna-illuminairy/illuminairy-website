@@ -375,7 +375,7 @@ export function QFIComparePrep({ onContinue, onBack, q7 = ['khan'] }) {
   const MAX = 182;
 
   return (
-    <QFScreen stepIdx={8} onBack={onBack}
+    <QFScreen stepIdx={9} onBack={onBack}
       footer={<QFButton kind="forest" onClick={onContinue}>See what actually works</QFButton>}
     >
       <div className="gap-22" style={{ marginTop: 4 }}>
@@ -575,12 +575,12 @@ export function QFIDiagnosis({ onContinue, onBack, q3 = 'sat-1', q4 = '1200-1300
   const untilTest = formatWeeksUntilTest(weeks, dateMonth);
 
   return (
-    <QFScreen stepIdx={9} onBack={onBack}
-      footer={<QFButton kind="forest" onClick={onContinue}>See what works</QFButton>}
+    <QFScreen stepIdx={8} onBack={onBack}
+      footer={<QFButton kind="forest" onClick={onContinue}>See the results</QFButton>}
     >
       <div className="gap-22" style={{ marginTop: 4 }}>
         <h1 className="qf-h1" style={{ marginBottom: 0 }}>
-          Our Skill Diagnostic identifies the{' '}
+          Instead of trying to improve every SAT skill, they need a Skill Diagnostic that identifies the{' '}
           <em>{FOCUS_SKILL_COUNT}–6 highest-impact skills</em>.
         </h1>
         <div style={{ position: 'relative', padding: 0 }}>
@@ -668,30 +668,19 @@ export function QFIDiagnosis({ onContinue, onBack, q3 = 'sat-1', q4 = '1200-1300
             transition: 'opacity 0.6s ease 0.7s',
           }}
         >
+          Because some skills are worth far more points than others, it reveals the fastest path{' '}
           {hasScore ? (
+            <>from <em>{breakOutBand}</em> to the highest score possible</>
+          ) : (
+            <>to the highest score possible</>
+          )}
+          {untilTest ? (
             <>
-              Your fastest path out of <em>{breakOutBand}</em>
-              {untilTest ? (
-                <>
-                  {' '}
-                  before the <em>{untilTest.monthName}</em> SAT.
-                </>
-              ) : (
-                '.'
-              )}
+              {' '}
+              before the <em>{D_TEST_DATE_SHORT[q5]}</em> SAT.
             </>
           ) : (
-            <>
-              Your fastest path to a stronger score
-              {untilTest ? (
-                <>
-                  {' '}
-                  before the <em>{untilTest.monthName}</em> SAT.
-                </>
-              ) : (
-                '.'
-              )}
-            </>
+            '.'
           )}
         </p>
       </div>
