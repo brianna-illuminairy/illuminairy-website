@@ -57,10 +57,9 @@ export function selectedDoubts(qDoubts: string[] = []): DoubtOption[] {
 }
 
 export const DOUBTS_INSIGHT_COPY = {
-  headline:
-    "Good news. We've helped hundreds of students who felt the exact same way raise their SAT scores.",
+  headline: "Good news: this is fixable.",
   subheadline:
-    "A disappointing SAT score doesn't mean your child isn't capable of a much higher score.",
+    "Most students who say these things are capable of much higher scores. Here's what we actually find and work on.",
   sayingLabel: "What you heard",
   uncoverLabel: "What we find",
   cta: "What's Really Holding Them Back?",

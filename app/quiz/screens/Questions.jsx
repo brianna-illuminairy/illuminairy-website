@@ -95,7 +95,7 @@ export function QFQDoubts({ value = [], onToggle, onContinue, onBack }) {
     <QFScreen stepIdx={4} onBack={onBack}
       footer={<QFButton kind="forest" onClick={onContinue}>Continue</QFButton>}
     >
-      <QFQuestionHead title="Since their last SAT score, which of these have you <em>heard</em> from your child?" multiSelect />
+      <QFQuestionHead title="Which of these have you <em>heard</em> from your child?" multiSelect />
       <div className="qf-options">
         {opts.map(o => (
           <QFOption key={o.id} multi selected={value.includes(o.id)} onClick={() => onToggle(o.id)}>{o.label}</QFOption>

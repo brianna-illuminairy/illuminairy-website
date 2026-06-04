@@ -885,7 +885,7 @@ export function QFISteps({ onContinue, onBack }) {
     >
       <div className="gap-22">
         <h1 className="qf-h1" style={{ marginBottom: 0 }}>
-          By the end of this quiz, we&apos;ll build a SAT plan.
+          By the end of this, we&apos;ll build a SAT plan like Sophia&apos;s.
         </h1>
         <QFExamplePlanCard />
       </div>
