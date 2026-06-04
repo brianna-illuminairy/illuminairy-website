@@ -92,19 +92,22 @@ export function educationHitQ8Scores(q2?: string): EducationSlideHit {
   };
 }
 
-/** After i-steps — first-month outcome */
+/** After q5 — urgency-relief "hope" screen: improvement happens faster than expected. */
 export function educationHitOutcomeMonthOne(): EducationSlideHit {
   const o = satFirstMonthOutcomes;
   return {
     type: "outcome",
     parts: [
-      { text: `${o.hit100PlusPct}% of students who follow their ` },
-      { text: "diagnostic-driven plan", em: true },
-      { text: " achieve " },
-      { text: `${o.minPointsFirstMonth}+ points`, em: true },
-      { text: " their first month." },
+      { text: "Most score improvements happen faster than parents expect." },
     ],
     followUpBlocks: [
+      [
+        { text: `${o.hit100PlusPct}% of students who follow their ` },
+        { text: "diagnostic-driven plan", em: true },
+        { text: " achieve " },
+        { text: `${o.minPointsFirstMonth}+ points`, em: true },
+        { text: " their first month." },
+      ],
       [
         { text: "Our average student invests " },
         { text: o.hoursPerWeekEffortPhrase, em: true },

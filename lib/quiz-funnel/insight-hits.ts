@@ -51,24 +51,6 @@ export function flattenInsightParts(parts: InsightHitPart[] = []): string {
     .trim();
 }
 
-/** After q4 — recognition when parent flagged GPA/SAT mismatch (q1). */
-export function insightHitAfterQ4(q1?: string): InsightHit | null {
-  if (q1 !== "gpa-sat") return null;
-  return {
-    type: "recognition",
-    parts: [
-      { text: "They passed Algebra in school, but SAT algebra is " },
-      { text: "multiple-choice under a clock", em: true },
-      { text: "." },
-    ],
-    followUp: [
-      {
-        text: "The Skill Diagnostic finds where school math and test-day math diverge, then we teach those skills first.",
-      },
-    ],
-  };
-}
-
 /** After q6 — closed-loop stat tied to section emphasis. */
 export function insightHitAfterQ6(q6: string[] = []): InsightHit {
   const hasMath = q6.includes("math");

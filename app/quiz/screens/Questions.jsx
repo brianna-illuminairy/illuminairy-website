@@ -1,13 +1,13 @@
 'use client'; // @ts-nocheck
 import { QFScreen, QFOption, QFButton, QFQuestionHead, QFOptOut, QFWhyWeAsk } from '../components/QFShell';
 import { Q2_STAKES_OPTIONS } from '@/lib/quiz-funnel/stakes-copy';
+import { DOUBTS_OPTIONS } from '@/lib/quiz-funnel/doubts-copy';
 
 export function QFQ1Trigger({ value, onSelect, onBack }) {
   const opts = [
     { id: 'score-low', label: "SAT score too low" },
     { id: 'test-soon', label: "SAT test date coming up" },
     { id: 'app-soon',  label: "Upcoming app deadlines (EA, ED, RD)" },
-    { id: 'gpa-sat',   label: "Good grades, low SAT: why?" },
     { id: 'get-ahead', label: "Starting prep early" },
   ];
   return (
@@ -85,6 +85,22 @@ export function QFQ4RecentScore({ value, onSelect, onBack, q3 = 'sat-1' }) {
           ? 'This helps us estimate a realistic improvement range before test day.'
           : 'Optional. The Skill Diagnostic sets the real starting point. A rough band helps us preview your Improvement Plan.'}
       </QFWhyWeAsk>
+    </QFScreen>
+  );
+}
+
+export function QFQDoubts({ value = [], onToggle, onContinue, onBack }) {
+  const opts = DOUBTS_OPTIONS;
+  return (
+    <QFScreen stepIdx={4} onBack={onBack}
+      footer={<QFButton kind="forest" onClick={onContinue}>Continue</QFButton>}
+    >
+      <QFQuestionHead title="Since their last SAT score, which of these have you <em>heard</em> from your child?" multiSelect />
+      <div className="qf-options">
+        {opts.map(o => (
+          <QFOption key={o.id} multi selected={value.includes(o.id)} onClick={() => onToggle(o.id)}>{o.label}</QFOption>
+        ))}
+      </div>
     </QFScreen>
   );
 }
@@ -204,6 +220,32 @@ export function QFQ9GPA({ value, onSelect, onBack }) {
       </div>
       <QFWhyWeAsk>
         Their GPA helps us set a realistic score target and shape their Improvement Plan for their timeline.
+      </QFWhyWeAsk>
+    </QFScreen>
+  );
+}
+
+export function QFQName({ value = '', onChange, onContinue, onBack }) {
+  return (
+    <QFScreen stepIdx={13} onBack={onBack}
+      footer={<QFButton kind="forest" onClick={onContinue}>Continue</QFButton>}
+    >
+      <div className="qf-question-head">
+        <div className="qf-eyebrow">One last detail</div>
+        <h1 className="qf-h1" style={{ marginBottom: 0 }} dangerouslySetInnerHTML={{ __html: "What's your student's <em>first name</em>?" }} />
+      </div>
+      <input
+        className="qf-text-input"
+        type="text"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder="First name"
+        autoComplete="off"
+        autoFocus
+        onKeyDown={(e) => { if (e.key === 'Enter') onContinue(); }}
+      />
+      <QFWhyWeAsk>
+        We&apos;ll personalize their plan and score roadmap with their name.
       </QFWhyWeAsk>
     </QFScreen>
   );

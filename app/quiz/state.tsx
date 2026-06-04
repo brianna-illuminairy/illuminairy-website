@@ -16,6 +16,7 @@ export type QuizAnswers = {
   q2?: string;
   q3?: string;
   q4?: string;
+  qDoubts: string[];
   q5?: string;
   q6: string[];
   q7: string[];
@@ -37,6 +38,7 @@ type QuizAction =
   | { type: 'LOAD'; data: Partial<QuizAnswers> };
 
 const initialState: QuizAnswers = {
+  qDoubts: [],
   q6: [],
   q7: [],
   parentName: '',

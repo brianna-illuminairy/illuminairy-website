@@ -80,7 +80,7 @@ Key libs: `plan-reveal.ts`, `score-path-copy.ts`, `stakes-copy.ts`, `education-s
 ## Dev quick ref
 
 ```bash
-npm run dev                              # http://localhost:3000/quiz?step=reveal
+npm run dev                              # http://localhost:3000/quiz?step=achievability
 npm run funnel:step-registry && npm run build
 ```
 

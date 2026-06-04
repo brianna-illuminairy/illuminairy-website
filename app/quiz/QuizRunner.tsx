@@ -3,18 +3,15 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useQuiz, showGapScreen, type QuizAnswers } from './state';
 import { useQuizAnalytics } from './useQuizAnalytics';
 import {
-  QFQ1Trigger, QFQ2Stakes, QFQ3TimesTaken, QFQ4RecentScore, QFQ5Clock,
-  QFQ6Blocker, QFQ7Tried, QFQ8Goal, QFQ9GPA,
+  QFQ1Trigger, QFQ2Stakes, QFQ3TimesTaken, QFQ4RecentScore, QFQDoubts, QFQ5Clock,
+  QFQ6Blocker, QFQ7Tried, QFQ8Goal, QFQ9GPA, QFQName,
 } from './screens/Questions';
 import {
-  QFI2Compute, QFIGPAGap, QFV1Projection, QFIDiagnosis, QFIMethod, QFISteps,
-  QFIComparePrep,
+  QFI2Compute, QFIGPAGap, QFV1Projection, QFIDiagnosis, QFISteps,
+  QFIComparePrep, QFIDoubtsInsight,
 } from './screens/Interstitials';
 import { QFInsightHit } from './components/QFInsightHit';
 import { prepFailureInsight } from '@/lib/quiz-funnel/prep-failure-copy';
-import {
-  insightHitAfterQ4,
-} from '@/lib/quiz-funnel/insight-hits';
 import {
   educationHitQ3None,
   educationHitQ5Tbd,
@@ -22,7 +19,7 @@ import {
   educationHitOutcomeMonthOne,
 } from '@/lib/quiz-funnel/education-slides';
 import {
-  QFSHeardSummary, QFSPlanReveal, QFS3Stats,
+  QFSPlanReveal, QFS3Stats,
 } from './screens/Results';
 import {
   QFS4PlanHandoff, QFS5Approved, QFS7PlanDetails, QFS9Booking, QFS9ThankYou,
@@ -32,15 +29,14 @@ import { PLAN_HANDOFF_CTA } from '@/lib/quiz-funnel/plan-handoff-copy';
 const BASE_STEPS = [
   'q1','q2','q3',
   'i-steps',
-  'q4','q5',
+  'q4','q-doubts','q5',
+  'hit-outcome-month-one',
   'q6','q7','hit-q7',
   'i-diag',
   'i-compare',
-  'i-method',
-  'i2','q8',
-  'reveal',
-  'q9',
-  'heard',
+  'q8','q9',
+  'name',
+  'i2',
   'v1',
   's3','s4',
   's5',
@@ -52,13 +48,16 @@ function getSteps(answers: QuizAnswers) {
   if (answers.q3 === 'none') {
     const q4Idx = steps.indexOf('q4');
     if (q4Idx >= 0) steps.splice(q4Idx, 1);
+    // "Since their last SAT score…" has no prior score to reference.
+    const qDoubtsIdx = steps.indexOf('q-doubts');
+    if (qDoubtsIdx >= 0) steps.splice(qDoubtsIdx, 1);
     const q3Idx = steps.indexOf('q3');
     if (q3Idx >= 0) steps.splice(q3Idx + 1, 0, 'hit-q3-none');
   }
 
-  if (answers.q1 === 'gpa-sat') {
-    const q5Idx = steps.indexOf('q5');
-    if (q5Idx >= 0) steps.splice(q5Idx, 0, 'hit-q4');
+  if (Array.isArray(answers.qDoubts) && answers.qDoubts.length > 0) {
+    const qDoubtsIdx = steps.indexOf('q-doubts');
+    if (qDoubtsIdx >= 0) steps.splice(qDoubtsIdx + 1, 0, 'doubts-insight');
   }
 
   if (answers.q5 === 'tbd' || answers.q5 === '2027') {
@@ -66,16 +65,13 @@ function getSteps(answers: QuizAnswers) {
     if (q6Idx >= 0) steps.splice(q6Idx, 0, 'hit-q5-tbd');
   }
 
-  const iMethodIdx = steps.indexOf('i-method');
-  if (iMethodIdx >= 0) steps.splice(iMethodIdx + 1, 0, 'hit-outcome-month-one');
-
   if (answers.q8 === 'tbd') {
     const q9Idx = steps.indexOf('q9');
     if (q9Idx >= 0) steps.splice(q9Idx, 0, 'hit-q8-scores');
   }
 
   if (showGapScreen(answers)) {
-    const idx = steps.indexOf('heard');
+    const idx = steps.indexOf('name');
     if (idx >= 0) steps.splice(idx, 0, 'i-gap');
   }
 
@@ -159,15 +155,8 @@ export default function QuizRunner() {
         />
       );
     case 'q4':  return <QFQ4RecentScore value={a.q4} onSelect={(v: string) => setQAndAdvance('q4', v)} onBack={back} q3={a.q3} />;
-    case 'hit-q4':
-      return (
-        <QFInsightHit
-          hit={insightHitAfterQ4(a.q1)!}
-          onContinue={next}
-          onBack={back}
-          stepIdx={4}
-        />
-      );
+    case 'q-doubts': return <QFQDoubts value={a.qDoubts as any} onToggle={(id: string) => toggleQ('qDoubts', id)} onContinue={next} onBack={back} />;
+    case 'doubts-insight': return <QFIDoubtsInsight onContinue={next} onBack={back} qDoubts={a.qDoubts as any} />;
     case 'q5':  return <QFQ5Clock     value={a.q5} onSelect={(v: string) => setQAndAdvance('q5', v)} onBack={back} />;
     case 'hit-q5-tbd':
       return (
@@ -192,7 +181,6 @@ export default function QuizRunner() {
       );
     case 'i-compare': return <QFIComparePrep onContinue={next} onBack={back} q7={a.q7 as any} />;
     case 'i-diag': return <QFIDiagnosis onContinue={next} onBack={back} q3={a.q3} q4={a.q4} q6={a.q6 as any} q7={a.q7 as any} q5={a.q5} />;
-    case 'i-method': return <QFIMethod onContinue={next} onBack={back} q5={a.q5} />;
     case 'i-steps': return <QFISteps onContinue={next} onBack={back} />;
     case 'hit-outcome-month-one':
       return (
@@ -200,11 +188,11 @@ export default function QuizRunner() {
           hit={educationHitOutcomeMonthOne()}
           onContinue={next}
           onBack={back}
-          stepIdx={11}
+          stepIdx={6}
           manual
         />
       );
-    case 'i2':  return <QFI2Compute   onContinue={next} onBack={back} q4={a.q4} q5={a.q5} q6={a.q6} />;
+    case 'i2':  return <QFI2Compute   onContinue={next} onBack={back} q2={a.q2} q4={a.q4} q5={a.q5} q6={a.q6} q7={a.q7 as any} q8={a.q8} q9={a.q9} name={a.kidName as string} />;
     case 'q8':  return <QFQ8Goal      value={a.q8} onSelect={(v: string) => setQAndAdvance('q8', v)} onBack={back} />;
     case 'hit-q8-scores':
       return (
@@ -218,12 +206,20 @@ export default function QuizRunner() {
 
     case 'q9':  return <QFQ9GPA       value={a.q9} onSelect={(v: string) => setQAndAdvance('q9', v)} onBack={back} />;
     case 'i-gap': return <QFIGPAGap   onContinue={next} onBack={back} q4={a.q4} q9={a.q9} />;
-    case 'heard':
-      return <QFSHeardSummary answers={a} onContinue={next} onBack={back} />;
-    case 'reveal':
+    case 'name':
+      return (
+        <QFQName
+          value={a.kidName as string}
+          onChange={(v: string) => dispatch({ type: 'SET_FIELD', key: 'kidName', value: v })}
+          onContinue={next}
+          onBack={back}
+        />
+      );
+    case 'achievability':
+    case 'reveal': // deprecated alias for old deep links + share page
     case 's1':
       return <QFSPlanReveal answers={a} onContinue={next} onBack={back} />;
-    case 'v1':  return <QFV1Projection onContinue={next} onBack={back} q2={a.q2} q4={a.q4} q5={a.q5} q8={a.q8} />;
+    case 'v1':  return <QFV1Projection onContinue={next} onBack={back} answers={a} />;
     case 's3':  return <QFS3Stats     onContinue={next} onBack={back} />;
     case 's4':
       return (

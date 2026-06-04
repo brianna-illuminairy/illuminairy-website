@@ -1,5 +1,5 @@
 'use client'; // @ts-nocheck
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { funnelToday } from "@/lib/funnel-today";
 import { QFScreen, QFButton, QFConstellation } from '../components/QFShell';
 import { QFBarChart } from '../components/QFBarChart';
@@ -15,15 +15,50 @@ import {
   KHAN_SAT_YOUTUBE_VIDEO_COUNT,
   KHAN_SAT_SKILL_COUNT_LABEL,
 } from "@/lib/sat-skills-copy";
-import { methodScreenLeadParts } from '@/lib/quiz-funnel/method-lead-copy';
 import { iCompareHeadlineMultiplier, iCompareProofBridgeLine } from '@/lib/quiz-funnel/i-compare-copy';
 import {
   formatSatScoreLabel,
-  v1FastWinBridgeParts,
 } from '@/lib/quiz-funnel/score-path-copy';
 import { QFV1ProjectionChart } from '../components/QFV1ProjectionChart';
+import { selectedDoubtLabels, DOUBTS_INSIGHT_COPY } from '@/lib/quiz-funnel/doubts-copy';
+import { buildGoalAchievability } from '@/lib/quiz-funnel/goal-achievability';
+import { AchievabilityStatBar, AchievabilityPills } from '../components/AchievabilityRating';
 
 export { gainTargetForQ5 };
+
+// ─── I · Doubts mirror (echoes selected q-doubts, reframes to the Diagnostic) ─
+export function QFIDoubtsInsight({ onContinue, onBack, qDoubts = [] }) {
+  const quotes = selectedDoubtLabels(qDoubts);
+  const c = DOUBTS_INSIGHT_COPY;
+  return (
+    <QFScreen stepIdx={4} ornament="glow" onBack={onBack}
+      footer={<QFButton kind="forest" onClick={onContinue}>Continue</QFButton>}
+    >
+      <div className="gap-22" style={{ marginTop: 4 }}>
+        <h1 className="qf-h1" style={{ marginBottom: 0 }}>{c.headline}…</h1>
+        <p className="qf-lead" style={{ margin: 0 }}>{c.intro}</p>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          {quotes.map((q, i) => (
+            <p key={i} style={{
+              margin: 0,
+              fontFamily: 'var(--qf-display)',
+              fontStyle: 'italic',
+              fontSize: 16,
+              lineHeight: 1.4,
+              color: 'var(--qf-ink)',
+              borderLeft: '3px solid var(--qf-forest)',
+              paddingLeft: 12,
+            }}>{q}</p>
+          ))}
+        </div>
+        <p className="qf-lead" style={{ margin: 0 }}>{c.common}</p>
+        <p className="qf-lead" style={{ margin: 0 }}>{c.notAbility}</p>
+        <p className="qf-lead" style={{ margin: 0 }}>{c.realIssue}</p>
+        <p className="qf-lead" style={{ margin: 0 }}>{c.diagnostic}</p>
+      </div>
+    </QFScreen>
+  );
+}
 
 // ─── I2 · Compute ────────────────────────────────────────────────────────────
 const CQ4_BANDS = {
@@ -34,26 +69,30 @@ const CQ5_LONG = {
   'aug22': 'August 22, 2026', 'sept12': 'September 12, 2026', 'oct3': 'October 3, 2026',
   'nov7': 'November 7, 2026', 'dec5': 'December 5, 2026', 'tbd': 'TBD',
 };
-const CQ5_SHORT = {
-  'aug22': 'Aug 22', 'sept12': 'Sept 12', 'oct3': 'Oct 3', 'nov7': 'Nov 7', 'dec5': 'Dec 5',
-  'tbd': 'TBD',
+const CCHALLENGE_LABEL = {
+  'math': 'Math', 'reading': 'Reading & writing', 'self-study': 'Self-study',
+  'no-plan': 'No clear plan', 'wont': 'Staying consistent', 'too-busy': 'Limited time',
 };
-const CSCORE_RETURN = {
-  'aug22': 'September 5, 2026', 'sept12': 'September 25, 2026', 'oct3': 'October 18, 2026',
-  'nov7': 'November 21, 2026', 'dec5': 'December 19, 2026',
+const CPREP_LABEL = {
+  'khan': 'Khan / Bluebook', 'group': 'Group class', 'online': 'Online course',
+  'app': 'SAT app', 'book': 'Prep book', 'nothing': 'Self-study',
 };
-const CANCHOR_SCORES = {
-  'u1000': 1050, '1100-1200': 1150, '1200-1300': 1250,
-  '1300-1400': 1350, '1400plus': 1450,
+const CGPA_LABEL = {
+  'u3.0': 'Under 3.0', '3.0-3.3': '3.0–3.3', '3.3-3.5': '3.3–3.5',
+  '3.5-3.7': '3.5–3.7', '3.7-3.9': '3.7–3.9', '4.0+': '4.0+',
 };
-const CQ6_PHRASE = {
-  'math': 'math score gains', 'reading': 'reading & writing gains',
-  'self-study': 'consistent follow-through', 'wont': 'accountability & consistency',
-  'no-plan': 'a clear, structured plan', 'too-busy': 'an efficient, time-boxed plan',
+const CGOAL_LABEL = {
+  'merit': 'Merit scholarships', 'top-choice': 'Top-choice school',
+  'selective': 'Selective colleges', 'app-rounds': 'Early application rounds',
+  'early': 'Early application rounds',
 };
 
-function formatPrepStartDate(today) {
-  return today.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+function firstComputeLabel(arr, map) {
+  const ids = Array.isArray(arr) ? arr : [];
+  for (const id of ids) {
+    if (map[id]) return map[id];
+  }
+  return null;
 }
 
 const STARS = [
@@ -68,45 +107,48 @@ const STARS = [
   [310,640,0.4,0.7],
 ];
 
-export function QFI2Compute({ onContinue, onBack, q4 = '1200-1300', q5 = 'oct3', q6 = ['math', 'no-plan'] }) {
+export function QFI2Compute({
+  onContinue, onBack,
+  q2 = 'top-choice', q4 = '1200-1300', q5 = 'oct3', q6 = ['math', 'no-plan'], q7 = [], q8 = '1400', q9, name,
+}) {
+  const displayName = name && String(name).trim() ? String(name).trim() : null;
+  const possessive = displayName ? `${displayName}'s` : 'your';
   const hasQ4 = q4 && q4 !== 'na' && CQ4_BANDS[q4];
   const hasDate = q5 && q5 !== 'tbd' && q5 !== '2027' && CQ5_LONG[q5];
-  const problemSummary = q6.slice(0, 2).map(id => CQ6_PHRASE[id] || id).join(' + ');
-  const TEST_DATES = {
-    'aug22': new Date('2026-08-22'), 'sept12': new Date('2026-09-12'), 'oct3': new Date('2026-10-03'),
-    'nov7': new Date('2026-11-07'), 'dec5': new Date('2026-12-05'),
-  };
-  const today = funnelToday();
-  const prepStart = formatPrepStartDate(today);
-  const daysToTest = TEST_DATES[q5]
-    ? Math.round((TEST_DATES[q5] - today) / (1000 * 60 * 60 * 24))
-    : null;
+  const hasTarget = q8 && q8 !== 'tbd' && q8 !== 'na';
+  const gpaLabel = q9 && CGPA_LABEL[q9];
+  const goalLabel = CGOAL_LABEL[q2];
 
   // Build a flat reveal sequence: section headers + their rows
   const items = [];
-  items.push({ type: 'header', label: 'Reviewing your inputs', section: 1 });
-  if (hasQ4) items.push({ type: 'row', content: <>Starting score range: <span className="v">{CQ4_BANDS[q4]}</span></> });
-  else       items.push({ type: 'row', content: <>No official SAT yet: <span className="v">planning for first sit</span></> });
-  if (hasDate) items.push({ type: 'row', content: <>Next test date: <span className="v">{CQ5_LONG[q5]}</span></> });
-  items.push({ type: 'row', content: <>Early Decision deadlines: <span className="v">Nov 1</span></> });
-  if (CSCORE_RETURN[q5]) items.push({ type: 'row', content: <>Score return: <span className="v">{CSCORE_RETURN[q5]}</span></> });
+  items.push({ type: 'header', label: 'Reviewing inputs', section: 1 });
+  if (hasQ4) items.push({ type: 'row', content: <>Current score: <span className="v">{CQ4_BANDS[q4]}</span></> });
+  else       items.push({ type: 'row', content: <>Current score: <span className="v">planning for first sit</span></> });
+  if (hasTarget) items.push({ type: 'row', content: <>Target score: <span className="v">{q8}</span></> });
+  if (hasDate) items.push({ type: 'row', content: <>Next test: <span className="v">{CQ5_LONG[q5]}</span></> });
+  if (gpaLabel)  items.push({ type: 'row', content: <>GPA: <span className="v">{gpaLabel}</span></> });
+  if (goalLabel) items.push({ type: 'row', content: <>Goal: <span className="v">{goalLabel}</span></> });
 
-  items.push({ type: 'header', label: 'Building plan frame', section: 2 });
-  if (daysToTest) items.push({ type: 'row', content: <>Building <span className="v">{daysToTest}-day</span> prep window: <span className="v">{prepStart} → {CQ5_SHORT[q5]}</span></> });
-  else            items.push({ type: 'row', content: <>Building <span className="v">flexible</span> prep window</> });
-  if (hasQ4)          items.push({ type: 'row', content: <>Plan anchor score: <span className="v">{CANCHOR_SCORES[q4]}</span></> });
-  if (problemSummary) items.push({ type: 'row', content: <>Optimizing for: <span className="v">{problemSummary}</span></> });
+  items.push({ type: 'header', label: 'Comparing against similar students', section: 2 });
+  items.push({ type: 'row', content: <>Students with <span className="v">similar starting scores</span></> });
+  items.push({ type: 'row', content: <>Students with <span className="v">similar GPAs</span></> });
+  items.push({ type: 'row', content: <>Students with <span className="v">similar timelines</span></> });
+
+  items.push({ type: 'header', label: 'Generating score projection', section: 3 });
+  items.push({ type: 'row', content: <>Calculating <span className="v">achievable score range</span></> });
+  items.push({ type: 'row', content: <>Estimating <span className="v">weekly point targets</span></> });
+  items.push({ type: 'row', content: <>Identifying <span className="v">highest-impact opportunities</span></> });
 
   const [revealed, setRevealed] = useState(0);
   const [barPct, setBarPct] = useState(0);
   const [showBar, setShowBar] = useState(false);
-  const [showMissing, setShowMissing] = useState(false);
+  const [showDone, setShowDone] = useState(false);
 
-  // Stagger each item in sequence, then start the progress bar
+  // Stagger each item in sequence, then run the progress bar to 100%
   useEffect(() => {
     const timers = [];
     const FIRST_DELAY = 350;
-    const STAGGER = 320;
+    const STAGGER = 300;
     for (let i = 0; i < items.length; i++) {
       timers.push(setTimeout(() => setRevealed(i + 1), FIRST_DELAY + i * STAGGER));
     }
@@ -119,9 +161,9 @@ export function QFI2Compute({ onContinue, onBack, q4 = '1200-1300', q5 = 'oct3',
         setBarPct(pct);
         if (pct >= 100) {
           clearInterval(inc);
-          setShowMissing(true);
+          setShowDone(true);
         }
-      }, 28);
+      }, 26);
       timers.push(inc);
     }, barDelay));
     return () => timers.forEach(t => {
@@ -132,12 +174,12 @@ export function QFI2Compute({ onContinue, onBack, q4 = '1200-1300', q5 = 'oct3',
   }, []);
 
   const barLabel = barPct < 40 ? 'ANALYZING INPUTS'
-                 : barPct < 70 ? 'DETECTING GAPS'
-                 : 'MISSING DATA DETECTED';
+                 : barPct < 75 ? 'COMPARING COHORTS'
+                 : showDone ? 'PLAN READY' : 'FINALIZING PROJECTION';
 
   return (
-    <QFScreen stepIdx={9} tone="ink" onBack={onBack}
-      footer={showMissing ? <QFButton kind="forest" onClick={onContinue}>Finalize inputs</QFButton> : undefined}
+    <QFScreen stepIdx={14} tone="ink" onBack={onBack}
+      footer={showDone ? <QFButton kind="forest" onClick={onContinue}>Reveal {possessive} plan</QFButton> : undefined}
     >
       <svg className="qf-starfield" viewBox="0 0 360 700" preserveAspectRatio="xMidYMid slice">
         {STARS.map(([x, y, o, r], i) => (
@@ -147,7 +189,7 @@ export function QFI2Compute({ onContinue, onBack, q4 = '1200-1300', q5 = 'oct3',
       <div className="qf-aurora-band" />
 
       <div className="qf-compute">
-        <div className="compute-eyebrow">Building your plan</div>
+        <div className="compute-eyebrow">Building {possessive} SAT plan</div>
 
         {items.map((item, i) => {
           const shown = i < revealed;
@@ -184,19 +226,6 @@ export function QFI2Compute({ onContinue, onBack, q4 = '1200-1300', q5 = 'oct3',
                 background: 'var(--qf-glow)', borderRadius: 4,
                 transition: 'width 0.1s linear',
               }} />
-            </div>
-          </div>
-        )}
-
-        {showMissing && (
-          <div style={{ marginTop: 10, opacity: 1, animation: 'fadeIn 0.4s ease' }}>
-            <div className="compute-arrow" style={{ marginBottom: 8 }}>
-              → <span className="v" style={{ opacity: 0.5 }}>Target score: ___</span>
-              <span className="compute-hint">next question</span>
-            </div>
-            <div className="compute-arrow">
-              → <span className="v" style={{ opacity: 0.5 }}>GPA: ___</span>
-              <span className="compute-hint">after that</span>
             </div>
           </div>
         )}
@@ -380,8 +409,7 @@ export function QFIComparePrep({ onContinue, onBack, q7 = ['khan'] }) {
     >
       <div className="gap-22" style={{ marginTop: 4 }}>
         <h1 className="qf-h1" style={{ marginBottom: 0 }}>
-          <em>{multiplier}×</em> better results with a{' '}
-          <em>diagnostic-driven SAT plan</em>.
+          <em>Diagnostic-driven SAT plans</em> achieve <em>{multiplier}×</em> better results.
         </h1>
 
         <div className="qf-card gap-14" style={{ padding: 20 }}>
@@ -400,72 +428,91 @@ export function QFIComparePrep({ onContinue, onBack, q7 = ['khan'] }) {
   );
 }
 
-export function QFV1Projection({
-  onContinue, onBack,
-  q2 = 'top-choice',
-  q4 = '1200-1300', q5 = 'oct3', q8 = '1400',
-}) {
-  const projection = buildV1Projection({ q2, q4, q5, q8 });
-  const showGainMath = shouldShowGainMath(q5);
-  const reachScore = formatSatScoreLabel(projection.displayTarget);
-  const goalScore = projection.goalTarget ?? projection.displayTarget;
+// ─── V1 · Plan reveal — the SAT Score Roadmap ────────────────────────────────
+function RoadmapSection({ eyebrow, children }) {
+  return (
+    <div className="qf-roadmap-section">
+      <div className="qf-roadmap-section__eyebrow">{eyebrow}</div>
+      {children}
+    </div>
+  );
+}
 
-  const [showCopy, setShowCopy] = useState(!projection.showChart);
+export function QFV1Projection({ onContinue, onBack, answers = {} }) {
+  const { q2 = 'top-choice', q4 = '1200-1300', q5 = 'oct3', q6 = [], q7 = [], q8 = '1400', q9, kidName } = answers;
+  const projection = buildV1Projection(answers);
+  const assessment = buildGoalAchievability(answers);
 
-  const handleChartAnim = useCallback(() => {
-    setShowCopy(true);
-  }, []);
+  const displayName = kidName && String(kidName).trim() ? String(kidName).trim() : null;
+  const possessive = displayName ? `${displayName}'s` : 'Your';
+  const current = formatSatScoreLabel(projection.current);
+  const goalScore = formatSatScoreLabel(projection.goalTarget ?? projection.displayTarget);
+
+  const challengeLabel = firstComputeLabel(q6, CCHALLENGE_LABEL) ?? 'The right skills';
+  const prepLabel = firstComputeLabel(q7, CPREP_LABEL) ?? 'Past prep';
+  const skillCount = Math.min(projection.skillCount || 6, 6);
+  const skillRows = Array.from({ length: skillCount }, (_, i) => i + 1);
 
   return (
-    <QFScreen stepIdx={14} ornament="glow" onBack={onBack}
-      footer={
-        <QFButton kind="forest" onClick={onContinue} disabled={!showCopy}>
-          Continue to my plan
-        </QFButton>
-      }
+    <QFScreen stepIdx={15} ornament="glow" onBack={onBack}
+      footer={<QFButton kind="forest" onClick={onContinue}>Continue to schedule your SAT Strategy Call</QFButton>}
     >
       <div className="gap-22">
-        {showGainMath && (
-          <>
-            <h1 className="qf-h1" style={{ marginBottom: 0 }}>
-              {projection.hasDate ? (
-                <>
-                  By <em>{projection.testDateLabel}</em>, they could reach <em>{reachScore}</em>.
-                </>
-              ) : (
-                <>
-                  By test day, they could reach <em>{reachScore}</em>.
-                </>
-              )}
-            </h1>
-
-            {projection.showChart ? (
-              <QFV1ProjectionChart
-                current={projection.current}
-                displayTarget={projection.displayTarget}
-                goalTarget={projection.goalTarget}
-                skillPts={projection.skillPts}
-                gapExceedsModeled={projection.gapExceedsModeled}
-                onAnimationComplete={handleChartAnim}
-              />
-            ) : null}
-          </>
-        )}
-
-        <div style={{
-          opacity: showCopy ? 1 : 0,
-          transition: 'opacity 0.5s ease',
-        }}>
-          <p className="qf-lead" style={{ margin: 0 }}>
-            {v1FastWinBridgeParts(goalScore).map((part, i) =>
-              part.em ? (
-                <em key={i}>{part.text}</em>
-              ) : (
-                <span key={i}>{part.text}</span>
-              )
-            )}
+        <div>
+          <p className="qf-meta qf-roadmap__eyebrow">Personalized SAT plan</p>
+          <h1 className="qf-h1" style={{ margin: '2px 0 0' }}>{possessive} SAT Score Roadmap</h1>
+          <p className="qf-roadmap__score">
+            <span>{current}</span>
+            <span className="qf-roadmap__arrow"> → </span>
+            <em>{goalScore}</em>
           </p>
         </div>
+
+        {projection.showChart ? (
+          <QFV1ProjectionChart
+            current={projection.current}
+            displayTarget={projection.displayTarget}
+            goalTarget={projection.goalTarget}
+            skillPts={projection.skillPts}
+            gapExceedsModeled={projection.gapExceedsModeled}
+          />
+        ) : null}
+
+        <div className="qf-goal-assess__callout">
+          <AchievabilityStatBar stats={assessment.stats} />
+          <p className="qf-meta qf-achv-rating-label">Goal score achievability rating</p>
+          <AchievabilityPills
+            tierIndex={assessment.tierIndex}
+            tierRanges={assessment.tierRanges}
+            educational={!assessment.stats.hasKnownGoal}
+          />
+        </div>
+
+        <RoadmapSection eyebrow="Last time">
+          <p className="qf-lead" style={{ margin: 0 }}>{challengeLabel} was a challenge.</p>
+          <p className="qf-lead" style={{ margin: 0 }}>{prepLabel} didn&apos;t produce the score increase you wanted.</p>
+        </RoadmapSection>
+
+        <RoadmapSection eyebrow="This time">
+          <p className="qf-lead" style={{ margin: 0 }}>
+            We&apos;ll identify the <em>{FOCUS_SKILL_COUNT}–6 skills</em> worth the most points.
+          </p>
+          <p className="qf-lead" style={{ margin: 0 }}>
+            Then we&apos;ll build a personalized plan around those specific skills.
+          </p>
+        </RoadmapSection>
+
+        <RoadmapSection eyebrow="Skills to identify">
+          <div className="qf-roadmap-skills">
+            {skillRows.map((n) => (
+              <div key={n} className="qf-roadmap-skill">
+                <span className="qf-roadmap-skill__name">Skill {n}</span>
+                <span className="qf-roadmap-skill__tbd">TBD</span>
+              </div>
+            ))}
+          </div>
+          <p className="qf-caption" style={{ marginTop: 8 }}>Found through the Skill Diagnostic.</p>
+        </RoadmapSection>
       </div>
     </QFScreen>
   );
@@ -475,6 +522,10 @@ export function QFV1Projection({
 const D_TEST_DATE_SHORT = {
   'aug22': 'August 22', 'sept12': 'September 12', 'oct3': 'October 3', 'nov7': 'November 7',
   'dec5': 'December 5',
+};
+const D_TEST_DATE_ORDINAL = {
+  'aug22': 'August 22nd', 'sept12': 'September 12th', 'oct3': 'October 3rd', 'nov7': 'November 7th',
+  'dec5': 'December 5th',
 };
 const D_TEST_DATES = {
   'aug22': new Date('2026-08-22'), 'sept12': new Date('2026-09-12'), 'oct3': new Date('2026-10-03'),
@@ -580,7 +631,7 @@ export function QFIDiagnosis({ onContinue, onBack, q3 = 'sat-1', q4 = '1200-1300
     >
       <div className="gap-22" style={{ marginTop: 4 }}>
         <h1 className="qf-h1" style={{ marginBottom: 0 }}>
-          Instead of trying to improve every SAT skill, they need a Skill Diagnostic that identifies the{' '}
+          Instead of trying to learn every SAT skill, they need a Diagnostic that identifies the{' '}
           <em>{FOCUS_SKILL_COUNT}–6 highest-impact skills</em>.
         </h1>
         <div style={{ position: 'relative', padding: 0 }}>
@@ -668,7 +719,7 @@ export function QFIDiagnosis({ onContinue, onBack, q3 = 'sat-1', q4 = '1200-1300
             transition: 'opacity 0.6s ease 0.7s',
           }}
         >
-          Because some skills are worth far more points than others, it reveals the fastest path{' '}
+          Some skills are worth far more points than others, a diagnostic reveals the fastest path{' '}
           {hasScore ? (
             <>from <em>{breakOutBand}</em> to the highest score possible</>
           ) : (
@@ -677,7 +728,7 @@ export function QFIDiagnosis({ onContinue, onBack, q3 = 'sat-1', q4 = '1200-1300
           {untilTest ? (
             <>
               {' '}
-              before the <em>{D_TEST_DATE_SHORT[q5]}</em> SAT.
+              before the <em>{D_TEST_DATE_ORDINAL[q5]}</em> SAT.
             </>
           ) : (
             '.'
@@ -688,128 +739,76 @@ export function QFIDiagnosis({ onContinue, onBack, q3 = 'sat-1', q4 = '1200-1300
   );
 }
 
-// ─── Product-outcome (Hims-style: offer + outcome collage, 1 sentence) ───────
-function MethodLeadLine({ parts }) {
-  return (
-    <p className="qf-lead" style={{ margin: 0 }}>
-      {parts.map((part, i) =>
-        part.em ? (
-          <em key={i}>{part.text}</em>
-        ) : (
-          <span key={i}>{part.text}</span>
-        )
-      )}
-    </p>
-  );
-}
-
-export function QFIMethod({ onContinue, onBack, q5 = 'oct3' }) {
-  const showGainMath = shouldShowGainMath(q5);
-  const gain = gainTargetForQ5(q5);
-  const methodLead = methodScreenLeadParts(gain, showGainMath);
-  return (
-    <QFScreen stepIdx={10} onBack={onBack}
-      footer={<QFButton kind="forest" onClick={onContinue}>How it works</QFButton>}
-    >
-      <div className="qf-i-method">
-        <div className="qf-i-method__copy">
-          <MethodLeadLine parts={methodLead} />
-        </div>
-        <div className="qf-i-method__visual">
-          <img
-            src="/photos/tutor-student-session.png"
-            alt="Sophia with her tutor and her personalized weekly SAT Improvement Plan"
-            onError={(e) => { e.currentTarget.style.display = 'none'; }}
-          />
-        </div>
-      </div>
-    </QFScreen>
-  );
-}
-
 // ─── I · Steps (early plan preview: large plan visual + 3 Hims-style labels) ──
+const I_STEPS_LABELS = [
+  { title: 'Skill Diagnostic', sub: 'The 5–6 gap skills.', rot: -3, pos: { top: 110, left: -6 }, maxWidth: 150 },
+  { title: 'Rank', sub: 'By point impact.', rot: 3, pos: { top: 235, right: -6 }, maxWidth: 150 },
+  { title: 'Plan', sub: 'Focus each week.', rot: -2, pos: { bottom: 14, left: -6 }, maxWidth: 160 },
+];
+
 export function QFISteps({ onContinue, onBack }) {
+  const [revealed, setRevealed] = useState(0);
+
+  // Stagger the three labels in order; reveal all at once for reduced motion.
+  useEffect(() => {
+    const reduced = typeof window !== 'undefined'
+      && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const timers = [];
+    if (reduced) {
+      timers.push(setTimeout(() => setRevealed(I_STEPS_LABELS.length), 0));
+    } else {
+      const FIRST = 450;
+      const STAGGER = 600;
+      for (let i = 0; i < I_STEPS_LABELS.length; i++) {
+        timers.push(setTimeout(() => setRevealed(i + 1), FIRST + i * STAGGER));
+      }
+    }
+    return () => timers.forEach(clearTimeout);
+  }, []);
+
   return (
     <QFScreen stepIdx={4} onBack={onBack}
       footer={<QFButton kind="forest" onClick={onContinue}>Build their plan</QFButton>}
     >
       <p className="qf-lead" style={{ margin: '0 0 4px' }}>
-        We build their Improvement Plan around the few skills most likely to raise their score fastest.
+        Here&apos;s how we build a personalized SAT improvement plan.
       </p>
       <div style={{ position: 'relative', paddingTop: 16, paddingBottom: 20 }}>
         <div style={{ margin: '0 8px' }}>
           <QFSophiaPlanCard />
         </div>
 
-        {/* Floating Hims-style labels — pointing at parts */}
-        {/* DIAGNOSE — top-left, points to ranked skill names */}
-        <div style={{
-          position: 'absolute',
-          top: 110, left: -6,
-          transform: 'rotate(-3deg)',
-          background: 'var(--qf-paper)',
-          border: '1.5px solid var(--qf-forest)',
-          borderRadius: 12,
-          padding: '8px 14px',
-          boxShadow: '0 8px 20px rgba(47,110,71,0.25)',
-          zIndex: 2,
-          maxWidth: 150,
-        }}>
-          <div style={{
-            fontFamily: 'var(--qf-display)', fontSize: 15, fontWeight: 600,
-            color: 'var(--qf-forest)', letterSpacing: '-0.01em',
-          }}>Skill Diagnostic</div>
-          <div style={{
-            fontFamily: 'var(--qf-body)', fontSize: 11.5,
-            color: 'var(--qf-ink-2)', marginTop: 2, lineHeight: 1.3,
-          }}>The 5–6 gap skills.</div>
-        </div>
-
-        {/* RANK — middle-right, points to impact bars/scores */}
-        <div style={{
-          position: 'absolute',
-          top: 235, right: -6,
-          transform: 'rotate(3deg)',
-          background: 'var(--qf-paper)',
-          border: '1.5px solid var(--qf-forest)',
-          borderRadius: 12,
-          padding: '8px 14px',
-          boxShadow: '0 8px 20px rgba(47,110,71,0.25)',
-          zIndex: 2,
-          maxWidth: 150,
-        }}>
-          <div style={{
-            fontFamily: 'var(--qf-display)', fontSize: 15, fontWeight: 600,
-            color: 'var(--qf-forest)', letterSpacing: '-0.01em',
-          }}>Rank</div>
-          <div style={{
-            fontFamily: 'var(--qf-body)', fontSize: 11.5,
-            color: 'var(--qf-ink-2)', marginTop: 2, lineHeight: 1.3,
-          }}>By point impact.</div>
-        </div>
-
-        {/* PLAN — bottom-left, points to the plan total footer */}
-        <div style={{
-          position: 'absolute',
-          bottom: 14, left: -6,
-          transform: 'rotate(-2deg)',
-          background: 'var(--qf-paper)',
-          border: '1.5px solid var(--qf-forest)',
-          borderRadius: 12,
-          padding: '8px 14px',
-          boxShadow: '0 8px 20px rgba(47,110,71,0.25)',
-          zIndex: 2,
-          maxWidth: 160,
-        }}>
-          <div style={{
-            fontFamily: 'var(--qf-display)', fontSize: 15, fontWeight: 600,
-            color: 'var(--qf-forest)', letterSpacing: '-0.01em',
-          }}>Plan</div>
-          <div style={{
-            fontFamily: 'var(--qf-body)', fontSize: 11.5,
-            color: 'var(--qf-ink-2)', marginTop: 2, lineHeight: 1.3,
-          }}>Focus each week.</div>
-        </div>
+        {/* Floating Hims-style labels — animate in order */}
+        {I_STEPS_LABELS.map((lbl, i) => {
+          const shown = i < revealed;
+          return (
+            <div key={lbl.title} style={{
+              position: 'absolute',
+              ...lbl.pos,
+              background: 'var(--qf-paper)',
+              border: '1.5px solid var(--qf-forest)',
+              borderRadius: 12,
+              padding: '8px 14px',
+              boxShadow: '0 8px 20px rgba(47,110,71,0.25)',
+              zIndex: 2,
+              maxWidth: lbl.maxWidth,
+              opacity: shown ? 1 : 0,
+              transform: shown
+                ? `rotate(${lbl.rot}deg) translateY(0) scale(1)`
+                : `rotate(${lbl.rot}deg) translateY(10px) scale(0.94)`,
+              transition: 'opacity 0.4s ease, transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1)',
+            }}>
+              <div style={{
+                fontFamily: 'var(--qf-display)', fontSize: 15, fontWeight: 600,
+                color: 'var(--qf-forest)', letterSpacing: '-0.01em',
+              }}>{lbl.title}</div>
+              <div style={{
+                fontFamily: 'var(--qf-body)', fontSize: 11.5,
+                color: 'var(--qf-ink-2)', marginTop: 2, lineHeight: 1.3,
+              }}>{lbl.sub}</div>
+            </div>
+          );
+        })}
       </div>
     </QFScreen>
   );

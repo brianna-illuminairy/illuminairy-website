@@ -21,13 +21,14 @@ const baseSteps = [...baseMatch[1].matchAll(/'([^']+)'/g)].map((m) => m[1]);
 
 const conditionalSteps = [
   "hit-q3-none",
-  "hit-q4",
+  "doubts-insight",
   "hit-q5-tbd",
-  "hit-outcome-month-one",
   "hit-q8-scores",
   "i-gap",
   "booked",
-  "s1", // alias route for reveal
+  "achievability", // deep-link / share alias (plan reveal content)
+  "reveal", // deprecated alias route for the reveal content
+  "s1", // alias route for the reveal content
 ];
 
 const allSteps = [...new Set([...baseSteps, ...conditionalSteps])];

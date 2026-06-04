@@ -74,7 +74,7 @@ async function main() {
   const urls = [
     ["/", "Landing"],
     ["/quiz?step=q1", "Plan Builder q1"],
-    ["/quiz?step=reveal", "Plan reveal (deep link)"],
+    ["/quiz?step=achievability", "Goal achievability (deep link)"],
     ["/?lp=b3a", "B3a landing variant"]
   ];
 
