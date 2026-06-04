@@ -34,7 +34,7 @@ const BASE_STEPS = [
   'q6','q7','hit-q7',
   'i-diag',
   'i-compare',
-  'q8','q9',
+  'q8','achievability','q9',
   'name',
   'i2',
   'v1',
