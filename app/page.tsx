@@ -7,20 +7,20 @@ import "./landing/landing-overrides.css";
 import "./landing/landing-premium.css";
 
 export const metadata: Metadata = {
-  title: "SAT Improvement Plan for your child · Illuminairy",
+  title: "Free SAT Improvement Plan · Illuminairy",
   description:
-    "Free ~2-minute plan builder for parents. Get an SAT Improvement Plan with score projection — which skills to focus on first and what improvement is realistic. Your child doesn't take a test yet.",
+    "For parents: SAT in the 1100s or 1200s but colleges expect ~1400? Free 2-minute plan shows why their score is stuck, what's realistic before their fall SAT, and what to study first. No test for your child.",
   openGraph: {
-    title: "SAT Improvement Plan for your child · Illuminairy",
+    title: "Free SAT Improvement Plan · Illuminairy",
     description:
-      "For parents · ~2 minutes · free score projection. Skill Diagnostic and weekly plan follow your Strategy Call.",
+      "Why their score is stuck, a realistic fall SAT range, and what to focus on first. Free · parent only · about 2 minutes.",
     images: [{ url: "/brand/logo-square.png", width: 1200, height: 630 }]
   },
   twitter: {
     card: "summary_large_image",
-    title: "SAT Improvement Plan for your child · Illuminairy",
+    title: "Free SAT Improvement Plan · Illuminairy",
     description:
-      "For parents · ~2 minutes · free score projection. Skill Diagnostic after your Strategy Call."
+      "Why stuck · realistic fall score · what to study first. Free · parent only · about 2 minutes."
   },
   robots: { index: true, follow: true }
 };

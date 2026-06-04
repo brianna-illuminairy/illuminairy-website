@@ -328,6 +328,33 @@ export const satProgram = {
 };
 
 /**
+ * Scale line for LP trust bar — team heritage (Nerdy / Varsity Tutors era). Update if legal reviews wording.
+ */
+export const tutoringHeritageTrust = {
+  sinceYear: 2007,
+  eyebrow: "We've helped hundreds of families get the SAT score they need.",
+  shortLine: "Millions of students tutored since 2007"
+} as const;
+
+/**
+ * Typical SAT totals for trust ticker / parent-facing social proof.
+ * Most finish in the 1400s; some land in the 1300s or 1500s. Scores in 10-point increments.
+ */
+export const satTypicalStudentScoreBands = {
+  totalBeforeMin: 1100,
+  totalBeforeMax: 1290,
+  totalAfterMin: 1310,
+  totalAfterMax: 1520,
+  /** Where most students finish (majority of outcomes). */
+  totalAfterTypicalMin: 1380,
+  totalAfterTypicalMax: 1460,
+  gainMin: 90,
+  gainMax: 420,
+  summaryLine:
+    "Most students start in the 1100s or 1200s and finish in the 1400s — sometimes the 1300s or 1500s."
+} as const;
+
+/**
  * Published program outcome stats for funnel trust surfaces (INT1, INT6).
  * Methodology: internal completer data — always pair with vary disclaimers in UI.
  */

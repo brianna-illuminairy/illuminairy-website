@@ -28,3 +28,31 @@ export function isPlanBuilderPathname(pathname: string | null | undefined): bool
   if (!pathname) return false;
   return pathname === PLAN_BUILDER_PATH || pathname.startsWith(`${PLAN_BUILDER_PATH}/`);
 }
+
+const UTM_KEYS = [
+  "utm_source",
+  "utm_medium",
+  "utm_campaign",
+  "utm_content",
+  "utm_term",
+  "fbclid",
+  "gclid"
+] as const;
+
+/**
+ * Plan Builder entry from LP — canonical `/plan?step=q1` plus UTMs from the landing URL.
+ */
+export function planBuilderEntryFromLanding(search?: string): string {
+  const params = new URLSearchParams();
+  params.set("step", "q1");
+  if (search) {
+    const incoming = new URLSearchParams(
+      search.startsWith("?") ? search.slice(1) : search
+    );
+    for (const key of UTM_KEYS) {
+      const value = incoming.get(key);
+      if (value) params.set(key, value);
+    }
+  }
+  return `${PLAN_BUILDER_PATH}?${params.toString()}`;
+}

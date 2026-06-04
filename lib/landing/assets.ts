@@ -1,5 +1,5 @@
 /**
- * One file per slot. `null` = show placeholder until you add the file to public/photos/.
+ * One file per slot. `null` = no image in that section (no wrong stock photo).
  * See growth/b3-lp-photo-shot-list.md
  */
 export const landingPhotoSlots = {
@@ -7,16 +7,13 @@ export const landingPhotoSlots = {
   b3aHeroSession: "/photos/tutor-student-session.png",
   b3cHero: null as string | null,
   science: null as string | null,
-  greatNews: "/photos/team-hero.jpg",
+  greatNews: null as string | null,
   included: null as string | null,
   stepAssessment: null as string | null,
   stepStrategyCall: null as string | null,
   stepDiagnostic: null as string | null,
-  /** Step 04 — personalized weekly plan (file: lp-step-weekly-plan.jpg) */
   stepWeeklyPlan: null as string | null,
-  /** @deprecated use stepStrategyCall */
   stepPlan: null as string | null,
-  /** @deprecated use stepWeeklyPlan */
   stepTutor: null as string | null,
   review1Before: null as string | null,
   review1After: null as string | null,

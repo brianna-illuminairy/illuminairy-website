@@ -6,7 +6,7 @@
 |---|---|---|
 | `PageView` | Route load | (existing MetaPixel) |
 | `ViewContent` | LP mount, variant known | `content_name: sat_landing`, `content_category: sat_lp_variant` |
-| `FunnelCTA` (custom) | Any LP CTA → `/quiz` | `section_id`, `sat_lp_variant`, `cta_label` |
+| `FunnelCTA` (custom) | Any LP CTA → `/plan?step=q1` | `section_id`, `sat_lp_variant`, `sat_lp_layout`, `cta_label` |
 
 **Do not** fire `Lead` or `Schedule` on the LP — those stay at S5/S9 only.
 
@@ -35,8 +35,13 @@
 - **All new Meta/Google ads** → `https://illuminairy.com/` with UTMs
 - Do not point new campaigns at satprep unless intentionally testing legacy funnel
 
-## UTM convention
+## UTM convention (Meta primary — national)
 
-- `utm_campaign=sat-lp-b3a-problem` | `sat-lp-b3b-results` | `sat-lp-b3c-authority`
-- `utm_source=facebook` | `google`
-- `utm_content` = creative slug
+- `utm_source=facebook`
+- `utm_medium=paid_social`
+- `utm_campaign=fall_sat_national` (or creative-specific slug)
+- **`utm_content=script_5`** — drives LP headline match (see playbook)
+- **`hook=gpa`** — optional override
+- **`metro=atlanta`** — optional, geo ad sets only
+
+Full playbook: [`meta-paid-lp-playbook.md`](meta-paid-lp-playbook.md).

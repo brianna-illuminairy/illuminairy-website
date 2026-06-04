@@ -1,11 +1,5 @@
-import { satProgramOutcomes, satRetakeResearch } from "@/lib/site";
-import {
-  FOCUS_SKILL_COUNT,
-  KHAN_SAT_SKILL_COUNT_LABEL,
-  notAllKhanSkillsPhrase,
-  notAllKhanSkillsTitleCase,
-  satBreadthVsFocusLine,
-} from "@/lib/sat-skills-copy";
+import { satProgramOutcomes, satTypicalStudentScoreBands } from "@/lib/site";
+import { satBreadthVsFocusLine } from "@/lib/sat-skills-copy";
 
 export type LandingSectionId =
   | "hero"
@@ -15,7 +9,12 @@ export type LandingSectionId =
   | "reviews"
   | "how_it_works"
   | "final_cta"
-  | "footer";
+  | "footer"
+  | "why"
+  | "proof"
+  | "compact_how_it_works"
+  | "sticky_cta"
+  | "trust_bar";
 
 export type LandingReview = {
   before: string;
@@ -27,86 +26,117 @@ export type LandingReview = {
 };
 
 export const landingDisclaimers = {
-  heroResults:
-    "*Based on average gains across the last 95 completed plans. Individual results vary.",
-  heroAuthority:
-    "*Aggregate score-improvement data from public College Board reports.",
+  heroResults: `Students who completed our ${satProgramOutcomes.programWeeks}-week program averaged +${satProgramOutcomes.avgPointsGained} points (n=${satProgramOutcomes.plansBuiltCount}). ${satProgramOutcomes.varyDisclaimer}`,
   greatNews:
-    "*Requires Skill Diagnostic after Strategy Call. Plans built from diagnostic data. Restrictions apply.",
+    "Numbers in the free plan are illustrative until a Strategy Call and Skill Diagnostic. Individual results vary.",
   reviews:
     "Before/after scores shared by parents. Results not independently verified. Individual results vary.",
   footer:
     "SAT and PSAT are trademarks of the College Board, which is not affiliated with this site. Individual results vary."
 } as const;
 
-/** Plan Builder entry product — Skill Diagnostic is a separate proctored step. */
+/** Plan Builder entry — Skill Diagnostic is a separate proctored step. */
 export const improvementPlanProduct = {
   name: "SAT Improvement Plan",
-  duration: "~2 minutes",
-  trust: "Free · for parents · no test for your child"
+  builderName: "SAT Plan Builder",
+  duration: "about 2 minutes",
+  trust: "Free · parent only · your child does not take a test here"
 } as const;
 
 /** @deprecated Use improvementPlanProduct */
 export const scorePathProduct = improvementPlanProduct;
 
+export const landingCta = {
+  hero: "Build their free SAT Improvement Plan",
+  inline: "Build their free SAT Improvement Plan",
+  sticky: "Get their free plan"
+} as const;
+
+/** Cold DR: outcomes parents came for (not program mechanics). */
+export const landingParentChecklist = [
+  "Why their last SAT score is stuck (even with good grades)",
+  "Whether more Khan / Bluebook will actually move the official score",
+  "What score is realistic before August, September, or October",
+  "Whether 150–200+ points is still possible before applications",
+  "What to study first so the fall retake is not the same result"
+] as const;
+
+export const landingHero = {
+  subhead: satTypicalStudentScoreBands.summaryLine,
+  /** Below CTA only — not lead copy. */
+  finePrint: "Free for parents · about 2 minutes · no test for your child.",
+  checklistIntro: "You'll see:",
+  checklist: landingParentChecklist,
+  ctaCopy:
+    "Answer a few questions about your child. We show you why their score is stuck, what's realistic before their next test, and what to focus on first.",
+  disclaimer: landingDisclaimers.heroResults
+} as const;
+
 export const landingShared = {
-  heroCtaLabel: "Get their improvement plan",
-  inlineCtaLabel: "Get their improvement plan",
-  includedTitle: "What's included",
-  includedItems: [
-    `Skill Diagnostic maps ${KHAN_SAT_SKILL_COUNT_LABEL} skill areas`,
-    "Personalized weekly SAT plan",
-    "Mistake-driven work on their weakest skills",
-    "Weekly parent update",
-    "SAT advisor support",
-    "100% online"
-  ],
+  heroCtaLabel: landingCta.hero,
+  inlineCtaLabel: landingCta.inline,
+  stickyCtaLabel: landingCta.sticky,
+  whatItIs: {
+    title: "What this is",
+    lead: `A free ${improvementPlanProduct.builderName} (${improvementPlanProduct.duration}, ${improvementPlanProduct.trust}).`,
+    deliverable:
+      "You tell us their GPA, last SAT score, next test date, and what they've already tried. We build a free SAT Improvement Plan: why the last SAT likely struggled, a score projection for their fall date, and what to focus on so study time is not wasted on the whole test.",
+    after:
+      "If you want help after that, a free SAT Strategy Call leads to a Skill Diagnostic that ranks the 5–6 skills on their real misses. Nothing to buy to get the free plan."
+  },
   science: {
-    title: "Diagnostic-driven plan",
+    title: "More practice tests are not the missing piece",
     p1: satBreadthVsFocusLine(),
-    p2: "We diagnose them. Then we drill the right skills — with a personalized weekly plan, not endless review."
+    p2: "Most families need to know which few skills will move the score fastest, not another month on everything on the test. The free plan starts there."
   },
   greatNews: {
-    titleMuted: "Good news:",
-    titleRest: "a stronger score is in your child's future.",
-    lead: "See if a focused path fits your child — built from their scores and timeline.",
-    overlay: "Get their improvement plan",
-    pillCta: "Start the Plan Builder →"
+    title: "What you get free in about 2 minutes",
+    lead: "Why their score is stuck. A realistic range for their fall SAT date. What to focus on first. Clear next steps if you want them.",
+    overlay: landingCta.inline,
+    pillCta: landingCta.inline
   },
+  includedTitle: "Optional after the free plan",
+  includedItems: [
+    "Free 15-minute SAT Strategy Call: schools, targets, timeline",
+    "Skill Diagnostic ranks the 5–6 skills that matter on their real misses",
+    "Tutoring works those skills in order",
+    "Weekly parent update",
+    "100% online"
+  ],
   reviews: {
-    title: "Parents are seeing real score movement."
+    title: "Scores parents shared after focusing on ranked skills"
   },
   howItWorks: {
-    title: "How it works",
+    title: "How the free plan works",
     steps: [
       {
-        title: "Answer a few questions",
-        desc: "For parents — GPA, target score, timeline. Your child doesn't take a test.",
+        title: "Answer parent questions",
+        desc: "GPA, last SAT, test date, what they tried. Your child does not take a test on this page.",
         time: "~2 min"
       },
       {
-        title: "SAT Strategy Call",
-        desc: "Free 15 min — confirm targets and schedule Week 1.",
+        title: "Get the Improvement Plan",
+        desc: "Score projection for their fall date, why the last SAT struggled, and what to focus on first.",
+        time: "Instant"
+      },
+      {
+        title: "Optional: Strategy Call",
+        desc: "Free 15 minutes if you want help booking the Skill Diagnostic and confirming targets.",
         time: "15 min"
       },
       {
-        title: "Skill Diagnostic",
-        desc: "Proctored exam finds the 5–6 skills that move their score.",
+        title: "Optional: Skill Diagnostic",
+        desc: "Proctored exam ranks the 5–6 highest-impact skills on their real SAT misses.",
         time: "After call"
-      },
-      {
-        title: "Personalized weekly plan",
-        desc: "Built from diagnostic results — weekly skill focus in order.",
-        time: "Ongoing"
       }
     ]
   },
   finalCta: {
-    title: "Your child's score, their plan, their pace.",
+    title: "See what's realistic before their fall SAT",
     checklist: [
-      `Fix the gaps. ${notAllKhanSkillsTitleCase()}.`,
-      "Built around the 5–6 skills that move their score",
-      "100% online — no office required"
+      "Free · parent only · about 2 minutes",
+      "No test for your child on this page",
+      "Why stuck · realistic score · what to study first"
     ]
   },
   footer: {
@@ -119,7 +149,7 @@ export const landingReviews: LandingReview[] = [
     before: "1180",
     after: "1410",
     months: 3,
-    quote: "+230 points. The diagnostic was the difference.",
+    quote: "+230 points. We finally knew which skills to work.",
     name: "David D.",
     initials: "D"
   },
@@ -128,7 +158,7 @@ export const landingReviews: LandingReview[] = [
     after: "1290",
     months: 3,
     quote:
-      "Khan and a group class missed the speed problem. Illuminairy did not.",
+      "Khan and a group class did not fix timing. Focusing on ranked skills did.",
     name: "Priya S.",
     initials: "P"
   },
@@ -136,67 +166,17 @@ export const landingReviews: LandingReview[] = [
     before: "1240",
     after: "1430",
     months: 3,
-    quote: "A plan that ends. That mattered. +190 points.",
+    quote: "We had a realistic target for October. +190 points.",
     name: "Tom B.",
     initials: "T"
   }
 ];
 
-const b3bGainMultiple = (
-  satProgramOutcomes.avgPointsGained /
-  satRetakeResearch.avgPointsWithoutNewApproach
-).toFixed(1);
-
+/** @deprecated PostHog may still bucket variants; UI uses unified `landingHero`. */
 export const landingHeroes = {
-  /** B3a — Problem / empathy: GPA–SAT gap, parent relief */
-  "b3a-problem": {
-    headline: ["High GPA.", "Low SAT.", "Fixable."],
-    accentLine: 2,
-    checklist: [
-      "A realistic improvement path for their next test date",
-      "The 5 skill gaps most likely costing points",
-      `What to focus on first—${notAllKhanSkillsPhrase()}`
-    ],
-    ctaCopy: `Answer a few questions about your child. In ${improvementPlanProduct.duration} you'll get their ${improvementPlanProduct.name} with a free score projection — ${improvementPlanProduct.trust}.`,
-    disclaimer: landingDisclaimers.heroResults
-  },
-  /** B3b — Results: social proof, “could this work for them?” */
-  "b3b-results": {
-    headline: ["+182 points.", "On a focused path.", "Could it work for them?"],
-    accentLine: 0,
-    checklist: [
-      `${b3bGainMultiple}× the College Board avg gain on completed plans*`,
-      `${satProgramOutcomes.targetHitRatePct}% of students hit their target score band`,
-      `Free ${improvementPlanProduct.name} with score projection — before any call`
-    ],
-    ctaCopy: `In ${improvementPlanProduct.duration}, see whether a +${satProgramOutcomes.avgPointsGained} pt path fits their test date and starting score.`,
-    stats: [
-      { num: `${satProgramOutcomes.plansBuiltCount}+`, lbl: "PLANS BUILT" },
-      {
-        num: String(satProgramOutcomes.avgPointsGained),
-        lbl: "AVG PTS",
-        accent: true
-      },
-      { num: `${satProgramOutcomes.targetHitRatePct}%`, lbl: "HIT TARGET" }
-    ],
-    disclaimer: "*Across last 95 completed plans. Individual results vary."
-  },
-  /** B3c — Authority: College Board scale, data-backed path */
-  "b3c-authority": {
-    eyebrow: "BUILT ON COLLEGE BOARD DATA",
-    headline: [
-      "An improvement path built on",
-      `${satRetakeResearch.cohortSizeLabel} student scores.`
-    ],
-    accentLine: 1,
-    checklist: [
-      "Grounded in public College Board score trends",
-      "Personalized to their test date—not one-size-fits-all advice",
-      `${improvementPlanProduct.duration} · ${improvementPlanProduct.trust}`
-    ],
-    ctaCopy: `Answer a few questions — we'll build their ${improvementPlanProduct.name} from the same data. ${improvementPlanProduct.duration}, free.`,
-    disclaimer: landingDisclaimers.heroAuthority
-  }
+  "b3a-problem": landingHero,
+  "b3b-results": landingHero,
+  "b3c-authority": landingHero
 } as const;
 
 export type HeroVariant = keyof typeof landingHeroes;

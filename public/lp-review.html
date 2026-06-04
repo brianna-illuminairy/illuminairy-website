@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>LP side-by-side review (local)</title>
+    <style>
+      :root {
+        --bg: #0f1419;
+        --panel: #1a2332;
+        --text: #e8edf2;
+        --muted: #8b98a8;
+        --line: #2a3544;
+        --accent: #5cb88a;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: "SF Pro Text", system-ui, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+      header {
+        flex-shrink: 0;
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--line);
+        background: var(--panel);
+      }
+      header h1 {
+        margin: 0 0 4px;
+        font-size: 15px;
+        font-weight: 700;
+      }
+      header p {
+        margin: 0 0 12px;
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px 16px;
+        align-items: end;
+      }
+      label {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      select,
+      button {
+        font: inherit;
+        font-size: 13px;
+        font-weight: 500;
+        text-transform: none;
+        letter-spacing: 0;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 8px 10px;
+        min-width: 12rem;
+      }
+      button {
+        cursor: pointer;
+        color: var(--accent);
+        border-color: rgba(92, 184, 138, 0.45);
+      }
+      button:hover {
+        background: rgba(92, 184, 138, 0.08);
+      }
+      .panes {
+        flex: 1;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        min-height: 0;
+      }
+      .pane {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        border-right: 1px solid var(--line);
+      }
+      .pane:last-child {
+        border-right: none;
+      }
+      .pane-head {
+        flex-shrink: 0;
+        padding: 8px 12px;
+        font-size: 12px;
+        font-weight: 600;
+        background: rgba(255, 255, 255, 0.03);
+        border-bottom: 1px solid var(--line);
+      }
+      .pane-head span {
+        display: block;
+        margin-top: 2px;
+        font-weight: 400;
+        color: var(--muted);
+        font-size: 11px;
+        word-break: break-all;
+      }
+      iframe {
+        flex: 1;
+        width: 100%;
+        border: 0;
+        background: #f5f8fa;
+      }
+      @media (max-width: 900px) {
+        .panes {
+          grid-template-columns: 1fr;
+          grid-template-rows: 1fr 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>SAT LP — side-by-side (local only)</h1>
+      <p>
+        Requires <code>npm run dev</code>. Left vs right reload together. Default:
+        score ticker vs mom reviews trust bar.
+      </p>
+      <div class="controls">
+        <label>
+          Left pane
+          <select id="left-preset"></select>
+        </label>
+        <label>
+          Right pane
+          <select id="right-preset"></select>
+        </label>
+        <label>
+          Width
+          <select id="frame-width">
+            <option value="100%">Full pane</option>
+            <option value="390px">390px (mobile)</option>
+            <option value="1440px">1440px (desktop)</option>
+          </select>
+        </label>
+        <button type="button" id="reload">Reload both</button>
+        <button type="button" id="swap">Swap left ↔ right</button>
+      </div>
+    </header>
+
+    <div class="panes">
+      <div class="pane">
+        <div class="pane-head" id="left-label">Left</div>
+        <iframe id="left-frame" title="Left LP"></iframe>
+      </div>
+      <div class="pane">
+        <div class="pane-head" id="right-label">Right</div>
+        <iframe id="right-frame" title="Right LP"></iframe>
+      </div>
+    </div>
+
+    <script>
+      const PRESETS = [
+        {
+          id: "meta-compact",
+          label: "New · Meta compact (default for ads)",
+          path: "/?utm_source=facebook&utm_medium=paid_social&utm_campaign=fall_sat_national&utm_content=script_5"
+        },
+        {
+          id: "trust-scores",
+          label: "Compact · score ticker trust bar (default)",
+          path: "/?utm_source=facebook&utm_content=script_5&trust_bar=scores"
+        },
+        {
+          id: "trust-mom-reviews",
+          label: "Compact · mom reviews carousel (?trust_bar=mom_reviews)",
+          path: "/?utm_source=facebook&utm_content=script_5&trust_bar=mom_reviews"
+        },
+        {
+          id: "full-scroll",
+          label: "Full scroll LP (?lp_layout=full)",
+          path: "/?lp_layout=full&utm_source=facebook&utm_content=script_5"
+        },
+        {
+          id: "script-1",
+          label: "Compact · script_1 (GPA hook)",
+          path: "/?utm_source=facebook&utm_content=script_1"
+        },
+        {
+          id: "script-4",
+          label: "Compact · script_4 (Khan hook)",
+          path: "/?utm_source=facebook&utm_content=script_4"
+        },
+        {
+          id: "script-6",
+          label: "Compact · script_6 (June hook)",
+          path: "/?utm_source=facebook&utm_content=script_6"
+        },
+        {
+          id: "national",
+          label: "Compact · no utm_content",
+          path: "/"
+        }
+      ];
+
+      const leftSelect = document.getElementById("left-preset");
+      const rightSelect = document.getElementById("right-preset");
+      const leftFrame = document.getElementById("left-frame");
+      const rightFrame = document.getElementById("right-frame");
+      const leftLabel = document.getElementById("left-label");
+      const rightLabel = document.getElementById("right-label");
+      const widthSelect = document.getElementById("frame-width");
+
+      function fillSelect(select) {
+        for (const preset of PRESETS) {
+          const opt = document.createElement("option");
+          opt.value = preset.id;
+          opt.textContent = preset.label;
+          select.appendChild(opt);
+        }
+      }
+
+      function presetById(id) {
+        return PRESETS.find((p) => p.id === id) || PRESETS[0];
+      }
+
+      function applyPane(side) {
+        const select = side === "left" ? leftSelect : rightSelect;
+        const frame = side === "left" ? leftFrame : rightFrame;
+        const label = side === "left" ? leftLabel : rightLabel;
+        const preset = presetById(select.value);
+        const url = preset.path;
+        label.innerHTML =
+          preset.label + '<span>' + window.location.origin + url + "</span>";
+        frame.src = url;
+        frame.style.maxWidth = widthSelect.value;
+        frame.style.margin = widthSelect.value === "100%" ? "0" : "0 auto";
+      }
+
+      function applyBoth() {
+        applyPane("left");
+        applyPane("right");
+      }
+
+      fillSelect(leftSelect);
+      fillSelect(rightSelect);
+      leftSelect.value = "trust-scores";
+      rightSelect.value = "trust-mom-reviews";
+      applyBoth();
+
+      document.getElementById("reload").addEventListener("click", applyBoth);
+      leftSelect.addEventListener("change", () => applyPane("left"));
+      rightSelect.addEventListener("change", () => applyPane("right"));
+      widthSelect.addEventListener("change", applyBoth);
+
+      document.getElementById("swap").addEventListener("click", () => {
+        const tmp = leftSelect.value;
+        leftSelect.value = rightSelect.value;
+        rightSelect.value = tmp;
+        applyBoth();
+      });
+    </script>
+  </body>
+</html>

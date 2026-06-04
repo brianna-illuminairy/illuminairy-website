@@ -7,6 +7,7 @@ import {
   showedGpaGapScreen,
   weeksUntilQ5Test
 } from "@/lib/quiz-funnel/gains";
+import { readPersistedLpLayout } from "@/lib/landing/layout-storage";
 import { readPersistedLpVariant } from "@/lib/landing/variant-storage";
 import { PLAN_BUILDER_PATH } from "@/lib/plan-builder-routes";
 
@@ -37,13 +38,23 @@ export function trackQuizSchedule() {
   trackQuizGaEvent("schedule", { funnel: "sat_quiz" });
 }
 
+function persistedLpContext() {
+  return {
+    sat_lp_variant: readPersistedLpVariant() ?? undefined,
+    sat_lp_layout: readPersistedLpLayout() ?? undefined
+  };
+}
+
 export function captureQuizStarted(answers: Record<string, unknown>) {
   if (!getPostHogKey()) return;
   posthog.capture("quiz_started", {
-    sat_lp_variant: readPersistedLpVariant() ?? undefined,
+    ...persistedLpContext(),
     q1: answers.q1
   });
-  trackQuizGaEvent("quiz_started", { funnel: "sat_quiz" });
+  trackQuizGaEvent("quiz_started", {
+    funnel: "sat_quiz",
+    ...persistedLpContext()
+  });
 }
 
 export function captureQuizStep(
@@ -54,6 +65,7 @@ export function captureQuizStep(
 ) {
   if (!getPostHogKey()) return;
   const props = {
+    ...persistedLpContext(),
     step: stepId,
     step_index: stepIndex,
     has_gap_screen: Boolean(options?.hasGapScreen),
@@ -109,6 +121,7 @@ export function captureQuizLeadSubmitted(
       (answers.sat_lp_variant as string | undefined) ??
       readPersistedLpVariant() ??
       undefined,
+    sat_lp_layout: readPersistedLpLayout() ?? undefined,
     has_gap_screen: Boolean(options?.hasGapScreen),
     showed_gpa_gap: showedGpaGapScreen(q4, answers.q9 as string | undefined),
     promised_gain_pts: promisedGain ?? undefined,

@@ -6,6 +6,10 @@
   margin: 0;
 }
 
+main.funnel-main:has(.il-layout-hero-only) {
+  min-height: 100dvh;
+}
+
 /* Header — dark chrome only (hero/body stay light) */
 .il-page .top-bar.il-top-bar,
 .il-page.il-brand.light .top-bar.il-top-bar {

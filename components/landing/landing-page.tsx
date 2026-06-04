@@ -1,106 +1,85 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import posthog from "posthog-js";
-import { FunnelHeaderLogo } from "@/components/funnel-header-logo";
 import { B3Page } from "@/components/landing/b3/b3-page";
 import { trackLandingCtaClick, trackLandingView } from "@/lib/landing/analytics";
+import { persistLpLayout } from "@/lib/landing/layout-storage";
 import { persistLpVariant } from "@/lib/landing/variant-storage";
 import type { LandingSectionId } from "@/lib/landing/content";
 import { landingShared } from "@/lib/landing/content";
+import { resolveMetaLandingContext } from "@/lib/landing/meta-traffic";
+import { resolveTrustBarVariant } from "@/lib/landing/trust-bar-variant";
+import { planBuilderEntryFromLanding } from "@/lib/plan-builder-routes";
 import {
   devOverrideFromSearch,
   LP_VARIANT_FLAG,
-  resolveLpVariantFromFlag,
   trackLpExperimentExposure,
   type LpVariant
 } from "@/lib/quiz-funnel/experiments";
-import { getPostHogKey } from "@/lib/posthog";
+import {
+  devLayoutOverrideFromSearch,
+  LP_LAYOUT_FLAG,
+  trackLpLayoutExperimentExposure,
+  type LpLayout
+} from "@/lib/quiz-funnel/experiments-layout";
 
-const FLAG_TIMEOUT_MS = 2000;
-
-function LandingSkeleton() {
-  return (
-    <div className="il-skeleton" aria-busy="true">
-      <div className="il-skeleton-bar">
-        <FunnelHeaderLogo />
-      </div>
-      <div className="il-skeleton-body" aria-hidden />
-    </div>
-  );
-}
+const LP_VARIANT: LpVariant = "b3a-problem";
+const LP_LAYOUT: LpLayout = "compact";
 
 export function LandingPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [variant, setVariant] = useState<LpVariant | null>(null);
-  const [ready, setReady] = useState(false);
+  const trackedRef = useRef(false);
 
-  const applyVariant = useCallback(
-    (v: LpVariant, opts?: { flag_timeout?: boolean }) => {
-      setVariant(v);
-      persistLpVariant(v);
-      trackLpExperimentExposure(v, opts);
-      trackLandingView(v, opts);
-      setReady(true);
-    },
-    []
-  );
+  const search = searchParams.toString();
+  const query = search ? `?${search}` : "";
+  const layout = devLayoutOverrideFromSearch(query) ?? LP_LAYOUT;
+  const variant = devOverrideFromSearch(query) ?? LP_VARIANT;
+  const metaContext = useMemo(() => resolveMetaLandingContext(query), [query]);
+  const trustBarVariant = useMemo(() => resolveTrustBarVariant(query), [query]);
 
   useEffect(() => {
-    const search = searchParams.toString();
-    const devOverride = devOverrideFromSearch(
-      search ? `?${search}` : window.location.search
-    );
-    if (devOverride) {
-      applyVariant(devOverride);
-      return;
-    }
-
-    if (!getPostHogKey()) {
-      applyVariant(resolveLpVariantFromFlag());
-      return;
-    }
-
-    let settled = false;
-    const finish = (v: LpVariant, flagTimeout = false) => {
-      if (settled) return;
-      settled = true;
-      applyVariant(v, flagTimeout ? { flag_timeout: true } : undefined);
+    if (trackedRef.current) return;
+    trackedRef.current = true;
+    persistLpVariant(variant);
+    persistLpLayout(layout);
+    const trackingExtra = {
+      preferred_metro: metaContext.metro.metroId,
+      metro_source: metaContext.metro.source,
+      hero_hook: metaContext.heroHook,
+      hero_hook_source: metaContext.heroHookSource,
+      traffic_channel: metaContext.isMetaPaid ? ("meta_paid" as const) : ("other" as const)
     };
-
-    const timer = window.setTimeout(
-      () => finish(resolveLpVariantFromFlag(), true),
-      FLAG_TIMEOUT_MS
-    );
-
-    if (posthog.onFeatureFlags) {
-      posthog.onFeatureFlags(() => {
-        window.clearTimeout(timer);
-        finish(resolveLpVariantFromFlag());
-      });
-    }
-
-    return () => window.clearTimeout(timer);
-  }, [applyVariant, searchParams]);
+    trackLpExperimentExposure(variant, {
+      sat_lp_layout: layout,
+      ...trackingExtra
+    });
+    trackLpLayoutExperimentExposure(layout);
+    trackLandingView(variant, layout, trackingExtra);
+  }, [layout, metaContext, variant]);
 
   const handleCta = useCallback(
     (sectionId: LandingSectionId, label?: string) => {
-      if (!variant) return;
       const ctaLabel = label ?? landingShared.heroCtaLabel;
-      trackLandingCtaClick(variant, sectionId, ctaLabel);
-      router.push("/quiz?step=q1");
+      trackLandingCtaClick(variant, layout, sectionId, ctaLabel);
+      router.push(planBuilderEntryFromLanding(search ? `?${search}` : undefined));
     },
-    [router, variant]
+    [layout, router, search, variant]
   );
 
-  if (!ready || !variant) {
-    return <LandingSkeleton />;
-  }
-
-  return <B3Page variant={variant} onCta={handleCta} />;
+  return (
+    <B3Page
+      variant={variant}
+      layout={layout}
+      search={query}
+      preferredMetroId={metaContext.metro.metroId}
+      heroHook={metaContext.heroHook}
+      trustBarVariant={trustBarVariant}
+      onCta={handleCta}
+    />
+  );
 }
 
-/** Exported for tests — flag key constant */
-export { LP_VARIANT_FLAG };
+/** Exported for tests — flag key constants */
+export { LP_VARIANT_FLAG, LP_LAYOUT_FLAG };

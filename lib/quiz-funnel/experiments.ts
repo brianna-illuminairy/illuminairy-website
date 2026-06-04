@@ -36,8 +36,8 @@ export function normalizeLpVariant(raw: string | boolean | undefined): LpVariant
 }
 
 export function devOverrideFromSearch(search: string): LpVariant | null {
-  if (typeof window === "undefined") return null;
-  const params = new URLSearchParams(search);
+  const normalized = search.startsWith("?") ? search.slice(1) : search;
+  const params = new URLSearchParams(normalized);
   const lp = params.get("lp")?.toLowerCase();
   if (lp && DEV_OVERRIDE_MAP[lp]) return DEV_OVERRIDE_MAP[lp];
   return null;
@@ -54,7 +54,7 @@ export function resolveLpVariantFromFlag(): LpVariant {
 
 export function trackLpExperimentExposure(
   variant: LpVariant,
-  extra?: { flag_timeout?: boolean }
+  extra?: { flag_timeout?: boolean; sat_lp_layout?: string }
 ) {
   if (!getPostHogKey()) return;
   posthog.register({ sat_lp_variant: variant });

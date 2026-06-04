@@ -6,6 +6,7 @@ import { readSessionAttribution } from "@/lib/attribution";
 import { AnalyticsEvents } from "@/lib/analytics-events";
 import { getPostHogKey } from "@/lib/posthog";
 import type { LpVariant } from "@/lib/quiz-funnel/experiments";
+import type { LpLayout } from "@/lib/quiz-funnel/experiments-layout";
 import { trackQuizGaEvent } from "@/lib/quiz-funnel/analytics";
 import type { LandingSectionId } from "@/lib/landing/content";
 
@@ -17,6 +18,7 @@ declare global {
 
 export type LandingEventProps = {
   sat_lp_variant: LpVariant;
+  sat_lp_layout: LpLayout;
   section_id?: LandingSectionId;
   cta_label?: string;
   utm_source?: string;
@@ -28,6 +30,11 @@ export type LandingEventProps = {
   gclid?: string;
   landing_page?: string;
   flag_timeout?: boolean;
+  traffic_channel?: "meta_paid" | "other";
+  preferred_metro?: string | null;
+  metro_source?: string;
+  hero_hook?: string;
+  hero_hook_source?: string;
 };
 
 function readAttribution(): Partial<AttributionSnapshot> {
@@ -36,11 +43,13 @@ function readAttribution(): Partial<AttributionSnapshot> {
 
 function baseProps(
   variant: LpVariant,
+  layout: LpLayout,
   extra?: Partial<LandingEventProps>
 ): LandingEventProps {
   const attr = readAttribution();
   return {
     sat_lp_variant: variant,
+    sat_lp_layout: layout,
     landing_page: "/",
     utm_source: attr.utm_source,
     utm_medium: attr.utm_medium,
@@ -55,31 +64,35 @@ function baseProps(
 
 export function trackLandingView(
   variant: LpVariant,
+  layout: LpLayout,
   extra?: Partial<LandingEventProps>
 ) {
-  const props = baseProps(variant, extra);
+  const props = baseProps(variant, layout, extra);
   if (getPostHogKey()) {
     posthog.capture(AnalyticsEvents.funnelLandingView, props);
   }
   trackQuizGaEvent(AnalyticsEvents.funnelLandingView, {
     sat_lp_variant: variant,
+    sat_lp_layout: layout,
     funnel: "sat_quiz",
     landing_page: "/"
   });
   if (typeof window !== "undefined" && window.fbq) {
     window.fbq("track", "ViewContent", {
       content_name: "sat_landing",
-      content_category: variant
+      content_category: variant,
+      sat_lp_layout: layout
     });
   }
 }
 
 export function trackLandingCtaClick(
   variant: LpVariant,
+  layout: LpLayout,
   sectionId: LandingSectionId,
   ctaLabel: string
 ) {
-  const props = baseProps(variant, {
+  const props = baseProps(variant, layout, {
     section_id: sectionId,
     cta_label: ctaLabel
   });
@@ -88,6 +101,7 @@ export function trackLandingCtaClick(
   }
   trackQuizGaEvent(AnalyticsEvents.funnelCtaClick, {
     sat_lp_variant: variant,
+    sat_lp_layout: layout,
     section_id: sectionId,
     cta_label: ctaLabel,
     funnel: "sat_quiz"
@@ -96,6 +110,7 @@ export function trackLandingCtaClick(
     window.fbq("trackCustom", "FunnelCTA", {
       content_name: "sat_landing",
       content_category: variant,
+      sat_lp_layout: layout,
       section_id: sectionId,
       cta_label: ctaLabel
     });

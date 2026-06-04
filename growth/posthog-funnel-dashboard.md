@@ -6,10 +6,11 @@ Create one dashboard: **SAT LP → Quiz → Lead → Book**
 
 - [ ] Create multivariate feature flag **`sat-lp-variant`** in PostHog
 - [ ] Variants: `b3a-problem`, `b3b-results`, `b3c-authority` — **33% / 33% / 33%**
-- [ ] Stickiness: **distinct_id** (same visitor always sees same hero on return)
+- [ ] Create feature flag **`sat-lp-layout`** — **`full`** (control) · **`compact`** (treatment) — **50% / 50%**
+- [ ] Stickiness: **distinct_id** (same visitor always sees same hero + layout on return)
 - [ ] Rollout: **100%** of traffic on `/`
-- [ ] Verify Live Events: `experiment_exposure` with `implemented: true`
-- [ ] Dev QA only: `?lp=b3a|b3b|b3c` — does **not** write to experiment
+- [ ] Verify Live Events: `experiment_exposure` with `implemented: true` for **both** flags
+- [ ] Dev QA only: `?lp=b3a|b3b|b3c` and `?lp_layout=full|compact` — do **not** write to experiment
 
 ### Flag slow / fail behavior (code)
 
@@ -64,7 +65,8 @@ Break down `quiz_booking_error` by `error_code`: `invalid_phone`, `lead_save_fai
 ## Breakdowns
 
 - `sat_lp_variant` (`b3a-problem` / `b3b-results` / `b3c-authority`)
-- `section_id` on `funnel_cta_click` (`hero`, `science`, `great_news`, `included`, `reviews`, `how_it_works`, `final_cta`)
+- `sat_lp_layout` (`full` / `compact`) on all LP events and `quiz_started` / `quiz_lead_submitted`
+- `section_id` on `funnel_cta_click` — full: `hero`, `science`, `great_news`, `included`, `reviews`, `how_it_works`, `final_cta` · compact: `hero`, `sticky_cta`, `final_cta`
 - `utm_campaign`, `utm_source`
 - Device type (mobile vs desktop)
 
@@ -95,14 +97,37 @@ Run [`ad-message-match-qa.md`](./ad-message-match-qa.md) so ad hook = LP hero wi
 
 UTMs must persist LP → `/plan?step=q1` → s5 lead row (`sat_lp_variant` on `quiz_lead_submitted`).
 
+## Layout experiment (`sat-lp-layout`)
+
+**Control:** `full` — six body sections (science → great news → included → reviews → how it works → final CTA).
+
+**Treatment:** `compact` — hero + why + proof (stats on b3b, one review on b3a/b3c) + 2-step how it works + final CTA; **sticky mobile CTA** (`section_id: sticky_cta`).
+
+| Metric | Compare |
+|--------|---------|
+| Primary | `funnel_cta_click` / `funnel_landing_view` by `sat_lp_layout` |
+| Handoff | `quiz_started` or `quiz_step_viewed` where `step = q1` |
+| Secondary | `quiz_lead_submitted`, `quiz_booking_confirmed` |
+| Guardrail | GA4 bounce on `/`; no lead/book regression on compact |
+
+**Sample:** ~200 landing views per layout **or** 14 days. **Scale compact to 100%** only if LP→q1 and lead rate match or beat full.
+
+**Prod QA URLs:**
+
+- `https://illuminairy.com/?lp_layout=compact`
+- `https://illuminairy.com/?lp=b3b&lp_layout=compact` (stats proof block)
+
+See [`b3-lp-analytics-verify.md`](./b3-lp-analytics-verify.md) for Live Events checklist.
+
 ## Prioritized A/B tests (2026-06)
 
 Full hypotheses: [`2026-06-full-funnel-conversion-plan.md`](./2026-06-full-funnel-conversion-plan.md) § CRO / A/B.
 
 | Priority | Test | Primary metric | Sample | Implementation |
 |----------|------|----------------|--------|----------------|
-| **1** | b3a vs b3b vs b3c hero | `funnel_cta_click` / `funnel_landing_view` | ~200 views/arm or 14d | PostHog flag `sat-lp-variant` |
-| **2** | Hero micro-copy on winner (CTA label or checklist order) | CTA + `quiz_lead_submitted` | ~200 views/arm | After test 1 winner only |
+| **1** | `full` vs `compact` layout | LP→q1 + `funnel_cta_click` rate | ~200 views/arm or 14d | PostHog flag `sat-lp-layout` |
+| **2** | b3a vs b3b vs b3c hero (within winning layout) | `funnel_cta_click` / `funnel_landing_view` | ~200 views/arm or 14d | PostHog flag `sat-lp-variant` |
+| **3** | Hero micro-copy on winner (CTA label or checklist order) | CTA + `quiz_lead_submitted` | ~200 views/arm | After test 2 winner only |
 
 **Do not** scale Meta creative to a new hook until LP variant wins and [`ad-message-match-qa.md`](./ad-message-match-qa.md) is re-signed for that pair.
 

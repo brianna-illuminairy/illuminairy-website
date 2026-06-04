@@ -11,7 +11,7 @@ const aspectClass: Record<Aspect, string> = {
 };
 
 type LandingPhotoProps = {
-  /** Shown on placeholder — matches shot list row */
+  /** Filename hint for internal QA builds only */
   slotLabel: string;
   src: string | null | undefined;
   alt: string;
@@ -22,6 +22,8 @@ type LandingPhotoProps = {
   fill?: boolean;
   width?: number;
   height?: number;
+  /** Dev-only dashed placeholder; never on production LP */
+  showPlaceholder?: boolean;
 };
 
 export function LandingPhoto({
@@ -34,11 +36,12 @@ export function LandingPhoto({
   sizes,
   fill,
   width,
-  height
+  height,
+  showPlaceholder = false
 }: LandingPhotoProps) {
-  const phClass = `img-ph ${aspectClass[aspect]}`.trim();
-
   if (!src) {
+    if (!showPlaceholder) return null;
+    const phClass = `img-ph ${aspectClass[aspect]}`.trim();
     return (
       <div
         className={`${phClass} ${className}`.trim()}

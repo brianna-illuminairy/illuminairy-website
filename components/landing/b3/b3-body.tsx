@@ -27,52 +27,47 @@ export function B3Body({ onCta }: BodyProps) {
       <section className="section bg-paper il-section-science">
         <div className="il-premium-container">
           <h2 className="il-section-heading">{landingShared.science.title}</h2>
-          <div className="il-section-split">
+          <div
+            className={
+              landingPhotoSlots.science
+                ? "il-section-split"
+                : "il-section-split il-section-split--copy-only"
+            }
+          >
             <div className="il-section-copy">
               <p className="il-body-copy">{landingShared.science.p1}</p>
               <p className="il-body-copy il-body-copy-spaced">{landingShared.science.p2}</p>
               <InlineCta onClick={() => start("science")} />
             </div>
-            <LandingPhoto
-              slotLabel="lp-science-diagnostic.jpg"
-              src={landingPhotoSlots.science}
-              alt="SAT skill diagnostic"
-              aspect="section"
-              fill
-              sizes="(max-width: 1023px) 100vw, 480px"
-              className="il-photo-section"
-            />
+            {landingPhotoSlots.science ? (
+              <LandingPhoto
+                slotLabel="lp-science-diagnostic.jpg"
+                src={landingPhotoSlots.science}
+                alt="SAT skill diagnostic"
+                aspect="section"
+                fill
+                sizes="(max-width: 1023px) 100vw, 480px"
+                className="il-photo-section"
+              />
+            ) : null}
           </div>
         </div>
       </section>
 
       <section className="section il-section-great-news">
         <div className="il-premium-container">
-          <h2 className="il-section-heading">
-            <span className="muted">{landingShared.greatNews.titleMuted}</span>{" "}
-            {landingShared.greatNews.titleRest}
-          </h2>
+          <h2 className="il-section-heading">{landingShared.greatNews.title}</h2>
           <p className="lead il-lead-spaced">{landingShared.greatNews.lead}</p>
-          <div className="il-section-split il-section-split-media">
-            <div className="il-overlay-wrap">
-              <LandingPhoto
-                slotLabel="lp-great-news-team.jpg"
-                src={landingPhotoSlots.greatNews}
-                alt="Illuminairy tutor team"
-                aspect="tall"
-                fill
-                sizes="(max-width: 1023px) 100vw, 480px"
-                className="il-photo-tall il-photo-great-news"
-              />
-              <div className="il-overlay-badge">{landingShared.greatNews.overlay}</div>
-              <button
-                type="button"
-                className="btn btn-pill il-overlay-pill"
-                onClick={() => start("great_news", landingShared.greatNews.pillCta)}
-              >
-                {landingShared.greatNews.pillCta}
-              </button>
-            </div>
+          <div className="il-section-copy il-what-it-is">
+            <p className="il-body-copy">{landingShared.whatItIs.lead}</p>
+            <p className="il-body-copy il-body-copy-spaced">{landingShared.whatItIs.deliverable}</p>
+            <p className="il-body-copy il-body-copy-spaced muted">{landingShared.whatItIs.after}</p>
+          </div>
+          <div className="il-cta-spaced">
+            <InlineCta
+              label={landingShared.greatNews.pillCta}
+              onClick={() => start("great_news", landingShared.greatNews.pillCta)}
+            />
           </div>
           <p className="disclaimer il-disclaimer-spaced">{landingDisclaimers.greatNews}</p>
         </div>
@@ -81,7 +76,13 @@ export function B3Body({ onCta }: BodyProps) {
       <section className="section bg-cream il-section-included">
         <div className="il-premium-container">
           <h2>{landingShared.includedTitle}</h2>
-          <div className="il-included-layout">
+          <div
+            className={
+              landingPhotoSlots.included
+                ? "il-included-layout"
+                : "il-included-layout il-included-layout--list-only"
+            }
+          >
             {landingPhotoSlots.included ? (
               <div className="il-included-photo">
                 <LandingPhoto
@@ -94,17 +95,7 @@ export function B3Body({ onCta }: BodyProps) {
                   className="il-included-img"
                 />
               </div>
-            ) : (
-              <div className="il-included-placeholder">
-                <LandingPhoto
-                  slotLabel="lp-included-product.jpg"
-                  src={null}
-                  alt=""
-                  aspect="wide"
-                  className="il-included-ph"
-                />
-              </div>
-            )}
+            ) : null}
             <div className="col il-included-list">
               {landingShared.includedItems.map((item) => (
                 <IncludedRow key={item} label={item} />

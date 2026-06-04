@@ -17,6 +17,21 @@ Run **before ad spend** and again **after every LP layout/CSS change**. Pair wit
 
 Optional with UTMs (message-match): see [ad-message-match-qa.md](./ad-message-match-qa.md).
 
+### Layout experiment (`sat-lp-layout`)
+
+| Layout | URL |
+|--------|-----|
+| Full (control) | `/?lp_layout=full` or default |
+| Compact | `/?lp_layout=compact` |
+| Compact + b3b stats | `/?lp=b3b&lp_layout=compact` |
+
+Compact-specific checks (mobile ≤1023px):
+
+- [ ] Sticky CTA appears after scrolling past hero; **≥48px** tap height; does not cover footer links
+- [ ] No great-news / included / reviews carousel sections
+- [ ] 2-step how-it-works list (not 4-column grid)
+- [ ] b3b compact shows **stat row**; b3a/b3c show **single review** card
+
 ---
 
 ## 2. Viewport matrix
@@ -50,7 +65,7 @@ Our layout breakpoint: **desktop ≥ 1024px** (premium grid). Below that = stack
 - [ ] “How it works”: **01–04 badges** when step photos missing; desktop = 4 columns
 - [ ] Reviews: mobile = horizontal scroll; desktop = **3 cards**, no scroll trap
 - [ ] Footer legal links work; College Board disclaimer visible
-- [ ] Hero CTA + inline CTAs → `/quiz?step=q1`
+- [ ] Hero CTA + inline CTAs → `/plan?step=q1` (UTMs preserved)
 
 ### D. Copy spot-check (no fixed timeline)
 
