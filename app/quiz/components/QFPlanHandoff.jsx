@@ -1,8 +1,7 @@
 'use client';
 
-import { useMemo } from 'react';
 import {
-  buildPlanHandoff,
+  PLAN_HANDOFF_CALL_BODY,
   PLAN_HANDOFF_CALL_DURATION,
   PLAN_HANDOFF_CALL_TITLE,
   PLAN_HANDOFF_EYEBROW,
@@ -13,9 +12,7 @@ import {
 /**
  * @param {{ answers?: Record<string, unknown> }} props
  */
-export function QFPlanHandoff({ answers = {} }) {
-  const handoff = useMemo(() => buildPlanHandoff(answers), [answers]);
-
+export function QFPlanHandoff({ answers: _answers = {} }) {
   return (
     <div className="gap-22 qf-plan-handoff">
       <p className="qf-meta qf-plan-handoff__eyebrow">
@@ -41,19 +38,7 @@ export function QFPlanHandoff({ answers = {} }) {
           </span>
         </div>
 
-        <ul className="qf-plan-handoff__list">
-          {handoff.items.map((item) => (
-            <li key={item.title} className="qf-plan-handoff__item">
-              <span className="qf-plan-handoff__item-check" aria-hidden="true">
-                ✓
-              </span>
-              <div className="qf-plan-handoff__item-text">
-                <span className="qf-plan-handoff__item-title">{item.title}</span>
-                <span className="qf-plan-handoff__item-body">{item.body}</span>
-              </div>
-            </li>
-          ))}
-        </ul>
+        <p className="qf-plan-handoff__call-body">{PLAN_HANDOFF_CALL_BODY}</p>
       </div>
     </div>
   );

@@ -27,7 +27,6 @@ import {
 } from '@/lib/calendly-embed';
 import {
   buildThankYouBeforeCallItems,
-  buildThankYouCoverItems,
   formatStrategyCallDateTime,
   S9_SCHEDULING_SUBHEAD,
   strategyCallStartFromCalendlyPayload,
@@ -35,7 +34,6 @@ import {
   STRATEGY_CALL_PREP_ITEMS,
   THANK_YOU_ADD_CALENDAR_CTA,
   THANK_YOU_BEFORE_SECTION,
-  THANK_YOU_COVER_SECTION,
   THANK_YOU_DONE_CTA,
   thankYouHeadline,
   thankYouWhenLine,
@@ -556,10 +554,6 @@ export function QFS9ThankYou({
     ? strategyCallGoogleCalendarUrl(callStartIso)
     : null;
 
-  const coverItems = useMemo(
-    () => buildThankYouCoverItems(answers as Parameters<typeof buildThankYouCoverItems>[0]),
-    [answers]
-  );
   const beforeCallItems = useMemo(
     () => buildThankYouBeforeCallItems(answers as Parameters<typeof buildThankYouBeforeCallItems>[0]),
     [answers]
@@ -597,11 +591,6 @@ export function QFS9ThankYou({
         <p className="qf-lead" style={{ margin: 0 }}>
           {thankYouWhenLine(callWhen)}
         </p>
-
-        <div>
-          <p className="qf-meta qf-thank-you-section-label">{THANK_YOU_COVER_SECTION}</p>
-          <ThankYouChecklist items={coverItems} />
-        </div>
 
         <div>
           <p className="qf-meta qf-thank-you-section-label">{THANK_YOU_BEFORE_SECTION}</p>

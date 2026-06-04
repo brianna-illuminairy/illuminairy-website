@@ -1,5 +1,4 @@
 import { strategyCallStartFromCalendlyWebhook } from "@/lib/crm/calendly-payload";
-import { buildPlanHandoff } from "@/lib/quiz-funnel/plan-handoff-copy";
 import type { QuizAnswersLike } from "@/lib/quiz-funnel/score-path-output";
 import { QUIZ_TESTIMONIALS } from "@/lib/quiz-funnel/testimonials";
 
@@ -36,16 +35,7 @@ export const THANK_YOU_DONE_CTA = "Done";
 
 export const THANK_YOU_ADD_CALENDAR_CTA = "Add To Calendar";
 
-export const THANK_YOU_COVER_SECTION = "What we'll cover";
-
 export const THANK_YOU_BEFORE_SECTION = "Before the call";
-
-export const THANK_YOU_COVER_FASTEST_PATH = "The fastest path to that score";
-
-export const THANK_YOU_COVER_QUESTIONS =
-  "Questions about format, pricing, or scheduling";
-
-export const THANK_YOU_COVER_DIAGNOSTIC = "Next steps for the Skill Diagnostic";
 
 export function thankYouHeadline(parentFirst: string): string {
   if (parentFirst.trim()) {
@@ -58,19 +48,6 @@ export function thankYouWhenLine(callWhen: string | null): string {
   return (
     callWhen ?? "Check your email for the calendar invite with your call time."
   );
-}
-
-export function thankYouGoalRealisticLine(
-  targetLabel: string | null,
-  testDateLabel: string | null
-): string {
-  if (targetLabel && testDateLabel) {
-    return `Whether ${targetLabel} by ${testDateLabel} is realistic`;
-  }
-  if (targetLabel) {
-    return `Whether ${targetLabel} is realistic`;
-  }
-  return "Whether their target score is realistic";
 }
 
 export function thankYouKidInviteLine(kidName: string): string {
@@ -119,17 +96,6 @@ export function formatStrategyCallDateTime(iso?: string | null): string | null {
 /** @deprecated Use thankYouKidInviteLine on the booked screen. */
 export function kidJoinCallLine(kidName: string): string {
   return thankYouKidInviteLine(kidName);
-}
-
-/** What we'll cover — goal line uses quiz answers. */
-export function buildThankYouCoverItems(answers: QuizAnswersLike = {}): string[] {
-  const { targetLabel, testDateLabel } = buildPlanHandoff(answers);
-  return [
-    thankYouGoalRealisticLine(targetLabel, testDateLabel),
-    THANK_YOU_COVER_FASTEST_PATH,
-    THANK_YOU_COVER_QUESTIONS,
-    THANK_YOU_COVER_DIAGNOSTIC,
-  ];
 }
 
 /** Before the call — invite line uses student first name when known. */

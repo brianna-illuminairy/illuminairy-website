@@ -22,14 +22,16 @@ const Q5_HANDOFF_DATE: Record<string, string> = {
 
 export const PLAN_HANDOFF_EYEBROW = "ELIGIBLE FOR THE SKILL DIAGNOSTIC";
 
-export const PLAN_HANDOFF_HEADLINE = "You're approved for the Skill Diagnostic.";
+export const PLAN_HANDOFF_HEADLINE =
+  "Next step to get started with your diagnostic";
 
-export const PLAN_HANDOFF_SUBHEADLINE =
-  "Next we'll identify the 5–6 skills most likely to raise your child's score and finalize their plan.";
+export const PLAN_HANDOFF_SUBHEADLINE = "Reserve your free SAT Plan Review.";
 
 export const PLAN_HANDOFF_CALL_TITLE = "Free SAT Plan Review";
 
 export const PLAN_HANDOFF_CALL_DURATION = "15 min";
+
+export const PLAN_HANDOFF_CALL_BODY = `We'll confirm the goal, answer your questions, and schedule the diagnostic that identifies your child's ${FOCUS_SKILL_COUNT}–6 highest-impact skills.`;
 
 export const PLAN_HANDOFF_CTA = "Reserve My SAT Plan Review";
 
