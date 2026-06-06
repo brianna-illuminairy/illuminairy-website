@@ -1,6 +1,8 @@
 "use client";
 
 import posthog from "posthog-js";
+import { recordClientTouch } from "@/lib/analytics-touch-client";
+import { TouchEvents } from "@/lib/analytics-registry";
 import { getPostHogKey } from "@/lib/posthog";
 import {
   promisedGainFromQuizAnswers,
@@ -51,6 +53,11 @@ export function captureQuizStarted(answers: Record<string, unknown>) {
     ...persistedLpContext(),
     q1: answers.q1
   });
+  recordClientTouch(TouchEvents.quizStarted, {
+    step: "q1",
+    step_index: 0,
+    ...persistedLpContext()
+  });
   trackQuizGaEvent("quiz_started", {
     funnel: "sat_quiz",
     ...persistedLpContext()
@@ -85,6 +92,15 @@ export function captureQuizStep(
   posthog.capture("$pageview", {
     $current_url: `${window.location.origin}${PLAN_BUILDER_PATH}?step=${stepId}`
   });
+  recordClientTouch(TouchEvents.quizStepView, {
+    step: stepId,
+    step_index: stepIndex,
+    sat_lp_variant: props.sat_lp_variant as string | undefined,
+    has_gap_screen: Boolean(options?.hasGapScreen)
+  });
+  if (stepId === "s5") {
+    recordClientTouch(TouchEvents.quizScheduleView, { step: stepId, step_index: stepIndex });
+  }
   trackQuizStepView(stepId, stepIndex);
 }
 

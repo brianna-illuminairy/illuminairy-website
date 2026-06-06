@@ -1,8 +1,11 @@
 import { NextResponse } from "next/server";
 import { upsertLeadFromQuizFunnel, type QuizAnswersPayload } from "@/lib/crm/quiz-leads";
 import type { AttributionSnapshot } from "@/lib/attribution";
+import { buildKlaviyoQuizProperties } from "@/lib/klaviyo-quiz-props";
+import { KlaviyoEvents } from "@/lib/analytics-registry";
 import { upsertKlaviyoProfile, trackKlaviyoEvent } from "@/lib/klaviyo-server";
 import { makeMetaEventId, sendMetaCapiEvent } from "@/lib/meta-capi";
+import { getVisitorById } from "@/lib/crm/visitors";
 
 type Body = QuizAnswersPayload & {
   visitorId?: string;
@@ -70,23 +73,18 @@ export async function POST(request: Request) {
   }
 
   const { first, last } = splitName(name);
+  const visitorRow = body.visitorId
+    ? await getVisitorById(body.visitorId)
+    : null;
   const klaviyoProps = {
-    q1: body.q1 ?? "",
-    q2: body.q2 ?? "",
-    q3: body.q3 ?? "",
-    q4: body.q4 ?? "",
-    q5: body.q5 ?? "",
-    q8: body.q8 ?? "",
-    q9: body.q9 ?? "",
-    q6: (body.q6 ?? []).join(","),
-    q7: (body.q7 ?? []).join(","),
-    target_score: body.q8 ?? "",
-    gpa_band: body.q9 ?? "",
-    promised_gain_pts: result.promisedGain ?? "",
-    showed_gpa_gap: result.showedGpaGap ? "yes" : "no",
-    lead_source: result.leadSource,
-    funnel: "sat_quiz",
-    sat_lp_variant: body.sat_lp_variant ?? ""
+    ...buildKlaviyoQuizProperties({
+      answers: body,
+      attribution: result.attribution,
+      quizFurthestStep:
+        (visitorRow?.quiz_furthest_step as string | undefined) ?? "s5",
+      satLpVariant: body.sat_lp_variant ?? undefined
+    }),
+    lead_source: result.leadSource
   };
 
   void upsertKlaviyoProfile(result.email, {
@@ -95,7 +93,7 @@ export async function POST(request: Request) {
     phone,
     properties: klaviyoProps
   });
-  void trackKlaviyoEvent(result.email, "Quiz Lead Submitted", klaviyoProps);
+  void trackKlaviyoEvent(result.email, KlaviyoEvents.quizLeadSubmitted, klaviyoProps);
 
   const eventId = makeMetaEventId("lead", result.leadId);
   const clientIp =

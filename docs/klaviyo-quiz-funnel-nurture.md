@@ -8,9 +8,25 @@
 
 | Property | When |
 |----------|------|
-| `q1`–`q9`, `promised_gain_pts`, `sat_lp_variant`, `funnel` | `Quiz Lead Submitted` |
+| `q1`–`q9`, `promised_gain_pts`, `showed_gpa_gap`, `weeks_until_test`, `sat_lp_variant`, `funnel` | `Quiz Lead Submitted` |
+| `quiz_furthest_step`, `resume_plan_url` | Lead + nurture CTAs (deep link to `/plan?step=…`) |
+| `utm_campaign`, `utm_source`, `utm_content`, `first_touch_utm_campaign` | Attribution segments |
 | `strategy_call_at` | `Quiz Call Booked` (ISO datetime — use for Flow D delays) |
 | `calendly_uri` | Booking |
+
+Properties are built in [`lib/klaviyo-quiz-props.ts`](../lib/klaviyo-quiz-props.ts).
+
+## Flow B2 — Quiz abandon (pre-lead, email known only)
+
+**Note:** Anonymous abandons live in Supabase `visitors` for Meta retargeting. Klaviyo Flow B2 applies only after you capture email (e.g. partial lead save in a future spec).
+
+**Trigger (manual segment or future cron):** profile has `quiz_furthest_step` ≥ `q3` and has not done `Quiz Lead Submitted`.
+
+**CTA:** `{{ person.resume_plan_url|default:'https://illuminairy.com/plan?step=q1' }}`
+
+**Subject variants:**
+- `weeks_until_test` ≤ 8: "August timeline: pick up your Improvement Plan"
+- `showed_gpa_gap` = yes: "Your child's SAT plan is saved — finish the Plan Builder"
 
 ## Flow B — Lead, no call booked
 

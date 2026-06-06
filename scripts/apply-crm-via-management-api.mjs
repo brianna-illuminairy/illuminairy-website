@@ -21,7 +21,8 @@ if (!token) {
 const migrationFiles = [
   "supabase/migrations/20260518120000_crm_schema.sql",
   "supabase/migrations/20260528190000_quiz_funnel_lead_columns.sql",
-  "supabase/migrations/20260601120000_plan_shares.sql"
+  "supabase/migrations/20260601120000_plan_shares.sql",
+  "supabase/migrations/20260605120000_visitors_analytics.sql"
 ];
 
 function splitStatements(sql) {

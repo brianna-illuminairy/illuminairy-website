@@ -16,6 +16,11 @@ import {
   BOOKING_FEEDBACK,
   parseAvailabilityApiResponse,
 } from '@/lib/quiz-funnel/booking-feedback';
+import {
+  invalidateAvailabilityCache,
+  prefetchCalendlyAvailability,
+  readPrefetchedAvailability,
+} from '@/lib/calendly/availability-prefetch';
 import { captureQuizBookingError } from '@/lib/quiz-funnel/analytics';
 import { sanitizeBookingErrorMessage } from '@/lib/calendly/booking-errors';
 import { QFBookingAlert } from './QFBookingAlert';
@@ -81,13 +86,34 @@ export function QFPlanScheduler({
   const loadAvailability = useCallback(async () => {
     const skipAutoSelect = reloadOptionsRef.current.skipAutoSelect;
     reloadOptionsRef.current.skipAutoSelect = false;
+
+    const prefetched = readPrefetchedAvailability();
+    if (prefetched?.length) {
+      setLoading(false);
+      onLoadingChangeRef.current?.(false);
+      onAvailabilityReadyRef.current?.(true);
+      setDays(prefetched);
+      const firstDay = prefetched[0];
+      setActiveDayKey(firstDay.dateKey);
+      if (!skipAutoSelect) {
+        const firstSlot = firstDay.slots?.[0];
+        if (firstSlot) {
+          onSelectSlotRef.current({
+            ...firstSlot,
+            weekdayShort: firstDay.weekdayShort,
+            dayTitle: firstDay.dayTitle,
+          });
+        }
+      }
+      void prefetchCalendlyAvailability();
+      return;
+    }
+
     setLoading(true);
     onLoadingChangeRef.current?.(true);
     setAvailabilityAlert(null);
     try {
-      const res = await fetch('/api/funnel/calendly-availability?fresh=1', {
-        cache: 'no-store',
-      });
+      const res = await fetch('/api/funnel/calendly-availability');
       const data = await res.json().catch(() => ({}));
       const parsed = parseAvailabilityApiResponse(data, res.status);
 
@@ -279,15 +305,30 @@ export function QFPlanScheduler({
 
       <div className="qf-plan-scheduler__calendar">
         {loading ? (
-          <p className="qf-lead muted" style={{ margin: 0 }} aria-live="polite">
-            Loading open times…
-          </p>
+          <div className="qf-plan-scheduler__skeleton" aria-live="polite" aria-busy="true">
+            <div className="qf-plan-scheduler__skeleton-tabs">
+              {[1, 2, 3, 4].map((n) => (
+                <span key={n} className="qf-plan-scheduler__skeleton-tab" />
+              ))}
+            </div>
+            <div className="qf-plan-scheduler__skeleton-slots">
+              {[1, 2, 3, 4, 5, 6].map((n) => (
+                <span key={n} className="qf-plan-scheduler__skeleton-slot" />
+              ))}
+            </div>
+            <p className="qf-lead muted" style={{ margin: '12px 0 0' }}>
+              Loading open times…
+            </p>
+          </div>
         ) : availabilityAlert ? (
           <QFBookingAlert
             title={availabilityAlert.title}
             message={availabilityAlert.message}
             retryable={availabilityAlert.retryable}
-            onRetry={() => setReloadKey((k) => k + 1)}
+            onRetry={() => {
+              invalidateAvailabilityCache();
+              setReloadKey((k) => k + 1);
+            }}
             retryLabel="Reload times"
           />
         ) : (

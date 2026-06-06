@@ -4,8 +4,6 @@ import { funnelApiError } from "@/lib/calendly/funnel-api-errors";
 import { classifyBookingError } from "@/lib/calendly/booking-errors";
 import { BOOKING_FEEDBACK } from "@/lib/quiz-funnel/booking-feedback";
 
-export const dynamic = "force-dynamic";
-
 export async function GET(request: Request) {
   const fresh =
     new URL(request.url).searchParams.get("fresh") === "1" ||
@@ -30,14 +28,13 @@ export async function GET(request: Request) {
         days: [],
       });
     }
-    return NextResponse.json(
-      { ok: true, days },
-      {
-        headers: {
-          "Cache-Control": "no-store, max-age=0",
-        },
-      }
-    );
+    const cacheHeaders = fresh
+      ? { "Cache-Control": "no-store, max-age=0" }
+      : {
+          "Cache-Control":
+            "public, s-maxage=45, stale-while-revalidate=120, max-age=30"
+        };
+    return NextResponse.json({ ok: true, days }, { headers: cacheHeaders });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Calendly fetch failed";
     const code = classifyBookingError(message, { httpStatus: 502 });

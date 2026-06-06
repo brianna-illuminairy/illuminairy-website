@@ -9,6 +9,7 @@ import {
   weeksUntilQ5Test
 } from "@/lib/quiz-funnel/gains";
 import { appendTouchEvent, getFirstTouchForVisitor, linkVisitorTouches } from "@/lib/crm/touch";
+import { getVisitorById } from "@/lib/crm/visitors";
 
 export type QuizAnswersPayload = {
   q1?: string | null;
@@ -80,6 +81,18 @@ export async function upsertLeadFromQuizFunnel(
     }
   }
 
+  const visitorRow = options.visitorId
+    ? await getVisitorById(options.visitorId)
+    : null;
+  const quizFurthestStep =
+    (visitorRow?.quiz_furthest_step as string | undefined) ?? "s5";
+  const satLpVariantFromVisitor =
+    (visitorRow?.sat_lp_variant as string | undefined) ??
+    answers.sat_lp_variant ??
+    null;
+  const posthogDistinctId =
+    (visitorRow?.posthog_distinct_id as string | undefined) ?? null;
+
   const { first, last } = splitName(answers.parentName ?? "");
   const leadSource = deriveLeadSource(attribution);
   const now = new Date().toISOString();
@@ -137,6 +150,9 @@ export async function upsertLeadFromQuizFunnel(
     referrer: attribution.referrer ?? null,
     lead_source: leadSource,
     first_touch_at: firstTouchAt ?? now,
+    quiz_furthest_step: quizFurthestStep,
+    sat_lp_variant: satLpVariantFromVisitor,
+    posthog_distinct_id: posthogDistinctId,
     updated_at: now
   };
 

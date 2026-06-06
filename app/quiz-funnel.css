@@ -125,7 +125,8 @@
   justify-content: center;
   max-width: min(260px, 76vw);
 }
-.qf-page .qf-brand-lockup svg {
+.qf-page .qf-brand-lockup svg,
+.qf-page .qf-brand-lockup img {
   display: block;
   height: 36px;
   width: auto;
@@ -2413,6 +2414,51 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+}
+.qf-page .qf-plan-scheduler__skeleton-tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.qf-page .qf-plan-scheduler__skeleton-tab {
+  flex: 1 1 0;
+  min-width: 56px;
+  height: 38px;
+  border-radius: 10px;
+  background: linear-gradient(
+    90deg,
+    rgba(18, 26, 43, 0.06) 0%,
+    rgba(18, 26, 43, 0.12) 50%,
+    rgba(18, 26, 43, 0.06) 100%
+  );
+  background-size: 200% 100%;
+  animation: qf-skeleton-shimmer 1.2s ease-in-out infinite;
+}
+.qf-page .qf-plan-scheduler__skeleton-slots {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+@media (min-width: 480px) {
+  .qf-page .qf-plan-scheduler__skeleton-slots {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+.qf-page .qf-plan-scheduler__skeleton-slot {
+  height: 44px;
+  border-radius: 10px;
+  background: linear-gradient(
+    90deg,
+    rgba(18, 26, 43, 0.05) 0%,
+    rgba(18, 26, 43, 0.1) 50%,
+    rgba(18, 26, 43, 0.05) 100%
+  );
+  background-size: 200% 100%;
+  animation: qf-skeleton-shimmer 1.2s ease-in-out infinite;
+}
+@keyframes qf-skeleton-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 .qf-page .qf-plan-scheduler__tabs {
   display: flex;

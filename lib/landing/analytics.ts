@@ -3,7 +3,9 @@
 import posthog from "posthog-js";
 import type { AttributionSnapshot } from "@/lib/attribution";
 import { readSessionAttribution } from "@/lib/attribution";
+import { recordClientTouch } from "@/lib/analytics-touch-client";
 import { AnalyticsEvents } from "@/lib/analytics-events";
+import { TouchEvents } from "@/lib/analytics-registry";
 import { getPostHogKey } from "@/lib/posthog";
 import type { LpVariant } from "@/lib/quiz-funnel/experiments";
 import type { LpLayout } from "@/lib/quiz-funnel/experiments-layout";
@@ -99,6 +101,12 @@ export function trackLandingCtaClick(
   if (getPostHogKey()) {
     posthog.capture(AnalyticsEvents.funnelCtaClick, props);
   }
+  recordClientTouch(TouchEvents.funnelCtaClick, {
+    section_id: sectionId,
+    cta_label: ctaLabel,
+    sat_lp_variant: variant,
+    sat_lp_layout: layout
+  });
   trackQuizGaEvent(AnalyticsEvents.funnelCtaClick, {
     sat_lp_variant: variant,
     sat_lp_layout: layout,

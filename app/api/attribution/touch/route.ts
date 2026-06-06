@@ -3,15 +3,9 @@ import {
   parseAttributionFromSearch,
   type AttributionSnapshot
 } from "@/lib/attribution";
+import { CLIENT_TOUCH_EVENTS, TouchEvents, type TouchEventName } from "@/lib/analytics-registry";
 import { appendTouchEvent } from "@/lib/crm/touch";
-
-const ALLOWED_EVENTS = new Set([
-  "page_view",
-  "attribution_captured",
-  "internal_redirect",
-  "intake_started",
-  "schedule_viewed"
-]);
+import { upsertVisitorFromTouch } from "@/lib/crm/visitors";
 
 type TouchBody = {
   visitorId?: string;
@@ -21,6 +15,7 @@ type TouchBody = {
   referrer?: string;
   leadId?: string;
   attribution?: AttributionSnapshot;
+  payload?: Record<string, unknown>;
 };
 
 export async function POST(request: Request) {
@@ -32,13 +27,13 @@ export async function POST(request: Request) {
   }
 
   const visitorId = body.visitorId?.trim();
-  const eventType = body.eventType?.trim() ?? "page_view";
+  const eventType = body.eventType?.trim() ?? TouchEvents.pageView;
 
   if (!visitorId) {
     return NextResponse.json({ error: "visitorId required." }, { status: 400 });
   }
 
-  if (!ALLOWED_EVENTS.has(eventType)) {
+  if (!CLIENT_TOUCH_EVENTS.has(eventType as TouchEventName)) {
     return NextResponse.json({ error: "Invalid event type." }, { status: 400 });
   }
 
@@ -56,6 +51,32 @@ export async function POST(request: Request) {
     }
   }
 
+  const payload = body.payload ?? {};
+
+  const visitorResult = await upsertVisitorFromTouch({
+    visitor_id: visitorId,
+    event_type: eventType,
+    attribution,
+    payload
+  });
+
+  if (
+    visitorResult.ok &&
+    "attributionReturn" in visitorResult &&
+    visitorResult.attributionReturn
+  ) {
+    await appendTouchEvent({
+      visitor_id: visitorId,
+      event_type: TouchEvents.attributionReturn,
+      path: body.path,
+      full_url: body.fullUrl,
+      referrer: body.referrer ?? request.headers.get("referer") ?? undefined,
+      attribution,
+      payload: { ...payload, note: "return_visit_new_campaign" },
+      source: "client"
+    });
+  }
+
   const result = await appendTouchEvent({
     visitor_id: visitorId,
     lead_id: body.leadId,
@@ -64,6 +85,7 @@ export async function POST(request: Request) {
     full_url: body.fullUrl,
     referrer: body.referrer ?? request.headers.get("referer") ?? undefined,
     attribution,
+    payload,
     source: "client"
   });
 

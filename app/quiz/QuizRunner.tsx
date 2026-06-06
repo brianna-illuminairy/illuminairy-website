@@ -2,6 +2,7 @@
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useQuiz, showGapScreen, type QuizAnswers } from './state';
 import { useQuizAnalytics } from './useQuizAnalytics';
+import { useQuizAvailabilityPrefetch } from './useQuizAvailabilityPrefetch';
 import {
   QFQ1Trigger, QFQ2Stakes, QFQ3TimesTaken, QFQ4RecentScore, QFQDoubts, QFQ5Clock,
   QFQ6Blocker, QFQ7Tried, QFQ8Goal, QFQ9GPA, QFQName,
@@ -88,6 +89,7 @@ export default function QuizRunner() {
   const gapScreen = showGapScreen(answers);
 
   useQuizAnalytics(stepId, currentIdx, answers, gapScreen);
+  useQuizAvailabilityPrefetch(stepId);
 
   function goTo(id: string) {
     router.replace(`/quiz?step=${id}`);

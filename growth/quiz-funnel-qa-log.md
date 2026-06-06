@@ -301,5 +301,27 @@ Outstanding:
 [ ] PostHog flag sat-lp-variant live  [ ] Klaviyo s9 links  [ ] LP em dashes  [ ] process_only concrete number  [ ] q5=2027 runway  [ ] i-gap q4=na+4.0  [ ] reveal hydration mismatch (date/locale)  [ ] mobile LCP
 ```
 
+---
+
+## 2026-06-05 — Analytics stack + logo refresh
+
+### Code shipped
+
+| Area | Result | Notes |
+|------|--------|-------|
+| Logo lockup | ✓ | Owner PNG → `public/brand/logo-horizontal.png` (cropped), OG `logo-square.png`; `IlluminairyLogoV7` uses raster on LP + funnel |
+| Event registry | ✓ | `lib/analytics-registry.ts` |
+| CRM touches | ✓ | Quiz steps + LP CTA → `/api/attribution/touch`; `visitors` migration |
+| Booking perf | ✓ | Prefetch v1/s4/s7, route cache 45s, s5 skeleton UI |
+| Klaviyo props | ✓ | `lib/klaviyo-quiz-props.ts`, resume URL + UTMs on lead |
+| Marketing dashboard | ✓ | `/admin/marketing` + daily cron digest |
+
+### Owner actions
+
+1. Run `npm run crm:migrate:visitors` on prod Supabase (or paste migration SQL)
+2. Set Vercel: `CRON_SECRET`, `MARKETING_DIGEST_EMAIL`
+3. Build Klaviyo Flows B/C/D per updated `docs/klaviyo-quiz-funnel-nurture.md`
+4. PostHog dashboards per `growth/posthog-funnel-dashboard.md`
+
 ### Other findings (tickets, non-blocking)
 - **Reveal hydration mismatch (dev overlay):** React hydration error on `reveal` referencing locale date formatting / `Date.now()` — date/weeks-to-test derived strings render differently SSR vs client. Prod hides the overlay but the mismatch is real. Recommend deferring date-derived strings to client (`useEffect`) or `suppressHydrationWarning`.
