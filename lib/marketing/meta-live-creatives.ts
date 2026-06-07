@@ -42,6 +42,15 @@ export const META_LIVE_CREATIVES: readonly MetaLiveCreative[] = [
     landingPath: "/sat-plan-builder",
     heroHook: "tutor",
     angle: "Before paying for tutoring — what score is realistic?"
+  },
+  {
+    id: "ad4_mom_first_story",
+    utmContent: "ad4_mom_first_story",
+    utmCampaign: "c1_sat_plan_builder_cold_creative_test",
+    utmTerm: "broad_moms_35_58",
+    landingPath: "/sat-plan-builder",
+    heroHook: "gpa",
+    angle: "Testimonial — 3.9 GPA / 1160 SAT, mom panic on time, 1160→1430 outcome"
   }
 ] as const;
 
