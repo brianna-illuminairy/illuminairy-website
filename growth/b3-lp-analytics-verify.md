@@ -26,7 +26,8 @@ Run after deploy. Pair with [posthog-funnel-dashboard.md](./posthog-funnel-dashb
 3. Click hero CTA — `funnel_cta_click` with `section_id: hero`, navigate to **`/plan?step=q-who`** (UTMs preserved).
 4. Compact only: scroll past hero — sticky bar; click — `section_id: sticky_cta`.
 5. Land on q-who — `quiz_started` + `quiz_step_viewed` with `step: q-who`, `sat_lp_variant` + `sat_lp_layout` from localStorage.
-6. After opening questions — person props include `qWho`, `qScoreLower`, `quiz_urgency` (same as answer key `q1`).
+6. Select **My child** — `parent_confirmed` (PostHog + touch) + Meta **`ParentConfirmed`** (once per session). **Me** must **not** fire ParentConfirmed.
+7. After opening questions — person props include `qWho`, `qScoreLower`, `quiz_urgency` (same as answer key `q1`).
 
 ## GA4 (DebugView or Realtime)
 
@@ -35,6 +36,7 @@ Run after deploy. Pair with [posthog-funnel-dashboard.md](./posthog-funnel-dashb
 | `funnel_landing_view` | LP mount |
 | `funnel_cta_click` | Any LP CTA |
 | `quiz_started` | First `q-who` view (once per session) |
+| `parent_confirmed` | q-who **My child** only (once per session) |
 | `quiz_step_view` | Each funnel step (includes `qWho` / `qScoreLower` when set) |
 | `generate_lead` | s5 lead submit |
 | `schedule` | Booking confirmed |
@@ -48,6 +50,7 @@ Params should include `sat_lp_variant`, `sat_lp_layout`, `funnel: sat_quiz`.
 | `PageView` | Route load |
 | `ViewContent` | LP mount (`content_category` = variant) |
 | `FunnelCTA` | LP CTA (`section_id`, `sat_lp_layout`) |
+| **`ParentConfirmed`** | q-who **My child** only — Phase 1 ad optimization |
 | `Lead` | s5 only — **not** on LP (CAPI custom data: `qWho`, `qScoreLower`, `q1`, `q4`, `sat_lp_variant`) |
 | `Schedule` | Booked — **not** on LP |
 

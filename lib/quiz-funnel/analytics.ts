@@ -1,8 +1,14 @@
 "use client";
 
 import posthog from "posthog-js";
+import { readSessionAttribution } from "@/lib/attribution";
 import { recordClientTouch } from "@/lib/analytics-touch-client";
-import { TouchEvents } from "@/lib/analytics-registry";
+import {
+  Ga4Events,
+  MetaEvents,
+  PostHogEvents,
+  TouchEvents
+} from "@/lib/analytics-registry";
 import { getPostHogKey } from "@/lib/posthog";
 import {
   promisedGainFromQuizAnswers,
@@ -75,6 +81,53 @@ function persistedLpContext() {
     sat_lp_variant: readPersistedLpVariant() ?? undefined,
     sat_lp_layout: readPersistedLpLayout() ?? undefined
   };
+}
+
+const PARENT_CONFIRMED_KEY = "illuminairy_parent_confirmed";
+
+/** Meta Phase 1 optimization — parent selected "My child" on q-who (not students). */
+export function captureParentConfirmed(qWho: string) {
+  if (qWho !== "child" || typeof window === "undefined") return;
+
+  try {
+    if (sessionStorage.getItem(PARENT_CONFIRMED_KEY)) return;
+    sessionStorage.setItem(PARENT_CONFIRMED_KEY, "1");
+  } catch {
+    // sessionStorage blocked — still fire once this page load
+  }
+
+  const lpContext = persistedLpContext();
+  const attr = readSessionAttribution();
+  const props = {
+    ...lpContext,
+    qWho: "child" as const,
+    utm_source: attr.utm_source,
+    utm_medium: attr.utm_medium,
+    utm_campaign: attr.utm_campaign,
+    utm_content: attr.utm_content,
+    utm_term: attr.utm_term,
+    landing_page: attr.landing_page
+  };
+
+  recordClientTouch(TouchEvents.parentConfirmed, props);
+  trackQuizGaEvent(Ga4Events.parentConfirmed, {
+    funnel: "sat_quiz",
+    step: QUIZ_ENTRY_STEP,
+    ...props
+  });
+  if (getPostHogKey()) {
+    posthog.capture(PostHogEvents.parentConfirmed, props);
+  }
+  if (window.fbq) {
+    window.fbq("trackCustom", MetaEvents.parentConfirmed, {
+      content_name: "sat_score_path",
+      content_category: lpContext.sat_lp_variant,
+      sat_lp_layout: lpContext.sat_lp_layout,
+      qWho: "child",
+      utm_campaign: attr.utm_campaign,
+      utm_content: attr.utm_content
+    });
+  }
 }
 
 export function captureQuizStarted(answers: Record<string, unknown>) {

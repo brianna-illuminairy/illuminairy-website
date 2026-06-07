@@ -12,6 +12,7 @@ export const TouchEvents = {
   intakeStarted: "intake_started",
   scheduleViewed: "schedule_viewed",
   funnelCtaClick: "funnel_cta_click",
+  parentConfirmed: "parent_confirmed",
   quizStarted: "quiz_started",
   quizStepView: "quiz_step_view",
   quizLeadSubmitted: "quiz_lead_submitted",
@@ -31,6 +32,7 @@ export const CLIENT_TOUCH_EVENTS = new Set<TouchEventName>([
   TouchEvents.intakeStarted,
   TouchEvents.scheduleViewed,
   TouchEvents.funnelCtaClick,
+  TouchEvents.parentConfirmed,
   TouchEvents.quizStarted,
   TouchEvents.quizStepView,
   TouchEvents.quizScheduleView,
@@ -40,6 +42,7 @@ export const CLIENT_TOUCH_EVENTS = new Set<TouchEventName>([
 export const PostHogEvents = {
   funnelLandingView: AnalyticsEvents.funnelLandingView,
   funnelCtaClick: AnalyticsEvents.funnelCtaClick,
+  parentConfirmed: "parent_confirmed",
   quizStarted: "quiz_started",
   quizStepViewed: "quiz_step_viewed",
   quizLeadSubmitted: "quiz_lead_submitted",
@@ -51,6 +54,7 @@ export const PostHogEvents = {
 export const Ga4Events = {
   funnelLandingView: AnalyticsEvents.funnelLandingView,
   funnelCtaClick: AnalyticsEvents.funnelCtaClick,
+  parentConfirmed: "parent_confirmed",
   quizStarted: "quiz_started",
   quizStepView: "quiz_step_view",
   generateLead: "generate_lead",
@@ -63,6 +67,7 @@ export const MetaEvents = {
   pageView: "PageView",
   viewContent: "ViewContent",
   funnelCta: "FunnelCTA",
+  parentConfirmed: "ParentConfirmed",
   lead: "Lead",
   schedule: "Schedule"
 } as const;

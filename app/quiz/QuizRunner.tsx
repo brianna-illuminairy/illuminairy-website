@@ -4,6 +4,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useQuiz, showGapScreen, type QuizAnswers } from './state';
 import { useQuizAnalytics } from './useQuizAnalytics';
 import { useQuizAvailabilityPrefetch } from './useQuizAvailabilityPrefetch';
+import { captureParentConfirmed } from '@/lib/quiz-funnel/analytics';
 import { QUIZ_ENTRY_STEP, resolveGuardedQuizStep } from '@/lib/quiz-funnel/funnel-steps';
 import { isQuizSelfTaker } from '@/lib/quiz-funnel/subject-voice';
 import {
@@ -142,6 +143,9 @@ export default function QuizRunner() {
       for (const [k, v] of Object.entries(extra)) {
         if (v !== undefined) dispatch({ type: 'SET_Q', key: k, value: v as string });
       }
+    }
+    if (key === 'qWho' && value === 'child') {
+      captureParentConfirmed(value);
     }
     const pending = { [key]: value, ...extra };
     setTimeout(() => advanceAfterAnswer(pending), 120);
