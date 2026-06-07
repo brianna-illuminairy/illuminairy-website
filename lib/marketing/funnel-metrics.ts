@@ -1,4 +1,5 @@
 import { getSupabaseAdmin } from "@/lib/supabase/server";
+import { SAT_PARENT_LP_PATHS } from "@/lib/plan-builder-routes";
 
 export type FunnelCounts = {
   lpViews: number;
@@ -32,10 +33,22 @@ function daysAgoIso(days: number) {
   return d.toISOString();
 }
 
+export type CreativeRow = {
+  utmContent: string;
+  utmCampaign: string;
+  pageViews: number;
+  ctaClicks: number;
+  quizStarts: number;
+  leads: number;
+  books: number;
+  ctaRatePct: number | null;
+  leadRatePct: number | null;
+};
+
 async function countTouches(
   eventType: string,
   since: string,
-  extra?: { path?: string }
+  extra?: { path?: string; paths?: readonly string[] }
 ) {
   const supabase = getSupabaseAdmin();
   if (!supabase) return 0;
@@ -48,6 +61,8 @@ async function countTouches(
 
   if (extra?.path) {
     q = q.eq("path", extra.path);
+  } else if (extra?.paths?.length) {
+    q = q.in("path", [...extra.paths]);
   }
 
   const { count, error } = await q;
@@ -58,10 +73,14 @@ async function countTouches(
   return count ?? 0;
 }
 
+async function countLandingPageViews(since: string) {
+  return countTouches("page_view", since, { paths: SAT_PARENT_LP_PATHS });
+}
+
 export async function getFunnelCounts(days = 7): Promise<FunnelCounts> {
   const since = daysAgoIso(days);
   const [lpViews, ctaClicks, quizStarts, leads, books] = await Promise.all([
-    countTouches("page_view", since, { path: "/" }),
+    countLandingPageViews(since),
     countTouches("funnel_cta_click", since),
     countTouches("quiz_started", since),
     countTouches("quiz_lead_submitted", since),
@@ -177,6 +196,89 @@ export async function getCampaignRows(days = 30): Promise<CampaignRow[]> {
           ? Math.round((1000 * c.leads) / c.quizStarts) / 10
           : null
     }))
+    .sort((a, b) => b.pageViews - a.pageViews);
+}
+
+export async function getCreativeRows(days = 30): Promise<CreativeRow[]> {
+  const supabase = getSupabaseAdmin();
+  if (!supabase) return [];
+
+  const since = daysAgoIso(days);
+  const { data, error } = await supabase
+    .from("touch_events")
+    .select("event_type, utm_campaign, utm_content")
+    .gte("created_at", since);
+
+  if (error || !data) return [];
+
+  const map = new Map<
+    string,
+    {
+      utmCampaign: string;
+      pageViews: number;
+      ctaClicks: number;
+      quizStarts: number;
+      leads: number;
+      books: number;
+    }
+  >();
+
+  for (const row of data) {
+    const content = row.utm_content?.trim() || "(none)";
+    const camp = row.utm_campaign?.trim() || "(none)";
+    const key = `${camp}::${content}`;
+    const bucket = map.get(key) ?? {
+      utmCampaign: camp,
+      pageViews: 0,
+      ctaClicks: 0,
+      quizStarts: 0,
+      leads: 0,
+      books: 0
+    };
+    switch (row.event_type) {
+      case "page_view":
+        bucket.pageViews++;
+        break;
+      case "funnel_cta_click":
+        bucket.ctaClicks++;
+        break;
+      case "quiz_started":
+        bucket.quizStarts++;
+        break;
+      case "quiz_lead_submitted":
+        bucket.leads++;
+        break;
+      case "call_booked":
+        bucket.books++;
+        break;
+      default:
+        break;
+    }
+    map.set(key, bucket);
+  }
+
+  return Array.from(map.entries())
+    .map(([key, c]) => {
+      const utmContent = key.split("::")[1] ?? "(none)";
+      return {
+        utmContent,
+        utmCampaign: c.utmCampaign,
+        pageViews: c.pageViews,
+        ctaClicks: c.ctaClicks,
+        quizStarts: c.quizStarts,
+        leads: c.leads,
+        books: c.books,
+        ctaRatePct:
+          c.pageViews > 0
+            ? Math.round((1000 * c.ctaClicks) / c.pageViews) / 10
+            : null,
+        leadRatePct:
+          c.quizStarts > 0
+            ? Math.round((1000 * c.leads) / c.quizStarts) / 10
+            : null
+      };
+    })
+    .filter((row) => row.utmContent !== "(none)" || row.pageViews > 0)
     .sort((a, b) => b.pageViews - a.pageViews);
 }
 

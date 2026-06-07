@@ -57,7 +57,8 @@ function metroHeroHook(metroId: TrustMetroId | null): LandingHeroHook | null {
     raw === "khan" ||
     raw === "nov1" ||
     raw === "gap" ||
-    raw === "june"
+    raw === "june" ||
+    raw === "tutor"
   ) {
     return raw;
   }
@@ -100,6 +101,25 @@ export function metaLandingUrl(input: {
   if (input.hook) params.set("hook", input.hook);
   if (input.metro) params.set("metro", input.metro);
   return `https://illuminairy.com/?${params.toString()}`;
+}
+
+/** Live Meta cold ads — `/sat-plan-builder` path (same LP, distinct reporting). */
+export function metaSatPlanBuilderLandingUrl(input: {
+  hook?: LandingHeroHook;
+  campaign?: string;
+  content: string;
+  term?: string;
+  source?: "facebook" | "meta";
+}): string {
+  const params = new URLSearchParams({
+    utm_source: input.source ?? "meta",
+    utm_medium: "paid_social",
+    utm_campaign: input.campaign ?? "c1_sat_plan_builder_cold_creative_test",
+    utm_content: input.content
+  });
+  if (input.term) params.set("utm_term", input.term);
+  if (input.hook) params.set("hook", input.hook);
+  return `https://illuminairy.com/sat-plan-builder?${params.toString()}`;
 }
 
 export { metroFromSearch, normalizeMetroParam };

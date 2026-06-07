@@ -26,7 +26,12 @@ import {
 const LP_VARIANT: LpVariant = "b3a-problem";
 const LP_LAYOUT: LpLayout = "compact";
 
-export function LandingPage() {
+type LandingPageProps = {
+  /** Pathname for analytics (`/` or `/sat-plan-builder`). */
+  landingPath?: string;
+};
+
+export function LandingPage({ landingPath = "/" }: LandingPageProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const trackedRef = useRef(false);
@@ -47,23 +52,24 @@ export function LandingPage() {
       metro_source: metaContext.metro.source,
       hero_hook: metaContext.heroHook,
       hero_hook_source: metaContext.heroHookSource,
-      traffic_channel: metaContext.isMetaPaid ? ("meta_paid" as const) : ("other" as const)
+      traffic_channel: metaContext.isMetaPaid ? ("meta_paid" as const) : ("other" as const),
+      landing_page: landingPath
     };
     trackLpExperimentExposure(variant, {
       sat_lp_layout: layout,
       ...trackingExtra
     });
     trackLpLayoutExperimentExposure(layout);
-    trackLandingView(variant, layout, trackingExtra);
-  }, [layout, metaContext, variant]);
+    trackLandingView(variant, layout, landingPath, trackingExtra);
+  }, [layout, landingPath, metaContext, variant]);
 
   const handleCta = useCallback(
     (sectionId: LandingSectionId, label?: string) => {
       const ctaLabel = label ?? landingShared.heroCtaLabel;
-      trackLandingCtaClick(variant, layout, sectionId, ctaLabel);
+      trackLandingCtaClick(variant, layout, landingPath, sectionId, ctaLabel);
       router.push(planBuilderEntryFromLanding(search ? `?${search}` : undefined));
     },
-    [layout, router, search, variant]
+    [layout, landingPath, router, search, variant]
   );
 
   return <V4Page search={query} heroHook={metaContext.heroHook} onCta={handleCta} />;

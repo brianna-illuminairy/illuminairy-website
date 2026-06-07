@@ -8,7 +8,8 @@ export type LandingHeroHook =
   | "khan"
   | "nov1"
   | "gap"
-  | "june";
+  | "june"
+  | "tutor";
 
 export function landingHeroHookFromSearch(search: string): LandingHeroHook {
   const normalized = search.startsWith("?") ? search.slice(1) : search;
@@ -19,7 +20,8 @@ export function landingHeroHookFromSearch(search: string): LandingHeroHook {
     raw === "khan" ||
     raw === "nov1" ||
     raw === "gap" ||
-    raw === "june"
+    raw === "june" ||
+    raw === "tutor"
   ) {
     return raw;
   }
@@ -39,7 +41,8 @@ const HOOK_UTM_TOKENS: readonly LandingHeroHook[] = [
   "khan",
   "nov1",
   "gap",
-  "june"
+  "june",
+  "tutor"
 ];
 
 /** Icon / Meta creative slugs — `utm_content=script_1`, etc. */
@@ -52,7 +55,10 @@ const ICON_SCRIPT_HOOKS: Record<string, LandingHeroHook> = {
   script_6: "june",
   angle_a: "gap",
   angle_b: "june",
-  angle_g: "nov1"
+  angle_g: "nov1",
+  /** Meta c1 cold creative slugs — `utm_content` on live ad URLs. */
+  ad2_enough_time: "fall",
+  ad3_before_tutoring: "tutor"
 };
 
 function hookFromToken(token: string): LandingHeroHook | null {
@@ -91,6 +97,8 @@ export function landingHeroHookFromUtmSlug(slug?: string | null): LandingHeroHoo
     return "nov1";
   }
   if (lower.includes("gpa") || lower.includes("ap_class")) return "gpa";
+  if (lower.includes("enough_time")) return "fall";
+  if (lower.includes("before_tutoring") || lower.includes("tutoring")) return "tutor";
 
   return null;
 }
@@ -188,5 +196,13 @@ export const landingHeroHeadlines: Record<LandingHeroHook, LandingHeroHeadline> 
       "See if that's still realistic on their timeline."
     ],
     accentLine: 0
+  },
+  tutor: {
+    lines: [
+      "Before you pay for SAT tutoring.",
+      "Find out what score is realistic",
+      "before their next test."
+    ],
+    accentLine: 1
   }
 };

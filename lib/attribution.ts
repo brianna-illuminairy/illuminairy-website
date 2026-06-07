@@ -47,7 +47,15 @@ export function parseAttributionFromSearch(
 }
 
 export function deriveLeadSource(snap: AttributionSnapshot): string {
-  if (snap.fbclid || snap.utm_source?.toLowerCase().includes("facebook")) {
+  const src = snap.utm_source?.toLowerCase() ?? "";
+  if (
+    snap.fbclid ||
+    src === "facebook" ||
+    src === "fb" ||
+    src === "meta" ||
+    src === "instagram" ||
+    src.includes("facebook")
+  ) {
     return "meta";
   }
   if (snap.gclid || snap.utm_source?.toLowerCase() === "google") {

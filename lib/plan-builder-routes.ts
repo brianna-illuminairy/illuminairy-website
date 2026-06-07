@@ -6,6 +6,17 @@
 
 export const PLAN_BUILDER_PATH = "/plan";
 
+/** Meta ad destination — same LP as `/`, distinct path for reporting. */
+export const SAT_PLAN_BUILDER_LP_PATH = "/sat-plan-builder";
+
+/** Paths that render the SAT parent landing page (hero + trust bar). */
+export const SAT_PARENT_LP_PATHS = ["/", SAT_PLAN_BUILDER_LP_PATH] as const;
+
+export function isSatParentLandingPath(pathname: string | null | undefined): boolean {
+  if (!pathname) return false;
+  return (SAT_PARENT_LP_PATHS as readonly string[]).includes(pathname);
+}
+
 export type PlanBuilderQuery = Record<string, string | undefined>;
 
 /** Build `/plan?step=…&utm_*=…` for ads, email, and in-app navigation. */

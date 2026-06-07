@@ -3,6 +3,7 @@ import { isAdminAuthenticated } from "@/lib/admin-auth";
 import {
   getAnonymousAbandonCount,
   getCampaignRows,
+  getCreativeRows,
   getFunnelCounts,
   getStepDropoffs
 } from "@/lib/marketing/funnel-metrics";
@@ -13,7 +14,7 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
   }
 
-  const [current, previous, steps, campaigns, anonymousAbandon] =
+  const [current, previous, steps, campaigns, creatives, anonymousAbandon] =
     await Promise.all([
       getFunnelCounts(7),
       getFunnelCounts(14).then(async (twoWeek) => {
@@ -28,6 +29,7 @@ export async function GET() {
       }),
       getStepDropoffs(7),
       getCampaignRows(30),
+      getCreativeRows(30),
       getAnonymousAbandonCount(7)
     ]);
 
@@ -41,6 +43,7 @@ export async function GET() {
     leaks,
     stepDropoffs: steps,
     campaigns: campaigns.slice(0, 20),
+    creatives: creatives.slice(0, 30),
     anonymousAbandon
   });
 }

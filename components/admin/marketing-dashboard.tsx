@@ -32,6 +32,16 @@ type MarketingPayload = {
     ctaRatePct: number | null;
     leadRatePct: number | null;
   }>;
+  creatives: Array<{
+    utmContent: string;
+    utmCampaign: string;
+    pageViews: number;
+    ctaClicks: number;
+    leads: number;
+    books: number;
+    ctaRatePct: number | null;
+    leadRatePct: number | null;
+  }>;
   anonymousAbandon: number;
 };
 
@@ -188,6 +198,55 @@ export function MarketingDashboard() {
                   </td>
                 </tr>
               ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section className="rounded-xl border border-border bg-surface p-5">
+        <h2 className="text-lg font-semibold">Creative performance (utm_content, 30d)</h2>
+        <div className="mt-3 overflow-x-auto">
+          <table className="w-full min-w-[560px] text-left text-sm">
+            <thead>
+              <tr className="border-b border-border text-muted-foreground">
+                <th className="py-2 pr-3 font-medium">Content</th>
+                <th className="py-2 pr-3 font-medium">Campaign</th>
+                <th className="py-2 pr-3 font-medium">Views</th>
+                <th className="py-2 pr-3 font-medium">CTA rate</th>
+                <th className="py-2 pr-3 font-medium">Leads</th>
+                <th className="py-2 font-medium">Lead rate</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.creatives.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="py-4 text-muted-foreground">
+                    No utm_content traffic yet.
+                  </td>
+                </tr>
+              ) : (
+                data.creatives.map((c) => (
+                  <tr
+                    key={`${c.utmCampaign}:${c.utmContent}`}
+                    className="border-b border-border/60"
+                  >
+                    <td className="max-w-[160px] truncate py-2 pr-3 font-mono text-xs">
+                      {c.utmContent}
+                    </td>
+                    <td className="max-w-[160px] truncate py-2 pr-3 font-mono text-xs">
+                      {c.utmCampaign}
+                    </td>
+                    <td className="py-2 pr-3 tabular-nums">{c.pageViews}</td>
+                    <td className="py-2 pr-3 tabular-nums">
+                      {c.ctaRatePct !== null ? `${c.ctaRatePct}%` : "—"}
+                    </td>
+                    <td className="py-2 pr-3 tabular-nums">{c.leads}</td>
+                    <td className="py-2 tabular-nums">
+                      {c.leadRatePct !== null ? `${c.leadRatePct}%` : "—"}
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
