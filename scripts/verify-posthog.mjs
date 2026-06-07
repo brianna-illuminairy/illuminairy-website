@@ -81,6 +81,19 @@ try {
         sr.sampleRate == null ? "100% (no sampling)" : String(sr.sampleRate);
       console.log(`✓ Session recordings active (${rate})`);
     }
+
+    const perf = decide.capturePerformance;
+    if (perf?.web_vitals) {
+      console.log("✓ Web vitals capture enabled");
+    } else {
+      console.log("⚠ Web vitals not enabled in decide (check capture_performance in instrumentation-client.ts)");
+    }
+
+    if (decide.autocaptureExceptions) {
+      console.log("✓ Exception autocapture enabled (project settings)");
+    } else {
+      console.log("⚠ Exception autocapture off — enable in PostHog → Error tracking");
+    }
   }
 
   console.log("\nPostHog is working. Open app.posthog.com → Activity → Live events");

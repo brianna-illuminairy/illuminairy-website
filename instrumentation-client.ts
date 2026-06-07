@@ -14,6 +14,9 @@ if (key) {
     person_profiles: "identified_only",
     capture_pageview: false,
     capture_pageleave: true,
+    capture_performance: {
+      web_vitals: true
+    },
     disable_session_recording: false,
     session_recording: {
       maskAllInputs: true,

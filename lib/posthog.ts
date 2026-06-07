@@ -6,6 +6,7 @@ export function getPostHogKey() {
   return (
     process.env.NEXT_PUBLIC_POSTHOG_KEY ??
     process.env.NEXT_PUBLIC_POSTHOG_TOKEN ??
+    process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN ??
     ""
   );
 }

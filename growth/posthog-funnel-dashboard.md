@@ -163,3 +163,18 @@ Recordings help debug LP → quiz drop-off and booking friction. Traffic goes th
 - Do not disable network payload capture at the project level (`recordBody: false` turns off replay in `/decide`).
 
 Break down replays by `utm_campaign`, `utm_content`, and funnel events linked from the recording sidebar.
+
+## Error tracking
+
+Client: `instrumentation-client.ts` + `app/error.tsx` + `app/global-error.tsx` call `posthog.captureException`. Unhandled browser errors autocapture when enabled in PostHog project settings.
+
+Server: `instrumentation.ts` → `onRequestError` → `lib/posthog-server.ts` (`posthog-node`).
+
+Source maps (readable stacks in prod): set on **Vercel Production** only:
+
+- `POSTHOG_PERSONAL_API_KEY` (phx_, error tracking write)
+- `POSTHOG_PROJECT_ID=428901`
+
+`next.config.mjs` wraps `@posthog/nextjs-config` when both are present at build time. Verify: PostHog → Error tracking → `$exception` events after a test error.
+
+Web vitals: `capture_performance.web_vitals: true` in `instrumentation-client.ts` → `$web_vitals` events.

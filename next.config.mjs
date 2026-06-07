@@ -1,10 +1,19 @@
 import path from "path";
 import { fileURLToPath } from "url";
+import { withPostHogConfig } from "@posthog/nextjs-config";
 
 const projectRoot = path.dirname(fileURLToPath(import.meta.url));
 
+const personalApiKey =
+  process.env.POSTHOG_PERSONAL_API_KEY ?? process.env.POSTHOG_API_KEY ?? "";
+const posthogProjectId = process.env.POSTHOG_PROJECT_ID ?? "";
+const posthogSourcemapsEnabled =
+  Boolean(personalApiKey && posthogProjectId) &&
+  process.env.NODE_ENV === "production";
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  productionBrowserSourceMaps: posthogSourcemapsEnabled,
   turbopack: {
     root: projectRoot
   },
@@ -113,4 +122,19 @@ const nextConfig = {
   }
 };
 
-export default nextConfig;
+export default posthogSourcemapsEnabled
+  ? withPostHogConfig(nextConfig, {
+      personalApiKey,
+      projectId: posthogProjectId,
+      host: process.env.POSTHOG_API_HOST ?? "https://us.posthog.com",
+      sourcemaps: {
+        enabled: true,
+        releaseName: "illuminairy-site",
+        releaseVersion:
+          process.env.VERCEL_GIT_COMMIT_SHA ??
+          process.env.GITHUB_SHA ??
+          "local",
+        deleteAfterUpload: true
+      }
+    })
+  : nextConfig;
