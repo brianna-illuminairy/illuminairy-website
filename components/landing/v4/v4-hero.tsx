@@ -1,8 +1,7 @@
 "use client";
 
 import {
-  landingHeroHeadlines,
-  landingHeroHookFromSearch,
+  resolveLandingHeroHeadlineV4,
   type LandingHeroHook
 } from "@/lib/landing/hero-hooks";
 import { v4Authority, v4Cta, v4Headline } from "./v4-content";
@@ -13,21 +12,14 @@ type V4HeroProps = {
   search?: string;
 };
 
-/** Hook-aware headline: ad message-match overrides the v4 default. */
+/** Ad hook headlines are two lines only — same fold layout as the owner v4 default. */
 function useHeadlineLines(hook: LandingHeroHook | undefined, search?: string): {
   lines: readonly string[];
   accentLine: number;
 } {
-  if (hook && hook !== "default") {
-    const h = landingHeroHeadlines[hook];
-    return { lines: h.lines, accentLine: h.accentLine };
-  }
-  if (search) {
-    const fromSearch = landingHeroHookFromSearch(search);
-    if (fromSearch !== "default") {
-      const h = landingHeroHeadlines[fromSearch];
-      return { lines: h.lines, accentLine: h.accentLine };
-    }
+  const fromHook = resolveLandingHeroHeadlineV4(hook, search);
+  if (fromHook) {
+    return { lines: fromHook.lines, accentLine: fromHook.accentLine };
   }
   return { lines: v4Headline.lines, accentLine: v4Headline.accentLine };
 }

@@ -210,3 +210,59 @@ export const landingHeroHeadlines: Record<LandingHeroHook, LandingHeroHeadline> 
     accentLine: 1
   }
 };
+
+/** v4 LP only — two lines max (owner fold-tested layout). `default` hook uses v4Headline. */
+export type LandingHeroHeadlineV4 = {
+  lines: readonly [string, string];
+  accentLine: 0 | 1;
+};
+
+export const landingHeroHeadlinesV4: Record<
+  Exclude<LandingHeroHook, "default">,
+  LandingHeroHeadlineV4
+> = {
+  gpa: {
+    lines: ["Strong GPA.", "So why a low SAT score?"],
+    accentLine: 1
+  },
+  gap: {
+    lines: ["SAT in the 1100s or 1200s?", "What's realistic before their fall test?"],
+    accentLine: 0
+  },
+  fall: {
+    lines: ["Running out of time?", "See if the score can still move."],
+    accentLine: 0
+  },
+  june: {
+    lines: ["June SAT score too low?", "What's realistic this fall?"],
+    accentLine: 0
+  },
+  khan: {
+    lines: ["Self-study didn't move the score.", "Find out what to focus on instead."],
+    accentLine: 0
+  },
+  nov1: {
+    lines: ["Early applications soon.", "Is 150–200+ points still realistic?"],
+    accentLine: 1
+  },
+  tutor: {
+    lines: ["Before SAT tutoring.", "Find out what's realistic first."],
+    accentLine: 1
+  }
+};
+
+export function resolveLandingHeroHeadlineV4(
+  hook: LandingHeroHook | undefined,
+  search?: string
+): LandingHeroHeadlineV4 | null {
+  if (hook && hook !== "default") {
+    return landingHeroHeadlinesV4[hook];
+  }
+  if (search) {
+    const fromSearch = landingHeroHookFromSearch(search);
+    if (fromSearch !== "default") {
+      return landingHeroHeadlinesV4[fromSearch];
+    }
+  }
+  return null;
+}

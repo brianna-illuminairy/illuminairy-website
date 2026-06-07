@@ -9,7 +9,7 @@
  * `+182 avg pts` is backed (n=95).
  */
 
-/** Default v4 hero headline — gap-tension (used when no ad hook is active). */
+/** Default v4 hero headline — two lines, fold-tested (shown when no ad hook). */
 export const v4Headline = {
   lines: ["Your child has good grades.", "So why a low SAT score?"],
   /** index of the line rendered in the accent color */

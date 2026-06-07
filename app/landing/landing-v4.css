@@ -61,6 +61,7 @@
 /* v4 single-column hero — left-aligned, capped width */
 .lp-hero-single { max-width: 620px; }
 .lp-hero-single .lp-h1 { font-size: clamp(26px, 6.2vw, 46px); line-height: 1.05; text-wrap: balance; }
+/* v4 H1 is designed for exactly two lines — keeps CTA above fold in short viewports */
 .lp-hero-single .lp-h1 .line { display: block; }
 .lp-hero-single .lp-authority-line { margin-top: 18px; }
 .lp-hero-single .lp-cta-card { margin-top: 24px; }
