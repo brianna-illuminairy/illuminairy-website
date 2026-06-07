@@ -59,6 +59,30 @@ try {
   }
   console.log("✓ PostHog key found locally");
   console.log(`✓ Live site proxy OK (${siteUrl}/ia/...)`);
+
+  const decideRes = await fetch(`${siteUrl}/ia/decide?v=3`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ api_key: key, distinct_id: "posthog-verify-script" })
+  });
+  if (decideRes.ok) {
+    const decide = await decideRes.json();
+    const sr = decide.sessionRecording;
+    if (sr === false || sr == null) {
+      console.log("⚠ Session recordings not active (decide returned false).");
+      console.log(
+        "  Run: POSTHOG_PERSONAL_API_KEY=phx_... npm run posthog:enable-recordings"
+      );
+      console.log(
+        "  Or PostHog → Project settings → Session replay → Enable."
+      );
+    } else {
+      const rate =
+        sr.sampleRate == null ? "100% (no sampling)" : String(sr.sampleRate);
+      console.log(`✓ Session recordings active (${rate})`);
+    }
+  }
+
   console.log("\nPostHog is working. Open app.posthog.com → Activity → Live events");
   console.log("when you want to see visitors (no browser tools needed).\n");
 } catch (err) {

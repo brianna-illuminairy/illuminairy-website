@@ -12,6 +12,7 @@
     "deploy:prod": "npx vercel deploy --prod",
     "release": "npm run env:sync && npm run deploy:prod",
     "posthog:verify": "node scripts/verify-posthog.mjs",
+    "posthog:enable-recordings": "node scripts/enable-posthog-session-recording.mjs",
     "cc:analyze-blog": "node scripts/analyze-curious-cardinals-blog.mjs",
     "cc:fetch-typeforms": "node scripts/fetch-cc-typeforms.mjs",
     "typeform:mentor:build": "node scripts/typeform/build-mentor-application.mjs",

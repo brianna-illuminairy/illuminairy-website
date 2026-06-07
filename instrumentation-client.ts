@@ -14,6 +14,15 @@ if (key) {
     person_profiles: "identified_only",
     capture_pageview: false,
     capture_pageleave: true,
+    disable_session_recording: false,
+    session_recording: {
+      maskAllInputs: true,
+      maskInputOptions: {
+        password: true,
+        email: true,
+        tel: true
+      }
+    },
     defaults: "2026-01-30"
   });
 }

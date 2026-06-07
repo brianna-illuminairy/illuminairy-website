@@ -21,8 +21,8 @@ Create one dashboard: **SAT LP → Quiz → Lead → Book**
 
 1. `funnel_landing_view`
 2. `funnel_cta_click`
-3. `quiz_started` (once on first `q1` — distinct from step views)
-4. `quiz_step_viewed` (filter `step = q1` for LP → quiz handoff)
+3. `quiz_started` (once on first `q-who` — distinct from step views)
+4. `quiz_step_viewed` (filter `step = q-who` for LP → quiz handoff; legacy `step = q1` = urgency Q3)
 5. `quiz_lead_submitted`
 6. `quiz_booking_confirmed`
 7. `quiz_thank_you_viewed` (`booked` step)
@@ -54,13 +54,13 @@ Break down `quiz_booking_error` by `error_code`: `invalid_phone`, `lead_save_fai
 
 ### Lead submit props
 
-`quiz_lead_submitted` includes `q1–q9`, `sat_lp_variant`, `has_gap_screen`, `showed_gpa_gap`, `promised_gain_pts`, `weeks_until_test`, `booking_source: client`.
+`quiz_lead_submitted` includes `qWho`, `qScoreLower`, `q1–q9`, `sat_lp_variant`, `has_gap_screen`, `showed_gpa_gap`, `promised_gain_pts`, `weeks_until_test`, `booking_source: client`. CRM `quiz_trigger` = urgency answer (`q1`: score-low, test-soon, etc.).
 
 ## Primary experiment metric
 
 - **CTA rate:** `funnel_cta_click` / `funnel_landing_view`
 - **Sample:** ~200 views per arm **or** 14 days — whichever comes first
-- **Secondary:** LP → q1 rate, lead rate, book rate by `sat_lp_variant`
+- **Secondary:** LP → q-who rate, lead rate, book rate by `sat_lp_variant`
 
 ## Breakdowns
 
@@ -95,7 +95,7 @@ Run [`ad-message-match-qa.md`](./ad-message-match-qa.md) so ad hook = LP hero wi
 | b3b | `sat-lp-b3b-results` | +182 points. On a focused path. |
 | b3c | `sat-lp-b3c-authority` | improvement path · 250k+ scores |
 
-UTMs must persist LP → `/plan?step=q1` → s5 lead row (`sat_lp_variant` on `quiz_lead_submitted`).
+UTMs must persist LP → `/plan?step=q-who` → s5 lead row (`sat_lp_variant` on `quiz_lead_submitted`).
 
 ## Layout experiment (`sat-lp-layout`)
 
@@ -106,11 +106,11 @@ UTMs must persist LP → `/plan?step=q1` → s5 lead row (`sat_lp_variant` on `q
 | Metric | Compare |
 |--------|---------|
 | Primary | `funnel_cta_click` / `funnel_landing_view` by `sat_lp_layout` |
-| Handoff | `quiz_started` or `quiz_step_viewed` where `step = q1` |
+| Handoff | `quiz_started` or `quiz_step_viewed` where `step = q-who` |
 | Secondary | `quiz_lead_submitted`, `quiz_booking_confirmed` |
 | Guardrail | GA4 bounce on `/`; no lead/book regression on compact |
 
-**Sample:** ~200 landing views per layout **or** 14 days. **Scale compact to 100%** only if LP→q1 and lead rate match or beat full.
+**Sample:** ~200 landing views per layout **or** 14 days. **Scale compact to 100%** only if LP→q-who and lead rate match or beat full.
 
 **Prod QA URLs:**
 
@@ -125,7 +125,7 @@ Full hypotheses: [`2026-06-full-funnel-conversion-plan.md`](./2026-06-full-funne
 
 | Priority | Test | Primary metric | Sample | Implementation |
 |----------|------|----------------|--------|----------------|
-| **1** | `full` vs `compact` layout | LP→q1 + `funnel_cta_click` rate | ~200 views/arm or 14d | PostHog flag `sat-lp-layout` |
+| **1** | `full` vs `compact` layout | LP→q-who + `funnel_cta_click` rate | ~200 views/arm or 14d | PostHog flag `sat-lp-layout` |
 | **2** | b3a vs b3b vs b3c hero (within winning layout) | `funnel_cta_click` / `funnel_landing_view` | ~200 views/arm or 14d | PostHog flag `sat-lp-variant` |
 | **3** | Hero micro-copy on winner (CTA label or checklist order) | CTA + `quiz_lead_submitted` | ~200 views/arm | After test 2 winner only |
 
@@ -140,3 +140,26 @@ On `quiz_lead_submitted` and `funnel_cta_click`, always break down by:
 - `utm_source` (e.g. `icon`, `facebook`)
 
 Icon traffic (June 2026, fall retakers): `utm_campaign=fall_sat_retake` + `utm_content=script_1` … `script_6` — compare completion to LP arms.
+
+## Session replay
+
+Recordings help debug LP → quiz drop-off and booking friction. Traffic goes through the `/ia/` reverse proxy (same as events).
+
+### Enable (one time)
+
+1. PostHog → **Settings** → **Personal API keys** → create key with project access (`phx_...`).
+2. From repo root:
+   ```bash
+   POSTHOG_PERSONAL_API_KEY=phx_... npm run posthog:enable-recordings
+   ```
+   Or in PostHog UI: **Project settings** → **Session replay** → **Enable**.
+3. Deploy (client init lives in `instrumentation-client.ts`).
+4. Verify: `npm run posthog:verify` should report `sampleRate: 1` (not `null`).
+5. Browse `https://illuminairy.com`, then **Session replay** → **Recent recordings**.
+
+### Privacy defaults
+
+- All form inputs masked (email, phone, password) in project settings and client init.
+- Do not disable network payload capture at the project level (`recordBody: false` turns off replay in `/decide`).
+
+Break down replays by `utm_campaign`, `utm_content`, and funnel events linked from the recording sidebar.
