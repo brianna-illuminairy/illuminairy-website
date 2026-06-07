@@ -12,12 +12,42 @@ import {
 import { readPersistedLpLayout } from "@/lib/landing/layout-storage";
 import { readPersistedLpVariant } from "@/lib/landing/variant-storage";
 import { PLAN_BUILDER_PATH } from "@/lib/plan-builder-routes";
+import { QUIZ_ENTRY_STEP } from "@/lib/quiz-funnel/funnel-steps";
 
 declare global {
   interface Window {
     gtag?: (...args: unknown[]) => void;
     fbq?: (...args: unknown[]) => void;
   }
+}
+
+/** Shared opening + urgency props for PostHog, GA4, and CRM touches. */
+function quizOpeningProps(answers: Record<string, unknown>) {
+  const qWho =
+    typeof answers.qWho === "string" ? answers.qWho : undefined;
+  const qScoreLower =
+    typeof answers.qScoreLower === "string" ? answers.qScoreLower : undefined;
+  const q1 = typeof answers.q1 === "string" ? answers.q1 : undefined;
+  return {
+    qWho,
+    qScoreLower,
+    q1,
+    quiz_urgency: q1,
+    quiz_is_self_taker: qWho === "self"
+  };
+}
+
+function syncQuizPersonProperties(answers: Record<string, unknown>) {
+  if (!getPostHogKey()) return;
+  const opening = quizOpeningProps(answers);
+  if (!opening.qWho && !opening.qScoreLower && !opening.q1) return;
+  posthog.setPersonProperties({
+    qWho: opening.qWho,
+    qScoreLower: opening.qScoreLower,
+    quiz_trigger: opening.q1,
+    quiz_urgency: opening.q1,
+    quiz_is_self_taker: opening.quiz_is_self_taker
+  });
 }
 
 export function trackQuizGaEvent(
@@ -49,19 +79,23 @@ function persistedLpContext() {
 
 export function captureQuizStarted(answers: Record<string, unknown>) {
   const lpContext = persistedLpContext();
+  const opening = quizOpeningProps(answers);
   recordClientTouch(TouchEvents.quizStarted, {
-    step: "q1",
+    step: QUIZ_ENTRY_STEP,
     step_index: 0,
-    ...lpContext
+    ...lpContext,
+    ...opening
   });
   trackQuizGaEvent("quiz_started", {
     funnel: "sat_quiz",
-    ...lpContext
+    step: QUIZ_ENTRY_STEP,
+    ...lpContext,
+    ...opening
   });
   if (!getPostHogKey()) return;
   posthog.capture("quiz_started", {
     ...lpContext,
-    q1: answers.q1
+    ...opening
   });
 }
 
@@ -71,6 +105,7 @@ export function captureQuizStep(
   answers: Record<string, unknown>,
   options?: { hasGapScreen?: boolean }
 ) {
+  const opening = quizOpeningProps(answers);
   const props = {
     ...persistedLpContext(),
     step: stepId,
@@ -78,7 +113,7 @@ export function captureQuizStep(
     has_gap_screen: Boolean(options?.hasGapScreen),
     viewport_width:
       typeof window !== "undefined" ? window.innerWidth : undefined,
-    q1: answers.q1,
+    ...opening,
     q2: answers.q2,
     q3: answers.q3,
     q4: answers.q4,
@@ -92,9 +127,14 @@ export function captureQuizStep(
     step: stepId,
     step_index: stepIndex,
     sat_lp_variant: props.sat_lp_variant as string | undefined,
-    has_gap_screen: Boolean(options?.hasGapScreen)
+    has_gap_screen: Boolean(options?.hasGapScreen),
+    ...opening
   });
-  trackQuizStepView(stepId, stepIndex);
+  trackQuizGaEvent("quiz_step_view", {
+    step: stepId,
+    step_index: stepIndex,
+    ...opening
+  });
   if (stepId === "s5") {
     recordClientTouch(TouchEvents.quizScheduleView, {
       step: stepId,
@@ -102,6 +142,7 @@ export function captureQuizStep(
     });
   }
   if (!getPostHogKey()) return;
+  syncQuizPersonProperties(answers);
   posthog.capture("quiz_step_viewed", props);
   posthog.capture("$pageview", {
     $current_url: `${window.location.origin}${PLAN_BUILDER_PATH}?step=${stepId}`
@@ -110,11 +151,14 @@ export function captureQuizStep(
 
 export function identifyQuizLead(email: string, answers: Record<string, unknown>) {
   if (!getPostHogKey()) return;
+  const opening = quizOpeningProps(answers);
   posthog.identify(email, {
     email,
     name: typeof answers.parentName === "string" ? answers.parentName : undefined,
     phone: typeof answers.parentPhone === "string" ? answers.parentPhone : undefined,
-    kid_first_name: typeof answers.kidName === "string" ? answers.kidName : undefined
+    kid_first_name: typeof answers.kidName === "string" ? answers.kidName : undefined,
+    ...opening,
+    quiz_trigger: opening.q1
   });
 }
 
@@ -127,8 +171,9 @@ export function captureQuizLeadSubmitted(
   const q5 = answers.q5 as string | undefined;
   const q8 = answers.q8 as string | undefined;
   const promisedGain = promisedGainFromQuizAnswers(q4, q5, q8);
+  const opening = quizOpeningProps(answers);
   const props = {
-    q1: answers.q1,
+    ...opening,
     q2: answers.q2,
     q3: answers.q3,
     q4: answers.q4,

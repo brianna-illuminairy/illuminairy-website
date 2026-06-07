@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import { captureQuizStarted, captureQuizStep } from '@/lib/quiz-funnel/analytics';
+import { QUIZ_ENTRY_STEP } from '@/lib/quiz-funnel/funnel-steps';
 import type { QuizAnswers } from './state';
 
 const QUIZ_STARTED_KEY = 'illuminairy_quiz_started';
@@ -19,7 +20,7 @@ export function useQuizAnalytics(
     if (lastStep.current === stepId) return;
     lastStep.current = stepId;
 
-    if (stepId === 'q1' && typeof window !== 'undefined') {
+    if (stepId === QUIZ_ENTRY_STEP && typeof window !== 'undefined') {
       try {
         if (!sessionStorage.getItem(QUIZ_STARTED_KEY)) {
           sessionStorage.setItem(QUIZ_STARTED_KEY, '1');

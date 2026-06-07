@@ -1,5 +1,7 @@
 /** q2 stakes — positive framing (single source for Q2, i1, reveal, booking). */
 
+import { isQuizSelfTaker } from "@/lib/quiz-funnel/subject-voice";
+
 export const Q2_STAKES_QUESTION = "What would a higher SAT score help them achieve?";
 
 export type StakesId = "top-choice" | "merit" | "selective" | "app-rounds" | "early";
@@ -20,9 +22,25 @@ export const STAKES_OUTCOME: Record<string, string> = {
   early: "they're ready for early application rounds",
 };
 
+const STAKES_OUTCOME_SELF: Record<string, string> = {
+  "top-choice": "you can get into your top-choice school",
+  merit: "you can qualify for merit scholarships",
+  selective: "you stay competitive at selective colleges",
+  "app-rounds": "you're ready for early application rounds",
+  early: "you're ready for early application rounds",
+};
+
 /** Plan reveal / booking — verb phrase after "help them" */
 export const STAKES_GOAL_PHRASE: Record<string, string> = {
   "top-choice": "get into their top-choice school",
+  merit: "qualify for merit scholarships",
+  selective: "stay competitive at selective colleges",
+  "app-rounds": "be ready for early application rounds",
+  early: "be ready for early application rounds",
+};
+
+const STAKES_GOAL_PHRASE_SELF: Record<string, string> = {
+  "top-choice": "get into your top-choice school",
   merit: "qualify for merit scholarships",
   selective: "stay competitive at selective colleges",
   "app-rounds": "be ready for early application rounds",
@@ -38,12 +56,14 @@ export const STAKES_GOAL_LABEL: Record<string, string> = {
   early: "Early application rounds",
 };
 
-export function stakesOutcome(q2?: string): string {
-  return STAKES_OUTCOME[q2 ?? ""] ?? STAKES_OUTCOME["top-choice"];
+export function stakesOutcome(q2?: string, qWho?: string): string {
+  const map = isQuizSelfTaker(qWho) ? STAKES_OUTCOME_SELF : STAKES_OUTCOME;
+  return map[q2 ?? ""] ?? map["top-choice"];
 }
 
-export function stakesGoalPhrase(q2?: string): string {
-  return STAKES_GOAL_PHRASE[q2 ?? ""] ?? STAKES_GOAL_PHRASE["top-choice"];
+export function stakesGoalPhrase(q2?: string, qWho?: string): string {
+  const map = isQuizSelfTaker(qWho) ? STAKES_GOAL_PHRASE_SELF : STAKES_GOAL_PHRASE;
+  return map[q2 ?? ""] ?? map["top-choice"];
 }
 
 export function stakesGoalLabel(q2?: string): string {
@@ -75,7 +95,7 @@ export function stakesSubheadOpener(q2?: string): string {
 }
 
 /** Shorter prefix for assessment verdict (avoids repeating full subhead). */
-export function stakesVerdictPrefix(q2?: string): string {
-  const goal = stakesGoalPhrase(q2);
+export function stakesVerdictPrefix(q2?: string, qWho?: string): string {
+  const goal = stakesGoalPhrase(q2, qWho);
   return `For students working toward ${goal}, `;
 }

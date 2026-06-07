@@ -72,8 +72,8 @@ export function educationHitQ5Timing(): EducationSlideHit {
 }
 
 /** q8 = tbd — score competitiveness */
-export function educationHitQ8Scores(q2?: string): EducationSlideHit {
-  const goal = stakesGoalPhrase(q2);
+export function educationHitQ8Scores(q2?: string, qWho?: string): EducationSlideHit {
+  const goal = stakesGoalPhrase(q2, qWho);
   return {
     type: "surprise",
     parts: [

@@ -12,6 +12,8 @@ import {
 const STORAGE_KEY = 'qf_answers';
 
 export type QuizAnswers = {
+  qWho?: string;
+  qScoreLower?: string;
   q1?: string;
   q2?: string;
   q3?: string;

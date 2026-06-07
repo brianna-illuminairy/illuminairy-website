@@ -12,6 +12,8 @@ import { appendTouchEvent, getFirstTouchForVisitor, linkVisitorTouches } from "@
 import { getVisitorById } from "@/lib/crm/visitors";
 
 export type QuizAnswersPayload = {
+  qWho?: string | null;
+  qScoreLower?: string | null;
   q1?: string | null;
   q2?: string | null;
   q3?: string | null;
@@ -38,6 +40,8 @@ function splitName(full: string) {
 
 function buildQuizAnswersSnapshot(answers: QuizAnswersPayload) {
   return {
+    qWho: answers.qWho ?? null,
+    qScoreLower: answers.qScoreLower ?? null,
     q1: answers.q1 ?? null,
     q2: answers.q2 ?? null,
     q3: answers.q3 ?? null,
@@ -116,6 +120,8 @@ export async function upsertLeadFromQuizFunnel(
     target_score: answers.q8 ?? null,
     funnel: "sat_quiz",
     intake_submitted_at: now,
+    quiz_who: answers.qWho ?? null,
+    quiz_score_lower: answers.qScoreLower ?? null,
     quiz_trigger: answers.q1 ?? null,
     quiz_stakes: answers.q2 ?? null,
     quiz_tests_taken: answers.q3 ?? null,
@@ -179,6 +185,8 @@ export async function upsertLeadFromQuizFunnel(
           target_score: leadRow.target_score,
           funnel: leadRow.funnel,
           intake_submitted_at: leadRow.intake_submitted_at,
+          quiz_who: leadRow.quiz_who,
+          quiz_score_lower: leadRow.quiz_score_lower,
           quiz_trigger: leadRow.quiz_trigger,
           quiz_stakes: leadRow.quiz_stakes,
           quiz_tests_taken: leadRow.quiz_tests_taken,
@@ -235,9 +243,13 @@ export async function upsertLeadFromQuizFunnel(
     payload: {
       parent_email: email,
       funnel: "sat_quiz",
+      qWho: answers.qWho,
+      qScoreLower: answers.qScoreLower,
+      q1: answers.q1,
       q4: answers.q4,
       q5: answers.q5,
       q8: answers.q8,
+      quiz_is_self_taker: answers.qWho === "self",
       promised_gain_pts: promisedGain,
       showed_gpa_gap: gpaGap
     }

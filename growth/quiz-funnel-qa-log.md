@@ -13,8 +13,8 @@ Append-only log for viewport, speed, and integration QA from the funnel instrume
 | Check | Result | Notes |
 |-------|--------|-------|
 | LP attribution key | ✓ Fixed | `readSessionAttribution()` → `illuminairy_attribution` |
-| `quiz_started` on first q1 | ✓ | sessionStorage gate in `useQuizAnalytics.ts` |
-| `quiz_lead_submitted` enrichment | ✓ | q1–q9, gap screen, gain props; Finale passes `hasGapScreen` |
+| `quiz_started` on first q-who | ✓ | sessionStorage gate in `useQuizAnalytics.ts` |
+| `quiz_lead_submitted` enrichment | ✓ | qWho, qScoreLower, q1–q9, gap screen, gain props; Finale passes `hasGapScreen` |
 | Step registry script | ✓ | `npm run funnel:step-registry` |
 | hit-q7 haystack spacing | ✓ | Removed desktop max-height crop; margin on visual |
 | LP P0 vocabulary | ✓ | `content.ts`, meta, messaging-guide §2, funnel Finale copy |

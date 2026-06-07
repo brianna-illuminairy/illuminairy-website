@@ -27,12 +27,14 @@ import {
   modeledGainForTimeline,
   projectedGainBand
 } from "@/lib/quiz-funnel/score-path-gain";
+import { isQuizSelfTaker } from "@/lib/quiz-funnel/subject-voice";
 
 export type ScoreConfidence = "known" | "estimate" | "inferred" | "illustrative" | "missing";
 
 export type ScorePathMode = "full" | "partial" | "illustrative" | "process_only";
 
 export type QuizAnswersLike = {
+  qWho?: string;
   q1?: string;
   q2?: string;
   q3?: string;
@@ -265,7 +267,8 @@ export function buildScorePathOutput(
   answers: QuizAnswersLike,
   today = funnelToday()
 ): ScorePathOutput {
-  const { q2, q3, q4, q5, q6, q7, q8, q9 } = answers;
+  const { q2, q3, q4, q5, q6, q7, q8, q9, qWho } = answers;
+  const self = isQuizSelfTaker(qWho);
 
   const isFirstOfficialSit = q3 === "none";
   const starting = resolveStarting(q3, q4);
@@ -343,11 +346,15 @@ export function buildScorePathOutput(
   const disclaimers: string[] = [];
   if (isFirstOfficialSit) {
     disclaimers.push(
-      "No official SAT yet. The Skill Diagnostic sets their real starting score before the first test."
+      self
+        ? "No official SAT yet. The Skill Diagnostic sets your real starting score before the first test."
+        : "No official SAT yet. The Skill Diagnostic sets their real starting score before the first test."
     );
   } else if (q3 === "psat-only") {
     disclaimers.push(
-      "PSAT is a rough signal. The Skill Diagnostic confirms where they stand for the official SAT."
+      self
+        ? "PSAT is a rough signal. The Skill Diagnostic confirms where you stand for the official SAT."
+        : "PSAT is a rough signal. The Skill Diagnostic confirms where they stand for the official SAT."
     );
   }
   if (starting.confidence === "estimate") {

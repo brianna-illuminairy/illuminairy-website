@@ -38,7 +38,7 @@ export default async function SharedPlanPage({ params }: Props) {
       return (
         <main className="qf-page qf-share-page">
           <p className="qf-lead">This shared plan link has expired.</p>
-          <a className="btn btn-forest" href="/quiz?step=q1&utm_source=shared_plan_expired">
+          <a className="btn btn-forest" href="/quiz?step=q-who&utm_source=shared_plan_expired">
             Build your child&apos;s Improvement Plan
           </a>
         </main>

@@ -113,7 +113,14 @@ export async function POST(request: Request) {
       fbp: body.fbp,
       fbc: body.fbc
     },
-    { funnel: "sat_quiz", q4: body.q4 ?? "", sat_lp_variant: body.sat_lp_variant ?? "" },
+    {
+      funnel: "sat_quiz",
+      qWho: body.qWho ?? "",
+      qScoreLower: body.qScoreLower ?? "",
+      q1: body.q1 ?? "",
+      q4: body.q4 ?? "",
+      sat_lp_variant: body.sat_lp_variant ?? ""
+    },
     result.attribution
   );
 

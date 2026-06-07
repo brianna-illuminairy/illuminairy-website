@@ -3,33 +3,47 @@ import { QFScreen, QFOption, QFButton, QFQuestionHead, QFOptOut, QFWhyWeAsk } fr
 import { Q2_STAKES_OPTIONS } from '@/lib/quiz-funnel/stakes-copy';
 import { DOUBTS_OPTIONS } from '@/lib/quiz-funnel/doubts-copy';
 import { NAME_CTA } from '@/lib/quiz-funnel/score-path-copy';
+import {
+  Q_WHO_OPTIONS,
+  Q_SCORE_LOWER_OPTIONS,
+  Q_URGENCY_OPTIONS,
+  scoreLowerQuestion,
+} from '@/lib/quiz-funnel/opening-copy';
+import {
+  stakesQuestionHtml,
+  timesTakenQuestion,
+  recentScoreQuestionHtml,
+  recentScoreWhyWeAsk,
+  nextSatQuestionHtml,
+  blockerOptionLabel,
+  prepQuestionHtml,
+  goalScoreQuestionHtml,
+  gpaQuestionHtml,
+  gpaWhyWeAsk,
+  nameQuestionHtml,
+  nameWhyWeAsk,
+  stakesOptionLabel,
+} from '@/lib/quiz-funnel/subject-voice';
 
-export function QFQ1Trigger({ value, onSelect, onBack }) {
-  const opts = [
-    { id: 'score-low', label: "SAT score too low" },
-    { id: 'test-soon', label: "SAT test date coming up" },
-    { id: 'app-soon',  label: "Upcoming app deadlines (EA, ED, RD)" },
-    { id: 'get-ahead', label: "Starting prep early" },
-  ];
+export function QFQWho({ value, onSelect, onBack }) {
   return (
     <QFScreen stepIdx={1} onBack={onBack}>
-      <QFQuestionHead title="Which sounds <em>most like you</em>?" />
+      <QFQuestionHead title="Who needs SAT help?" />
       <div className="qf-options">
-        {opts.map(o => (
+        {Q_WHO_OPTIONS.map(o => (
           <QFOption key={o.id} selected={value === o.id} onClick={() => onSelect(o.id)}>{o.label}</QFOption>
         ))}
       </div>
-      <QFOptOut />
     </QFScreen>
   );
 }
 
-export function QFQ2Stakes({ value, onSelect, onBack }) {
+export function QFQScoreLower({ value, onSelect, onBack, qWho = 'child' }) {
   return (
     <QFScreen stepIdx={2} onBack={onBack}>
-      <QFQuestionHead title="What would a higher SAT score help them <em>achieve</em>?" />
+      <QFQuestionHead title={scoreLowerQuestion(qWho)} />
       <div className="qf-options">
-        {Q2_STAKES_OPTIONS.map(o => (
+        {Q_SCORE_LOWER_OPTIONS.map(o => (
           <QFOption key={o.id} selected={value === o.id} onClick={() => onSelect(o.id)}>{o.label}</QFOption>
         ))}
       </div>
@@ -37,7 +51,35 @@ export function QFQ2Stakes({ value, onSelect, onBack }) {
   );
 }
 
-export function QFQ3TimesTaken({ value, onSelect, onBack }) {
+export function QFQ1Trigger({ value, onSelect, onBack }) {
+  return (
+    <QFScreen stepIdx={3} onBack={onBack}>
+      <QFQuestionHead title="What feels most <em>urgent</em> right now?" />
+      <div className="qf-options">
+        {Q_URGENCY_OPTIONS.map(o => (
+          <QFOption key={o.id} selected={value === o.id} onClick={() => onSelect(o.id)}>{o.label}</QFOption>
+        ))}
+      </div>
+    </QFScreen>
+  );
+}
+
+export function QFQ2Stakes({ value, onSelect, onBack, qWho = 'child' }) {
+  return (
+    <QFScreen stepIdx={4} onBack={onBack}>
+      <QFQuestionHead title={stakesQuestionHtml(qWho)} />
+      <div className="qf-options">
+        {Q2_STAKES_OPTIONS.map(o => (
+          <QFOption key={o.id} selected={value === o.id} onClick={() => onSelect(o.id)}>
+            {stakesOptionLabel(o.id, qWho)}
+          </QFOption>
+        ))}
+      </div>
+    </QFScreen>
+  );
+}
+
+export function QFQ3TimesTaken({ value, onSelect, onBack, qWho = 'child' }) {
   const opts = [
     { id: 'sat-1',     label: 'SAT once' },
     { id: 'sat-2',     label: 'SAT twice' },
@@ -46,8 +88,8 @@ export function QFQ3TimesTaken({ value, onSelect, onBack }) {
     { id: 'none',      label: 'None' },
   ];
   return (
-    <QFScreen stepIdx={3} onBack={onBack}>
-      <QFQuestionHead title="Have they taken the SAT before?" />
+    <QFScreen stepIdx={5} onBack={onBack}>
+      <QFQuestionHead title={timesTakenQuestion(qWho)} />
       <div className="qf-options">
         {opts.map(o => (
           <QFOption key={o.id} selected={value === o.id} onClick={() => onSelect(o.id)}>{o.label}</QFOption>
@@ -57,7 +99,7 @@ export function QFQ3TimesTaken({ value, onSelect, onBack }) {
   );
 }
 
-export function QFQ4RecentScore({ value, onSelect, onBack, q3 = 'sat-1' }) {
+export function QFQ4RecentScore({ value, onSelect, onBack, q3 = 'sat-1', qWho = 'child' }) {
   const hasSat = ['sat-1', 'sat-2', 'sat-3+'].includes(q3);
   const opts = [
     { id: 'u1000',     label: 'Under 1100' },
@@ -67,12 +109,8 @@ export function QFQ4RecentScore({ value, onSelect, onBack, q3 = 'sat-1' }) {
     { id: '1400plus',  label: '1400+' },
   ];
   return (
-    <QFScreen stepIdx={4} onBack={onBack}>
-      <QFQuestionHead
-        title={hasSat
-          ? "What's the <em>most recent</em> SAT score?"
-          : "Best estimate of where they'd score <em>today</em>?"}
-      />
+    <QFScreen stepIdx={6} onBack={onBack}>
+      <QFQuestionHead title={recentScoreQuestionHtml(qWho, hasSat)} />
       <div className="qf-options">
         {opts.map(o => (
           <QFOption key={o.id} selected={value === o.id} onClick={() => onSelect(o.id)}>{o.label}</QFOption>
@@ -82,9 +120,7 @@ export function QFQ4RecentScore({ value, onSelect, onBack, q3 = 'sat-1' }) {
         <QFOptOut onClick={() => onSelect('na')}>No official SAT yet (skip for now)</QFOptOut>
       )}
       <QFWhyWeAsk>
-        {hasSat
-          ? 'This helps us estimate a realistic improvement range before test day.'
-          : 'Optional. The Skill Diagnostic sets the real starting point. A rough band helps us preview your Improvement Plan.'}
+        {recentScoreWhyWeAsk(qWho, hasSat)}
       </QFWhyWeAsk>
     </QFScreen>
   );
@@ -93,7 +129,7 @@ export function QFQ4RecentScore({ value, onSelect, onBack, q3 = 'sat-1' }) {
 export function QFQDoubts({ value = [], onToggle, onContinue, onBack }) {
   const opts = DOUBTS_OPTIONS;
   return (
-    <QFScreen stepIdx={4} onBack={onBack}
+    <QFScreen stepIdx={7} onBack={onBack}
       footer={<QFButton kind="forest" onClick={onContinue}>Continue</QFButton>}
     >
       <QFQuestionHead title="Which of these have you <em>heard</em> from your child?" multiSelect />
@@ -106,7 +142,7 @@ export function QFQDoubts({ value = [], onToggle, onContinue, onBack }) {
   );
 }
 
-export function QFQ5Clock({ value, onSelect, onBack }) {
+export function QFQ5Clock({ value, onSelect, onBack, qWho = 'child' }) {
   const opts = [
     { id: 'aug22', label: 'August 22, 2026' },
     { id: 'sept12', label: 'September 12, 2026' },
@@ -116,8 +152,8 @@ export function QFQ5Clock({ value, onSelect, onBack }) {
     { id: 'tbd', label: 'Not sure yet' },
   ];
   return (
-    <QFScreen stepIdx={5} onBack={onBack}>
-      <QFQuestionHead title="When's their <em>next</em> SAT?" />
+    <QFScreen stepIdx={8} onBack={onBack}>
+      <QFQuestionHead title={nextSatQuestionHtml(qWho)} />
       <div className="qf-options">
         {opts.map(o => (
           <QFOption key={o.id} selected={value === o.id} onClick={() => onSelect(o.id)}>{o.label}</QFOption>
@@ -127,17 +163,17 @@ export function QFQ5Clock({ value, onSelect, onBack }) {
   );
 }
 
-export function QFQ6Blocker({ value = [], onToggle, onContinue, onBack }) {
+export function QFQ6Blocker({ value = [], onToggle, onContinue, onBack, qWho = 'child' }) {
   const opts = [
     { id: 'math',       label: 'Math' },
     { id: 'reading',    label: 'Reading & writing' },
     { id: 'self-study', label: "Self-study isn't working" },
     { id: 'no-plan',    label: 'No clear plan' },
-    { id: 'wont',       label: "Won't study on their own" },
+    { id: 'wont',       label: blockerOptionLabel('wont', qWho) },
     { id: 'too-busy',   label: 'Too busy' },
   ];
   return (
-    <QFScreen stepIdx={7} onBack={onBack}
+    <QFScreen stepIdx={9} onBack={onBack}
       footer={<QFButton kind="forest" onClick={onContinue}>Continue</QFButton>}
     >
       <QFQuestionHead title="What seems to be the <em>problem</em>?" multiSelect />
@@ -150,11 +186,8 @@ export function QFQ6Blocker({ value = [], onToggle, onContinue, onBack }) {
   );
 }
 
-export function QFQ7Tried({ value = [], onToggle, onContinue, onBack, q3 = 'sat-1' }) {
+export function QFQ7Tried({ value = [], onToggle, onContinue, onBack, q3 = 'sat-1', qWho = 'child' }) {
   const hasSat = ['sat-1', 'sat-2', 'sat-3+'].includes(q3);
-  const title = hasSat
-    ? "How did they prep for their <em>last SAT</em>?"
-    : "How have they <em>prepared</em> so far?";
   const opts = [
     { id: 'khan',    label: 'Khan / Bluebook / YouTube' },
     { id: 'group',   label: 'In-person group class' },
@@ -164,14 +197,14 @@ export function QFQ7Tried({ value = [], onToggle, onContinue, onBack, q3 = 'sat-
     { id: 'nothing', label: "Didn't prepare much" },
   ];
   return (
-    <QFScreen stepIdx={8} onBack={onBack}
+    <QFScreen stepIdx={10} onBack={onBack}
       footer={
         <QFButton kind="forest" onClick={onContinue} disabled={value.length === 0}>
           Continue
         </QFButton>
       }
     >
-      <QFQuestionHead title={title} multiSelect />
+      <QFQuestionHead title={prepQuestionHtml(qWho, hasSat)} multiSelect />
       <div className="qf-options">
         {opts.map(o => (
           <QFOption key={o.id} multi selected={value.includes(o.id)} onClick={() => onToggle(o.id)}>{o.label}</QFOption>
@@ -181,7 +214,7 @@ export function QFQ7Tried({ value = [], onToggle, onContinue, onBack, q3 = 'sat-
   );
 }
 
-export function QFQ8Goal({ value, onSelect, onBack }) {
+export function QFQ8Goal({ value, onSelect, onBack, qWho = 'child' }) {
   const opts = [
     { id: '1250', label: '1250' },
     { id: '1300', label: '1300' },
@@ -190,8 +223,8 @@ export function QFQ8Goal({ value, onSelect, onBack }) {
     { id: '1450', label: '1450+' },
   ];
   return (
-    <QFScreen stepIdx={10} onBack={onBack}>
-      <QFQuestionHead title="What score are they <em>aiming for</em>?" />
+    <QFScreen stepIdx={12} onBack={onBack}>
+      <QFQuestionHead title={goalScoreQuestionHtml(qWho)} />
       <div className="qf-options">
         {opts.map(o => (
           <QFOption key={o.id} selected={value === o.id} onClick={() => onSelect(o.id)}>{o.label}</QFOption>
@@ -202,7 +235,7 @@ export function QFQ8Goal({ value, onSelect, onBack }) {
   );
 }
 
-export function QFQ9GPA({ value, onSelect, onBack }) {
+export function QFQ9GPA({ value, onSelect, onBack, qWho = 'child' }) {
   const opts = [
     { id: 'u3.0',    label: 'Under 3.0' },
     { id: '3.0-3.3', label: '3.0 – 3.3' },
@@ -212,28 +245,28 @@ export function QFQ9GPA({ value, onSelect, onBack }) {
     { id: '4.0+',    label: '4.0+' },
   ];
   return (
-    <QFScreen stepIdx={12} onBack={onBack}>
-      <QFQuestionHead title="What's their <em>GPA</em>?" />
+    <QFScreen stepIdx={14} onBack={onBack}>
+      <QFQuestionHead title={gpaQuestionHtml(qWho)} />
       <div className="qf-options">
         {opts.map(o => (
           <QFOption key={o.id} selected={value === o.id} onClick={() => onSelect(o.id)}>{o.label}</QFOption>
         ))}
       </div>
       <QFWhyWeAsk>
-        Their GPA helps us set a realistic score target and shape their Improvement Plan for their timeline.
+        {gpaWhyWeAsk(qWho)}
       </QFWhyWeAsk>
     </QFScreen>
   );
 }
 
-export function QFQName({ value = '', onChange, onContinue, onBack }) {
+export function QFQName({ value = '', onChange, onContinue, onBack, qWho = 'child' }) {
   return (
-    <QFScreen stepIdx={13} onBack={onBack}
+    <QFScreen stepIdx={15} onBack={onBack}
       footer={<QFButton kind="forest" onClick={onContinue}>{NAME_CTA}</QFButton>}
     >
       <div className="qf-question-head">
         <div className="qf-eyebrow">One last detail</div>
-        <h1 className="qf-h1" style={{ marginBottom: 0 }} dangerouslySetInnerHTML={{ __html: "What's your student's <em>first name</em>?" }} />
+        <h1 className="qf-h1" style={{ marginBottom: 0 }} dangerouslySetInnerHTML={{ __html: nameQuestionHtml(qWho) }} />
       </div>
       <input
         className="qf-text-input"
@@ -246,7 +279,7 @@ export function QFQName({ value = '', onChange, onContinue, onBack }) {
         onKeyDown={(e) => { if (e.key === 'Enter') onContinue(); }}
       />
       <QFWhyWeAsk>
-        We&apos;ll personalize their plan and score roadmap with their name.
+        {nameWhyWeAsk(qWho)}
       </QFWhyWeAsk>
     </QFScreen>
   );

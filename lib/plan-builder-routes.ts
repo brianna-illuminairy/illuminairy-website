@@ -4,6 +4,9 @@
  * Internal folder remains `app/quiz/`; Next.js rewrites `/plan` → `/quiz`.
  */
 
+import { QUIZ_ENTRY_STEP } from "@/lib/quiz-funnel/funnel-steps";
+
+export { QUIZ_ENTRY_STEP };
 export const PLAN_BUILDER_PATH = "/plan";
 
 /** Meta ad destination — same LP as `/`, distinct path for reporting. */
@@ -51,11 +54,11 @@ const UTM_KEYS = [
 ] as const;
 
 /**
- * Plan Builder entry from LP — canonical `/plan?step=q1` plus UTMs from the landing URL.
+ * Plan Builder entry from LP — canonical `/plan?step=q-who` plus UTMs from the landing URL.
  */
 export function planBuilderEntryFromLanding(search?: string): string {
   const params = new URLSearchParams();
-  params.set("step", "q1");
+  params.set("step", QUIZ_ENTRY_STEP);
   if (search) {
     const incoming = new URLSearchParams(
       search.startsWith("?") ? search.slice(1) : search

@@ -24,12 +24,12 @@ const nextConfig = {
       },
       {
         source: "/assessment",
-        destination: "/plan?step=q1",
+        destination: "/plan?step=q-who",
         permanent: true
       },
       {
         source: "/assessment/:path*",
-        destination: "/plan?step=q1",
+        destination: "/plan?step=q-who",
         permanent: true
       },
       {

@@ -177,6 +177,8 @@ alter table leads add column if not exists intake_submitted_at timestamptz;
 
 -- Quiz intake (queryable without parsing JSON)
 alter table leads add column if not exists quiz_trigger text;
+alter table leads add column if not exists quiz_who text;
+alter table leads add column if not exists quiz_score_lower text;
 alter table leads add column if not exists quiz_stakes text;
 alter table leads add column if not exists quiz_tests_taken text;
 alter table leads add column if not exists sat_next_test text;
@@ -201,8 +203,12 @@ create index if not exists leads_funnel_idx on leads (funnel);
 create index if not exists leads_sat_next_test_idx on leads (sat_next_test);
 create index if not exists leads_gpa_band_idx on leads (gpa_band);
 create index if not exists leads_stage_funnel_idx on leads (stage, funnel);
+create index if not exists leads_quiz_who_idx on leads (quiz_who);
 
 comment on column leads.funnel is 'Lead origin: sat_quiz, intake, legacy, etc.';
+comment on column leads.quiz_who is 'Opening answer: child | self (who needs SAT help)';
+comment on column leads.quiz_score_lower is 'Opening answer: yes | planning-ahead (score lower than expected)';
+comment on column leads.quiz_trigger is 'Urgency answer (legacy key q1): score-low, test-soon, app-soon, get-ahead';
 comment on column leads.quiz_answers is 'Raw SAT quiz payload snapshot at S5 submit';
 comment on column leads.promised_gain_pts is 'Capped score gain shown on S5 approval screen';
 

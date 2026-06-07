@@ -27,7 +27,11 @@ export function buildKlaviyoQuizProperties(ctx: KlaviyoQuizContext) {
   const resumeUrl = `https://illuminairy.com${PLAN_BUILDER_PATH}?step=${encodeURIComponent(step)}`;
 
   return {
+    qWho: answers.qWho ?? "",
+    qScoreLower: answers.qScoreLower ?? "",
     q1: answers.q1 ?? "",
+    quiz_urgency: answers.q1 ?? "",
+    quiz_is_self_taker: answers.qWho === "self" ? "yes" : "no",
     q2: answers.q2 ?? "",
     q3: answers.q3 ?? "",
     q4: answers.q4 ?? "",

@@ -18,6 +18,7 @@ import {
 import { weeksUntilQ5Test, hasScheduledTestDate } from "@/lib/quiz-funnel/gains";
 import { satProgramOutcomes } from "@/lib/site";
 import { stakesGoalLabel, stakesSubheadOpener, stakesVerdictPrefix } from "@/lib/quiz-funnel/stakes-copy";
+import { isQuizSelfTaker } from "@/lib/quiz-funnel/subject-voice";
 import { buildGoalAchievability, type GoalAchievability } from "@/lib/quiz-funnel/goal-achievability";
 
 /** Diagnostic ranks 5–6 skills; examples on this page show 5. */
@@ -255,7 +256,10 @@ export function buildInputGroups(answers: QuizAnswersLike): PlanRevealInputGroup
 
   const context: PlanRevealInputRow[] = [];
   if (tried.length) {
-    context.push({ label: "What they've tried", value: tried.join(" · ") });
+    context.push({
+      label: isQuizSelfTaker(answers.qWho) ? "What you've tried" : "What they've tried",
+      value: tried.join(" · "),
+    });
   }
   if (q6.includes("math")) {
     context.push({ label: "Main problem", value: "Math" });
@@ -265,11 +269,11 @@ export function buildInputGroups(answers: QuizAnswersLike): PlanRevealInputGroup
   }
 
   const groups: PlanRevealInputGroup[] = [
-    { title: "Your student", rows: student },
+    { title: isQuizSelfTaker(answers.qWho) ? "You" : "Your student", rows: student },
     { title: "Timeline", rows: timeline },
   ];
   if (context.length) {
-    groups.push({ title: "What you've tried", rows: context });
+    groups.push({ title: "Prep so far", rows: context });
   }
   return groups;
 }
@@ -280,19 +284,32 @@ function buildHeardSummary(answers: QuizAnswersLike, path: ScorePathOutput): str
   const q6 = answers.q6 ?? [];
   const q8 = answers.q8 ?? "1450";
   const prep = selectedPrepLabels(answers.q7);
+  const self = isQuizSelfTaker(answers.qWho);
 
   const startPhrase =
     q4 === "na"
-      ? "They haven't taken an official SAT yet"
+      ? self
+        ? "You haven't taken an official SAT yet"
+        : "They haven't taken an official SAT yet"
       : hasKnownStartingScore(q4)
-        ? `They're around ${Q4_INPUT_LABEL[q4]} today`
-        : "You're still pinning down their starting score";
+        ? self
+          ? `You're around ${Q4_INPUT_LABEL[q4]} today`
+          : `They're around ${Q4_INPUT_LABEL[q4]} today`
+        : self
+          ? "You're still pinning down your starting score"
+          : "You're still pinning down their starting score";
 
   const targetPhrase = hasTargetScore(q8)
-    ? `want ${Q8_INPUT_LABEL[q8]}`
+    ? self
+      ? `want ${Q8_INPUT_LABEL[q8]}`
+      : `want ${Q8_INPUT_LABEL[q8]}`
     : path.target.bandLabel
-      ? `are aiming for about ${path.target.bandLabel}`
-      : "haven't picked a target yet";
+      ? self
+        ? `are aiming for about ${path.target.bandLabel}`
+        : `are aiming for about ${path.target.bandLabel}`
+      : self
+        ? "haven't picked a target yet"
+        : "haven't picked a target yet";
 
   const dateLabel = q5DisplayLabel(q5) ?? Q5_INPUT_LABEL[q5] ?? "a test date TBD";
   const datePhrase =
@@ -302,9 +319,13 @@ function buildHeardSummary(answers: QuizAnswersLike, path: ScorePathOutput): str
         ? `testing ${dateLabel}`
         : `with ${dateLabel.toLowerCase()}`;
 
-  let sentence = `${startPhrase}, ${targetPhrase}, ${datePhrase}.`;
+  let sentence = self
+    ? `${startPhrase}, you ${targetPhrase}, ${datePhrase}.`
+    : `${startPhrase}, ${targetPhrase}, ${datePhrase}.`;
   if (prep.length) {
-    sentence += ` They've tried ${prep.join(" and ")}.`;
+    sentence += self
+      ? ` You've tried ${prep.join(" and ")}.`
+      : ` They've tried ${prep.join(" and ")}.`;
   }
   const concern = parentConcernPhrase(q6);
   if (concern) {
@@ -323,8 +344,16 @@ function buildProjectionVerdict(
   const start = startMetricLabel(path);
   const weeks = path.chartWeeks;
   const weekWord = weeks === 1 ? "week" : "weeks";
-  const stakesLine = stakesVerdictPrefix(answers.q2);
+  const stakesLine = stakesVerdictPrefix(answers.q2, answers.qWho);
   const cohortLine = `We've helped ${plansBuiltCount} students through a full plan. On average, their scores went up ${avgPointsGained} points.`;
+  const self = isQuizSelfTaker(answers.qWho);
+  const workPhrase = self ? "when you work" : "when they work";
+  const skillTargetPhrase = self
+    ? "Your SAT Strategy Call and Skill Diagnostic make this specific to you."
+    : "Your SAT Strategy Call and Skill Diagnostic make this specific to your student.";
+  const holdingBackPhrase = self
+    ? `skills holding your score back`
+    : `skills holding their score back`;
 
   const profileParts: string[] = [`starting around ${start}`];
   if (gpa) profileParts.push(`a ${gpa} GPA`);
@@ -342,7 +371,7 @@ function buildProjectionVerdict(
       low !== high
         ? `${low}–${high} points`
         : `about ${path.modeledGain} points`;
-    return `${stakesLine}${cohortLine} ${profileLine} with ${weeks} ${weekWord} before the ${path.testDateLabel} test, often improve ${improveText}, enough to reach about ${path.scoreRange.typical}, when they work the ${DIAGNOSTIC_SKILL_RANGE} skills from the Skill Diagnostic, not everything on the SAT.`;
+    return `${stakesLine}${cohortLine} ${profileLine} with ${weeks} ${weekWord} before the ${path.testDateLabel} test, often improve ${improveText}, enough to reach about ${path.scoreRange.typical}, ${workPhrase} the ${DIAGNOSTIC_SKILL_RANGE} skills from the Skill Diagnostic, not everything on the SAT.`;
   }
 
   if (path.showGainMath && path.gainBand && path.scoreRange.typical != null) {
@@ -351,14 +380,14 @@ function buildProjectionVerdict(
       low !== high
         ? `${low}–${high} points`
         : `about ${path.modeledGain} points`;
-    return `${stakesLine}${cohortLine} ${profileLine} over ${weeks} ${weekWord}, often improve ${improveText}, toward about ${path.scoreRange.typical}, when they work the ${DIAGNOSTIC_SKILL_RANGE} skills from the Skill Diagnostic, not everything on the SAT. Your SAT Strategy Call confirms the numbers.`;
+    return `${stakesLine}${cohortLine} ${profileLine} over ${weeks} ${weekWord}, often improve ${improveText}, toward about ${path.scoreRange.typical}, ${workPhrase} the ${DIAGNOSTIC_SKILL_RANGE} skills from the Skill Diagnostic, not everything on the SAT. Your SAT Strategy Call confirms the numbers.`;
   }
 
   if (path.mode === "process_only" || !path.showGainMath) {
-    return `${stakesLine}${cohortLine} ${profileLine} often improve about ${SCORE_PATH_DEFAULT_GAIN} points over ${SCORE_PATH_DEFAULT_WEEKS} weeks when they work the ${DIAGNOSTIC_SKILL_RANGE} skills from the Skill Diagnostic, not the whole test. Your SAT Strategy Call and Skill Diagnostic make this specific to your student.`;
+    return `${stakesLine}${cohortLine} ${profileLine} often improve about ${SCORE_PATH_DEFAULT_GAIN} points over ${SCORE_PATH_DEFAULT_WEEKS} weeks ${workPhrase} the ${DIAGNOSTIC_SKILL_RANGE} skills from the Skill Diagnostic, not the whole test. ${skillTargetPhrase}`;
   }
 
-  return `${stakesLine}${cohortLine} The Skill Diagnostic finds the ${DIAGNOSTIC_SKILL_RANGE} skills holding their score back. Your SAT Strategy Call walks through timeline and targets.`;
+  return `${stakesLine}${cohortLine} The Skill Diagnostic finds the ${DIAGNOSTIC_SKILL_RANGE} ${holdingBackPhrase}. Your SAT Strategy Call walks through timeline and targets.`;
 }
 
 export type PlanRevealLever = { rank: number; name: string; pts: number };
