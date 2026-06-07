@@ -59,7 +59,8 @@ const ICON_SCRIPT_HOOKS: Record<string, LandingHeroHook> = {
   /** Meta c1 cold creative slugs — `utm_content` on live ad URLs. */
   ad2_enough_time: "fall",
   ad3_before_tutoring: "tutor",
-  ad4_mom_first_story: "gpa"
+  ad4_mom_first_story: "gpa",
+  ad5_high_gpa_student_story: "gpa"
 };
 
 function hookFromToken(token: string): LandingHeroHook | null {
@@ -101,6 +102,7 @@ export function landingHeroHookFromUtmSlug(slug?: string | null): LandingHeroHoo
   if (lower.includes("enough_time")) return "fall";
   if (lower.includes("before_tutoring") || lower.includes("tutoring")) return "tutor";
   if (lower.includes("mom_first_story") || lower.includes("first_story")) return "gpa";
+  if (lower.includes("high_gpa") || lower.includes("student_story")) return "gpa";
 
   return null;
 }

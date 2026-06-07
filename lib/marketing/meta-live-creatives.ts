@@ -51,6 +51,15 @@ export const META_LIVE_CREATIVES: readonly MetaLiveCreative[] = [
     landingPath: "/sat-plan-builder",
     heroHook: "gpa",
     angle: "Testimonial — 3.9 GPA / 1160 SAT, mom panic on time, 1160→1430 outcome"
+  },
+  {
+    id: "ad5_high_gpa_student_story",
+    utmContent: "ad5_high_gpa_student_story",
+    utmCampaign: "c1_sat_plan_builder_cold_creative_test",
+    utmTerm: "broad_moms_35_58",
+    landingPath: "/sat-plan-builder",
+    heroHook: "gpa",
+    angle: "Student-led story — 3.9 GPA / 11 AP / 1160, mom asks why score low, 1430 outcome"
   }
 ] as const;
 
