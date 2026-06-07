@@ -23,7 +23,7 @@ export const META_LIVE_CREATIVES: readonly MetaLiveCreative[] = [
     utmTerm: "broad_moms_35_58",
     landingPath: "/",
     heroHook: "gap",
-    angle: "Good grades, SAT score shock"
+    angle: "Good grades, SAT score shock — v4 default headline (no score band)"
   },
   {
     id: "ad2_enough_time",

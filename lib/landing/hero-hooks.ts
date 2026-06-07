@@ -211,24 +211,21 @@ export const landingHeroHeadlines: Record<LandingHeroHook, LandingHeroHeadline> 
   }
 };
 
-/** v4 LP only — two lines max (owner fold-tested layout). `default` hook uses v4Headline. */
+/** v4 LP only — two lines max (owner fold-tested layout). */
 export type LandingHeroHeadlineV4 = {
   lines: readonly [string, string];
   accentLine: 0 | 1;
 };
 
+/** Hooks that use the owner v4 default headline (no score-band copy). */
+const V4_OWNER_DEFAULT_HOOKS = new Set<LandingHeroHook>(["gpa", "gap"]);
+
+type V4CustomHeadlineHook = Exclude<LandingHeroHook, "default" | "gpa" | "gap">;
+
 export const landingHeroHeadlinesV4: Record<
-  Exclude<LandingHeroHook, "default">,
+  V4CustomHeadlineHook,
   LandingHeroHeadlineV4
 > = {
-  gpa: {
-    lines: ["Strong GPA.", "So why a low SAT score?"],
-    accentLine: 1
-  },
-  gap: {
-    lines: ["SAT in the 1100s or 1200s?", "What's realistic before their fall test?"],
-    accentLine: 0
-  },
   fall: {
     lines: ["Running out of time?", "See if the score can still move."],
     accentLine: 0
@@ -251,18 +248,24 @@ export const landingHeroHeadlinesV4: Record<
   }
 };
 
+function resolveV4Hook(
+  hook: LandingHeroHook | undefined,
+  search?: string
+): LandingHeroHook | null {
+  if (hook && hook !== "default") return hook;
+  if (search) {
+    const fromSearch = landingHeroHookFromSearch(search);
+    if (fromSearch !== "default") return fromSearch;
+  }
+  return null;
+}
+
+/** Returns null when the owner v4 default headline should show (gpa/gap/no hook). */
 export function resolveLandingHeroHeadlineV4(
   hook: LandingHeroHook | undefined,
   search?: string
 ): LandingHeroHeadlineV4 | null {
-  if (hook && hook !== "default") {
-    return landingHeroHeadlinesV4[hook];
-  }
-  if (search) {
-    const fromSearch = landingHeroHookFromSearch(search);
-    if (fromSearch !== "default") {
-      return landingHeroHeadlinesV4[fromSearch];
-    }
-  }
-  return null;
+  const resolved = resolveV4Hook(hook, search);
+  if (!resolved || V4_OWNER_DEFAULT_HOOKS.has(resolved)) return null;
+  return landingHeroHeadlinesV4[resolved as V4CustomHeadlineHook];
 }
