@@ -2,6 +2,16 @@
 
 import { useEffect, useState } from "react";
 
+type FunnelDropStage = {
+  id: string;
+  label: string;
+  reached: number;
+  continued: number;
+  dropped: number;
+  dropPct: number | null;
+  retainFromLpPct: number | null;
+};
+
 type MarketingPayload = {
   funnel: {
     lpViews: number;
@@ -9,6 +19,12 @@ type MarketingPayload = {
     quizStarts: number;
     leads: number;
     books: number;
+  };
+  dropoff: {
+    periodDays: number;
+    stages: FunnelDropStage[];
+    landingBouncePct: number | null;
+    topDropStage: FunnelDropStage | null;
   };
   leaks: Array<{
     id: string;
@@ -22,6 +38,9 @@ type MarketingPayload = {
     stepIndex: number;
     visitors: number;
     dropPct: number | null;
+    dropCount: number | null;
+    retainFromQuizStartPct: number | null;
+    retainFromLpPct: number | null;
   }>;
   campaigns: Array<{
     utmCampaign: string;
@@ -48,6 +67,18 @@ type MarketingPayload = {
 function pct(num: number, den: number) {
   if (den <= 0) return "—";
   return `${Math.round((1000 * num) / den) / 10}%`;
+}
+
+function pctVal(value: number | null) {
+  if (value === null) return "—";
+  return `${value}%`;
+}
+
+function dropTone(dropPct: number | null): string {
+  if (dropPct === null) return "text-muted-foreground";
+  if (dropPct >= 50) return "text-red-600 font-medium";
+  if (dropPct >= 30) return "text-amber-700 font-medium";
+  return "text-muted-foreground";
 }
 
 export function MarketingDashboard() {
@@ -83,13 +114,15 @@ export function MarketingDashboard() {
   }
 
   const f = data.funnel;
+  const dropoff = data.dropoff;
 
   return (
     <div className="space-y-10">
       <header>
         <h1 className="text-2xl font-semibold tracking-tight">Marketing performance</h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Last 7 days from Supabase touch_events + leads. Drill down in PostHog for experiments.
+          Last {dropoff.periodDays} days from Supabase touch_events. PostHog for experiment
+          drill-down.
         </p>
       </header>
 
@@ -111,7 +144,124 @@ export function MarketingDashboard() {
       </section>
 
       <section className="rounded-xl border border-border bg-surface p-5">
-        <h2 className="text-lg font-semibold">Conversion rates</h2>
+        <h2 className="text-lg font-semibold">Where they drop off</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Each row is a funnel stage. <strong className="font-medium text-foreground">Left</strong>{" "}
+          = visitors who did not continue to the next stage. Drop % is relative to that stage.
+        </p>
+
+        {f.lpViews === 0 ? (
+          <p className="mt-4 text-sm text-muted-foreground">
+            No landing page traffic yet in this window.
+          </p>
+        ) : (
+          <>
+            {dropoff.landingBouncePct !== null ? (
+              <p className="mt-4 rounded-lg bg-muted/40 px-3 py-2 text-sm">
+                <strong className="font-medium">Landing page bounce:</strong>{" "}
+                {dropoff.landingBouncePct}% viewed the LP without clicking the CTA (
+                {f.lpViews - f.ctaClicks} of {f.lpViews}).
+              </p>
+            ) : null}
+            {dropoff.topDropStage ? (
+              <p className="mt-2 text-sm text-muted-foreground">
+                Biggest drop so far:{" "}
+                <span className="font-medium text-foreground">
+                  {dropoff.topDropStage.label}
+                </span>{" "}
+                ({dropoff.topDropStage.dropPct}% left at this stage).
+              </p>
+            ) : null}
+
+            <div className="mt-4 overflow-x-auto">
+              <table className="w-full min-w-[640px] text-left text-sm">
+                <thead>
+                  <tr className="border-b border-border text-muted-foreground">
+                    <th className="py-2 pr-3 font-medium">Stage</th>
+                    <th className="py-2 pr-3 font-medium">Reached</th>
+                    <th className="py-2 pr-3 font-medium">Continued</th>
+                    <th className="py-2 pr-3 font-medium">Left</th>
+                    <th className="py-2 pr-3 font-medium">Drop %</th>
+                    <th className="py-2 font-medium">% of LP views</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {dropoff.stages.map((row) => (
+                    <tr key={row.id} className="border-b border-border/60">
+                      <td className="max-w-[220px] py-2.5 pr-3">
+                        <span className="block font-medium">{row.label}</span>
+                        <span className="font-mono text-[10px] text-muted-foreground">
+                          {row.id}
+                        </span>
+                      </td>
+                      <td className="py-2.5 pr-3 tabular-nums">{row.reached}</td>
+                      <td className="py-2.5 pr-3 tabular-nums">{row.continued}</td>
+                      <td className="py-2.5 pr-3 tabular-nums">{row.dropped}</td>
+                      <td className={`py-2.5 pr-3 tabular-nums ${dropTone(row.dropPct)}`}>
+                        {pctVal(row.dropPct)}
+                      </td>
+                      <td className="py-2.5 tabular-nums text-muted-foreground">
+                        {pctVal(row.retainFromLpPct)}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
+        )}
+      </section>
+
+      <section className="rounded-xl border border-border bg-surface p-5">
+        <h2 className="text-lg font-semibold">Quiz step detail</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Unique visitors per plan-builder step (last {dropoff.periodDays}d). Drop vs prior step
+          in the quiz only.
+        </p>
+        {data.stepDropoffs.length === 0 ? (
+          <p className="mt-4 text-sm text-muted-foreground">
+            No quiz step views yet. Step tracking fires on each screen load.
+          </p>
+        ) : (
+          <div className="mt-3 overflow-x-auto">
+            <table className="w-full min-w-[560px] text-left text-sm">
+              <thead>
+                <tr className="border-b border-border text-muted-foreground">
+                  <th className="py-2 pr-3 font-medium">Step</th>
+                  <th className="py-2 pr-3 font-medium">Visitors</th>
+                  <th className="py-2 pr-3 font-medium">Left vs prior</th>
+                  <th className="py-2 pr-3 font-medium">Drop %</th>
+                  <th className="py-2 pr-3 font-medium">% of quiz starts</th>
+                  <th className="py-2 font-medium">% of LP views</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.stepDropoffs.map((row) => (
+                  <tr key={row.step} className="border-b border-border/60">
+                    <td className="py-2 pr-3 font-mono text-xs">{row.step}</td>
+                    <td className="py-2 pr-3 tabular-nums">{row.visitors}</td>
+                    <td className="py-2 pr-3 tabular-nums">
+                      {row.dropCount !== null ? row.dropCount : "—"}
+                    </td>
+                    <td className={`py-2 pr-3 tabular-nums ${dropTone(row.dropPct)}`}>
+                      {row.dropPct !== null ? `${row.dropPct}%` : "—"}
+                    </td>
+                    <td className="py-2 pr-3 tabular-nums">
+                      {pctVal(row.retainFromQuizStartPct)}
+                    </td>
+                    <td className="py-2 tabular-nums text-muted-foreground">
+                      {pctVal(row.retainFromLpPct)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </section>
+
+      <section className="rounded-xl border border-border bg-surface p-5">
+        <h2 className="text-lg font-semibold">Stage conversion summary</h2>
         <ul className="mt-3 space-y-2 text-sm">
           <li>LP → CTA: {pct(f.ctaClicks, f.lpViews)}</li>
           <li>CTA → quiz start: {pct(f.quizStarts, f.ctaClicks)}</li>
@@ -120,13 +270,9 @@ export function MarketingDashboard() {
         </ul>
       </section>
 
-      <section className="rounded-xl border border-border bg-surface p-5">
-        <h2 className="text-lg font-semibold">Biggest leaks (ranked)</h2>
-        {data.leaks.length === 0 ? (
-          <p className="mt-3 text-sm text-muted-foreground">
-            Not enough traffic yet for leak ranking (need more LP views / quiz starts).
-          </p>
-        ) : (
+      {data.leaks.length > 0 ? (
+        <section className="rounded-xl border border-border bg-surface p-5">
+          <h2 className="text-lg font-semibold">Alerts</h2>
           <ol className="mt-4 space-y-4">
             {data.leaks.map((leak, i) => (
               <li key={leak.id} className="border-b border-border pb-4 last:border-0 last:pb-0">
@@ -140,34 +286,8 @@ export function MarketingDashboard() {
               </li>
             ))}
           </ol>
-        )}
-      </section>
-
-      <section className="rounded-xl border border-border bg-surface p-5">
-        <h2 className="text-lg font-semibold">Quiz step drop-off</h2>
-        <div className="mt-3 overflow-x-auto">
-          <table className="w-full min-w-[420px] text-left text-sm">
-            <thead>
-              <tr className="border-b border-border text-muted-foreground">
-                <th className="py-2 pr-4 font-medium">Step</th>
-                <th className="py-2 pr-4 font-medium">Visitors</th>
-                <th className="py-2 font-medium">Drop vs prior</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.stepDropoffs.map((row) => (
-                <tr key={row.step} className="border-b border-border/60">
-                  <td className="py-2 pr-4 font-mono text-xs">{row.step}</td>
-                  <td className="py-2 pr-4 tabular-nums">{row.visitors}</td>
-                  <td className="py-2 tabular-nums">
-                    {row.dropPct !== null ? `${row.dropPct}%` : "—"}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </section>
+        </section>
+      ) : null}
 
       <section className="rounded-xl border border-border bg-surface p-5">
         <h2 className="text-lg font-semibold">Campaign quality (30d)</h2>
@@ -256,7 +376,7 @@ export function MarketingDashboard() {
         <p>
           Anonymous quiz abandon (step ≥ q3, last 7d, no email):{" "}
           <strong className="text-foreground">{data.anonymousAbandon}</strong> visitors in
-          Supabase. Use for Meta retargeting audiences or Flow B2 once email is captured.
+          Supabase.
         </p>
       </section>
     </div>

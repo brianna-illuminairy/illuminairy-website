@@ -48,19 +48,20 @@ function persistedLpContext() {
 }
 
 export function captureQuizStarted(answers: Record<string, unknown>) {
-  if (!getPostHogKey()) return;
-  posthog.capture("quiz_started", {
-    ...persistedLpContext(),
-    q1: answers.q1
-  });
+  const lpContext = persistedLpContext();
   recordClientTouch(TouchEvents.quizStarted, {
     step: "q1",
     step_index: 0,
-    ...persistedLpContext()
+    ...lpContext
   });
   trackQuizGaEvent("quiz_started", {
     funnel: "sat_quiz",
-    ...persistedLpContext()
+    ...lpContext
+  });
+  if (!getPostHogKey()) return;
+  posthog.capture("quiz_started", {
+    ...lpContext,
+    q1: answers.q1
   });
 }
 
@@ -70,7 +71,6 @@ export function captureQuizStep(
   answers: Record<string, unknown>,
   options?: { hasGapScreen?: boolean }
 ) {
-  if (!getPostHogKey()) return;
   const props = {
     ...persistedLpContext(),
     step: stepId,
@@ -88,20 +88,24 @@ export function captureQuizStep(
     q8: answers.q8,
     q9: answers.q9
   };
-  posthog.capture("quiz_step_viewed", props);
-  posthog.capture("$pageview", {
-    $current_url: `${window.location.origin}${PLAN_BUILDER_PATH}?step=${stepId}`
-  });
   recordClientTouch(TouchEvents.quizStepView, {
     step: stepId,
     step_index: stepIndex,
     sat_lp_variant: props.sat_lp_variant as string | undefined,
     has_gap_screen: Boolean(options?.hasGapScreen)
   });
-  if (stepId === "s5") {
-    recordClientTouch(TouchEvents.quizScheduleView, { step: stepId, step_index: stepIndex });
-  }
   trackQuizStepView(stepId, stepIndex);
+  if (stepId === "s5") {
+    recordClientTouch(TouchEvents.quizScheduleView, {
+      step: stepId,
+      step_index: stepIndex
+    });
+  }
+  if (!getPostHogKey()) return;
+  posthog.capture("quiz_step_viewed", props);
+  posthog.capture("$pageview", {
+    $current_url: `${window.location.origin}${PLAN_BUILDER_PATH}?step=${stepId}`
+  });
 }
 
 export function identifyQuizLead(email: string, answers: Record<string, unknown>) {

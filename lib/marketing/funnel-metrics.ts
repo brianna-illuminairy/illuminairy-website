@@ -14,6 +14,9 @@ export type StepDrop = {
   stepIndex: number;
   visitors: number;
   dropPct: number | null;
+  dropCount: number | null;
+  retainFromQuizStartPct: number | null;
+  retainFromLpPct: number | null;
 };
 
 export type CampaignRow = {
@@ -89,7 +92,11 @@ export async function getFunnelCounts(days = 7): Promise<FunnelCounts> {
   return { lpViews, ctaClicks, quizStarts, leads, books };
 }
 
-export async function getStepDropoffs(days = 7): Promise<StepDrop[]> {
+export async function getStepDropoffs(
+  days = 7,
+  lpViews = 0,
+  quizStarts = 0
+): Promise<StepDrop[]> {
   const supabase = getSupabaseAdmin();
   if (!supabase) return [];
 
@@ -123,14 +130,29 @@ export async function getStepDropoffs(days = 7): Promise<StepDrop[]> {
     .sort((a, b) => a.stepIndex - b.stepIndex);
 
   const out: StepDrop[] = [];
+  const quizTop = quizStarts > 0 ? quizStarts : sorted[0]?.visitors ?? 0;
+  const lpTop = lpViews;
+
   for (let i = 0; i < sorted.length; i++) {
     const curr = sorted[i];
     const prev = sorted[i - 1];
+    const dropCount =
+      prev && prev.visitors > 0 ? prev.visitors - curr.visitors : null;
     const dropPct =
       prev && prev.visitors > 0
         ? Math.round(1000 * (1 - curr.visitors / prev.visitors)) / 10
         : null;
-    out.push({ ...curr, dropPct });
+    out.push({
+      ...curr,
+      dropPct,
+      dropCount: dropCount !== null ? Math.max(0, dropCount) : null,
+      retainFromQuizStartPct:
+        quizTop > 0
+          ? Math.round((1000 * curr.visitors) / quizTop) / 10
+          : null,
+      retainFromLpPct:
+        lpTop > 0 ? Math.round((1000 * curr.visitors) / lpTop) / 10 : null
+    });
   }
   return out;
 }

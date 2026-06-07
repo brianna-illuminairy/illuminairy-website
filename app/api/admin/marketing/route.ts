@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
+import { getFunnelDropoffReport } from "@/lib/marketing/funnel-dropoffs";
 import {
   getAnonymousAbandonCount,
   getCampaignRows,
@@ -14,7 +15,7 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
   }
 
-  const [current, previous, steps, campaigns, creatives, anonymousAbandon] =
+  const [current, previous, dropoffReport, steps, campaigns, creatives, anonymousAbandon] =
     await Promise.all([
       getFunnelCounts(7),
       getFunnelCounts(14).then(async (twoWeek) => {
@@ -27,7 +28,8 @@ export async function GET() {
           books: Math.max(0, twoWeek.books - last7.books)
         };
       }),
-      getStepDropoffs(7),
+      getFunnelDropoffReport(7),
+      getFunnelCounts(7).then((c) => getStepDropoffs(7, c.lpViews, c.quizStarts)),
       getCampaignRows(30),
       getCreativeRows(30),
       getAnonymousAbandonCount(7)
@@ -41,6 +43,7 @@ export async function GET() {
     funnel: current,
     priorFunnel: previous,
     leaks,
+    dropoff: dropoffReport,
     stepDropoffs: steps,
     campaigns: campaigns.slice(0, 20),
     creatives: creatives.slice(0, 30),
