@@ -1,7 +1,10 @@
 "use client";
 
 import posthog from "posthog-js";
-import { readSessionAttribution } from "@/lib/attribution";
+import {
+  attributionUtmProps,
+  readAttributionForAnalytics
+} from "@/lib/attribution";
 import { recordClientTouch } from "@/lib/analytics-touch-client";
 import {
   Ga4Events,
@@ -83,6 +86,10 @@ function persistedLpContext() {
   };
 }
 
+function quizAttributionProps() {
+  return attributionUtmProps(readAttributionForAnalytics());
+}
+
 const PARENT_CONFIRMED_KEY = "illuminairy_parent_confirmed";
 
 /** Meta Phase 1 optimization — parent selected "My child" on q-who (not students). */
@@ -97,16 +104,11 @@ export function captureParentConfirmed(qWho: string) {
   }
 
   const lpContext = persistedLpContext();
-  const attr = readSessionAttribution();
+  const attr = quizAttributionProps();
   const props = {
     ...lpContext,
     qWho: "child" as const,
-    utm_source: attr.utm_source,
-    utm_medium: attr.utm_medium,
-    utm_campaign: attr.utm_campaign,
-    utm_content: attr.utm_content,
-    utm_term: attr.utm_term,
-    landing_page: attr.landing_page
+    ...attr
   };
 
   recordClientTouch(TouchEvents.parentConfirmed, props);
@@ -125,7 +127,8 @@ export function captureParentConfirmed(qWho: string) {
       sat_lp_layout: lpContext.sat_lp_layout,
       qWho: "child",
       utm_campaign: attr.utm_campaign,
-      utm_content: attr.utm_content
+      utm_content: attr.utm_content,
+      utm_source: attr.utm_source
     });
   }
 }
@@ -133,21 +136,25 @@ export function captureParentConfirmed(qWho: string) {
 export function captureQuizStarted(answers: Record<string, unknown>) {
   const lpContext = persistedLpContext();
   const opening = quizOpeningProps(answers);
+  const attr = quizAttributionProps();
   recordClientTouch(TouchEvents.quizStarted, {
     step: QUIZ_ENTRY_STEP,
     step_index: 0,
     ...lpContext,
+    ...attr,
     ...opening
   });
   trackQuizGaEvent("quiz_started", {
     funnel: "sat_quiz",
     step: QUIZ_ENTRY_STEP,
     ...lpContext,
+    ...attr,
     ...opening
   });
   if (!getPostHogKey()) return;
   posthog.capture("quiz_started", {
     ...lpContext,
+    ...attr,
     ...opening
   });
 }
@@ -161,6 +168,7 @@ export function captureQuizStep(
   const opening = quizOpeningProps(answers);
   const props = {
     ...persistedLpContext(),
+    ...quizAttributionProps(),
     step: stepId,
     step_index: stepIndex,
     has_gap_screen: Boolean(options?.hasGapScreen),

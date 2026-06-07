@@ -121,3 +121,36 @@ export function readSessionAttribution(): Partial<AttributionSnapshot> {
     return {};
   }
 }
+
+/** Session + current URL — for analytics before AttributionProvider runs or if sessionStorage is blocked. */
+export function readAttributionForAnalytics(): Partial<AttributionSnapshot> {
+  if (typeof window === "undefined") return {};
+  const fromSession = readSessionAttribution();
+  const fromUrl = parseAttributionFromSearch(window.location.search);
+  return mergeAttribution(fromSession, fromUrl);
+}
+
+export function attributionUtmProps(
+  snap: Partial<AttributionSnapshot>
+): Pick<
+  AttributionSnapshot,
+  | "utm_source"
+  | "utm_medium"
+  | "utm_campaign"
+  | "utm_content"
+  | "utm_term"
+  | "fbclid"
+  | "gclid"
+  | "landing_page"
+> {
+  return {
+    utm_source: snap.utm_source,
+    utm_medium: snap.utm_medium,
+    utm_campaign: snap.utm_campaign,
+    utm_content: snap.utm_content,
+    utm_term: snap.utm_term,
+    fbclid: snap.fbclid,
+    gclid: snap.gclid,
+    landing_page: snap.landing_page
+  };
+}

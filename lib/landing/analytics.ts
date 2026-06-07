@@ -2,7 +2,10 @@
 
 import posthog from "posthog-js";
 import type { AttributionSnapshot } from "@/lib/attribution";
-import { readSessionAttribution } from "@/lib/attribution";
+import {
+  attributionUtmProps,
+  readAttributionForAnalytics
+} from "@/lib/attribution";
 import { recordClientTouch } from "@/lib/analytics-touch-client";
 import { AnalyticsEvents } from "@/lib/analytics-events";
 import { TouchEvents } from "@/lib/analytics-registry";
@@ -39,8 +42,16 @@ export type LandingEventProps = {
   hero_hook_source?: string;
 };
 
-function readAttribution(): Partial<AttributionSnapshot> {
-  return readSessionAttribution();
+function registerPostHogAttribution(attr: Partial<AttributionSnapshot>) {
+  if (!getPostHogKey()) return;
+  const props = attributionUtmProps(attr);
+  const register: Record<string, string> = {};
+  for (const [key, value] of Object.entries(props)) {
+    if (value) register[key] = value;
+  }
+  if (Object.keys(register).length > 0) {
+    posthog.register(register);
+  }
 }
 
 function baseProps(
@@ -49,18 +60,12 @@ function baseProps(
   landingPath: string,
   extra?: Partial<LandingEventProps>
 ): LandingEventProps {
-  const attr = readAttribution();
+  const attr = readAttributionForAnalytics();
   return {
     sat_lp_variant: variant,
     sat_lp_layout: layout,
     landing_page: landingPath,
-    utm_source: attr.utm_source,
-    utm_medium: attr.utm_medium,
-    utm_campaign: attr.utm_campaign,
-    utm_content: attr.utm_content,
-    utm_term: attr.utm_term,
-    fbclid: attr.fbclid,
-    gclid: attr.gclid,
+    ...attributionUtmProps(attr),
     ...extra
   };
 }
@@ -72,6 +77,7 @@ export function trackLandingView(
   extra?: Partial<LandingEventProps>
 ) {
   const props = baseProps(variant, layout, landingPath, extra);
+  registerPostHogAttribution(props);
   if (getPostHogKey()) {
     posthog.capture(AnalyticsEvents.funnelLandingView, props);
   }
@@ -101,6 +107,7 @@ export function trackLandingCtaClick(
     section_id: sectionId,
     cta_label: ctaLabel
   });
+  registerPostHogAttribution(props);
   if (getPostHogKey()) {
     posthog.capture(AnalyticsEvents.funnelCtaClick, props);
   }
