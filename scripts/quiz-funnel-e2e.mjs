@@ -203,11 +203,19 @@ async function assertStepInteraction(page, stepId, opts = {}) {
   return assertExplicitCta(page, stepId, opts);
 }
 
-async function seedAnswers(page, answers) {
+async function seedAnswers(page, answers, lastStep = null) {
   await page.goto(`${BASE}/plan?step=q-who`, { waitUntil: "networkidle" });
-  await page.evaluate((payload) => {
-    localStorage.setItem("qf_answers", JSON.stringify(payload));
-  }, answers);
+  await page.evaluate(
+    ({ payload, step }) => {
+      localStorage.setItem("qf_answers", JSON.stringify(payload));
+      if (step) localStorage.setItem("qf_last_step", step);
+      const trimmed = { qWho: payload.qWho, q1: payload.q1, q2: payload.q2, q3: payload.q3, q4: payload.q4, q5: payload.q5, q6: payload.q6, q7: payload.q7, q8: payload.q8, q9: payload.q9, qDoubts: payload.qDoubts, qScoreLower: payload.qScoreLower };
+      const snap = encodeURIComponent(JSON.stringify({ v: 2, s: step, t: Date.now(), a: trimmed }));
+      document.cookie = `qf_snapshot=${snap}; Path=/; Max-Age=7776000; SameSite=Lax`;
+      if (step) localStorage.setItem("qf_updated_at", String(Date.now()));
+    },
+    { payload: answers, step: lastStep }
+  );
 }
 
 async function openStep(page, stepId) {

@@ -1,5 +1,7 @@
 /** First-touch attribution — browser session + cookie helpers. */
 
+import { applyLandingAttributionInference } from "@/lib/marketing/landing-attribution-infer";
+
 export const VISITOR_COOKIE = "illuminairy_vid";
 export const ATTRIBUTION_SESSION_KEY = "illuminairy_attribution";
 
@@ -37,6 +39,8 @@ export type AttributionSnapshot = {
   fbp?: string;
   fbc?: string;
   landing_page?: string;
+  /** Resolved on LP load — used to infer ad when utm_content is stripped. */
+  hero_hook?: string;
   referrer?: string;
 };
 
@@ -94,12 +98,19 @@ export function deriveLeadSource(snap: AttributionSnapshot): string {
   return "unknown";
 }
 
+const CONTEXT_KEYS = ["hero_hook", "landing_page"] as const;
+
 export function mergeAttribution(
   base: AttributionSnapshot,
   incoming: AttributionSnapshot
 ): AttributionSnapshot {
   const merged = { ...base };
   for (const key of TRACKING_KEYS) {
+    if (incoming[key] && !merged[key]) {
+      merged[key] = incoming[key];
+    }
+  }
+  for (const key of CONTEXT_KEYS) {
     if (incoming[key] && !merged[key]) {
       merged[key] = incoming[key];
     }
@@ -132,7 +143,7 @@ export function attributionToTouchColumns(snap: AttributionSnapshot) {
 }
 
 /** Read persisted first-touch attribution from sessionStorage (browser only). */
-export function readSessionAttribution(): Partial<AttributionSnapshot> {
+export function readSessionAttribution(): AttributionSnapshot {
   if (typeof window === "undefined") return {};
   try {
     const raw = sessionStorage.getItem(ATTRIBUTION_SESSION_KEY);
@@ -143,12 +154,38 @@ export function readSessionAttribution(): Partial<AttributionSnapshot> {
   }
 }
 
+export function writeSessionAttribution(snap: AttributionSnapshot): void {
+  if (typeof window === "undefined") return;
+  try {
+    sessionStorage.setItem(ATTRIBUTION_SESSION_KEY, JSON.stringify(snap));
+  } catch {
+    /* ignore */
+  }
+}
+
 /** Session + current URL — for analytics before AttributionProvider runs or if sessionStorage is blocked. */
 export function readAttributionForAnalytics(): Partial<AttributionSnapshot> {
   if (typeof window === "undefined") return {};
   const fromSession = readSessionAttribution();
   const fromUrl = parseAttributionFromSearch(window.location.search);
-  return mergeAttribution(fromSession, fromUrl);
+  const merged = mergeAttribution(fromSession, fromUrl);
+  return applyLandingAttributionInference(merged);
+}
+
+/** Persist LP path + hero hook and infer Meta UTMs when URL params are missing. */
+export function enrichSessionAttributionFromLanding(
+  landingPath: string,
+  heroHook?: string
+): void {
+  if (typeof window === "undefined") return;
+  const fromUrl = parseAttributionFromSearch(window.location.search);
+  let merged = mergeAttribution(readSessionAttribution(), fromUrl);
+  merged = mergeAttribution(merged, {
+    landing_page: landingPath,
+    hero_hook: heroHook
+  });
+  merged = applyLandingAttributionInference(merged);
+  writeSessionAttribution(merged);
 }
 
 export function attributionUtmProps(
@@ -163,6 +200,7 @@ export function attributionUtmProps(
   | "fbclid"
   | "gclid"
   | "landing_page"
+  | "hero_hook"
 > {
   return {
     utm_source: snap.utm_source,
@@ -172,6 +210,7 @@ export function attributionUtmProps(
     utm_term: snap.utm_term,
     fbclid: snap.fbclid,
     gclid: snap.gclid,
-    landing_page: snap.landing_page
+    landing_page: snap.landing_page,
+    hero_hook: snap.hero_hook
   };
 }

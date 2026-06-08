@@ -21,17 +21,32 @@ Create one dashboard: **SAT LP → Quiz → Lead → Book**
 
 1. `funnel_landing_view`
 2. `funnel_cta_click`
-3. `quiz_started` (once on first `q-who` — distinct from step views)
-4. `quiz_step_viewed` (filter `step = q-who` for LP → quiz handoff; legacy `step = q1` = urgency Q3)
-5. `quiz_lead_submitted`
-6. `quiz_booking_confirmed`
-7. `quiz_thank_you_viewed` (`booked` step)
+3. `quiz_session_started` (once per browser session — first `quiz_step_viewed` on any step)
+4. `quiz_started` (once per browser lifetime — first-ever funnel entry; property `first_start_ever: true`)
+5. `quiz_step_viewed` (filter `step = q-who` for LP → quiz handoff on fresh starts; legacy `step = q1` = urgency Q3)
+6. `quiz_lead_submitted`
+7. `quiz_booking_confirmed`
+8. `quiz_thank_you_viewed` (`booked` step)
 
 ## Event notes
 
 ### `quiz_step_viewed` vs `$pageview`
 
-Each step also fires a synthetic PostHog `$pageview` with `$current_url=/plan?step=…` (canonical URL; `/quiz` redirects). Funnel dashboards should use **`quiz_step_viewed`** as the step metric; `$pageview` is optional for path-based views.
+**LP CTA rate:** `funnel_cta_click` / `funnel_landing_view` — breakdown by `utm_content`. Do not use `$pageview` for LP or quiz step funnels.
+
+Plan Builder steps fire **`quiz_step_viewed` only** (no per-step `$pageview`). The global provider still sends one `$pageview` on LP paths (`/`, `/sat-plan-builder`) per navigation; `/plan` step changes do not emit `$pageview`.
+
+### UTM fallback from landing page
+
+When URL UTMs are stripped (Safari ITP, in-app browser), session attribution backfills from the **SAT parent LP path** (`lib/marketing/landing-attribution-infer.ts`, registry in `lib/marketing/meta-live-creatives.ts`):
+
+| LP path | Inference |
+|---------|-----------|
+| `/` | Maps to ad1 (`utm_content: script_5`) — one ad on this path |
+| `/sat-plan-builder` | Uses persisted `hero_hook` from LP load → matching live creative (`fall`, `tutor`, `mom_story`, `student_story`) |
+| `/sat-plan-builder` (no hook) | Falls back to `utm_content: lp_sat-plan-builder` (shared LP bucket) |
+
+LP view calls `enrichSessionAttributionFromLanding` before quiz navigation so `/plan` events inherit inferred UTMs. Break down LP CTR by `utm_content`; use `hero_hook` when `utm_content` is the shared LP bucket.
 
 ### Booking confirmation (API vs webhook)
 

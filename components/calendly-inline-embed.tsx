@@ -4,6 +4,8 @@ import { useEffect, useRef, type CSSProperties } from "react";
 import {
   buildCalendlyInlineWidgetOptions,
   calendlyEmbedUrl,
+  CALENDLY_WIDGET_CSS,
+  CALENDLY_WIDGET_JS,
   type CalendlyPrefill,
   type CalendlyUtm
 } from "@/lib/calendly-embed";
@@ -17,7 +19,25 @@ type CalendlyInlineEmbedProps = {
   style?: CSSProperties;
 };
 
-/** Wait for widget.js (loaded in quiz layout) — handles script arriving before or after mount. */
+function ensureCalendlyAssetsLoaded(): void {
+  if (typeof document === "undefined") return;
+
+  if (!document.querySelector(`link[href="${CALENDLY_WIDGET_CSS}"]`)) {
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = CALENDLY_WIDGET_CSS;
+    document.head.appendChild(link);
+  }
+
+  if (!document.querySelector(`script[src="${CALENDLY_WIDGET_JS}"]`)) {
+    const script = document.createElement("script");
+    script.src = CALENDLY_WIDGET_JS;
+    script.async = true;
+    document.body.appendChild(script);
+  }
+}
+
+/** Wait for widget.js — loaded when embed mounts (not quiz layout). */
 function waitForCalendly(
   timeoutMs = 15000
 ): Promise<NonNullable<typeof window.Calendly>> {
@@ -60,6 +80,10 @@ export function CalendlyInlineEmbed({
   const initKeyRef = useRef("");
 
   useEffect(() => {
+    ensureCalendlyAssetsLoaded();
+  }, []);
+
+  useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
     if (!prefill?.email?.includes("@") || !prefill?.name?.trim()) return;
@@ -85,7 +109,6 @@ export function CalendlyInlineEmbed({
       })
       .catch(() => {
         if (cancelled || !containerRef.current) return;
-        // Last resort: same URL as widget would use (no customAnswers via URL).
         el.innerHTML = "";
         const iframe = document.createElement("iframe");
         iframe.title = "Schedule a call";

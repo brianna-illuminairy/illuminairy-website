@@ -36,7 +36,7 @@ import {
 export { gainTargetForQ5 };
 
 // ─── I · Doubts mirror (echoes selected q-doubts, reframes what we uncover) ───
-export function QFIDoubtsInsight({ onContinue, onBack, qDoubts = [] }) {
+export function QFIDoubtsInsight({ onContinue, onBack, qDoubts = /** @type {string[]} */ ([]) }) {
   const rows = selectedDoubts(qDoubts);
   const c = DOUBTS_INSIGHT_COPY;
   return (
@@ -112,7 +112,7 @@ const STARS = [
 
 export function QFI2Compute({
   onContinue, onBack,
-  q2 = 'top-choice', q4 = '1200-1300', q5 = 'oct3', q6 = ['math', 'no-plan'], q7 = [], q8 = '1400', q9, name,
+  q2 = 'top-choice', q4 = '1200-1300', q5 = 'oct3', q6 = ['math', 'no-plan'], q7 = /** @type {string[]} */ ([]), q8 = '1400', q9, name,
 }) {
   const displayName = name && String(name).trim() ? String(name).trim() : null;
   const possessive = displayName ? `${displayName}'s` : 'your';
@@ -516,7 +516,7 @@ function planDelayCost(skillPts, ptsPerWeek) {
 }
 
 export function QFV1Projection({ onContinue, onBack, answers = {} }) {
-  const { q7 = [], kidName, qWho = 'child' } = answers;
+  const { q7 = /** @type {string[]} */ ([]), kidName, qWho = 'child' } = answers;
   const self = isQuizSelfTaker(qWho);
   const { possessive: voicePossessive } = quizSubjectVoice(qWho);
   const projection = buildV1Projection(answers);
@@ -723,7 +723,7 @@ const Q4_BREAK_OUT_BAND = {
   '1400plus': 'the 1400s',
 };
 
-export function QFIDiagnosis({ onContinue, onBack, q3 = 'sat-1', q4 = '1200-1300', q6 = ['math', 'no-plan'], q7 = [], q5 = 'oct3', qWho = 'child' }) {
+export function QFIDiagnosis({ onContinue, onBack, q3 = 'sat-1', q4 = '1200-1300', q6 = ['math', 'no-plan'], q7 = /** @type {string[]} */ ([]), q5 = 'oct3', qWho = 'child' }) {
   const needPhrase = isQuizSelfTaker(qWho) ? 'you need' : 'they need';
   const today = funnelToday();
   const days = D_TEST_DATES[q5]

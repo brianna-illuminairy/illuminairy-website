@@ -1,10 +1,13 @@
 'use client';
 
-import { GOAL_FEASIBILITY_TIER_ORDER } from '@/lib/quiz-funnel/goal-achievability';
+import {
+  EMPTY_ACHIEVABILITY_STATS,
+  GOAL_FEASIBILITY_TIER_ORDER,
+} from '@/lib/quiz-funnel/goal-achievability';
 
 const AMBITIOUS_INDEX = GOAL_FEASIBILITY_TIER_ORDER.indexOf('ambitious');
 
-export function AchievabilityStatBar({ stats }) {
+export function AchievabilityStatBar({ stats = EMPTY_ACHIEVABILITY_STATS }) {
   const cells = [
     { value: stats.scoreGap != null ? `+${stats.scoreGap}` : '—', label: 'Score gap', accent: true },
     { value: stats.testDateShort ?? 'Flexible', label: 'Test date', accent: false },
@@ -56,11 +59,11 @@ export function AchievabilityPills({
  * Pills live in their own container; disclaimer sits outside.
  */
 export function AchievabilityPlanBlock({
-  stats,
+  stats = EMPTY_ACHIEVABILITY_STATS,
   startingScoreLabel,
   startingScoreNote,
-  tierIndex,
-  tierRanges,
+  tierIndex = 2,
+  tierRanges = [],
   educational = true,
   outcomesMeta,
   projectedRangeLine,
@@ -92,14 +95,15 @@ export function AchievabilityPlanBlock({
 
 /** Stat bar + rating-pill block, shared by the plan reveal and the share page. */
 export function AchievabilityRating({ assessment, label = 'Goal score achievability rating' }) {
+  const stats = assessment?.stats ?? EMPTY_ACHIEVABILITY_STATS;
   return (
     <div className="qf-goal-assess__callout">
       <AchievabilityPlanBlock
-        stats={assessment.stats}
-        startingScoreLabel={assessment.startingScoreLabel}
-        tierIndex={assessment.tierIndex}
-        tierRanges={assessment.tierRanges}
-        educational={!assessment.stats.hasKnownGoal}
+        stats={stats}
+        startingScoreLabel={assessment?.startingScoreLabel}
+        tierIndex={assessment?.tierIndex ?? 2}
+        tierRanges={assessment?.tierRanges ?? []}
+        educational={!stats.hasKnownGoal}
         ratingLabel={label}
       />
     </div>

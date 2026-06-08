@@ -14,6 +14,9 @@ function PostHogPageView() {
     if (!getPostHogKey() || !pathname) {
       return;
     }
+    if (pathname === "/plan" || pathname.startsWith("/plan/")) {
+      return;
+    }
     let url = window.location.origin + pathname;
     const query = searchParams.toString();
     if (query) {

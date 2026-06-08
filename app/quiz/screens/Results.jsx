@@ -1,4 +1,4 @@
-'use client'; // @ts-nocheck
+'use client';
 import { useMemo } from 'react';
 import { QFScreen, QFButton, QFQuestionHead, QFConstellation } from '../components/QFShell';
 import { buildPlanReveal } from '@/lib/quiz-funnel/plan-reveal';

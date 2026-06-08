@@ -2,13 +2,15 @@
 
 import { useEffect, useRef } from "react";
 import {
-  ATTRIBUTION_SESSION_KEY,
   createVisitorId,
   mergeAttribution,
   parseAttributionFromSearch,
+  readSessionAttribution,
+  writeSessionAttribution,
   type AttributionSnapshot,
   VISITOR_COOKIE
 } from "@/lib/attribution";
+import { applyLandingAttributionInference } from "@/lib/marketing/landing-attribution-infer";
 import { persistMetaClickIds } from "@/lib/meta-click-ids";
 
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 180;
@@ -36,23 +38,11 @@ function ensureVisitorId() {
 }
 
 function loadSessionAttribution(): AttributionSnapshot {
-  try {
-    const raw = sessionStorage.getItem(ATTRIBUTION_SESSION_KEY);
-    if (raw) {
-      return JSON.parse(raw) as AttributionSnapshot;
-    }
-  } catch {
-    /* ignore */
-  }
-  return {};
+  return readSessionAttribution();
 }
 
 function saveSessionAttribution(snap: AttributionSnapshot) {
-  try {
-    sessionStorage.setItem(ATTRIBUTION_SESSION_KEY, JSON.stringify(snap));
-  } catch {
-    /* ignore */
-  }
+  writeSessionAttribution(snap);
 }
 
 async function sendTouch(
@@ -87,7 +77,7 @@ export function AttributionProvider({ children }: { children: React.ReactNode })
 
     const visitorId = ensureVisitorId();
     const fromUrl = parseAttributionFromSearch(window.location.search);
-    const merged = mergeAttribution(loadSessionAttribution(), {
+    let merged = mergeAttribution(loadSessionAttribution(), {
       ...fromUrl,
       landing_page: window.location.href,
       referrer: document.referrer || undefined
@@ -97,6 +87,8 @@ export function AttributionProvider({ children }: { children: React.ReactNode })
     const metaIds = persistMetaClickIds(merged.fbclid);
     if (metaIds.fbp && !merged.fbp) merged.fbp = metaIds.fbp;
     if (metaIds.fbc && !merged.fbc) merged.fbc = metaIds.fbc;
+
+    merged = applyLandingAttributionInference(merged);
 
     saveSessionAttribution(merged);
 
@@ -128,7 +120,8 @@ export function getAttributionPayload(): {
 } {
   const visitorId = ensureVisitorId();
   const fromUrl = parseAttributionFromSearch(window.location.search);
-  const merged = mergeAttribution(loadSessionAttribution(), fromUrl);
+  let merged = mergeAttribution(loadSessionAttribution(), fromUrl);
+  merged = applyLandingAttributionInference(merged);
   saveSessionAttribution(merged);
   return { visitorId, attribution: merged };
 }

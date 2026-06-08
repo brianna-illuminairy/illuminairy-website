@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { V4Page } from "@/components/landing/v4/v4-page";
 import { trackLandingCtaClick, trackLandingView } from "@/lib/landing/analytics";
+import { enrichSessionAttributionFromLanding } from "@/lib/attribution";
 import { persistLpLayout } from "@/lib/landing/layout-storage";
 import { persistLpVariant } from "@/lib/landing/variant-storage";
 import type { LandingSectionId } from "@/lib/landing/content";
@@ -60,6 +61,7 @@ export function LandingPage({ landingPath = "/" }: LandingPageProps) {
       ...trackingExtra
     });
     trackLpLayoutExperimentExposure(layout);
+    enrichSessionAttributionFromLanding(landingPath, metaContext.heroHook);
     trackLandingView(variant, layout, landingPath, trackingExtra);
   }, [layout, landingPath, metaContext, variant]);
 

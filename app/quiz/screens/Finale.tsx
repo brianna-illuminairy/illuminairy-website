@@ -578,7 +578,10 @@ export function QFS9ThankYou({
     [answers]
   );
 
+  const thankYouTracked = useRef(false);
   useEffect(() => {
+    if (thankYouTracked.current) return;
+    thankYouTracked.current = true;
     captureQuizThankYouViewed(answers);
   }, [answers]);
 

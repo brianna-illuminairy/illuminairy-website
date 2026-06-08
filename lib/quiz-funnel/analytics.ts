@@ -18,10 +18,8 @@ import {
 } from "@/lib/quiz-funnel/gains";
 import { readPersistedLpLayout } from "@/lib/landing/layout-storage";
 import { readPersistedLpVariant } from "@/lib/landing/variant-storage";
-import { PLAN_BUILDER_PATH } from "@/lib/plan-builder-routes";
 import { buildQuizAnswersSnapshot } from "@/lib/crm/quiz-answers-snapshot";
 import { QUIZ_ENTRY_STEP } from "@/lib/quiz-funnel/funnel-steps";
-import { syncQuizProgressNow } from "@/lib/quiz-funnel/quiz-progress-sync";
 import {
   quizDoubtsEventProps,
   shouldAttachQuizDoubtsProps,
@@ -161,15 +159,17 @@ export function captureParentConfirmed(qWho: string) {
   }
 }
 
-export function captureQuizStarted(answers: Record<string, unknown>) {
+export function captureQuizStarted(
+  answers: Record<string, unknown>,
+  meta: { stepId: string; stepIndex: number }
+) {
   const lpContext = persistedLpContext();
   const opening = quizOpeningProps(answers);
   const attr = quizAttributionProps();
   const snapshot = buildQuizAnswersSnapshot(answers);
-  syncQuizProgressNow(answers, { step: QUIZ_ENTRY_STEP, step_index: 0 });
   recordClientTouch(TouchEvents.quizStarted, {
-    step: QUIZ_ENTRY_STEP,
-    step_index: 0,
+    step: meta.stepId,
+    step_index: meta.stepIndex,
     ...lpContext,
     ...attr,
     ...opening,
@@ -177,16 +177,45 @@ export function captureQuizStarted(answers: Record<string, unknown>) {
   });
   trackQuizGaEvent("quiz_started", {
     funnel: "sat_quiz",
-    step: QUIZ_ENTRY_STEP,
+    step: meta.stepId,
+    step_index: meta.stepIndex,
     ...lpContext,
     ...attr,
     ...opening
   });
   if (!getPostHogKey()) return;
-  posthog.capture("quiz_started", {
+  posthog.capture(PostHogEvents.quizStarted, {
+    ...lpContext,
+    ...attr,
+    ...opening,
+    step: meta.stepId,
+    step_index: meta.stepIndex,
+    first_start_ever: true
+  });
+}
+
+export function captureQuizSessionStarted(
+  answers: Record<string, unknown>,
+  meta: { stepId: string; stepIndex: number }
+) {
+  const lpContext = persistedLpContext();
+  const opening = quizOpeningProps(answers);
+  const attr = quizAttributionProps();
+  trackQuizGaEvent(Ga4Events.quizSessionStarted, {
+    funnel: "sat_quiz",
+    step: meta.stepId,
+    step_index: meta.stepIndex,
     ...lpContext,
     ...attr,
     ...opening
+  });
+  if (!getPostHogKey()) return;
+  posthog.capture(PostHogEvents.quizSessionStarted, {
+    ...lpContext,
+    ...attr,
+    ...opening,
+    step: meta.stepId,
+    step_index: meta.stepIndex
   });
 }
 
@@ -201,7 +230,6 @@ export function captureQuizStep(
   const lpContext = persistedLpContext();
   const snapshot = buildQuizAnswersSnapshot(answers);
   const kid = snapshot.kidName ?? undefined;
-  syncQuizProgressNow(answers, { step: stepId, step_index: stepIndex });
   const props = {
     ...lpContext,
     ...attr,
@@ -253,9 +281,6 @@ export function captureQuizStep(
   syncQuizPersonProperties(answers);
   maybeCaptureQuizDoubtsAnswered(stepId, answers);
   posthog.capture("quiz_step_viewed", props);
-  posthog.capture("$pageview", {
-    $current_url: `${window.location.origin}${PLAN_BUILDER_PATH}?step=${stepId}`
-  });
 }
 
 export function identifyQuizLead(email: string, answers: Record<string, unknown>) {

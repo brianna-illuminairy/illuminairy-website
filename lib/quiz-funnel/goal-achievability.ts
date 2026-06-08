@@ -98,6 +98,15 @@ export type AchievabilityStats = {
   hasKnownGoal: boolean;
 };
 
+/** Safe defaults when achievability stats are missing from a partial/stale payload. */
+export const EMPTY_ACHIEVABILITY_STATS: AchievabilityStats = {
+  scoreGap: null,
+  testDateShort: null,
+  daysToTest: null,
+  ptsPerWeek: null,
+  hasKnownGoal: false,
+};
+
 /** Point-gain band for each tier at the student's runway. */
 export type AchievabilityTierRange = {
   tier: GoalFeasibilityTier;
@@ -708,7 +717,7 @@ export function resolveGoalAchievabilityForDisplay(plan: {
   return {
     ...fallback,
     ...partial,
-    stats: partial.stats ?? fallback.stats,
+    stats: partial.stats ?? fallback.stats ?? EMPTY_ACHIEVABILITY_STATS,
     tierRanges: partial.tierRanges ?? fallback.tierRanges,
     stakesEmphasis: partial.stakesEmphasis ?? fallback.stakesEmphasis,
     insightParagraph: partial.insightParagraph ?? fallback.insightParagraph,

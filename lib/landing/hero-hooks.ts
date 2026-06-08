@@ -9,7 +9,9 @@ export type LandingHeroHook =
   | "nov1"
   | "gap"
   | "june"
-  | "tutor";
+  | "tutor"
+  | "mom_story"
+  | "student_story";
 
 export function landingHeroHookFromSearch(search: string): LandingHeroHook {
   const normalized = search.startsWith("?") ? search.slice(1) : search;
@@ -21,7 +23,9 @@ export function landingHeroHookFromSearch(search: string): LandingHeroHook {
     raw === "nov1" ||
     raw === "gap" ||
     raw === "june" ||
-    raw === "tutor"
+    raw === "tutor" ||
+    raw === "mom_story" ||
+    raw === "student_story"
   ) {
     return raw;
   }
@@ -59,8 +63,8 @@ const ICON_SCRIPT_HOOKS: Record<string, LandingHeroHook> = {
   /** Meta c1 cold creative slugs — `utm_content` on live ad URLs. */
   ad2_enough_time: "fall",
   ad3_before_tutoring: "tutor",
-  ad4_mom_first_story: "gpa",
-  ad5_high_gpa_student_story: "gpa"
+  ad4_mom_first_story: "mom_story",
+  ad5_high_gpa_student_story: "student_story"
 };
 
 function hookFromToken(token: string): LandingHeroHook | null {
@@ -101,8 +105,8 @@ export function landingHeroHookFromUtmSlug(slug?: string | null): LandingHeroHoo
   if (lower.includes("gpa") || lower.includes("ap_class")) return "gpa";
   if (lower.includes("enough_time")) return "fall";
   if (lower.includes("before_tutoring") || lower.includes("tutoring")) return "tutor";
-  if (lower.includes("mom_first_story") || lower.includes("first_story")) return "gpa";
-  if (lower.includes("high_gpa") || lower.includes("student_story")) return "gpa";
+  if (lower.includes("mom_first_story") || lower.includes("first_story")) return "mom_story";
+  if (lower.includes("high_gpa") || lower.includes("student_story")) return "student_story";
 
   return null;
 }
@@ -208,6 +212,22 @@ export const landingHeroHeadlines: Record<LandingHeroHook, LandingHeroHeadline> 
       "before their next test."
     ],
     accentLine: 1
+  },
+  mom_story: {
+    lines: [
+      "She had a 3.9 GPA and a 1160 SAT.",
+      "We needed to know if there was still time.",
+      "See what's realistic before their fall test."
+    ],
+    accentLine: 1
+  },
+  student_story: {
+    lines: [
+      "3.9 GPA. 11 AP classes.",
+      "So why is the SAT still in the 1160s?",
+      "See what's realistic before their fall test."
+    ],
+    accentLine: 1
   }
 };
 
@@ -244,6 +264,14 @@ export const landingHeroHeadlinesV4: Record<
   },
   tutor: {
     lines: ["Before SAT tutoring.", "Find out what's realistic first."],
+    accentLine: 1
+  },
+  mom_story: {
+    lines: ["3.9 GPA. 1160 SAT.", "Is there still time to move the score?"],
+    accentLine: 1
+  },
+  student_story: {
+    lines: ["3.9 GPA. 11 AP classes.", "So why is the SAT still in the 1160s?"],
     accentLine: 1
   }
 };

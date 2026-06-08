@@ -1,8 +1,9 @@
 import {
-  ATTRIBUTION_SESSION_KEY,
-  VISITOR_COOKIE,
-  type AttributionSnapshot
+  readSessionAttribution,
+  type AttributionSnapshot,
+  VISITOR_COOKIE
 } from "@/lib/attribution";
+import { applyLandingAttributionInference } from "@/lib/marketing/landing-attribution-infer";
 
 function readCookie(name: string) {
   if (typeof document === "undefined") return "";
@@ -17,19 +18,15 @@ export function getClientAttributionPayload(): {
   if (typeof window === "undefined") {
     return { attribution: {} };
   }
-  let attribution: AttributionSnapshot = {};
-  try {
-    const raw = sessionStorage.getItem(ATTRIBUTION_SESSION_KEY);
-    if (raw) attribution = JSON.parse(raw) as AttributionSnapshot;
-  } catch {
-    /* ignore */
-  }
+  let attribution: AttributionSnapshot = readSessionAttribution();
+  attribution = {
+    ...attribution,
+    landing_page: attribution.landing_page ?? window.location.pathname,
+    referrer: attribution.referrer ?? (document.referrer || undefined)
+  };
+  attribution = applyLandingAttributionInference(attribution);
   return {
     visitorId: readCookie(VISITOR_COOKIE) || undefined,
-    attribution: {
-      ...attribution,
-      landing_page: attribution.landing_page ?? window.location.pathname,
-      referrer: attribution.referrer ?? (document.referrer || undefined)
-    }
+    attribution
   };
 }

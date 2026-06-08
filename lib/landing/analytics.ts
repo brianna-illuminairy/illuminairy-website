@@ -75,7 +75,8 @@ export function trackLandingView(
     sat_lp_variant: variant,
     sat_lp_layout: layout,
     funnel: "sat_quiz",
-    landing_page: landingPath
+    landing_page: landingPath,
+    ...attributionUtmProps(readAttributionForAnalytics())
   });
   if (typeof window !== "undefined" && window.fbq) {
     window.fbq("track", "ViewContent", {

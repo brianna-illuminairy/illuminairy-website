@@ -56,10 +56,18 @@ export function QFInsightHit({
   manual = false,
 }) {
   const [progress, setProgress] = useState(0);
+  const [reducedMotion, setReducedMotion] = useState(true);
 
-  const reducedMotion =
-    typeof window !== 'undefined' &&
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const apply = () => setReducedMotion(mq.matches);
+    const timer = window.setTimeout(apply, 0);
+    mq.addEventListener('change', apply);
+    return () => {
+      window.clearTimeout(timer);
+      mq.removeEventListener('change', apply);
+    };
+  }, []);
 
   const duration =
     hit && !manual && !reducedMotion ? resolveAutoAdvanceMs(hit, autoAdvanceMs) : null;

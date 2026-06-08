@@ -126,7 +126,7 @@ export function QFQ4RecentScore({ value, onSelect, onBack, q3 = 'sat-1', qWho = 
   );
 }
 
-export function QFQDoubts({ value = [], onToggle, onContinue, onBack }) {
+export function QFQDoubts({ value = /** @type {string[]} */ ([]), onToggle, onContinue, onBack }) {
   const opts = DOUBTS_OPTIONS;
   return (
     <QFScreen stepIdx={7} onBack={onBack}
@@ -163,7 +163,7 @@ export function QFQ5Clock({ value, onSelect, onBack, qWho = 'child' }) {
   );
 }
 
-export function QFQ6Blocker({ value = [], onToggle, onContinue, onBack, qWho = 'child' }) {
+export function QFQ6Blocker({ value = /** @type {string[]} */ ([]), onToggle, onContinue, onBack, qWho = 'child' }) {
   const opts = [
     { id: 'math',       label: 'Math' },
     { id: 'reading',    label: 'Reading & writing' },
@@ -186,7 +186,7 @@ export function QFQ6Blocker({ value = [], onToggle, onContinue, onBack, qWho = '
   );
 }
 
-export function QFQ7Tried({ value = [], onToggle, onContinue, onBack, q3 = 'sat-1', qWho = 'child' }) {
+export function QFQ7Tried({ value = /** @type {string[]} */ ([]), onToggle, onContinue, onBack, q3 = 'sat-1', qWho = 'child' }) {
   const hasSat = ['sat-1', 'sat-2', 'sat-3+'].includes(q3);
   const opts = [
     { id: 'khan',    label: 'Khan / Bluebook / YouTube' },

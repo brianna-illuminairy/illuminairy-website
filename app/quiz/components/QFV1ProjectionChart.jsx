@@ -73,12 +73,21 @@ export function QFV1ProjectionChart({
   gapExceedsModeled = false,
   onAnimationComplete,
 }) {
-  const [playing, setPlaying] = useState(true);
+  const [playing, setPlaying] = useState(false);
   const segments = skillPts.length;
 
-  const reducedMotion =
-    typeof window !== 'undefined' &&
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const [reducedMotion, setReducedMotion] = useState(true);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const apply = () => setReducedMotion(mq.matches);
+    const timer = window.setTimeout(apply, 0);
+    mq.addEventListener('change', apply);
+    return () => {
+      window.clearTimeout(timer);
+      mq.removeEventListener('change', apply);
+    };
+  }, []);
 
   const timing = useMemo(() => animationTiming(segments), [segments]);
   const segW = (END_X - PAD_X) / Math.max(segments, 1);
@@ -128,18 +137,21 @@ export function QFV1ProjectionChart({
 
   useEffect(() => {
     if (reducedMotion) {
-      queueMicrotask(() => {
+      const stopTimer = window.setTimeout(() => {
         setPlaying(false);
         onAnimationComplete?.();
-      });
-      return;
+      }, 0);
+      return () => window.clearTimeout(stopTimer);
     }
-    queueMicrotask(() => setPlaying(true));
+    const startTimer = window.setTimeout(() => setPlaying(true), 0);
     const done = window.setTimeout(() => {
       setPlaying(false);
       onAnimationComplete?.();
     }, timing.animDoneMs);
-    return () => window.clearTimeout(done);
+    return () => {
+      window.clearTimeout(startTimer);
+      window.clearTimeout(done);
+    };
   }, [
     current,
     displayTarget,

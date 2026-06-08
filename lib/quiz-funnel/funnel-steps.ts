@@ -1,5 +1,3 @@
-import { readQuizLastStep } from "@/lib/quiz-funnel/quiz-storage";
-
 /**
  * Plan Builder step IDs and intake guards.
  * Step IDs are stable for PostHog/GA/touch_events — do not rename without dashboard updates.
@@ -76,19 +74,20 @@ type ResumeAnswers = QuizIntakeAnswers & {
  */
 export function resolveQuizResumeStep(
   answers: ResumeAnswers,
-  routeSteps: string[]
+  routeSteps: string[],
+  lastStep?: string | null
 ): string {
   if (answers.strategyCallStart) {
     return QUIZ_BOOKED_STEP;
   }
 
-  const lastStep = readQuizLastStep();
-  if (lastStep && routeSteps.includes(lastStep)) {
-    const guarded = resolveGuardedQuizStep(answers, lastStep, routeSteps);
-    const lastIdx = routeSteps.indexOf(lastStep);
+  const saved = lastStep ?? null;
+  if (saved && routeSteps.includes(saved)) {
+    const guarded = resolveGuardedQuizStep(answers, saved, routeSteps);
+    const lastIdx = routeSteps.indexOf(saved);
     const guardedIdx = routeSteps.indexOf(guarded);
-    if (guarded === lastStep || (guardedIdx >= 0 && guardedIdx <= lastIdx)) {
-      return lastStep;
+    if (guarded === saved || (guardedIdx >= 0 && guardedIdx <= lastIdx)) {
+      return saved;
     }
   }
 

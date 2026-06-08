@@ -27,6 +27,17 @@ const LOCKED_SHELL = [
 
 const STEP_SCAN_DIRS = ["app/quiz/screens", "app/quiz/components"];
 
+/** Catch unclosed `{` before CSS ships — PostHog saw this break the funnel on Jun 7. */
+function cssBraceDepth(css) {
+  let depth = 0;
+  for (const line of css.split("\n")) {
+    depth += line.split("{").length - 1;
+    depth -= line.split("}").length - 1;
+    if (depth < 0) return -1;
+  }
+  return depth;
+}
+
 const STEP_EXEMPT = new Set([
   "app/quiz/components/QFShell.tsx",
   "app/quiz/components/QFFunnelLegal.tsx",
@@ -166,6 +177,17 @@ try {
   }
   if (!/\.qf-page \.qf-body\s*\{[\s\S]*?min-height:\s*0/.test(css)) {
     errors.push("app/quiz-funnel.css: .qf-body needs min-height:0 for scroll + pinned actions");
+  }
+  const braceDepth = cssBraceDepth(css);
+  if (braceDepth !== 0) {
+    errors.push(
+      `app/quiz-funnel.css: unbalanced braces (depth ${braceDepth}) — fix before deploy`
+    );
+  }
+  if (/\.qf-page\s+\.qf-footer\b/.test(css)) {
+    errors.push(
+      "app/quiz-funnel.css: stale .qf-footer selector — use .qf-step-actions + .qf-funnel-legal"
+    );
   }
 } catch {
   errors.push("Missing file: app/quiz-funnel.css");

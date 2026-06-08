@@ -9,7 +9,7 @@ import {
   resolveQuizResumeStep,
 } from "@/lib/quiz-funnel/funnel-steps";
 import { getQuizRouteSteps } from "@/lib/quiz-funnel/quiz-route";
-import { readStoredQuizAnswers } from "@/lib/quiz-funnel/quiz-storage";
+import { readQuizSnapshotClient } from "@/lib/quiz-funnel/quiz-storage";
 
 export { QUIZ_ENTRY_STEP };
 export const PLAN_BUILDER_PATH = "/plan";
@@ -66,9 +66,10 @@ export function planBuilderEntryFromLanding(search?: string): string {
   const params = new URLSearchParams();
   let step = QUIZ_ENTRY_STEP;
   if (typeof window !== "undefined") {
-    const answers = readStoredQuizAnswers();
+    const snap = readQuizSnapshotClient();
+    const answers = snap?.answers ?? {};
     const routeSteps = getQuizRouteSteps(answers);
-    step = resolveQuizResumeStep(answers, routeSteps);
+    step = resolveQuizResumeStep(answers, routeSteps, snap?.lastStep ?? null);
   }
   params.set("step", step);
   if (search) {

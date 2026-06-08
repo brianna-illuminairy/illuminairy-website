@@ -267,6 +267,31 @@ export function QFPlanScheduler({
         </div>
       </div>
 
+      <label
+        className={
+          showErr('confirmTcpa')
+            ? 'qf-plan-scheduler__tcpa qf-plan-scheduler__tcpa--invalid'
+            : 'qf-plan-scheduler__tcpa'
+        }
+      >
+        <input
+          type="checkbox"
+          checked={Boolean(confirmTcpa)}
+          aria-invalid={Boolean(showErr('confirmTcpa'))}
+          onChange={(e) => onFieldChange('confirmTcpa', e.target.checked)}
+        />
+        <span>
+          I agree Illuminairy may contact me about this call. See{' '}
+          <a href="/privacy">Privacy</a> and <a href="/terms">Terms</a>. We never share or sell
+          your details.
+        </span>
+      </label>
+      {showErr('confirmTcpa') ? (
+        <p className="qf-field-error" style={{ margin: '-12px 0 0' }} role="alert">
+          {showErr('confirmTcpa')}
+        </p>
+      ) : null}
+
       <div className="qf-plan-scheduler__calendar">
         {loading ? (
           <div className="qf-plan-scheduler__skeleton" aria-live="polite" aria-busy="true">
@@ -352,31 +377,6 @@ export function QFPlanScheduler({
           </>
         )}
       </div>
-
-      <label
-        className={
-          showErr('confirmTcpa')
-            ? 'qf-plan-scheduler__tcpa qf-plan-scheduler__tcpa--invalid'
-            : 'qf-plan-scheduler__tcpa'
-        }
-      >
-        <input
-          type="checkbox"
-          checked={Boolean(confirmTcpa)}
-          aria-invalid={Boolean(showErr('confirmTcpa'))}
-          onChange={(e) => onFieldChange('confirmTcpa', e.target.checked)}
-        />
-        <span>
-          I agree Illuminairy may contact me about this call. See{' '}
-          <a href="/privacy">Privacy</a> and <a href="/terms">Terms</a>. We never share or sell
-          your details.
-        </span>
-      </label>
-      {showErr('confirmTcpa') ? (
-        <p className="qf-field-error" style={{ margin: '-12px 0 0' }} role="alert">
-          {showErr('confirmTcpa')}
-        </p>
-      ) : null}
     </div>
   );
 }

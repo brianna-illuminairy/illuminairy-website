@@ -4,13 +4,19 @@ import {
   useContext,
   useReducer,
   useEffect,
+  useRef,
   useState,
   type ReactNode,
-  type Dispatch
+  type Dispatch,
 } from 'react';
 import { scheduleQuizProgressSync } from '@/lib/quiz-funnel/quiz-progress-sync';
-
-const STORAGE_KEY = 'qf_answers';
+import type { QuizSnapshot } from '@/lib/quiz-funnel/quiz-cookie';
+import { hasQuizProgress } from '@/lib/quiz-funnel/quiz-cookie';
+import {
+  persistQuizSnapshot,
+  readQuizSnapshotClient,
+  type StoredQuizAnswers,
+} from '@/lib/quiz-funnel/quiz-storage';
 
 export type QuizAnswers = {
   qWho?: string;
@@ -31,14 +37,9 @@ export type QuizAnswers = {
   kidName: string;
   confirmTcpa: boolean;
   planChoice: string;
+  strategyCallStart?: string;
   [key: string]: string | string[] | boolean | undefined;
 };
-
-type QuizAction =
-  | { type: 'SET_Q'; key: string; value?: string }
-  | { type: 'TOGGLE_Q'; key: string; id: string }
-  | { type: 'SET_FIELD'; key: string; value: unknown }
-  | { type: 'LOAD'; data: Partial<QuizAnswers> };
 
 const initialState: QuizAnswers = {
   qDoubts: [],
@@ -49,24 +50,53 @@ const initialState: QuizAnswers = {
   parentPhone: '',
   kidName: '',
   confirmTcpa: false,
-  planChoice: 'full'
+  planChoice: 'full',
 };
 
-function reducer(state: QuizAnswers, action: QuizAction): QuizAnswers {
+type QuizAction =
+  | { type: 'SET_Q'; key: string; value?: string }
+  | { type: 'TOGGLE_Q'; key: string; id: string }
+  | { type: 'SET_FIELD'; key: string; value: unknown }
+  | { type: 'LOAD'; data: Partial<QuizAnswers>; lastStep?: string | null }
+  | { type: 'SET_LAST_STEP'; step: string };
+
+type QuizStoreState = {
+  answers: QuizAnswers;
+  lastStep: string | null;
+};
+
+const emptyStore = (): QuizStoreState => ({
+  answers: initialState,
+  lastStep: null,
+});
+
+function mergeStoredAnswers(data: Partial<QuizAnswers> | StoredQuizAnswers): QuizAnswers {
+  return { ...initialState, ...(data as Partial<QuizAnswers>) };
+}
+
+function storeReducer(state: QuizStoreState, action: QuizAction): QuizStoreState {
   switch (action.type) {
     case 'SET_Q':
-      return { ...state, [action.key]: action.value };
+      return { ...state, answers: { ...state.answers, [action.key]: action.value } };
     case 'TOGGLE_Q': {
-      const prev = (state[action.key] as string[]) || [];
+      const prev = (state.answers[action.key] as string[]) || [];
       const next = prev.includes(action.id)
         ? prev.filter((x) => x !== action.id)
         : [...prev, action.id];
-      return { ...state, [action.key]: next };
+      return { ...state, answers: { ...state.answers, [action.key]: next } };
     }
     case 'SET_FIELD':
-      return { ...state, [action.key]: action.value as QuizAnswers[string] };
+      return {
+        ...state,
+        answers: { ...state.answers, [action.key]: action.value as QuizAnswers[string] },
+      };
     case 'LOAD':
-      return { ...initialState, ...action.data };
+      return {
+        answers: mergeStoredAnswers(action.data),
+        lastStep: action.lastStep !== undefined ? action.lastStep : state.lastStep,
+      };
+    case 'SET_LAST_STEP':
+      return { ...state, lastStep: action.step };
     default:
       return state;
   }
@@ -75,49 +105,72 @@ function reducer(state: QuizAnswers, action: QuizAction): QuizAnswers {
 type QuizContextValue = {
   answers: QuizAnswers;
   dispatch: Dispatch<QuizAction>;
-  /** false until saved answers are read from localStorage (client). */
+  lastStep: string | null;
+  setLastStep: (step: string) => void;
+  /** Client storage merge finished — safe for redirects that depend on localStorage. */
   hydrated: boolean;
 };
 
 const QuizCtx = createContext<QuizContextValue | null>(null);
 
-function readStoredAnswers(): Partial<QuizAnswers> {
-  if (typeof window === "undefined") return {};
-  try {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    return saved ? (JSON.parse(saved) as Partial<QuizAnswers>) : {};
-  } catch {
-    return {};
-  }
+function initStoreFromSnapshot(snapshot?: QuizSnapshot | null): QuizStoreState {
+  if (!snapshot || !hasQuizProgress(snapshot)) return emptyStore();
+  return {
+    answers: mergeStoredAnswers(snapshot.answers),
+    lastStep: snapshot.lastStep,
+  };
 }
 
-export function QuizProvider({ children }: { children: ReactNode }) {
-  const [answers, dispatch] = useReducer(reducer, initialState);
+export function QuizProvider({
+  children,
+  initialSnapshot = null,
+}: {
+  children: ReactNode;
+  initialSnapshot?: QuizSnapshot | null;
+}) {
+  const [store, dispatch] = useReducer(storeReducer, initialSnapshot, initStoreFromSnapshot);
+  const { answers, lastStep } = store;
+  const skipNextPersist = useRef(true);
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
-    const stored = readStoredAnswers();
-    if (Object.keys(stored).length > 0) {
-      dispatch({ type: "LOAD", data: stored });
+    const serverHadProgress = hasQuizProgress(initialSnapshot);
+    const clientSnap = readQuizSnapshotClient();
+
+    if (!serverHadProgress && clientSnap && hasQuizProgress(clientSnap)) {
+      dispatch({
+        type: 'LOAD',
+        data: clientSnap.answers as Partial<QuizAnswers>,
+        lastStep: clientSnap.lastStep,
+      });
+    } else if (serverHadProgress && initialSnapshot) {
+      persistQuizSnapshot({ ...initialSnapshot, updatedAt: Date.now() });
     }
-    queueMicrotask(() => setHydrated(true));
-  }, []);
+    const readyTimer = window.setTimeout(() => setHydrated(true), 0);
+    return () => window.clearTimeout(readyTimer);
+  }, [initialSnapshot]);
 
   useEffect(() => {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(answers));
-    } catch {
-      /* ignore */
+    if (skipNextPersist.current) {
+      skipNextPersist.current = false;
+      return;
     }
-  }, [answers]);
+    persistQuizSnapshot({ answers, lastStep, updatedAt: Date.now() });
+  }, [answers, lastStep]);
 
   useEffect(() => {
     if (!hydrated) return;
-    scheduleQuizProgressSync(answers as Record<string, unknown>);
-  }, [answers, hydrated]);
+    scheduleQuizProgressSync(answers as Record<string, unknown>, {
+      step: lastStep ?? undefined,
+    });
+  }, [answers, lastStep, hydrated]);
+
+  const setLastStep = (step: string) => {
+    dispatch({ type: 'SET_LAST_STEP', step });
+  };
 
   return (
-    <QuizCtx.Provider value={{ answers, dispatch, hydrated }}>
+    <QuizCtx.Provider value={{ answers, dispatch, lastStep, setLastStep, hydrated }}>
       <div className="qf-quiz-provider-fill">{children}</div>
     </QuizCtx.Provider>
   );
