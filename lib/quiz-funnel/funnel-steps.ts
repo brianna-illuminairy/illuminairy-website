@@ -87,7 +87,12 @@ export function resolveQuizResumeStep(
     const lastIdx = routeSteps.indexOf(saved);
     const guardedIdx = routeSteps.indexOf(guarded);
     if (guarded === saved || (guardedIdx >= 0 && guardedIdx <= lastIdx)) {
-      return saved;
+      const intakeForSaved = INTAKE_STEP_SATISFIED[saved];
+      if (!(intakeForSaved && intakeForSaved(answers))) {
+        return saved;
+      }
+    } else {
+      return guarded;
     }
   }
 

@@ -447,7 +447,12 @@ async function checkAllRoutedSteps(page) {
 
 async function checkNavigation(page) {
   console.log("\n— Forward navigation (option tap + CTA) —");
-  await page.evaluate(() => localStorage.removeItem("qf_answers"));
+  await page.evaluate(() => {
+    localStorage.removeItem("qf_answers");
+    localStorage.removeItem("qf_last_step");
+    localStorage.removeItem("qf_updated_at");
+    document.cookie = "qf_snapshot=; Path=/; Max-Age=0; SameSite=Lax";
+  });
   await page.goto(`${BASE}/plan?step=q-who`, { waitUntil: "networkidle" });
   await waitForHydration(page);
 
