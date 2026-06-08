@@ -4,7 +4,8 @@ import {
   achievabilityEyebrow,
   buildGoalAchievabilityFallback,
 } from '@/lib/quiz-funnel/goal-achievability';
-import { AchievabilityStatBar, AchievabilityPills } from './AchievabilityRating';
+import { AchievabilityPlanBlock } from './AchievabilityRating';
+import { AchievabilityInputChips } from './AchievabilityInputChips';
 
 /** Render the stakes lead with one phrase emphasized green. */
 function renderStakesLead(text, emphasis) {
@@ -25,9 +26,11 @@ function renderStakesLead(text, emphasis) {
  *   title?: React.ReactNode,
  *   introNote?: string,
  *   q2?: string,
+ *   answers?: Record<string, unknown>,
+ *   onEditAnswer?: (answerKey: string, value: string) => void,
  * }} props
  */
-export function PlanRevealContent({ plan, title, introNote, q2 }) {
+export function PlanRevealContent({ plan, title, introNote, q2, answers, onEditAnswer }) {
   const assessment =
     plan.achievability ?? buildGoalAchievabilityFallback(plan);
   const eyebrow = achievabilityEyebrow(q2 ?? plan.q2);
@@ -44,23 +47,30 @@ export function PlanRevealContent({ plan, title, introNote, q2 }) {
             {assessment.verdictLead} <em>{assessment.verdictEm}</em>.
           </h1>
         )}
-        {title}
 
         <p className="qf-lead">{renderStakesLead(assessment.stakesLead, assessment.stakesEmphasis)}</p>
       </div>
 
-      <AchievabilityStatBar stats={assessment.stats} />
-
-      <div className="qf-goal-assess__scale">
-        <p className="qf-meta qf-achv-rating-label">Goal score achievability rating</p>
-        <AchievabilityPills
-          tierIndex={assessment.tierIndex}
-          tierRanges={assessment.tierRanges}
-          educational={!assessment.stats.hasKnownGoal}
+      {answers && onEditAnswer ? (
+        <AchievabilityInputChips
+          answers={answers}
+          startingScoreLabel={assessment.startingScoreLabel}
+          onEditAnswer={onEditAnswer}
         />
-        <p className="qf-meta qf-achv-outcomes-label">{assessment.outcomesMeta}</p>
-        {introNote ? <p className="qf-caption">{introNote}</p> : null}
-      </div>
+      ) : null}
+
+      <AchievabilityPlanBlock
+        stats={assessment.stats}
+        startingScoreLabel={assessment.startingScoreLabel}
+        startingScoreNote={assessment.startingScoreNote}
+        tierIndex={assessment.tierIndex}
+        tierRanges={assessment.tierRanges}
+        educational
+        outcomesMeta={assessment.outcomesMeta}
+        projectedRangeLine={assessment.projectedRangeLine}
+      />
+
+      {introNote ? <p className="qf-caption">{introNote}</p> : null}
 
       <p className="qf-lead">{assessment.insightParagraph}</p>
 

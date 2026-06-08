@@ -48,7 +48,8 @@ export const PostHogEvents = {
   quizLeadSubmitted: "quiz_lead_submitted",
   quizBookingConfirmed: "quiz_booking_confirmed",
   quizThankYouViewed: "quiz_thank_you_viewed",
-  quizBookingError: "quiz_booking_error"
+  quizBookingError: "quiz_booking_error",
+  achievabilityInputEdited: "achievability_input_edited"
 } as const;
 
 export const Ga4Events = {
@@ -60,7 +61,8 @@ export const Ga4Events = {
   generateLead: "generate_lead",
   schedule: "schedule",
   quizThankYouView: "quiz_thank_you_view",
-  quizBookingError: "quiz_booking_error"
+  quizBookingError: "quiz_booking_error",
+  achievabilityInputEdited: "achievability_input_edited"
 } as const;
 
 export const MetaEvents = {

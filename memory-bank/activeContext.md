@@ -1,6 +1,6 @@
 # Active context
 
-*Last updated: 2026-06-02*
+*Last updated: 2026-06-07*
 
 ## Resume here
 
@@ -32,6 +32,10 @@
 `q1–q5` → `i1` → `q6` → `q7` → `hit-q7` → `i-compare` → … → `reveal` → `v1` → `s2` → `s3` → `s5` → `s7` → `s9` → `booked`
 
 Key libs: `plan-reveal.ts`, `score-path-copy.ts`, `stakes-copy.ts`, `education-slides.ts`, `prep-failure-copy.ts`, `thank-you-copy.ts`
+
+## Recently shipped (2026-06-07)
+
+- **UTM attribution fix** (`68ed3fe`) — `readAttributionForAnalytics()` merges session + URL for LP/quiz PostHog events; fixes ad5 `funnel_cta_click` showing 0 when replays showed clicks. Deployed prod.
 
 ## Recently shipped (2026-05-29)
 

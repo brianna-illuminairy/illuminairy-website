@@ -20,10 +20,10 @@ import {
   formatSatScoreLabel,
 } from '@/lib/quiz-funnel/score-path-copy';
 import { selectedDoubts, DOUBTS_INSIGHT_COPY } from '@/lib/quiz-funnel/doubts-copy';
-import { buildGoalAchievability, buildTierRanges, GOAL_FEASIBILITY_TIER_LABELS } from '@/lib/quiz-funnel/goal-achievability';
+import { buildGoalAchievability, buildTierRanges, GOAL_FEASIBILITY_TIER_LABELS, GOAL_FEASIBILITY_TIER_ORDER, tierFromPtsPerWeekScale, achievabilityOutcomesMeta } from '@/lib/quiz-funnel/goal-achievability';
 import { buildScorePathOutput } from '@/lib/quiz-funnel/score-path-output';
 import { selectedPrepLabels, formatEnglishList } from '@/lib/quiz-funnel/prep-copy';
-import { AchievabilityStatBar, AchievabilityPills } from '../components/AchievabilityRating';
+import { AchievabilityPlanBlock } from '../components/AchievabilityRating';
 import { QFScoreReportPair } from '../components/QFPlanVisuals';
 import { Q5_TEST_DATES } from '@/lib/quiz-funnel/gains';
 import { satFirstMonthOutcomes } from '@/lib/site';
@@ -177,7 +177,13 @@ export function QFI2Compute({
 
   return (
     <QFScreen stepIdx={14} tone="ink" onBack={onBack}
-      footer={showDone ? <QFButton kind="forest" onClick={onContinue}>Reveal {possessive} plan</QFButton> : undefined}
+      footer={
+        showDone ? (
+          <QFButton kind="forest" onClick={onContinue}>Reveal {possessive} plan</QFButton>
+        ) : (
+          <QFButton kind="forest" disabled aria-busy="true">Building plan…</QFButton>
+        )
+      }
     >
       <svg className="qf-starfield" viewBox="0 0 360 700" preserveAspectRatio="xMidYMid slice">
         {STARS.map(([x, y, o, r], i) => (
@@ -331,7 +337,7 @@ export function QFIGPAGap({ onContinue, onBack, q4 = '1200-1300', q9 = '3.8-4.0'
         </h1>
 
         <p className="qf-lead">
-          It's common for smart students with high GPAs to score lower than expected on the SAT.
+          It&apos;s common for smart students with high GPAs to score lower than expected on the SAT.
           The same habits that earn their A&apos;s in class quietly cost points on a test scored on pace.
         </p>
 
@@ -558,16 +564,16 @@ export function QFV1Projection({ onContinue, onBack, answers = {} }) {
 
           <QFPlanChart current={currentNum} projected={goalNum} skillCount={skillCount} totalDays={weeks * 7} />
 
-          <AchievabilityStatBar stats={assessment.stats} />
-          <div className="qf-goal-assess__scale">
-            <p className="qf-meta qf-achv-rating-label">Goal score achievability rating</p>
-            <AchievabilityPills
-              tierIndex={assessment.tierIndex}
-              tierRanges={assessment.tierRanges}
-              educational={!assessment.stats.hasKnownGoal}
-            />
-            <p className="qf-meta qf-achv-outcomes-label">{assessment.outcomesMeta}</p>
-          </div>
+          <AchievabilityPlanBlock
+            stats={assessment.stats}
+            startingScoreLabel={assessment.startingScoreLabel}
+            startingScoreNote={assessment.startingScoreNote}
+            tierIndex={assessment.tierIndex}
+            tierRanges={assessment.tierRanges}
+            educational
+            outcomesMeta={assessment.outcomesMeta}
+            projectedRangeLine={assessment.projectedRangeLine}
+          />
 
           <div className="qf-example-plan__skills-head">Skills to identify</div>
           <div className="qf-example-plan__skills">
@@ -933,7 +939,12 @@ function QFPlanChart({ current = 1180, projected = 1400, skillCount = 6, totalDa
 }
 
 function QFExamplePlanCard() {
-  const tierRanges = buildTierRanges(15);
+  const exampleWeeks = 15;
+  const exampleStart = 1180;
+  const exampleTarget = 1400;
+  const exampleTier = tierFromPtsPerWeekScale(exampleStart, exampleTarget, exampleWeeks);
+  const exampleTierIndex = GOAL_FEASIBILITY_TIER_ORDER.indexOf(exampleTier);
+  const tierRanges = buildTierRanges(exampleWeeks, exampleStart);
   const total = EXAMPLE_PLAN_SKILLS.reduce((a, s) => a + s.pts, 0);
   return (
     <div className="qf-example-plan">
@@ -943,11 +954,16 @@ function QFExamplePlanCard() {
       </div>
       <div className="qf-example-plan__name">Sophia L.</div>
 
-      <QFPlanChart />
+      <QFPlanChart current={exampleStart} projected={exampleTarget} totalDays={exampleWeeks * 7} />
 
-      <AchievabilityStatBar stats={EXAMPLE_PLAN_STATS} />
-      <p className="qf-meta qf-achv-rating-label">Goal score achievability rating</p>
-      <AchievabilityPills tierIndex={2} tierRanges={tierRanges} educational={false} />
+      <AchievabilityPlanBlock
+        stats={EXAMPLE_PLAN_STATS}
+        startingScoreLabel={String(exampleStart)}
+        tierIndex={exampleTierIndex}
+        tierRanges={tierRanges}
+        educational={false}
+        outcomesMeta={achievabilityOutcomesMeta()}
+      />
 
       <div className="qf-example-plan__skills-head">Sophia&apos;s highest-impact skills</div>
       <div className="qf-example-plan__skills">

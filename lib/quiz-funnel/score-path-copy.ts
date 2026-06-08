@@ -66,7 +66,7 @@ export const I_GAP_CTA = "Final question";
 
 export const NAME_CTA = "Build my plan";
 
-export const V1_CTA = "Get Started →";
+export const V1_CTA = "Get Started";
 
 export const REVEAL_SCORE_PROJECTION_NOTE =
   "Starter plan with free score projection. Exact skills, missed questions, and lessons unlock after the Skill Diagnostic.";

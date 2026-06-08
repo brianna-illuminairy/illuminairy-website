@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect, useMemo, useRef } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useQuiz, showGapScreen } from '../state';
 import { QFScreen, QFButton, QFConstellation } from '../components/QFShell';
 import { CalendlyInlineEmbed } from '@/components/calendly-inline-embed';
@@ -17,6 +17,7 @@ import { sanitizeBookingErrorMessage } from '@/lib/calendly/booking-errors';
 import { countPhoneDigits } from '@/lib/calendly/phone-e164';
 import { QUIZ_TESTIMONIALS } from '@/lib/quiz-funnel/testimonials';
 import { getClientAttributionPayload } from '@/lib/quiz-funnel/client-attribution';
+import { planBuilderStepHref } from '@/lib/plan-builder-routes';
 import { resolveMetaClickIds } from '@/lib/meta-click-ids';
 import { readPersistedLpVariant } from '@/lib/landing/variant-storage';
 import { site } from '@/lib/site';
@@ -613,6 +614,7 @@ export function QFS9Booking({
   dispatch?: (action: { type: string; key?: string; value?: unknown }) => void;
 }) {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { hydrated } = useQuiz();
   const contact = {
     parentName: typeof answers.parentName === "string" ? answers.parentName : "",
@@ -627,9 +629,9 @@ export function QFS9Booking({
   useEffect(() => {
     if (!hydrated) return;
     if (!contactReady) {
-      router.replace("/quiz?step=s5");
+      router.replace(planBuilderStepHref("s5", searchParams.toString()));
     }
-  }, [hydrated, contactReady, router]);
+  }, [hydrated, contactReady, router, searchParams]);
 
   const { prefill, utm, fallbackUrl } = useMemo(() => {
     const { attribution } = getClientAttributionPayload();
@@ -671,7 +673,16 @@ export function QFS9Booking({
   }, [onBooked, dispatch]);
 
   return (
-    <QFScreen stepIdx={21} onBack={onBack}>
+    <QFScreen stepIdx={21} onBack={onBack}
+      footer={
+        <QFButton
+          kind="forest"
+          onClick={() => window.open(fallbackUrl, "_blank", "noopener,noreferrer")}
+        >
+          Open calendar in new tab
+        </QFButton>
+      }
+    >
       <div className="gap-22">
         <p className="qf-meta" style={{ color: 'var(--qf-forest)', marginBottom: 8 }}>Step 2 of 2</p>
         <h1 className="qf-h1">

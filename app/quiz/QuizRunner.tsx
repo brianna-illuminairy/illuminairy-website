@@ -5,6 +5,7 @@ import { useQuiz, showGapScreen, type QuizAnswers } from './state';
 import { useQuizAnalytics } from './useQuizAnalytics';
 import { useQuizAvailabilityPrefetch } from './useQuizAvailabilityPrefetch';
 import { captureParentConfirmed } from '@/lib/quiz-funnel/analytics';
+import { planBuilderStepHref } from '@/lib/plan-builder-routes';
 import { QUIZ_ENTRY_STEP, resolveGuardedQuizStep } from '@/lib/quiz-funnel/funnel-steps';
 import { isQuizSelfTaker } from '@/lib/quiz-funnel/subject-voice';
 import {
@@ -29,6 +30,20 @@ import {
   QFS4PlanHandoff, QFS5Approved, QFS7PlanDetails, QFS9Booking, QFS9ThankYou,
 } from './screens/Finale';
 import { PLAN_HANDOFF_CTA } from '@/lib/quiz-funnel/plan-handoff-copy';
+import { QFScreen, QFContinueFooter } from './components/QFShell';
+import { QFProgressProvider } from './components/QFProgressContext';
+
+function QuizHydratingShell() {
+  return (
+    <QFScreen stepIdx={0} showBack={false}
+      footer={<QFContinueFooter disabled />}
+    >
+      <p className="qf-lead muted" aria-live="polite" style={{ marginTop: 8 }}>
+        Loading your plan…
+      </p>
+    </QFScreen>
+  );
+}
 
 const BASE_STEPS = [
   'q-who','q-score-lower','q1','q2','q3',
@@ -38,7 +53,7 @@ const BASE_STEPS = [
   'q6','q7','hit-q7',
   'i-diag',
   'i-compare',
-  'q8','achievability','q9',
+  'q9','q8','achievability',
   'name',
   'i2',
   'v1',
@@ -91,6 +106,7 @@ export default function QuizRunner() {
   const router = useRouter();
   const params = useSearchParams();
   const { answers, dispatch, hydrated } = useQuiz();
+  const search = params.toString();
 
   const requestedStep = params.get('step') || QUIZ_ENTRY_STEP;
   const steps = getSteps(answers);
@@ -100,23 +116,29 @@ export default function QuizRunner() {
 
   useEffect(() => {
     if (!hydrated) return;
-    if (stepId !== requestedStep) {
-      router.replace(`/quiz?step=${stepId}`);
+    const reqIdx = steps.indexOf(requestedStep);
+    const guardIdx = steps.indexOf(stepId);
+    if (reqIdx >= 0 && guardIdx >= 0 && reqIdx > guardIdx) {
+      router.replace(planBuilderStepHref(stepId, search));
+    } else if (reqIdx < 0 && stepId !== requestedStep) {
+      router.replace(planBuilderStepHref(stepId, search));
     }
-  }, [hydrated, stepId, requestedStep, router]);
+  }, [hydrated, stepId, requestedStep, router, search, steps]);
 
   useQuizAnalytics(stepId, currentIdx, answers, gapScreen);
   useQuizAvailabilityPrefetch(stepId);
 
   function goTo(id: string) {
-    router.replace(`/quiz?step=${id}`);
+    router.replace(planBuilderStepHref(id, search));
   }
 
   function advanceAfterAnswer(pending: Partial<QuizAnswers>) {
     const merged = { ...answers, ...pending };
     const routeSteps = getSteps(merged);
     const idx = routeSteps.indexOf(stepId);
-    if (idx < routeSteps.length - 1) goTo(routeSteps[idx + 1]);
+    if (idx >= 0 && idx < routeSteps.length - 1) {
+      goTo(routeSteps[idx + 1]);
+    }
   }
 
   function next() {
@@ -154,11 +176,21 @@ export default function QuizRunner() {
   const a = answers;
   const qWho = a.qWho ?? 'child';
 
+  if (!hydrated) {
+    return (
+      <QFProgressProvider index={0} total={steps.length}>
+        <QuizHydratingShell />
+      </QFProgressProvider>
+    );
+  }
+
+  let stepContent;
   switch (stepId) {
     case 'q-who':
-      return <QFQWho value={a.qWho} onSelect={(v: string) => setQAndAdvance('qWho', v)} onBack={back} />;
+      stepContent = <QFQWho value={a.qWho} onSelect={(v: string) => setQAndAdvance('qWho', v)} onBack={back} />;
+      break;
     case 'q-score-lower':
-      return (
+      stepContent = (
         <QFQScoreLower
           value={a.qScoreLower}
           qWho={a.qWho}
@@ -166,10 +198,11 @@ export default function QuizRunner() {
           onBack={back}
         />
       );
-    case 'q1':  return <QFQ1Trigger   value={a.q1} onSelect={(v: string) => setQAndAdvance('q1', v)} onBack={back} />;
-    case 'q2':  return <QFQ2Stakes    value={a.q2} qWho={qWho} onSelect={(v: string) => setQAndAdvance('q2', v)} onBack={back} />;
+      break;
+    case 'q1':  stepContent = <QFQ1Trigger   value={a.q1} onSelect={(v: string) => setQAndAdvance('q1', v)} onBack={back} />; break;
+    case 'q2':  stepContent = <QFQ2Stakes    value={a.q2} qWho={qWho} onSelect={(v: string) => setQAndAdvance('q2', v)} onBack={back} />; break;
     case 'q3':
-      return (
+      stepContent = (
         <QFQ3TimesTaken
           value={a.q3}
           qWho={qWho}
@@ -179,8 +212,9 @@ export default function QuizRunner() {
           onBack={back}
         />
       );
+      break;
     case 'hit-q3-none':
-      return (
+      stepContent = (
         <QFInsightHit
           hit={educationHitQ3None()}
           onContinue={next}
@@ -188,12 +222,13 @@ export default function QuizRunner() {
           stepIdx={6}
         />
       );
-    case 'q4':  return <QFQ4RecentScore value={a.q4} qWho={qWho} onSelect={(v: string) => setQAndAdvance('q4', v)} onBack={back} q3={a.q3} />;
-    case 'q-doubts': return <QFQDoubts value={a.qDoubts as any} onToggle={(id: string) => toggleQ('qDoubts', id)} onContinue={next} onBack={back} />;
-    case 'doubts-insight': return <QFIDoubtsInsight onContinue={next} onBack={back} qDoubts={a.qDoubts as any} />;
-    case 'q5':  return <QFQ5Clock     value={a.q5} qWho={qWho} onSelect={(v: string) => setQAndAdvance('q5', v)} onBack={back} />;
+      break;
+    case 'q4':  stepContent = <QFQ4RecentScore value={a.q4} qWho={qWho} onSelect={(v: string) => setQAndAdvance('q4', v)} onBack={back} q3={a.q3} />; break;
+    case 'q-doubts': stepContent = <QFQDoubts value={a.qDoubts as any} onToggle={(id: string) => toggleQ('qDoubts', id)} onContinue={next} onBack={back} />; break;
+    case 'doubts-insight': stepContent = <QFIDoubtsInsight onContinue={next} onBack={back} qDoubts={a.qDoubts as any} />; break;
+    case 'q5':  stepContent = <QFQ5Clock     value={a.q5} qWho={qWho} onSelect={(v: string) => setQAndAdvance('q5', v)} onBack={back} />; break;
     case 'hit-q5-tbd':
-      return (
+      stepContent = (
         <QFInsightHit
           hit={educationHitQ5Tbd()}
           onContinue={next}
@@ -201,10 +236,11 @@ export default function QuizRunner() {
           stepIdx={8}
         />
       );
-    case 'q6':  return <QFQ6Blocker   value={a.q6 as any} qWho={qWho} onToggle={(id: string) => toggleQ('q6', id)} onContinue={next} onBack={back} />;
-    case 'q7':  return <QFQ7Tried     value={a.q7 as any} qWho={qWho} onToggle={(id: string) => toggleQ('q7', id)} onContinue={next} onBack={back} q3={a.q3} />;
+      break;
+    case 'q6':  stepContent = <QFQ6Blocker   value={a.q6 as any} qWho={qWho} onToggle={(id: string) => toggleQ('q6', id)} onContinue={next} onBack={back} />; break;
+    case 'q7':  stepContent = <QFQ7Tried     value={a.q7 as any} qWho={qWho} onToggle={(id: string) => toggleQ('q7', id)} onContinue={next} onBack={back} q3={a.q3} />; break;
     case 'hit-q7':
-      return (
+      stepContent = (
         <QFInsightHit
           hit={prepFailureInsight(a.q7, a.q6)}
           onContinue={next}
@@ -213,15 +249,17 @@ export default function QuizRunner() {
           manual
         />
       );
-    case 'i-compare': return <QFIComparePrep onContinue={next} onBack={back} q7={a.q7 as any} />;
-    case 'i-diag': return <QFIDiagnosis onContinue={next} onBack={back} q3={a.q3} q4={a.q4} q6={a.q6 as any} q7={a.q7 as any} q5={a.q5} />;
-    case 'i-steps': return <QFISteps onContinue={next} onBack={back} />;
+      break;
+    case 'i-compare': stepContent = <QFIComparePrep onContinue={next} onBack={back} q7={a.q7 as any} />; break;
+    case 'i-diag': stepContent = <QFIDiagnosis onContinue={next} onBack={back} q3={a.q3} q4={a.q4} q6={a.q6 as any} q7={a.q7 as any} q5={a.q5} />; break;
+    case 'i-steps': stepContent = <QFISteps onContinue={next} onBack={back} />; break;
     case 'hit-outcome-month-one':
-      return <QFIHopeScreen onContinue={next} onBack={back} q5={a.q5} />;
-    case 'i2':  return <QFI2Compute   onContinue={next} onBack={back} q2={a.q2} q4={a.q4} q5={a.q5} q6={a.q6} q7={a.q7 as any} q8={a.q8} q9={a.q9} name={a.kidName as string} />;
-    case 'q8':  return <QFQ8Goal      value={a.q8} qWho={qWho} onSelect={(v: string) => setQAndAdvance('q8', v)} onBack={back} />;
+      stepContent = <QFIHopeScreen onContinue={next} onBack={back} q5={a.q5} />;
+      break;
+    case 'i2':  stepContent = <QFI2Compute   onContinue={next} onBack={back} q2={a.q2} q4={a.q4} q5={a.q5} q6={a.q6} q7={a.q7 as any} q8={a.q8} q9={a.q9} name={a.kidName as string} />; break;
+    case 'q8':  stepContent = <QFQ8Goal      value={a.q8} qWho={qWho} onSelect={(v: string) => setQAndAdvance('q8', v)} onBack={back} />; break;
     case 'hit-q8-scores':
-      return (
+      stepContent = (
         <QFInsightHit
           hit={educationHitQ8Scores(a.q2, qWho)}
           onContinue={next}
@@ -229,11 +267,12 @@ export default function QuizRunner() {
           stepIdx={12}
         />
       );
+      break;
 
-    case 'q9':  return <QFQ9GPA       value={a.q9} qWho={qWho} onSelect={(v: string) => setQAndAdvance('q9', v)} onBack={back} />;
-    case 'i-gap': return <QFIGPAGap   onContinue={next} onBack={back} q4={a.q4} q9={a.q9} />;
+    case 'q9':  stepContent = <QFQ9GPA       value={a.q9} qWho={qWho} onSelect={(v: string) => setQAndAdvance('q9', v)} onBack={back} />; break;
+    case 'i-gap': stepContent = <QFIGPAGap   onContinue={next} onBack={back} q4={a.q4} q9={a.q9} />; break;
     case 'name':
-      return (
+      stepContent = (
         <QFQName
           value={a.kidName as string}
           qWho={qWho}
@@ -242,13 +281,24 @@ export default function QuizRunner() {
           onBack={back}
         />
       );
+      break;
     case 'achievability':
     case 'reveal': // deprecated alias for old deep links + share page
     case 's1':
-      return <QFSPlanReveal answers={a} onContinue={next} onBack={back} />;
-    case 'v1':  return <QFV1Projection onContinue={next} onBack={back} answers={a} />;
+      stepContent = (
+        <QFSPlanReveal
+          answers={a}
+          onContinue={next}
+          onBack={back}
+          onEditAnswer={(key: string, value: string) =>
+            dispatch({ type: 'SET_Q', key, value })
+          }
+        />
+      );
+      break;
+    case 'v1':  stepContent = <QFV1Projection onContinue={next} onBack={back} answers={a} />; break;
     case 's4':
-      return (
+      stepContent = (
         <QFS4PlanHandoff
           onContinue={next}
           onBack={back}
@@ -256,8 +306,9 @@ export default function QuizRunner() {
           ctaLabel={PLAN_HANDOFF_CTA}
         />
       );
+      break;
     case 's5':
-      return (
+      stepContent = (
         <QFS5Approved
           onContinue={next}
           onBack={back}
@@ -266,10 +317,12 @@ export default function QuizRunner() {
           onBooked={() => goTo('booked')}
         />
       );
+      break;
     case 's7':
-      return <QFS7PlanDetails onContinue={() => goTo('s5')} onBack={back} answers={a} />;
+      stepContent = <QFS7PlanDetails onContinue={() => goTo('s5')} onBack={back} answers={a} />;
+      break;
     case 's9':
-      return (
+      stepContent = (
         <QFS9Booking
           onBooked={() => goTo('booked')}
           onBack={back}
@@ -277,8 +330,17 @@ export default function QuizRunner() {
           dispatch={dispatch as (action: { type: string; key?: string; value?: unknown }) => void}
         />
       );
+      break;
     case 'booked':
-      return <QFS9ThankYou onDone={() => router.push('/')} answers={a} />;
-    default:    return <QFQWho value={a.qWho} onSelect={(v: string) => setQAndAdvance('qWho', v)} onBack={back} />;
+      stepContent = <QFS9ThankYou onDone={() => router.push('/')} answers={a} />;
+      break;
+    default:
+      stepContent = <QFQWho value={a.qWho} onSelect={(v: string) => setQAndAdvance('qWho', v)} onBack={back} />;
   }
+
+  return (
+    <QFProgressProvider index={Math.max(0, currentIdx)} total={steps.length}>
+      {stepContent}
+    </QFProgressProvider>
+  );
 }

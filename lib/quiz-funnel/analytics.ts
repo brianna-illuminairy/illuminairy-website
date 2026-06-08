@@ -1,10 +1,7 @@
 "use client";
 
 import posthog from "posthog-js";
-import {
-  attributionUtmProps,
-  readAttributionForAnalytics
-} from "@/lib/attribution";
+import { analyticsAttributionProps } from "@/lib/analytics-attribution";
 import { recordClientTouch } from "@/lib/analytics-touch-client";
 import {
   Ga4Events,
@@ -12,6 +9,7 @@ import {
   PostHogEvents,
   TouchEvents
 } from "@/lib/analytics-registry";
+import type { AchievabilityInputField } from "@/lib/quiz-funnel/achievability-input-fields";
 import { getPostHogKey } from "@/lib/posthog";
 import {
   promisedGainFromQuizAnswers,
@@ -86,8 +84,9 @@ function persistedLpContext() {
   };
 }
 
+/** Session + URL UTMs on every quiz analytics payload (PostHog register + explicit props). */
 function quizAttributionProps() {
-  return attributionUtmProps(readAttributionForAnalytics());
+  return analyticsAttributionProps();
 }
 
 const PARENT_CONFIRMED_KEY = "illuminairy_parent_confirmed";
@@ -166,9 +165,11 @@ export function captureQuizStep(
   options?: { hasGapScreen?: boolean }
 ) {
   const opening = quizOpeningProps(answers);
+  const attr = quizAttributionProps();
+  const lpContext = persistedLpContext();
   const props = {
-    ...persistedLpContext(),
-    ...quizAttributionProps(),
+    ...lpContext,
+    ...attr,
     step: stepId,
     step_index: stepIndex,
     has_gap_screen: Boolean(options?.hasGapScreen),
@@ -187,19 +188,24 @@ export function captureQuizStep(
   recordClientTouch(TouchEvents.quizStepView, {
     step: stepId,
     step_index: stepIndex,
-    sat_lp_variant: props.sat_lp_variant as string | undefined,
+    sat_lp_variant: lpContext.sat_lp_variant,
     has_gap_screen: Boolean(options?.hasGapScreen),
-    ...opening
+    ...opening,
+    ...attr
   });
   trackQuizGaEvent("quiz_step_view", {
     step: stepId,
     step_index: stepIndex,
-    ...opening
+    funnel: "sat_quiz",
+    ...opening,
+    ...attr,
+    ...lpContext
   });
   if (stepId === "s5") {
     recordClientTouch(TouchEvents.quizScheduleView, {
       step: stepId,
-      step_index: stepIndex
+      step_index: stepIndex,
+      ...attr
     });
   }
   if (!getPostHogKey()) return;
@@ -233,8 +239,10 @@ export function captureQuizLeadSubmitted(
   const q8 = answers.q8 as string | undefined;
   const promisedGain = promisedGainFromQuizAnswers(q4, q5, q8);
   const opening = quizOpeningProps(answers);
+  const attr = quizAttributionProps();
   const props = {
     ...opening,
+    ...attr,
     q2: answers.q2,
     q3: answers.q3,
     q4: answers.q4,
@@ -306,6 +314,34 @@ export function capturePlanShareViewed(props: { shareId: string }) {
     posthog.capture("plan_share_viewed", props);
   }
   trackQuizGaEvent("plan_share_viewed", props);
+}
+
+export type AchievabilityInputEditedProps = {
+  /** UI field: target | test_date | starting | gpa */
+  field: AchievabilityInputField;
+  /** Quiz answer key updated (q8, q5, q4, q9) */
+  answer_key: "q8" | "q5" | "q4" | "q9";
+  new_value: string;
+  previous_value?: string;
+  screen?: "achievability";
+};
+
+/** Inline edit on achievability — target, starting band, or GPA. */
+export function captureAchievabilityInputEdited(props: AchievabilityInputEditedProps) {
+  const payload = {
+    funnel: "sat_quiz",
+    screen: props.screen ?? "achievability",
+    field: props.field,
+    answer_key: props.answer_key,
+    new_value: props.new_value,
+    previous_value: props.previous_value,
+    ...persistedLpContext(),
+    ...quizAttributionProps(),
+  };
+  if (getPostHogKey()) {
+    posthog.capture(PostHogEvents.achievabilityInputEdited, payload);
+  }
+  trackQuizGaEvent(Ga4Events.achievabilityInputEdited, payload);
 }
 
 export type QuizBookingErrorProps = {

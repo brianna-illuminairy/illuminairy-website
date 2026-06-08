@@ -3,6 +3,27 @@
 export const VISITOR_COOKIE = "illuminairy_vid";
 export const ATTRIBUTION_SESSION_KEY = "illuminairy_attribution";
 
+/** Works on HTTP LAN dev (crypto.randomUUID needs a secure context). */
+export function createVisitorId(): string {
+  const c = globalThis.crypto;
+  if (typeof c?.randomUUID === "function") {
+    try {
+      return c.randomUUID();
+    } catch {
+      /* non-secure origin — fall through */
+    }
+  }
+  if (typeof c?.getRandomValues === "function") {
+    const bytes = new Uint8Array(16);
+    c.getRandomValues(bytes);
+    bytes[6] = (bytes[6] & 0x0f) | 0x40;
+    bytes[8] = (bytes[8] & 0x3f) | 0x80;
+    const hex = Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
+    return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
+  }
+  return `vid-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 11)}`;
+}
+
 export type AttributionSnapshot = {
   utm_source?: string;
   utm_medium?: string;

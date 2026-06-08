@@ -27,6 +27,7 @@ import {
   modeledGainForTimeline,
   projectedGainBand
 } from "@/lib/quiz-funnel/score-path-gain";
+import { inferredStartFromGpa } from "@/lib/quiz-funnel/gpa-inferred-start";
 import { isQuizSelfTaker } from "@/lib/quiz-funnel/subject-voice";
 
 export type ScoreConfidence = "known" | "estimate" | "inferred" | "illustrative" | "missing";
@@ -118,7 +119,7 @@ export type ScorePathOutput = {
   callHooks: string[];
 };
 
-function resolveStarting(q3?: string, q4?: string): ResolvedScore {
+function resolveStarting(q3?: string, q4?: string, q9?: string): ResolvedScore {
   const firstSit = q3 === "none";
   const psatOnly = q3 === "psat-only";
 
@@ -149,6 +150,15 @@ function resolveStarting(q3?: string, q4?: string): ResolvedScore {
   }
 
   if (q4 === Q4_NO_SCORE || !q4) {
+    const fromGpa = inferredStartFromGpa(q9);
+    if (fromGpa != null) {
+      return {
+        value: fromGpa,
+        confidence: "inferred",
+        label: `~${fromGpa}`,
+        bandLabel: `${fromGpa} (from GPA)`
+      };
+    }
     return {
       value: SCORE_PATH_DEFAULT_START,
       confidence: "inferred",
@@ -271,7 +281,7 @@ export function buildScorePathOutput(
   const self = isQuizSelfTaker(qWho);
 
   const isFirstOfficialSit = q3 === "none";
-  const starting = resolveStarting(q3, q4);
+  const starting = resolveStarting(q3, q4, q9);
   const target = resolveTarget(q8, q2);
   const mode = resolveMode(q4, q8, starting, target);
 

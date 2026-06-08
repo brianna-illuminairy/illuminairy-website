@@ -1,3 +1,4 @@
+import { gpaStartingScoreNote } from "@/lib/quiz-funnel/gpa-inferred-start";
 import { satProgramOutcomes } from "@/lib/site";
 import { funnelToday } from "@/lib/funnel-today";
 import type { QuizAnswersLike, ScorePathOutput } from "@/lib/quiz-funnel/score-path-output";
@@ -96,13 +97,56 @@ export type AchievabilityTierRange = {
   label: string;
   minGain: number;
   maxGain: number | null;
+  /** Pts per week at this tier (Danielle baseline: 10–30/wk over ~11 wk). */
+  ptsPerWeek: number;
+  /** Total pts at this tier over the runway. */
+  totalGain: number;
+  /** Starting score + totalGain when a baseline exists. */
+  projectedScore: number | null;
 };
+
+/**
+ * Pts/week per tier — calibrated to a real student (~1125 start, 11 weeks):
+ * Effortless +10/wk → ~1235 · Realistic +15 → ~1290 · Ambitious +20 → ~1345
+ * Aggressive +25 → ~1400 · Extreme +30 → ~1455
+ */
+export const ACHIEVABILITY_PTS_PER_WEEK: Record<GoalFeasibilityTier, number> = {
+  effortless: 10,
+  realistic: 15,
+  ambitious: 20,
+  aggressive: 25,
+  extreme: 30
+};
+
+/** e.g. "11 weeks to Aug 22" — shown above the tier scale. */
+export function buildRunwayContextLine(
+  weeks: number,
+  q5?: string,
+  hasScheduledTestDate = false
+): string {
+  const w = Math.max(1, weeks);
+  const shortDate = q5 ? Q5_HEADLINE_DATE[q5] : null;
+  if (shortDate && hasScheduledTestDate) {
+    return `${w} weeks to ${shortDate}`;
+  }
+  return `${w} weeks on their timeline`;
+}
 
 export type GoalAchievability = {
   tier: GoalFeasibilityTier;
   tierIndex: number;
   stats: AchievabilityStats;
   tierRanges: AchievabilityTierRange[];
+  /** Weeks until test (or illustrative runway). Drives per-tier total gain in pills. */
+  runwayWeeks: number;
+  /** Short line tying the tier math to their calendar. */
+  runwayContextLine: string;
+  /** When start was inferred (GPA or default) — show under stat bar. */
+  startingScoreNote: string | null;
+  /** Full illustrative score range over the runway. */
+  projectedRangeLine: string | null;
+  /** e.g. ~1250 when inferred from GPA */
+  startingScoreLabel: string | null;
   /** H1 — e.g. “+250 pts in 16 weeks.” */
   pointsLine: string;
   /** H2 — tier verdict (“Realistic and” / “Tight timeline,”). */
@@ -193,21 +237,68 @@ function daysUntilTestDate(q5?: string): number | null {
 }
 
 /**
- * Point-gain band each tier represents at this runway. Anchored on the average
- * student (+182 over 12 weeks ≈ Ambitious). Mirrors tierFromFeasibilityPressure
- * thresholds so the legend matches where a real goal would land.
+ * Point-gain bands per tier — pts/week × weeks → projected score from baseline.
  */
-export function buildTierRanges(weeks: number): AchievabilityTierRange[] {
-  const expected = expectedGainForWeeks(Math.max(1, weeks));
-  const r = (x: number) => Math.round((x * expected) / 10) * 10;
-  const cuts = { effortless: r(0.65), realistic: r(0.85), ambitious: r(1.15), aggressive: r(1.42) };
-  return [
-    { tier: "effortless", label: GOAL_FEASIBILITY_TIER_LABELS.effortless, minGain: 0, maxGain: cuts.effortless },
-    { tier: "realistic", label: GOAL_FEASIBILITY_TIER_LABELS.realistic, minGain: cuts.effortless, maxGain: cuts.realistic },
-    { tier: "ambitious", label: GOAL_FEASIBILITY_TIER_LABELS.ambitious, minGain: cuts.realistic, maxGain: cuts.ambitious },
-    { tier: "aggressive", label: GOAL_FEASIBILITY_TIER_LABELS.aggressive, minGain: cuts.ambitious, maxGain: cuts.aggressive },
-    { tier: "extreme", label: GOAL_FEASIBILITY_TIER_LABELS.extreme, minGain: cuts.aggressive, maxGain: null },
-  ];
+export function buildTierRanges(
+  weeks: number,
+  startingScore: number | null = null
+): AchievabilityTierRange[] {
+  const w = Math.max(1, weeks);
+  return GOAL_FEASIBILITY_TIER_ORDER.map((tier) => {
+    const ptsPerWeek = ACHIEVABILITY_PTS_PER_WEEK[tier];
+    const totalGain = ptsPerWeek * w;
+    const projectedScore =
+      startingScore != null ? startingScore + totalGain : null;
+    return {
+      tier,
+      label: GOAL_FEASIBILITY_TIER_LABELS[tier],
+      minGain: totalGain,
+      maxGain: null,
+      ptsPerWeek,
+      totalGain,
+      projectedScore
+    };
+  });
+}
+
+/** Tier for a goal score on the pts/week scale (lowest tier whose ceiling reaches target). */
+export function tierFromPtsPerWeekScale(
+  startingScore: number,
+  targetScore: number,
+  weeks: number
+): GoalFeasibilityTier {
+  const w = Math.max(1, weeks);
+  for (const tier of GOAL_FEASIBILITY_TIER_ORDER) {
+    const ceiling = startingScore + ACHIEVABILITY_PTS_PER_WEEK[tier] * w;
+    if (targetScore <= ceiling) return tier;
+  }
+  return "extreme";
+}
+
+function buildProjectedRangeLine(
+  startingScore: number,
+  weeks: number
+): string {
+  const w = Math.max(1, weeks);
+  const low = startingScore + ACHIEVABILITY_PTS_PER_WEEK.effortless * w;
+  const high = startingScore + ACHIEVABILITY_PTS_PER_WEEK.extreme * w;
+  const realistic = startingScore + ACHIEVABILITY_PTS_PER_WEEK.realistic * w;
+  const aggressive = startingScore + ACHIEVABILITY_PTS_PER_WEEK.aggressive * w;
+  return `Over ${w} weeks, mistake-driven tutoring on their weakest skills could land roughly ~${low}–${high}. Students who follow their personalized weekly plan often end up in the Realistic to Aggressive band (~${realistic}–${aggressive}). Results vary.`;
+}
+
+function buildStartingScoreNote(
+  path: ScorePathOutput,
+  q4?: string,
+  q9?: string
+): string | null {
+  if (path.starting.confidence !== "inferred") return null;
+  if (q4 === "na" || !q4) {
+    const fromGpa = gpaStartingScoreNote(q9, path.starting.value);
+    if (fromGpa) return fromGpa;
+    return `No official SAT yet. We are using ${path.starting.label} as a placeholder starting point until the Skill Diagnostic.`;
+  }
+  return null;
 }
 
 function buildAchievabilityStats(
@@ -288,6 +379,21 @@ export function tierFromFeasibilityPressure(
 
 export function computeFeasibilityTier(path: ScorePathOutput): GoalFeasibilityTier {
   if (path.flags.targetAtOrBelowCurrent) return "effortless";
+  if (path.flags.pastTestDate) return "extreme";
+
+  const start = path.starting?.value;
+  const target = path.target?.value;
+  const weeks = path.chartWeeks;
+
+  if (
+    start != null &&
+    target != null &&
+    weeks >= 1 &&
+    path.rawGap != null &&
+    path.rawGap > 0
+  ) {
+    return tierFromPtsPerWeekScale(start, target, weeks);
+  }
 
   const pressure = computeFeasibilityPressure(path);
   if (!pressure) return "effortless";
@@ -321,7 +427,7 @@ function verdictForTier(
   }
 }
 
-function achievabilityOutcomesMeta(): string {
+export function achievabilityOutcomesMeta(): string {
   const label = satProgramOutcomes.achievabilityOutcomesSampleLabel;
   return `Based on outcomes from ${label} similar students.`;
 }
@@ -497,11 +603,29 @@ export function buildGoalAchievability(
   const pointsLine = buildPointsLine(path, answers.q5);
   const pressure = computeFeasibilityPressure(path);
 
+  const startingScore = path.starting.value;
+  const weeks = Math.max(1, pressure?.weeks ?? path.chartWeeks);
+  const tierRanges = buildTierRanges(weeks, startingScore);
+  const startingScoreNote = buildStartingScoreNote(path, answers.q4, answers.q9);
+  const projectedRangeLine =
+    startingScore != null ? buildProjectedRangeLine(startingScore, weeks) : null;
+  const runwayContextLine = buildRunwayContextLine(
+    weeks,
+    answers.q5,
+    path.hasScheduledTestDate
+  );
+
   return {
     tier,
     tierIndex: tierIndex >= 0 ? tierIndex : 2,
     stats: buildAchievabilityStats(path, pressure, answers.q5, answers.q8),
-    tierRanges: buildTierRanges(pressure?.weeks ?? path.chartWeeks),
+    tierRanges,
+    runwayWeeks: weeks,
+    runwayContextLine,
+    startingScoreNote,
+    projectedRangeLine,
+    startingScoreLabel:
+      path.starting.value != null ? path.starting.label : null,
     pointsLine,
     verdictLead: verdict.lead,
     verdictEm: verdict.em,
@@ -544,7 +668,12 @@ export function buildGoalAchievabilityFallback(
       ptsPerWeek: null,
       hasKnownGoal: false,
     },
-    tierRanges: buildTierRanges(Number(weeksText) || 12),
+    tierRanges: buildTierRanges(Number(weeksText) || 12, null),
+    runwayWeeks: Number(weeksText) || 12,
+    runwayContextLine: buildRunwayContextLine(Number(weeksText) || 12),
+    startingScoreNote: null,
+    projectedRangeLine: null,
+    startingScoreLabel: null,
     pointsLine,
     verdictLead: verdict.lead,
     verdictEm: verdict.em,

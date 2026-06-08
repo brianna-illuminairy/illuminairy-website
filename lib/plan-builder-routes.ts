@@ -70,3 +70,15 @@ export function planBuilderEntryFromLanding(search?: string): string {
   }
   return `${PLAN_BUILDER_PATH}?${params.toString()}`;
 }
+
+/** In-funnel navigation — keep UTMs and other query params on `/plan`. */
+export function planBuilderStepHref(
+  step: string,
+  currentSearch?: string
+): string {
+  const params = new URLSearchParams(
+    currentSearch?.startsWith("?") ? currentSearch.slice(1) : currentSearch ?? ""
+  );
+  params.set("step", step);
+  return `${PLAN_BUILDER_PATH}?${params.toString()}`;
+}

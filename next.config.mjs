@@ -11,9 +11,21 @@ const posthogSourcemapsEnabled =
   Boolean(personalApiKey && posthogProjectId) &&
   process.env.NODE_ENV === "production";
 
+const devAllowedOrigins = (
+  process.env.DEV_ALLOWED_ORIGINS ??
+  "127.0.0.1,localhost,192.168.7.194"
+)
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   productionBrowserSourceMaps: posthogSourcemapsEnabled,
+  // Hide Next.js dev badge ("N" / "Rendering") during phone QA on LAN.
+  devIndicators: false,
+  // Required for phone QA on LAN IP (Next.js 16 blocks /_next/* cross-origin otherwise).
+  allowedDevOrigins: devAllowedOrigins,
   turbopack: {
     root: projectRoot
   },

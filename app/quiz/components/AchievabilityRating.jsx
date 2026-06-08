@@ -4,9 +4,12 @@ import { GOAL_FEASIBILITY_TIER_ORDER } from '@/lib/quiz-funnel/goal-achievabilit
 
 const AMBITIOUS_INDEX = GOAL_FEASIBILITY_TIER_ORDER.indexOf('ambitious');
 
-export function AchievabilityStatBar({ stats }) {
+export function AchievabilityStatBar({ stats, startingLabel }) {
   const cells = [
-    { value: stats.scoreGap != null ? `+${stats.scoreGap}` : '—', label: 'Score gap', accent: true },
+    ...(startingLabel
+      ? [{ value: startingLabel, label: 'Starting (est.)', accent: true }]
+      : []),
+    { value: stats.scoreGap != null ? `+${stats.scoreGap}` : '—', label: 'Score gap', accent: !startingLabel },
     { value: stats.testDateShort ?? 'Flexible', label: 'Test date', accent: false },
     { value: stats.daysToTest != null ? String(stats.daysToTest) : '—', label: 'Days to test', accent: true },
     { value: stats.ptsPerWeek != null ? `+${stats.ptsPerWeek}` : '—', label: 'Pts / wk', accent: false },
@@ -25,26 +28,67 @@ export function AchievabilityStatBar({ stats }) {
   );
 }
 
-export function AchievabilityPills({ tierIndex, tierRanges, educational }) {
-  // No real goal yet → highlight the average student (Ambitious) as the reference point.
+export function AchievabilityPills({
+  tierIndex,
+  tierRanges,
+  educational,
+}) {
   const refIndex = educational ? AMBITIOUS_INDEX : tierIndex;
+
   return (
-    <div className="qf-achv-pills">
-      {tierRanges.map((range, index) => {
-        const state = index < refIndex ? 'before' : index === refIndex ? 'active' : 'after';
-        return (
-          <div key={range.tier} className={`qf-achv-pill qf-achv-pill--${state}`}>
-            <span className="qf-achv-pill__label">{range.label}</span>
-            {educational ? (
-              <span className="qf-achv-pill__range">
-                {range.maxGain == null
-                  ? `+${range.minGain}+`
-                  : `+${range.minGain}–${range.maxGain}`}
-              </span>
-            ) : null}
-          </div>
-        );
-      })}
+    <div className="qf-achv-scale">
+      <div className="qf-achv-pills" role="list" aria-label="Score gain by effort tier">
+        {tierRanges.map((range, index) => {
+          const state = index < refIndex ? 'before' : index === refIndex ? 'active' : 'after';
+          return (
+            <div key={range.tier} className="qf-achv-pill-col" role="listitem">
+              <div className={`qf-achv-pill qf-achv-pill--${state}`}>
+                <span className="qf-achv-pill__label">{range.label}</span>
+              </div>
+              <span className="qf-achv-pill__pace-under">+{range.ptsPerWeek}/wk</span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Shared achievability block — plan reveal, v1 plan card, Sophia example, share page.
+ * Pills live in their own container; disclaimer sits outside.
+ */
+export function AchievabilityPlanBlock({
+  stats,
+  startingScoreLabel,
+  startingScoreNote,
+  tierIndex,
+  tierRanges,
+  educational = true,
+  outcomesMeta,
+  projectedRangeLine,
+  ratingLabel = 'Goal score achievability rating',
+}) {
+  return (
+    <div className="qf-goal-assess__callout">
+      <AchievabilityStatBar stats={stats} startingLabel={startingScoreLabel} />
+      {startingScoreNote ? (
+        <p className="qf-caption qf-achv-start-note">{startingScoreNote}</p>
+      ) : null}
+      <div className="qf-goal-assess__scale">
+        <p className="qf-meta qf-achv-rating-label">{ratingLabel}</p>
+        <AchievabilityPills
+          tierIndex={tierIndex}
+          tierRanges={tierRanges}
+          educational={educational}
+        />
+        {outcomesMeta ? (
+          <p className="qf-meta qf-achv-outcomes-label">{outcomesMeta}</p>
+        ) : null}
+      </div>
+      {projectedRangeLine ? (
+        <p className="qf-caption qf-achv-range-line">{projectedRangeLine}</p>
+      ) : null}
     </div>
   );
 }
@@ -53,12 +97,15 @@ export function AchievabilityPills({ tierIndex, tierRanges, educational }) {
 export function AchievabilityRating({ assessment, label = 'Goal score achievability rating' }) {
   return (
     <div className="qf-goal-assess__callout">
-      <AchievabilityStatBar stats={assessment.stats} />
-      <p className="qf-meta qf-achv-rating-label">{label}</p>
-      <AchievabilityPills
+      <AchievabilityPlanBlock
+        stats={assessment.stats}
+        startingScoreLabel={assessment.startingScoreLabel}
         tierIndex={assessment.tierIndex}
         tierRanges={assessment.tierRanges}
         educational={!assessment.stats.hasKnownGoal}
+        outcomesMeta={assessment.outcomesMeta}
+        projectedRangeLine={assessment.projectedRangeLine}
+        ratingLabel={label}
       />
     </div>
   );

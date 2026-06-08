@@ -19,14 +19,19 @@ export function QFSHeardSummary({ answers = {}, onContinue, onBack }) {
 }
 
 // ─── Plan reveal · SAT Improvement Plan + score projection ───────────────────
-export function QFSPlanReveal({ answers = {}, onContinue, onBack }) {
+export function QFSPlanReveal({ answers = {}, onContinue, onBack, onEditAnswer }) {
   const plan = useMemo(() => buildPlanReveal(answers), [answers]);
 
   return (
     <QFScreen stepIdx={11} ornament="glow" onBack={onBack}
       footer={<QFButton kind="forest" onClick={onContinue}>{REVEAL_CTA}</QFButton>}
     >
-      <PlanRevealContent plan={plan} q2={answers.q2} />
+      <PlanRevealContent
+        plan={plan}
+        q2={answers.q2}
+        answers={answers}
+        onEditAnswer={onEditAnswer}
+      />
     </QFScreen>
   );
 }

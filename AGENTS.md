@@ -32,6 +32,12 @@ This is **not** a coursework or AIMA assignment repo. Do not apply academic “s
 - **Layout lock:** step files are **content only** — swap `headline`, `hint`, `bodyVariant`, and body children. Do not edit `funnel.css`, `funnel-shell.tsx`, `quiz-step-template.tsx`, or spacing without owner approval. See `components/sat-plan/LAYOUT.lock.md` and `npm run funnel:layout-guard`.
 - Product/copy checklists stay in the **quizfunnel** git repo
 
+## Plan Builder quiz (`/plan`)
+
+- **Ship here:** `npm run dev` → http://localhost:3000/plan
+- **CTA lock:** **every** step passes a `footer` to `QFScreen`. See `app/quiz/LAYOUT.lock.md`, `npm run funnel:cta-guard`, and **`npm run funnel:e2e`** (Playwright — every step + navigation; requires dev server).
+- **Shell:** `app/quiz/components/QFShell.tsx` pins the footer; step files are content + `footer` prop only.
+
 ## Assessment funnel (`/assessment`) — parallel to satplan
 
 - **Ship here:** `npm run dev` → http://localhost:3000/assessment

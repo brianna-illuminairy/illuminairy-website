@@ -7,6 +7,7 @@ import {
   computeFeasibilityTier,
   expectedGainForWeeks,
   tierFromFeasibilityPressure,
+  tierFromPtsPerWeekScale,
 } from "@/lib/quiz-funnel/goal-achievability";
 import {
   buildQ6SolutionBlock,
@@ -32,6 +33,7 @@ type Case = {
     prepNull?: boolean;
     outcomesIncludes?: string;
     insightIncludes?: string;
+    startingNoteIncludes?: string;
     prepExcludes?: string;
     insightExcludes?: string;
   };
@@ -163,9 +165,50 @@ const SCORE_CASES: Case[] = [
     expect: { tier: "effortless" },
   },
   {
+    name: "Danielle baseline — 1125 start, 11wk, 1400 goal → aggressive",
+    answers: {
+      q2: "selective",
+      q3: "none",
+      q4: "na",
+      q5: "aug22",
+      q8: "1400",
+      q9: "3.3-3.5",
+    },
+    expect: { tier: ["aggressive", "extreme"] },
+  },
+  {
+    name: "First sit 4.0+ GPA, Aug 22, 1450 goal → ambitious (not extreme)",
+    answers: {
+      q2: "selective",
+      q3: "none",
+      q4: "na",
+      q5: "aug22",
+      q6: ["reading"],
+      q7: ["nothing"],
+      q8: "1450",
+      q9: "4.0+",
+    },
+    expect: { tier: "ambitious" },
+  },
+  {
+    name: "GPA note on inferred start",
+    answers: {
+      q2: "selective",
+      q3: "none",
+      q4: "na",
+      q5: "aug22",
+      q8: "1400",
+      q9: "4.0+",
+    },
+    expect: {
+      tier: "realistic",
+      startingNoteIncludes: "4.0+ GPA",
+    },
+  },
+  {
     name: "q4 na + q8 tbd → inferred gap, dated headline",
     answers: { ...BASE, q3: "none", q4: "na", q8: "tbd" },
-    expect: { pointsIncludes: ["Sept 12", "+"], tier: "extreme" },
+    expect: { pointsIncludes: ["Sept 12", "+"], tier: ["ambitious", "aggressive", "extreme"] },
   },
   {
     name: "q5 tbd only → over weeks not by date",
@@ -175,7 +218,7 @@ const SCORE_CASES: Case[] = [
   {
     name: "q8 tbd merit inferred target",
     answers: { ...BASE, q8: "tbd", q2: "merit" },
-    expect: { tier: "aggressive" },
+    expect: { tier: ["ambitious", "aggressive"] },
   },
 ];
 
@@ -247,6 +290,13 @@ function assertTierScalingUnit(): string[] {
   }
   if (tierFromFeasibilityPressure(0.75, 1, flags) !== "realistic") {
     errors.push("pressure 0.75 should map to realistic");
+  }
+
+  if (tierFromPtsPerWeekScale(1125, 1400, 11) !== "aggressive") {
+    errors.push("Danielle baseline: 1125→1400 in 11wk should be aggressive");
+  }
+  if (tierFromPtsPerWeekScale(1250, 1450, 11) !== "ambitious") {
+    errors.push("4.0+ first sit: 1250→1450 in 11wk should be ambitious");
   }
 
   return errors;
@@ -344,6 +394,14 @@ function assertCase(testCase: Case): string[] {
   if (exp.insightIncludes && !result.insightParagraph.includes(exp.insightIncludes)) {
     errors.push(
       `insightParagraph missing "${exp.insightIncludes}": ${result.insightParagraph}`
+    );
+  }
+  if (
+    exp.startingNoteIncludes &&
+    !(result.startingScoreNote ?? "").includes(exp.startingNoteIncludes)
+  ) {
+    errors.push(
+      `startingScoreNote missing "${exp.startingNoteIncludes}": ${result.startingScoreNote}`
     );
   }
   if (exp.prepExcludes && result.insightParagraph.includes(exp.prepExcludes)) {

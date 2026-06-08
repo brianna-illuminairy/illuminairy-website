@@ -1,7 +1,9 @@
 "use client";
 
 import posthog from "posthog-js";
-import type { AttributionSnapshot } from "@/lib/attribution";
+import {
+  registerPostHogAttribution
+} from "@/lib/analytics-attribution";
 import {
   attributionUtmProps,
   readAttributionForAnalytics
@@ -42,18 +44,6 @@ export type LandingEventProps = {
   hero_hook_source?: string;
 };
 
-function registerPostHogAttribution(attr: Partial<AttributionSnapshot>) {
-  if (!getPostHogKey()) return;
-  const props = attributionUtmProps(attr);
-  const register: Record<string, string> = {};
-  for (const [key, value] of Object.entries(props)) {
-    if (value) register[key] = value;
-  }
-  if (Object.keys(register).length > 0) {
-    posthog.register(register);
-  }
-}
-
 function baseProps(
   variant: LpVariant,
   layout: LpLayout,
@@ -61,6 +51,7 @@ function baseProps(
   extra?: Partial<LandingEventProps>
 ): LandingEventProps {
   const attr = readAttributionForAnalytics();
+  registerPostHogAttribution(attr);
   return {
     sat_lp_variant: variant,
     sat_lp_layout: layout,
@@ -77,7 +68,6 @@ export function trackLandingView(
   extra?: Partial<LandingEventProps>
 ) {
   const props = baseProps(variant, layout, landingPath, extra);
-  registerPostHogAttribution(props);
   if (getPostHogKey()) {
     posthog.capture(AnalyticsEvents.funnelLandingView, props);
   }
@@ -107,7 +97,6 @@ export function trackLandingCtaClick(
     section_id: sectionId,
     cta_label: ctaLabel
   });
-  registerPostHogAttribution(props);
   if (getPostHogKey()) {
     posthog.capture(AnalyticsEvents.funnelCtaClick, props);
   }
@@ -115,14 +104,16 @@ export function trackLandingCtaClick(
     section_id: sectionId,
     cta_label: ctaLabel,
     sat_lp_variant: variant,
-    sat_lp_layout: layout
+    sat_lp_layout: layout,
+    ...attributionUtmProps(readAttributionForAnalytics())
   });
   trackQuizGaEvent(AnalyticsEvents.funnelCtaClick, {
     sat_lp_variant: variant,
     sat_lp_layout: layout,
     section_id: sectionId,
     cta_label: ctaLabel,
-    funnel: "sat_quiz"
+    funnel: "sat_quiz",
+    ...attributionUtmProps(readAttributionForAnalytics())
   });
   if (typeof window !== "undefined" && window.fbq) {
     window.fbq("trackCustom", "FunnelCTA", {

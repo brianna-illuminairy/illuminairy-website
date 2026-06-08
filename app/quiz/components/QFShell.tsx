@@ -2,6 +2,7 @@
 
 import { FunnelHeaderLogo } from '@/components/funnel-header-logo';
 import type { CSSProperties, ReactNode } from 'react';
+import { useQFProgress } from './QFProgressContext';
 
 const TOTAL_STEPS = 23;
 
@@ -34,10 +35,19 @@ export function QFScreen({
     : tone === 'bg-2' ? 'var(--qf-bg-2)'
     : 'var(--qf-bg)';
   const inkColor = tone === 'ink' ? 'var(--qf-paper)' : 'var(--qf-ink)';
-  const fillPct = Math.max(0, Math.min(1, (stepIdx || 0) / TOTAL_STEPS)) * 100;
+  const routeProgress = useQFProgress();
+  const fillPct =
+    routeProgress && routeProgress.total > 0
+      ? ((routeProgress.index + 1) / routeProgress.total) * 100
+      : Math.max(0, Math.min(1, (stepIdx || 0) / TOTAL_STEPS)) * 100;
+  const hasCta = footer != null && footer !== false;
 
   return (
-    <div className="qf-page" style={{ color: inkColor }}>
+    <div
+      className={'qf-page' + (hasCta ? ' qf-page--has-cta' : '')}
+      style={{ color: inkColor }}
+      data-has-cta={hasCta ? 'true' : undefined}
+    >
       <div className="qf-top">
         <div className="qf-top-row">
           <button
@@ -66,19 +76,21 @@ export function QFScreen({
         style={{ background: bodyBg, position: 'relative' }}
       >
         {ornament === 'glow' && <div className="qf-glow" />}
-        <div style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column' }}>
+        <div className="qf-body-inner">
           {children}
         </div>
       </div>
 
-      {footer && (
+      {hasCta ? (
         <div
           className="qf-footer"
+          role="region"
+          aria-label="Continue"
           style={{ background: bodyBg, borderTopColor: tone === 'ink' ? 'rgba(255,255,255,0.1)' : undefined }}
         >
           {footer}
         </div>
-      )}
+      ) : null}
     </div>
   );
 }
@@ -155,6 +167,44 @@ export function QFButton({
     <button className={cls} onClick={onClick} disabled={disabled} style={style}>
       {children} <span className="arrow">→</span>
     </button>
+  );
+}
+
+/** Pinned footer CTA for every funnel step — never ship a screen without this. */
+export function QFContinueFooter({
+  disabled,
+  onClick,
+  label = 'Continue',
+}: {
+  disabled?: boolean;
+  onClick?: () => void;
+  label?: string;
+}) {
+  return (
+    <QFButton kind="forest" disabled={disabled} onClick={onClick}>
+      {label}
+    </QFButton>
+  );
+}
+
+/** Single-select: option tap still advances; footer is always visible as backup. */
+export function QFSingleSelectFooter({
+  value,
+  onSelect,
+  label = 'Continue',
+}: {
+  value?: string;
+  onSelect: (value: string) => void;
+  label?: string;
+}) {
+  return (
+    <QFContinueFooter
+      disabled={!value}
+      label={label}
+      onClick={() => {
+        if (value) onSelect(value);
+      }}
+    />
   );
 }
 

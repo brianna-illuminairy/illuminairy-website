@@ -12,6 +12,6 @@ export function iCompareProofBridgeLine(): string {
   const pts = satProgramOutcomes.avgPointsGained;
   return (
     `Our students averaged +${pts} using a custom improvement plan ` +
-    `built around the skills hurting their score the most:`
+    `built around the skills hurting their score the most.`
   );
 }

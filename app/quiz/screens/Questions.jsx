@@ -260,9 +260,10 @@ export function QFQ9GPA({ value, onSelect, onBack, qWho = 'child' }) {
 }
 
 export function QFQName({ value = '', onChange, onContinue, onBack, qWho = 'child' }) {
+  const trimmed = value.trim();
   return (
     <QFScreen stepIdx={15} onBack={onBack}
-      footer={<QFButton kind="forest" onClick={onContinue}>{NAME_CTA}</QFButton>}
+      footer={<QFButton kind="forest" onClick={onContinue} disabled={!trimmed}>{NAME_CTA}</QFButton>}
     >
       <div className="qf-question-head">
         <div className="qf-eyebrow">One last detail</div>
@@ -276,7 +277,7 @@ export function QFQName({ value = '', onChange, onContinue, onBack, qWho = 'chil
         placeholder="First name"
         autoComplete="off"
         autoFocus
-        onKeyDown={(e) => { if (e.key === 'Enter') onContinue(); }}
+        onKeyDown={(e) => { if (e.key === 'Enter' && trimmed) onContinue(); }}
       />
       <QFWhyWeAsk>
         {nameWhyWeAsk(qWho)}

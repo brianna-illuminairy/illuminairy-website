@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import {
   ATTRIBUTION_SESSION_KEY,
+  createVisitorId,
   mergeAttribution,
   parseAttributionFromSearch,
   type AttributionSnapshot,
@@ -28,7 +29,7 @@ function writeCookie(name: string, value: string) {
 function ensureVisitorId() {
   let id = readCookie(VISITOR_COOKIE);
   if (!id) {
-    id = crypto.randomUUID();
+    id = createVisitorId();
     writeCookie(VISITOR_COOKIE, id);
   }
   return id;
