@@ -7,6 +7,7 @@ import {
   SCORE_PATH_DEFAULT_WEEKS,
 } from "@/lib/quiz-funnel/quiz-profile";
 import { stakesGoalPhrase } from "@/lib/quiz-funnel/stakes-copy";
+import { isQuizSelfTaker, quizSubjectVoice } from "@/lib/quiz-funnel/subject-voice";
 import { satFirstMonthOutcomes } from "@/lib/site";
 import type { InsightHit, InsightHitPart } from "@/lib/quiz-funnel/insight-hits";
 
@@ -16,7 +17,10 @@ export type EducationSlideHit = InsightHit & {
 };
 
 /** q3 = none — skip q4, illustrative start */
-export function educationHitQ3None(): EducationSlideHit {
+export function educationHitQ3None(qWho?: string): EducationSlideHit {
+  const specificLine = isQuizSelfTaker(qWho)
+    ? "That's the typical band for a first attempt, not a guess about you. Your SAT Strategy Call and Skill Diagnostic make it specific."
+    : "That's the typical band for a first attempt, not a guess about your student. Your SAT Strategy Call and Skill Diagnostic make it specific.";
   return {
     type: "recognition",
     parts: [{ text: "No official SAT yet." }],
@@ -28,17 +32,14 @@ export function educationHitQ3None(): EducationSlideHit {
           text: " as a planning starting point until the Skill Diagnostic sets the real baseline.",
         },
       ],
-      [
-        {
-          text: "That's the typical band for a first attempt, not a guess about your student. Your SAT Strategy Call and Skill Diagnostic make it specific.",
-        },
-      ],
+      [{ text: specificLine }],
     ],
   };
 }
 
 /** q5 = tbd — default runway */
-export function educationHitQ5Tbd(): EducationSlideHit {
+export function educationHitQ5Tbd(qWho?: string): EducationSlideHit {
+  const { possessive } = quizSubjectVoice(qWho);
   return {
     type: "surprise",
     parts: [
@@ -48,14 +49,15 @@ export function educationHitQ5Tbd(): EducationSlideHit {
     ],
     followUp: [
       {
-        text: "On your SAT Strategy Call, we'll help you pick the best test date for their grade and school list.",
+        text: `On your SAT Strategy Call, we'll help you pick the best test date for ${possessive} grade and school list.`,
       },
     ],
   };
 }
 
 /** q5 = 2027+ — grade timing */
-export function educationHitQ5Timing(): EducationSlideHit {
+export function educationHitQ5Timing(qWho?: string): EducationSlideHit {
+  const { possessive } = quizSubjectVoice(qWho);
   return {
     type: "surprise",
     parts: [
@@ -65,7 +67,7 @@ export function educationHitQ5Timing(): EducationSlideHit {
     ],
     followUp: [
       {
-        text: "Starting earlier gives room to fix recurring skills instead of cramming. Your SAT Strategy Call maps the right first date for their timeline.",
+        text: `Starting earlier gives room to fix recurring skills instead of cramming. Your SAT Strategy Call maps the right first date for ${possessive} timeline.`,
       },
     ],
   };

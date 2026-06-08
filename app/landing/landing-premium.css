@@ -641,6 +641,7 @@
   line-height: 1.1;
   letter-spacing: -0.03em;
   max-width: 22em;
+  text-wrap: normal;
 }
 
 .il-layout-hero-only .il-hero-subhead {

@@ -18,7 +18,7 @@ import {
 import { weeksUntilQ5Test, hasScheduledTestDate } from "@/lib/quiz-funnel/gains";
 import { satProgramOutcomes } from "@/lib/site";
 import { stakesGoalLabel, stakesSubheadOpener, stakesVerdictPrefix } from "@/lib/quiz-funnel/stakes-copy";
-import { isQuizSelfTaker } from "@/lib/quiz-funnel/subject-voice";
+import { isQuizSelfTaker, quizSubjectVoice } from "@/lib/quiz-funnel/subject-voice";
 import { buildGoalAchievability, type GoalAchievability } from "@/lib/quiz-funnel/goal-achievability";
 
 /** Diagnostic ranks 5–6 skills; examples on this page show 5. */
@@ -357,7 +357,9 @@ function buildProjectionVerdict(
 
   const profileParts: string[] = [`starting around ${start}`];
   if (gpa) profileParts.push(`a ${gpa} GPA`);
-  const profileLine = `Students like yours (${profileParts.join(", ")})`;
+  const profileLine = self
+    ? `Students like you (${profileParts.join(", ")})`
+    : `Students like yours (${profileParts.join(", ")})`;
 
   if (
     path.showGainMath &&
@@ -419,6 +421,8 @@ export type PlanRevealModel = {
 export function buildPlanReveal(answers: QuizAnswersLike): PlanRevealModel {
   const path = buildScorePathOutput(answers);
   const q6 = answers.q6 ?? [];
+  const self = isQuizSelfTaker(answers.qWho);
+  const { possessive } = quizSubjectVoice(answers.qWho);
   const levers = pickTopLevers(q6).map((s, i) => ({
     rank: i + 1,
     name: s.name,
@@ -427,8 +431,20 @@ export function buildPlanReveal(answers: QuizAnswersLike): PlanRevealModel {
 
   const leversNote =
     path.mode === "process_only" || path.starting.confidence !== "known"
-      ? "Example skills from similar students. Your Skill Diagnostic names their exact 5–6."
-      : "Example skills from similar students. Your Skill Diagnostic confirms their exact 5–6.";
+      ? `Example skills from similar students. Your Skill Diagnostic names ${possessive} exact 5–6.`
+      : `Example skills from similar students. Your Skill Diagnostic confirms ${possessive} exact 5–6.`;
+
+  const parentVisibility = self
+    ? [
+        "Weekly update: which skills you worked on, what practice you did, and what's next",
+        "Message your tutor between sessions",
+        "You'll know if you're on track before test day",
+      ]
+    : [
+        "Weekly update: which skills they worked on, what practice they did, and what's next",
+        "Message their tutor between sessions",
+        "You'll know if they're on track before test day",
+      ];
 
   return {
     q2: answers.q2,
@@ -455,13 +471,9 @@ export function buildPlanReveal(answers: QuizAnswersLike): PlanRevealModel {
     leversNote,
     whyLastTimeFailed: whyLastPrepFailed(answers.q7),
     howThisTimeDifferent:
-      `The Skill Diagnostic finds the ${DIAGNOSTIC_SKILL_RANGE} SAT skills holding their score back. We teach those first, not the whole test.`,
+      `The Skill Diagnostic finds the ${DIAGNOSTIC_SKILL_RANGE} SAT skills holding ${possessive} score back. We teach those first, not the whole test.`,
     honestyLines: path.disclaimers,
-    parentVisibility: [
-      "Weekly update: which skills they worked on, what practice they did, and what's next",
-      "Message their tutor between sessions",
-      "You'll know if they're on track before test day",
-    ],
+    parentVisibility,
     nextSteps: [
       {
         title: "Free SAT Strategy Call (15 min)",
@@ -475,8 +487,9 @@ export function buildPlanReveal(answers: QuizAnswersLike): PlanRevealModel {
       },
       {
         title: "Personalized plan review (Fri Week 1)",
-        detail:
-          "An SAT advisor walks diagnostic results with you and activates their weekly skill order.",
+        detail: self
+          ? "An SAT advisor walks diagnostic results with you and activates your weekly skill order."
+          : "An SAT advisor walks diagnostic results with you and activates their weekly skill order.",
       },
       {
         title: "Activated Improvement Plan",

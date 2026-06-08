@@ -78,7 +78,7 @@
   display: flex; align-items: center; gap: 10px;
   margin: 14px 0 0;
   font-family: var(--body); font-size: 14px; font-weight: 500; line-height: 1.4;
-  color: var(--fg-soft); text-wrap: balance;
+  color: var(--fg-soft); text-wrap: pretty;
 }
 .lp-authority-line .bars { display: inline-flex; align-items: flex-end; gap: 2.5px; flex-shrink: 0; height: 14px; }
 .lp-authority-line .bars i { width: 4px; border-radius: 1.5px; background: var(--em); display: block; }
@@ -198,4 +198,12 @@
   .lp-cta-value li { font-size: 14.5px; line-height: 1.35; }
   .lp-btn { padding: 14px 18px; font-size: 16.5px; }
   .lp-cta-sub { margin-top: 10px; }
+}
+
+/* Ultra-narrow: allow hook headlines to wrap at words (owner default stays nowrap above) */
+@media (max-width: 360px) {
+  .lp-hero-single .lp-h1 .line {
+    text-wrap: pretty;
+    white-space: normal;
+  }
 }

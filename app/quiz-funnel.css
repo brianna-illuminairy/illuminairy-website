@@ -594,7 +594,7 @@
   letter-spacing: -0.014em;
   color: var(--qf-ink);
   margin: 0;
-  text-wrap: pretty;
+  text-wrap: normal;
 }
 .qf-page .qf-h1 em { font-style: normal; color: var(--qf-forest); font-weight: 500; }
 
@@ -626,7 +626,7 @@
   letter-spacing: -0.012em;
   color: var(--qf-ink);
   margin: 0;
-  text-wrap: balance;
+  text-wrap: normal;
 }
 .qf-page .qf-h2 em { font-style: normal; color: var(--qf-forest); font-weight: 500; }
 .qf-page .qf-lead {

@@ -27,6 +27,11 @@ import { AchievabilityPlanBlock } from '../components/AchievabilityRating';
 import { QFScoreReportPair } from '../components/QFPlanVisuals';
 import { Q5_TEST_DATES } from '@/lib/quiz-funnel/gains';
 import { satFirstMonthOutcomes } from '@/lib/site';
+import {
+  buildPlanCta,
+  isQuizSelfTaker,
+  quizSubjectVoice,
+} from '@/lib/quiz-funnel/subject-voice';
 
 export { gainTargetForQ5 };
 
@@ -237,10 +242,11 @@ export function QFI2Compute({
 }
 
 // ─── Hope screen (post-q5): enough time + first-month proof ──────────────────
-export function QFIHopeScreen({ onContinue, onBack, q5 = 'oct3' }) {
+export function QFIHopeScreen({ onContinue, onBack, q5 = 'oct3', qWho = 'child' }) {
   const date = Q5_TEST_DATES[q5];
   const days = date ? Math.round((date.getTime() - funnelToday().getTime()) / 86400000) : null;
   const o = satFirstMonthOutcomes;
+  const scoreUp = isQuizSelfTaker(qWho) ? 'your score up' : 'their score up';
   return (
     <QFScreen stepIdx={6} ornament="glow" onBack={onBack}
       actions={<QFButton kind="forest" onClick={onContinue}>Continue Building My Plan</QFButton>}
@@ -248,9 +254,9 @@ export function QFIHopeScreen({ onContinue, onBack, q5 = 'oct3' }) {
       <div className="gap-22" style={{ marginTop: 4 }}>
         <h1 className="qf-h1" style={{ marginBottom: 0 }}>
           {days && days > 0 ? (
-            <>You still have <em>{days} days</em> to get their score up.</>
+            <>You still have <em>{days} days</em> to get {scoreUp}.</>
           ) : (
-            <>You still have time to get their score up.</>
+            <>You still have time to get {scoreUp}.</>
           )}
         </h1>
         <div className="qf-stat-callout">
@@ -288,13 +294,15 @@ const BR_DATE_NUMERIC = {
   'aug22': '8/22', 'sept12': '9/12', 'oct3': '10/3', 'nov7': '11/7', 'dec5': '12/5',
 };
 
-export function QFI3Bridge({ onContinue, onBack, q5 = 'oct3' }) {
+export function QFI3Bridge({ onContinue, onBack, q5 = 'oct3', qWho = 'child' }) {
   const today = funnelToday();
   const daysToTest = BR_TEST_DATES[q5]
     ? Math.round((BR_TEST_DATES[q5] - today) / (1000 * 60 * 60 * 24))
     : null;
   const dateNumeric = BR_DATE_NUMERIC[q5];
   const hasDate = daysToTest && dateNumeric;
+  const { possessive } = quizSubjectVoice(qWho);
+  const scoreUp = isQuizSelfTaker(qWho) ? 'your score up' : 'their score up';
   return (
     <QFScreen stepIdx={11} ornament="glow" onBack={onBack}
       actions={<QFButton kind="forest" onClick={onContinue}>One more question</QFButton>}
@@ -302,13 +310,13 @@ export function QFI3Bridge({ onContinue, onBack, q5 = 'oct3' }) {
       <div className="gap-22" style={{ marginTop: 4 }}>
         <p className="qf-lead">
           {hasDate ? (
-            <>Good news, we think we can help get their score up by the <em>{dateNumeric}</em> SAT, which is only <em>{daysToTest} days</em> away.</>
+            <>Good news, we think we can help get {scoreUp} by the <em>{dateNumeric}</em> SAT, which is only <em>{daysToTest} days</em> away.</>
           ) : (
-            <>Good news, we think we can help get their score up before the test.</>
+            <>Good news, we think we can help get {scoreUp} before the test.</>
           )}
         </p>
         <p className="qf-lead">
-          One more question about their <em>GPA</em>. Then we&apos;ll show a realistic <em>score projection</em> and their Improvement Plan.
+          One more question about {possessive} <em>GPA</em>. Then we&apos;ll show a realistic <em>score projection</em> and {possessive} Improvement Plan.
         </p>
       </div>
     </QFScreen>
@@ -324,7 +332,10 @@ const GAP_Q9_LABEL = {
   '3.0-3.3': '3.0–3.3', '3.3-3.5': '3.3–3.5', '3.5-3.7': '3.5–3.7', '3.7-3.9': '3.7–3.9', '4.0+': '4.0+',
 };
 
-export function QFIGPAGap({ onContinue, onBack, q4 = '1200-1300', q9 = '3.8-4.0' }) {
+export function QFIGPAGap({ onContinue, onBack, q4 = '1200-1300', q9 = '3.8-4.0', qWho = 'child' }) {
+  const gradeHabit = isQuizSelfTaker(qWho)
+    ? "The same habits that earn your A's in class quietly cost points on a test scored on pace."
+    : "The same habits that earn their A's in class quietly cost points on a test scored on pace.";
   return (
     <QFScreen stepIdx={13} onBack={onBack}
       actions={<QFButton kind="forest" onClick={onContinue}>{I_GAP_CTA}</QFButton>}
@@ -335,8 +346,8 @@ export function QFIGPAGap({ onContinue, onBack, q4 = '1200-1300', q9 = '3.8-4.0'
         </h1>
 
         <p className="qf-lead">
-          It&apos;s common for smart students with high GPAs to score lower than expected on the SAT.
-          The same habits that earn their A&apos;s in class quietly cost points on a test scored on pace.
+          It&apos;s common for smart students with high GPAs to score lower than expected on the SAT.{' '}
+          {gradeHabit}
         </p>
 
         {/* Side-by-side contrast table */}
@@ -438,7 +449,7 @@ function compareBar1Short(q7 = []) {
   return compareBar1Label(q7);
 }
 
-export function QFIComparePrep({ onContinue, onBack, q7 = ['khan'] }) {
+export function QFIComparePrep({ onContinue, onBack, q7 = ['khan'], qWho = 'child' }) {
   const bar1Short = compareBar1Short(q7);
   const multiplier = iCompareHeadlineMultiplier();
   const bars = [
@@ -462,7 +473,7 @@ export function QFIComparePrep({ onContinue, onBack, q7 = ['khan'] }) {
         </div>
 
         <p className="qf-lead" style={{ margin: 0 }}>
-          {iCompareProofBridgeLine()}
+          {iCompareProofBridgeLine(qWho)}
         </p>
 
         <p className="qf-disclaimer" style={{ margin: 0 }}>
@@ -483,16 +494,19 @@ function RoadmapSection({ eyebrow, children }) {
   );
 }
 
-function planStruggledCopy(q7) {
+function planStruggledCopy(q7, qWho = 'child') {
+  const { possessive } = quizSubjectVoice(qWho);
   const ids = Array.isArray(q7) ? q7 : [];
   if (ids.includes('khan')) {
-    return 'Khan Academy has over 475 pieces of SAT content, far too much to simply study. Your child likely barely scratched the surface.';
+    return isQuizSelfTaker(qWho)
+      ? 'Khan Academy has over 475 pieces of SAT content, far too much to simply study. You likely barely scratched the surface.'
+      : 'Khan Academy has over 475 pieces of SAT content, far too much to simply study. Your child likely barely scratched the surface.';
   }
   const labels = selectedPrepLabels(q7);
   if (labels.length) {
-    return `${formatEnglishList(labels)} spread time across the whole SAT instead of the few skills actually holding their score back.`;
+    return `${formatEnglishList(labels)} spread time across the whole SAT instead of the few skills actually holding ${possessive} score back.`;
   }
-  return 'Studying without a ranked plan spreads time across the whole SAT instead of the few skills actually holding their score back.';
+  return `Studying without a ranked plan spreads time across the whole SAT instead of the few skills actually holding ${possessive} score back.`;
 }
 
 function planDelayCost(skillPts, ptsPerWeek) {
@@ -502,7 +516,9 @@ function planDelayCost(skillPts, ptsPerWeek) {
 }
 
 export function QFV1Projection({ onContinue, onBack, answers = {} }) {
-  const { q7 = [], kidName } = answers;
+  const { q7 = [], kidName, qWho = 'child' } = answers;
+  const self = isQuizSelfTaker(qWho);
+  const { possessive: voicePossessive } = quizSubjectVoice(qWho);
   const projection = buildV1Projection(answers);
   const assessment = buildGoalAchievability(answers);
   const path = buildScorePathOutput(answers);
@@ -591,8 +607,8 @@ export function QFV1Projection({ onContinue, onBack, answers = {} }) {
         </div>
 
         {/* Narrative — plan → why a call + diagnostic is the next step */}
-        <RoadmapSection eyebrow="Why they struggled last test">
-          <p className="qf-lead" style={{ margin: 0 }}>{planStruggledCopy(q7)}</p>
+        <RoadmapSection eyebrow={self ? 'Why you struggled last test' : 'Why they struggled last test'}>
+          <p className="qf-lead" style={{ margin: 0 }}>{planStruggledCopy(q7, qWho)}</p>
         </RoadmapSection>
 
         <RoadmapSection eyebrow="What to do differently this time">
@@ -607,13 +623,13 @@ export function QFV1Projection({ onContinue, onBack, answers = {} }) {
             {hasBand ? (
               <>Students with a similar start and {weeks}-week timeline typically improve <em>+{rangeLow}&ndash;+{rangeHigh}</em>, and a Skill Diagnostic plus starting within 7 days makes the upper end realistic.</>
             ) : (
-              <>A Skill Diagnostic plus starting within 7 days sets a realistic improvement range for their timeline.</>
+              <>A Skill Diagnostic plus starting within 7 days sets a realistic improvement range for {voicePossessive} timeline.</>
             )}
           </p>
         </RoadmapSection>
 
         <RoadmapSection eyebrow="How much effort it takes">
-          <p className="qf-lead" style={{ margin: 0 }}>~5&ndash;7 hours per week of mistake-driven practice on their weakest skills.</p>
+          <p className="qf-lead" style={{ margin: 0 }}>~5&ndash;7 hours per week of mistake-driven practice on {voicePossessive} weakest skills.</p>
         </RoadmapSection>
 
         <RoadmapSection eyebrow="Biggest risk to the plan">
@@ -638,7 +654,11 @@ export function QFV1Projection({ onContinue, onBack, answers = {} }) {
 
         <RoadmapSection eyebrow="How to get started">
           <p className="qf-lead" style={{ margin: 0 }}>
-            Schedule a call so we can get started diagnosing your child&apos;s <em>{FOCUS_SKILL_COUNT}&ndash;6 highest-impact skills</em> to finalize their plan.
+            {self ? (
+              <>Schedule a call so we can get started diagnosing your <em>{FOCUS_SKILL_COUNT}&ndash;6 highest-impact skills</em> to finalize your plan.</>
+            ) : (
+              <>Schedule a call so we can get started diagnosing your child&apos;s <em>{FOCUS_SKILL_COUNT}&ndash;6 highest-impact skills</em> to finalize their plan.</>
+            )}
           </p>
         </RoadmapSection>
       </div>
@@ -660,14 +680,6 @@ const D_TEST_DATES = {
   'nov7': new Date('2026-11-07'), 'dec5': new Date('2026-12-05'),
 };
 
-const PREP_WHY_FAILED = {
-  'khan':    `Khan's SAT math course has ${KHAN_SAT_MATH_SKILL_COUNT} lessons and ${KHAN_SAT_YOUTUBE_VIDEO_COUNT} videos. Without the Skill Diagnostic, it's a needle in a haystack. We rank the ${FOCUS_SKILL_COUNT}–6 that move their score.`,
-  'group':   "Group classes pace to the middle of the room. Nobody built a plan for the few skills actually holding their score back.",
-  'online':  "One syllabus for everyone. It doesn't find their weakest skills and rank them.",
-  'app':     "SAT apps keep serving questions. They don't tell you which content skills to master first.",
-  'book':    "Paper prep trains the wrong test. The digital SAT rewards Desmos and on-screen pacing, not flipping pages.",
-  'nothing': "Without the Skill Diagnostic, students guess where to start and lose months on low-impact review.",
-};
 // Real SAT content skills (not tricks) tied to Q6 selections.
 const MATH_SKILLS = [
   { name: 'Linear Functions',           lines: ['Linear', 'Functions'],         pts: 50 },
@@ -711,7 +723,8 @@ const Q4_BREAK_OUT_BAND = {
   '1400plus': 'the 1400s',
 };
 
-export function QFIDiagnosis({ onContinue, onBack, q3 = 'sat-1', q4 = '1200-1300', q6 = ['math', 'no-plan'], q7 = [], q5 = 'oct3' }) {
+export function QFIDiagnosis({ onContinue, onBack, q3 = 'sat-1', q4 = '1200-1300', q6 = ['math', 'no-plan'], q7 = [], q5 = 'oct3', qWho = 'child' }) {
+  const needPhrase = isQuizSelfTaker(qWho) ? 'you need' : 'they need';
   const today = funnelToday();
   const days = D_TEST_DATES[q5]
     ? Math.round((D_TEST_DATES[q5] - today) / (1000 * 60 * 60 * 24))
@@ -759,7 +772,7 @@ export function QFIDiagnosis({ onContinue, onBack, q3 = 'sat-1', q4 = '1200-1300
     >
       <div className="gap-22" style={{ marginTop: 4 }}>
         <h1 className="qf-h1" style={{ marginBottom: 0 }}>
-          Instead of trying to learn every SAT skill, they need a Diagnostic that identifies the{' '}
+          Instead of trying to learn every SAT skill, {needPhrase} a Diagnostic that identifies the{' '}
           <em>{FOCUS_SKILL_COUNT}–6 highest-impact skills</em>.
         </h1>
         <div style={{ position: 'relative', padding: 0 }}>
@@ -982,10 +995,10 @@ function QFExamplePlanCard() {
   );
 }
 
-export function QFISteps({ onContinue, onBack }) {
+export function QFISteps({ onContinue, onBack, qWho = 'child' }) {
   return (
     <QFScreen stepIdx={4} onBack={onBack}
-      actions={<QFButton kind="forest" onClick={onContinue}>Build their plan</QFButton>}
+      actions={<QFButton kind="forest" onClick={onContinue}>{buildPlanCta(qWho)}</QFButton>}
     >
       <div className="gap-22">
         <h1 className="qf-h1" style={{ marginBottom: 0 }}>

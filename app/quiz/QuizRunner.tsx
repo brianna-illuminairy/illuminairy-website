@@ -216,7 +216,7 @@ export default function QuizRunner() {
     case 'hit-q3-none':
       stepContent = (
         <QFInsightHit
-          hit={educationHitQ3None()}
+          hit={educationHitQ3None(qWho)}
           onContinue={next}
           onBack={back}
           stepIdx={6}
@@ -230,7 +230,7 @@ export default function QuizRunner() {
     case 'hit-q5-tbd':
       stepContent = (
         <QFInsightHit
-          hit={educationHitQ5Tbd()}
+          hit={educationHitQ5Tbd(qWho)}
           onContinue={next}
           onBack={back}
           stepIdx={8}
@@ -242,7 +242,7 @@ export default function QuizRunner() {
     case 'hit-q7':
       stepContent = (
         <QFInsightHit
-          hit={prepFailureInsight(a.q7, a.q6)}
+          hit={prepFailureInsight(a.q7, a.q6, qWho)}
           onContinue={next}
           onBack={back}
           stepIdx={9}
@@ -250,11 +250,11 @@ export default function QuizRunner() {
         />
       );
       break;
-    case 'i-compare': stepContent = <QFIComparePrep onContinue={next} onBack={back} q7={a.q7 as any} />; break;
-    case 'i-diag': stepContent = <QFIDiagnosis onContinue={next} onBack={back} q3={a.q3} q4={a.q4} q6={a.q6 as any} q7={a.q7 as any} q5={a.q5} />; break;
-    case 'i-steps': stepContent = <QFISteps onContinue={next} onBack={back} />; break;
+    case 'i-compare': stepContent = <QFIComparePrep onContinue={next} onBack={back} q7={a.q7 as any} qWho={qWho} />; break;
+    case 'i-diag': stepContent = <QFIDiagnosis onContinue={next} onBack={back} q3={a.q3} q4={a.q4} q6={a.q6 as any} q7={a.q7 as any} q5={a.q5} qWho={qWho} />; break;
+    case 'i-steps': stepContent = <QFISteps onContinue={next} onBack={back} qWho={qWho} />; break;
     case 'hit-outcome-month-one':
-      stepContent = <QFIHopeScreen onContinue={next} onBack={back} q5={a.q5} />;
+      stepContent = <QFIHopeScreen onContinue={next} onBack={back} q5={a.q5} qWho={qWho} />;
       break;
     case 'i2':  stepContent = <QFI2Compute   onContinue={next} onBack={back} q2={a.q2} q4={a.q4} q5={a.q5} q6={a.q6} q7={a.q7 as any} q8={a.q8} q9={a.q9} name={a.kidName as string} />; break;
     case 'q8':  stepContent = <QFQ8Goal      value={a.q8} qWho={qWho} onSelect={(v: string) => setQAndAdvance('q8', v)} onBack={back} />; break;
@@ -270,7 +270,7 @@ export default function QuizRunner() {
       break;
 
     case 'q9':  stepContent = <QFQ9GPA       value={a.q9} qWho={qWho} onSelect={(v: string) => setQAndAdvance('q9', v)} onBack={back} />; break;
-    case 'i-gap': stepContent = <QFIGPAGap   onContinue={next} onBack={back} q4={a.q4} q9={a.q9} />; break;
+    case 'i-gap': stepContent = <QFIGPAGap   onContinue={next} onBack={back} q4={a.q4} q9={a.q9} qWho={qWho} />; break;
     case 'name':
       stepContent = (
         <QFQName

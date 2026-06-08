@@ -66,8 +66,13 @@
   letter-spacing: -0.02em;
   color: var(--ink);
   margin: 0;
-  text-wrap: balance;
+  /* balance re-breaks owner line breaks — use normal; hero .line is block per row */
+  text-wrap: normal;
   line-height: 1.05;
+}
+/* B3 / premium cold hero: one block row per headline line (no <br> squish) */
+.il-page .il-premium-hero .il-h1 .line {
+  display: block;
 }
 .il-page h1 { font-size: 34px; }
 .il-page h2 { font-size: 28px; }

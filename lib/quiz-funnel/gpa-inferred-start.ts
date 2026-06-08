@@ -1,3 +1,5 @@
+import { quizSubjectVoice } from "@/lib/quiz-funnel/subject-voice";
+
 /**
  * When q4 = na (no official SAT), infer a starting score from GPA for achievability only.
  * Always labeled inferred — Skill Diagnostic replaces on enrollment.
@@ -26,10 +28,15 @@ export function inferredStartFromGpa(q9?: string | null): number | null {
   return Q9_GPA_INFERRED_START[q9] ?? null;
 }
 
-/** Parent-facing line on achievability when start came from GPA. */
-export function gpaStartingScoreNote(q9?: string | null, score?: number | null): string | null {
+/** Achievability note when start came from GPA (your vs their by qWho). */
+export function gpaStartingScoreNote(
+  q9?: string | null,
+  score?: number | null,
+  qWho?: string
+): string | null {
   if (!q9 || score == null) return null;
   const gpaLabel = Q9_GPA_DISPLAY[q9];
   if (!gpaLabel) return null;
-  return `No official SAT yet. We are using ~${score} as a starting point based on their ${gpaLabel} GPA until the Skill Diagnostic sets a real baseline.`;
+  const { possessive } = quizSubjectVoice(qWho);
+  return `No official SAT yet. We are using ~${score} as a starting point based on ${possessive} ${gpaLabel} GPA until the Skill Diagnostic sets a real baseline.`;
 }

@@ -1,8 +1,14 @@
 import { stakesRealisticTarget } from "@/lib/quiz-funnel/stakes-copy";
+import {
+  isQuizSelfTaker,
+  revealPlanCta,
+  scorePathEffortLine,
+} from "@/lib/quiz-funnel/subject-voice";
 
-/** Canonical effort line for Score Path / quiz funnel — no "prep" or vague "guided/structured". */
-export const SCORE_PATH_EFFORT_LINE =
-  "~5–7 hrs/week · mistake-driven SAT tutoring on their weakest skills";
+/** @deprecated Prefer scorePathEffortLine(qWho) — default is parent voice. */
+export const SCORE_PATH_EFFORT_LINE = scorePathEffortLine();
+
+export { scorePathEffortLine, revealPlanCta };
 
 export type ScorePathCopyPart = { text: string; em?: boolean };
 
@@ -11,16 +17,20 @@ export function formatSatScoreLabel(score: number): string {
   return score.toLocaleString("en-US");
 }
 
-/** v1 projection lead — after projection chart (parent voice). */
-export function v1FastWinBridgeParts(goalScore: number | null | undefined): ScorePathCopyPart[] {
+/** v1 projection lead — after projection chart. */
+export function v1FastWinBridgeParts(
+  goalScore: number | null | undefined,
+  qWho?: string
+): ScorePathCopyPart[] {
   const hasGoal = goalScore != null && goalScore > 0;
+  const goalFallback = isQuizSelfTaker(qWho) ? "your goal score" : "their goal score";
   const parts: ScorePathCopyPart[] = [
     { text: "The fastest way to achieve " },
   ];
   if (hasGoal) {
     parts.push({ text: formatSatScoreLabel(goalScore), em: true });
   } else {
-    parts.push({ text: "their goal score", em: true });
+    parts.push({ text: goalFallback, em: true });
   }
   parts.push({
     text: " is to attack skills one at a time in the order of highest impact.",
@@ -60,7 +70,8 @@ export function v1EmotionalBridgeParts(
 
 /** s3 verified case study — see `s3-verified-case-study.ts` + `QFVerifiedCaseStudy`. */
 
-export const REVEAL_CTA = "Continue to their plan";
+/** @deprecated Prefer revealPlanCta(qWho) — default is parent voice. */
+export const REVEAL_CTA = revealPlanCta();
 
 export const I_GAP_CTA = "Final question";
 

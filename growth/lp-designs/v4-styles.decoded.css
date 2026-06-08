@@ -194,8 +194,8 @@
 
 /* v4 single-column hero — left-aligned, capped width */
 .lp-hero-single { max-width: 620px; }
-.lp-hero-single .lp-h1 { font-size: clamp(26px, 6.2vw, 46px); line-height: 1.05; text-wrap: balance; }
-.lp-hero-single .lp-h1 .line { display: block; white-space: nowrap; }
+.lp-hero-single .lp-h1 { font-size: clamp(26px, 6.2vw, 46px); line-height: 1.05; text-wrap: normal; }
+.lp-hero-single .lp-h1 .line { display: block; text-wrap: nowrap; }
 .lp-hero-single .lp-authority-line { margin-top: 18px; }
 .lp-hero-single .lp-cta-card { margin-top: 24px; }
 
@@ -209,7 +209,7 @@
 .lp-h1 {
   font-family: var(--display); font-weight: 700;
   font-size: clamp(30px, 6.6vw, 50px); line-height: 1.04;
-  letter-spacing: -0.03em; margin: 0; text-wrap: balance; color: var(--page-fg);
+  letter-spacing: -0.03em; margin: 0; text-wrap: normal; color: var(--page-fg);
 }
 .lp-h1 em { font-style: normal; color: var(--em); }
 
@@ -230,7 +230,7 @@
   display: flex; align-items: center; gap: 10px;
   margin: 14px 0 0;
   font-family: var(--body); font-size: 14px; font-weight: 500; line-height: 1.4;
-  color: var(--fg-soft); text-wrap: balance;
+  color: var(--fg-soft); text-wrap: pretty;
 }
 .lp-authority-line .bars { display: inline-flex; align-items: flex-end; gap: 2.5px; flex-shrink: 0; height: 14px; }
 .lp-authority-line .bars i { width: 4px; border-radius: 1.5px; background: var(--em); display: block; }

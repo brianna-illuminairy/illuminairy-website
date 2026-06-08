@@ -2,7 +2,7 @@
 import { useMemo } from 'react';
 import { QFScreen, QFButton, QFQuestionHead, QFConstellation } from '../components/QFShell';
 import { buildPlanReveal } from '@/lib/quiz-funnel/plan-reveal';
-import { REVEAL_CTA } from '@/lib/quiz-funnel/score-path-copy';
+import { revealPlanCta } from '@/lib/quiz-funnel/score-path-copy';
 import { PlanRevealContent } from '../components/PlanRevealContent';
 import { PlanHeardSummary } from '../components/PlanHeardSummary';
 import { HEARD_SUMMARY_CTA } from '@/lib/quiz-funnel/heard-summary-copy';
@@ -24,7 +24,7 @@ export function QFSPlanReveal({ answers = {}, onContinue, onBack, onEditAnswer }
 
   return (
     <QFScreen stepIdx={11} ornament="glow" onBack={onBack}
-      actions={<QFButton kind="forest" onClick={onContinue}>{REVEAL_CTA}</QFButton>}
+      actions={<QFButton kind="forest" onClick={onContinue}>{revealPlanCta(answers.qWho)}</QFButton>}
     >
       <PlanRevealContent
         plan={plan}

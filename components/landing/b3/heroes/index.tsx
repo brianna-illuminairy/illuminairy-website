@@ -35,9 +35,11 @@ function UnifiedHero({ onStart, hook, search, textOnly = false }: HeroProps) {
         <section className="section il-hero-section">
           <h1 className="il-h1">
             {lines.map((line, i) => (
-              <span key={line} className={i === accentLine ? "accent" : undefined}>
+              <span
+                key={line}
+                className={`line${i === accentLine ? " accent" : ""}`}
+              >
                 {line}
-                {i < lines.length - 1 && <br />}
               </span>
             ))}
           </h1>

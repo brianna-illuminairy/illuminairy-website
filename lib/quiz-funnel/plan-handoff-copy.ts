@@ -3,6 +3,7 @@
  */
 
 import type { QuizAnswersLike } from "@/lib/quiz-funnel/score-path-output";
+import { isQuizSelfTaker } from "@/lib/quiz-funnel/subject-voice";
 import { buildScorePathOutput } from "@/lib/quiz-funnel/score-path-output";
 import { hasScheduledTestDate, hasTargetScore } from "@/lib/quiz-funnel/quiz-profile";
 import { formatSatScoreLabel } from "@/lib/quiz-funnel/score-path-copy";
@@ -88,8 +89,10 @@ function resolveTestDateLabel(q5?: string): string | null {
 
 function buildGoalConfirmTitle(
   targetLabel: string | null,
-  testDateLabel: string | null
+  testDateLabel: string | null,
+  qWho?: string
 ): string {
+  const goalWord = isQuizSelfTaker(qWho) ? "your goal" : "their goal";
   if (targetLabel && testDateLabel) {
     return `Confirm ${targetLabel} by ${testDateLabel}`;
   }
@@ -97,7 +100,7 @@ function buildGoalConfirmTitle(
     return `Confirm ${targetLabel}`;
   }
   if (testDateLabel) {
-    return `Confirm their goal by ${testDateLabel}`;
+    return `Confirm ${goalWord} by ${testDateLabel}`;
   }
   return "Confirm the goal";
 }
@@ -105,8 +108,12 @@ function buildGoalConfirmTitle(
 function buildGoalConfirmBody(
   targetLabel: string | null,
   testDateLabel: string | null,
-  isInferred: boolean
+  isInferred: boolean,
+  qWho?: string
 ): string {
+  const forWhom = isQuizSelfTaker(qWho) ? "you" : "them";
+  const goalWord = isQuizSelfTaker(qWho) ? "your goal" : "their goal";
+  const targetWord = isQuizSelfTaker(qWho) ? "your target score" : "their target score";
   if (targetLabel && testDateLabel) {
     if (isInferred) {
       return `Whether that range by ${testDateLabel} is realistic, and what it will take.`;
@@ -115,26 +122,27 @@ function buildGoalConfirmBody(
   }
   if (targetLabel) {
     return isInferred
-      ? "Whether that range is realistic for them, and what it will take."
-      : "Whether that's realistic for them, and what it will take.";
+      ? `Whether that range is realistic for ${forWhom}, and what it will take.`
+      : `Whether that's realistic for ${forWhom}, and what it will take.`;
   }
   if (testDateLabel) {
-    return `Whether their goal by ${testDateLabel} is realistic, and what it will take.`;
+    return `Whether ${goalWord} by ${testDateLabel} is realistic, and what it will take.`;
   }
-  return "Whether their target score is realistic, and what it will take.";
+  return `Whether ${targetWord} is realistic, and what it will take.`;
 }
 
 function buildHandoffItems(
   targetLabel: string | null,
   testDateLabel: string | null,
-  isInferred: boolean
+  isInferred: boolean,
+  qWho?: string
 ): PlanHandoffItem[] {
   const skillRange = `${FOCUS_SKILL_COUNT}–6`;
 
   return [
     {
-      title: buildGoalConfirmTitle(targetLabel, testDateLabel),
-      body: buildGoalConfirmBody(targetLabel, testDateLabel, isInferred),
+      title: buildGoalConfirmTitle(targetLabel, testDateLabel, qWho),
+      body: buildGoalConfirmBody(targetLabel, testDateLabel, isInferred, qWho),
     },
     {
       title: "Answer your questions",
@@ -160,6 +168,6 @@ export function buildPlanHandoff(answers: QuizAnswersLike = {}): PlanHandoffMode
     testDateLabel,
     hasTarget: targetLabel != null,
     hasDate: testDateLabel != null,
-    items: buildHandoffItems(targetLabel, testDateLabel, isInferred),
+    items: buildHandoffItems(targetLabel, testDateLabel, isInferred, answers.qWho),
   };
 }

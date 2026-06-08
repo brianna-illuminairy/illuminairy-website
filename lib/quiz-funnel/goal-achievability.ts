@@ -1,4 +1,5 @@
 import { gpaStartingScoreNote } from "@/lib/quiz-funnel/gpa-inferred-start";
+import { isQuizSelfTaker, quizSubjectVoice } from "@/lib/quiz-funnel/subject-voice";
 import { satProgramOutcomes } from "@/lib/site";
 import { funnelToday } from "@/lib/funnel-today";
 import type { QuizAnswersLike, ScorePathOutput } from "@/lib/quiz-funnel/score-path-output";
@@ -128,14 +129,16 @@ export const ACHIEVABILITY_PTS_PER_WEEK: Record<GoalFeasibilityTier, number> = {
 export function buildRunwayContextLine(
   weeks: number,
   q5?: string,
-  hasScheduledTestDate = false
+  hasScheduledTestDate = false,
+  qWho?: string
 ): string {
   const w = Math.max(1, weeks);
   const shortDate = q5 ? Q5_HEADLINE_DATE[q5] : null;
   if (shortDate && hasScheduledTestDate) {
     return `${w} weeks to ${shortDate}`;
   }
-  return `${w} weeks on their timeline`;
+  const { possessive } = quizSubjectVoice(qWho);
+  return `${w} weeks on ${possessive} timeline`;
 }
 
 export type GoalAchievability = {
@@ -194,6 +197,24 @@ const STAKES_ACHIEVABILITY_LEAD: Record<string, string> = {
 const STAKES_ACHIEVABILITY_EMPHASIS: Record<string, string> = {
   merit: "thousands of dollars",
   "top-choice": "their top-choice school",
+  selective: "selective colleges",
+  "app-rounds": "early application rounds",
+  early: "early application rounds",
+};
+
+const STAKES_ACHIEVABILITY_LEAD_SELF: Record<string, string> = {
+  merit:
+    "A higher score could unlock thousands of dollars in merit scholarships.",
+  "top-choice":
+    "A higher score could make you competitive for your top-choice school.",
+  selective: "A higher score keeps selective colleges on the table.",
+  "app-rounds": "A higher score helps you be ready for early application rounds.",
+  early: "A higher score helps you be ready for early application rounds.",
+};
+
+const STAKES_ACHIEVABILITY_EMPHASIS_SELF: Record<string, string> = {
+  merit: "thousands of dollars",
+  "top-choice": "your top-choice school",
   selective: "selective colleges",
   "app-rounds": "early application rounds",
   early: "early application rounds",
@@ -311,11 +332,12 @@ export function buildProjectedRangeLine(
 function buildStartingScoreNote(
   path: ScorePathOutput,
   q4?: string,
-  q9?: string
+  q9?: string,
+  qWho?: string
 ): string | null {
   if (path.starting.confidence !== "inferred") return null;
   if (q4 === "na" || !q4) {
-    const fromGpa = gpaStartingScoreNote(q9, path.starting.value);
+    const fromGpa = gpaStartingScoreNote(q9, path.starting.value, qWho);
     if (fromGpa) return fromGpa;
     return `No official SAT yet. We are using ${path.starting.label} as a placeholder starting point until the Skill Diagnostic.`;
   }
@@ -599,18 +621,18 @@ function buildInsightParts(
   };
 }
 
-function buildStakesLead(q2?: string): string {
-  return (
-    STAKES_ACHIEVABILITY_LEAD[q2 ?? ""] ??
-    STAKES_ACHIEVABILITY_LEAD["top-choice"]
-  );
+function buildStakesLead(q2?: string, qWho?: string): string {
+  const map = isQuizSelfTaker(qWho)
+    ? STAKES_ACHIEVABILITY_LEAD_SELF
+    : STAKES_ACHIEVABILITY_LEAD;
+  return map[q2 ?? ""] ?? map["top-choice"];
 }
 
-function buildStakesEmphasis(q2?: string): string {
-  return (
-    STAKES_ACHIEVABILITY_EMPHASIS[q2 ?? ""] ??
-    STAKES_ACHIEVABILITY_EMPHASIS["top-choice"]
-  );
+function buildStakesEmphasis(q2?: string, qWho?: string): string {
+  const map = isQuizSelfTaker(qWho)
+    ? STAKES_ACHIEVABILITY_EMPHASIS_SELF
+    : STAKES_ACHIEVABILITY_EMPHASIS;
+  return map[q2 ?? ""] ?? map["top-choice"];
 }
 
 export function buildGoalAchievability(
@@ -627,12 +649,18 @@ export function buildGoalAchievability(
   const startingScore = path.starting.value;
   const weeks = Math.max(1, pressure?.weeks ?? path.chartWeeks);
   const tierRanges = buildTierRanges(weeks, startingScore);
-  const startingScoreNote = buildStartingScoreNote(path, answers.q4, answers.q9);
+  const startingScoreNote = buildStartingScoreNote(
+    path,
+    answers.q4,
+    answers.q9,
+    answers.qWho
+  );
   const projectedRangeLine = null;
   const runwayContextLine = buildRunwayContextLine(
     weeks,
     answers.q5,
-    path.hasScheduledTestDate
+    path.hasScheduledTestDate,
+    answers.qWho
   );
 
   return {
@@ -649,8 +677,8 @@ export function buildGoalAchievability(
     pointsLine,
     verdictLead: verdict.lead,
     verdictEm: verdict.em,
-    stakesLead: buildStakesLead(answers.q2),
-    stakesEmphasis: buildStakesEmphasis(answers.q2),
+    stakesLead: buildStakesLead(answers.q2, answers.qWho),
+    stakesEmphasis: buildStakesEmphasis(answers.q2, answers.qWho),
     outcomesMeta: achievabilityOutcomesMeta(),
     insightParagraph: insight.insightParagraph,
     gpaLabel: insight.gpaLabel,
@@ -659,7 +687,9 @@ export function buildGoalAchievability(
     skillDetail: insight.skillDetail,
     hitRatePct: satProgramOutcomes.targetHitRatePct,
     hitRateBefore: "of students who follow their Illuminairy plan ",
-    hitRateEmphasis: "reach their score goal",
+    hitRateEmphasis: isQuizSelfTaker(answers.qWho)
+      ? "reach your score goal"
+      : "reach their score goal",
     hitRateAfter: "",
     varyDisclaimer: satProgramOutcomes.varyDisclaimer,
   };

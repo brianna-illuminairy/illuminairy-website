@@ -6,6 +6,7 @@
 
 import { normalizeQ7, Q7_PREP_PRIORITY } from "@/lib/quiz-funnel/prep-copy";
 import type { InsightHit, InsightHitPart } from "@/lib/quiz-funnel/insight-hits";
+import { isQuizSelfTaker, quizSubjectVoice } from "@/lib/quiz-funnel/subject-voice";
 import {
   FOCUS_SKILL_COUNT,
   KHAN_SAT_MATH_LESSON_COUNT,
@@ -28,14 +29,20 @@ const KHAN_MATH_HAYSTACK_IMAGE = {
   alt: "Student facing a wall of numbered SAT lesson books",
 } as const;
 
-const KHAN_HAYSTACK_UI = {
-  image: KHAN_MATH_HAYSTACK_IMAGE,
-  imageCaption: [
-    { text: "They're looking for a " },
+function khanHaystackCaption(qWho?: string): InsightHitPart[] {
+  const opener = isQuizSelfTaker(qWho) ? "You're looking for a " : "They're looking for a ";
+  return [
+    { text: opener },
     { text: "needle in a haystack", em: true },
     { text: "." },
-  ] as InsightHitPart[],
-};
+  ];
+}
+
+function studentEmphasis(qWho?: string): InsightHitPart {
+  return isQuizSelfTaker(qWho)
+    ? { text: "you", em: true }
+    : { text: "your child", em: true };
+}
 
 export function prepSectionFocus(q6: string[] = []): SectionFocus {
   const math = q6.includes("math");
@@ -51,10 +58,11 @@ export function primaryPrepId(q7: unknown): string {
   return Q7_PREP_PRIORITY.find((id) => ids.includes(id)) ?? "nothing";
 }
 
-function khanHit(section: SectionFocus): InsightHit {
+function khanHit(section: SectionFocus, qWho?: string): InsightHit {
   const shared = {
     type: "surprise" as const,
-    ...KHAN_HAYSTACK_UI,
+    image: KHAN_MATH_HAYSTACK_IMAGE,
+    imageCaption: khanHaystackCaption(qWho),
   };
 
   if (section === "reading") {
@@ -101,7 +109,10 @@ function khanHit(section: SectionFocus): InsightHit {
   };
 }
 
-function groupHit(_section: SectionFocus): InsightHit {
+function groupHit(_section: SectionFocus, qWho?: string): InsightHit {
+  const gapPhrase = isQuizSelfTaker(qWho)
+    ? ", way too much to cover in a few weeks with enough depth to actually close gaps you have."
+    : ", way too much to cover in a few weeks with enough depth to actually close gaps your child has.";
   return {
     type: "surprise",
     parts: [
@@ -115,16 +126,15 @@ function groupHit(_section: SectionFocus): InsightHit {
         { text: "3–4 years of high school math and language arts", em: true },
         { text: " and " },
         { text: SAT_TOPIC_AREAS_LABEL, em: true },
-        {
-          text: ", way too much to cover in a few weeks with enough depth to actually close gaps your child has.",
-        },
+        { text: gapPhrase },
       ],
     ],
   };
 }
 
 /** Online and/or app — full SAT breadth; q6 does not narrow this copy. */
-function onlineCoursesAndAppsHit(): InsightHit {
+function onlineCoursesAndAppsHit(qWho?: string): InsightHit {
+  const struggleVerb = isQuizSelfTaker(qWho) ? " are" : " is";
   return {
     type: "surprise",
     parts: [
@@ -139,9 +149,9 @@ function onlineCoursesAndAppsHit(): InsightHit {
         {
           text: "With hundreds of lessons and thousands of practice problems, it's difficult to spend enough time on the specific skills ",
         },
-        { text: "your child", em: true },
+        studentEmphasis(qWho),
         {
-          text: " is struggling with. Some SAT topics appear repeatedly while others rarely show up.",
+          text: `${struggleVerb} struggling with. Some SAT topics appear repeatedly while others rarely show up.`,
         },
       ],
       [
@@ -153,16 +163,16 @@ function onlineCoursesAndAppsHit(): InsightHit {
   };
 }
 
-function onlineHit(_section: SectionFocus): InsightHit {
-  return onlineCoursesAndAppsHit();
+function onlineHit(_section: SectionFocus, qWho?: string): InsightHit {
+  return onlineCoursesAndAppsHit(qWho);
 }
 
-function onlineAppHit(_section: SectionFocus): InsightHit {
-  return onlineCoursesAndAppsHit();
+function onlineAppHit(_section: SectionFocus, qWho?: string): InsightHit {
+  return onlineCoursesAndAppsHit(qWho);
 }
 
-function appHit(_section: SectionFocus): InsightHit {
-  return onlineCoursesAndAppsHit();
+function appHit(_section: SectionFocus, qWho?: string): InsightHit {
+  return onlineCoursesAndAppsHit(qWho);
 }
 
 function bookHit(_section: SectionFocus): InsightHit {
@@ -189,7 +199,8 @@ function bookHit(_section: SectionFocus): InsightHit {
   };
 }
 
-function nothingHit(_section: SectionFocus): InsightHit {
+function nothingHit(_section: SectionFocus, qWho?: string): InsightHit {
+  const { possessive } = quizSubjectVoice(qWho);
   return {
     type: "surprise",
     parts: [
@@ -210,7 +221,7 @@ function nothingHit(_section: SectionFocus): InsightHit {
       ],
       [
         {
-          text: "Without a plan built for their gaps, weeks of effort often go to topics that wouldn't move their score.",
+          text: `Without a plan built for ${possessive} gaps, weeks of effort often go to topics that wouldn't move ${possessive} score.`,
         },
       ],
     ],
@@ -232,8 +243,8 @@ function hasHigherPriorityPrepThanOnlineApp(ids: string[]): boolean {
   return ids.some((id) => id === "khan" || id === "group");
 }
 
-/** q7 × q6 — why their prep failed; autoprogress insight before i-diag. */
-export function prepFailureInsight(q7: unknown, q6: unknown): InsightHit {
+/** q7 × q6 — why prep failed; autoprogress insight before i-diag. */
+export function prepFailureInsight(q7: unknown, q6: unknown, qWho?: string): InsightHit {
   const ids = normalizeQ7(q7);
   const section = prepSectionFocus(Array.isArray(q6) ? q6.filter(Boolean) : []);
 
@@ -242,24 +253,24 @@ export function prepFailureInsight(q7: unknown, q6: unknown): InsightHit {
     ids.includes("app") &&
     !hasHigherPriorityPrepThanOnlineApp(ids)
   ) {
-    return onlineAppHit(section);
+    return onlineAppHit(section, qWho);
   }
 
   const prep = primaryPrepId(q7);
 
   switch (prep) {
     case "khan":
-      return khanHit(section);
+      return khanHit(section, qWho);
     case "group":
-      return groupHit(section);
+      return groupHit(section, qWho);
     case "online":
-      return onlineHit(section);
+      return onlineHit(section, qWho);
     case "app":
-      return appHit(section);
+      return appHit(section, qWho);
     case "book":
       return bookHit(section);
     case "nothing":
-      return nothingHit(section);
+      return nothingHit(section, qWho);
     default:
       return fallbackHit();
   }

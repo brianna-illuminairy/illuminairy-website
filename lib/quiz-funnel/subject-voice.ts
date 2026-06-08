@@ -125,6 +125,20 @@ export function nameWhyWeAsk(qWho?: string): string {
   return `We'll personalize ${possessive} plan and score roadmap with ${possessive} name.`;
 }
 
+/** Locked effort line — possessive follows qWho (your vs their). */
+export function scorePathEffortLine(qWho?: string): string {
+  const { possessive } = quizSubjectVoice(qWho);
+  return `~5–7 hrs/week · mistake-driven SAT tutoring on ${possessive} weakest skills`;
+}
+
+export function revealPlanCta(qWho?: string): string {
+  return isQuizSelfTaker(qWho) ? "Continue to your plan" : "Continue to their plan";
+}
+
+export function buildPlanCta(qWho?: string): string {
+  return isQuizSelfTaker(qWho) ? "Build my plan" : "Build their plan";
+}
+
 export function stakesOptionLabel(id: string, qWho?: string): string {
   if (!isQuizSelfTaker(qWho)) {
     const child: Record<string, string> = {
