@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import {
   SHARE_COPY_LINK,
   SHARE_ERROR,
@@ -32,7 +32,7 @@ export function PlanSharePanel({ plan, kidName = '' }) {
 
   const studentLabel = includeName && canUseName ? trimmedKid.split(/\s+/)[0] : null;
 
-  const ensureShareUrl = useCallback(async () => {
+  async function ensureShareUrl() {
     if (shareUrl) return shareUrl;
     setBusy(true);
     setError('');
@@ -65,7 +65,7 @@ export function PlanSharePanel({ plan, kidName = '' }) {
     } finally {
       setBusy(false);
     }
-  }, [plan, shareUrl, studentLabel]);
+  }
 
   async function onCopyLink() {
     const url = await ensureShareUrl();

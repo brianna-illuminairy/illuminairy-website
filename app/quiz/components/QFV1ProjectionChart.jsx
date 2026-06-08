@@ -128,11 +128,13 @@ export function QFV1ProjectionChart({
 
   useEffect(() => {
     if (reducedMotion) {
-      setPlaying(false);
-      onAnimationComplete?.();
+      queueMicrotask(() => {
+        setPlaying(false);
+        onAnimationComplete?.();
+      });
       return;
     }
-    setPlaying(true);
+    queueMicrotask(() => setPlaying(true));
     const done = window.setTimeout(() => {
       setPlaying(false);
       onAnimationComplete?.();

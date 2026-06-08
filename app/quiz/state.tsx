@@ -99,7 +99,7 @@ export function QuizProvider({ children }: { children: ReactNode }) {
     if (Object.keys(stored).length > 0) {
       dispatch({ type: "LOAD", data: stored });
     }
-    setHydrated(true);
+    queueMicrotask(() => setHydrated(true));
   }, []);
 
   useEffect(() => {
