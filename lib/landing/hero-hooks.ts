@@ -238,7 +238,7 @@ export type LandingHeroHeadlineV4 = {
 };
 
 /** Hooks that use the owner v4 default headline (no score-band copy). */
-const V4_OWNER_DEFAULT_HOOKS = new Set<LandingHeroHook>(["gpa", "gap"]);
+const V4_OWNER_DEFAULT_HOOKS = new Set<LandingHeroHook>(["gpa", "gap", "student_story"]);
 
 type V4CustomHeadlineHook = Exclude<LandingHeroHook, "default" | "gpa" | "gap">;
 
