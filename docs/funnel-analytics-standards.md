@@ -35,6 +35,11 @@ Recommended threshold defaults:
 - Warning: < 98% completeness
 - Critical: < 95% completeness
 
+Automation:
+
+- Run `npm run funnel:completeness` to evaluate thresholds over recent touch events.
+- The script exits non-zero on critical breaches (<95%) to support deploy gates.
+
 ## Primary funnel checks
 
 - Landing -> CTA

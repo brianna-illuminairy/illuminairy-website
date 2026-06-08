@@ -12,6 +12,19 @@ export async function appendTouchEvent(input: TouchEventInput) {
   }
 
   const attr = input.attribution ?? {};
+  const payload = {
+    ...(input.payload ?? {}),
+    ...(typeof attr.hero_hook === "string" &&
+    attr.hero_hook &&
+    typeof input.payload?.hero_hook !== "string"
+      ? { hero_hook: attr.hero_hook }
+      : {}),
+    ...(typeof attr.landing_page === "string" &&
+    attr.landing_page &&
+    typeof input.payload?.landing_page !== "string"
+      ? { landing_page: attr.landing_page }
+      : {})
+  };
   const row = {
     visitor_id: input.visitor_id ?? null,
     lead_id: input.lead_id ?? null,
@@ -22,7 +35,7 @@ export async function appendTouchEvent(input: TouchEventInput) {
     full_url: input.full_url ?? null,
     referrer: input.referrer ?? null,
     ...attributionToTouchColumns(attr),
-    payload: input.payload ?? {},
+    payload,
     source: input.source ?? "server"
   };
 

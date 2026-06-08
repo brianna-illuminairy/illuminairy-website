@@ -57,5 +57,10 @@ Before deploy sign-off:
 
 1. `npm run funnel:e2e`
 2. `npm run funnel:analytics-smoke`
-3. `FUNNEL_LAYOUT_UNLOCK=1 npm run agent:verify`
-4. Spot QA at least one iOS and one Android real device path
+3. `npm run funnel:completeness`
+4. `FUNNEL_LAYOUT_UNLOCK=1 npm run agent:verify`
+5. Spot QA at least one iOS and one Android real device path
+
+Operational checklist:
+
+- `growth/mobile-funnel-qa-checklist.md`

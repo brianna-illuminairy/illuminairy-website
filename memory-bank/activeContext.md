@@ -44,6 +44,7 @@ Key libs: `plan-reveal.ts`, `score-path-copy.ts`, `stakes-copy.ts`, `education-s
 - **Hydration/resume hardening (Jun 8)** — removed timer-based hydration guards in quiz state/runner; hydration now resolves through reducer action (`HYDRATE`) before redirect + lastStep writes. Resume logic now deterministically prefers guarded saved step. Added e2e regression for stale cookie vs newer localStorage (`checkHydrationResumePriority` in `scripts/quiz-funnel-e2e.mjs`).
 - **Attribution carry-forward hardening (Jun 8, uncommitted)** — landing analytics now persists one canonical attribution snapshot (`utm_*`, click IDs, `landing_page`, `hero_hook`) and reuses it across PostHog + GA4 + touch events for LP view/CTA. Also added attribution fan-out in shared `captureAnalytics()` so downstream custom captures inherit the same source context, plus `qWho` carry-forward (parent vs self) on late events such as booking confirmation / thank-you. Added attribution value sanitization + length caps before session persistence (sessionStorage only, no attribution cookie mirror) to avoid oversized payload regressions. Server routes now resolve canonical attribution + `qWho` from `visitors.first_touch`/`last_touch`/`quiz_answers` and persist that canonical context on touch/lead/booking events.
 - **Mobile funnel architecture docs + spec (Jun 8, uncommitted)** — created:
+- **Mobile funnel architecture docs + spec (Jun 8, shipped)** — created:
   - `specs/2026-06-mobile-cold-traffic-funnel/SPEC.md`
   - `docs/funnel-eventing-and-state.md`
   - `docs/funnel-analytics-standards.md`
@@ -51,6 +52,8 @@ Key libs: `plan-reveal.ts`, `score-path-copy.ts`, `stakes-copy.ts`, `education-s
   - `docs/funnel-mobile-ux-responsiveness.md`
   - `.agents/funnel-mobile-ops.md`
   Also switched `specs/ACTIVE.md` to the mobile cold-traffic funnel spec.
+- **Visitor fast columns migration applied (Jun 8, shipped)** — `visitors_fast_attribution_columns` applied on Supabase via MCP; live columns/indexes: `visitors.first_utm_content`, `visitors.first_hero_hook`, `visitors.quiz_who`.
+- **Completeness ops baseline (Jun 8, shipped)** — added `npm run funnel:completeness` monitor script + standing checklist `growth/mobile-funnel-qa-checklist.md`, and wired docs to include threshold policy (warn <98%, critical <95%).
 - **Plan reveal drop playbook** — PostHog MCP pass on Jun 7–8 attributed cohort. [`growth/plan-reveal-drop-playbook.md`](../growth/plan-reveal-drop-playbook.md): product-order funnel **name→i2→v1** 9→6→6; 3 never saw plan reveal; not “0% reveal→name”.
 
 ## Recently shipped (2026-06-07)

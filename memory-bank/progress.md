@@ -20,11 +20,13 @@
 - [x] INT8 contrast: triptych (daughter/Me variant), `ContrastBarChart`, diagnostic animation
 - [x] Wrong step: dashboard tile icons; INT2 tutor-note; INT12 digital-vs-paper mockup
 - [x] `satPrepComparison` + Bloom chart title in `lib/site.ts`
+- [x] Mobile cold-traffic funnel spec + architecture docs (`specs/2026-06-mobile-cold-traffic-funnel`, `docs/funnel-*`)
+- [x] Visitor fast-reporting columns live in Supabase (`first_utm_content`, `first_hero_hook`, `quiz_who`) with indexes
+- [x] Completeness monitor command + ops checklist (`npm run funnel:completeness`, `growth/mobile-funnel-qa-checklist.md`)
 
 ## In progress
 
 - [ ] Mobile cold-traffic funnel stabilization spec (`specs/2026-06-mobile-cold-traffic-funnel/SPEC.md`) execution (Phases A/B/C)
-- [ ] Canonical visitor reporting columns rollout (`first_utm_content`, `first_hero_hook`, `quiz_who`)
 - [ ] Phase B: `POST /api/funnel/lead` + Supabase + Klaviyo + TCPA on contact
 - [ ] Default (son) prep-path triptych art asset
 - [ ] Launch QA: Meta IAB 390×844, Lighthouse baseline

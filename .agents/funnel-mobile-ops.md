@@ -16,9 +16,11 @@ Internal operating notes for mobile cold-traffic quiz funnel work.
 - `docs/funnel-analytics-standards.md`
 - `docs/funnel-hydration-and-resume.md`
 - `docs/funnel-mobile-ux-responsiveness.md`
+- `growth/mobile-funnel-qa-checklist.md`
 
 ## Release gate for funnel-impacting changes
 
 - `npm run funnel:e2e`
 - `npm run funnel:analytics-smoke`
+- `npm run funnel:completeness`
 - `FUNNEL_LAYOUT_UNLOCK=1 npm run agent:verify`
