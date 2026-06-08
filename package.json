@@ -30,7 +30,6 @@
     "ralph:next": "node scripts/ralph-loop.mjs next",
     "crm:setup": "node scripts/setup-crm.mjs",
     "crm:migrate": "node scripts/apply-crm-migration.mjs",
-    "crm:migrate:plan-shares": "node scripts/apply-plan-shares-migration.mjs",
     "smoke:prod": "node scripts/smoke-prod.mjs",
     "crm:migrate:api": "node scripts/apply-crm-via-management-api.mjs",
     "crm:calendly-webhook": "node scripts/setup-calendly-webhook.mjs"

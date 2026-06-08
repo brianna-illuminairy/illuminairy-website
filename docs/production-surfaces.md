@@ -15,7 +15,6 @@ If git and Vercel disagree, something used `deploy:cli` (local upload). Fix: com
 | **Plan Builder** (paid ads) | `/plan`, `/quiz`, `/sat-plan-builder` | `app/quiz/`, `lib/quiz-funnel/`, `app/quiz-funnel.css`, `app/funnel-responsive.css` | `app/quiz/LAYOUT.lock.md`, `docs/funnel-mobile-shell.md` |
 | **SAT plan funnel** (Meta lagoon) | `/satplan` | `app/satplan/`, `components/sat-plan/`, `lib/sat-plan-funnel/` | `components/sat-plan/LAYOUT.lock.md` |
 | **Marketing home** | `/`, `/?lp=b3a` etc. | `app/page.tsx`, `components/landing/`, `app/landing/*.css` | — |
-| **Plan share** | `/quiz/share/[id]` | `app/quiz/share/`, `app/api/funnel/plan-share/` | — |
 | **Enrollment / site** | `/enroll`, `/contact`, legal, `/sat-accelerator` (if routed) | `app/`, `components/` | — |
 
 **Redirects (same deploy):**
@@ -33,7 +32,7 @@ If git and Vercel disagree, something used `deploy:cli` (local upload). Fix: com
 | Plan Builder UI/shell | `npm run funnel:e2e` (dev server on :3000 or :3001) |
 | SAT plan steps only | `npm run funnel:layout-guard` (already in `agent:verify`) + manual `/satplan` |
 | Landing / LP CSS | `growth/b3-lp-viewport-qa.md` checklist; `npm run smoke:prod` |
-| APIs / share | `npm run smoke:prod` |
+| APIs | `npm run smoke:prod` |
 | Env vars only | `npm run env:sync` then push (rebuild bakes `NEXT_PUBLIC_*`) |
 
 `npm run agent:verify` always runs:
@@ -51,8 +50,6 @@ If git and Vercel disagree, something used `deploy:cli` (local upload). Fix: com
 - Plan Builder entry + deep links + `/plan` rewrite
 - Ad LP `/sat-plan-builder`
 - `/satplan` (lagoon funnel)
-- Plan share API + page
-
 Optional manual (phone): `/sat-plan-builder` → CTA → `/plan` → i-steps CTA visible.
 
 ## Agents

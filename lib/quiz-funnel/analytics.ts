@@ -318,33 +318,6 @@ export function captureQuizThankYouViewed(answers: Record<string, unknown>) {
   trackQuizGaEvent("quiz_thank_you_view", { funnel: "sat_quiz" });
 }
 
-export function capturePlanShareCreated(props: {
-  shareId: string;
-  includeName: boolean;
-}) {
-  if (getPostHogKey()) {
-    posthog.capture("plan_share_created", props);
-  }
-  trackQuizGaEvent("plan_share_created", props);
-}
-
-export function capturePlanShareLinkCopied(props: {
-  shareId?: string;
-  native?: boolean;
-}) {
-  if (getPostHogKey()) {
-    posthog.capture("plan_share_link_copied", props);
-  }
-  trackQuizGaEvent("plan_share_link_copied", props);
-}
-
-export function capturePlanShareViewed(props: { shareId: string }) {
-  if (getPostHogKey()) {
-    posthog.capture("plan_share_viewed", props);
-  }
-  trackQuizGaEvent("plan_share_viewed", props);
-}
-
 export type AchievabilityInputEditedProps = {
   /** UI field: target | test_date | starting | gpa */
   field: AchievabilityInputField;

@@ -283,7 +283,7 @@ export default function QuizRunner() {
       );
       break;
     case 'achievability':
-    case 'reveal': // deprecated alias for old deep links + share page
+    case 'reveal': // deprecated alias for old deep links
     case 's1':
       stepContent = (
         <QFSPlanReveal

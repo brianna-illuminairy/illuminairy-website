@@ -2,6 +2,10 @@
 
 Large site snapshots are stored on dedicated Git branches (not on `main`) to keep your local clone small.
 
+## Plan share (retired 2026-06)
+
+Read-only `/plan/share/{id}` virality experiment — removed from production. Snapshot: [`plan-share-retired-2026-06/`](plan-share-retired-2026-06/README.md).
+
 ## Curious Cardinals (2026-05-18)
 
 **Branch:** `archive/curious-cardinals-2026-05-18`  
