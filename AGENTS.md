@@ -68,7 +68,7 @@ Non-trivial features: start with a spec. End sessions: update memory-bank.
 2. **Brand voice** — Follow [`docs/brand-voice-and-positioning.md`](docs/brand-voice-and-positioning.md). Parent/funnel messaging (Score Path, stats, banned patterns): [`docs/messaging-guide.md`](docs/messaging-guide.md). SAT-specific angles: [`docs/sat-messaging-positioning.md`](docs/sat-messaging-positioning.md). Avoid “cohort”; use parent-friendly language.
 3. **Secrets** — Never commit `.env.local`, API keys, or webhook secrets. Use `.env.example` as the template.
 4. **Invite-only links** — `TUTOR_CALENDLY_URL` / `lib/internal-links.ts` tutor interview URL is **email-only after vetting**. Never surface it in public pages, sitemaps, or client bundles.
-5. **Deploy path** — **Git → Vercel auto-deploy** on push to `main`. Ship: `npm run agent:verify` → commit → `npm run release` (push + smoke). Full guide: [`docs/deploy.md`](docs/deploy.md). **Do not** `npm run deploy:cli` / `deploy:prod` except emergencies (`DEPLOY_CLI_OK=1`); CLI uploads local files and drifts from git. Env-only changes: `npm run env:sync` then push to redeploy.
+5. **Deploy path** — **One repo, one Vercel build** (Plan Builder, `/satplan`, LP, APIs ship together). **Git → Vercel auto-deploy** on push to `main`. Ship: `npm run agent:verify` → commit → `npm run release`. Guides: [`docs/deploy.md`](docs/deploy.md), [`docs/production-surfaces.md`](docs/production-surfaces.md). **Do not** `deploy:cli` except emergencies (`DEPLOY_CLI_OK=1`). Match extra verify to the surface you changed (e.g. `funnel:e2e` for `/plan`).
 
 ## Code conventions
 

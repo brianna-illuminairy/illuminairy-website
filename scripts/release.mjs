@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Canonical production release: verify → push main → Vercel Git deploy → smoke.
- * Does NOT upload local files via CLI. See docs/deploy.md
+ * One build ships all surfaces — docs/production-surfaces.md
  */
 
 import { spawnSync } from "node:child_process";
@@ -27,7 +27,48 @@ function fail(msg) {
   process.exit(1);
 }
 
-console.log("Release — git push → Vercel auto-deploy (not CLI upload)\n");
+console.log("Release — one git push deploys all surfaces (plan, satplan, LP, APIs)\n");
+
+function changedFilesSinceUpstream() {
+  const r = git(["diff", "--name-only", "@{u}...HEAD"]);
+  return r.stdout.split("\n").map((s) => s.trim()).filter(Boolean);
+}
+
+function printSurfaceHints(paths) {
+  if (!paths.length) return;
+  const hints = [];
+  if (
+    paths.some(
+      (p) =>
+        p.startsWith("app/quiz/") ||
+        p.startsWith("lib/quiz-funnel/") ||
+        p.includes("quiz-funnel.css") ||
+        p.includes("funnel-responsive.css") ||
+        p.includes("quiz-globals.css")
+    )
+  ) {
+    hints.push("Plan Builder (/plan): npm run funnel:e2e — needs dev server");
+  }
+  if (paths.some((p) => p.startsWith("components/sat-plan/") || p.startsWith("app/satplan/"))) {
+    hints.push("SAT plan (/satplan): spot-check lagoon funnel on phone");
+  }
+  if (
+    paths.some(
+      (p) =>
+        p.startsWith("app/landing/") ||
+        p.startsWith("components/landing/") ||
+        p === "app/page.tsx" ||
+        p === "app/sat-plan-builder/page.tsx"
+    )
+  ) {
+    hints.push("Marketing LP: growth/b3-lp-viewport-qa.md");
+  }
+  if (hints.length) {
+    console.log("Surface-specific checks for this release:");
+    for (const h of hints) console.log(`  • ${h}`);
+    console.log("  (see docs/production-surfaces.md)\n");
+  }
+}
 
 const branch = git(["rev-parse", "--abbrev-ref", "HEAD"]).stdout.trim();
 if (branch !== "main") {
@@ -63,6 +104,7 @@ if (Number(ahead) === 0) {
   console.log("Vercel will not rebuild unless you push a new commit.");
   console.log("Running smoke:prod on current production…\n");
 } else {
+  printSurfaceHints(changedFilesSinceUpstream());
   console.log(`Pushing ${ahead} commit(s) (${localSha}) to origin/main…\n`);
   const push = run("git", ["push", "origin", "main"]);
   if (!push.ok) fail("git push failed");

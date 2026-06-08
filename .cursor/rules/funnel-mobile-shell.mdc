@@ -6,7 +6,7 @@ alwaysApply: false
 
 # Funnel mobile shell (Plan Builder `/plan`)
 
-**Full spec:** `docs/funnel-mobile-shell.md` · **Lock doc:** `app/quiz/LAYOUT.lock.md`
+**Full spec:** `docs/funnel-mobile-shell.md` · **Lock doc:** `app/quiz/LAYOUT.lock.md` · **Multi-surface deploy:** `docs/production-surfaces.md`
 
 ## The pattern (do not reinvent)
 
