@@ -125,6 +125,19 @@ export function bookingFeedbackForCode(
         field: "parentPhone",
         retryable: false,
       };
+    case "invalid_contact":
+      return {
+        title: "Check your details",
+        message: BOOKING_FEEDBACK.emailInvalid,
+        retryable: false,
+      };
+    case "tcpa_required":
+      return {
+        title: "Consent required",
+        message: BOOKING_FEEDBACK.tcpaRequired,
+        field: "confirmTcpa",
+        retryable: false,
+      };
     case "no_slot":
       return {
         title: "Pick a time",

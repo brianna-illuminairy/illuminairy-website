@@ -2797,15 +2797,29 @@
 }
 .qf-page .qf-plan-scheduler__tcpa {
   display: flex;
-  gap: 10px;
+  gap: 12px;
   align-items: flex-start;
+  min-height: 44px;
+  padding: 10px 12px;
+  margin: 0 -12px;
+  border-radius: 12px;
+  cursor: pointer;
   font-size: 13px;
   line-height: 1.45;
   color: var(--qf-ink-mid);
 }
 .qf-page .qf-plan-scheduler__tcpa input {
-  margin-top: 3px;
+  margin-top: 2px;
   flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  min-height: 20px;
+}
+.qf-page .qf-plan-scheduler__tcpa--invalid {
+  outline: 1px solid #c0392b;
+  outline-offset: 2px;
+  background: rgba(192, 57, 43, 0.04);
 }
 .qf-page .qf-plan-scheduler__tcpa a {
   color: var(--qf-forest);

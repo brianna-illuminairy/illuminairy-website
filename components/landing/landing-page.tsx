@@ -6,9 +6,13 @@ import { V4Page } from "@/components/landing/v4/v4-page";
 import { trackLandingCtaClick, trackLandingView } from "@/lib/landing/analytics";
 import { enrichSessionAttributionFromLanding } from "@/lib/attribution";
 import { persistLpLayout } from "@/lib/landing/layout-storage";
-import { persistLpVariant } from "@/lib/landing/variant-storage";
+import {
+  persistLpVariant,
+  persistLpVariantId
+} from "@/lib/landing/variant-storage";
 import type { LandingSectionId } from "@/lib/landing/content";
 import { landingShared } from "@/lib/landing/content";
+import { lpVariantFromHeroHook } from "@/lib/landing/lp-variant";
 import { resolveMetaLandingContext } from "@/lib/landing/meta-traffic";
 import { planBuilderEntryFromLanding } from "@/lib/plan-builder-routes";
 import {
@@ -48,11 +52,14 @@ export function LandingPage({ landingPath = "/" }: LandingPageProps) {
     trackedRef.current = true;
     persistLpVariant(variant);
     persistLpLayout(layout);
+    const lpVariantId = lpVariantFromHeroHook(metaContext.heroHook);
+    persistLpVariantId(lpVariantId);
     const trackingExtra = {
       preferred_metro: metaContext.metro.metroId,
       metro_source: metaContext.metro.source,
       hero_hook: metaContext.heroHook,
       hero_hook_source: metaContext.heroHookSource,
+      lp_variant: lpVariantId,
       traffic_channel: metaContext.isMetaPaid ? ("meta_paid" as const) : ("other" as const),
       landing_page: landingPath
     };
@@ -68,10 +75,14 @@ export function LandingPage({ landingPath = "/" }: LandingPageProps) {
   const handleCta = useCallback(
     (sectionId: LandingSectionId, label?: string) => {
       const ctaLabel = label ?? landingShared.heroCtaLabel;
-      trackLandingCtaClick(variant, layout, landingPath, sectionId, ctaLabel);
+      trackLandingCtaClick(variant, layout, landingPath, sectionId, ctaLabel, {
+        hero_hook: metaContext.heroHook,
+        hero_hook_source: metaContext.heroHookSource,
+        lp_variant: lpVariantFromHeroHook(metaContext.heroHook)
+      });
       router.push(planBuilderEntryFromLanding(search ? `?${search}` : undefined));
     },
-    [layout, landingPath, router, search, variant]
+    [layout, landingPath, metaContext.heroHook, metaContext.heroHookSource, router, search, variant]
   );
 
   return <V4Page search={query} heroHook={metaContext.heroHook} onCta={handleCta} />;

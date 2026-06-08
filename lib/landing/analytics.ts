@@ -42,6 +42,7 @@ export type LandingEventProps = {
   metro_source?: string;
   hero_hook?: string;
   hero_hook_source?: string;
+  lp_variant?: string;
 };
 
 function baseProps(
@@ -92,11 +93,13 @@ export function trackLandingCtaClick(
   layout: LpLayout,
   landingPath: string,
   sectionId: LandingSectionId,
-  ctaLabel: string
+  ctaLabel: string,
+  extra?: Partial<LandingEventProps>
 ) {
   const props = baseProps(variant, layout, landingPath, {
     section_id: sectionId,
-    cta_label: ctaLabel
+    cta_label: ctaLabel,
+    ...extra
   });
   if (getPostHogKey()) {
     posthog.capture(AnalyticsEvents.funnelCtaClick, props);

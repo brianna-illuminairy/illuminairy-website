@@ -49,8 +49,8 @@ export const META_LIVE_CREATIVES: readonly MetaLiveCreative[] = [
     utmCampaign: "c1_sat_plan_builder_cold_creative_test",
     utmTerm: "broad_moms_35_58",
     landingPath: "/sat-plan-builder",
-    heroHook: "mom_story",
-    angle: "Testimonial — 3.9 GPA / 1160 SAT, mom panic on time, 1160→1430 outcome"
+    heroHook: "student_story",
+    angle: "Same video as ad5 (mom cut) — variant-highgpa-ap-lowsat LP headline"
   },
   {
     id: "ad5_high_gpa_student_story",

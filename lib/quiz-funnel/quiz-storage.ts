@@ -79,6 +79,57 @@ function localClientSnapshot(): QuizSnapshot {
   };
 }
 
+function localSnapshotHasData(snapshot: QuizSnapshot): boolean {
+  return Boolean(snapshot.lastStep) || Object.keys(snapshot.answers).length > 0;
+}
+
+/**
+ * Union intake (cookie / SSR) with localStorage. Local wins on overlapping keys
+ * so PII and fields only stored locally are preserved after refresh.
+ */
+export function mergeQuizSnapshots(
+  intake: QuizSnapshot | null | undefined,
+  local: QuizSnapshot | null | undefined
+): QuizSnapshot | null {
+  if (!intake && !local) return null;
+  if (!intake) return local ?? null;
+  if (!local || !localSnapshotHasData(local)) return intake;
+
+  const mergedAnswers: StoredQuizAnswers = { ...intake.answers };
+  for (const [key, val] of Object.entries(local.answers)) {
+    if (val === undefined || val === null) continue;
+    if (typeof val === "string" && val.length === 0) continue;
+    if (Array.isArray(val) && val.length === 0) continue;
+    mergedAnswers[key] = val;
+  }
+
+  const intakeTime = intake.updatedAt ?? 0;
+  const localTime = local.updatedAt ?? 0;
+  const lastStep =
+    localTime >= intakeTime
+      ? local.lastStep ?? intake.lastStep
+      : intake.lastStep ?? local.lastStep;
+
+  return {
+    answers: mergedAnswers,
+    lastStep,
+    updatedAt: Math.max(intakeTime, localTime),
+  };
+}
+
+/** Merge SSR cookie snapshot with client localStorage on mount. */
+export function resolveHydratedQuizSnapshot(
+  serverSnapshot: QuizSnapshot | null | undefined
+): QuizSnapshot | null {
+  const local = localClientSnapshot();
+  const clientCookie = readQuizSnapshotCookieClient();
+  const intake =
+    serverSnapshot && (serverSnapshot.lastStep || Object.keys(serverSnapshot.answers).length > 0)
+      ? serverSnapshot
+      : clientCookie;
+  return mergeQuizSnapshots(intake, localSnapshotHasData(local) ? local : null);
+}
+
 function pickNewerSnapshot(a: QuizSnapshot, b: QuizSnapshot): QuizSnapshot {
   const aTime = a.updatedAt ?? 0;
   const bTime = b.updatedAt ?? 0;

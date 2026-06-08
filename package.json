@@ -22,6 +22,7 @@
     "funnel:layout-guard": "node scripts/funnel-layout-guard.mjs",
     "funnel:cta-guard": "node scripts/quiz-cta-guard.mjs",
     "funnel:e2e": "node scripts/quiz-funnel-e2e.mjs",
+    "funnel:analytics-smoke": "node scripts/funnel-analytics-smoke.mjs",
     "funnel:step-registry": "node scripts/verify-quiz-step-registry.mjs",
     "funnel:achievability": "node scripts/verify-goal-achievability.mjs",
     "funnel:no-em-dash": "node scripts/funnel-no-em-dash.mjs",

@@ -3,8 +3,11 @@
  * Step IDs are stable for PostHog/GA/touch_events — do not rename without dashboard updates.
  */
 
-/** First screen after LP CTA — used in planBuilderEntryFromLanding and quiz_started. */
-export const QUIZ_ENTRY_STEP = "q-who";
+/** Canonical first screen after LP CTA — used in planBuilderEntryFromLanding and quiz_started. */
+export const QUIZ_ENTRY_STEP = "q1-parent-child";
+
+/** Legacy alias kept so old ad links with `step=q-who` do not break. */
+export const QUIZ_ENTRY_STEP_LEGACY = "q-who";
 
 /** Terminal step after a Strategy Call is booked. */
 export const QUIZ_BOOKED_STEP = "booked";
@@ -29,7 +32,7 @@ export type QuizIntakeAnswers = {
 
 /** Steps that require a saved answer before the user may proceed past them. */
 const INTAKE_STEP_SATISFIED: Record<string, (a: QuizIntakeAnswers) => boolean> = {
-  "q-who": (a) => Boolean(a.qWho),
+  "q1-parent-child": (a) => Boolean(a.qWho),
   "q-score-lower": (a) => Boolean(a.qScoreLower),
   q1: (a) => Boolean(a.q1),
   q2: (a) => Boolean(a.q2),
@@ -43,6 +46,11 @@ const INTAKE_STEP_SATISFIED: Record<string, (a: QuizIntakeAnswers) => boolean> =
   name: (a) => Boolean(a.kidName?.trim())
 };
 
+function normalizeStepId(step: string): string {
+  if (step === QUIZ_ENTRY_STEP_LEGACY) return QUIZ_ENTRY_STEP;
+  return step;
+}
+
 /**
  * If a deep link skips unanswered intake steps (e.g. old ads using `?step=q1`),
  * return the earliest missing step. Interstitials and insight slides pass through.
@@ -52,7 +60,8 @@ export function resolveGuardedQuizStep(
   requestedStep: string,
   routeSteps: string[]
 ): string {
-  const targetIdx = routeSteps.indexOf(requestedStep);
+  const normalizedRequested = normalizeStepId(requestedStep);
+  const targetIdx = routeSteps.indexOf(normalizedRequested);
   if (targetIdx < 0) return QUIZ_ENTRY_STEP;
 
   for (let i = 0; i <= targetIdx; i++) {
@@ -61,7 +70,7 @@ export function resolveGuardedQuizStep(
     if (satisfied && !satisfied(answers)) return step;
   }
 
-  return requestedStep;
+  return normalizedRequested;
 }
 
 type ResumeAnswers = QuizIntakeAnswers & {
@@ -81,7 +90,7 @@ export function resolveQuizResumeStep(
     return QUIZ_BOOKED_STEP;
   }
 
-  const saved = lastStep ?? null;
+  const saved = lastStep ? normalizeStepId(lastStep) : null;
   if (saved && routeSteps.includes(saved)) {
     const guarded = resolveGuardedQuizStep(answers, saved, routeSteps);
     const lastIdx = routeSteps.indexOf(saved);

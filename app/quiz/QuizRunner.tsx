@@ -4,7 +4,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useQuiz, showGapScreen, type QuizAnswers } from './state';
 import { useQuizAnalytics } from './useQuizAnalytics';
 import { useQuizAvailabilityPrefetch } from './useQuizAvailabilityPrefetch';
-import { captureParentConfirmed } from '@/lib/quiz-funnel/analytics';
+import { captureParentConfirmed, captureQuizStepBack } from '@/lib/quiz-funnel/analytics';
 import { planBuilderStepHref } from '@/lib/plan-builder-routes';
 import {
   QUIZ_BOOKED_STEP,
@@ -39,13 +39,14 @@ function getSteps(answers: QuizAnswers) {
 export default function QuizRunner() {
   const router = useRouter();
   const params = useSearchParams();
-  const { answers, dispatch, lastStep, setLastStep } = useQuiz();
+  const { answers, dispatch, lastStep, setLastStep, hydrated } = useQuiz();
   const search = params.toString();
 
-  const requestedStep = params.get('step') || QUIZ_ENTRY_STEP;
+  const rawStep = params.get('step');
+  const requestedStep = rawStep || QUIZ_ENTRY_STEP;
   const steps = getSteps(answers);
   const resumeStep =
-    requestedStep === QUIZ_ENTRY_STEP || requestedStep === QUIZ_BOOKED_STEP
+    !rawStep || requestedStep === QUIZ_BOOKED_STEP
       ? resolveQuizResumeStep(answers, steps, lastStep)
       : requestedStep;
   const stepId =
@@ -60,18 +61,22 @@ export default function QuizRunner() {
   }, [stepId, lastStep, setLastStep]);
 
   useEffect(() => {
-    if (resumeStep !== requestedStep) {
-      router.replace(planBuilderStepHref(resumeStep, search));
-      return;
-    }
-    const reqIdx = steps.indexOf(requestedStep);
-    const guardIdx = steps.indexOf(stepId);
-    if (reqIdx >= 0 && guardIdx >= 0 && reqIdx > guardIdx) {
-      router.replace(planBuilderStepHref(stepId, search));
-    } else if (reqIdx < 0 && stepId !== requestedStep) {
-      router.replace(planBuilderStepHref(stepId, search));
-    }
-  }, [stepId, requestedStep, resumeStep, router, search, steps]);
+    if (!hydrated) return;
+    const redirectTimer = window.setTimeout(() => {
+      if (resumeStep !== requestedStep) {
+        router.replace(planBuilderStepHref(resumeStep, search));
+        return;
+      }
+      const reqIdx = steps.indexOf(requestedStep);
+      const guardIdx = steps.indexOf(stepId);
+      if (reqIdx >= 0 && guardIdx >= 0 && reqIdx > guardIdx) {
+        router.replace(planBuilderStepHref(stepId, search));
+      } else if (reqIdx < 0 && stepId !== requestedStep) {
+        router.replace(planBuilderStepHref(stepId, search));
+      }
+    }, 0);
+    return () => window.clearTimeout(redirectTimer);
+  }, [hydrated, stepId, requestedStep, resumeStep, router, search, steps]);
 
   useQuizAnalytics(stepId, currentIdx, answers, gapScreen);
   useQuizAvailabilityPrefetch(stepId);
@@ -95,8 +100,16 @@ export default function QuizRunner() {
 
   function back() {
     const idx = steps.indexOf(stepId);
-    if (idx > 0) goTo(steps[idx - 1]);
-    else router.back();
+    if (idx > 0) {
+      const toStep = steps[idx - 1];
+      captureQuizStepBack({
+        from_step: stepId,
+        to_step: toStep,
+        from_index: idx,
+        to_index: idx - 1
+      });
+      goTo(toStep);
+    } else router.back();
   }
 
   function setQ(key: string, value?: string) {
@@ -126,7 +139,7 @@ export default function QuizRunner() {
 
   let stepContent;
   switch (stepId) {
-    case 'q-who':
+    case 'q1-parent-child':
       stepContent = <QFQWho value={a.qWho} onSelect={(v: string) => setQAndAdvance('qWho', v)} onBack={back} />;
       break;
     case 'q-score-lower':

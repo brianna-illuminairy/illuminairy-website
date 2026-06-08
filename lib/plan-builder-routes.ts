@@ -60,7 +60,7 @@ const UTM_KEYS = [
 
 /**
  * Plan Builder entry from LP — `/plan?step=…` plus UTMs from the landing URL.
- * Resumes in-progress sessions (localStorage) instead of always resetting to q-who.
+ * Resumes in-progress sessions (localStorage) instead of always resetting to the entry step.
  */
 export function planBuilderEntryFromLanding(search?: string): string {
   const params = new URLSearchParams();

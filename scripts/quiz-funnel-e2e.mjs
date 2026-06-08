@@ -37,7 +37,7 @@ const PARENT_SAT_ANSWERS = {
 };
 
 const STEP_LABELS = {
-  "q-who": "Who needs SAT help",
+  "q1-parent-child": "Who needs SAT help",
   "q-score-lower": "SAT score come back lower",
   q1: "feels most urgent",
   q2: "stakes",
@@ -204,15 +204,17 @@ async function assertStepInteraction(page, stepId, opts = {}) {
 }
 
 async function seedAnswers(page, answers, lastStep = null) {
-  await page.goto(`${BASE}/plan?step=q-who`, { waitUntil: "networkidle" });
+  await page.goto(`${BASE}/plan?step=q1-parent-child`, { waitUntil: "networkidle" });
   await page.evaluate(
     ({ payload, step }) => {
       localStorage.setItem("qf_answers", JSON.stringify(payload));
       if (step) localStorage.setItem("qf_last_step", step);
+      else localStorage.removeItem("qf_last_step");
       const trimmed = { qWho: payload.qWho, q1: payload.q1, q2: payload.q2, q3: payload.q3, q4: payload.q4, q5: payload.q5, q6: payload.q6, q7: payload.q7, q8: payload.q8, q9: payload.q9, qDoubts: payload.qDoubts, qScoreLower: payload.qScoreLower };
       const snap = encodeURIComponent(JSON.stringify({ v: 2, s: step, t: Date.now(), a: trimmed }));
       document.cookie = `qf_snapshot=${snap}; Path=/; Max-Age=7776000; SameSite=Lax`;
       if (step) localStorage.setItem("qf_updated_at", String(Date.now()));
+      else localStorage.removeItem("qf_updated_at");
     },
     { payload: answers, step: lastStep }
   );
@@ -388,7 +390,7 @@ async function checkAllRoutedSteps(page) {
   await seedAnswers(page, PARENT_SAT_ANSWERS);
 
   const steps = [
-    "q-who",
+    "q1-parent-child",
     "q-score-lower",
     "q1",
     "q2",
@@ -453,12 +455,12 @@ async function checkNavigation(page) {
     localStorage.removeItem("qf_updated_at");
     document.cookie = "qf_snapshot=; Path=/; Max-Age=0; SameSite=Lax";
   });
-  await page.goto(`${BASE}/plan?step=q-who`, { waitUntil: "networkidle" });
+  await page.goto(`${BASE}/plan?step=q1-parent-child`, { waitUntil: "networkidle" });
   await waitForHydration(page);
 
   await page.locator(".qf-opt").first().click();
   await page.waitForURL(/step=q-score-lower/, { timeout: TIMEOUT });
-  pass("nav", "q-who option tap advances");
+  pass("nav", "q1-parent-child option tap advances");
 
   await page.locator(".qf-opt").first().click();
   await page.waitForURL(/step=q1/, { timeout: TIMEOUT });
@@ -477,7 +479,7 @@ async function checkNavigation(page) {
 async function checkUtmPreserved(page) {
   console.log("\n— UTM preservation —");
   await page.goto(
-    `${BASE}/plan?step=q-who&utm_source=meta&utm_campaign=ad3&utm_content=concerned_mom`,
+    `${BASE}/plan?step=q1-parent-child&utm_source=meta&utm_campaign=ad3&utm_content=concerned_mom`,
     { waitUntil: "networkidle" }
   );
   await page.locator(".qf-opt").first().click();
@@ -496,7 +498,7 @@ async function main() {
 
   let browser;
   try {
-    const health = await fetch(`${BASE}/plan?step=q-who`);
+    const health = await fetch(`${BASE}/plan?step=q1-parent-child`);
     if (!health.ok) {
       console.error(`Server not reachable at ${BASE} (${health.status})`);
       console.error("Start with: npm run dev  OR  npm run build && npm run start");

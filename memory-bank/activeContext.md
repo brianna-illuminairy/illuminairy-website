@@ -1,8 +1,10 @@
 # Active context
 
-*Last updated: 2026-06-07*
+*Last updated: 2026-06-08*
 
 ## Resume here
+
+**Plan reveal drop analysis (Jun 7–8):** [`growth/plan-reveal-drop-playbook.md`](../growth/plan-reveal-drop-playbook.md) — attributed cohort n=9, all replays tagged. Next: `post-plan-value-bridge`, `name-step-parent-drop`, `v1-below-fold-ux`.
 
 **Full session handoff (start next chat with this):** [`session-handoff-2026-05-29-funnel-qa.md`](./session-handoff-2026-05-29-funnel-qa.md)
 
@@ -32,6 +34,12 @@
 `q1–q5` → `i1` → `q6` → `q7` → `hit-q7` → `i-compare` → … → `reveal` → `v1` → `s2` → `s3` → `s5` → `s7` → `s9` → `booked`
 
 Key libs: `plan-reveal.ts`, `score-path-copy.ts`, `stakes-copy.ts`, `education-slides.ts`, `prep-failure-copy.ts`, `thank-you-copy.ts`
+
+## Recently shipped (2026-06-08)
+
+- **LP ad message-match (local, uncommitted)** — `student_story` H1 for ad4/ad5; `mom_story` removed; responsive H1; `lp_variant` on LP/quiz/lead; hydration merge cookie∪localStorage; booking error dedupe + structured lead API errors; s5 TCPA tap target; `quiz_step_back`; PostHog dashboard doc updated. Verify: `FUNNEL_LAYOUT_UNLOCK=1 npm run agent:verify` PASS; `npm run funnel:e2e` PASS (37 checks). **Next:** commit + `npm run release`; Meta ad URLs `hook=student_story`; PostHog success metrics after traffic.
+- **Chunk C split (Jun 8)** — keep step-registry refactor (Phase A/B) as a dedicated multi-session track; ship analytics/docs independently now (`step=q1-parent-child` canonical + `q-who` alias, step labels/seq on quiz events, checklist docs updated).
+- **Plan reveal drop playbook** — PostHog MCP pass on Jun 7–8 attributed cohort. [`growth/plan-reveal-drop-playbook.md`](../growth/plan-reveal-drop-playbook.md): product-order funnel **name→i2→v1** 9→6→6; 3 never saw plan reveal; not “0% reveal→name”.
 
 ## Recently shipped (2026-06-07)
 

@@ -14,7 +14,7 @@ import type { QuizSnapshot } from '@/lib/quiz-funnel/quiz-cookie';
 import { hasQuizProgress } from '@/lib/quiz-funnel/quiz-cookie';
 import {
   persistQuizSnapshot,
-  readQuizSnapshotClient,
+  resolveHydratedQuizSnapshot,
   type StoredQuizAnswers,
 } from '@/lib/quiz-funnel/quiz-storage';
 
@@ -131,24 +131,30 @@ export function QuizProvider({
   const [store, dispatch] = useReducer(storeReducer, initialSnapshot, initStoreFromSnapshot);
   const { answers, lastStep } = store;
   const skipNextPersist = useRef(true);
+  const awaitMergeCommit = useRef(false);
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
-    const serverHadProgress = hasQuizProgress(initialSnapshot);
-    const clientSnap = readQuizSnapshotClient();
-
-    if (!serverHadProgress && clientSnap && hasQuizProgress(clientSnap)) {
-      dispatch({
-        type: 'LOAD',
-        data: clientSnap.answers as Partial<QuizAnswers>,
-        lastStep: clientSnap.lastStep,
-      });
-    } else if (serverHadProgress && initialSnapshot) {
-      persistQuizSnapshot({ ...initialSnapshot, updatedAt: Date.now() });
+    const merged = resolveHydratedQuizSnapshot(initialSnapshot);
+    if (!merged || !hasQuizProgress(merged)) {
+      const readyTimer = window.setTimeout(() => setHydrated(true), 0);
+      return () => window.clearTimeout(readyTimer);
     }
+    awaitMergeCommit.current = true;
+    dispatch({
+      type: 'LOAD',
+      data: merged.answers as Partial<QuizAnswers>,
+      lastStep: merged.lastStep,
+    });
+    persistQuizSnapshot({ ...merged, updatedAt: Date.now() });
+  }, [initialSnapshot]);
+
+  useEffect(() => {
+    if (!awaitMergeCommit.current) return;
+    awaitMergeCommit.current = false;
     const readyTimer = window.setTimeout(() => setHydrated(true), 0);
     return () => window.clearTimeout(readyTimer);
-  }, [initialSnapshot]);
+  }, [answers, lastStep]);
 
   useEffect(() => {
     if (skipNextPersist.current) {

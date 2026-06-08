@@ -45,12 +45,12 @@ const nextConfig = {
       },
       {
         source: "/assessment",
-        destination: "/plan?step=q-who",
+        destination: "/plan?step=q1-parent-child",
         permanent: true
       },
       {
         source: "/assessment/:path*",
-        destination: "/plan?step=q-who",
+        destination: "/plan?step=q1-parent-child",
         permanent: true
       },
       {

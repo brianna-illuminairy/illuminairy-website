@@ -21,13 +21,24 @@ Run after deploy. Pair with [posthog-funnel-dashboard.md](./posthog-funnel-dashb
 
 ## Live Events checklist
 
-1. Load `/` — `funnel_landing_view` with `sat_lp_variant`, `sat_lp_layout`, UTMs if present.
+1. Load `/` — `funnel_landing_view` with `sat_lp_variant`, `sat_lp_layout`, **`lp_variant`**, UTMs if present.
 2. `experiment_exposure` for `sat-lp-variant` and `sat-lp-layout` (`implemented: true`).
-3. Click hero CTA — `funnel_cta_click` with `section_id: hero`, navigate to **`/plan?step=q-who`** (UTMs preserved).
+3. Click hero CTA — `funnel_cta_click` with `section_id: hero`, navigate to **`/plan?step=q1-parent-child`** (UTMs preserved).
 4. Compact only: scroll past hero — sticky bar; click — `section_id: sticky_cta`.
-5. Land on q-who — `quiz_started` + `quiz_step_viewed` with `step: q-who`, `sat_lp_variant` + `sat_lp_layout` from localStorage.
-6. Select **My child** — `parent_confirmed` (PostHog + touch) + Meta **`ParentConfirmed`** (once per session). **Me** must **not** fire ParentConfirmed.
+5. Land on `q1-parent-child` — `quiz_session_started` (once per session) + `quiz_step_viewed` with `step: q1-parent-child`, `sat_lp_variant`, `sat_lp_layout`, **`lp_variant`** from localStorage.
+6. Select **My child** — `parent_confirmed` (PostHog + touch) + Meta **`ParentConfirmed`** (once per session). **Me** must **not** fire ParentConfirmed. Re-select after back must **not** double-fire.
 7. After opening questions — person props include `qWho`, `qScoreLower`, `quiz_urgency` (same as answer key `q1`).
+8. Tap back within funnel — `quiz_step_back` with `from_step` / `to_step` (PostHog + GA4).
+
+## Automated smoke (CI / pre-prod)
+
+```bash
+npm run dev   # terminal 1
+npm run funnel:analytics-smoke
+FUNNEL_E2E_BASE=https://illuminairy.com npm run funnel:analytics-smoke
+```
+
+Catches: missing LP/CTA/step events, `$pageview` on `/plan`, duplicate `parent_confirmed`, missing `lp_variant` localStorage for ad5 hook.
 
 ## GA4 (DebugView or Realtime)
 
@@ -35,13 +46,13 @@ Run after deploy. Pair with [posthog-funnel-dashboard.md](./posthog-funnel-dashb
 |-------|---------|
 | `funnel_landing_view` | LP mount |
 | `funnel_cta_click` | Any LP CTA |
-| `quiz_started` | First `q-who` view (once per session) |
-| `parent_confirmed` | q-who **My child** only (once per session) |
+| `quiz_started` | First `q1-parent-child` view (once per session) |
+| `parent_confirmed` | `q1-parent-child` **My child** only (once per session) |
 | `quiz_step_view` | Each funnel step (includes `qWho` / `qScoreLower` when set) |
 | `generate_lead` | s5 lead submit |
 | `schedule` | Booking confirmed |
 
-Params should include `sat_lp_variant`, `sat_lp_layout`, `funnel: sat_quiz`.
+Params should include `sat_lp_variant`, `sat_lp_layout`, **`lp_variant`**, `funnel: sat_quiz`, UTMs when present.
 
 ## Meta Events Manager (Test Events)
 
@@ -50,7 +61,7 @@ Params should include `sat_lp_variant`, `sat_lp_layout`, `funnel: sat_quiz`.
 | `PageView` | Route load |
 | `ViewContent` | LP mount (`content_category` = variant) |
 | `FunnelCTA` | LP CTA (`section_id`, `sat_lp_layout`) |
-| **`ParentConfirmed`** | q-who **My child** only — Phase 1 ad optimization |
+| **`ParentConfirmed`** | `q1-parent-child` **My child** only — Phase 1 ad optimization |
 | `Lead` | s5 only — **not** on LP (CAPI custom data: `qWho`, `qScoreLower`, `q1`, `q4`, `sat_lp_variant`) |
 | `Schedule` | Booked — **not** on LP |
 
@@ -60,7 +71,7 @@ Landing URL:
 
 `/?utm_source=facebook&utm_campaign=sat-lp-b3a-problem&utm_content=test`
 
-After CTA, address bar should include same UTMs on `/plan?step=q-who`.
+After CTA, address bar should include same UTMs on `/plan?step=q1-parent-child`.
 
 ## Supabase (lead row at s5)
 

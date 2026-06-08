@@ -6,8 +6,8 @@
 |------|-----------------|------------|-------------|
 | LP load | `funnel_landing_view` | `ViewContent` | Baseline only |
 | LP CTA → `/plan` | `funnel_cta_click` | **`FunnelCTA`** | Diagnostic / engagement |
-| Plan opens (`q-who`) | `quiz_started` | — | Funnel quality |
-| **“My child” on q-who** | **`parent_confirmed`** | **`ParentConfirmed`** | **Phase 1 cold optimization** |
+| Plan opens (`q1-parent-child`) | `quiz_started` | — | Funnel quality |
+| **“My child” on `q1-parent-child`** | **`parent_confirmed`** | **`ParentConfirmed`** | **Phase 1 cold optimization** |
 | S5 contact form | `quiz_lead_submitted` | **`Lead`** (+ CAPI) | **Phase 2 scale** |
 | Calendly book | `call_booked` | **`Schedule`** (+ CAPI) | Retarget / late funnel |
 
@@ -35,13 +35,13 @@ Rough gates: ~100–200 ParentConfirmed before trusting ad/LP rankings; ~40–60
 |---|---|---|
 | `PageView` | Route load | (existing MetaPixel) |
 | `ViewContent` | LP mount, variant known | `content_name: sat_landing`, `content_category: sat_lp_variant` |
-| `FunnelCTA` (custom) | Any LP CTA → `/plan?step=q-who` | `section_id`, `sat_lp_variant`, `sat_lp_layout`, `cta_label` |
+| `FunnelCTA` (custom) | Any LP CTA → `/plan?step=q1-parent-child` | `section_id`, `sat_lp_variant`, `sat_lp_layout`, `cta_label` |
 
 ## Events on `/plan` (pixel only)
 
 | Event | When | Params |
 |---|---|---|
-| `ParentConfirmed` (custom) | q-who answer **My child** | `content_name: sat_score_path`, `utm_content`, `sat_lp_layout`, `content_category` (LP variant) |
+| `ParentConfirmed` (custom) | `q1-parent-child` answer **My child** | `content_name: sat_score_path`, `utm_content`, `sat_lp_layout`, `content_category` (LP variant) |
 
 ## Events Manager setup
 
@@ -53,7 +53,7 @@ Rough gates: ~100–200 ParentConfirmed before trusting ad/LP rankings; ~40–60
 
 - **Lead / Schedule:** pixel + server CAPI with shared `event_id`
 - S5 submit passes **`_fbp`** and **`_fbc`** from browser cookies to `/api/funnel/lead`
-- LP + q-who events stay browser-only; CAPI pairing on Lead/Schedule matters most for optimization
+- LP + `q1-parent-child` events stay browser-only; CAPI pairing on Lead/Schedule matters most for optimization
 
 ## satprep.illuminairy.com
 

@@ -1,4 +1,4 @@
-/** Optional ad message-match — `?hook=gpa|fall|khan|nov1|gap|june` (UTM passthrough). */
+/** Optional ad message-match — `?hook=gpa|fall|khan|nov1|gap|june|tutor|student_story` (UTM passthrough). */
 export const LANDING_HOOK_PARAM = "hook" as const;
 
 export type LandingHeroHook =
@@ -10,12 +10,26 @@ export type LandingHeroHook =
   | "gap"
   | "june"
   | "tutor"
-  | "mom_story"
   | "student_story";
+
+const STUDENT_STORY_SLUG_MARKERS = [
+  "high_gpa",
+  "student_story",
+  "mom_first_story",
+  "first_story"
+] as const;
+
+function slugMatchesStudentStory(lower: string): boolean {
+  for (const marker of STUDENT_STORY_SLUG_MARKERS) {
+    if (lower.includes(marker)) return true;
+  }
+  return false;
+}
 
 export function landingHeroHookFromSearch(search: string): LandingHeroHook {
   const normalized = search.startsWith("?") ? search.slice(1) : search;
   const raw = new URLSearchParams(normalized).get(LANDING_HOOK_PARAM)?.toLowerCase();
+  if (raw === "mom_story") return "student_story";
   if (
     raw === "gpa" ||
     raw === "fall" ||
@@ -24,7 +38,6 @@ export function landingHeroHookFromSearch(search: string): LandingHeroHook {
     raw === "gap" ||
     raw === "june" ||
     raw === "tutor" ||
-    raw === "mom_story" ||
     raw === "student_story"
   ) {
     return raw;
@@ -60,10 +73,10 @@ const ICON_SCRIPT_HOOKS: Record<string, LandingHeroHook> = {
   angle_a: "gap",
   angle_b: "june",
   angle_g: "nov1",
-  /** Meta c1 cold creative slugs — `utm_content` on live ad URLs. */
+  /** Meta c1 cold creative slugs — ad4/ad5 share student_story LP variant. */
   ad2_enough_time: "fall",
   ad3_before_tutoring: "tutor",
-  ad4_mom_first_story: "mom_story",
+  ad4_mom_first_story: "student_story",
   ad5_high_gpa_student_story: "student_story"
 };
 
@@ -81,6 +94,8 @@ export function landingHeroHookFromUtmSlug(slug?: string | null): LandingHeroHoo
   const lower = slug.toLowerCase().trim();
   const direct = hookFromToken(lower);
   if (direct) return direct;
+
+  if (slugMatchesStudentStory(lower)) return "student_story";
 
   for (const token of HOOK_UTM_TOKENS) {
     if (
@@ -102,11 +117,9 @@ export function landingHeroHookFromUtmSlug(slug?: string | null): LandingHeroHoo
   if (lower.includes("nov1") || lower.includes("early_action") || lower.includes("deadline")) {
     return "nov1";
   }
-  if (lower.includes("gpa") || lower.includes("ap_class")) return "gpa";
   if (lower.includes("enough_time")) return "fall";
   if (lower.includes("before_tutoring") || lower.includes("tutoring")) return "tutor";
-  if (lower.includes("mom_first_story") || lower.includes("first_story")) return "mom_story";
-  if (lower.includes("high_gpa") || lower.includes("student_story")) return "student_story";
+  if (lower.includes("gpa") || lower.includes("ap_class")) return "gpa";
 
   return null;
 }
@@ -213,18 +226,10 @@ export const landingHeroHeadlines: Record<LandingHeroHook, LandingHeroHeadline> 
     ],
     accentLine: 1
   },
-  mom_story: {
-    lines: [
-      "She had a 3.9 GPA and a 1160 SAT.",
-      "We needed to know if there was still time.",
-      "See what's realistic before their fall test."
-    ],
-    accentLine: 1
-  },
   student_story: {
     lines: [
-      "3.9 GPA. 11 AP classes.",
-      "So why is the SAT still in the 1160s?",
+      "High GPA, hard AP/IB/honors classes.",
+      "But low SAT?",
       "See what's realistic before their fall test."
     ],
     accentLine: 1
@@ -238,7 +243,7 @@ export type LandingHeroHeadlineV4 = {
 };
 
 /** Hooks that use the owner v4 default headline (no score-band copy). */
-const V4_OWNER_DEFAULT_HOOKS = new Set<LandingHeroHook>(["gpa", "gap", "student_story"]);
+const V4_OWNER_DEFAULT_HOOKS = new Set<LandingHeroHook>(["gpa", "gap"]);
 
 type V4CustomHeadlineHook = Exclude<LandingHeroHook, "default" | "gpa" | "gap">;
 
@@ -266,12 +271,8 @@ export const landingHeroHeadlinesV4: Record<
     lines: ["Before SAT tutoring.", "Find out what's realistic first."],
     accentLine: 1
   },
-  mom_story: {
-    lines: ["3.9 GPA. 1160 SAT.", "Is there still time to move the score?"],
-    accentLine: 1
-  },
   student_story: {
-    lines: ["3.9 GPA. 11 AP classes.", "So why is the SAT still in the 1160s?"],
+    lines: ["High GPA, hard AP/IB/honors classes.", "But low SAT?"],
     accentLine: 1
   }
 };

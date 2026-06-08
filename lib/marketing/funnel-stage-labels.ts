@@ -5,6 +5,7 @@ export const FUNNEL_STAGE_LABELS: Record<string, string> = {
   quiz_started: "Quiz started",
   lead_submitted: "Lead submitted (s5)",
   call_booked: "Strategy Call booked",
+  "q1-parent-child": "Q1 · Who needs SAT help",
   "q-who": "Q1 · Who needs SAT help",
   "q-score-lower": "Q2 · Score lower than expected",
   q1: "Q3 · What feels most urgent",

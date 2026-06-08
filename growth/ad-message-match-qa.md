@@ -2,7 +2,19 @@
 
 Run **before turning on spend**. Parent must see ad headline echoed on LP hero within ~3 seconds.
 
-## Per-variant checklist
+## v4 live variants (Jun 2026 — use these, not b3a/b3b/b3c)
+
+| `lp_variant` | Headline | Meta `utm_content` | `hook` param |
+|---|---|---|---|
+| `variant-goodgrades-lowSAT` | Your child has good grades. / **So why a low SAT score?** | `concerned_mom_good_grades_low_sat`, `script_5` | `gap` or omit |
+| `variant-beforetutoringmoney-realistic-score` | Before SAT tutoring. / **Find out what's realistic first.** | `ad3_before_tutoring` | `tutor` |
+| `variant-highgpa-ap-lowsat` | High GPA, hard AP/IB/honors classes. / **But low SAT?** | `ad4_mom_first_story`, `ad5_high_gpa_student_story` | `student_story` |
+
+**Never use `hook=mom_story`.** ad4 and ad5 share the same video; both use `variant-highgpa-ap-lowsat`.
+
+Canonical URLs: [`lib/marketing/meta-live-creatives.ts`](../lib/marketing/meta-live-creatives.ts) via `metaLiveCreativeUrl()`.
+
+## Per-variant checklist (legacy B3 — deprecated)
 
 | Variant | Ad creative must echo | LP hero (verify on device) | UTM campaign |
 |---|---|---|---|

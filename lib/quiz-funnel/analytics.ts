@@ -17,7 +17,10 @@ import {
   weeksUntilQ5Test
 } from "@/lib/quiz-funnel/gains";
 import { readPersistedLpLayout } from "@/lib/landing/layout-storage";
-import { readPersistedLpVariant } from "@/lib/landing/variant-storage";
+import {
+  readPersistedLpVariant,
+  readPersistedLpVariantId
+} from "@/lib/landing/variant-storage";
 import { buildQuizAnswersSnapshot } from "@/lib/crm/quiz-answers-snapshot";
 import { QUIZ_ENTRY_STEP } from "@/lib/quiz-funnel/funnel-steps";
 import {
@@ -25,6 +28,7 @@ import {
   shouldAttachQuizDoubtsProps,
   quizPathIncludesQDoubts
 } from "@/lib/quiz-funnel/doubts-analytics";
+import { funnelStageLabel } from "@/lib/marketing/funnel-stage-labels";
 
 declare global {
   interface Window {
@@ -106,7 +110,8 @@ export function trackQuizSchedule() {
 function persistedLpContext() {
   return {
     sat_lp_variant: readPersistedLpVariant() ?? undefined,
-    sat_lp_layout: readPersistedLpLayout() ?? undefined
+    sat_lp_layout: readPersistedLpLayout() ?? undefined,
+    lp_variant: readPersistedLpVariantId() ?? undefined
   };
 }
 
@@ -118,7 +123,7 @@ function quizAttributionProps() {
 const PARENT_CONFIRMED_KEY = "illuminairy_parent_confirmed";
 const QUIZ_DOUBTS_ANSWERED_KEY = "illuminairy_quiz_doubts_answered";
 
-/** Meta Phase 1 optimization — parent selected "My child" on q-who (not students). */
+/** Meta Phase 1 optimization — parent selected "My child" on entry step (not students). */
 export function captureParentConfirmed(qWho: string) {
   if (qWho !== "child" || typeof window === "undefined") return;
 
@@ -234,6 +239,8 @@ export function captureQuizStep(
     ...lpContext,
     ...attr,
     step: stepId,
+    step_label: funnelStageLabel(stepId),
+    step_seq: stepIndex + 1,
     step_index: stepIndex,
     has_gap_screen: Boolean(options?.hasGapScreen),
     viewport_width:
@@ -329,6 +336,10 @@ export function captureQuizLeadSubmitted(
       readPersistedLpVariant() ??
       undefined,
     sat_lp_layout: readPersistedLpLayout() ?? undefined,
+    lp_variant:
+      (answers.lp_variant as string | undefined) ??
+      readPersistedLpVariantId() ??
+      undefined,
     has_gap_screen: Boolean(options?.hasGapScreen),
     showed_gpa_gap: showedGpaGapScreen(q4, answers.q9 as string | undefined),
     promised_gain_pts: promisedGain ?? undefined,
@@ -400,19 +411,57 @@ export type QuizBookingErrorProps = {
   slots_available?: boolean;
   field?: string;
   retryable?: boolean;
+  qWho?: string;
 };
 
 /** s5 lead save, Calendly book API, availability load, validation. */
+const BOOKING_ERROR_DEDUPE_MS = 3000;
+let lastBookingErrorKey = "";
+let lastBookingErrorAt = 0;
+
 export function captureQuizBookingError(props: QuizBookingErrorProps) {
+  const key = `${props.error_code}|${props.step ?? "s5"}|${props.field ?? ""}`;
+  const now = Date.now();
+  if (
+    key === lastBookingErrorKey &&
+    now - lastBookingErrorAt < BOOKING_ERROR_DEDUPE_MS
+  ) {
+    return;
+  }
+  lastBookingErrorKey = key;
+  lastBookingErrorAt = now;
+
   const payload = {
     funnel: "sat_quiz",
     step: props.step ?? "s5",
-    ...props,
+    ...persistedLpContext(),
+    ...quizAttributionProps(),
+    ...props
   };
   if (getPostHogKey()) {
     posthog.capture("quiz_booking_error", payload);
   }
   trackQuizGaEvent("quiz_booking_error", payload);
+}
+
+export function captureQuizStepBack(meta: {
+  from_step: string;
+  to_step: string;
+  from_index: number;
+  to_index: number;
+}) {
+  const payload = {
+    funnel: "sat_quiz",
+    ...persistedLpContext(),
+    ...quizAttributionProps(),
+    from_label: funnelStageLabel(meta.from_step),
+    to_label: funnelStageLabel(meta.to_step),
+    ...meta
+  };
+  if (getPostHogKey()) {
+    posthog.capture(PostHogEvents.quizStepBack, payload);
+  }
+  trackQuizGaEvent(Ga4Events.quizStepBack, payload);
 }
 
 function captureQuizDoubtsAnswered(answers: Record<string, unknown>) {

@@ -42,8 +42,8 @@ const PAGE_CHECKS = [
   },
   {
     surface: "plan-builder",
-    path: "/quiz?step=q-who",
-    label: "Plan Builder entry (q-who)",
+    path: "/quiz?step=q1-parent-child",
+    label: "Plan Builder entry (q1-parent-child)",
     assert: (html) => {
       if (!html.includes("qf-page") && !html.includes("Who needs SAT help")) {
         throw new Error("missing Plan Builder shell");
@@ -113,7 +113,7 @@ async function main() {
   }
 
   const planRewriteOk = await check("/plan rewrite [plan-builder]", async () => {
-    const res = await fetch(`${BASE}/plan?step=q-who`, { redirect: "manual" });
+    const res = await fetch(`${BASE}/plan?step=q1-parent-child`, { redirect: "manual" });
     if (res.status === 404) {
       throw new Error("/plan returns 404 — rewrite broken");
     }

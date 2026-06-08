@@ -61,8 +61,8 @@
 /* v4 single-column hero — left-aligned, capped width */
 .lp-hero-single { max-width: 620px; }
 .lp-hero-single .lp-h1 { font-size: clamp(26px, 6.2vw, 46px); line-height: 1.05; text-wrap: normal; }
-/* v4 H1 is exactly two logical lines (JS) — do not balance-wrap inside each line */
-.lp-hero-single .lp-h1 .line { display: block; text-wrap: nowrap; }
+/* v4 H1 is two logical lines (JS) — allow wrap so long headlines do not clip */
+.lp-hero-single .lp-h1 .line { display: block; text-wrap: pretty; white-space: normal; }
 .lp-hero-single .lp-authority-line { margin-top: 18px; }
 .lp-hero-single .lp-cta-card { margin-top: 24px; }
 

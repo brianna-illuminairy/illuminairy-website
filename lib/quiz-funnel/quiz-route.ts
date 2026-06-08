@@ -3,7 +3,7 @@ import { showGapScreen } from "@/lib/quiz-funnel/gap-screen";
 import type { QuizIntakeAnswers } from "@/lib/quiz-funnel/funnel-steps";
 
 export const BASE_QUIZ_ROUTE_STEPS = [
-  "q-who",
+  "q1-parent-child",
   "q-score-lower",
   "q1",
   "q2",

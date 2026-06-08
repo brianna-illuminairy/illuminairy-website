@@ -19,7 +19,7 @@ import { QUIZ_TESTIMONIALS } from '@/lib/quiz-funnel/testimonials';
 import { getClientAttributionPayload } from '@/lib/quiz-funnel/client-attribution';
 import { planBuilderStepHref } from '@/lib/plan-builder-routes';
 import { resolveMetaClickIds } from '@/lib/meta-click-ids';
-import { readPersistedLpVariant } from '@/lib/landing/variant-storage';
+import { readPersistedLpVariant, readPersistedLpVariantId } from '@/lib/landing/variant-storage';
 import { site } from '@/lib/site';
 import {
   buildQuizCalendlyPrefill,
@@ -208,6 +208,7 @@ export function QFS5Approved({
     errorMessage: string,
     extra?: { http_status?: number; field?: BookingFieldKey; retryable?: boolean }
   ) {
+    const qWho = typeof answers.qWho === 'string' ? answers.qWho : undefined;
     captureQuizBookingError({
       error_code: errorCode,
       error_message: sanitizeBookingErrorMessage(errorMessage),
@@ -217,13 +218,15 @@ export function QFS5Approved({
       slots_available: slotsAvailable,
       field: extra?.field,
       retryable: extra?.retryable,
+      qWho,
     });
   }
 
   function fieldToErrorCode(field: BookingFieldKey): string {
     if (field === 'parentPhone') return 'invalid_phone';
+    if (field === 'parentName') return 'invalid_contact';
     if (field === 'slot') return 'no_slot';
-    if (field === 'confirmTcpa') return 'unknown';
+    if (field === 'confirmTcpa') return 'tcpa_required';
     return 'unknown';
   }
 
@@ -272,6 +275,7 @@ export function QFS5Approved({
     const fbp = resolved.fbp ?? attribution.fbp;
     const fbc = resolved.fbc ?? attribution.fbc;
     const sat_lp_variant = readPersistedLpVariant();
+    const lp_variant = readPersistedLpVariantId();
     try {
       const res = await fetch('/api/funnel/lead', {
         method: 'POST',
@@ -284,6 +288,7 @@ export function QFS5Approved({
           fbp,
           fbc,
           sat_lp_variant,
+          lp_variant,
         }),
       });
       const data = await res.json();
@@ -322,6 +327,10 @@ export function QFS5Approved({
           parentPhone: contact.parentPhone,
           kidName: contact.kidName,
           visitorId,
+          attribution,
+          qWho: typeof answers.qWho === 'string' ? answers.qWho : undefined,
+          sat_lp_variant,
+          lp_variant,
         }),
       });
       const bookData = await bookRes.json().catch(() => ({}));

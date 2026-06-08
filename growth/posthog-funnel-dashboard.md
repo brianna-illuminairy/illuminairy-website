@@ -23,10 +23,12 @@ Create one dashboard: **SAT LP → Quiz → Lead → Book**
 2. `funnel_cta_click`
 3. `quiz_session_started` (once per browser session — first `quiz_step_viewed` on any step)
 4. `quiz_started` (once per browser lifetime — first-ever funnel entry; property `first_start_ever: true`)
-5. `quiz_step_viewed` (filter `step = q-who` for LP → quiz handoff on fresh starts; legacy `step = q1` = urgency Q3)
+5. `quiz_step_viewed` (filter `step = q1-parent-child` for LP → quiz handoff on fresh starts; `step = q1` remains urgency Q3)
 6. `quiz_lead_submitted`
 7. `quiz_booking_confirmed`
 8. `quiz_thank_you_viewed` (`booked` step)
+
+Legacy URL alias `step=q-who` is still accepted and canonicalized to `step=q1-parent-child`.
 
 ## Event notes
 
@@ -43,7 +45,7 @@ When URL UTMs are stripped (Safari ITP, in-app browser), session attribution bac
 | LP path | Inference |
 |---------|-----------|
 | `/` | Maps to ad1 (`utm_content: script_5`) — one ad on this path |
-| `/sat-plan-builder` | Uses persisted `hero_hook` from LP load → matching live creative (`fall`, `tutor`, `mom_story`, `student_story`) |
+| `/sat-plan-builder` | Uses persisted `hero_hook` from LP load → matching live creative (`fall`, `tutor`, `student_story`) |
 | `/sat-plan-builder` (no hook) | Falls back to `utm_content: lp_sat-plan-builder` (shared LP bucket) |
 
 LP view calls `enrichSessionAttributionFromLanding` before quiz navigation so `/plan` events inherit inferred UTMs. Break down LP CTR by `utm_content`; use `hero_hook` when `utm_content` is the shared LP bucket.
@@ -65,7 +67,15 @@ LP view calls `enrichSessionAttributionFromLanding` before quiz navigation so `/
 | `quiz_booking_error` (PostHog + GA4) | Lead save fail, invalid phone, slot taken, Calendly API 5xx, availability load fail, network |
 | `booking_error` (touch_events, server) | Same failures on `POST /api/funnel/calendly-book` |
 
-Break down `quiz_booking_error` by `error_code`: `invalid_phone`, `lead_save_failed`, `no_slot`, `slot_taken`, `calendly_api`, `availability_load`, `network`.
+Break down `quiz_booking_error` by `error_code`: `invalid_phone`, `invalid_contact`, `tcpa_required`, `lead_save_failed`, `no_slot`, `slot_taken`, `calendly_api`, `availability_load`, `network`.
+
+### Step back (resume debugging)
+
+| Event | When |
+|-------|------|
+| `quiz_step_back` (PostHog + GA4) | User taps back within `/plan` (not browser back off `q1-parent-child`) |
+
+Break down by `from_step` → `to_step` to find back loops before plan reveal or s5.
 
 ### q-doubts
 
@@ -78,17 +88,39 @@ Break down `quiz_booking_error` by `error_code`: `invalid_phone`, `lead_save_fai
 
 ### Lead submit props
 
-`quiz_lead_submitted` includes `qWho`, `qScoreLower`, `q1–q9`, `sat_lp_variant`, `has_gap_screen`, `showed_gpa_gap`, `promised_gain_pts`, `weeks_until_test`, `booking_source: client`. CRM `quiz_trigger` = urgency answer (`q1`: score-low, test-soon, etc.).
+`quiz_lead_submitted` includes `qWho`, `qScoreLower`, `q1–q9`, `sat_lp_variant`, `lp_variant`, `has_gap_screen`, `showed_gpa_gap`, `promised_gain_pts`, `weeks_until_test`, `booking_source: client`. CRM `quiz_trigger` = urgency answer (`q1`: score-low, test-soon, etc.).
+
+## Message-match LP variants (`lp_variant`)
+
+Owner-facing headline IDs on all LP + quiz events (Jun 2026 ad message-match):
+
+| `lp_variant` | Hero hook | Primary ads (`utm_content`) |
+|--------------|-----------|------------------------------|
+| `variant-goodgrades-lowSAT` | default / fall / concerned mom | `concerned_mom_good_grades_low_sat`, `script_5`, fallback |
+| `variant-beforetutoringmoney-realistic-score` | `tutor` | `ad3_before_tutoring` |
+| `variant-highgpa-ap-lowsat` | `student_story` | `ad4_mom_first_story`, `ad5_high_gpa_student_story` |
+
+**Primary success metrics (after deploy + ~200 LP views/arm or 14d):**
+
+1. **LP CTA rate:** `funnel_cta_click` / `funnel_landing_view` — breakdown by `lp_variant` and `utm_content`
+2. **LP → quiz:** `quiz_step_viewed` where `step = q1-parent-child` / `funnel_landing_view`
+3. **Lead rate:** `quiz_lead_submitted` / `funnel_landing_view` by `lp_variant`
+4. **Book rate:** `quiz_booking_confirmed` / `quiz_lead_submitted` by `lp_variant`
+
+**Rollback trigger:** If `variant-highgpa-ap-lowsat` CTA rate trails `variant-goodgrades-lowSAT` after sample window, remap ad4+ad5 to default hook in `lib/marketing/meta-live-creatives.ts` (keep distinct `utm_content`).
+
+Legacy PostHog flag `sat-lp-variant` (`b3a-problem` / `b3b-results` / `b3c-authority`) is layout-era experiment metadata — use **`lp_variant`** for ad message-match reporting.
 
 ## Primary experiment metric
 
 - **CTA rate:** `funnel_cta_click` / `funnel_landing_view`
 - **Sample:** ~200 views per arm **or** 14 days — whichever comes first
-- **Secondary:** LP → q-who rate, lead rate, book rate by `sat_lp_variant`
+- **Secondary:** LP → `q1-parent-child` rate, lead rate, book rate by `sat_lp_variant`
 
 ## Breakdowns
 
-- `sat_lp_variant` (`b3a-problem` / `b3b-results` / `b3c-authority`)
+- `sat_lp_variant` (`b3a-problem` / `b3b-results` / `b3c-authority`) — legacy layout experiment
+- `lp_variant` (`variant-goodgrades-lowSAT` / `variant-beforetutoringmoney-realistic-score` / `variant-highgpa-ap-lowsat`) — ad message-match
 - `sat_lp_layout` (`full` / `compact`) on all LP events and `quiz_started` / `quiz_lead_submitted`
 - `section_id` on `funnel_cta_click` — full: `hero`, `science`, `great_news`, `included`, `reviews`, `how_it_works`, `final_cta` · compact: `hero`, `sticky_cta`, `final_cta`
 - `utm_campaign`, `utm_source`
@@ -119,7 +151,7 @@ Run [`ad-message-match-qa.md`](./ad-message-match-qa.md) so ad hook = LP hero wi
 | b3b | `sat-lp-b3b-results` | +182 points. On a focused path. |
 | b3c | `sat-lp-b3c-authority` | improvement path · 250k+ scores |
 
-UTMs must persist LP → `/plan?step=q-who` → s5 lead row (`sat_lp_variant` on `quiz_lead_submitted`).
+UTMs must persist LP → `/plan?step=q1-parent-child` → s5 lead row (`sat_lp_variant` on `quiz_lead_submitted`).
 
 ## Layout experiment (`sat-lp-layout`)
 
@@ -130,11 +162,11 @@ UTMs must persist LP → `/plan?step=q-who` → s5 lead row (`sat_lp_variant` on
 | Metric | Compare |
 |--------|---------|
 | Primary | `funnel_cta_click` / `funnel_landing_view` by `sat_lp_layout` |
-| Handoff | `quiz_started` or `quiz_step_viewed` where `step = q-who` |
+| Handoff | `quiz_started` or `quiz_step_viewed` where `step = q1-parent-child` |
 | Secondary | `quiz_lead_submitted`, `quiz_booking_confirmed` |
 | Guardrail | GA4 bounce on `/`; no lead/book regression on compact |
 
-**Sample:** ~200 landing views per layout **or** 14 days. **Scale compact to 100%** only if LP→q-who and lead rate match or beat full.
+**Sample:** ~200 landing views per layout **or** 14 days. **Scale compact to 100%** only if LP→`q1-parent-child` and lead rate match or beat full.
 
 **Prod QA URLs:**
 
@@ -149,7 +181,7 @@ Full hypotheses: [`2026-06-full-funnel-conversion-plan.md`](./2026-06-full-funne
 
 | Priority | Test | Primary metric | Sample | Implementation |
 |----------|------|----------------|--------|----------------|
-| **1** | `full` vs `compact` layout | LP→q-who + `funnel_cta_click` rate | ~200 views/arm or 14d | PostHog flag `sat-lp-layout` |
+| **1** | `full` vs `compact` layout | LP→`q1-parent-child` + `funnel_cta_click` rate | ~200 views/arm or 14d | PostHog flag `sat-lp-layout` |
 | **2** | b3a vs b3b vs b3c hero (within winning layout) | `funnel_cta_click` / `funnel_landing_view` | ~200 views/arm or 14d | PostHog flag `sat-lp-variant` |
 | **3** | Hero micro-copy on winner (CTA label or checklist order) | CTA + `quiz_lead_submitted` | ~200 views/arm | After test 2 winner only |
 
@@ -159,7 +191,8 @@ Full hypotheses: [`2026-06-full-funnel-conversion-plan.md`](./2026-06-full-funne
 
 On `quiz_lead_submitted` and `funnel_cta_click`, always break down by:
 
-- `sat_lp_variant`
+- `lp_variant` (message-match headline)
+- `sat_lp_variant` (legacy b3 flag)
 - `utm_campaign` (expect `sat-lp-b3a-problem` | `sat-lp-b3b-results` | `sat-lp-b3c-authority` | `fall_sat_retake` for Icon)
 - `utm_source` (e.g. `icon`, `facebook`)
 
