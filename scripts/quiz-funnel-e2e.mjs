@@ -13,19 +13,6 @@ import { chromium, devices } from "playwright";
 const BASE = process.env.FUNNEL_E2E_BASE ?? "http://localhost:3000";
 const TIMEOUT = 15_000;
 
-/** Single-select screens — option tap advances; no docked footer by design. */
-const SINGLE_SELECT_NO_FOOTER = new Set([
-  "q-who",
-  "q-score-lower",
-  "q1",
-  "q2",
-  "q3",
-  "q4",
-  "q5",
-  "q8",
-  "q9",
-]);
-
 /** Parent path with SAT history — hits all base steps through plan reveal. */
 const PARENT_SAT_ANSWERS = {
   qDoubts: ["burned-out"],
@@ -165,19 +152,6 @@ async function openStep(page, stepId) {
 async function checkStep(page, stepId, opts) {
   const ok = await openStep(page, stepId);
   if (!ok) return;
-  if (SINGLE_SELECT_NO_FOOTER.has(stepId)) {
-    const firstOpt = page.locator(".qf-opt").first();
-    if ((await firstOpt.count()) === 0) {
-      fail(stepId, "single-select missing .qf-opt");
-      return;
-    }
-    if (!(await firstOpt.isVisible())) {
-      fail(stepId, "single-select options not visible");
-      return;
-    }
-    pass(stepId, "single-select options visible (no footer by design)");
-    return;
-  }
   await assertFooterCta(page, stepId, opts);
 }
 
@@ -224,6 +198,67 @@ async function checkIStepsFooterAfterScroll(page) {
   }
 
   pass("i-steps-scroll", "CTA visible before and after max body scroll");
+}
+
+async function checkAchievabilityFooterAfterScroll(page) {
+  console.log("\n— achievability tall content (body scrolls, CTA stays docked) —");
+  await seedAnswers(page, PARENT_SAT_ANSWERS);
+  const ok = await openStep(page, "achievability");
+  if (!ok) return;
+
+  const body = page.locator(".qf-body");
+  const scrollHeight = await body.evaluate((el) => el.scrollHeight);
+  const clientHeight = await body.evaluate((el) => el.clientHeight);
+  if (scrollHeight <= clientHeight + 8) {
+    fail("achievability-scroll", "body should scroll on achievability (content taller than viewport)");
+    return;
+  }
+
+  const footer = page.locator('[role="region"][aria-label="Continue"]');
+  await footer.waitFor({ state: "visible", timeout: TIMEOUT });
+
+  const viewport = page.viewportSize();
+  let box = await footer.boundingBox();
+  if (!box || !viewport) {
+    fail("achievability-scroll", "footer not measurable");
+    return;
+  }
+  if (box.y + box.height > viewport.height + 2) {
+    fail("achievability-scroll", `footer below viewport before scroll (bottom=${Math.round(box.y + box.height)})`);
+    return;
+  }
+
+  await body.evaluate((el) => {
+    el.scrollTop = el.scrollHeight;
+  });
+  await page.waitForTimeout(200);
+
+  box = await footer.boundingBox();
+  if (!box) {
+    fail("achievability-scroll", "footer lost after body scroll");
+    return;
+  }
+  if (box.y + box.height > viewport.height + 2) {
+    fail("achievability-scroll", `footer clipped after scroll (bottom=${Math.round(box.y + box.height)})`);
+    return;
+  }
+
+  const insight = page.locator(".qf-goal-assess .qf-lead").last();
+  if ((await insight.count()) > 0) {
+    const inView = await insight.evaluate((el) => {
+      const bodyEl = el.closest(".qf-body");
+      if (!bodyEl) return false;
+      const rect = el.getBoundingClientRect();
+      const bodyRect = bodyEl.getBoundingClientRect();
+      return rect.top >= bodyRect.top && rect.bottom <= bodyRect.bottom + 1;
+    });
+    if (!inView) {
+      fail("achievability-scroll", "insight paragraph not reachable via body scroll");
+      return;
+    }
+  }
+
+  pass("achievability-scroll", "body scrolls; CTA docked; below-fold copy reachable");
 }
 
 async function checkCriticalScreens(page) {
@@ -361,6 +396,7 @@ async function main() {
 
   await checkCriticalScreens(page);
   await checkIStepsFooterAfterScroll(page);
+  await checkAchievabilityFooterAfterScroll(page);
   await checkAllRoutedSteps(page);
   await checkNavigation(page);
   await checkUtmPreserved(page);

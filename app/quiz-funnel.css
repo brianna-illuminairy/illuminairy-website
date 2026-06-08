@@ -56,7 +56,7 @@
   font-size: 15px;
   font-weight: 400;
 
-  height: auto;
+  height: 100%;
   flex: 1 1 auto;
   min-height: 0;
   max-height: 100%;
@@ -65,6 +65,14 @@
   overflow: hidden;
   position: relative;
 }
+
+/*
+ * Mobile funnel shell (locked):
+ * - .qf-page fills the viewport column (height 100%, min-height 0 on every ancestor).
+ * - Row 1: chrome (.qf-top). Row 2: scrollable content (.qf-body, overflow-y auto).
+ * - Row 3: docked CTA (.qf-footer) — always visible, never inside the scroll container.
+ * - Do not position:fixed the footer or overflow:hidden the body on tall steps.
+ */
 
 .qf-page--has-cta {
   grid-template-rows: auto minmax(0, 1fr) auto;
@@ -187,6 +195,8 @@
   grid-row: 3;
   flex: 0 0 auto;
   flex-shrink: 0;
+  align-self: end;
+  width: 100%;
   padding: 12px 20px calc(12px + env(safe-area-inset-bottom, 0px));
   background: var(--qf-bg);
   border-top: 1px solid var(--qf-line);

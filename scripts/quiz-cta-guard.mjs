@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
- * Plan Builder (/plan): screens with an explicit footer CTA must pass footer=.
- * Single-select question screens use option tap only (no footer).
+ * Plan Builder (/plan): every QFScreen must pass footer=.
+ * Shell CSS must grid-dock the footer (no position:fixed on .qf-footer).
  */
 
 import { readFileSync } from "node:fs";
@@ -14,15 +14,10 @@ const MUST_HAVE_FOOTER = [
   "app/quiz/screens/Results.jsx",
   "app/quiz/screens/Finale.tsx",
   "app/quiz/components/QFInsightHit.jsx",
+  "app/quiz/screens/Questions.jsx",
 ];
 
-/** Multi-select / form steps in Questions.jsx — must keep a footer CTA. */
-const QUESTIONS_FOOTER_EXPORTS = [
-  "QFQDoubts",
-  "QFQ6Blocker",
-  "QFQ7Tried",
-  "QFQName",
-];
+const FOOTER_BUTTON_MARKERS = ["QFButton", "QFContinueFooter", "QFSingleSelectFooter"];
 
 function fail(msg) {
   console.error(`quiz-cta-guard: ${msg}`);
@@ -62,12 +57,6 @@ function qfScreenBlocks(src) {
   return blocks;
 }
 
-function exportBlocks(src, exportName) {
-  const re = new RegExp(`export function ${exportName}\\([\\s\\S]*?(?=\\nexport function |$)`);
-  const m = src.match(re);
-  return m ? m[0] : "";
-}
-
 const errors = [];
 
 for (const rel of MUST_HAVE_FOOTER) {
@@ -89,31 +78,22 @@ for (const rel of MUST_HAVE_FOOTER) {
   blocks.forEach((block, idx) => {
     if (!block.includes("footer=")) {
       errors.push(`${rel}: QFScreen #${idx + 1} missing footer= (CTA required)`);
-    } else if (!block.includes("QFButton") && !block.includes("QFContinueFooter")) {
-      errors.push(`${rel}: QFScreen #${idx + 1} footer must include QFButton`);
+    } else if (!FOOTER_BUTTON_MARKERS.some((m) => block.includes(m))) {
+      errors.push(`${rel}: QFScreen #${idx + 1} footer must include a QF* footer button`);
     }
   });
 }
 
-const questionsPath = join(ROOT, "app/quiz/screens/Questions.jsx");
-let questionsSrc;
+const responsiveCss = join(ROOT, "app/funnel-responsive.css");
 try {
-  questionsSrc = readFileSync(questionsPath, "utf8");
-} catch {
-  errors.push("Missing file: app/quiz/screens/Questions.jsx");
-}
-
-if (questionsSrc) {
-  for (const name of QUESTIONS_FOOTER_EXPORTS) {
-    const block = exportBlocks(questionsSrc, name);
-    if (!block) {
-      errors.push(`Questions.jsx: missing export ${name}`);
-      continue;
-    }
-    if (!block.includes("footer=")) {
-      errors.push(`Questions.jsx: ${name} missing footer= (multi-select / form CTA required)`);
-    }
+  const css = readFileSync(responsiveCss, "utf8");
+  if (/\.qf-footer[\s\S]{0,120}position:\s*fixed/.test(css)) {
+    errors.push(
+      "app/funnel-responsive.css: .qf-footer must not use position:fixed — grid row 3 docks the CTA"
+    );
   }
+} catch {
+  errors.push("Missing file: app/funnel-responsive.css");
 }
 
 if (errors.length) {

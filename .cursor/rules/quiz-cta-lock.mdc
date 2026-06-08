@@ -1,5 +1,5 @@
 ---
-description: Plan Builder (/plan) — every continue QFScreen must have a docked footer CTA
+description: Plan Builder (/plan) — every QFScreen must have a docked footer CTA
 globs: app/quiz/**/*
 alwaysApply: false
 ---
@@ -10,18 +10,24 @@ alwaysApply: false
 
 ## Hard rule
 
-**Every step** on `/plan` must pass a `footer` to `QFScreen` (`QFContinueFooter` or `QFButton` on interstitials/forms). The shell docks it as grid row 3 (`.qf-footer`). **Never ship any step without a visible footer CTA.**
+**Every step** on `/plan` must pass a `footer` to `QFScreen`. The shell docks it as **grid row 3** (`.qf-footer`). Row 2 (`.qf-body`) scrolls when content is tall. **Never ship a step without a visible footer CTA.**
+
+## Mobile pattern
+
+- Grid: chrome | scrollable body | docked CTA
+- CTA always visible when `footer` is set — **no** `position: fixed` on `.qf-footer` in shell CSS
+- Never `overflow: hidden` on `.qf-body` to avoid scroll on tall steps
 
 ## Question screens
 
-- Single-select: option tap advances (no generic Continue footer unless explicitly required).
-- Multi-select / name: `QFContinueFooter`.
+- Single-select: option tap advances + `QFSingleSelectFooter` (disabled until choice)
+- Multi-select / name: `QFContinueFooter` or `QFButton`
 
 ## Do not
 
-- Remove or omit `footer` to fit tall content (e.g. i-steps Sophia card). Body scrolls; CTA stays docked.
+- Remove or omit `footer` to fit tall content (e.g. achievability, i-steps). Body scrolls; CTA stays in row 3.
 - Add custom `position: fixed` CTAs in step files.
-- Edit `QFShell.tsx` / `quiz-funnel.css` footer layout without owner unlock.
+- Edit `QFShell.tsx` / `quiz-funnel.css` / `funnel-responsive.css` footer layout without owner unlock.
 
 ## Verify
 
