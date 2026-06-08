@@ -120,7 +120,7 @@ export function QFS4PlanHandoff({
 }) {
   return (
     <QFScreen stepIdx={17} ornament="glow" onBack={onBack}
-      footer={<QFButton kind="forest" onClick={onContinue}>{ctaLabel}</QFButton>}
+      actions={<QFButton kind="forest" onClick={onContinue}>{ctaLabel}</QFButton>}
     >
       <QFPlanHandoff answers={answers} />
     </QFScreen>
@@ -360,7 +360,7 @@ export function QFS5Approved({
 
   return (
     <QFScreen stepIdx={18} ornament="glow" onBack={onBack}
-      footer={
+      actions={
         <QFButton kind="forest" onClick={handleContinue} disabled={!canSubmit}>
           {submitting ? BOOKING_FEEDBACK.confirming : footerLabel}
         </QFButton>
@@ -418,7 +418,7 @@ export function QFS7PlanDetails({
 
   return (
     <QFScreen stepIdx={20} onBack={onBack}
-      footer={<QFButton kind="forest" onClick={onContinue}>Book my SAT Strategy Call</QFButton>}
+      actions={<QFButton kind="forest" onClick={onContinue}>Book my SAT Strategy Call</QFButton>}
     >
       <div className="gap-22">
         <div>
@@ -571,7 +571,7 @@ export function QFS9ThankYou({
 
   return (
     <QFScreen stepIdx={22} showBack={false} onBack={onDone}
-      footer={
+      actions={
         <div className="qf-thank-you-footer">
           <QFButton kind="forest" onClick={onDone}>
             {THANK_YOU_DONE_CTA}
@@ -674,7 +674,7 @@ export function QFS9Booking({
 
   return (
     <QFScreen stepIdx={21} onBack={onBack}
-      footer={
+      actions={
         <QFButton
           kind="forest"
           onClick={() => window.open(fallbackUrl, "_blank", "noopener,noreferrer")}

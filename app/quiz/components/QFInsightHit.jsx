@@ -93,7 +93,7 @@ export function QFInsightHit({
       stepIdx={stepIdx}
       ornament="glow"
       onBack={onBack}
-      footer={
+      actions={
         showAutoFooter ? (
           <div className="qf-insight-hit__auto-footer" aria-hidden="true">
             <div

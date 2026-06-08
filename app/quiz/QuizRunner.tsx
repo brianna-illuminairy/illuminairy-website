@@ -36,7 +36,7 @@ import { QFProgressProvider } from './components/QFProgressContext';
 function QuizHydratingShell() {
   return (
     <QFScreen stepIdx={0} showBack={false}
-      footer={<QFContinueFooter disabled />}
+      actions={<QFContinueFooter disabled />}
     >
       <p className="qf-lead muted" aria-live="polite" style={{ marginTop: 8 }}>
         Loading your plan…

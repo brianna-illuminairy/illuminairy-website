@@ -1,49 +1,39 @@
-# Plan Builder quiz layout (`/plan`) — CTA lock
+# Plan Builder quiz layout (`/plan`) — step actions lock
 
-**Every step with a continue action must expose a visible footer CTA.** No dead-end steps.
+**Terminology:** The site **footer** is legal only (Privacy · Terms in `QFFunnelLegal`). Step **Continue** buttons live in **`.qf-step-actions`**, not the footer.
 
-## Mobile shell pattern (locked)
+## Shell layout (locked)
 
-Three-row CSS grid on `.qf-page` — **not** `position: fixed` on the footer.
+| Region | Class | Contents |
+|--------|-------|----------|
+| Chrome | `.qf-top` | Back, logo, progress |
+| Content | `.qf-body` | Step copy, options, cards — **scrolls** when tall |
+| Step actions | `.qf-step-actions` | Pinned Continue / step CTA — **not** legal links |
+| Legal footer | `.qf-funnel-legal` | Privacy · Terms only (`layout.tsx`) |
 
-| Row | Element | Behavior |
-|-----|---------|----------|
-| 1 | `.qf-top` | Chrome + progress (fixed height) |
-| 2 | `.qf-body` | **Only scroll container** (`overflow-y: auto`, `min-height: 0`) |
-| 3 | `.qf-footer` | **Docked CTA** — always visible, never inside the scroll container |
+Three-row grid on `.qf-page` when `actions` is set. Row 2 scrolls; row 3 stays visible.
 
-Ancestors (`qf-funnel-root` → `qf-funnel-column` → `qf-funnel-stage` → `qf-page`) use `height: 100%` / `100dvh` and `min-height: 0` so row 2 gets a bounded height and scroll works.
-
-**Forbidden:** `position: fixed` on `.qf-footer` in shell CSS; `overflow: hidden` on `.qf-body` for tall steps; shrinking/removing the footer to fit content.
+**Forbidden:** Putting step CTAs in `.qf-funnel-legal`; `position: fixed` on `.qf-step-actions`; `overflow: hidden` on `.qf-body` for tall steps; using `footer=` on `QFScreen` (renamed to `actions=`).
 
 ## Hard rules
 
-1. **Every step** uses `QFScreen` with a `footer` prop. No exceptions.
-2. **Single-select** — option tap advances; footer uses `QFSingleSelectFooter` (disabled until a choice; backup Continue).
-3. **Multi-select / forms / interstitials** — `QFContinueFooter` or `QFButton`. Disable until valid when required.
-4. **Shell owns CTA placement** — `QFShell.tsx` renders `.qf-footer` as grid row 3. Step files must not add custom fixed CTAs.
-5. **Tall content** — body scrolls; CTA stays in row 3 on mobile, tablet, and desktop.
+1. **Every step** passes `actions` to `QFScreen`. No dead-end screens.
+2. **Single-select** — option tap advances; `QFSingleSelectFooter` in `actions` as backup.
+3. **Multi-select / forms** — `QFButton` or `QFContinueFooter` in `actions`.
+4. **Shell owns step actions** — `QFShell.tsx` renders `.qf-step-actions` as grid row 3. Step files do not add fixed CTAs.
 
-## Locked files (layout / shell)
+## Locked files
 
 | File | Owns |
 |------|------|
-| `app/quiz/components/QFShell.tsx` | Header, progress, body slot, **grid-docked footer** |
-| `app/quiz-funnel.css` | `.qf-page--has-cta`, `.qf-footer`, `.qf-body` scroll |
-| `app/funnel-responsive.css` | Viewport height chain (`qf-funnel-stage` → `.qf-page` at `height: 100%`) |
-
-## Step file rules
-
-| Allowed | Forbidden |
-|---------|-----------|
-| `headline`, copy, body children, `onContinue` / `onBack`, `footer` prop | Custom footer CSS, `position: fixed` CTAs in step files, omitting `footer` |
+| `app/quiz/components/QFShell.tsx` | Chrome, body, **step actions** |
+| `app/quiz/components/QFFunnelLegal.tsx` | Privacy · Terms |
+| `app/quiz/layout.tsx` | Legal strip below step shell |
+| `app/quiz-funnel.css` | `.qf-page--has-actions`, `.qf-step-actions`, `.qf-body` scroll |
 
 ## Verify
 
 ```bash
-npm run funnel:cta-guard   # every QFScreen has footer=; no fixed footer in shell CSS
-npm run funnel:step-registry
-npm run funnel:e2e         # Playwright — CTA visible + tall-step scroll (needs dev server)
+npm run funnel:cta-guard
+npm run funnel:e2e
 ```
-
-`funnel:cta-guard` and `funnel:step-registry` run in `npm run agent:verify`.

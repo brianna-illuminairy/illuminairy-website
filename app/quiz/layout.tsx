@@ -5,6 +5,7 @@ import { funnelFontClassName } from "@/lib/funnel-fonts";
 import "../quiz-funnel.css";
 import "../quiz-globals.css";
 import "../funnel-responsive.css";
+import { QFFunnelLegal } from "./components/QFFunnelLegal";
 
 export const metadata: Metadata = {
   title: "SAT Improvement Plan · Illuminairy",
@@ -18,7 +19,10 @@ export default function QuizLayout({ children }: { children: React.ReactNode }) 
     <div className={`qf-funnel-root ${funnelFontClassName}`}>
       <link rel="stylesheet" href={CALENDLY_WIDGET_CSS} />
       <Script src={CALENDLY_WIDGET_JS} strategy="afterInteractive" />
-      <div className="qf-funnel-column">{children}</div>
+      <div className="qf-funnel-column">
+        <div className="qf-funnel-fill">{children}</div>
+        <QFFunnelLegal />
+      </div>
     </div>
   );
 }

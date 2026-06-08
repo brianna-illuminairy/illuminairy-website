@@ -70,11 +70,12 @@
  * Mobile funnel shell (locked):
  * - .qf-page fills the viewport column (height 100%, min-height 0 on every ancestor).
  * - Row 1: chrome (.qf-top). Row 2: scrollable content (.qf-body, overflow-y auto).
- * - Row 3: docked CTA (.qf-footer) — always visible, never inside the scroll container.
- * - Do not position:fixed the footer or overflow:hidden the body on tall steps.
+ * - Row 3: pinned step actions (.qf-step-actions) — Continue, not legal links.
+ * - Site legal footer: .qf-funnel-legal in layout (Privacy · Terms only).
+ * - Do not position:fixed step actions or overflow:hidden the body on tall steps.
  */
 
-.qf-page--has-cta {
+.qf-page--has-actions {
   grid-template-rows: auto minmax(0, 1fr) auto;
 }
 
@@ -190,14 +191,14 @@
   transition: width 0.35s ease;
 }
 
-/* Docked CTA — third grid row; body above scrolls, CTA stays in view. */
-.qf-page .qf-footer {
+/* Pinned step actions — third grid row; not the legal site footer. */
+.qf-page .qf-step-actions {
   grid-row: 3;
   flex: 0 0 auto;
   flex-shrink: 0;
   align-self: end;
   width: 100%;
-  padding: 12px 20px calc(12px + env(safe-area-inset-bottom, 0px));
+  padding: 12px 20px 12px;
   background: var(--qf-bg);
   border-top: 1px solid var(--qf-line);
   box-shadow: 0 -8px 20px rgba(18, 26, 43, 0.06);
@@ -243,9 +244,27 @@
   margin-bottom: 6px;
 }
 
-.qf-page .qf-footer {
+.qf-page .qf-step-actions {
   flex: 0 0 auto;
   flex-shrink: 0;
+}
+
+/* Legal strip only — Privacy · Terms. Lives in quiz layout, below the step shell. */
+.qf-funnel-legal {
+  flex: 0 0 auto;
+  padding: 6px 16px calc(6px + env(safe-area-inset-bottom, 0px));
+  text-align: center;
+  font-family: var(--qf-body);
+  font-size: 10px;
+  line-height: 1.4;
+  color: var(--qf-ink-mute);
+  background: var(--qf-bg);
+  border-top: 1px solid var(--qf-line);
+}
+.qf-funnel-legal a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 /* ────────────── Type primitives ────────────────── */

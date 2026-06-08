@@ -35,8 +35,8 @@ This is **not** a coursework or AIMA assignment repo. Do not apply academic “s
 ## Plan Builder quiz (`/plan`)
 
 - **Ship here:** `npm run dev` → http://localhost:3000/plan
-- **CTA lock:** **every** step passes a `footer` to `QFScreen`. See `app/quiz/LAYOUT.lock.md`, `npm run funnel:cta-guard`, and **`npm run funnel:e2e`** (Playwright — every step + navigation; requires dev server).
-- **Shell:** `app/quiz/components/QFShell.tsx` pins the footer; step files are content + `footer` prop only.
+- **Step actions lock:** **every** step passes `actions` to `QFScreen` (pinned Continue in `.qf-step-actions`). Legal footer only: `QFFunnelLegal` (Privacy · Terms). See `app/quiz/LAYOUT.lock.md`, `npm run funnel:cta-guard`, **`npm run funnel:e2e`**.
+- **Shell:** `QFShell.tsx` owns chrome + scrollable body + step actions; `layout.tsx` adds the legal strip.
 
 ## Assessment funnel (`/assessment`) — parallel to satplan
 

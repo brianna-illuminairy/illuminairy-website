@@ -11,7 +11,7 @@ import { HEARD_SUMMARY_CTA } from '@/lib/quiz-funnel/heard-summary-copy';
 export function QFSHeardSummary({ answers = {}, onContinue, onBack }) {
   return (
     <QFScreen stepIdx={13} ornament="glow" onBack={onBack}
-      footer={<QFButton kind="forest" onClick={onContinue}>{HEARD_SUMMARY_CTA}</QFButton>}
+      actions={<QFButton kind="forest" onClick={onContinue}>{HEARD_SUMMARY_CTA}</QFButton>}
     >
       <PlanHeardSummary answers={answers} />
     </QFScreen>
@@ -24,7 +24,7 @@ export function QFSPlanReveal({ answers = {}, onContinue, onBack, onEditAnswer }
 
   return (
     <QFScreen stepIdx={11} ornament="glow" onBack={onBack}
-      footer={<QFButton kind="forest" onClick={onContinue}>{REVEAL_CTA}</QFButton>}
+      actions={<QFButton kind="forest" onClick={onContinue}>{REVEAL_CTA}</QFButton>}
     >
       <PlanRevealContent
         plan={plan}

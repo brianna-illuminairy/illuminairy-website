@@ -86,7 +86,7 @@
   max-height: 100%;
 }
 
-/* CTA + scroll: grid row 3 stays visible; only .qf-body scrolls. Never position:fixed the footer. */
+/* Step actions + scroll: row 3 pinned; only .qf-body scrolls. Legal links sit in .qf-funnel-legal below. */
 
 /* Tablet portrait / small landscape */
 @media (min-width: 600px) {

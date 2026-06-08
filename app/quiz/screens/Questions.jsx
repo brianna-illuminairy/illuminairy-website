@@ -28,7 +28,7 @@ import {
 export function QFQWho({ value, onSelect, onBack }) {
   return (
     <QFScreen stepIdx={1} onBack={onBack}
-      footer={<QFSingleSelectFooter value={value} onSelect={onSelect} />}
+      actions={<QFSingleSelectFooter value={value} onSelect={onSelect} />}
     >
       <QFQuestionHead title="Who needs SAT help?" />
       <div className="qf-options">
@@ -43,7 +43,7 @@ export function QFQWho({ value, onSelect, onBack }) {
 export function QFQScoreLower({ value, onSelect, onBack, qWho = 'child' }) {
   return (
     <QFScreen stepIdx={2} onBack={onBack}
-      footer={<QFSingleSelectFooter value={value} onSelect={onSelect} />}
+      actions={<QFSingleSelectFooter value={value} onSelect={onSelect} />}
     >
       <QFQuestionHead title={scoreLowerQuestion(qWho)} />
       <div className="qf-options">
@@ -58,7 +58,7 @@ export function QFQScoreLower({ value, onSelect, onBack, qWho = 'child' }) {
 export function QFQ1Trigger({ value, onSelect, onBack }) {
   return (
     <QFScreen stepIdx={3} onBack={onBack}
-      footer={<QFSingleSelectFooter value={value} onSelect={onSelect} />}
+      actions={<QFSingleSelectFooter value={value} onSelect={onSelect} />}
     >
       <QFQuestionHead title="What feels most <em>urgent</em> right now?" />
       <div className="qf-options">
@@ -73,7 +73,7 @@ export function QFQ1Trigger({ value, onSelect, onBack }) {
 export function QFQ2Stakes({ value, onSelect, onBack, qWho = 'child' }) {
   return (
     <QFScreen stepIdx={4} onBack={onBack}
-      footer={<QFSingleSelectFooter value={value} onSelect={onSelect} />}
+      actions={<QFSingleSelectFooter value={value} onSelect={onSelect} />}
     >
       <QFQuestionHead title={stakesQuestionHtml(qWho)} />
       <div className="qf-options">
@@ -97,7 +97,7 @@ export function QFQ3TimesTaken({ value, onSelect, onBack, qWho = 'child' }) {
   ];
   return (
     <QFScreen stepIdx={5} onBack={onBack}
-      footer={<QFSingleSelectFooter value={value} onSelect={onSelect} />}
+      actions={<QFSingleSelectFooter value={value} onSelect={onSelect} />}
     >
       <QFQuestionHead title={timesTakenQuestion(qWho)} />
       <div className="qf-options">
@@ -120,7 +120,7 @@ export function QFQ4RecentScore({ value, onSelect, onBack, q3 = 'sat-1', qWho = 
   ];
   return (
     <QFScreen stepIdx={6} onBack={onBack}
-      footer={<QFSingleSelectFooter value={value} onSelect={onSelect} />}
+      actions={<QFSingleSelectFooter value={value} onSelect={onSelect} />}
     >
       <QFQuestionHead title={recentScoreQuestionHtml(qWho, hasSat)} />
       <div className="qf-options">
@@ -142,7 +142,7 @@ export function QFQDoubts({ value = [], onToggle, onContinue, onBack }) {
   const opts = DOUBTS_OPTIONS;
   return (
     <QFScreen stepIdx={7} onBack={onBack}
-      footer={<QFButton kind="forest" onClick={onContinue}>Continue</QFButton>}
+      actions={<QFButton kind="forest" onClick={onContinue}>Continue</QFButton>}
     >
       <QFQuestionHead title="Which of these have you <em>heard</em> from your child?" multiSelect />
       <div className="qf-options">
@@ -165,7 +165,7 @@ export function QFQ5Clock({ value, onSelect, onBack, qWho = 'child' }) {
   ];
   return (
     <QFScreen stepIdx={8} onBack={onBack}
-      footer={<QFSingleSelectFooter value={value} onSelect={onSelect} />}
+      actions={<QFSingleSelectFooter value={value} onSelect={onSelect} />}
     >
       <QFQuestionHead title={nextSatQuestionHtml(qWho)} />
       <div className="qf-options">
@@ -188,7 +188,7 @@ export function QFQ6Blocker({ value = [], onToggle, onContinue, onBack, qWho = '
   ];
   return (
     <QFScreen stepIdx={9} onBack={onBack}
-      footer={<QFButton kind="forest" onClick={onContinue}>Continue</QFButton>}
+      actions={<QFButton kind="forest" onClick={onContinue}>Continue</QFButton>}
     >
       <QFQuestionHead title="What seems to be the <em>problem</em>?" multiSelect />
       <div className="qf-options">
@@ -212,7 +212,7 @@ export function QFQ7Tried({ value = [], onToggle, onContinue, onBack, q3 = 'sat-
   ];
   return (
     <QFScreen stepIdx={10} onBack={onBack}
-      footer={
+      actions={
         <QFButton kind="forest" onClick={onContinue} disabled={value.length === 0}>
           Continue
         </QFButton>
@@ -238,7 +238,7 @@ export function QFQ8Goal({ value, onSelect, onBack, qWho = 'child' }) {
   ];
   return (
     <QFScreen stepIdx={12} onBack={onBack}
-      footer={<QFSingleSelectFooter value={value} onSelect={onSelect} />}
+      actions={<QFSingleSelectFooter value={value} onSelect={onSelect} />}
     >
       <QFQuestionHead title={goalScoreQuestionHtml(qWho)} />
       <div className="qf-options">
@@ -262,7 +262,7 @@ export function QFQ9GPA({ value, onSelect, onBack, qWho = 'child' }) {
   ];
   return (
     <QFScreen stepIdx={14} onBack={onBack}
-      footer={<QFSingleSelectFooter value={value} onSelect={onSelect} />}
+      actions={<QFSingleSelectFooter value={value} onSelect={onSelect} />}
     >
       <QFQuestionHead title={gpaQuestionHtml(qWho)} />
       <div className="qf-options">
@@ -281,7 +281,7 @@ export function QFQName({ value = '', onChange, onContinue, onBack, qWho = 'chil
   const trimmed = value.trim();
   return (
     <QFScreen stepIdx={15} onBack={onBack}
-      footer={<QFButton kind="forest" onClick={onContinue} disabled={!trimmed}>{NAME_CTA}</QFButton>}
+      actions={<QFButton kind="forest" onClick={onContinue} disabled={!trimmed}>{NAME_CTA}</QFButton>}
     >
       <div className="qf-question-head">
         <div className="qf-eyebrow">One last detail</div>

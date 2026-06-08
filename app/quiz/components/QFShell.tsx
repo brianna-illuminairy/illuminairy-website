@@ -13,7 +13,8 @@ type QFScreenProps = {
   wordmark?: boolean;
   tone?: 'paper' | 'ink' | 'bg-2';
   ornament?: 'glow';
-  footer?: ReactNode;
+  /** Pinned step CTA — not the site legal footer (see QFFunnelLegal). */
+  actions?: ReactNode;
   flushBody?: boolean;
   onBack?: () => void;
   children?: ReactNode;
@@ -26,7 +27,7 @@ export function QFScreen({
   wordmark = true,
   tone = 'paper',
   ornament,
-  footer,
+  actions,
   flushBody = false,
   onBack,
   children,
@@ -40,13 +41,13 @@ export function QFScreen({
     routeProgress && routeProgress.total > 0
       ? ((routeProgress.index + 1) / routeProgress.total) * 100
       : Math.max(0, Math.min(1, (stepIdx || 0) / TOTAL_STEPS)) * 100;
-  const hasCta = footer != null && footer !== false;
+  const hasActions = actions != null && actions !== false;
 
   return (
     <div
-      className={'qf-page' + (hasCta ? ' qf-page--has-cta' : '')}
+      className={'qf-page' + (hasActions ? ' qf-page--has-actions' : '')}
       style={{ color: inkColor }}
-      data-has-cta={hasCta ? 'true' : undefined}
+      data-has-actions={hasActions ? 'true' : undefined}
     >
       <div className="qf-top">
         <div className="qf-top-row">
@@ -81,14 +82,14 @@ export function QFScreen({
         </div>
       </div>
 
-      {hasCta ? (
+      {hasActions ? (
         <div
-          className="qf-footer"
+          className="qf-step-actions"
           role="region"
-          aria-label="Continue"
+          aria-label="Step actions"
           style={{ background: bodyBg, borderTopColor: tone === 'ink' ? 'rgba(255,255,255,0.1)' : undefined }}
         >
-          {footer}
+          {actions}
         </div>
       ) : null}
     </div>
@@ -170,7 +171,7 @@ export function QFButton({
   );
 }
 
-/** Pinned footer CTA for every funnel step — never ship a screen without this. */
+/** Pinned step action for continue screens — lives in .qf-step-actions, not the legal footer. */
 export function QFContinueFooter({
   disabled,
   onClick,
@@ -187,7 +188,7 @@ export function QFContinueFooter({
   );
 }
 
-/** Single-select: option tap still advances; footer is always visible as backup. */
+/** Single-select: option tap advances; pinned Continue is backup in .qf-step-actions. */
 export function QFSingleSelectFooter({
   value,
   onSelect,

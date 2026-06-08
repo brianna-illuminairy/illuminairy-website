@@ -36,7 +36,7 @@ export function QFIDoubtsInsight({ onContinue, onBack, qDoubts = [] }) {
   const c = DOUBTS_INSIGHT_COPY;
   return (
     <QFScreen stepIdx={4} ornament="glow" onBack={onBack}
-      footer={<QFButton kind="forest" onClick={onContinue}>{c.cta}</QFButton>}
+      actions={<QFButton kind="forest" onClick={onContinue}>{c.cta}</QFButton>}
     >
       <div className="gap-22" style={{ marginTop: 4 }}>
         <h1 className="qf-h1" style={{ marginBottom: 0 }}>{c.headline}</h1>
@@ -177,7 +177,7 @@ export function QFI2Compute({
 
   return (
     <QFScreen stepIdx={14} tone="ink" onBack={onBack}
-      footer={
+      actions={
         showDone ? (
           <QFButton kind="forest" onClick={onContinue}>Reveal {possessive} plan</QFButton>
         ) : (
@@ -245,7 +245,7 @@ export function QFIHopeScreen({ onContinue, onBack, q5 = 'oct3' }) {
   const o = satFirstMonthOutcomes;
   return (
     <QFScreen stepIdx={6} ornament="glow" onBack={onBack}
-      footer={<QFButton kind="forest" onClick={onContinue}>Continue Building My Plan</QFButton>}
+      actions={<QFButton kind="forest" onClick={onContinue}>Continue Building My Plan</QFButton>}
     >
       <div className="gap-22" style={{ marginTop: 4 }}>
         <h1 className="qf-h1" style={{ marginBottom: 0 }}>
@@ -299,7 +299,7 @@ export function QFI3Bridge({ onContinue, onBack, q5 = 'oct3' }) {
   const hasDate = daysToTest && dateNumeric;
   return (
     <QFScreen stepIdx={11} ornament="glow" onBack={onBack}
-      footer={<QFButton kind="forest" onClick={onContinue}>One more question</QFButton>}
+      actions={<QFButton kind="forest" onClick={onContinue}>One more question</QFButton>}
     >
       <div className="gap-22" style={{ marginTop: 4 }}>
         <p className="qf-lead">
@@ -329,7 +329,7 @@ const GAP_Q9_LABEL = {
 export function QFIGPAGap({ onContinue, onBack, q4 = '1200-1300', q9 = '3.8-4.0' }) {
   return (
     <QFScreen stepIdx={13} onBack={onBack}
-      footer={<QFButton kind="forest" onClick={onContinue}>{I_GAP_CTA}</QFButton>}
+      actions={<QFButton kind="forest" onClick={onContinue}>{I_GAP_CTA}</QFButton>}
     >
       <div className="gap-22" style={{ marginTop: 4 }}>
         <h1 className="qf-h1">
@@ -452,7 +452,7 @@ export function QFIComparePrep({ onContinue, onBack, q7 = ['khan'] }) {
 
   return (
     <QFScreen stepIdx={9} onBack={onBack}
-      footer={<QFButton kind="forest" onClick={onContinue}>{I_COMPARE_CTA}</QFButton>}
+      actions={<QFButton kind="forest" onClick={onContinue}>{I_COMPARE_CTA}</QFButton>}
     >
       <div className="gap-22" style={{ marginTop: 4 }}>
         <h1 className="qf-h1" style={{ marginBottom: 0 }}>
@@ -551,7 +551,7 @@ export function QFV1Projection({ onContinue, onBack, answers = {} }) {
 
   return (
     <QFScreen stepIdx={15} ornament="glow" onBack={onBack}
-      footer={<QFButton kind="forest" onClick={onContinue}>{V1_CTA}</QFButton>}
+      actions={<QFButton kind="forest" onClick={onContinue}>{V1_CTA}</QFButton>}
     >
       <div className="gap-22">
         {/* Plan — one container so it reads as a real plan */}
@@ -760,7 +760,7 @@ export function QFIDiagnosis({ onContinue, onBack, q3 = 'sat-1', q4 = '1200-1300
 
   return (
     <QFScreen stepIdx={8} onBack={onBack}
-      footer={<QFButton kind="forest" onClick={onContinue}>See the results</QFButton>}
+      actions={<QFButton kind="forest" onClick={onContinue}>See the results</QFButton>}
     >
       <div className="gap-22" style={{ marginTop: 4 }}>
         <h1 className="qf-h1" style={{ marginBottom: 0 }}>
@@ -990,7 +990,7 @@ function QFExamplePlanCard() {
 export function QFISteps({ onContinue, onBack }) {
   return (
     <QFScreen stepIdx={4} onBack={onBack}
-      footer={<QFButton kind="forest" onClick={onContinue}>Build their plan</QFButton>}
+      actions={<QFButton kind="forest" onClick={onContinue}>Build their plan</QFButton>}
     >
       <div className="gap-22">
         <h1 className="qf-h1" style={{ marginBottom: 0 }}>

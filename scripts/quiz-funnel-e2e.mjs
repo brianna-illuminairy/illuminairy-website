@@ -83,12 +83,12 @@ async function waitForHydration(page) {
 }
 
 async function assertFooterCta(page, stepId, { allowDisabled = true } = {}) {
-  const footer = page.locator('[role="region"][aria-label="Continue"]');
+  const footer = page.locator('[role="region"][aria-label="Step actions"]');
   await footer.waitFor({ state: "visible", timeout: TIMEOUT });
 
-  const pageRoot = page.locator(".qf-page--has-cta");
+  const pageRoot = page.locator(".qf-page--has-actions");
   if ((await pageRoot.count()) === 0) {
-    fail(stepId, "missing .qf-page--has-cta on shell");
+    fail(stepId, "missing .qf-page--has-actions on shell");
     return false;
   }
 
@@ -161,7 +161,7 @@ async function checkIStepsFooterAfterScroll(page) {
   const ok = await openStep(page, "i-steps");
   if (!ok) return;
 
-  const footer = page.locator('[role="region"][aria-label="Continue"]');
+  const footer = page.locator('[role="region"][aria-label="Step actions"]');
   await footer.waitFor({ state: "visible", timeout: TIMEOUT });
 
   const viewport = page.viewportSize();
@@ -214,7 +214,7 @@ async function checkAchievabilityFooterAfterScroll(page) {
     return;
   }
 
-  const footer = page.locator('[role="region"][aria-label="Continue"]');
+  const footer = page.locator('[role="region"][aria-label="Step actions"]');
   await footer.waitFor({ state: "visible", timeout: TIMEOUT });
 
   const viewport = page.viewportSize();
@@ -310,12 +310,12 @@ async function checkAllRoutedSteps(page) {
 
   // i2 compute: wait for animation CTA to enable
   await openStep(page, "i2");
-  const footer = page.locator('[role="region"][aria-label="Continue"] button.qf-btn');
+  const footer = page.locator('[role="region"][aria-label="Step actions"] button.qf-btn');
   try {
     await footer.waitFor({ state: "visible", timeout: TIMEOUT });
     await page.waitForFunction(
       () => {
-        const btn = document.querySelector('[aria-label="Continue"] button.qf-btn');
+        const btn = document.querySelector('[aria-label="Step actions"] button.qf-btn');
         return btn && !btn.disabled;
       },
       { timeout: 20_000 }
