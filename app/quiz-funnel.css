@@ -56,28 +56,18 @@
   font-size: 15px;
   font-weight: 400;
 
-  height: 100%;
-  flex: 1 1 auto;
-  min-height: 0;
-  max-height: 100%;
-  display: grid;
-  grid-template-rows: auto minmax(0, 1fr);
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
   position: relative;
+  min-height: 0;
 }
 
 /*
- * Mobile funnel shell (locked):
- * - .qf-page fills the viewport column (height 100%, min-height 0 on every ancestor).
- * - Row 1: chrome (.qf-top). Row 2: scrollable content (.qf-body, overflow-y auto).
- * - Row 3: pinned step actions (.qf-step-actions) — Continue, not legal links.
- * - Site legal footer: .qf-funnel-legal in layout (Privacy · Terms only).
- * - Do not position:fixed step actions or overflow:hidden the body on tall steps.
+ * Step shell (locked) — see docs/funnel-mobile-shell.md
+ * .qf-top (shrink 0) · .qf-body (flex 1, scroll) · .qf-step-actions (shrink 0, actions= prop)
+ * Height chain: funnel-responsive.css — not per-step heights.
  */
-
-.qf-page--has-actions {
-  grid-template-rows: auto minmax(0, 1fr) auto;
-}
 
 .qf-page, .qf-page *, .qf-page *::before, .qf-page *::after {
   box-sizing: border-box;
@@ -85,7 +75,6 @@
 
 /* ────────────── Dark chrome band (top) ────────────────── */
 .qf-page .qf-top {
-  grid-row: 1;
   flex: 0 0 auto;
   background: var(--qf-ink);
   color: #F5F8FA;
@@ -191,12 +180,10 @@
   transition: width 0.35s ease;
 }
 
-/* Pinned step actions — third grid row; not the legal site footer. */
+/* Pinned step actions — flex footer row; not the legal site footer. */
 .qf-page .qf-step-actions {
-  grid-row: 3;
   flex: 0 0 auto;
   flex-shrink: 0;
-  align-self: end;
   width: 100%;
   padding: 12px 20px 12px;
   background: var(--qf-bg);
@@ -206,7 +193,6 @@
 }
 
 .qf-page .qf-body {
-  grid-row: 2;
   flex: 1 1 auto;
   min-height: 0;
   overflow-x: hidden;
@@ -244,9 +230,10 @@
   margin-bottom: 6px;
 }
 
-.qf-page .qf-step-actions {
-  flex: 0 0 auto;
-  flex-shrink: 0;
+.qf-page--skeleton {
+  flex: 1 1 auto;
+  min-height: 0;
+  background: var(--qf-bg);
 }
 
 /* Legal strip only — Privacy · Terms. Lives in quiz layout, below the step shell. */
@@ -776,6 +763,16 @@
 .qf-page .qf-question-head--multi + .qf-options {
   margin-top: 4px;
 }
+
+/* Single-select intake — compact rows; 15px type unchanged */
+.qf-page .qf-question-head:not(.qf-question-head--multi) + .qf-options {
+  gap: 8px;
+}
+.qf-page .qf-question-head:not(.qf-question-head--multi) + .qf-options .qf-opt {
+  min-height: 52px;
+  padding: 14px 16px;
+}
+
 .qf-page .qf-opt {
   appearance: none;
   background: var(--qf-card);
@@ -1785,7 +1782,13 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  margin-bottom: 4px;
+  margin-bottom: 0;
+}
+.qf-page .qf-goal-assess__stakes {
+  margin-bottom: 2px;
+}
+.qf-page .qf-goal-assess__hero .qf-achv-inputs {
+  margin: 0;
 }
 .qf-page .qf-goal-assess__eyebrow {
   color: var(--qf-forest);
@@ -1801,6 +1804,9 @@
 .qf-page .qf-goal-assess__hero .qf-lead {
   margin: 0;
   max-width: 36em;
+}
+.qf-page .qf-goal-assess__hit-rate {
+  margin: 0;
 }
 .qf-page .qf-goal-assess__callout {
   display: flex;
@@ -1819,7 +1825,7 @@
 }
 .qf-page .qf-achv-stats {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   border: 1px solid var(--qf-line);
   border-radius: 14px;
   background: var(--qf-paper);
@@ -1830,8 +1836,8 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 2px;
-  padding: 10px 2px;
+  gap: 3px;
+  padding: 12px 3px;
   text-align: center;
   min-width: 0;
 }
@@ -1840,11 +1846,14 @@
 }
 .qf-page .qf-achv-stats__value {
   font-family: var(--qf-display);
-  font-size: clamp(13px, 3.4vw, 18px);
+  font-size: clamp(17px, 4.6vw, 23px);
   font-weight: 700;
   line-height: 1.05;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
   color: var(--qf-ink);
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .qf-page .qf-achv-stats__value--accent {
   color: var(--qf-forest);
@@ -1867,6 +1876,12 @@
   margin: 0;
   text-align: center;
   color: var(--qf-ink-mute);
+  font-family: var(--qf-body);
+  font-size: clamp(10px, 2.65vw, 11px);
+  line-height: 1.35;
+  letter-spacing: normal;
+  font-weight: 500;
+  text-transform: none;
 }
 .qf-page .qf-achv-start-note {
   margin: 0;

@@ -42,8 +42,8 @@ export function QFPlanHandoff({ answers = {} }) {
         </div>
 
         <ul className="qf-plan-handoff__list">
-          {handoff.items.map((item) => (
-            <li key={item.title} className="qf-plan-handoff__item">
+          {handoff.items.map((item, index) => (
+            <li key={`handoff-${index}`} className="qf-plan-handoff__item">
               <span className="qf-plan-handoff__item-check" aria-hidden="true">
                 ✓
               </span>

@@ -1,120 +1,234 @@
 #!/usr/bin/env node
 /**
- * Plan Builder (/plan): every QFScreen must pass actions= (not footer=).
- * Step CTAs live in .qf-step-actions; legal links only in .qf-funnel-legal.
+ * Plan Builder (/plan): mobile shell + step interaction modes (no invented CTAs).
+ * Spec: docs/funnel-mobile-shell.md · Registry: lib/quiz-funnel/step-interaction.mjs
  */
 
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
+import { spawnSync } from "node:child_process";
+import {
+  STEP_INTERACTION,
+  AUTO_ADVANCE_STEPS,
+} from "../lib/quiz-funnel/step-interaction.mjs";
 
 const ROOT = process.cwd();
+const UNLOCK = process.env.FUNNEL_LAYOUT_UNLOCK === "1";
 
-const MUST_HAVE_ACTIONS = [
-  "app/quiz/screens/Interstitials.jsx",
-  "app/quiz/screens/Results.jsx",
-  "app/quiz/screens/Finale.tsx",
-  "app/quiz/components/QFInsightHit.jsx",
-  "app/quiz/screens/Questions.jsx",
+const LOCKED_SHELL = [
+  "app/funnel-responsive.css",
+  "app/quiz-globals.css",
+  "app/quiz/components/QFShell.tsx",
+  "app/quiz/layout.tsx",
+  "app/quiz/page.tsx",
+  "app/quiz/components/QFProgressContext.tsx",
+  "app/quiz/state.tsx",
 ];
 
-const ACTION_BUTTON_MARKERS = ["QFButton", "QFContinueFooter", "QFSingleSelectFooter"];
+const STEP_SCAN_DIRS = ["app/quiz/screens", "app/quiz/components"];
+
+const STEP_EXEMPT = new Set([
+  "app/quiz/components/QFShell.tsx",
+  "app/quiz/components/QFFunnelLegal.tsx",
+  "app/quiz/components/QFProgressContext.tsx",
+]);
+
+const STEP_FORBIDDEN = [
+  { re: /minHeight:\s*['"]100(d)?vh/i, msg: "inline minHeight 100vh/dvh — fix shell chain, not step file" },
+  { re: /height:\s*['"]100(d)?vh/i, msg: "inline height 100vh/dvh — fix shell chain, not step file" },
+  { re: /style=\{\{[^}]*100(d)?vh/i, msg: "inline style viewport height in step file" },
+  { re: /<QFScreen[^>]*\sfooter=/, msg: "use actions= on QFScreen, not footer=" },
+];
+
+function gitChangedPaths() {
+  const out = new Set();
+  for (const args of [["diff", "--name-only", "HEAD"], ["diff", "--cached", "--name-only"]]) {
+    const r = spawnSync("git", args, { cwd: ROOT, encoding: "utf8" });
+    if (r.status !== 0) continue;
+    for (const line of (r.stdout || "").split("\n")) {
+      const t = line.trim();
+      if (t) out.add(t);
+    }
+  }
+  return out;
+}
+
+function listFilesUnder(dirRel) {
+  const abs = join(ROOT, dirRel);
+  const out = [];
+  for (const ent of readdirSync(abs, { withFileTypes: true })) {
+    const p = join(dirRel, ent.name);
+    if (ent.isDirectory()) out.push(...listFilesUnder(p));
+    else if (/\.(tsx|ts|jsx|js)$/.test(ent.name)) out.push(p);
+  }
+  return out;
+}
 
 function fail(msg) {
   console.error(`quiz-cta-guard: ${msg}`);
   process.exitCode = 1;
 }
 
-function qfScreenBlocks(src) {
-  const blocks = [];
-  let i = 0;
-  while (i < src.length) {
-    const start = src.indexOf("<QFScreen", i);
-    if (start < 0) break;
-    let depth = 0;
-    let j = start;
-    let end = -1;
-    while (j < src.length) {
-      if (src.startsWith("<QFScreen", j)) {
-        depth += 1;
-        j += 9;
-        continue;
-      }
-      if (src.startsWith("</QFScreen>", j)) {
-        depth -= 1;
-        j += 11;
-        if (depth === 0) {
-          end = j;
-          break;
-        }
-        continue;
-      }
-      j += 1;
-    }
-    if (end < 0) break;
-    blocks.push(src.slice(start, end));
-    i = end;
-  }
-  return blocks;
-}
-
 const errors = [];
 
-for (const rel of MUST_HAVE_ACTIONS) {
-  const abs = join(ROOT, rel);
+if (!UNLOCK) {
+  for (const path of LOCKED_SHELL) {
+    if (gitChangedPaths().has(path)) {
+      errors.push(
+        `Locked shell file modified: ${path}. Set FUNNEL_LAYOUT_UNLOCK=1 only with owner approval.`
+      );
+    }
+  }
+}
+
+for (const relPath of STEP_SCAN_DIRS.flatMap(listFilesUnder)) {
+  if (STEP_EXEMPT.has(relPath)) continue;
   let src;
   try {
-    src = readFileSync(abs, "utf8");
+    src = readFileSync(join(ROOT, relPath), "utf8");
   } catch {
-    errors.push(`Missing file: ${rel}`);
     continue;
   }
-
-  if (src.includes("footer=")) {
-    errors.push(`${rel}: use actions= on QFScreen — footer is legal-only (QFFunnelLegal)`);
+  for (const { re, msg } of STEP_FORBIDDEN) {
+    if (re.test(src)) errors.push(`${relPath}: ${msg}`);
   }
-
-  const blocks = qfScreenBlocks(src);
-  if (!blocks.length) {
-    errors.push(`${rel}: no QFScreen usage found`);
-    continue;
+  if (src.includes("footer=") && src.includes("<QFScreen")) {
+    errors.push(`${relPath}: use actions= on QFScreen — footer is legal-only (QFFunnelLegal)`);
   }
+}
 
-  blocks.forEach((block, idx) => {
-    if (!block.includes("actions=")) {
-      errors.push(`${rel}: QFScreen #${idx + 1} missing actions= (step CTA required)`);
-    } else if (!ACTION_BUTTON_MARKERS.some((m) => block.includes(m))) {
-      errors.push(`${rel}: QFScreen #${idx + 1} actions must include a QF* button`);
-    }
-  });
+const runnerPath = join(ROOT, "app/quiz/QuizRunner.tsx");
+let runnerSrc = "";
+try {
+  runnerSrc = readFileSync(runnerPath, "utf8");
+} catch {
+  errors.push("Missing file: app/quiz/QuizRunner.tsx");
+}
+
+for (const stepId of AUTO_ADVANCE_STEPS) {
+  const caseRe = new RegExp(`case '${stepId.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}':[\\s\\S]*?break;`, "m");
+  const block = runnerSrc.match(caseRe)?.[0] ?? "";
+  if (!block.includes("QFInsightHit")) {
+    errors.push(`QuizRunner ${stepId}: auto-advance steps must use QFInsightHit`);
+  } else if (/\bmanual\b/.test(block)) {
+    errors.push(`QuizRunner ${stepId}: auto-advance must not pass manual to QFInsightHit`);
+  }
+}
+
+const manualHit = runnerSrc.match(/case 'hit-q7':[\s\S]*?break;/)?.[0] ?? "";
+if (manualHit && !/\bmanual\b/.test(manualHit)) {
+  errors.push("QuizRunner hit-q7: manual insight must pass manual to QFInsightHit");
+}
+
+const insightHitPath = join(ROOT, "app/quiz/components/QFInsightHit.jsx");
+try {
+  const src = readFileSync(insightHitPath, "utf8");
+  if (!src.includes("qf-insight-hit__auto-footer")) {
+    errors.push("QFInsightHit.jsx: auto-advance must use progress footer, not invented CTA");
+  }
+  if (!src.includes("prefers-reduced-motion")) {
+    errors.push("QFInsightHit.jsx: reduced motion must fall back to explicit Continue");
+  }
+} catch {
+  errors.push("Missing file: app/quiz/components/QFInsightHit.jsx");
 }
 
 const responsiveCss = join(ROOT, "app/funnel-responsive.css");
 try {
   const css = readFileSync(responsiveCss, "utf8");
-  if (/\.qf-step-actions[\s\S]{0,120}position:\s*fixed/.test(css)) {
-    errors.push(
-      "app/funnel-responsive.css: .qf-step-actions must not use position:fixed — grid row 3 pins actions"
-    );
+  if (!css.includes("FUNNEL-MOBILE-SHELL-START") || !css.includes("FUNNEL-MOBILE-SHELL-END")) {
+    errors.push("app/funnel-responsive.css: missing FUNNEL-MOBILE-SHELL markers");
+  }
+  if (!/\.qf-funnel-root\s*\{[\s\S]*?--qf-viewport-h:\s*100dvh/.test(css)) {
+    errors.push("app/funnel-responsive.css: .qf-funnel-root must anchor viewport with --qf-viewport-h");
   }
 } catch {
   errors.push("Missing file: app/funnel-responsive.css");
+}
+
+const funnelCss = join(ROOT, "app/quiz-funnel.css");
+try {
+  const css = readFileSync(funnelCss, "utf8");
+  const pageShell = css.match(/\.qf-page\s*\{[\s\S]*?\n\}/)?.[0] ?? "";
+  if (!pageShell.includes("display: flex") || !pageShell.includes("flex-direction: column")) {
+    errors.push("app/quiz-funnel.css: .qf-page shell must be flex column (pinned CTAs)");
+  }
+  if (pageShell.includes("display: grid")) {
+    errors.push("app/quiz-funnel.css: .qf-page shell must not use display:grid");
+  }
+  if (/100dvh|100svh|100vh/.test(pageShell)) {
+    errors.push("app/quiz-funnel.css: .qf-page must not set viewport units — use funnel-responsive.css");
+  }
+  const actionsRule =
+    css.match(/\.qf-page \.qf-step-actions\s*\{[\s\S]*?\n\}/)?.[0] ?? "";
+  if (actionsRule.includes("position: fixed") || actionsRule.includes("position:fixed")) {
+    errors.push("app/quiz-funnel.css: .qf-step-actions must not use position:fixed");
+  }
+  if (!/\.qf-page \.qf-body\s*\{[\s\S]*?min-height:\s*0/.test(css)) {
+    errors.push("app/quiz-funnel.css: .qf-body needs min-height:0 for scroll + pinned actions");
+  }
+} catch {
+  errors.push("Missing file: app/quiz-funnel.css");
+}
+
+const globalsCss = join(ROOT, "app/quiz-globals.css");
+try {
+  const css = readFileSync(globalsCss, "utf8");
+  if (!/main\.funnel-main:has\(\.qf-funnel-root\)/.test(css)) {
+    errors.push("app/quiz-globals.css: missing funnel-main flex bridge");
+  }
+  if (/100dvh|100svh/.test(css)) {
+    errors.push("app/quiz-globals.css: viewport units belong only in funnel-responsive.css");
+  }
+} catch {
+  errors.push("Missing file: app/quiz-globals.css");
 }
 
 const shellPath = join(ROOT, "app/quiz/components/QFShell.tsx");
 try {
   const shell = readFileSync(shellPath, "utf8");
   if (shell.includes("footer?:") || shell.includes("footer,")) {
-    errors.push("QFShell.tsx: remove footer prop — use actions for step CTAs");
+    errors.push("QFShell.tsx: remove footer prop — use actions for step chrome");
+  }
+  if (!shell.includes('aria-label="Step actions"')) {
+    errors.push("QFShell.tsx: step chrome region keeps aria-label=\"Step actions\" for e2e");
   }
 } catch {
   errors.push("Missing file: app/quiz/components/QFShell.tsx");
 }
 
+const pagePath = join(ROOT, "app/quiz/page.tsx");
+try {
+  const page = readFileSync(pagePath, "utf8");
+  if (/100(d)?vh/.test(page)) {
+    errors.push("app/quiz/page.tsx: no viewport height inline — use qf-page--skeleton");
+  }
+} catch {
+  errors.push("Missing file: app/quiz/page.tsx");
+}
+
+const registrySteps = new Set(Object.keys(STEP_INTERACTION));
+if (runnerSrc) {
+  const baseMatch = runnerSrc.match(/const BASE_STEPS = \[([\s\S]*?)\];/);
+  if (baseMatch) {
+    for (const m of baseMatch[1].matchAll(/'([^']+)'/g)) {
+      if (!registrySteps.has(m[1])) {
+        errors.push(`step-interaction.mjs: missing mode for routed step "${m[1]}"`);
+      }
+    }
+  }
+  for (const id of ["hit-q3-none", "doubts-insight", "hit-q5-tbd", "hit-q8-scores", "i-gap", "booked", "reveal", "s1"]) {
+    if (runnerSrc.includes(`case '${id}':`) && !registrySteps.has(id)) {
+      errors.push(`step-interaction.mjs: missing mode for conditional step "${id}"`);
+    }
+  }
+}
+
 if (errors.length) {
   for (const e of errors) fail(e);
-  console.error("\nSee app/quiz/LAYOUT.lock.md");
+  console.error("\nSee docs/funnel-mobile-shell.md and lib/quiz-funnel/step-interaction.mjs");
 } else {
-  console.log("quiz-cta-guard passed");
+  console.log("quiz-cta-guard passed (mobile shell + step interaction modes)");
 }
 
 process.exit(process.exitCode ?? 0);

@@ -4,12 +4,9 @@ import { GOAL_FEASIBILITY_TIER_ORDER } from '@/lib/quiz-funnel/goal-achievabilit
 
 const AMBITIOUS_INDEX = GOAL_FEASIBILITY_TIER_ORDER.indexOf('ambitious');
 
-export function AchievabilityStatBar({ stats, startingLabel }) {
+export function AchievabilityStatBar({ stats }) {
   const cells = [
-    ...(startingLabel
-      ? [{ value: startingLabel, label: 'Starting (est.)', accent: true }]
-      : []),
-    { value: stats.scoreGap != null ? `+${stats.scoreGap}` : '—', label: 'Score gap', accent: !startingLabel },
+    { value: stats.scoreGap != null ? `+${stats.scoreGap}` : '—', label: 'Score gap', accent: true },
     { value: stats.testDateShort ?? 'Flexible', label: 'Test date', accent: false },
     { value: stats.daysToTest != null ? String(stats.daysToTest) : '—', label: 'Days to test', accent: true },
     { value: stats.ptsPerWeek != null ? `+${stats.ptsPerWeek}` : '—', label: 'Pts / wk', accent: false },
@@ -71,7 +68,7 @@ export function AchievabilityPlanBlock({
 }) {
   return (
     <div className="qf-goal-assess__callout">
-      <AchievabilityStatBar stats={stats} startingLabel={startingScoreLabel} />
+      <AchievabilityStatBar stats={stats} />
       {startingScoreNote ? (
         <p className="qf-caption qf-achv-start-note">{startingScoreNote}</p>
       ) : null}
@@ -83,7 +80,7 @@ export function AchievabilityPlanBlock({
           educational={educational}
         />
         {outcomesMeta ? (
-          <p className="qf-meta qf-achv-outcomes-label">{outcomesMeta}</p>
+          <p className="qf-achv-outcomes-label">{outcomesMeta}</p>
         ) : null}
       </div>
       {projectedRangeLine ? (
@@ -103,8 +100,6 @@ export function AchievabilityRating({ assessment, label = 'Goal score achievabil
         tierIndex={assessment.tierIndex}
         tierRanges={assessment.tierRanges}
         educational={!assessment.stats.hasKnownGoal}
-        outcomesMeta={assessment.outcomesMeta}
-        projectedRangeLine={assessment.projectedRangeLine}
         ratingLabel={label}
       />
     </div>

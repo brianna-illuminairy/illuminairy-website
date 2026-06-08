@@ -7,7 +7,6 @@ import { QFOption } from './QFShell';
 import { captureAchievabilityInputEdited } from '@/lib/quiz-funnel/analytics';
 import {
   ACHIEVABILITY_FIELD_TO_ANSWER_KEY,
-  ACHIEVABILITY_INPUTS_HEADLINE,
   buildAchievabilityInputChips,
   optionsForAchievabilityField,
   pickerFieldForChip,
@@ -116,7 +115,6 @@ export function AchievabilityInputChips({
 
   return (
     <div className="qf-achv-inputs">
-      <p className="qf-caption qf-achv-inputs-headline">{ACHIEVABILITY_INPUTS_HEADLINE}</p>
       <div className="qf-achv-input-chips" role="group" aria-label="Edit plan inputs">
         {chips.map((chip) => (
           <button

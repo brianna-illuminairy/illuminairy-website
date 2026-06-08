@@ -35,8 +35,8 @@ This is **not** a coursework or AIMA assignment repo. Do not apply academic “s
 ## Plan Builder quiz (`/plan`)
 
 - **Ship here:** `npm run dev` → http://localhost:3000/plan
-- **Step actions lock:** **every** step passes `actions` to `QFScreen` (pinned Continue in `.qf-step-actions`). Legal footer only: `QFFunnelLegal` (Privacy · Terms). See `app/quiz/LAYOUT.lock.md`, `npm run funnel:cta-guard`, **`npm run funnel:e2e`**.
-- **Shell:** `QFShell.tsx` owns chrome + scrollable body + step actions; `layout.tsx` adds the legal strip.
+- **Mobile shell + step interaction:** flex viewport shell — `docs/funnel-mobile-shell.md`. Step modes in `lib/quiz-funnel/step-interaction.mjs` (auto-advance, option-tap, explicit CTA, etc.). Do not invent CTAs. Legal footer only: `QFFunnelLegal`. See `app/quiz/LAYOUT.lock.md`, `npm run funnel:cta-guard`, **`npm run funnel:e2e`**.
+- **Shell:** `QFShell.tsx` owns chrome + scrollable body + step actions; `layout.tsx` adds the legal strip. Shell CSS in `funnel-responsive.css` (`FUNNEL-MOBILE-SHELL` block).
 
 ## Assessment funnel (`/assessment`) — parallel to satplan
 
@@ -68,7 +68,7 @@ Non-trivial features: start with a spec. End sessions: update memory-bank.
 2. **Brand voice** — Follow [`docs/brand-voice-and-positioning.md`](docs/brand-voice-and-positioning.md). Parent/funnel messaging (Score Path, stats, banned patterns): [`docs/messaging-guide.md`](docs/messaging-guide.md). SAT-specific angles: [`docs/sat-messaging-positioning.md`](docs/sat-messaging-positioning.md). Avoid “cohort”; use parent-friendly language.
 3. **Secrets** — Never commit `.env.local`, API keys, or webhook secrets. Use `.env.example` as the template.
 4. **Invite-only links** — `TUTOR_CALENDLY_URL` / `lib/internal-links.ts` tutor interview URL is **email-only after vetting**. Never surface it in public pages, sitemaps, or client bundles.
-5. **Deploy path** — Vercel production; DNS for `illuminairy.com` points to Vercel. Env sync: `npm run env:sync` then `npm run deploy:prod` (or `npm run release`).
+5. **Deploy path** — **Git → Vercel auto-deploy** on push to `main`. Ship: `npm run agent:verify` → commit → `npm run release` (push + smoke). Full guide: [`docs/deploy.md`](docs/deploy.md). **Do not** `npm run deploy:cli` / `deploy:prod` except emergencies (`DEPLOY_CLI_OK=1`); CLI uploads local files and drifts from git. Env-only changes: `npm run env:sync` then push to redeploy.
 
 ## Code conventions
 

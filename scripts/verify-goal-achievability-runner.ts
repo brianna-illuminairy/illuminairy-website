@@ -86,7 +86,6 @@ const Q6_CASES: Case[] = [
     expect: {
       skillSubject: null,
       skillDetailIncludes: "rank the handful",
-      insightIncludes: "pts per week",
       prepNull: true,
     },
   },
@@ -155,7 +154,6 @@ const SCORE_CASES: Case[] = [
       tier: ["ambitious", "aggressive"],
       pointsIncludes: ["Sept 12", "+250"],
       outcomesIncludes: "1,500+",
-      insightIncludes: "smart and capable",
       insightExcludes: "calculator pacing",
     },
   },
@@ -417,36 +415,28 @@ function assertCase(testCase: Case): string[] {
   if (exp.outcomesIncludes && !result.outcomesMeta.includes(exp.outcomesIncludes)) {
     errors.push(`outcomesMeta missing "${exp.outcomesIncludes}": ${result.outcomesMeta}`);
   }
-  if (result.insightParagraph.includes("Skill Diagnostic")) {
-    errors.push("insightParagraph must not repeat Skill Diagnostic pitch");
+  if (result.insightParagraph.trim()) {
+    if (result.insightParagraph.includes("Skill Diagnostic")) {
+      errors.push("insightParagraph must not repeat Skill Diagnostic pitch");
+    }
+    if (result.insightParagraph.includes("Improvement Plan")) {
+      errors.push("insightParagraph must not repeat Improvement Plan pitch");
+    }
+    if (result.insightParagraph.includes("once they fix")) {
+      errors.push("insightParagraph must not list timing/content fixes");
+    }
+    if (result.insightParagraph.includes("You reported")) {
+      errors.push("insightParagraph must not echo Q6 selections");
+    }
+    if (result.insightParagraph.includes("—")) {
+      errors.push("insightParagraph must not use em dashes");
+    }
+    if (/last-test/i.test(result.insightParagraph)) {
+      errors.push('insightParagraph must not use "last-test"');
+    }
   }
-  if (result.insightParagraph.includes("Improvement Plan")) {
-    errors.push("insightParagraph must not repeat Improvement Plan pitch");
-  }
-  const expectedSentences = 1;
-  const sentenceCount = countInsightSentences(result.insightParagraph);
-  if (sentenceCount !== expectedSentences) {
-    errors.push(
-      `insightParagraph must be exactly ${expectedSentences} sentences, got ${sentenceCount}: ${result.insightParagraph}`
-    );
-  }
-  if (
-    !result.insightParagraph.includes("pts per week") &&
-    !result.insightParagraph.includes("steady weekly movement")
-  ) {
-    errors.push("insightParagraph must include weekly pace");
-  }
-  if (result.insightParagraph.includes("once they fix")) {
-    errors.push("insightParagraph must not list timing/content fixes");
-  }
-  if (result.insightParagraph.includes("You reported")) {
-    errors.push("insightParagraph must not echo Q6 selections");
-  }
-  if (result.insightParagraph.includes("—")) {
-    errors.push("insightParagraph must not use em dashes");
-  }
-  if (/last-test/i.test(result.insightParagraph)) {
-    errors.push('insightParagraph must not use "last-test"');
+  if (result.insightParagraph.includes("high GPAs")) {
+    errors.push("insightParagraph must not include GPA capability line");
   }
 
   return errors;

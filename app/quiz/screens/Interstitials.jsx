@@ -567,12 +567,9 @@ export function QFV1Projection({ onContinue, onBack, answers = {} }) {
           <AchievabilityPlanBlock
             stats={assessment.stats}
             startingScoreLabel={assessment.startingScoreLabel}
-            startingScoreNote={assessment.startingScoreNote}
             tierIndex={assessment.tierIndex}
             tierRanges={assessment.tierRanges}
             educational
-            outcomesMeta={assessment.outcomesMeta}
-            projectedRangeLine={assessment.projectedRangeLine}
           />
 
           <div className="qf-example-plan__skills-head">Skills to identify</div>

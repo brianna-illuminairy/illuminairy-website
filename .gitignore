@@ -3,6 +3,8 @@ node_modules
 out
 .vercel
 .env*.local
+.env.vercel.prod
+.env.vercel.tmp
 *.log
 .DS_Store
 tsconfig.tsbuildinfo

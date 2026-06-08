@@ -429,7 +429,7 @@ function verdictForTier(
 
 export function achievabilityOutcomesMeta(): string {
   const label = satProgramOutcomes.achievabilityOutcomesSampleLabel;
-  return `Based on outcomes from ${label} similar students.`;
+  return `Based on outcomes from ${label}\u00a0similar\u00a0students.`;
 }
 
 function buildPointsLine(path: ScorePathOutput, q5?: string): string {
@@ -607,8 +607,7 @@ export function buildGoalAchievability(
   const weeks = Math.max(1, pressure?.weeks ?? path.chartWeeks);
   const tierRanges = buildTierRanges(weeks, startingScore);
   const startingScoreNote = buildStartingScoreNote(path, answers.q4, answers.q9);
-  const projectedRangeLine =
-    startingScore != null ? buildProjectedRangeLine(startingScore, weeks) : null;
+  const projectedRangeLine = null;
   const runwayContextLine = buildRunwayContextLine(
     weeks,
     answers.q5,

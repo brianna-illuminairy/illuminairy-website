@@ -1,9 +1,6 @@
 'use client';
 
-import {
-  achievabilityEyebrow,
-  buildGoalAchievabilityFallback,
-} from '@/lib/quiz-funnel/goal-achievability';
+import { buildGoalAchievabilityFallback } from '@/lib/quiz-funnel/goal-achievability';
 import { AchievabilityPlanBlock } from './AchievabilityRating';
 import { AchievabilityInputChips } from './AchievabilityInputChips';
 
@@ -33,13 +30,9 @@ function renderStakesLead(text, emphasis) {
 export function PlanRevealContent({ plan, title, introNote, q2, answers, onEditAnswer }) {
   const assessment =
     plan.achievability ?? buildGoalAchievabilityFallback(plan);
-  const eyebrow = achievabilityEyebrow(q2 ?? plan.q2);
-
   return (
-    <div className="gap-22 qf-goal-assess">
+    <div className="gap-14 qf-goal-assess">
       <div className="qf-goal-assess__hero">
-        <p className="qf-meta qf-goal-assess__eyebrow">{eyebrow}</p>
-
         {title ?? (
           <h1 className="qf-h1" style={{ margin: 0 }}>
             {assessment.pointsLine}
@@ -48,33 +41,18 @@ export function PlanRevealContent({ plan, title, introNote, q2, answers, onEditA
           </h1>
         )}
 
-        <p className="qf-lead">{renderStakesLead(assessment.stakesLead, assessment.stakesEmphasis)}</p>
+        <p className="qf-lead qf-goal-assess__stakes">{renderStakesLead(assessment.stakesLead, assessment.stakesEmphasis)}</p>
+
+        {answers && onEditAnswer ? (
+          <AchievabilityInputChips
+            answers={answers}
+            startingScoreLabel={assessment.startingScoreLabel}
+            onEditAnswer={onEditAnswer}
+          />
+        ) : null}
       </div>
 
-      {answers && onEditAnswer ? (
-        <AchievabilityInputChips
-          answers={answers}
-          startingScoreLabel={assessment.startingScoreLabel}
-          onEditAnswer={onEditAnswer}
-        />
-      ) : null}
-
-      <AchievabilityPlanBlock
-        stats={assessment.stats}
-        startingScoreLabel={assessment.startingScoreLabel}
-        startingScoreNote={assessment.startingScoreNote}
-        tierIndex={assessment.tierIndex}
-        tierRanges={assessment.tierRanges}
-        educational
-        outcomesMeta={assessment.outcomesMeta}
-        projectedRangeLine={assessment.projectedRangeLine}
-      />
-
-      {introNote ? <p className="qf-caption">{introNote}</p> : null}
-
-      <p className="qf-lead">{assessment.insightParagraph}</p>
-
-      <div className="qf-stat-callout">
+      <div className="qf-stat-callout qf-goal-assess__hit-rate">
         <span className="qf-stat-callout__pct">{assessment.hitRatePct}%</span>
         <p className="qf-stat-callout__text">
           {assessment.hitRateBefore}
@@ -82,6 +60,17 @@ export function PlanRevealContent({ plan, title, introNote, q2, answers, onEditA
           {assessment.hitRateAfter}
         </p>
       </div>
+
+      <AchievabilityPlanBlock
+        stats={assessment.stats}
+        startingScoreLabel={assessment.startingScoreLabel}
+        tierIndex={assessment.tierIndex}
+        tierRanges={assessment.tierRanges}
+        educational
+        outcomesMeta={assessment.outcomesMeta}
+      />
+
+      {introNote ? <p className="qf-caption">{introNote}</p> : null}
     </div>
   );
 }

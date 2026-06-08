@@ -6,7 +6,7 @@ export default function QuizPage() {
   return (
     <div className="qf-funnel-stage">
       <QuizProvider>
-        <Suspense fallback={<div className="qf-page" style={{ minHeight: "100dvh" }} />}>
+        <Suspense fallback={<div className="qf-page qf-page--skeleton" aria-hidden />}>
           <QuizRunner />
         </Suspense>
       </QuizProvider>

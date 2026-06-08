@@ -13,6 +13,16 @@ cp .env.example .env.local
 npm run dev
 ```
 
+## Deploy to production
+
+**Git push → Vercel auto-deploy** on `main`. See **[`docs/deploy.md`](docs/deploy.md)**.
+
+```bash
+npm run agent:verify
+git commit -m "…"
+npm run release    # pushes main + smoke prod — not CLI upload
+```
+
 ## Before you open a PR
 
 1. Run **`npm run agent:verify`** (lint + build).

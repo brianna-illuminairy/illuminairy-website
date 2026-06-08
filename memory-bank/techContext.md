@@ -21,10 +21,10 @@
 npm run dev          # local dev
 npm run build        # production build (webpack)
 npm run lint         # ESLint
-npm run env:sync     # push .env.local → Vercel
+npm run env:sync     # push .env.local → Vercel (when env vars change)
 npm run env:pull     # pull Vercel → .env.local
-npm run deploy:prod  # Vercel production deploy
-npm run release      # env:sync + deploy:prod
+npm run release      # verify → git push main → Vercel Git deploy → smoke:prod
+npm run deploy:cli   # emergency only: CLI upload (DEPLOY_CLI_OK=1) — see docs/deploy.md
 ```
 
 ## Environment variables (see `.env.example`)

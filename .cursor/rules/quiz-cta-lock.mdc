@@ -1,12 +1,13 @@
 ---
-description: Plan Builder (/plan) — step actions vs legal footer
+description: Plan Builder (/plan) — step actions vs legal footer (see funnel-mobile-shell)
 globs: app/quiz/**/*
 alwaysApply: false
 ---
 
 # Plan Builder quiz — step actions (not footer CTAs)
 
-**Full lock doc:** `app/quiz/LAYOUT.lock.md`
+**Mobile shell (required reading):** `docs/funnel-mobile-shell.md` · `.cursor/rules/funnel-mobile-shell.mdc`  
+**Lock doc:** `app/quiz/LAYOUT.lock.md`
 
 ## Terminology
 
@@ -15,14 +16,14 @@ alwaysApply: false
 
 ## Hard rule
 
-Every `/plan` step passes `actions` to `QFScreen`. Row 2 (`.qf-body`) scrolls when tall; row 3 (`.qf-step-actions`) stays visible.
+Match each step's **interaction mode** (`lib/quiz-funnel/step-interaction.mjs`). Do not invent CTAs: auto-advance stays timer-driven; option-tap stays tap-to-advance. When a mode needs a button, put it in `actions=` → `.qf-step-actions`. Never per-step viewport heights.
 
 ## Do not
 
-- Put screen-specific buttons or copy in `.qf-funnel-legal`.
+- Put screen-specific buttons in `.qf-funnel-legal`.
 - Use `footer=` on `QFScreen` (use `actions=`).
-- `position: fixed` on `.qf-step-actions`.
-- Edit shell layout without owner unlock.
+- `position: fixed` on step CTAs.
+- Edit shell layout without `FUNNEL_LAYOUT_UNLOCK=1`.
 
 ## Verify
 

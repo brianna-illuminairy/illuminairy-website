@@ -150,6 +150,24 @@
 /* ════════ Desktop (≥920px) ════════ */
 @media (min-width: 920px) {
   .lp-hero { padding: 56px 0 64px; }
+  .lp-hero-single { margin-inline: auto; }
+  .lp-cta-card .lp-btn {
+    width: auto;
+    max-width: 100%;
+    min-width: min(100%, 300px);
+    min-height: 48px;
+    padding: 14px 22px;
+    font-size: 16px;
+  }
+}
+
+/* Tablet / small desktop — keep CTA proportional (PostHog desktop replays) */
+@media (min-width: 768px) {
+  .lp-cta-card .lp-btn {
+    min-height: 48px;
+    padding: 15px 22px;
+    font-size: 16px;
+  }
 }
 
 /* ════════ Phones (≤500px) ════════ */

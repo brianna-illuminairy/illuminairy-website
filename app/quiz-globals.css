@@ -1,9 +1,6 @@
 html,
 body {
-  height: 100dvh;
-  height: 100vh;
-  max-height: 100dvh;
-  max-height: 100vh;
+  height: 100%;
   margin: 0;
   padding: 0;
   overflow: hidden;
@@ -15,28 +12,30 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-.funnel-main {
+/* Bridge site chrome (layout-chrome.tsx) → funnel viewport shell.
+   Viewport height lives only on .qf-funnel-root — see funnel-responsive.css */
+main.funnel-main:has(.qf-funnel-root) {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  height: 100%;
   width: 100%;
   max-width: 100%;
-  min-height: 100dvh;
-  min-height: 100vh;
+  overflow: hidden;
 }
 
-/* Mobile-first funnel: full viewport on every device (no desktop phone mockup). */
-.qf-funnel-root {
+main.funnel-main:has(.qf-funnel-root) > .qf-funnel-root {
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
   width: 100%;
-  max-width: 100%;
-  height: 100%;
 }
 
 .qf-page {
   --qf-display: var(--font-display), "Source Serif 4", Georgia, serif;
   --qf-body: var(--font-schibsted), system-ui, sans-serif;
   --qf-mono: var(--font-dm-mono), ui-monospace, monospace;
-  width: 100%;
-  max-width: 100%;
-  height: 100%;
-  min-height: 0;
 }
 
 * {

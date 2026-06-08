@@ -9,9 +9,6 @@ export type AchievabilityInputField =
 
 export type AchievabilityAnswerKey = "q8" | "q5" | "q4" | "q9";
 
-export const ACHIEVABILITY_INPUTS_HEADLINE =
-  "We're using these inputs for the rating below. Tap any row to adjust.";
-
 export const ACHIEVABILITY_FIELD_TO_ANSWER_KEY: Record<
   AchievabilityInputField,
   AchievabilityAnswerKey
@@ -115,7 +112,27 @@ export function buildAchievabilityInputChips(
   answers: { q3?: string; q4?: string; q5?: string; q8?: string; q9?: string },
   startingScoreLabel?: string | null
 ): AchievabilityInputChip[] {
-  const chips: AchievabilityInputChip[] = [
+  const chips: AchievabilityInputChip[] = [];
+
+  if (needsGpaForStart(answers)) {
+    if (startingScoreLabel) {
+      chips.push({
+        field: "starting",
+        label: "Current",
+        value: startingScoreLabel,
+        answerKey: "q4",
+      });
+    }
+  } else if (hasKnownStartingScore(answers.q4)) {
+    chips.push({
+      field: "starting",
+      label: "Current",
+      value: Q4_LABEL[answers.q4 ?? ""] ?? "—",
+      answerKey: "q4",
+    });
+  }
+
+  chips.push(
     {
       field: "target",
       label: "Target",
@@ -127,30 +144,15 @@ export function buildAchievabilityInputChips(
       label: "Test date",
       value: Q5_LABEL[answers.q5 ?? ""] ?? "Not sure yet",
       answerKey: "q5",
-    },
-  ];
+    }
+  );
 
   if (needsGpaForStart(answers)) {
-    if (startingScoreLabel) {
-      chips.push({
-        field: "starting",
-        label: "Start (est.)",
-        value: startingScoreLabel,
-        answerKey: "q4",
-      });
-    }
     chips.push({
       field: "gpa",
       label: "GPA",
       value: Q9_LABEL[answers.q9 ?? ""] ?? "—",
       answerKey: "q9",
-    });
-  } else if (hasKnownStartingScore(answers.q4)) {
-    chips.push({
-      field: "starting",
-      label: "Current",
-      value: Q4_LABEL[answers.q4 ?? ""] ?? "—",
-      answerKey: "q4",
     });
   }
 

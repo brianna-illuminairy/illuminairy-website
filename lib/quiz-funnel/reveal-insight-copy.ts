@@ -1,9 +1,6 @@
 /**
- * Reveal specifics — one sentence under the achievability gauge:
- * a GPA-agnostic capability statement (weekly pace) that bridges into the GPA
- * question (q9), which now follows the reveal screen.
- *
- * No echoing Q6 back. No last-test claims. No diagnostic/plan pitch. No em dashes.
+ * Reveal insight helpers — prep struggle leads and deprecated fix/outcome sentences.
+ * Plan reveal no longer shows a capability paragraph under the achievability gauge.
  */
 
 import type { QuizAnswersLike } from "@/lib/quiz-funnel/score-path-output";
@@ -102,14 +99,6 @@ export function buildContentFixPhrase(q6: unknown): string {
   return Q6_CONTENT_FIX[behavioral[0]];
 }
 
-function buildCapabilityOpener(ptsPerWeek?: number): string {
-  const pace =
-    ptsPerWeek != null && ptsPerWeek > 0
-      ? `${ptsPerWeek} pts per week`
-      : "the steady weekly movement they need";
-  return `Students with high GPAs are smart and capable of ${pace}.`;
-}
-
 /** Second reveal sentence — first-month outcome stat only. */
 export function buildFirstMonthMovementSentence(): string {
   const firstMonthPts = satFirstMonthOutcomes.minPointsFirstMonth;
@@ -152,11 +141,9 @@ export function buildPrepStruggleLead(q7: unknown, _q6: unknown = []): string | 
 
 export function buildRevealInsightParagraph(
   _answers: QuizAnswersLike,
-  context: RevealAchievabilityContext = {}
+  _context: RevealAchievabilityContext = {}
 ): string {
-  // Shown before the GPA question — a general capability statement that bridges
-  // into q9, so it stays GPA-agnostic and carries the weekly pace only.
-  return buildCapabilityOpener(context.ptsPerWeek).replace(/\s+/g, " ").trim();
+  return "";
 }
 
 export function countInsightSentences(text: string): number {

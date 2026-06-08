@@ -9,6 +9,7 @@
  */
 
 import { chromium, devices } from "playwright";
+import { STEP_INTERACTION } from "../lib/quiz-funnel/step-interaction.mjs";
 
 const BASE = process.env.FUNNEL_E2E_BASE ?? "http://localhost:3000";
 const TIMEOUT = 15_000;
@@ -68,9 +69,13 @@ function fail(step, msg) {
   console.error(`  ✗ ${step}: ${msg}`);
 }
 
-function pass(step, detail = "footer CTA visible") {
+function pass(step, detail = "step chrome ok") {
   passes.push(step);
   console.log(`  ✓ ${step}: ${detail}`);
+}
+
+function stepMode(stepId) {
+  return STEP_INTERACTION[stepId] ?? "explicit-cta";
 }
 
 async function waitForHydration(page) {
@@ -82,24 +87,40 @@ async function waitForHydration(page) {
   await page.waitForTimeout(150);
 }
 
-async function assertFooterCta(page, stepId, { allowDisabled = true } = {}) {
-  const footer = page.locator('[role="region"][aria-label="Step actions"]');
-  await footer.waitFor({ state: "visible", timeout: TIMEOUT });
+async function assertChromePinned(page, stepId, chrome) {
+  const box = await chrome.boundingBox();
+  if (!box) {
+    fail(stepId, "step chrome has no layout box");
+    return false;
+  }
+  const viewport = page.viewportSize();
+  if (viewport) {
+    const bottom = box.y + box.height;
+    if (bottom > viewport.height + 2) {
+      fail(stepId, `step chrome below viewport (bottom=${Math.round(bottom)}, vh=${viewport.height})`);
+      return false;
+    }
+  }
+  return true;
+}
 
-  const pageRoot = page.locator(".qf-page--has-actions");
-  if ((await pageRoot.count()) === 0) {
+/** Explicit button CTA — only for modes that need a Continue (not auto-advance / option-tap). */
+async function assertExplicitCta(page, stepId, { allowDisabled = true } = {}) {
+  const chrome = page.locator('[role="region"][aria-label="Step actions"]');
+  await chrome.waitFor({ state: "visible", timeout: TIMEOUT });
+
+  if ((await page.locator(".qf-page--has-actions").count()) === 0) {
     fail(stepId, "missing .qf-page--has-actions on shell");
     return false;
   }
 
-  const btn = footer.locator("button.qf-btn").first();
+  const btn = chrome.locator("button.qf-btn").first();
   if ((await btn.count()) === 0) {
-    fail(stepId, "footer region has no .qf-btn");
+    fail(stepId, "expected step CTA button for this interaction mode");
     return false;
   }
 
-  const visible = await btn.isVisible();
-  if (!visible) {
+  if (!(await btn.isVisible())) {
     fail(stepId, "CTA button not visible");
     return false;
   }
@@ -110,23 +131,40 @@ async function assertFooterCta(page, stepId, { allowDisabled = true } = {}) {
     return false;
   }
 
-  const box = await footer.boundingBox();
-  if (!box) {
-    fail(stepId, "footer has no layout box");
-    return false;
+  if (!(await assertChromePinned(page, stepId, chrome))) return false;
+
+  pass(stepId, disabled ? "CTA visible (disabled until ready)" : "CTA visible and enabled");
+  return true;
+}
+
+async function assertStepInteraction(page, stepId, opts = {}) {
+  const mode = stepMode(stepId);
+
+  if (mode === "option-tap") {
+    await page.waitForSelector(".qf-opt", { timeout: TIMEOUT });
+    const chrome = page.locator('[role="region"][aria-label="Step actions"]');
+    if ((await chrome.count()) > 0) {
+      await chrome.waitFor({ state: "visible", timeout: TIMEOUT });
+      await assertChromePinned(page, stepId, chrome);
+    }
+    pass(stepId, "options visible (tap to advance)");
+    return true;
   }
 
-  const viewport = page.viewportSize();
-  if (viewport && box.y + box.height < viewport.height - 4) {
-    const bottom = box.y + box.height;
-    if (bottom < viewport.height * 0.85) {
-      fail(stepId, `footer not pinned to bottom (y=${Math.round(box.y)}, h=${Math.round(box.height)})`);
+  if (mode === "auto-advance") {
+    const chrome = page.locator('[role="region"][aria-label="Step actions"]');
+    await chrome.waitFor({ state: "visible", timeout: TIMEOUT });
+    const autoBar = chrome.locator(".qf-insight-hit__auto-footer");
+    if ((await autoBar.count()) === 0) {
+      fail(stepId, "auto-advance must use progress chrome, not invented CTA button");
       return false;
     }
+    if (!(await assertChromePinned(page, stepId, chrome))) return false;
+    pass(stepId, "auto-advance progress chrome visible");
+    return true;
   }
 
-  pass(stepId, disabled ? "CTA visible (disabled until answer)" : "CTA visible and enabled");
-  return true;
+  return assertExplicitCta(page, stepId, opts);
 }
 
 async function seedAnswers(page, answers) {
@@ -152,7 +190,33 @@ async function openStep(page, stepId) {
 async function checkStep(page, stepId, opts) {
   const ok = await openStep(page, stepId);
   if (!ok) return;
-  await assertFooterCta(page, stepId, opts);
+  await assertStepInteraction(page, stepId, opts);
+}
+
+async function checkAutoAdvanceNavigates(page) {
+  console.log("\n— auto-advance insight (no invented CTA) —");
+  await seedAnswers(page, {
+    ...PARENT_SAT_ANSWERS,
+    q3: "none",
+    q4: "na",
+    qDoubts: [],
+  });
+  const ok = await openStep(page, "hit-q3-none");
+  if (!ok) return;
+
+  const chrome = page.locator('[role="region"][aria-label="Step actions"]');
+  const autoBar = chrome.locator(".qf-insight-hit__auto-footer");
+  if ((await autoBar.count()) === 0) {
+    fail("hit-q3-none-auto", "missing auto-advance progress chrome");
+    return;
+  }
+
+  try {
+    await page.waitForURL(/step=i-steps/, { timeout: 20_000 });
+    pass("hit-q3-none-auto", "auto-advanced to i-steps without CTA tap");
+  } catch {
+    fail("hit-q3-none-auto", "did not auto-advance within timeout");
+  }
 }
 
 async function checkIStepsFooterAfterScroll(page) {
@@ -303,8 +367,10 @@ async function checkAllRoutedSteps(page) {
   ];
 
   for (const stepId of steps) {
+    const mode = stepMode(stepId);
+    const needsEnabledCta = ["explicit-cta", "multi-continue", "form-continue"].includes(mode);
     await checkStep(page, stepId, {
-      allowDisabled: !["q4", "q8", "name"].includes(stepId),
+      allowDisabled: !needsEnabledCta || ["q4", "q8", "name"].includes(stepId),
     });
   }
 
@@ -397,6 +463,7 @@ async function main() {
   await checkCriticalScreens(page);
   await checkIStepsFooterAfterScroll(page);
   await checkAchievabilityFooterAfterScroll(page);
+  await checkAutoAdvanceNavigates(page);
   await checkAllRoutedSteps(page);
   await checkNavigation(page);
   await checkUtmPreserved(page);

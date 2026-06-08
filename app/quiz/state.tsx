@@ -111,7 +111,9 @@ export function QuizProvider({ children }: { children: ReactNode }) {
   }, [answers]);
 
   return (
-    <QuizCtx.Provider value={{ answers, dispatch, hydrated }}>{children}</QuizCtx.Provider>
+    <QuizCtx.Provider value={{ answers, dispatch, hydrated }}>
+      <div className="qf-quiz-provider-fill">{children}</div>
+    </QuizCtx.Provider>
   );
 }
 

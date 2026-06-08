@@ -4,11 +4,7 @@
 
 import type { QuizAnswersLike } from "@/lib/quiz-funnel/score-path-output";
 import { buildScorePathOutput } from "@/lib/quiz-funnel/score-path-output";
-import {
-  hasScheduledTestDate,
-  hasTargetScore,
-  Q8_TARGET_SCORE,
-} from "@/lib/quiz-funnel/quiz-profile";
+import { hasScheduledTestDate, hasTargetScore } from "@/lib/quiz-funnel/quiz-profile";
 import { formatSatScoreLabel } from "@/lib/quiz-funnel/score-path-copy";
 import { FOCUS_SKILL_COUNT } from "@/lib/sat-skills-copy";
 
@@ -46,13 +42,43 @@ export type PlanHandoffModel = {
   items: PlanHandoffItem[];
 };
 
-function resolveTarget(answers: QuizAnswersLike): number | null {
+const Q8_GOAL_DISPLAY: Record<string, string> = {
+  "1250": "1250",
+  "1300": "1300",
+  "1350": "1350",
+  "1400": "1400",
+  "1450": "1450+",
+};
+
+function resolveGoalDisplay(answers: QuizAnswersLike): {
+  targetLabel: string | null;
+  targetValue: number | null;
+  isInferred: boolean;
+} {
   const path = buildScorePathOutput(answers);
-  if (path.target.value != null) return path.target.value;
-  if (hasTargetScore(answers.q8) && answers.q8) {
-    return Q8_TARGET_SCORE[answers.q8] ?? null;
+  const q8 = answers.q8;
+
+  if (hasTargetScore(q8) && q8) {
+    return {
+      targetLabel: Q8_GOAL_DISPLAY[q8] ?? formatSatScoreLabel(path.target.value ?? 0),
+      targetValue: path.target.value,
+      isInferred: false,
+    };
   }
-  return null;
+
+  if (path.target.value != null) {
+    const label =
+      path.target.confidence === "inferred" && path.target.bandLabel
+        ? path.target.bandLabel
+        : path.target.label;
+    return {
+      targetLabel: label,
+      targetValue: path.target.value,
+      isInferred: path.target.confidence === "inferred",
+    };
+  }
+
+  return { targetLabel: null, targetValue: null, isInferred: false };
 }
 
 function resolveTestDateLabel(q5?: string): string | null {
@@ -60,29 +86,59 @@ function resolveTestDateLabel(q5?: string): string | null {
   return Q5_HANDOFF_DATE[q5] ?? null;
 }
 
-function buildHandoffItems(
+function buildGoalConfirmTitle(
   targetLabel: string | null,
   testDateLabel: string | null
+): string {
+  if (targetLabel && testDateLabel) {
+    return `Confirm ${targetLabel} by ${testDateLabel}`;
+  }
+  if (targetLabel) {
+    return `Confirm ${targetLabel}`;
+  }
+  if (testDateLabel) {
+    return `Confirm their goal by ${testDateLabel}`;
+  }
+  return "Confirm the goal";
+}
+
+function buildGoalConfirmBody(
+  targetLabel: string | null,
+  testDateLabel: string | null,
+  isInferred: boolean
+): string {
+  if (targetLabel && testDateLabel) {
+    if (isInferred) {
+      return `Whether that range by ${testDateLabel} is realistic, and what it will take.`;
+    }
+    return `Whether that's realistic by ${testDateLabel}, and what it will take.`;
+  }
+  if (targetLabel) {
+    return isInferred
+      ? "Whether that range is realistic for them, and what it will take."
+      : "Whether that's realistic for them, and what it will take.";
+  }
+  if (testDateLabel) {
+    return `Whether their goal by ${testDateLabel} is realistic, and what it will take.`;
+  }
+  return "Whether their target score is realistic, and what it will take.";
+}
+
+function buildHandoffItems(
+  targetLabel: string | null,
+  testDateLabel: string | null,
+  isInferred: boolean
 ): PlanHandoffItem[] {
   const skillRange = `${FOCUS_SKILL_COUNT}–6`;
 
-  let goalLine = "Whether their target score is realistic, and what it will take.";
-  if (targetLabel && testDateLabel) {
-    goalLine = `Whether ${targetLabel} by ${testDateLabel} is realistic, and what it will take.`;
-  } else if (targetLabel) {
-    goalLine = `Whether ${targetLabel} is realistic, and what it will take.`;
-  } else if (testDateLabel) {
-    goalLine = `Whether their goal by ${testDateLabel} is realistic, and what it will take.`;
-  }
-
   return [
     {
-      title: "Confirm the goal",
-      body: goalLine,
+      title: buildGoalConfirmTitle(targetLabel, testDateLabel),
+      body: buildGoalConfirmBody(targetLabel, testDateLabel, isInferred),
     },
     {
       title: "Answer your questions",
-      body: "Schedule, format, pricing, whatever you need to decide.",
+      body: "Timeline, how Week 1 works, and whatever you still need to know before booking.",
     },
     {
       title: "Schedule the Skill Diagnostic",
@@ -96,8 +152,7 @@ function buildHandoffItems(
 }
 
 export function buildPlanHandoff(answers: QuizAnswersLike = {}): PlanHandoffModel {
-  const target = resolveTarget(answers);
-  const targetLabel = target != null ? formatSatScoreLabel(target) : null;
+  const { targetLabel, isInferred } = resolveGoalDisplay(answers);
   const testDateLabel = resolveTestDateLabel(answers.q5);
 
   return {
@@ -105,6 +160,6 @@ export function buildPlanHandoff(answers: QuizAnswersLike = {}): PlanHandoffMode
     testDateLabel,
     hasTarget: targetLabel != null,
     hasDate: testDateLabel != null,
-    items: buildHandoffItems(targetLabel, testDateLabel),
+    items: buildHandoffItems(targetLabel, testDateLabel, isInferred),
   };
 }

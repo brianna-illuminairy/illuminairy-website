@@ -1,0 +1,51 @@
+---
+description: Plan Builder mobile shell — flex viewport, pinned CTA, no height hacks
+globs: app/quiz/**/*,app/quiz-funnel.css,app/funnel-responsive.css,app/quiz-globals.css
+alwaysApply: false
+---
+
+# Funnel mobile shell (Plan Builder `/plan`)
+
+**Full spec:** `docs/funnel-mobile-shell.md` · **Lock doc:** `app/quiz/LAYOUT.lock.md`
+
+## The pattern (do not reinvent)
+
+- **One viewport anchor:** `100dvh`/`100svh` only on `.qf-funnel-root` in `app/funnel-responsive.css`.
+- **Flex column shell:** `.qf-page` = chrome (shrink 0) + `.qf-body` (flex 1, `min-height: 0`, `overflow-y: auto`) + `.qf-step-actions` (shrink 0).
+- **Step chrome:** optional `actions=` on `QFScreen` → `.qf-step-actions`. **Not** the legal footer (`QFFunnelLegal`).
+- **Interaction modes:** `lib/quiz-funnel/step-interaction.mjs` — do not invent CTAs. Auto-advance = progress bar only; option-tap = tap options (no required Continue).
+
+## Never do this (root cause of repeated regressions)
+
+- Per-step or per-screen `minHeight` / `height: 100dvh` / `100vh` to “fix” a missing CTA.
+- `position: fixed` on step Continue buttons or `.qf-step-actions`.
+- `display: grid` on `.qf-page` for the shell (use flex column).
+- `overflow: hidden` on `.qf-body` for tall steps (body must scroll).
+- New wrapper divs with height styles in step files (`screens/`, step components).
+- Putting step buttons in `.qf-funnel-legal`.
+
+## Step files are content-only
+
+Swap copy, options, and `actions` children. Do **not** edit shell layout, spacing chain, or CTA placement unless the user explicitly unlocks layout.
+
+**Locked shell files** (require `FUNNEL_LAYOUT_UNLOCK=1` + owner approval):
+
+- `app/funnel-responsive.css` (shell block)
+- `app/quiz-globals.css`
+- `app/quiz-funnel.css` (`.qf-page`, `.qf-top`, `.qf-body`, `.qf-step-actions` only)
+- `app/quiz/components/QFShell.tsx`, `layout.tsx`, `page.tsx`, `QFProgressContext.tsx`, `state.tsx`
+
+## If a CTA is missing on mobile
+
+1. Check the **height chain** (`FUNNEL-MOBILE-SHELL` block in `funnel-responsive.css`), not the step content.
+2. Confirm the step's **interaction mode** in `step-interaction.mjs` (do not add a button to auto-advance screens).
+3. Run `npm run funnel:e2e` (iPhone 13, i-steps scroll + auto-advance tests).
+
+Do not add heights to step content as a shortcut.
+
+## Verify before done
+
+```bash
+npm run funnel:cta-guard
+npm run funnel:e2e
+```
