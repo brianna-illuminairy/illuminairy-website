@@ -4,6 +4,14 @@ import {
   type Q5Key
 } from "@/lib/quiz-funnel/gains";
 
+/** College Board SAT composite bounds (funnel math must never exceed max). */
+export const SAT_MAX_SCORE = 1600;
+export const SAT_MIN_SCORE = 400;
+
+export function clampSatScore(score: number): number {
+  return Math.min(SAT_MAX_SCORE, Math.max(SAT_MIN_SCORE, Math.round(score)));
+}
+
 /** q4 opt-out — no official SAT score yet */
 export const Q4_NO_SCORE = "na";
 

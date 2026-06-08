@@ -3,7 +3,13 @@ import { satProgramOutcomes } from "@/lib/site";
 import { funnelToday } from "@/lib/funnel-today";
 import type { QuizAnswersLike, ScorePathOutput } from "@/lib/quiz-funnel/score-path-output";
 import { buildScorePathOutput } from "@/lib/quiz-funnel/score-path-output";
-import { SCORE_PATH_DEFAULT_GAIN, SCORE_PATH_DEFAULT_WEEKS, hasTargetScore } from "@/lib/quiz-funnel/quiz-profile";
+import {
+  SCORE_PATH_DEFAULT_GAIN,
+  SCORE_PATH_DEFAULT_WEEKS,
+  SAT_MAX_SCORE,
+  clampSatScore,
+  hasTargetScore,
+} from "@/lib/quiz-funnel/quiz-profile";
 import { Q5_TEST_DATES } from "@/lib/quiz-funnel/gains";
 import {
   buildPrepStruggleLead,
@@ -246,9 +252,13 @@ export function buildTierRanges(
   const w = Math.max(1, weeks);
   return GOAL_FEASIBILITY_TIER_ORDER.map((tier) => {
     const ptsPerWeek = ACHIEVABILITY_PTS_PER_WEEK[tier];
-    const totalGain = ptsPerWeek * w;
+    const rawGain = ptsPerWeek * w;
+    const totalGain =
+      startingScore != null
+        ? Math.min(rawGain, Math.max(0, SAT_MAX_SCORE - startingScore))
+        : rawGain;
     const projectedScore =
-      startingScore != null ? startingScore + totalGain : null;
+      startingScore != null ? clampSatScore(startingScore + totalGain) : null;
     return {
       tier,
       label: GOAL_FEASIBILITY_TIER_LABELS[tier],
@@ -268,22 +278,33 @@ export function tierFromPtsPerWeekScale(
   weeks: number
 ): GoalFeasibilityTier {
   const w = Math.max(1, weeks);
+  const cappedTarget = clampSatScore(targetScore);
   for (const tier of GOAL_FEASIBILITY_TIER_ORDER) {
-    const ceiling = startingScore + ACHIEVABILITY_PTS_PER_WEEK[tier] * w;
-    if (targetScore <= ceiling) return tier;
+    const ceiling = clampSatScore(
+      startingScore + ACHIEVABILITY_PTS_PER_WEEK[tier] * w
+    );
+    if (cappedTarget <= ceiling) return tier;
   }
   return "extreme";
 }
 
-function buildProjectedRangeLine(
+export function buildProjectedRangeLine(
   startingScore: number,
   weeks: number
 ): string {
   const w = Math.max(1, weeks);
-  const low = startingScore + ACHIEVABILITY_PTS_PER_WEEK.effortless * w;
-  const high = startingScore + ACHIEVABILITY_PTS_PER_WEEK.extreme * w;
-  const realistic = startingScore + ACHIEVABILITY_PTS_PER_WEEK.realistic * w;
-  const aggressive = startingScore + ACHIEVABILITY_PTS_PER_WEEK.aggressive * w;
+  const low = clampSatScore(
+    startingScore + ACHIEVABILITY_PTS_PER_WEEK.effortless * w
+  );
+  const high = clampSatScore(
+    startingScore + ACHIEVABILITY_PTS_PER_WEEK.extreme * w
+  );
+  const realistic = clampSatScore(
+    startingScore + ACHIEVABILITY_PTS_PER_WEEK.realistic * w
+  );
+  const aggressive = clampSatScore(
+    startingScore + ACHIEVABILITY_PTS_PER_WEEK.aggressive * w
+  );
   return `Over ${w} weeks, mistake-driven tutoring on their weakest skills could land roughly ~${low}–${high}. Students who follow their personalized weekly plan often end up in the Realistic to Aggressive band (~${realistic}–${aggressive}). Results vary.`;
 }
 

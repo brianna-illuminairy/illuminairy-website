@@ -15,6 +15,7 @@ import {
   SCORE_PATH_DEFAULT_START_BAND,
   SCORE_PATH_DEFAULT_WEEKS,
   SCORE_PATH_DEFAULT_GAIN,
+  clampSatScore,
   q5DisplayLabel
 } from "@/lib/quiz-funnel/quiz-profile";
 import {
@@ -335,15 +336,15 @@ export function buildScorePathOutput(
   if (starting.value != null && modeledGain != null && gainBand) {
     const cap = rawGap ?? modeledGain;
     scoreRange = {
-      low: starting.value + Math.min(cap, gainBand.low),
-      typical: starting.value + modeledGain,
-      high: starting.value + Math.min(cap, gainBand.high)
+      low: clampSatScore(starting.value + Math.min(cap, gainBand.low)),
+      typical: clampSatScore(starting.value + modeledGain),
+      high: clampSatScore(starting.value + Math.min(cap, gainBand.high)),
     };
   } else if (starting.value != null && modeledGain != null) {
     scoreRange = {
       low: null,
-      typical: starting.value + modeledGain,
-      high: null
+      typical: clampSatScore(starting.value + modeledGain),
+      high: null,
     };
   }
 

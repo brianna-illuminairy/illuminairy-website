@@ -567,7 +567,7 @@ export function QFV1Projection({ onContinue, onBack, answers = {} }) {
             startingScoreLabel={assessment.startingScoreLabel}
             tierIndex={assessment.tierIndex}
             tierRanges={assessment.tierRanges}
-            educational
+            educational={!assessment.stats.hasKnownGoal}
           />
 
           <div className="qf-example-plan__skills-head">Skills to identify</div>

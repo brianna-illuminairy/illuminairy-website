@@ -9,7 +9,7 @@ import {
   v1ChartSkillCount,
 } from "@/lib/quiz-funnel/score-path-gain";
 import { buildGoalAchievability } from "@/lib/quiz-funnel/goal-achievability";
-import { SCORE_PATH_DEFAULT_START } from "@/lib/quiz-funnel/quiz-profile";
+import { SCORE_PATH_DEFAULT_START, clampSatScore } from "@/lib/quiz-funnel/quiz-profile";
 
 function roundGainPoints(gain: number): number {
   if (gain <= 0) return 0;
@@ -51,8 +51,9 @@ export function buildV1Projection(answers: QuizAnswersLike): V1ProjectionModel {
   const current = path.starting.value ?? SCORE_PATH_DEFAULT_START;
   const modeledGain = path.modeledGain ?? 0;
   const displayGain = roundGainPoints(modeledGain);
-  const displayTarget =
-    path.scoreRange.typical ?? (modeledGain > 0 ? current + modeledGain : current);
+  const displayTarget = clampSatScore(
+    path.scoreRange.typical ?? (modeledGain > 0 ? current + modeledGain : current)
+  );
 
   const skillCount = v1ChartSkillCount(path.chartWeeks);
   const skillPts =

@@ -3,6 +3,7 @@
  */
 import {
   buildGoalAchievability,
+  buildProjectedRangeLine,
   buildSkillInsight,
   computeFeasibilityTier,
   expectedGainForWeeks,
@@ -295,6 +296,37 @@ function assertTierScalingUnit(): string[] {
   }
   if (tierFromPtsPerWeekScale(1250, 1450, 11) !== "ambitious") {
     errors.push("4.0+ first sit: 1250→1450 in 11wk should be ambitious");
+  }
+  if (tierFromPtsPerWeekScale(1350, 1400, 11) !== "effortless") {
+    errors.push("small gap: 1350→1400 in 11wk should be effortless");
+  }
+
+  const rangeLine = buildProjectedRangeLine(1350, 11);
+  if (rangeLine.includes("1680") || rangeLine.includes("1625")) {
+    errors.push(`projected range must cap at 1600: ${rangeLine}`);
+  }
+  if (!rangeLine.includes("1600")) {
+    errors.push(`projected range should hit 1600 cap for high band: ${rangeLine}`);
+  }
+
+  const smallGap = buildGoalAchievability({
+    q2: "merit",
+    q3: "sat-1",
+    q4: "1300-1400",
+    q5: "aug22",
+    q6: ["math"],
+    q7: [],
+    q8: "1400",
+    q9: "3.7-3.9",
+  });
+  if (smallGap.tier !== "effortless") {
+    errors.push(`1350→1400 achievability tier: expected effortless, got ${smallGap.tier}`);
+  }
+  if (smallGap.stats.ptsPerWeek !== 5) {
+    errors.push(`1350→1400 pts/wk: expected 5, got ${smallGap.stats.ptsPerWeek}`);
+  }
+  if (smallGap.tierIndex !== 0) {
+    errors.push(`1350→1400 tierIndex: expected 0 (effortless), got ${smallGap.tierIndex}`);
   }
 
   return errors;

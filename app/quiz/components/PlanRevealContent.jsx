@@ -56,7 +56,7 @@ export function PlanRevealContent({ plan, title, introNote, q2, answers, onEditA
         startingScoreLabel={assessment.startingScoreLabel}
         tierIndex={assessment.tierIndex}
         tierRanges={assessment.tierRanges}
-        educational
+        educational={!assessment.stats.hasKnownGoal}
         outcomesMeta={assessment.outcomesMeta}
       />
 
