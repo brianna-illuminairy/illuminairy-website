@@ -51,7 +51,8 @@ export const PostHogEvents = {
   quizBookingConfirmed: "quiz_booking_confirmed",
   quizThankYouViewed: "quiz_thank_you_viewed",
   quizBookingError: "quiz_booking_error",
-  achievabilityInputEdited: "achievability_input_edited"
+  achievabilityInputEdited: "achievability_input_edited",
+  quizDoubtsAnswered: "quiz_doubts_answered"
 } as const;
 
 export const Ga4Events = {

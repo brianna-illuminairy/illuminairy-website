@@ -6,8 +6,14 @@ import { useQuizAnalytics } from './useQuizAnalytics';
 import { useQuizAvailabilityPrefetch } from './useQuizAvailabilityPrefetch';
 import { captureParentConfirmed } from '@/lib/quiz-funnel/analytics';
 import { planBuilderStepHref } from '@/lib/plan-builder-routes';
-import { QUIZ_ENTRY_STEP, resolveGuardedQuizStep } from '@/lib/quiz-funnel/funnel-steps';
-import { isQuizSelfTaker } from '@/lib/quiz-funnel/subject-voice';
+import {
+  QUIZ_BOOKED_STEP,
+  QUIZ_ENTRY_STEP,
+  resolveGuardedQuizStep,
+  resolveQuizResumeStep,
+} from '@/lib/quiz-funnel/funnel-steps';
+import { getQuizRouteSteps } from '@/lib/quiz-funnel/quiz-route';
+import { saveQuizLastStep } from '@/lib/quiz-funnel/quiz-storage';
 import {
   QFQWho, QFQScoreLower, QFQ1Trigger, QFQ2Stakes, QFQ3TimesTaken, QFQ4RecentScore, QFQDoubts, QFQ5Clock,
   QFQ6Blocker, QFQ7Tried, QFQ8Goal, QFQ9GPA, QFQName,
@@ -45,61 +51,8 @@ function QuizHydratingShell() {
   );
 }
 
-const BASE_STEPS = [
-  'q-who','q-score-lower','q1','q2','q3',
-  'i-steps',
-  'q4','q-doubts','q5',
-  'hit-outcome-month-one',
-  'q6','q7','hit-q7',
-  'i-diag',
-  'i-compare',
-  'q9','q8','achievability',
-  'name',
-  'i2',
-  'v1',
-  's4',
-  's5',
-];
-
 function getSteps(answers: QuizAnswers) {
-  const steps = [...BASE_STEPS];
-
-  if (isQuizSelfTaker(answers.qWho)) {
-    const qDoubtsIdx = steps.indexOf('q-doubts');
-    if (qDoubtsIdx >= 0) steps.splice(qDoubtsIdx, 1);
-  }
-
-  if (answers.q3 === 'none') {
-    const q4Idx = steps.indexOf('q4');
-    if (q4Idx >= 0) steps.splice(q4Idx, 1);
-    // "Since their last SAT score…" has no prior score to reference.
-    const qDoubtsIdx = steps.indexOf('q-doubts');
-    if (qDoubtsIdx >= 0) steps.splice(qDoubtsIdx, 1);
-    const q3Idx = steps.indexOf('q3');
-    if (q3Idx >= 0) steps.splice(q3Idx + 1, 0, 'hit-q3-none');
-  }
-
-  if (Array.isArray(answers.qDoubts) && answers.qDoubts.length > 0) {
-    const qDoubtsIdx = steps.indexOf('q-doubts');
-    if (qDoubtsIdx >= 0) steps.splice(qDoubtsIdx + 1, 0, 'doubts-insight');
-  }
-
-  if (answers.q5 === 'tbd' || answers.q5 === '2027') {
-    const q6Idx = steps.indexOf('q6');
-    if (q6Idx >= 0) steps.splice(q6Idx, 0, 'hit-q5-tbd');
-  }
-
-  if (answers.q8 === 'tbd') {
-    const q9Idx = steps.indexOf('q9');
-    if (q9Idx >= 0) steps.splice(q9Idx, 0, 'hit-q8-scores');
-  }
-
-  if (showGapScreen(answers)) {
-    const idx = steps.indexOf('name');
-    if (idx >= 0) steps.splice(idx, 0, 'i-gap');
-  }
-
-  return steps;
+  return getQuizRouteSteps(answers);
 }
 
 export default function QuizRunner() {
@@ -110,12 +63,28 @@ export default function QuizRunner() {
 
   const requestedStep = params.get('step') || QUIZ_ENTRY_STEP;
   const steps = getSteps(answers);
-  const stepId = resolveGuardedQuizStep(answers, requestedStep, steps);
+  const resumeStep =
+    requestedStep === QUIZ_ENTRY_STEP || requestedStep === QUIZ_BOOKED_STEP
+      ? resolveQuizResumeStep(answers, steps)
+      : requestedStep;
+  const stepId =
+    resumeStep === QUIZ_BOOKED_STEP
+      ? QUIZ_BOOKED_STEP
+      : resolveGuardedQuizStep(answers, resumeStep, steps);
   const currentIdx = steps.indexOf(stepId);
   const gapScreen = showGapScreen(answers);
 
   useEffect(() => {
     if (!hydrated) return;
+    saveQuizLastStep(stepId);
+  }, [hydrated, stepId]);
+
+  useEffect(() => {
+    if (!hydrated) return;
+    if (resumeStep !== requestedStep) {
+      router.replace(planBuilderStepHref(resumeStep, search));
+      return;
+    }
     const reqIdx = steps.indexOf(requestedStep);
     const guardIdx = steps.indexOf(stepId);
     if (reqIdx >= 0 && guardIdx >= 0 && reqIdx > guardIdx) {
@@ -123,7 +92,7 @@ export default function QuizRunner() {
     } else if (reqIdx < 0 && stepId !== requestedStep) {
       router.replace(planBuilderStepHref(stepId, search));
     }
-  }, [hydrated, stepId, requestedStep, router, search, steps]);
+  }, [hydrated, stepId, requestedStep, resumeStep, router, search, steps]);
 
   useQuizAnalytics(stepId, currentIdx, answers, gapScreen);
   useQuizAvailabilityPrefetch(stepId);

@@ -21,8 +21,8 @@ export const v4Authority = "Backed by College Board data from 250,000+ students.
 export const v4Cta = {
   intro: "Your free SAT plan shows:",
   bullets: [
-    "Why smart students often struggle on the SAT",
-    "Whether 150\u2013200+ points is realistic before their next test",
+    "Why smart students struggle on the SAT",
+    "If 150\u2013200+ points is realistic before their next test",
     "What their SAT improvement plan looks like between now and test day"
   ],
   button: "Build my child\u2019s free SAT plan",

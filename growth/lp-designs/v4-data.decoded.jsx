@@ -85,8 +85,8 @@ const DIRECTION = {
 
 // ── The bullets: what the plan answers ──
 const VALUE = [
-  'Why smart students often struggle on the SAT',
-  'Whether 150–200+ points is realistic before their next test',
+  'Why smart students struggle on the SAT',
+  'If 150–200+ points is realistic before their next test',
   'What their SAT improvement plan looks like between now and test day',
 ];
 

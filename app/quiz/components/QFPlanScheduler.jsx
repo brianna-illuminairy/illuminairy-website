@@ -5,7 +5,6 @@ import {
   PLAN_SCHEDULER_EYEBROW,
   PLAN_SCHEDULER_HEADLINE,
   PLAN_SCHEDULER_PHONE_LABEL,
-  planSchedulerConfirmLabel,
 } from '@/lib/quiz-funnel/plan-scheduler-copy';
 import { timezoneLabel } from '@/lib/calendly/funnel-availability';
 import {
@@ -62,7 +61,6 @@ export function QFPlanScheduler({
   const [loading, setLoading] = useState(true);
   const [availabilityAlert, setAvailabilityAlert] = useState(null);
   const [reloadKey, setReloadKey] = useState(0);
-  const reloadOptionsRef = useRef({ skipAutoSelect: false });
 
   // Keep parent callbacks in refs so loadAvailability stays stable. Parents pass
   // new inline handlers each render; depending on their identity caused an
@@ -84,9 +82,6 @@ export function QFPlanScheduler({
   const showErr = (key) => (showFieldErrors ? fieldErrors[key] : undefined);
 
   const loadAvailability = useCallback(async () => {
-    const skipAutoSelect = reloadOptionsRef.current.skipAutoSelect;
-    reloadOptionsRef.current.skipAutoSelect = false;
-
     const prefetched = readPrefetchedAvailability();
     if (prefetched?.length) {
       setLoading(false);
@@ -95,16 +90,7 @@ export function QFPlanScheduler({
       setDays(prefetched);
       const firstDay = prefetched[0];
       setActiveDayKey(firstDay.dateKey);
-      if (!skipAutoSelect) {
-        const firstSlot = firstDay.slots?.[0];
-        if (firstSlot) {
-          onSelectSlotRef.current({
-            ...firstSlot,
-            weekdayShort: firstDay.weekdayShort,
-            dayTitle: firstDay.dayTitle,
-          });
-        }
-      }
+      onSelectSlotRef.current(null);
       void prefetchCalendlyAvailability();
       return;
     }
@@ -141,18 +127,7 @@ export function QFPlanScheduler({
       setDays(parsed.days);
       const firstDay = parsed.days[0];
       setActiveDayKey(firstDay.dateKey);
-      if (skipAutoSelect) {
-        onSelectSlotRef.current(null);
-        return;
-      }
-      const firstSlot = firstDay.slots?.[0];
-      if (firstSlot) {
-        onSelectSlotRef.current({
-          ...firstSlot,
-          weekdayShort: firstDay.weekdayShort,
-          dayTitle: firstDay.dayTitle,
-        });
-      }
+      onSelectSlotRef.current(null);
     } catch {
       onAvailabilityReadyRef.current?.(false);
       setDays([]);
@@ -177,7 +152,6 @@ export function QFPlanScheduler({
 
   useEffect(() => {
     onRegisterReload?.(() => {
-      reloadOptionsRef.current.skipAutoSelect = true;
       setReloadKey((k) => k + 1);
     });
   }, [onRegisterReload]);
@@ -201,17 +175,7 @@ export function QFPlanScheduler({
 
   function pickDay(day) {
     setActiveDayKey(day.dateKey);
-    const slot = day.slots?.[0];
-    if (slot) {
-      onSelectSlot({
-        ...slot,
-        weekdayShort: day.weekdayShort,
-        dayTitle: day.dayTitle,
-      });
-    } else {
-      onSelectSlot(null);
-      onSlotRequired?.();
-    }
+    onSelectSlot(null);
   }
 
   function pickSlot(slot) {

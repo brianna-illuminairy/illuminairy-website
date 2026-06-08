@@ -8,12 +8,14 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const runnerPath = join(root, "app/quiz/QuizRunner.tsx");
-const src = readFileSync(runnerPath, "utf8");
+const routePath = join(root, "lib/quiz-funnel/quiz-route.ts");
+const src = readFileSync(routePath, "utf8");
 
-const baseMatch = src.match(/const BASE_STEPS = \[([\s\S]*?)\];/);
+const baseMatch = src.match(
+  /export const BASE_QUIZ_ROUTE_STEPS = \[([\s\S]*?)\]\s*(?:as const)?;/
+);
 if (!baseMatch) {
-  console.error("Could not parse BASE_STEPS in QuizRunner.tsx");
+  console.error("Could not parse BASE_QUIZ_ROUTE_STEPS in lib/quiz-funnel/quiz-route.ts");
   process.exit(1);
 }
 
@@ -33,7 +35,8 @@ const conditionalSteps = [
 
 const allSteps = [...new Set([...baseSteps, ...conditionalSteps])];
 
-const switchCases = [...src.matchAll(/case '([^']+)':/g)].map((m) => m[1]);
+const runnerSrc = readFileSync(join(root, "app/quiz/QuizRunner.tsx"), "utf8");
+const switchCases = [...runnerSrc.matchAll(/case '([^']+)':/g)].map((m) => m[1]);
 const switchSet = new Set(switchCases);
 
 const missing = allSteps.filter((s) => !switchSet.has(s));

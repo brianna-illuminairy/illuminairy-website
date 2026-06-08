@@ -42,11 +42,13 @@ import {
 import { strategyCallGoogleCalendarUrl } from '@/lib/quiz-funnel/strategy-call-calendar';
 import { QFPlanHandoff } from '../components/QFPlanHandoff';
 import { QFPlanScheduler } from '../components/QFPlanScheduler';
+import { PLAN_HANDOFF_CTA } from '@/lib/quiz-funnel/plan-handoff-copy';
 import { planSchedulerConfirmLabel } from '@/lib/quiz-funnel/plan-scheduler-copy';
 import {
   BOOKING_FEEDBACK,
   parseFunnelApiError,
   validateBookingContact,
+  validateBookingContactOnly,
   type BookingFieldKey,
 } from '@/lib/quiz-funnel/booking-feedback';
 import { QFBookingAlert } from '../components/QFBookingAlert';
@@ -180,7 +182,21 @@ export function QFS5Approved({
     [contact, confirmTcpa, selectedSlot?.startTime]
   );
 
-  const canSubmit = !submitting && !availabilityLoading && slotsAvailable;
+  const contactReady = useMemo(
+    () =>
+      validateBookingContactOnly({
+        ...contact,
+        confirmTcpa: Boolean(confirmTcpa),
+      }).valid,
+    [contact, confirmTcpa]
+  );
+
+  const canSubmit =
+    !submitting &&
+    !availabilityLoading &&
+    slotsAvailable &&
+    contactReady &&
+    validation.valid;
 
   function setField(key: string, value: unknown) {
     dispatch?.({ type: 'SET_FIELD', key, value });
@@ -354,9 +370,11 @@ export function QFS5Approved({
     ? 'Loading open times…'
     : !slotsAvailable
       ? 'Reload times to continue'
-      : selectedSlot
-        ? planSchedulerConfirmLabel(selectedSlot.weekdayShort, selectedSlot.label)
-        : 'Pick a time';
+      : !contactReady
+        ? PLAN_HANDOFF_CTA
+        : !selectedSlot
+          ? 'Pick a time'
+          : planSchedulerConfirmLabel(selectedSlot.weekdayShort, selectedSlot.label);
 
   return (
     <QFScreen stepIdx={18} ornament="glow" onBack={onBack}

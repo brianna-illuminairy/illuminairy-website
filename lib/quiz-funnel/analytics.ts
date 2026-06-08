@@ -22,6 +22,11 @@ import { PLAN_BUILDER_PATH } from "@/lib/plan-builder-routes";
 import { buildQuizAnswersSnapshot } from "@/lib/crm/quiz-answers-snapshot";
 import { QUIZ_ENTRY_STEP } from "@/lib/quiz-funnel/funnel-steps";
 import { syncQuizProgressNow } from "@/lib/quiz-funnel/quiz-progress-sync";
+import {
+  quizDoubtsEventProps,
+  shouldAttachQuizDoubtsProps,
+  quizPathIncludesQDoubts
+} from "@/lib/quiz-funnel/doubts-analytics";
 
 declare global {
   interface Window {
@@ -73,7 +78,10 @@ function syncQuizPersonProperties(answers: Record<string, unknown>) {
     q4: snapshot.q4 ?? undefined,
     q5: snapshot.q5 ?? undefined,
     q8: snapshot.q8 ?? undefined,
-    q9: snapshot.q9 ?? undefined
+    q9: snapshot.q9 ?? undefined,
+    ...(quizPathIncludesQDoubts(answers)
+      ? quizDoubtsEventProps(snapshot.qDoubts)
+      : {})
   });
 }
 
@@ -110,6 +118,7 @@ function quizAttributionProps() {
 }
 
 const PARENT_CONFIRMED_KEY = "illuminairy_parent_confirmed";
+const QUIZ_DOUBTS_ANSWERED_KEY = "illuminairy_quiz_doubts_answered";
 
 /** Meta Phase 1 optimization — parent selected "My child" on q-who (not students). */
 export function captureParentConfirmed(qWho: string) {
@@ -211,7 +220,10 @@ export function captureQuizStep(
     q8: snapshot.q8 ?? undefined,
     q9: snapshot.q9 ?? undefined,
     kid_first_name: kid,
-    has_kid_name: Boolean(kid)
+    has_kid_name: Boolean(kid),
+    ...(shouldAttachQuizDoubtsProps(stepId, answers)
+      ? quizDoubtsEventProps(snapshot.qDoubts)
+      : {})
   };
   recordClientTouch(TouchEvents.quizStepView, {
     step: stepId,
@@ -239,6 +251,7 @@ export function captureQuizStep(
   }
   if (!getPostHogKey()) return;
   syncQuizPersonProperties(answers);
+  maybeCaptureQuizDoubtsAnswered(stepId, answers);
   posthog.capture("quiz_step_viewed", props);
   posthog.capture("$pageview", {
     $current_url: `${window.location.origin}${PLAN_BUILDER_PATH}?step=${stepId}`
@@ -269,6 +282,9 @@ export function captureQuizLeadSubmitted(
   const promisedGain = promisedGainFromQuizAnswers(q4, q5, q8);
   const opening = quizOpeningProps(answers);
   const attr = quizAttributionProps();
+  const qDoubts = Array.isArray(answers.qDoubts)
+    ? answers.qDoubts.filter((x) => typeof x === "string")
+    : [];
   const props = {
     ...opening,
     ...attr,
@@ -280,6 +296,9 @@ export function captureQuizLeadSubmitted(
     q7: answers.q7,
     q8: answers.q8,
     q9: answers.q9,
+    ...(quizPathIncludesQDoubts(answers)
+      ? quizDoubtsEventProps(qDoubts)
+      : {}),
     sat_lp_variant:
       (answers.sat_lp_variant as string | undefined) ??
       readPersistedLpVariant() ??
@@ -369,6 +388,57 @@ export function captureQuizBookingError(props: QuizBookingErrorProps) {
     posthog.capture("quiz_booking_error", payload);
   }
   trackQuizGaEvent("quiz_booking_error", payload);
+}
+
+function captureQuizDoubtsAnswered(answers: Record<string, unknown>) {
+  const qDoubts = Array.isArray(answers.qDoubts)
+    ? answers.qDoubts.filter((x) => typeof x === "string")
+    : [];
+  const props = {
+    funnel: "sat_quiz",
+    ...persistedLpContext(),
+    ...quizAttributionProps(),
+    ...quizDoubtsEventProps(qDoubts)
+  };
+  if (getPostHogKey()) {
+    posthog.capture(PostHogEvents.quizDoubtsAnswered, props);
+  }
+  const { qDoubts: _qDoubts, ...gaProps } = props;
+  trackQuizGaEvent("quiz_doubts_answered", {
+    ...gaProps,
+    qDoubts_count: props.qDoubts_count,
+    qDoubts_skipped: props.qDoubts_skipped
+  });
+}
+
+/** Once per session — after q-doubts on doubts-insight, or q5 when none selected. */
+export function maybeCaptureQuizDoubtsAnswered(
+  stepId: string,
+  answers: Record<string, unknown>
+) {
+  if (!quizPathIncludesQDoubts(answers)) return;
+
+  try {
+    if (sessionStorage.getItem(QUIZ_DOUBTS_ANSWERED_KEY)) return;
+  } catch {
+    // sessionStorage blocked — still attempt once this page load
+  }
+
+  const qDoubts = Array.isArray(answers.qDoubts)
+    ? answers.qDoubts.filter((x) => typeof x === "string")
+    : [];
+
+  const shouldFire =
+    stepId === "doubts-insight" ||
+    (stepId === "q5" && qDoubts.length === 0);
+  if (!shouldFire) return;
+
+  try {
+    sessionStorage.setItem(QUIZ_DOUBTS_ANSWERED_KEY, "1");
+  } catch {
+    // ignore
+  }
+  captureQuizDoubtsAnswered(answers);
 }
 
 export function captureQuizBookingConfirmed(

@@ -7,7 +7,7 @@
 
 export type DoubtOption = {
   id: string;
-  /** What the parent hears (quote). */
+  /** Short phrase the parent recognizes (question + insight recap). */
   label: string;
   /** What we usually uncover behind that belief. */
   uncover: string;
@@ -16,32 +16,32 @@ export type DoubtOption = {
 export const DOUBTS_OPTIONS: DoubtOption[] = [
   {
     id: "not-test-taker",
-    label: `"I'm just not a good test taker."`,
+    label: "Not a good test taker",
     uncover: "SAT strategy and pattern recognition.",
   },
   {
     id: "studied-no-help",
-    label: `"I already studied and it didn't help."`,
+    label: "Studied already, didn't help",
     uncover: "A focus on the 5-6 skills worth the most points.",
   },
   {
     id: "cant-raise",
-    label: `"There's no way I can raise my score that much."`,
+    label: "Can't raise my score that much",
     uncover: "A plan that prioritizes the fastest score gains.",
   },
   {
     id: "bad-at-sat",
-    label: `"Maybe I'm just bad at the SAT."`,
+    label: "Just bad at the SAT",
     uncover: "To learn how the SAT works differently from school.",
   },
   {
     id: "no-months",
-    label: `"I don't want to spend months studying again."`,
+    label: "Don't want to waste months studying",
     uncover: "A more focused study plan, not more hours.",
   },
   {
     id: "no-top-choice",
-    label: `"I don't think I can get into my top-choice school anymore."`,
+    label: "No way I get into my top school",
     uncover: "A realistic roadmap from today's score to test day.",
   },
 ];

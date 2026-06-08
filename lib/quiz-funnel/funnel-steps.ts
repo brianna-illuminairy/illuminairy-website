@@ -1,3 +1,5 @@
+import { readQuizLastStep } from "@/lib/quiz-funnel/quiz-storage";
+
 /**
  * Plan Builder step IDs and intake guards.
  * Step IDs are stable for PostHog/GA/touch_events — do not rename without dashboard updates.
@@ -5,6 +7,9 @@
 
 /** First screen after LP CTA — used in planBuilderEntryFromLanding and quiz_started. */
 export const QUIZ_ENTRY_STEP = "q-who";
+
+/** Terminal step after a Strategy Call is booked. */
+export const QUIZ_BOOKED_STEP = "booked";
 
 /** Urgency segmentation (legacy answer key `q1`, CRM column `quiz_trigger`). */
 export const QUIZ_URGENCY_STEP = "q1";
@@ -59,4 +64,46 @@ export function resolveGuardedQuizStep(
   }
 
   return requestedStep;
+}
+
+type ResumeAnswers = QuizIntakeAnswers & {
+  strategyCallStart?: string;
+};
+
+/**
+ * Where to land when re-entering the funnel (LP CTA, browser back to LP, etc.).
+ * Prefers the last viewed step; otherwise the first missing intake or furthest reachable step.
+ */
+export function resolveQuizResumeStep(
+  answers: ResumeAnswers,
+  routeSteps: string[]
+): string {
+  if (answers.strategyCallStart) {
+    return QUIZ_BOOKED_STEP;
+  }
+
+  const lastStep = readQuizLastStep();
+  if (lastStep && routeSteps.includes(lastStep)) {
+    const guarded = resolveGuardedQuizStep(answers, lastStep, routeSteps);
+    const lastIdx = routeSteps.indexOf(lastStep);
+    const guardedIdx = routeSteps.indexOf(guarded);
+    if (guarded === lastStep || (guardedIdx >= 0 && guardedIdx <= lastIdx)) {
+      return lastStep;
+    }
+  }
+
+  let resume = QUIZ_ENTRY_STEP;
+  for (const step of routeSteps) {
+    const satisfied = INTAKE_STEP_SATISFIED[step];
+    if (satisfied) {
+      if (!satisfied(answers)) {
+        return step;
+      }
+      resume = step;
+    } else {
+      resume = step;
+    }
+  }
+
+  return resume;
 }

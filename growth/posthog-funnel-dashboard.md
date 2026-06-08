@@ -52,6 +52,15 @@ Each step also fires a synthetic PostHog `$pageview` with `$current_url=/plan?st
 
 Break down `quiz_booking_error` by `error_code`: `invalid_phone`, `lead_save_failed`, `no_slot`, `slot_taken`, `calendly_api`, `availability_load`, `network`.
 
+### q-doubts
+
+| Event / property | Use |
+|------------------|-----|
+| `quiz_doubts_answered` | Fires once after q-doubts: on `doubts-insight` (selections) or `q5` (none selected) |
+| `qDoubts` | Array of ids on `quiz_step_viewed`, lead submit, person props |
+| `qDoubts_count`, `qDoubts_skipped` | Volume and skip rate |
+| `doubt_not_test_taker`, `doubt_studied_no_help`, … | Boolean per quote — Trends breakdown |
+
 ### Lead submit props
 
 `quiz_lead_submitted` includes `qWho`, `qScoreLower`, `q1–q9`, `sat_lp_variant`, `has_gap_screen`, `showed_gpa_gap`, `promised_gain_pts`, `weeks_until_test`, `booking_source: client`. CRM `quiz_trigger` = urgency answer (`q1`: score-low, test-soon, etc.).

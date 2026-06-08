@@ -4,7 +4,12 @@
  * Internal folder remains `app/quiz/`; Next.js rewrites `/plan` → `/quiz`.
  */
 
-import { QUIZ_ENTRY_STEP } from "@/lib/quiz-funnel/funnel-steps";
+import {
+  QUIZ_ENTRY_STEP,
+  resolveQuizResumeStep,
+} from "@/lib/quiz-funnel/funnel-steps";
+import { getQuizRouteSteps } from "@/lib/quiz-funnel/quiz-route";
+import { readStoredQuizAnswers } from "@/lib/quiz-funnel/quiz-storage";
 
 export { QUIZ_ENTRY_STEP };
 export const PLAN_BUILDER_PATH = "/plan";
@@ -54,11 +59,18 @@ const UTM_KEYS = [
 ] as const;
 
 /**
- * Plan Builder entry from LP — canonical `/plan?step=q-who` plus UTMs from the landing URL.
+ * Plan Builder entry from LP — `/plan?step=…` plus UTMs from the landing URL.
+ * Resumes in-progress sessions (localStorage) instead of always resetting to q-who.
  */
 export function planBuilderEntryFromLanding(search?: string): string {
   const params = new URLSearchParams();
-  params.set("step", QUIZ_ENTRY_STEP);
+  let step = QUIZ_ENTRY_STEP;
+  if (typeof window !== "undefined") {
+    const answers = readStoredQuizAnswers();
+    const routeSteps = getQuizRouteSteps(answers);
+    step = resolveQuizResumeStep(answers, routeSteps);
+  }
+  params.set("step", step);
   if (search) {
     const incoming = new URLSearchParams(
       search.startsWith("?") ? search.slice(1) : search

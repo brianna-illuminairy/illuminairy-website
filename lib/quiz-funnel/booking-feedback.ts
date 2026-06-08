@@ -84,6 +84,27 @@ export function validateBookingContact(
   return { valid: Object.keys(errors).length === 0, errors };
 }
 
+export type BookingContactOnlyInput = Omit<BookingContactInput, "hasSlot" | "kidName">;
+
+/** Name, email, phone, and TCPA — slot checked separately on s5. */
+export function validateBookingContactOnly(
+  input: BookingContactOnlyInput
+): { valid: boolean; errors: BookingFieldErrors } {
+  const errors: BookingFieldErrors = {};
+  const name = input.parentName.trim();
+  const email = input.parentEmail.trim();
+  const phone = input.parentPhone.trim();
+
+  if (!name) errors.parentName = BOOKING_FEEDBACK.nameRequired;
+  if (!email) errors.parentEmail = BOOKING_FEEDBACK.emailRequired;
+  else if (!isValidEmail(email)) errors.parentEmail = BOOKING_FEEDBACK.emailInvalid;
+  if (!phone) errors.parentPhone = BOOKING_FEEDBACK.phoneRequired;
+  else if (!isValidBookingPhone(phone)) errors.parentPhone = BOOKING_FEEDBACK.phoneInvalid;
+  if (!input.confirmTcpa) errors.confirmTcpa = BOOKING_FEEDBACK.tcpaRequired;
+
+  return { valid: Object.keys(errors).length === 0, errors };
+}
+
 export type BookingUserFeedback = {
   message: string;
   field?: BookingFieldKey;
