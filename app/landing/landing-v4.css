@@ -60,16 +60,16 @@
 
 /* v4 single-column hero — left-aligned, capped width */
 .lp-hero-single { max-width: 620px; }
-.lp-hero-single .lp-h1 { font-size: clamp(26px, 6.2vw, 46px); line-height: 1.05; text-wrap: balance; }
-/* v4 H1 is designed for exactly two lines — keeps CTA above fold in short viewports */
-.lp-hero-single .lp-h1 .line { display: block; }
+.lp-hero-single .lp-h1 { font-size: clamp(26px, 6.2vw, 46px); line-height: 1.05; text-wrap: normal; }
+/* v4 H1 is exactly two logical lines (JS) — do not balance-wrap inside each line */
+.lp-hero-single .lp-h1 .line { display: block; text-wrap: nowrap; }
 .lp-hero-single .lp-authority-line { margin-top: 18px; }
 .lp-hero-single .lp-cta-card { margin-top: 24px; }
 
 .lp-h1 {
   font-family: var(--display); font-weight: 700;
   line-height: 1.04; letter-spacing: -0.03em; margin: 0;
-  text-wrap: balance; color: var(--page-fg);
+  text-wrap: normal; color: var(--page-fg);
 }
 .lp-h1 em { font-style: normal; color: var(--em); }
 
@@ -173,7 +173,8 @@
 /* ════════ Phones (≤500px) ════════ */
 @media (max-width: 500px) {
   .lp-hero { padding: 20px 0 28px; }
-  .lp-hero-single .lp-h1 { font-size: clamp(30px, 8.2vw, 40px); line-height: 1.05; letter-spacing: -0.025em; }
+  /* Slightly smaller so both owner headline lines stay one row on narrow phones */
+  .lp-hero-single .lp-h1 { font-size: clamp(24px, 6.8vw, 34px); line-height: 1.05; letter-spacing: -0.025em; }
   .lp-authority-line { margin-top: 12px; font-size: 13px; }
   .lp-cta-card { margin-top: 18px; padding: 20px 18px 16px; }
   .lp-cta-intro { font-size: 11px; letter-spacing: 0.16em; margin-bottom: 12px; }
@@ -189,7 +190,7 @@
 @media (max-height: 720px) {
   .lp-hero { padding: 12px 0 18px; }
   .lp-topbar { padding: 9px 0; }
-  .lp-hero-single .lp-h1 { font-size: clamp(24px, 6.6vw, 34px); line-height: 1.04; }
+  .lp-hero-single .lp-h1 { font-size: clamp(22px, 6.2vw, 30px); line-height: 1.04; }
   .lp-authority-line { margin-top: 9px; font-size: 12.5px; }
   .lp-cta-card { margin-top: 12px; padding: 16px 16px 14px; }
   .lp-cta-intro { margin-bottom: 9px; }
