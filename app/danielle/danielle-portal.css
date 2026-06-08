@@ -46,12 +46,45 @@
   align-items: center;
 }
 
+.danielle-portal__header-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 18px;
+  padding-bottom: 0;
+  flex-wrap: wrap;
+}
+
 .danielle-portal__nav {
   display: flex;
   gap: 8px;
-  margin-top: 18px;
   padding-bottom: 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  flex: 1;
+  min-width: 0;
+}
+
+.danielle-portal__practice-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-bottom: 10px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: #7fd0a0;
+  color: var(--danielle-navy);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.danielle-portal__practice-cta:hover {
+  background: #9bddb3;
+  color: var(--danielle-navy);
 }
 
 .danielle-portal__nav-link {

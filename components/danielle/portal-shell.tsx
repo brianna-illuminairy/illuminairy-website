@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { IlluminairyLogoV7 } from "@/components/brand/illuminairy-logo-v7";
+import { practicePortalLoginUrl } from "@/lib/internal-links";
 
 const NAV = [
   { href: "/danielle", label: "SAT Plan", match: (path: string) => path === "/danielle" },
@@ -12,6 +13,36 @@ const NAV = [
     match: (path: string) => path.startsWith("/danielle/diagnostic")
   }
 ] as const;
+
+function DanielleHeaderNav({ pathname }: { pathname: string }) {
+  return (
+    <div className="danielle-portal__header-row">
+      <nav className="danielle-portal__nav" aria-label="Student portal">
+        {NAV.map((item) => {
+          const active = item.match(pathname);
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`danielle-portal__nav-link${active ? " is-active" : ""}`}
+              aria-current={active ? "page" : undefined}
+            >
+              {item.label}
+            </Link>
+          );
+        })}
+      </nav>
+      <a
+        href={practicePortalLoginUrl}
+        className="danielle-portal__practice-cta"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Practice Portal
+      </a>
+    </div>
+  );
+}
 
 export function DaniellePortalShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname() ?? "";
@@ -23,21 +54,7 @@ export function DaniellePortalShell({ children }: { children: React.ReactNode })
           <Link href="/danielle" className="danielle-portal__logo" aria-label="Illuminairy">
             <IlluminairyLogoV7 tone="on-dark" height={34} />
           </Link>
-          <nav className="danielle-portal__nav" aria-label="Student portal">
-            {NAV.map((item) => {
-              const active = item.match(pathname);
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`danielle-portal__nav-link${active ? " is-active" : ""}`}
-                  aria-current={active ? "page" : undefined}
-                >
-                  {item.label}
-                </Link>
-              );
-            })}
-          </nav>
+          <DanielleHeaderNav pathname={pathname} />
         </div>
       </header>
       <div className="danielle-portal__body">{children}</div>
@@ -56,6 +73,16 @@ export function DanielleLoginChrome({ children }: { children: React.ReactNode })
           <span className="danielle-portal__logo" aria-label="Illuminairy">
             <IlluminairyLogoV7 tone="on-dark" height={34} />
           </span>
+          <div className="danielle-portal__header-row">
+            <a
+              href={practicePortalLoginUrl}
+              className="danielle-portal__practice-cta"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Practice Portal
+            </a>
+          </div>
         </div>
       </header>
       <div className="danielle-portal__login-wrap">{children}</div>

@@ -6,6 +6,9 @@
 /** SAT family consultations — public; also wired via NEXT_PUBLIC_CALENDLY_URL / site.calendlyUrl */
 export const publicConsultationPath = "/contact#schedule";
 
+/** White-labeled tutoring practice platform — student login (Danielle portal nav). */
+export const practicePortalLoginUrl = "https://my.illuminairy.com/login";
+
 /**
  * Mentor interview — invite only after resume review.
  * Do not import this in client components or public pages.
