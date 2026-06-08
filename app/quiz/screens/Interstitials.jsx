@@ -178,11 +178,9 @@ export function QFI2Compute({
   return (
     <QFScreen stepIdx={14} tone="ink" onBack={onBack}
       actions={
-        showDone ? (
-          <QFButton kind="forest" onClick={onContinue}>Reveal {possessive} plan</QFButton>
-        ) : (
-          <QFButton kind="forest" disabled aria-busy="true">Building plan…</QFButton>
-        )
+        <QFButton kind="forest" onClick={onContinue} disabled={!showDone} aria-busy={!showDone}>
+          Reveal {possessive} plan
+        </QFButton>
       }
     >
       <svg className="qf-starfield" viewBox="0 0 360 700" preserveAspectRatio="xMidYMid slice">
@@ -589,7 +587,7 @@ export function QFV1Projection({ onContinue, onBack, answers = {} }) {
               );
             })}
           </div>
-          <p className="qf-caption" style={{ textAlign: 'center', margin: 0 }}>Found through the Skill Diagnostic.</p>
+          <p className="qf-caption" style={{ textAlign: 'center', margin: 0 }}>Found with Our Skill Diagnostic - reserve a call to get started.</p>
         </div>
 
         {/* Narrative — plan → why a call + diagnostic is the next step */}

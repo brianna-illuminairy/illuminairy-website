@@ -21,7 +21,7 @@
 ## Hard rules
 
 1. **Match interaction mode** — `lib/quiz-funnel/step-interaction.mjs`. Do not invent CTAs (auto-advance stays auto; option-tap stays tap).
-2. **Single-select (`option-tap`)** — option tap advances. Backup footer optional, not a new interaction.
+2. **Single-select (`option-tap`)** — option tap advances. **No** pinned Continue / backup footer.
 3. **Auto-advance** — `QFInsightHit` progress chrome only; `QFButton` only for reduced-motion fallback.
 4. **Multi-select / forms / interstitials** — explicit `QFButton` in `actions` when mode requires it.
 5. **Shell owns step chrome** — `QFShell.tsx` renders `.qf-step-actions` when `actions` is set. Step files are **content only**.

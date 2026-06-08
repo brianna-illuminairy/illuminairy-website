@@ -19,7 +19,9 @@ import {
 import { readPersistedLpLayout } from "@/lib/landing/layout-storage";
 import { readPersistedLpVariant } from "@/lib/landing/variant-storage";
 import { PLAN_BUILDER_PATH } from "@/lib/plan-builder-routes";
+import { buildQuizAnswersSnapshot } from "@/lib/crm/quiz-answers-snapshot";
 import { QUIZ_ENTRY_STEP } from "@/lib/quiz-funnel/funnel-steps";
+import { syncQuizProgressNow } from "@/lib/quiz-funnel/quiz-progress-sync";
 
 declare global {
   interface Window {
@@ -47,13 +49,31 @@ function quizOpeningProps(answers: Record<string, unknown>) {
 function syncQuizPersonProperties(answers: Record<string, unknown>) {
   if (!getPostHogKey()) return;
   const opening = quizOpeningProps(answers);
-  if (!opening.qWho && !opening.qScoreLower && !opening.q1) return;
+  const snapshot = buildQuizAnswersSnapshot(answers);
+  const kid = snapshot.kidName ?? undefined;
+  if (
+    !opening.qWho &&
+    !opening.qScoreLower &&
+    !opening.q1 &&
+    !kid &&
+    !snapshot.q2
+  ) {
+    return;
+  }
   posthog.setPersonProperties({
     qWho: opening.qWho,
     qScoreLower: opening.qScoreLower,
     quiz_trigger: opening.q1,
     quiz_urgency: opening.q1,
-    quiz_is_self_taker: opening.quiz_is_self_taker
+    quiz_is_self_taker: opening.quiz_is_self_taker,
+    kid_first_name: kid,
+    has_kid_name: Boolean(kid),
+    q2: snapshot.q2 ?? undefined,
+    q3: snapshot.q3 ?? undefined,
+    q4: snapshot.q4 ?? undefined,
+    q5: snapshot.q5 ?? undefined,
+    q8: snapshot.q8 ?? undefined,
+    q9: snapshot.q9 ?? undefined
   });
 }
 
@@ -136,12 +156,15 @@ export function captureQuizStarted(answers: Record<string, unknown>) {
   const lpContext = persistedLpContext();
   const opening = quizOpeningProps(answers);
   const attr = quizAttributionProps();
+  const snapshot = buildQuizAnswersSnapshot(answers);
+  syncQuizProgressNow(answers, { step: QUIZ_ENTRY_STEP, step_index: 0 });
   recordClientTouch(TouchEvents.quizStarted, {
     step: QUIZ_ENTRY_STEP,
     step_index: 0,
     ...lpContext,
     ...attr,
-    ...opening
+    ...opening,
+    quiz_answers: snapshot
   });
   trackQuizGaEvent("quiz_started", {
     funnel: "sat_quiz",
@@ -167,6 +190,9 @@ export function captureQuizStep(
   const opening = quizOpeningProps(answers);
   const attr = quizAttributionProps();
   const lpContext = persistedLpContext();
+  const snapshot = buildQuizAnswersSnapshot(answers);
+  const kid = snapshot.kidName ?? undefined;
+  syncQuizProgressNow(answers, { step: stepId, step_index: stepIndex });
   const props = {
     ...lpContext,
     ...attr,
@@ -176,14 +202,16 @@ export function captureQuizStep(
     viewport_width:
       typeof window !== "undefined" ? window.innerWidth : undefined,
     ...opening,
-    q2: answers.q2,
-    q3: answers.q3,
-    q4: answers.q4,
-    q5: answers.q5,
-    q6: answers.q6,
-    q7: answers.q7,
-    q8: answers.q8,
-    q9: answers.q9
+    q2: snapshot.q2 ?? undefined,
+    q3: snapshot.q3 ?? undefined,
+    q4: snapshot.q4 ?? undefined,
+    q5: snapshot.q5 ?? undefined,
+    q6: snapshot.q6,
+    q7: snapshot.q7,
+    q8: snapshot.q8 ?? undefined,
+    q9: snapshot.q9 ?? undefined,
+    kid_first_name: kid,
+    has_kid_name: Boolean(kid)
   };
   recordClientTouch(TouchEvents.quizStepView, {
     step: stepId,
@@ -191,7 +219,8 @@ export function captureQuizStep(
     sat_lp_variant: lpContext.sat_lp_variant,
     has_gap_screen: Boolean(options?.hasGapScreen),
     ...opening,
-    ...attr
+    ...attr,
+    quiz_answers: snapshot
   });
   trackQuizGaEvent("quiz_step_view", {
     step: stepId,

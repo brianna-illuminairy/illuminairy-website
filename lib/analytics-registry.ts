@@ -15,6 +15,7 @@ export const TouchEvents = {
   parentConfirmed: "parent_confirmed",
   quizStarted: "quiz_started",
   quizStepView: "quiz_step_view",
+  quizProgressSync: "quiz_progress_sync",
   quizLeadSubmitted: "quiz_lead_submitted",
   callBooked: "call_booked",
   bookingError: "booking_error",
@@ -35,6 +36,7 @@ export const CLIENT_TOUCH_EVENTS = new Set<TouchEventName>([
   TouchEvents.parentConfirmed,
   TouchEvents.quizStarted,
   TouchEvents.quizStepView,
+  TouchEvents.quizProgressSync,
   TouchEvents.quizScheduleView,
   TouchEvents.attributionReturn
 ]);

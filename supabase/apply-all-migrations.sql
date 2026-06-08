@@ -225,3 +225,9 @@ create table if not exists plan_shares (
 create index if not exists plan_shares_expires_at_idx on plan_shares (expires_at);
 
 comment on table plan_shares is 'Public read-only Improvement Plan snapshots; no PII in payload.';
+
+-- Partial funnel answers on anonymous visitors (before lead submit)
+alter table visitors add column if not exists quiz_answers jsonb not null default '{}'::jsonb;
+alter table visitors add column if not exists quiz_answers_updated_at timestamptz;
+comment on column visitors.quiz_answers is 'Latest SAT Score Path answers snapshot (intake + kid name + contact fields as entered)';
+comment on column visitors.quiz_answers_updated_at is 'Last time quiz_answers was synced from the browser';

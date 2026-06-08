@@ -48,12 +48,12 @@ Registry: `lib/quiz-funnel/step-interaction.mjs`. Each routed step has **one** m
 
 | Mode | User action | Step chrome (`actions=`) |
 |------|-------------|---------------------------|
-| `option-tap` | Tap an option to advance | Optional disabled backup (`QFSingleSelectFooter`) — not required |
+| `option-tap` | Tap an option to advance | **None** — no pinned Continue |
 | `auto-advance` | Timer advances (`QFInsightHit`) | Progress bar only — **no** `QFButton |
 | `multi-continue` | Select options, then Continue | `QFButton` / `QFContinueFooter` |
 | `form-continue` | Fill field, then Continue | `QFButton` |
 | `explicit-cta` | Tap Continue (or step-specific CTA) | `QFButton` |
-| `phased-cta` | Wait for animation, then Continue | Disabled button during phase, then enable (`i2`) |
+| `phased-cta` | Wait for animation, then Continue | Same CTA label always visible; disabled until ready (`i2`) |
 
 Reduced motion: auto-advance insight slides fall back to an explicit Continue (accessibility only).
 

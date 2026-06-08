@@ -8,6 +8,7 @@ import {
   type ReactNode,
   type Dispatch
 } from 'react';
+import { scheduleQuizProgressSync } from '@/lib/quiz-funnel/quiz-progress-sync';
 
 const STORAGE_KEY = 'qf_answers';
 
@@ -109,6 +110,11 @@ export function QuizProvider({ children }: { children: ReactNode }) {
       /* ignore */
     }
   }, [answers]);
+
+  useEffect(() => {
+    if (!hydrated) return;
+    scheduleQuizProgressSync(answers as Record<string, unknown>);
+  }, [answers, hydrated]);
 
   return (
     <QuizCtx.Provider value={{ answers, dispatch, hydrated }}>

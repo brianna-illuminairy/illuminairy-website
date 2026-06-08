@@ -16,7 +16,7 @@ alwaysApply: false
 
 ## Hard rule
 
-Match each step's **interaction mode** (`lib/quiz-funnel/step-interaction.mjs`). Do not invent CTAs: auto-advance stays timer-driven; option-tap stays tap-to-advance. When a mode needs a button, put it in `actions=` → `.qf-step-actions`. Never per-step viewport heights.
+Match each step's **interaction mode** (`lib/quiz-funnel/step-interaction.mjs`). Do not invent CTAs: auto-advance stays timer-driven; option-tap is tap-only (no pinned Continue). Interstitial CTAs stay as originally defined. When a mode needs a button, put it in `actions=` → `.qf-step-actions`. Never per-step viewport heights.
 
 ## Do not
 

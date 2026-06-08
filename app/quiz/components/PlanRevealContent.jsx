@@ -1,6 +1,6 @@
 'use client';
 
-import { buildGoalAchievabilityFallback } from '@/lib/quiz-funnel/goal-achievability';
+import { resolveGoalAchievabilityForDisplay } from '@/lib/quiz-funnel/goal-achievability';
 import { AchievabilityPlanBlock } from './AchievabilityRating';
 import { AchievabilityInputChips } from './AchievabilityInputChips';
 
@@ -28,8 +28,7 @@ function renderStakesLead(text, emphasis) {
  * }} props
  */
 export function PlanRevealContent({ plan, title, introNote, q2, answers, onEditAnswer }) {
-  const assessment =
-    plan.achievability ?? buildGoalAchievabilityFallback(plan);
+  const assessment = resolveGoalAchievabilityForDisplay(plan);
   return (
     <div className="gap-14 qf-goal-assess">
       <div className="qf-goal-assess__hero">
@@ -52,15 +51,6 @@ export function PlanRevealContent({ plan, title, introNote, q2, answers, onEditA
         ) : null}
       </div>
 
-      <div className="qf-stat-callout qf-goal-assess__hit-rate">
-        <span className="qf-stat-callout__pct">{assessment.hitRatePct}%</span>
-        <p className="qf-stat-callout__text">
-          {assessment.hitRateBefore}
-          <strong>{assessment.hitRateEmphasis}</strong>
-          {assessment.hitRateAfter}
-        </p>
-      </div>
-
       <AchievabilityPlanBlock
         stats={assessment.stats}
         startingScoreLabel={assessment.startingScoreLabel}
@@ -69,6 +59,15 @@ export function PlanRevealContent({ plan, title, introNote, q2, answers, onEditA
         educational
         outcomesMeta={assessment.outcomesMeta}
       />
+
+      <div className="qf-stat-callout qf-goal-assess__hit-rate">
+        <span className="qf-stat-callout__pct">{assessment.hitRatePct}%</span>
+        <p className="qf-stat-callout__text">
+          {assessment.hitRateBefore}
+          <strong>{assessment.hitRateEmphasis}</strong>
+          {assessment.hitRateAfter}
+        </p>
+      </div>
 
       {introNote ? <p className="qf-caption">{introNote}</p> : null}
     </div>

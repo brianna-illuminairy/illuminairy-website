@@ -749,6 +749,29 @@
   background: rgba(18, 26, 43, 0.12);
   color: rgba(18, 26, 43, 0.3);
   cursor: not-allowed;
+  transform: none;
+}
+.qf-page .qf-btn[disabled]:hover {
+  background: rgba(18, 26, 43, 0.12);
+}
+.qf-page .qf-btn.forest[disabled] {
+  background: rgba(119, 200, 154, 0.28);
+  color: rgba(255, 255, 255, 0.72);
+}
+.qf-page .qf-btn.forest[disabled]:hover {
+  background: rgba(119, 200, 154, 0.28);
+}
+/* i2 compute: Reveal CTA visible but locked until plan finishes building */
+.qf-page:has(.qf-body--ink) .qf-step-actions .qf-btn.forest[disabled] {
+  background: rgba(255, 255, 255, 0.16);
+  color: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+}
+.qf-page:has(.qf-body--ink) .qf-step-actions .qf-btn.forest[disabled]:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+.qf-page:has(.qf-body--ink) .qf-step-actions .qf-btn.forest:not([disabled]) {
+  border: 1px solid transparent;
 }
 .qf-page .qf-btn .arrow { font-size: 16px; line-height: 1; }
 

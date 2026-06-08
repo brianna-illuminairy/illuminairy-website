@@ -133,7 +133,39 @@ async function assertExplicitCta(page, stepId, { allowDisabled = true } = {}) {
 
   if (!(await assertChromePinned(page, stepId, chrome))) return false;
 
-  pass(stepId, disabled ? "CTA visible (disabled until ready)" : "CTA visible and enabled");
+  if (!disabled && !(await assertCtaClickable(page, stepId, btn))) return false;
+
+  pass(stepId, disabled ? "CTA visible (disabled until ready)" : "CTA visible, enabled, clickable");
+  return true;
+}
+
+/** Center of button must be in viewport and receive pointer hits (not covered). */
+async function assertCtaClickable(page, stepId, btn) {
+  const hit = await btn.evaluate((el) => {
+    const rect = el.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    if (rect.width < 2 || rect.height < 2) {
+      return { ok: false, reason: "zero-size button" };
+    }
+    if (cy < 0 || cy > window.innerHeight || cx < 0 || cx > window.innerWidth) {
+      return { ok: false, reason: "button center outside viewport" };
+    }
+    const top = document.elementFromPoint(cx, cy);
+    if (!top) return { ok: false, reason: "elementFromPoint missed" };
+    const blocked = top !== el && !el.contains(top) && !top.contains(el);
+    if (blocked) {
+      return { ok: false, reason: `covered by ${top.tagName}` };
+    }
+    if (window.getComputedStyle(el).pointerEvents === "none") {
+      return { ok: false, reason: "pointer-events: none" };
+    }
+    return { ok: true };
+  });
+  if (!hit.ok) {
+    fail(stepId, `CTA not clickable — ${hit.reason}`);
+    return false;
+  }
   return true;
 }
 
@@ -144,10 +176,14 @@ async function assertStepInteraction(page, stepId, opts = {}) {
     await page.waitForSelector(".qf-opt", { timeout: TIMEOUT });
     const chrome = page.locator('[role="region"][aria-label="Step actions"]');
     if ((await chrome.count()) > 0) {
-      await chrome.waitFor({ state: "visible", timeout: TIMEOUT });
-      await assertChromePinned(page, stepId, chrome);
+      fail(stepId, "option-tap must not show step CTA chrome");
+      return false;
     }
-    pass(stepId, "options visible (tap to advance)");
+    if ((await page.locator(".qf-page--has-actions").count()) > 0) {
+      fail(stepId, "option-tap must not use qf-page--has-actions");
+      return false;
+    }
+    pass(stepId, "options visible (tap to advance, no CTA)");
     return true;
   }
 
@@ -260,8 +296,11 @@ async function checkIStepsFooterAfterScroll(page) {
     fail("i-steps-scroll", "Build their plan button not visible after scroll");
     return;
   }
+  if (!(await assertCtaClickable(page, "i-steps-scroll", btn))) return;
 
-  pass("i-steps-scroll", "CTA visible before and after max body scroll");
+  await btn.click();
+  await page.waitForURL(/step=q4/, { timeout: TIMEOUT });
+  pass("i-steps-scroll", "CTA pinned after scroll, clickable, advances to q4");
 }
 
 async function checkAchievabilityFooterAfterScroll(page) {
@@ -374,11 +413,17 @@ async function checkAllRoutedSteps(page) {
     });
   }
 
-  // i2 compute: wait for animation CTA to enable
+  // i2 compute: CTA label visible immediately; enables when animation finishes
   await openStep(page, "i2");
   const footer = page.locator('[role="region"][aria-label="Step actions"] button.qf-btn');
   try {
     await footer.waitFor({ state: "visible", timeout: TIMEOUT });
+    const label = await footer.innerText();
+    if (!/Reveal/i.test(label)) {
+      fail("i2", `expected Reveal CTA label, got "${label.trim()}"`);
+    } else if (await footer.isDisabled()) {
+      pass("i2", "Reveal CTA visible while computing (disabled until ready)");
+    }
     await page.waitForFunction(
       () => {
         const btn = document.querySelector('[aria-label="Step actions"] button.qf-btn');
@@ -386,7 +431,7 @@ async function checkAllRoutedSteps(page) {
       },
       { timeout: 20_000 }
     );
-    pass("i2", "compute animation completes → CTA enables");
+    pass("i2", "compute animation completes → Reveal CTA enables");
   } catch {
     fail("i2", "compute CTA never enabled after animation");
   }

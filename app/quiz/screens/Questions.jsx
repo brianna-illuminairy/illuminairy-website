@@ -1,5 +1,5 @@
 'use client'; // @ts-nocheck
-import { QFScreen, QFOption, QFButton, QFQuestionHead, QFOptOut, QFWhyWeAsk, QFSingleSelectFooter } from '../components/QFShell';
+import { QFScreen, QFOption, QFButton, QFQuestionHead, QFOptOut, QFWhyWeAsk } from '../components/QFShell';
 import { Q2_STAKES_OPTIONS } from '@/lib/quiz-funnel/stakes-copy';
 import { DOUBTS_OPTIONS } from '@/lib/quiz-funnel/doubts-copy';
 import { NAME_CTA } from '@/lib/quiz-funnel/score-path-copy';
@@ -27,9 +27,7 @@ import {
 
 export function QFQWho({ value, onSelect, onBack }) {
   return (
-    <QFScreen stepIdx={1} onBack={onBack}
-      actions={<QFSingleSelectFooter value={value} onSelect={onSelect} />}
-    >
+    <QFScreen stepIdx={1} onBack={onBack}>
       <QFQuestionHead title="Who needs SAT help?" />
       <div className="qf-options">
         {Q_WHO_OPTIONS.map(o => (
@@ -42,9 +40,7 @@ export function QFQWho({ value, onSelect, onBack }) {
 
 export function QFQScoreLower({ value, onSelect, onBack, qWho = 'child' }) {
   return (
-    <QFScreen stepIdx={2} onBack={onBack}
-      actions={<QFSingleSelectFooter value={value} onSelect={onSelect} />}
-    >
+    <QFScreen stepIdx={2} onBack={onBack}>
       <QFQuestionHead title={scoreLowerQuestion(qWho)} />
       <div className="qf-options">
         {Q_SCORE_LOWER_OPTIONS.map(o => (
@@ -57,9 +53,7 @@ export function QFQScoreLower({ value, onSelect, onBack, qWho = 'child' }) {
 
 export function QFQ1Trigger({ value, onSelect, onBack }) {
   return (
-    <QFScreen stepIdx={3} onBack={onBack}
-      actions={<QFSingleSelectFooter value={value} onSelect={onSelect} />}
-    >
+    <QFScreen stepIdx={3} onBack={onBack}>
       <QFQuestionHead title="What feels most <em>urgent</em> right now?" />
       <div className="qf-options">
         {Q_URGENCY_OPTIONS.map(o => (
@@ -72,9 +66,7 @@ export function QFQ1Trigger({ value, onSelect, onBack }) {
 
 export function QFQ2Stakes({ value, onSelect, onBack, qWho = 'child' }) {
   return (
-    <QFScreen stepIdx={4} onBack={onBack}
-      actions={<QFSingleSelectFooter value={value} onSelect={onSelect} />}
-    >
+    <QFScreen stepIdx={4} onBack={onBack}>
       <QFQuestionHead title={stakesQuestionHtml(qWho)} />
       <div className="qf-options">
         {Q2_STAKES_OPTIONS.map(o => (
@@ -96,9 +88,7 @@ export function QFQ3TimesTaken({ value, onSelect, onBack, qWho = 'child' }) {
     { id: 'none',      label: 'None' },
   ];
   return (
-    <QFScreen stepIdx={5} onBack={onBack}
-      actions={<QFSingleSelectFooter value={value} onSelect={onSelect} />}
-    >
+    <QFScreen stepIdx={5} onBack={onBack}>
       <QFQuestionHead title={timesTakenQuestion(qWho)} />
       <div className="qf-options">
         {opts.map(o => (
@@ -119,9 +109,7 @@ export function QFQ4RecentScore({ value, onSelect, onBack, q3 = 'sat-1', qWho = 
     { id: '1400plus',  label: '1400+' },
   ];
   return (
-    <QFScreen stepIdx={6} onBack={onBack}
-      actions={<QFSingleSelectFooter value={value} onSelect={onSelect} />}
-    >
+    <QFScreen stepIdx={6} onBack={onBack}>
       <QFQuestionHead title={recentScoreQuestionHtml(qWho, hasSat)} />
       <div className="qf-options">
         {opts.map(o => (
@@ -164,9 +152,7 @@ export function QFQ5Clock({ value, onSelect, onBack, qWho = 'child' }) {
     { id: 'tbd', label: 'Not sure yet' },
   ];
   return (
-    <QFScreen stepIdx={8} onBack={onBack}
-      actions={<QFSingleSelectFooter value={value} onSelect={onSelect} />}
-    >
+    <QFScreen stepIdx={8} onBack={onBack}>
       <QFQuestionHead title={nextSatQuestionHtml(qWho)} />
       <div className="qf-options">
         {opts.map(o => (
@@ -237,9 +223,7 @@ export function QFQ8Goal({ value, onSelect, onBack, qWho = 'child' }) {
     { id: '1450', label: '1450+' },
   ];
   return (
-    <QFScreen stepIdx={12} onBack={onBack}
-      actions={<QFSingleSelectFooter value={value} onSelect={onSelect} />}
-    >
+    <QFScreen stepIdx={12} onBack={onBack}>
       <QFQuestionHead title={goalScoreQuestionHtml(qWho)} />
       <div className="qf-options">
         {opts.map(o => (
@@ -261,9 +245,7 @@ export function QFQ9GPA({ value, onSelect, onBack, qWho = 'child' }) {
     { id: '4.0+',    label: '4.0+' },
   ];
   return (
-    <QFScreen stepIdx={14} onBack={onBack}
-      actions={<QFSingleSelectFooter value={value} onSelect={onSelect} />}
-    >
+    <QFScreen stepIdx={14} onBack={onBack}>
       <QFQuestionHead title={gpaQuestionHtml(qWho)} />
       <div className="qf-options">
         {opts.map(o => (

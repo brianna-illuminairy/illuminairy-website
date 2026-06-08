@@ -2,6 +2,10 @@ import {
   deriveLeadSource,
   type AttributionSnapshot
 } from "@/lib/attribution";
+import {
+  buildQuizAnswersSnapshot,
+  type QuizAnswersSnapshotInput
+} from "@/lib/crm/quiz-answers-snapshot";
 import { getSupabaseAdmin } from "@/lib/supabase/server";
 import {
   promisedGainFromQuizAnswers,
@@ -11,50 +15,12 @@ import {
 import { appendTouchEvent, getFirstTouchForVisitor, linkVisitorTouches } from "@/lib/crm/touch";
 import { getVisitorById } from "@/lib/crm/visitors";
 
-export type QuizAnswersPayload = {
-  qWho?: string | null;
-  qScoreLower?: string | null;
-  q1?: string | null;
-  q2?: string | null;
-  q3?: string | null;
-  q4?: string | null;
-  q5?: string | null;
-  q6?: string[];
-  q7?: string[];
-  q8?: string | null;
-  q9?: string | null;
-  parentName?: string;
-  parentEmail?: string;
-  parentPhone?: string;
-  kidName?: string;
-  confirmTcpa?: boolean;
-  planChoice?: string;
-  sat_lp_variant?: string | null;
-};
+export type QuizAnswersPayload = QuizAnswersSnapshotInput;
 
 function splitName(full: string) {
   const parts = full.trim().split(/\s+/);
   if (parts.length === 1) return { first: parts[0], last: "" };
   return { first: parts[0], last: parts.slice(1).join(" ") };
-}
-
-function buildQuizAnswersSnapshot(answers: QuizAnswersPayload) {
-  return {
-    qWho: answers.qWho ?? null,
-    qScoreLower: answers.qScoreLower ?? null,
-    q1: answers.q1 ?? null,
-    q2: answers.q2 ?? null,
-    q3: answers.q3 ?? null,
-    q4: answers.q4 ?? null,
-    q5: answers.q5 ?? null,
-    q6: answers.q6 ?? [],
-    q7: answers.q7 ?? [],
-    q8: answers.q8 ?? null,
-    q9: answers.q9 ?? null,
-    planChoice: answers.planChoice ?? "full",
-    confirmTcpa: Boolean(answers.confirmTcpa),
-    sat_lp_variant: answers.sat_lp_variant ?? null
-  };
 }
 
 export async function upsertLeadFromQuizFunnel(

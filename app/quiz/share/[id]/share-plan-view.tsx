@@ -20,7 +20,7 @@ type Props = {
 
 export function SharePlanView({ shareId, payload }: Props) {
   const { plan, studentLabel } = payload;
-  const ctaHref = `/quiz?step=q-who&utm_source=shared_plan&utm_medium=referral&utm_content=${encodeURIComponent(shareId)}`;
+  const ctaHref = `/plan?step=q-who&utm_source=shared_plan&utm_medium=referral&utm_content=${encodeURIComponent(shareId)}`;
 
   useEffect(() => {
     capturePlanShareViewed({ shareId });

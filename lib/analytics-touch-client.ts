@@ -6,6 +6,7 @@ import {
   CLIENT_TOUCH_EVENTS,
   type TouchEventName
 } from "@/lib/analytics-registry";
+import type { QuizAnswersSnapshot } from "@/lib/crm/quiz-answers-snapshot";
 
 const DEDUPE = new Set<string>();
 
@@ -34,7 +35,8 @@ export type ClientTouchPayload = {
   sat_lp_variant?: string;
   section_id?: string;
   cta_label?: string;
-  [key: string]: string | number | boolean | undefined;
+  quiz_answers?: QuizAnswersSnapshot;
+  [key: string]: string | number | boolean | QuizAnswersSnapshot | undefined;
 };
 
 /**
@@ -51,7 +53,9 @@ export function recordClientTouch(
   const dedupeKey =
     eventType === "quiz_step_view" && payload?.step
       ? `${eventType}:${payload.step}`
-      : null;
+      : eventType === "quiz_progress_sync" && payload?.quiz_answers
+        ? `${eventType}:${payload.step ?? ""}:${JSON.stringify(payload.quiz_answers)}`
+        : null;
   if (dedupeKey && DEDUPE.has(dedupeKey)) return;
   if (dedupeKey) DEDUPE.add(dedupeKey);
 

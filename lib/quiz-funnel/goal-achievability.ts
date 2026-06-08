@@ -645,6 +645,25 @@ export function buildGoalAchievability(
 }
 
 /** Share payloads saved before achievability shipped — rebuild a minimal view. */
+/** Merge stored/partial achievability with computed defaults so share + reveal never crash. */
+export function resolveGoalAchievabilityForDisplay(plan: {
+  achievability?: Partial<GoalAchievability> | null;
+  metrics?: { gainRange?: string; weeks?: string };
+  subhead?: string;
+}): GoalAchievability {
+  const fallback = buildGoalAchievabilityFallback(plan);
+  const partial = plan.achievability;
+  if (!partial) return fallback;
+  return {
+    ...fallback,
+    ...partial,
+    stats: partial.stats ?? fallback.stats,
+    tierRanges: partial.tierRanges ?? fallback.tierRanges,
+    stakesEmphasis: partial.stakesEmphasis ?? fallback.stakesEmphasis,
+    insightParagraph: partial.insightParagraph ?? fallback.insightParagraph,
+  };
+}
+
 export function buildGoalAchievabilityFallback(
   plan: {
     metrics?: { gainRange?: string; weeks?: string };

@@ -1,4 +1,5 @@
 import type { AttributionSnapshot } from "@/lib/attribution";
+import type { QuizAnswersSnapshot } from "@/lib/crm/quiz-answers-snapshot";
 import { getSupabaseAdmin } from "@/lib/supabase/server";
 
 export type VisitorTouchInput = {
@@ -49,6 +50,12 @@ export async function upsertVisitorFromTouch(input: VisitorTouchInput) {
     typeof input.payload?.posthog_distinct_id === "string"
       ? input.payload.posthog_distinct_id
       : undefined;
+  const quizAnswers =
+    input.payload?.quiz_answers &&
+    typeof input.payload.quiz_answers === "object" &&
+    !Array.isArray(input.payload.quiz_answers)
+      ? (input.payload.quiz_answers as QuizAnswersSnapshot)
+      : undefined;
 
   const { data: existing, error: readErr } = await supabase
     .from("visitors")
@@ -67,7 +74,7 @@ export async function upsertVisitorFromTouch(input: VisitorTouchInput) {
   }
 
   if (!existing) {
-    const row = {
+    const row: Record<string, unknown> = {
       id: input.visitor_id,
       first_seen_at: now,
       last_seen_at: now,
@@ -79,6 +86,10 @@ export async function upsertVisitorFromTouch(input: VisitorTouchInput) {
       device_class: deviceClass ?? null,
       posthog_distinct_id: posthogDistinctId ?? null
     };
+    if (quizAnswers && typeof quizAnswers === "object") {
+      row.quiz_answers = quizAnswers;
+      row.quiz_answers_updated_at = now;
+    }
     const { error } = await supabase.from("visitors").insert(row);
     if (error) {
       console.error("upsertVisitorFromTouch insert:", error);
@@ -116,6 +127,10 @@ export async function upsertVisitorFromTouch(input: VisitorTouchInput) {
   }
   if (posthogDistinctId) {
     patch.posthog_distinct_id = posthogDistinctId;
+  }
+  if (quizAnswers && typeof quizAnswers === "object") {
+    patch.quiz_answers = quizAnswers;
+    patch.quiz_answers_updated_at = now;
   }
 
   const { error: updateErr } = await supabase
