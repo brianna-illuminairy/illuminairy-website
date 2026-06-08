@@ -8,7 +8,8 @@ import {
   readSessionAttribution,
   writeSessionAttribution,
   type AttributionSnapshot,
-  VISITOR_COOKIE
+  VISITOR_COOKIE,
+  VISITOR_STORAGE_KEY
 } from "@/lib/attribution";
 import { applyLandingAttributionInference } from "@/lib/marketing/landing-attribution-infer";
 import { persistMetaClickIds } from "@/lib/meta-click-ids";
@@ -28,12 +29,32 @@ function writeCookie(name: string, value: string) {
   document.cookie = `${name}=${encodeURIComponent(value)}; Path=/; Max-Age=${COOKIE_MAX_AGE}; SameSite=Lax${secure}`;
 }
 
+function readStoredVisitorId() {
+  if (typeof window === "undefined") return "";
+  try {
+    return localStorage.getItem(VISITOR_STORAGE_KEY) ?? "";
+  } catch {
+    return "";
+  }
+}
+
+function writeStoredVisitorId(value: string) {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem(VISITOR_STORAGE_KEY, value);
+  } catch {
+    /* ignore */
+  }
+}
+
 function ensureVisitorId() {
-  let id = readCookie(VISITOR_COOKIE);
+  let id = readStoredVisitorId() || readCookie(VISITOR_COOKIE);
   if (!id) {
     id = createVisitorId();
-    writeCookie(VISITOR_COOKIE, id);
   }
+  // Storage is primary on mobile; cookie is legacy/back-compat.
+  writeStoredVisitorId(id);
+  if (!readCookie(VISITOR_COOKIE)) writeCookie(VISITOR_COOKIE, id);
   return id;
 }
 
@@ -111,7 +132,7 @@ export function AttributionProvider({ children }: { children: React.ReactNode })
 }
 
 export function getVisitorIdFromCookie() {
-  return readCookie(VISITOR_COOKIE);
+  return readStoredVisitorId() || readCookie(VISITOR_COOKIE);
 }
 
 export function getAttributionPayload(): {

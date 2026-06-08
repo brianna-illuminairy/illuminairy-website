@@ -43,31 +43,37 @@ export function readQuizLastStep(): string | null {
   }
 }
 
-function writeLocalAnswers(answers: StoredQuizAnswers): void {
-  if (typeof window === "undefined") return;
+function writeLocalAnswers(answers: StoredQuizAnswers): boolean {
+  if (typeof window === "undefined") return false;
   try {
     localStorage.setItem(QUIZ_ANSWERS_STORAGE_KEY, JSON.stringify(answers));
+    return true;
   } catch {
     /* ignore quota / private mode */
+    return false;
   }
 }
 
-function writeLocalLastStep(step: string | null): void {
-  if (typeof window === "undefined") return;
+function writeLocalLastStep(step: string | null): boolean {
+  if (typeof window === "undefined") return false;
   try {
     if (step) localStorage.setItem(QUIZ_LAST_STEP_STORAGE_KEY, step);
     else localStorage.removeItem(QUIZ_LAST_STEP_STORAGE_KEY);
+    return true;
   } catch {
     /* ignore */
+    return false;
   }
 }
 
-function writeLocalUpdatedAt(updatedAt: number): void {
-  if (typeof window === "undefined") return;
+function writeLocalUpdatedAt(updatedAt: number): boolean {
+  if (typeof window === "undefined") return false;
   try {
     localStorage.setItem(QUIZ_UPDATED_AT_STORAGE_KEY, String(updatedAt));
+    return true;
   } catch {
     /* ignore */
+    return false;
   }
 }
 
@@ -157,15 +163,17 @@ export function readQuizSnapshotClient(): QuizSnapshot | null {
   return pickNewerSnapshot(fromCookie, fromLocal);
 }
 
-/** Client — keep localStorage and cookie in sync for the next server request. */
+/** Client — localStorage primary, cookie mirror only if localStorage is blocked. */
 export function persistQuizSnapshot(snapshot: QuizSnapshot): void {
   const updatedAt = snapshot.updatedAt > 0 ? snapshot.updatedAt : Date.now();
   const withTime: QuizSnapshot = { ...snapshot, updatedAt };
 
-  writeLocalAnswers(withTime.answers);
-  writeLocalLastStep(withTime.lastStep);
-  writeLocalUpdatedAt(updatedAt);
-  writeQuizSnapshotCookie(withTime);
+  const localAnswersOk = writeLocalAnswers(withTime.answers);
+  const localLastStepOk = writeLocalLastStep(withTime.lastStep);
+  const localUpdatedOk = writeLocalUpdatedAt(updatedAt);
+  if (!(localAnswersOk && localLastStepOk && localUpdatedOk)) {
+    writeQuizSnapshotCookie(withTime);
+  }
 }
 
 export function saveQuizLastStep(step: string): void {

@@ -15,7 +15,12 @@ import { countPhoneDigits, isValidBookingPhone } from "@/lib/calendly/phone-e164
 import { BOOKING_FEEDBACK } from "@/lib/quiz-funnel/booking-feedback";
 import { getSupabaseAdmin } from "@/lib/supabase/server";
 import { appendTouchEvent } from "@/lib/crm/touch";
-import type { AttributionSnapshot } from "@/lib/attribution";
+import {
+  mergeAttribution,
+  sanitizeAttributionSnapshot,
+  type AttributionSnapshot
+} from "@/lib/attribution";
+import { getVisitorById } from "@/lib/crm/visitors";
 
 type CalendlyBookBody = {
   startTime?: string;
@@ -29,6 +34,40 @@ type CalendlyBookBody = {
   sat_lp_variant?: string;
   lp_variant?: string;
 };
+
+function readQWhoFromVisitor(visitor: Record<string, unknown> | null): string | undefined {
+  if (!visitor) return undefined;
+  const answers = visitor.quiz_answers;
+  if (!answers || typeof answers !== "object" || Array.isArray(answers)) {
+    return undefined;
+  }
+  const qWho = (answers as Record<string, unknown>).qWho;
+  return typeof qWho === "string" ? qWho : undefined;
+}
+
+async function resolveVisitorContext(input: {
+  visitorId?: string;
+  attribution?: AttributionSnapshot;
+  qWho?: string;
+}) {
+  const incoming = sanitizeAttributionSnapshot(input.attribution ?? {});
+  if (!input.visitorId) {
+    return { attribution: incoming, qWho: input.qWho };
+  }
+  const visitor = await getVisitorById(input.visitorId);
+  const firstTouch = sanitizeAttributionSnapshot(
+    ((visitor?.first_touch as AttributionSnapshot | null) ?? {}) as AttributionSnapshot
+  );
+  const withLast = mergeAttribution(
+    firstTouch,
+    sanitizeAttributionSnapshot(
+      ((visitor?.last_touch as AttributionSnapshot | null) ?? {}) as AttributionSnapshot
+    )
+  );
+  const attribution = mergeAttribution(withLast, incoming);
+  const qWho = input.qWho ?? readQWhoFromVisitor(visitor as Record<string, unknown> | null);
+  return { attribution, qWho };
+}
 
 async function recordBookingError(input: {
   errorCode: QuizBookingErrorCode;
@@ -98,8 +137,13 @@ export async function POST(request: Request) {
   const kidName = typeof body.kidName === "string" ? body.kidName.trim() : undefined;
   const visitorId =
     typeof body.visitorId === "string" ? body.visitorId.trim() : undefined;
-  const attribution = body.attribution;
-  const qWho = typeof body.qWho === "string" ? body.qWho : undefined;
+  const resolved = await resolveVisitorContext({
+    visitorId,
+    attribution: body.attribution,
+    qWho: typeof body.qWho === "string" ? body.qWho : undefined
+  });
+  const attribution = resolved.attribution;
+  const qWho = resolved.qWho;
 
   const token = process.env.CALENDLY_API_TOKEN?.trim();
   if (!token) {
@@ -272,14 +316,27 @@ export async function POST(request: Request) {
           })
           .eq("id", lead.id);
 
+        const touchVisitorId = lead.visitor_id ?? visitorId;
+        const touchContext =
+          touchVisitorId && touchVisitorId !== visitorId
+            ? await resolveVisitorContext({
+                visitorId: touchVisitorId,
+                attribution,
+                qWho
+              })
+            : { attribution, qWho };
         await appendTouchEvent({
-          visitor_id: lead.visitor_id ?? undefined,
+          visitor_id: touchVisitorId ?? undefined,
           lead_id: lead.id,
           event_type: "call_booked",
           source: "server",
+          attribution: touchContext.attribution,
           payload: {
             calendly_uri: result.inviteeUri,
             strategy_call_at: result.startTime,
+            qWho: touchContext.qWho,
+            sat_lp_variant: body.sat_lp_variant,
+            lp_variant: body.lp_variant
           },
         });
       }

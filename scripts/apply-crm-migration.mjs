@@ -92,7 +92,9 @@ const migrationFiles = [
   "20260518120000_crm_schema.sql",
   "20260528190000_quiz_funnel_lead_columns.sql",
   "20260601120000_plan_shares.sql",
-  "20260605120000_visitors_analytics.sql"
+  "20260605120000_visitors_analytics.sql",
+  "20260608120000_visitor_quiz_answers.sql",
+  "20260608125500_visitors_fast_attribution_columns.sql"
 ];
 
 async function applyAllMigrations(client) {

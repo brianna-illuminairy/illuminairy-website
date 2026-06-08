@@ -21,6 +21,7 @@ import {
   readPersistedLpVariant,
   readPersistedLpVariantId
 } from "@/lib/landing/variant-storage";
+import { readStoredQuizAnswers } from "@/lib/quiz-funnel/quiz-storage";
 import { buildQuizAnswersSnapshot } from "@/lib/crm/quiz-answers-snapshot";
 import { QUIZ_ENTRY_STEP } from "@/lib/quiz-funnel/funnel-steps";
 import {
@@ -39,8 +40,13 @@ declare global {
 
 /** Shared opening + urgency props for PostHog, GA4, and CRM touches. */
 function quizOpeningProps(answers: Record<string, unknown>) {
+  const stored = readStoredQuizAnswers();
   const qWho =
-    typeof answers.qWho === "string" ? answers.qWho : undefined;
+    typeof answers.qWho === "string"
+      ? answers.qWho
+      : typeof stored.qWho === "string"
+        ? stored.qWho
+        : undefined;
   const qScoreLower =
     typeof answers.qScoreLower === "string" ? answers.qScoreLower : undefined;
   const q1 = typeof answers.q1 === "string" ? answers.q1 : undefined;
@@ -361,8 +367,10 @@ export function captureQuizLeadSubmitted(
 }
 
 export function captureQuizThankYouViewed(answers: Record<string, unknown>) {
+  const opening = quizOpeningProps(answers);
   if (getPostHogKey()) {
     posthog.capture("quiz_thank_you_viewed", {
+      ...opening,
       q4: answers.q4,
       q5: answers.q5,
       has_kid_name: Boolean(
@@ -370,7 +378,10 @@ export function captureQuizThankYouViewed(answers: Record<string, unknown>) {
       )
     });
   }
-  trackQuizGaEvent("quiz_thank_you_view", { funnel: "sat_quiz" });
+  trackQuizGaEvent("quiz_thank_you_view", {
+    funnel: "sat_quiz",
+    ...opening
+  });
 }
 
 export type AchievabilityInputEditedProps = {
@@ -517,13 +528,23 @@ export function maybeCaptureQuizDoubtsAnswered(
 
 export function captureQuizBookingConfirmed(
   eventId?: string,
-  options?: { booking_source?: "api" | "client" }
+  options?: { booking_source?: "api" | "client"; qWho?: string }
 ) {
   const bookingSource = options?.booking_source ?? "client";
+  const qWho =
+    options?.qWho ??
+    (() => {
+      const stored = readStoredQuizAnswers();
+      return typeof stored.qWho === "string" ? stored.qWho : undefined;
+    })();
+  const payload = { booking_source: bookingSource, qWho };
   if (getPostHogKey()) {
-    posthog.capture("quiz_booking_confirmed", { booking_source: bookingSource });
+    posthog.capture("quiz_booking_confirmed", payload);
   }
-  trackQuizGaEvent("schedule", { funnel: "sat_quiz", booking_source: bookingSource });
+  trackQuizGaEvent("schedule", {
+    funnel: "sat_quiz",
+    ...payload
+  });
   if (typeof window !== "undefined" && window.fbq && eventId) {
     window.fbq("track", "Schedule", {}, { eventID: eventId });
   } else if (typeof window !== "undefined" && window.fbq) {

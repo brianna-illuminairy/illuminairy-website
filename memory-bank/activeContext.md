@@ -4,6 +4,8 @@
 
 ## Resume here
 
+**Active spec (mobile cold traffic):** [`specs/2026-06-mobile-cold-traffic-funnel/SPEC.md`](../specs/2026-06-mobile-cold-traffic-funnel/SPEC.md)
+
 **Plan reveal drop analysis (Jun 7–8):** [`growth/plan-reveal-drop-playbook.md`](../growth/plan-reveal-drop-playbook.md) — attributed cohort n=9, all replays tagged. Next: `post-plan-value-bridge`, `name-step-parent-drop`, `v1-below-fold-ux`.
 
 **Full session handoff (start next chat with this):** [`session-handoff-2026-05-29-funnel-qa.md`](./session-handoff-2026-05-29-funnel-qa.md)
@@ -39,6 +41,16 @@ Key libs: `plan-reveal.ts`, `score-path-copy.ts`, `stakes-copy.ts`, `education-s
 
 - **LP ad message-match (local, uncommitted)** — `student_story` H1 for ad4/ad5; `mom_story` removed; responsive H1; `lp_variant` on LP/quiz/lead; hydration merge cookie∪localStorage; booking error dedupe + structured lead API errors; s5 TCPA tap target; `quiz_step_back`; PostHog dashboard doc updated. Verify: `FUNNEL_LAYOUT_UNLOCK=1 npm run agent:verify` PASS; `npm run funnel:e2e` PASS (37 checks). **Next:** commit + `npm run release`; Meta ad URLs `hook=student_story`; PostHog success metrics after traffic.
 - **Chunk C split (Jun 8)** — keep step-registry refactor (Phase A/B) as a dedicated multi-session track; ship analytics/docs independently now (`step=q1-parent-child` canonical + `q-who` alias, step labels/seq on quiz events, checklist docs updated).
+- **Hydration/resume hardening (Jun 8)** — removed timer-based hydration guards in quiz state/runner; hydration now resolves through reducer action (`HYDRATE`) before redirect + lastStep writes. Resume logic now deterministically prefers guarded saved step. Added e2e regression for stale cookie vs newer localStorage (`checkHydrationResumePriority` in `scripts/quiz-funnel-e2e.mjs`).
+- **Attribution carry-forward hardening (Jun 8, uncommitted)** — landing analytics now persists one canonical attribution snapshot (`utm_*`, click IDs, `landing_page`, `hero_hook`) and reuses it across PostHog + GA4 + touch events for LP view/CTA. Also added attribution fan-out in shared `captureAnalytics()` so downstream custom captures inherit the same source context, plus `qWho` carry-forward (parent vs self) on late events such as booking confirmation / thank-you. Added attribution value sanitization + length caps before session persistence (sessionStorage only, no attribution cookie mirror) to avoid oversized payload regressions. Server routes now resolve canonical attribution + `qWho` from `visitors.first_touch`/`last_touch`/`quiz_answers` and persist that canonical context on touch/lead/booking events.
+- **Mobile funnel architecture docs + spec (Jun 8, uncommitted)** — created:
+  - `specs/2026-06-mobile-cold-traffic-funnel/SPEC.md`
+  - `docs/funnel-eventing-and-state.md`
+  - `docs/funnel-analytics-standards.md`
+  - `docs/funnel-hydration-and-resume.md`
+  - `docs/funnel-mobile-ux-responsiveness.md`
+  - `.agents/funnel-mobile-ops.md`
+  Also switched `specs/ACTIVE.md` to the mobile cold-traffic funnel spec.
 - **Plan reveal drop playbook** — PostHog MCP pass on Jun 7–8 attributed cohort. [`growth/plan-reveal-drop-playbook.md`](../growth/plan-reveal-drop-playbook.md): product-order funnel **name→i2→v1** 9→6→6; 3 never saw plan reveal; not “0% reveal→name”.
 
 ## Recently shipped (2026-06-07)

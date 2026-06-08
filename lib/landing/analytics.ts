@@ -5,8 +5,12 @@ import {
   registerPostHogAttribution
 } from "@/lib/analytics-attribution";
 import {
+  mergeAttribution,
+  readSessionAttribution,
+  type AttributionSnapshot,
   attributionUtmProps,
-  readAttributionForAnalytics
+  readAttributionForAnalytics,
+  writeSessionAttribution
 } from "@/lib/attribution";
 import { recordClientTouch } from "@/lib/analytics-touch-client";
 import { AnalyticsEvents } from "@/lib/analytics-events";
@@ -52,13 +56,50 @@ function baseProps(
   extra?: Partial<LandingEventProps>
 ): LandingEventProps {
   const attr = readAttributionForAnalytics();
-  registerPostHogAttribution(attr);
   return {
     sat_lp_variant: variant,
     sat_lp_layout: layout,
     landing_page: landingPath,
     ...attributionUtmProps(attr),
     ...extra
+  };
+}
+
+function landingAttributionSnapshot(
+  props: LandingEventProps
+): Partial<AttributionSnapshot> {
+  return {
+    utm_source: props.utm_source,
+    utm_medium: props.utm_medium,
+    utm_campaign: props.utm_campaign,
+    utm_content: props.utm_content,
+    utm_term: props.utm_term,
+    fbclid: props.fbclid,
+    gclid: props.gclid,
+    landing_page: props.landing_page,
+    hero_hook: props.hero_hook
+  };
+}
+
+/**
+ * Keep first-touch attribution stable for downstream funnel events.
+ * Landing context wins only when the session is missing that value.
+ */
+function persistLandingAttribution(props: LandingEventProps): void {
+  const merged = mergeAttribution(
+    readSessionAttribution(),
+    landingAttributionSnapshot(props) as AttributionSnapshot
+  );
+  writeSessionAttribution(merged);
+  registerPostHogAttribution(merged);
+}
+
+function analyticsEventProps(
+  props: LandingEventProps
+): Record<string, string | number | boolean | undefined> {
+  return {
+    ...props,
+    preferred_metro: props.preferred_metro ?? undefined
   };
 }
 
@@ -69,15 +110,14 @@ export function trackLandingView(
   extra?: Partial<LandingEventProps>
 ) {
   const props = baseProps(variant, layout, landingPath, extra);
+  const analyticsProps = analyticsEventProps(props);
+  persistLandingAttribution(props);
   if (getPostHogKey()) {
     posthog.capture(AnalyticsEvents.funnelLandingView, props);
   }
   trackQuizGaEvent(AnalyticsEvents.funnelLandingView, {
-    sat_lp_variant: variant,
-    sat_lp_layout: layout,
+    ...analyticsProps,
     funnel: "sat_quiz",
-    landing_page: landingPath,
-    ...attributionUtmProps(readAttributionForAnalytics())
   });
   if (typeof window !== "undefined" && window.fbq) {
     window.fbq("track", "ViewContent", {
@@ -101,23 +141,17 @@ export function trackLandingCtaClick(
     cta_label: ctaLabel,
     ...extra
   });
+  const analyticsProps = analyticsEventProps(props);
+  persistLandingAttribution(props);
   if (getPostHogKey()) {
     posthog.capture(AnalyticsEvents.funnelCtaClick, props);
   }
   recordClientTouch(TouchEvents.funnelCtaClick, {
-    section_id: sectionId,
-    cta_label: ctaLabel,
-    sat_lp_variant: variant,
-    sat_lp_layout: layout,
-    ...attributionUtmProps(readAttributionForAnalytics())
+    ...analyticsProps
   });
   trackQuizGaEvent(AnalyticsEvents.funnelCtaClick, {
-    sat_lp_variant: variant,
-    sat_lp_layout: layout,
-    section_id: sectionId,
-    cta_label: ctaLabel,
+    ...analyticsProps,
     funnel: "sat_quiz",
-    ...attributionUtmProps(readAttributionForAnalytics())
   });
   if (typeof window !== "undefined" && window.fbq) {
     window.fbq("trackCustom", "FunnelCTA", {

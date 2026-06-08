@@ -92,17 +92,7 @@ export function resolveQuizResumeStep(
 
   const saved = lastStep ? normalizeStepId(lastStep) : null;
   if (saved && routeSteps.includes(saved)) {
-    const guarded = resolveGuardedQuizStep(answers, saved, routeSteps);
-    const lastIdx = routeSteps.indexOf(saved);
-    const guardedIdx = routeSteps.indexOf(guarded);
-    if (guarded === saved || (guardedIdx >= 0 && guardedIdx <= lastIdx)) {
-      const intakeForSaved = INTAKE_STEP_SATISFIED[saved];
-      if (!(intakeForSaved && intakeForSaved(answers))) {
-        return saved;
-      }
-    } else {
-      return guarded;
-    }
+    return resolveGuardedQuizStep(answers, saved, routeSteps);
   }
 
   let resume = QUIZ_ENTRY_STEP;

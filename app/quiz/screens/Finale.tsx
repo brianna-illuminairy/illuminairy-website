@@ -197,6 +197,7 @@ export function QFS5Approved({
     slotsAvailable &&
     contactReady &&
     validation.valid;
+  const qWho = typeof answers.qWho === 'string' ? answers.qWho : undefined;
 
   function setField(key: string, value: unknown) {
     dispatch?.({ type: 'SET_FIELD', key, value });
@@ -208,7 +209,6 @@ export function QFS5Approved({
     errorMessage: string,
     extra?: { http_status?: number; field?: BookingFieldKey; retryable?: boolean }
   ) {
-    const qWho = typeof answers.qWho === 'string' ? answers.qWho : undefined;
     captureQuizBookingError({
       error_code: errorCode,
       error_message: sanitizeBookingErrorMessage(errorMessage),
@@ -252,13 +252,15 @@ export function QFS5Approved({
       const eventId = inviteeUri
         ? `schedule_${inviteeUri.split('/').pop()}`
         : `schedule_${Date.now()}`;
-      captureQuizBookingConfirmed(eventId);
+      captureQuizBookingConfirmed(eventId, {
+        qWho,
+      });
       if (onBooked) onBooked();
       else onContinue();
     }
     window.addEventListener('message', onMessage);
     return () => window.removeEventListener('message', onMessage);
-  }, [onBooked, onContinue, dispatch]);
+  }, [onBooked, onContinue, dispatch, qWho]);
 
   async function handleContinue() {
     setSubmitAttempted(true);
@@ -363,7 +365,10 @@ export function QFS5Approved({
       const eventId = inviteeUri
         ? `schedule_${inviteeUri.split('/').pop()}`
         : `schedule_${Date.now()}`;
-      captureQuizBookingConfirmed(eventId, { booking_source: 'api' });
+      captureQuizBookingConfirmed(eventId, {
+        booking_source: 'api',
+        qWho,
+      });
       setSubmitting(false);
       if (onBooked) onBooked();
       else onContinue();
@@ -652,6 +657,7 @@ export function QFS9Booking({
     parentPhone: typeof answers.parentPhone === "string" ? answers.parentPhone : "",
     kidName: typeof answers.kidName === "string" ? answers.kidName : "",
   };
+  const qWho = typeof answers.qWho === "string" ? answers.qWho : undefined;
   const q5 = typeof answers.q5 === "string" ? answers.q5 : undefined;
   const testLabel = q5DisplayLabel(q5) || "your next test";
   const contactReady = hasQuizContactForBooking(contact);
@@ -694,13 +700,15 @@ export function QFS9Booking({
         const eventId = inviteeUri
           ? `schedule_${inviteeUri.split("/").pop()}`
           : `schedule_${Date.now()}`;
-        captureQuizBookingConfirmed(eventId);
+        captureQuizBookingConfirmed(eventId, {
+          qWho,
+        });
         onBooked();
       }
     }
     window.addEventListener("message", onMessage);
     return () => window.removeEventListener("message", onMessage);
-  }, [onBooked, dispatch]);
+  }, [onBooked, dispatch, qWho]);
 
   return (
     <QFScreen stepIdx={21} onBack={onBack}

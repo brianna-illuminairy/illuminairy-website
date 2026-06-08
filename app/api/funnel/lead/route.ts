@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 import { upsertLeadFromQuizFunnel, type QuizAnswersPayload } from "@/lib/crm/quiz-leads";
-import type { AttributionSnapshot } from "@/lib/attribution";
+import {
+  mergeAttribution,
+  sanitizeAttributionSnapshot,
+  type AttributionSnapshot
+} from "@/lib/attribution";
 import { buildKlaviyoQuizProperties } from "@/lib/klaviyo-quiz-props";
 import { KlaviyoEvents } from "@/lib/analytics-registry";
 import { upsertKlaviyoProfile, trackKlaviyoEvent } from "@/lib/klaviyo-server";
@@ -22,6 +26,40 @@ type Body = QuizAnswersPayload & {
   fbc?: string;
   lp_variant?: string;
 };
+
+function readQWhoFromVisitor(visitor: Record<string, unknown> | null): string | undefined {
+  if (!visitor) return undefined;
+  const answers = visitor.quiz_answers;
+  if (!answers || typeof answers !== "object" || Array.isArray(answers)) {
+    return undefined;
+  }
+  const qWho = (answers as Record<string, unknown>).qWho;
+  return typeof qWho === "string" ? qWho : undefined;
+}
+
+async function resolveVisitorContext(input: {
+  visitorId?: string;
+  attribution?: AttributionSnapshot;
+  qWho?: string;
+}) {
+  const incoming = sanitizeAttributionSnapshot(input.attribution ?? {});
+  if (!input.visitorId) {
+    return { attribution: incoming, qWho: input.qWho };
+  }
+  const visitor = await getVisitorById(input.visitorId);
+  const firstTouch = sanitizeAttributionSnapshot(
+    ((visitor?.first_touch as AttributionSnapshot | null) ?? {}) as AttributionSnapshot
+  );
+  const withLast = mergeAttribution(
+    firstTouch,
+    sanitizeAttributionSnapshot(
+      ((visitor?.last_touch as AttributionSnapshot | null) ?? {}) as AttributionSnapshot
+    )
+  );
+  const attribution = mergeAttribution(withLast, incoming);
+  const qWho = input.qWho ?? readQWhoFromVisitor(visitor as Record<string, unknown> | null);
+  return { attribution, qWho };
+}
 
 async function recordLeadBookingError(input: {
   body: Body;
@@ -85,6 +123,19 @@ export async function POST(request: Request) {
   if (body.company) {
     return NextResponse.json({ ok: true });
   }
+  const visitorId =
+    typeof body.visitorId === "string" ? body.visitorId.trim() : undefined;
+  const resolved = await resolveVisitorContext({
+    visitorId,
+    attribution: body.attribution,
+    qWho: typeof body.qWho === "string" ? body.qWho : undefined
+  });
+  body = {
+    ...body,
+    visitorId,
+    attribution: resolved.attribution,
+    qWho: resolved.qWho
+  };
 
   if (!body.confirmTcpa) {
     await recordLeadBookingError({

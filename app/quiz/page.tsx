@@ -1,20 +1,14 @@
-import { Suspense } from "react";
 import { cookies } from "next/headers";
-import { QuizProvider } from "./state";
-import QuizRunner from "./QuizRunner";
 import { readQuizSnapshotFromRequestCookies } from "@/lib/quiz-funnel/quiz-cookie";
+import { QuizClientRoot } from "./QuizClientRoot";
 
 export default async function QuizPage() {
+  // Cookie snapshot is fallback-only: localStorage/session + server visitors are primary.
   const cookieStore = await cookies();
   const initialSnapshot = readQuizSnapshotFromRequestCookies(cookieStore);
-
   return (
     <div className="qf-funnel-stage">
-      <QuizProvider initialSnapshot={initialSnapshot}>
-        <Suspense fallback={null}>
-          <QuizRunner />
-        </Suspense>
-      </QuizProvider>
+      <QuizClientRoot initialSnapshot={initialSnapshot} />
     </div>
   );
 }

@@ -220,6 +220,41 @@ async function seedAnswers(page, answers, lastStep = null) {
   );
 }
 
+async function seedConflictingSnapshot(page, { localAnswers, localStep, cookieStep }) {
+  await page.goto(`${BASE}/plan?step=q1-parent-child`, { waitUntil: "networkidle" });
+  await page.evaluate(
+    ({ localPayload, localLastStep, cookieLastStep }) => {
+      localStorage.setItem("qf_answers", JSON.stringify(localPayload));
+      localStorage.setItem("qf_last_step", localLastStep);
+      localStorage.setItem("qf_updated_at", String(Date.now()));
+      const trimmed = {
+        qWho: localPayload.qWho,
+        q1: localPayload.q1,
+        q2: localPayload.q2,
+        q3: localPayload.q3,
+        q4: localPayload.q4,
+        q5: localPayload.q5,
+        q6: localPayload.q6,
+        q7: localPayload.q7,
+        q8: localPayload.q8,
+        q9: localPayload.q9,
+        qDoubts: localPayload.qDoubts,
+        qScoreLower: localPayload.qScoreLower,
+      };
+      const staleCookie = encodeURIComponent(
+        JSON.stringify({
+          v: 2,
+          s: cookieLastStep,
+          t: Date.now() - 60_000,
+          a: trimmed,
+        })
+      );
+      document.cookie = `qf_snapshot=${staleCookie}; Path=/; Max-Age=7776000; SameSite=Lax`;
+    },
+    { localPayload: localAnswers, localLastStep: localStep, cookieLastStep: cookieStep }
+  );
+}
+
 async function openStep(page, stepId) {
   await page.goto(`${BASE}/plan?step=${encodeURIComponent(stepId)}`, {
     waitUntil: "networkidle",
@@ -492,6 +527,33 @@ async function checkUtmPreserved(page) {
   }
 }
 
+async function checkHydrationResumePriority(page) {
+  console.log("\n— Hydration resume priority (local newer than cookie) —");
+  await seedConflictingSnapshot(page, {
+    localAnswers: PARENT_SAT_ANSWERS,
+    localStep: "v1",
+    cookieStep: "name",
+  });
+
+  await page.goto(`${BASE}/plan`, { waitUntil: "networkidle" });
+  await waitForHydration(page);
+  const resumeStep = new URL(page.url()).searchParams.get("step");
+  if (resumeStep !== "v1") {
+    fail("hydration-resume", `expected /plan to resume at v1, got ${resumeStep}`);
+    return;
+  }
+  pass("hydration-resume", "plain /plan resumes from newer local snapshot");
+
+  await page.goto(`${BASE}/plan?step=s4`, { waitUntil: "networkidle" });
+  await waitForHydration(page);
+  const deepLinkStep = new URL(page.url()).searchParams.get("step");
+  if (deepLinkStep !== "s4") {
+    fail("hydration-resume-deeplink", `expected deep-link to stay at s4, got ${deepLinkStep}`);
+    return;
+  }
+  pass("hydration-resume-deeplink", "deep-link stays at guarded step after hydration");
+}
+
 async function main() {
   console.log(`Plan Builder E2E → ${BASE}`);
   console.log(`Viewport: iPhone 13 (mobile)\n`);
@@ -527,6 +589,7 @@ async function main() {
   await checkAllRoutedSteps(page);
   await checkNavigation(page);
   await checkUtmPreserved(page);
+  await checkHydrationResumePriority(page);
 
   await browser.close();
 

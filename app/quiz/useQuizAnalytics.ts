@@ -15,13 +15,15 @@ export function useQuizAnalytics(
   stepId: string,
   stepIndex: number,
   answers: QuizAnswers,
-  hasGapScreen: boolean
+  hasGapScreen: boolean,
+  enabled = true
 ) {
   const lastStep = useRef<string | null>(null);
   const sessionStarted = useRef(false);
   const lifetimeStarted = useRef(false);
 
   useEffect(() => {
+    if (!enabled) return;
     if (!stepId || stepIndex < 0) return;
     if (lastStep.current === stepId) return;
     lastStep.current = stepId;
@@ -63,5 +65,5 @@ export function useQuizAnalytics(
     }
 
     captureQuizStep(stepId, stepIndex, answers, { hasGapScreen });
-  }, [stepId, stepIndex, answers, hasGapScreen]);
+  }, [stepId, stepIndex, answers, hasGapScreen, enabled]);
 }

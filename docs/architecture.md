@@ -2,6 +2,15 @@
 
 High-level map of the production codebase. For agent workflows see [`AGENTS.md`](../AGENTS.md); for product goals see [`memory-bank/projectbrief.md`](../memory-bank/projectbrief.md).
 
+## Funnel standards
+
+For mobile cold-traffic funnel architecture and operations, use:
+
+- [`funnel-eventing-and-state.md`](./funnel-eventing-and-state.md)
+- [`funnel-analytics-standards.md`](./funnel-analytics-standards.md)
+- [`funnel-hydration-and-resume.md`](./funnel-hydration-and-resume.md)
+- [`funnel-mobile-ux-responsiveness.md`](./funnel-mobile-ux-responsiveness.md)
+
 ## System diagram
 
 ```mermaid

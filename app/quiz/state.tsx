@@ -4,8 +4,6 @@ import {
   useContext,
   useReducer,
   useEffect,
-  useRef,
-  useState,
   type ReactNode,
   type Dispatch,
 } from 'react';
@@ -57,17 +55,20 @@ type QuizAction =
   | { type: 'SET_Q'; key: string; value?: string }
   | { type: 'TOGGLE_Q'; key: string; id: string }
   | { type: 'SET_FIELD'; key: string; value: unknown }
+  | { type: 'HYDRATE'; data?: Partial<QuizAnswers>; lastStep?: string | null }
   | { type: 'LOAD'; data: Partial<QuizAnswers>; lastStep?: string | null }
   | { type: 'SET_LAST_STEP'; step: string };
 
 type QuizStoreState = {
   answers: QuizAnswers;
   lastStep: string | null;
+  hydrated: boolean;
 };
 
 const emptyStore = (): QuizStoreState => ({
   answers: initialState,
   lastStep: null,
+  hydrated: false,
 });
 
 function mergeStoredAnswers(data: Partial<QuizAnswers> | StoredQuizAnswers): QuizAnswers {
@@ -90,8 +91,15 @@ function storeReducer(state: QuizStoreState, action: QuizAction): QuizStoreState
         ...state,
         answers: { ...state.answers, [action.key]: action.value as QuizAnswers[string] },
       };
+    case 'HYDRATE':
+      return {
+        answers: action.data ? mergeStoredAnswers(action.data) : state.answers,
+        lastStep: action.lastStep !== undefined ? action.lastStep : state.lastStep,
+        hydrated: true,
+      };
     case 'LOAD':
       return {
+        ...state,
         answers: mergeStoredAnswers(action.data),
         lastStep: action.lastStep !== undefined ? action.lastStep : state.lastStep,
       };
@@ -118,6 +126,7 @@ function initStoreFromSnapshot(snapshot?: QuizSnapshot | null): QuizStoreState {
   return {
     answers: mergeStoredAnswers(snapshot.answers),
     lastStep: snapshot.lastStep,
+    hydrated: false,
   };
 }
 
@@ -129,40 +138,26 @@ export function QuizProvider({
   initialSnapshot?: QuizSnapshot | null;
 }) {
   const [store, dispatch] = useReducer(storeReducer, initialSnapshot, initStoreFromSnapshot);
-  const { answers, lastStep } = store;
-  const skipNextPersist = useRef(true);
-  const awaitMergeCommit = useRef(false);
-  const [hydrated, setHydrated] = useState(false);
+  const { answers, lastStep, hydrated } = store;
 
   useEffect(() => {
     const merged = resolveHydratedQuizSnapshot(initialSnapshot);
-    if (!merged || !hasQuizProgress(merged)) {
-      const readyTimer = window.setTimeout(() => setHydrated(true), 0);
-      return () => window.clearTimeout(readyTimer);
+    if (merged && hasQuizProgress(merged)) {
+      dispatch({
+        type: 'HYDRATE',
+        data: merged.answers as Partial<QuizAnswers>,
+        lastStep: merged.lastStep,
+      });
+      persistQuizSnapshot({ ...merged, updatedAt: Date.now() });
+      return;
     }
-    awaitMergeCommit.current = true;
-    dispatch({
-      type: 'LOAD',
-      data: merged.answers as Partial<QuizAnswers>,
-      lastStep: merged.lastStep,
-    });
-    persistQuizSnapshot({ ...merged, updatedAt: Date.now() });
+    dispatch({ type: 'HYDRATE' });
   }, [initialSnapshot]);
 
   useEffect(() => {
-    if (!awaitMergeCommit.current) return;
-    awaitMergeCommit.current = false;
-    const readyTimer = window.setTimeout(() => setHydrated(true), 0);
-    return () => window.clearTimeout(readyTimer);
-  }, [answers, lastStep]);
-
-  useEffect(() => {
-    if (skipNextPersist.current) {
-      skipNextPersist.current = false;
-      return;
-    }
+    if (!hydrated) return;
     persistQuizSnapshot({ answers, lastStep, updatedAt: Date.now() });
-  }, [answers, lastStep]);
+  }, [answers, lastStep, hydrated]);
 
   useEffect(() => {
     if (!hydrated) return;

@@ -1,6 +1,6 @@
 # Progress
 
-*Last updated: 2026-05-25*
+*Last updated: 2026-06-08*
 
 ## Shipped
 
@@ -23,6 +23,8 @@
 
 ## In progress
 
+- [ ] Mobile cold-traffic funnel stabilization spec (`specs/2026-06-mobile-cold-traffic-funnel/SPEC.md`) execution (Phases A/B/C)
+- [ ] Canonical visitor reporting columns rollout (`first_utm_content`, `first_hero_hook`, `quiz_who`)
 - [ ] Phase B: `POST /api/funnel/lead` + Supabase + Klaviyo + TCPA on contact
 - [ ] Default (son) prep-path triptych art asset
 - [ ] Launch QA: Meta IAB 390×844, Lighthouse baseline

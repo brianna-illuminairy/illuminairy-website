@@ -54,32 +54,43 @@ export default function QuizRunner() {
       ? QUIZ_BOOKED_STEP
       : resolveGuardedQuizStep(answers, resumeStep, steps);
   const currentIdx = steps.indexOf(stepId);
+  const requestedIdx = steps.indexOf(requestedStep);
+  const guardedIdx = steps.indexOf(stepId);
+  const stepsKey = steps.join('|');
   const gapScreen = showGapScreen(answers);
 
   useEffect(() => {
+    if (!hydrated) return;
     if (lastStep !== stepId) setLastStep(stepId);
-  }, [stepId, lastStep, setLastStep]);
+  }, [hydrated, stepId, lastStep, setLastStep]);
 
   useEffect(() => {
     if (!hydrated) return;
-    const redirectTimer = window.setTimeout(() => {
-      if (resumeStep !== requestedStep) {
-        router.replace(planBuilderStepHref(resumeStep, search));
-        return;
-      }
-      const reqIdx = steps.indexOf(requestedStep);
-      const guardIdx = steps.indexOf(stepId);
-      if (reqIdx >= 0 && guardIdx >= 0 && reqIdx > guardIdx) {
-        router.replace(planBuilderStepHref(stepId, search));
-      } else if (reqIdx < 0 && stepId !== requestedStep) {
-        router.replace(planBuilderStepHref(stepId, search));
-      }
-    }, 0);
-    return () => window.clearTimeout(redirectTimer);
-  }, [hydrated, stepId, requestedStep, resumeStep, router, search, steps]);
+    if (resumeStep !== requestedStep) {
+      router.replace(planBuilderStepHref(resumeStep, search));
+      return;
+    }
+    if (requestedIdx >= 0 && guardedIdx >= 0 && requestedIdx > guardedIdx) {
+      router.replace(planBuilderStepHref(stepId, search));
+    } else if (requestedIdx < 0 && stepId !== requestedStep) {
+      router.replace(planBuilderStepHref(stepId, search));
+    }
+  }, [hydrated, stepId, requestedStep, resumeStep, router, search, requestedIdx, guardedIdx, stepsKey]);
 
-  useQuizAnalytics(stepId, currentIdx, answers, gapScreen);
-  useQuizAvailabilityPrefetch(stepId);
+  useQuizAnalytics(stepId, currentIdx, answers, gapScreen, hydrated);
+  useQuizAvailabilityPrefetch(stepId, hydrated);
+
+  if (!hydrated) {
+    return (
+      <div className="qf-page" style={{ color: 'var(--qf-ink)' }}>
+        <div className="qf-body">
+          <div className="qf-body-inner">
+            <p className="qf-lead muted">Loading your plan...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   function goTo(id: string) {
     router.replace(planBuilderStepHref(id, search));

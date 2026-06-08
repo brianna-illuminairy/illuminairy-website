@@ -6,9 +6,10 @@ import { prefetchCalendlyAvailability } from "@/lib/calendly/availability-prefet
 const PREFETCH_STEPS = new Set(["v1", "s4", "reveal", "achievability"]);
 
 /** Warm Calendly slot list before s5 mount. */
-export function useQuizAvailabilityPrefetch(stepId: string) {
+export function useQuizAvailabilityPrefetch(stepId: string, enabled = true) {
   useEffect(() => {
+    if (!enabled) return;
     if (!PREFETCH_STEPS.has(stepId)) return;
     void prefetchCalendlyAvailability();
-  }, [stepId]);
+  }, [stepId, enabled]);
 }

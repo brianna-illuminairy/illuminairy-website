@@ -3,6 +3,7 @@
 import { applyLandingAttributionInference } from "@/lib/marketing/landing-attribution-infer";
 
 export const VISITOR_COOKIE = "illuminairy_vid";
+export const VISITOR_STORAGE_KEY = "illuminairy_vid";
 export const ATTRIBUTION_SESSION_KEY = "illuminairy_attribution";
 
 /** Works on HTTP LAN dev (crypto.randomUUID needs a secure context). */
@@ -54,6 +55,52 @@ const TRACKING_KEYS = [
   "fbclid",
   "msclkid"
 ] as const;
+const ATTRIBUTION_KEYS = [
+  ...TRACKING_KEYS,
+  "fbp",
+  "fbc",
+  "landing_page",
+  "hero_hook",
+  "referrer"
+] as const satisfies readonly (keyof AttributionSnapshot)[];
+
+const ATTRIBUTION_MAX_LEN: Record<keyof AttributionSnapshot, number> = {
+  utm_source: 120,
+  utm_medium: 120,
+  utm_campaign: 180,
+  utm_term: 180,
+  utm_content: 180,
+  gclid: 220,
+  fbclid: 220,
+  msclkid: 220,
+  fbp: 220,
+  fbc: 220,
+  landing_page: 300,
+  hero_hook: 80,
+  referrer: 300
+};
+
+function sanitizeAttributionValue(
+  key: keyof AttributionSnapshot,
+  value: unknown
+): string | undefined {
+  if (typeof value !== "string") return undefined;
+  const trimmed = value.trim();
+  if (!trimmed) return undefined;
+  const max = ATTRIBUTION_MAX_LEN[key];
+  return trimmed.length > max ? trimmed.slice(0, max) : trimmed;
+}
+
+export function sanitizeAttributionSnapshot(
+  snap: Partial<AttributionSnapshot>
+): AttributionSnapshot {
+  const cleaned: AttributionSnapshot = {};
+  for (const key of ATTRIBUTION_KEYS) {
+    const value = sanitizeAttributionValue(key, snap[key]);
+    if (value) cleaned[key] = value;
+  }
+  return cleaned;
+}
 
 export function parseAttributionFromSearch(
   search: string
@@ -64,7 +111,8 @@ export function parseAttributionFromSearch(
   for (const key of TRACKING_KEYS) {
     const value = params.get(key);
     if (value) {
-      snap[key] = value;
+      const cleaned = sanitizeAttributionValue(key, value);
+      if (cleaned) snap[key] = cleaned;
     }
   }
 
@@ -104,15 +152,16 @@ export function mergeAttribution(
   base: AttributionSnapshot,
   incoming: AttributionSnapshot
 ): AttributionSnapshot {
-  const merged = { ...base };
+  const merged = sanitizeAttributionSnapshot(base);
+  const cleanedIncoming = sanitizeAttributionSnapshot(incoming);
   for (const key of TRACKING_KEYS) {
-    if (incoming[key] && !merged[key]) {
-      merged[key] = incoming[key];
+    if (cleanedIncoming[key] && !merged[key]) {
+      merged[key] = cleanedIncoming[key];
     }
   }
   for (const key of CONTEXT_KEYS) {
-    if (incoming[key] && !merged[key]) {
-      merged[key] = incoming[key];
+    if (cleanedIncoming[key] && !merged[key]) {
+      merged[key] = cleanedIncoming[key];
     }
   }
   return merged;
@@ -120,8 +169,9 @@ export function mergeAttribution(
 
 export function appendAttributionToUrl(url: string, snap: AttributionSnapshot) {
   const target = new URL(url, "https://illuminairy.com");
+  const cleaned = sanitizeAttributionSnapshot(snap);
   for (const key of TRACKING_KEYS) {
-    const value = snap[key];
+    const value = cleaned[key];
     if (value) {
       target.searchParams.set(key, value);
     }
@@ -148,16 +198,20 @@ export function readSessionAttribution(): AttributionSnapshot {
   try {
     const raw = sessionStorage.getItem(ATTRIBUTION_SESSION_KEY);
     if (!raw) return {};
-    return JSON.parse(raw) as AttributionSnapshot;
+    return sanitizeAttributionSnapshot(JSON.parse(raw) as AttributionSnapshot);
   } catch {
     return {};
   }
 }
 
+/** Session storage only — never mirrors full attribution into cookies. */
 export function writeSessionAttribution(snap: AttributionSnapshot): void {
   if (typeof window === "undefined") return;
   try {
-    sessionStorage.setItem(ATTRIBUTION_SESSION_KEY, JSON.stringify(snap));
+    sessionStorage.setItem(
+      ATTRIBUTION_SESSION_KEY,
+      JSON.stringify(sanitizeAttributionSnapshot(snap))
+    );
   } catch {
     /* ignore */
   }

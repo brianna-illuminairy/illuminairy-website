@@ -59,6 +59,23 @@ export async function POST(request: Request) {
     attribution,
     payload
   });
+  const canonicalAttribution =
+    visitorResult.ok && "attribution" in visitorResult && visitorResult.attribution
+      ? visitorResult.attribution
+      : attribution;
+  const canonicalQWho =
+    visitorResult.ok && "qWho" in visitorResult ? visitorResult.qWho : undefined;
+  const canonicalPayload =
+    canonicalQWho && typeof payload.qWho !== "string"
+      ? {
+          ...payload,
+          qWho: canonicalQWho,
+          quiz_is_self_taker:
+            typeof payload.quiz_is_self_taker === "boolean"
+              ? payload.quiz_is_self_taker
+              : canonicalQWho === "self"
+        }
+      : payload;
 
   if (
     visitorResult.ok &&
@@ -71,8 +88,8 @@ export async function POST(request: Request) {
       path: body.path,
       full_url: body.fullUrl,
       referrer: body.referrer ?? request.headers.get("referer") ?? undefined,
-      attribution,
-      payload: { ...payload, note: "return_visit_new_campaign" },
+      attribution: canonicalAttribution,
+      payload: { ...canonicalPayload, note: "return_visit_new_campaign" },
       source: "client"
     });
   }
@@ -84,8 +101,8 @@ export async function POST(request: Request) {
     path: body.path,
     full_url: body.fullUrl,
     referrer: body.referrer ?? request.headers.get("referer") ?? undefined,
-    attribution,
-    payload,
+    attribution: canonicalAttribution,
+    payload: canonicalPayload,
     source: "client"
   });
 
