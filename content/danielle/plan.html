@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Danielle Danso Personalized SAT Plan</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&display=swap');
+:root{
+  --cream:#F5ECD9; --paper:#FFFDF8; --navy:#121A2B; --ink:#1F2733; --muted:#7C7666;
+  --line:#E7DFCD; --green:#2F8B55; --forest:#234F37; --sage:#E8F0E9; --sage-line:#CDDFD1;
+  --tomato:#F24822; --blue:#379BD0; --amber:#C98A2B;
+  --display:"Fraunces", Georgia, "Times New Roman", serif;
+  --body:-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--body);background:var(--cream);color:var(--ink);line-height:1.55;-webkit-font-smoothing:antialiased;padding:0 0 80px}
+.wrap{max-width:780px;margin:0 auto;padding:0 22px}
+.topbar{background:var(--navy);color:#fff;padding:26px 0 30px;position:relative;overflow:hidden}
+.topbar::after{content:"";position:absolute;top:-60px;right:-40px;width:240px;height:240px;background:radial-gradient(circle, rgba(47,139,85,.45), transparent 70%);filter:blur(10px)}
+.brand{display:flex;align-items:center;gap:9px;font-family:var(--display);font-weight:500;font-size:22px;letter-spacing:.5px}
+.brand .star{color:#7FD0A0;font-size:18px}
+.progress{height:6px;border-radius:6px;background:rgba(255,255,255,.15);margin-top:18px;overflow:hidden}
+.progress > span{display:block;height:100%;width:14%;background:linear-gradient(90deg,#7FD0A0,#2F8B55);border-radius:6px}
+section{margin-top:46px;animation:rise .7s ease both}
+.eyebrow{font-size:12px;letter-spacing:2.5px;text-transform:uppercase;color:var(--green);font-weight:600}
+h1{font-family:var(--display);font-weight:500;font-size:40px;line-height:1.08;letter-spacing:-.5px;margin:6px 0 2px}
+h2{font-family:var(--display);font-weight:500;font-size:30px;line-height:1.12;letter-spacing:-.4px;margin:6px 0 14px}
+h2 .accent{color:var(--green)}
+p{font-size:15.5px;margin:10px 0}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:26px 24px;box-shadow:0 1px 0 rgba(0,0,0,.02), 0 18px 40px -28px rgba(31,39,51,.35)}
+.card .head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+.card .head .right{font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
+.name{font-family:var(--display);font-size:32px;font-weight:500}
+.chart{margin:18px 0 6px}
+.chart svg{width:100%;height:auto;display:block}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:18px 0 4px}
+.stat{border:1px solid var(--line);border-radius:14px;padding:14px 10px;text-align:center;background:#fff}
+.stat b{display:block;font-family:var(--display);font-size:24px;color:var(--forest);font-weight:600;line-height:1}
+.stat span{display:block;font-size:10.5px;letter-spacing:1.3px;text-transform:uppercase;color:var(--muted);margin-top:7px}
+.rating-label{text-align:center;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin:24px 0 10px}
+.pills{display:flex;gap:6px}
+.pill{flex:1;display:flex;flex-direction:column;gap:2px;align-items:center;text-align:center;padding:9px 3px;border-radius:9px;background:var(--sage);color:#6e8a76}
+.pill b{font-size:11px;font-weight:700;letter-spacing:.2px}
+.pill span{font-size:10px;font-weight:600;opacity:.8}
+.pill .sc{font-family:var(--display);font-size:15px;font-weight:600;opacity:1;margin-top:1px}
+.pill.on{background:var(--forest);color:#fff}
+.pill.on span{opacity:.9}
+.honest{background:#FBF6EA;border:1px solid var(--line);border-left:3px solid var(--amber);border-radius:10px;padding:12px 14px;font-size:13.5px;color:#5f5a4d;margin-top:14px}
+.skills-title{text-align:center;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin:26px 0 10px}
+.srow{display:flex;align-items:center;gap:14px;padding:13px 4px;border-bottom:1px solid var(--line)}
+.srow:last-of-type{border-bottom:none}
+.chip{flex-shrink:0;font-size:11px;letter-spacing:1px;color:var(--muted);background:var(--sage);border-radius:7px;padding:6px 0;font-weight:600;width:34px;text-align:center}
+.sname{flex:1;font-size:15px}
+.sname small{display:block;color:var(--muted);font-size:12.5px;margin-top:1px}
+.pts{font-family:var(--display);font-size:22px;font-weight:600;color:var(--green)}
+.total{display:flex;justify-content:space-between;align-items:center;margin-top:16px;padding-top:14px;border-top:2px solid var(--ink)}
+.total span{font-size:12px;letter-spacing:2px;text-transform:uppercase;font-weight:600}
+.total b{font-family:var(--display);font-size:30px;color:var(--forest)}
+.effort{display:flex;justify-content:space-between;color:var(--muted);font-size:12.5px;margin-top:14px;flex-wrap:wrap;gap:6px}
+.callout{background:var(--navy);color:#EAF1EC;border-radius:16px;padding:22px 22px}
+.callout h3{font-family:var(--display);font-weight:500;font-size:20px;margin-bottom:8px;color:#fff}
+.callout p{color:#C9D3CC;font-size:14.5px;margin:9px 0}
+.callout .key{color:#8AD7A8;font-weight:600}
+.cost{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:18px 18px;margin-top:12px;border-left:4px solid var(--tomato)}
+.cost .ch{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.cost h4{font-size:16px;font-weight:600;flex:1}
+.cost .tail{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.cpts{font-family:var(--display);font-size:18px;font-weight:600;color:var(--green)}
+.cost p{font-size:14px;color:#544f44;margin:8px 0 0}
+.cost .fixline{font-size:13.5px;color:var(--forest);margin-top:8px}
+.cost .fixline b{color:var(--forest)}
+.fix{font-size:10.5px;font-weight:700;letter-spacing:.4px;padding:5px 10px;border-radius:20px;white-space:nowrap}
+.fix.high{background:var(--sage);color:var(--forest)}
+.fix.mid{background:#E3F1F6;color:#236b8a}
+.fix.steady{background:#FAF0DC;color:#9a6a18}
+.flag{background:#FBF6EA;border:1px dashed var(--amber);border-radius:10px;padding:11px 14px;font-size:13px;color:#6a6353;margin-top:12px}
+.steps{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:14px 0}
+.step{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 14px;font-size:14px}
+.step b{display:block;font-family:var(--display);color:var(--green);font-size:13px;letter-spacing:1px;margin-bottom:3px}
+.subh{font-weight:600;margin-top:20px;font-size:16px}
+.targets{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0}
+.tgt{background:var(--sage);border:1px solid var(--sage-line);border-radius:14px;padding:16px 10px;text-align:center}
+.tgt b{display:block;font-family:var(--display);font-size:30px;color:var(--forest);line-height:1}
+.tgt span{display:block;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#6e8a76;margin-top:6px}
+.note{font-size:13.5px;color:var(--muted)}
+.checks{list-style:none;margin:12px 0}
+.checks li{padding:8px 0 8px 26px;position:relative;font-size:14.5px;border-bottom:1px solid var(--line)}
+.checks li:last-child{border-bottom:none}
+.checks li::before{content:"\2736";position:absolute;left:2px;color:var(--green)}
+.phase{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--green);font-weight:600;margin:22px 0 8px}
+.week{display:flex;gap:14px;padding:13px 0;border-bottom:1px solid var(--line)}
+.week .wk{flex-shrink:0;width:54px;font-family:var(--display);font-weight:600;color:var(--ink);font-size:15px}
+.week .wd{flex:1;font-size:14.5px}
+.week .wd .tag{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.4px;color:var(--forest);background:var(--sage);border-radius:6px;padding:2px 8px;margin-left:6px}
+footer{margin-top:46px;text-align:center;color:var(--muted);font-size:12.5px}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+section:nth-of-type(2){animation-delay:.05s}
+section:nth-of-type(3){animation-delay:.1s}
+section:nth-of-type(4){animation-delay:.15s}
+@media(max-width:560px){h1{font-size:32px}.stats{grid-template-columns:repeat(2,1fr)}.steps{grid-template-columns:1fr}.pills{gap:4px}.pill{padding:8px 2px}.pill b{font-size:9px}.pill span{font-size:8.5px}.pill .sc{font-size:12px}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <div class="brand"><span class="star">&#10038;</span> Illuminairy</div>
+    <div class="progress"><span></span></div>
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- OVERVIEW -->
+<section>
+  <div class="card">
+    <div class="head">
+      <div><div class="eyebrow">Personalized SAT Plan</div><div class="name">Danielle Danso</div></div>
+      <div class="right">11 weeks to Aug 22</div>
+    </div>
+
+    <div class="chart">
+      <svg viewBox="0 0 720 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Projected score from 1125 to 1400">
+        <line x1="60" y1="56" x2="680" y2="56" stroke="#C9C0AC" stroke-width="1" stroke-dasharray="5 5"/>
+        <text x="680" y="48" text-anchor="end" font-size="12" fill="#9a927e" letter-spacing="1">GOAL 1400</text>
+        <path d="M60,280 L215,194 L370,133 L525,93 L680,56 L680,300 L60,300 Z" fill="#2F8B5530"/>
+        <polyline points="60,280 215,194 370,133 525,93 680,56" fill="none" stroke="#234F37" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+        <circle cx="60" cy="280" r="5" fill="#234F37"/>
+        <circle cx="215" cy="194" r="6" fill="#2F8B55"/>
+        <circle cx="370" cy="133" r="4" fill="#2F8B55"/>
+        <circle cx="525" cy="93" r="4" fill="#2F8B55"/>
+        <circle cx="680" cy="56" r="7" fill="#234F37"/>
+        <text x="58" y="300" font-family="Fraunces, Georgia, serif" font-size="20" font-weight="600" fill="#1F2733">1125</text>
+        <text x="215" y="180" text-anchor="middle" font-size="14" font-weight="700" fill="#234F37">1225</text>
+        <text x="370" y="119" text-anchor="middle" font-size="14" font-weight="700" fill="#234F37">1305</text>
+        <text x="525" y="79" text-anchor="middle" font-size="14" font-weight="700" fill="#234F37">1355</text>
+        <text x="690" y="40" text-anchor="end" font-family="Fraunces, Georgia, serif" font-size="22" font-weight="600" fill="#234F37">1400</text>
+        <g font-size="10" fill="#9a927e" letter-spacing="1" text-anchor="middle">
+          <text x="60" y="320">START</text>
+          <text x="215" y="320">WK 4 RETAKE</text>
+          <text x="370" y="320">WK 7</text>
+          <text x="525" y="320">WK 9</text>
+          <text x="680" y="320">AUG 22</text>
+        </g>
+      </svg>
+    </div>
+    <p style="font-size:13px;color:var(--muted);text-align:center;margin:2px 0 0">Each score above is where she should be at that check-in. We compare her real practice-test score to it to see if she is on track or if the plan needs adjusting.</p>
+
+    <div class="stats">
+      <div class="stat"><b>+275</b><span>Points to Goal</span></div>
+      <div class="stat"><b>Aug 22</b><span>Test Date</span></div>
+      <div class="stat"><b>76</b><span>Days to Test</span></div>
+      <div class="stat"><b>+25</b><span>Points / Week</span></div>
+    </div>
+
+    <div class="rating-label">How hard is this goal, and what is realistic?</div>
+    <div class="pills">
+      <div class="pill"><b>Effortless</b><span>+10/wk</span><span class="sc">1235</span></div>
+      <div class="pill"><b>Realistic</b><span>+15/wk</span><span class="sc">1290</span></div>
+      <div class="pill"><b>Ambitious</b><span>+20/wk</span><span class="sc">1345</span></div>
+      <div class="pill on"><b>Aggressive</b><span>+25/wk</span><span class="sc">1400</span></div>
+      <div class="pill"><b>Extreme</b><span>+30/wk</span><span class="sc">1455</span></div>
+    </div>
+    <div class="honest"><b>What is realistic:</b> across students, tutoring lands somewhere in the full range of about <b>1235 to 1455</b> (roughly 10 to 30 points a week). With the work this plan asks for, Danielle's most likely range is <b>1290 to 1400</b>. Her goal of 1400 sits at the very top of that range, the Aggressive line, so it is reachable but it is the stretch end and depends on the hours she puts in.</div>
+    <div class="honest" style="border-left-color:var(--green);background:var(--sage);color:#2c5740"><b>Our first goal: +100 points in the first month.</b> We measure it with a full practice test at the end of Week 4. If she is at about 1225 or higher, she is on track. If she is short, we find out why and adjust the plan before the gap grows.</div>
+
+    <div class="skills-title">Where her points are, biggest first</div>
+    <div class="srow"><div class="chip">01</div><div class="sname">Math: runs out of time and rushes the end<small>Math. Sinks ~4 minutes into a few hard questions, then rushes the last ones.</small></div><div class="pts">+35</div></div>
+    <div class="srow"><div class="chip">02</div><div class="sname">Area and volume<small>Math. Missed all 3, including an easy one.</small></div><div class="pts">+30</div></div>
+    <div class="srow"><div class="chip">03</div><div class="sname">Command of evidence<small>Reading. Missed 3 (one easy, two hard).</small></div><div class="pts">+26</div></div>
+    <div class="srow"><div class="chip">04</div><div class="sname">Nonlinear functions<small>Math. Missed 2.</small></div><div class="pts">+24</div></div>
+    <div class="srow"><div class="chip">05</div><div class="sname">Nonlinear equations and systems<small>Math. Missed 2. Her single most common question type.</small></div><div class="pts">+24</div></div>
+    <div class="srow"><div class="chip">06</div><div class="sname">Text structure and purpose<small>Reading. Missed 3 (one medium, two hard).</small></div><div class="pts">+24</div></div>
+    <div class="srow"><div class="chip">07</div><div class="sname">Transitions<small>Reading and Writing. Missed 3, across easy, medium, and hard.</small></div><div class="pts">+22</div></div>
+    <div class="srow"><div class="chip">08</div><div class="sname">Circles<small>Math. Missed 2 of 3.</small></div><div class="pts">+20</div></div>
+    <div class="srow"><div class="chip">09</div><div class="sname">Words in context<small>Reading. Missed 2, both hard.</small></div><div class="pts">+18</div></div>
+    <div class="srow"><div class="chip">10</div><div class="sname">Algebra: hard equations and inequalities<small>Math. Solid on easy and medium, missed 2 hard ones.</small></div><div class="pts">+18</div></div>
+    <div class="srow"><div class="chip">11</div><div class="sname">Sentence grammar<small>Writing. Missed 2 (subject and verb agreement, verb form), including an easy one.</small></div><div class="pts">+16</div></div>
+    <div class="srow"><div class="chip">+</div><div class="sname">Smaller single misses<small>One punctuation, one factoring, one passage comparison, one main idea, one chart reading.</small></div><div class="pts">+18</div></div>
+    <div class="total"><span>Total to Goal</span><b>+275</b></div>
+
+    <div class="effort"><span>6 days / week</span><span>About 6 to 7 hours / week</span><span>About 70 hours total</span></div>
+  </div>
+</section>
+
+<!-- WHAT'S COSTING POINTS -->
+<section>
+  <div class="eyebrow">The Diagnostic</div>
+  <h2>What's costing her the <span class="accent">most points</span></h2>
+
+  <div class="callout">
+    <h3>First, how the SAT decides her score</h3>
+    <p>The SAT is adaptive. Each section, Reading and Writing and Math, has two parts called modules. Everyone gets the same Module 1. How many questions she gets right in Module 1 decides which Module 2 the test gives her next.</p>
+    <p>Do well on Module 1 and she gets the <span class="key">harder Module 2</span>, which is the only version that can reach a top score. Do poorly on Module 1 and the test switches her to an <span class="key">easier Module 2</span>, and her score for that whole section gets capped. Once that switch happens, nothing she does in Module 2 can undo it. Getting the easier Module 2 in a section can cost around <span class="key">130 points</span>.</p>
+    <p>On her diagnostic, Danielle earned the harder Module 2 in both sections, which is good. But it was close. In Reading and Writing she got <span class="key">19 of 27</span> right in Module 1, and the cutoff to earn the harder module is about 18. In Math she got <span class="key">16 of 22</span>, and the cutoff is about 15. So in each section she was one question away from being dropped to the easier module. The first priority is strengthening her skills so she is consistently several questions above the cutoff.</p>
+  </div>
+
+  <div class="cost">
+    <div class="ch"><h4>1. She runs out of time on Math, then rushes the end</h4><div class="tail"><span class="cpts">+35</span><span class="fix high">Very fixable</span></div></div>
+    <p>Math is where her clock breaks. She spent close to four minutes each on three hard questions she actually got right (Module 1 questions 16 and 20, and Module 2 question 5, all over 210 seconds). That time has to come from somewhere. By the end of the Math second module she had run out of it, and she rushed the last two questions in under a minute each and missed both, even though they were a percentage and a ratio question, the kind she got right earlier when they were easier.</p>
+    <p>Her Reading and Writing pacing is the opposite. The timing chart shows her steady and close to the class average there, so Reading is not a timing problem and we mostly leave her pace alone.</p>
+    <p class="fixline"><b>How we fix it:</b> we cap hard Math questions at two minutes, so if she is not close she flags it and moves on instead of sinking four minutes into one. We train instant question recognition (in the plan below) so routine questions take less time and leave room for the hard ones. We drill Math pacing in the final weeks.</p>
+  </div>
+
+  <div class="cost">
+    <div class="ch"><h4>2. Area and volume</h4><div class="tail"><span class="cpts">+30</span><span class="fix high">Very fixable</span></div></div>
+    <p>She missed all 3 area and volume questions, including an easy one. This is a formula problem, not a thinking problem.</p>
+    <p class="fixline"><b>How we fix it:</b> we make sure she knows each formula cold and has a set method for setting these up. Because the only gap is the formula, these turn into reliable points quickly.</p>
+  </div>
+
+  <div class="cost">
+    <div class="ch"><h4>3. Command of evidence</h4><div class="tail"><span class="cpts">+26</span><span class="fix high">Very fixable</span></div></div>
+    <p>She missed 3 of these. One was an easy question she should have gotten; two were hard. These ask her to pick the fact, quote, or data point that best backs up a claim.</p>
+    <p class="fixline"><b>How we fix it:</b> we teach one repeatable method. Read the claim, say in her own words what would prove it, then find the answer that matches. A method she runs every time improves fast.</p>
+  </div>
+
+  <div class="cost">
+    <div class="ch"><h4>4. Nonlinear functions</h4><div class="tail"><span class="cpts">+24</span><span class="fix mid">Quick once she graphs</span></div></div>
+    <p>She missed 2 of these (a medium and a hard). These are parabolas and other curves, where the built in calculator can show the answer.</p>
+    <p class="fixline"><b>How we fix it:</b> we teach her to graph these in the calculator and read the answer straight off the graph, like the lowest point or where it crosses zero, instead of solving by hand.</p>
+  </div>
+
+  <div class="cost">
+    <div class="ch"><h4>5. Nonlinear equations and systems</h4><div class="tail"><span class="cpts">+24</span><span class="fix steady">Steady practice</span></div></div>
+    <p>She missed 2 of these. This is also her most common question type on the whole test; it showed up about 13 times. Because it appears so often, even a small accuracy gain here adds the most points of any single Math skill.</p>
+    <p class="fixline"><b>How we fix it:</b> we drill these from medium to hard until she is reliable, and give them extra time in practice since they come up the most.</p>
+  </div>
+
+  <div class="cost">
+    <div class="ch"><h4>6. Text structure and purpose</h4><div class="tail"><span class="cpts">+24</span><span class="fix mid">Fixable</span></div></div>
+    <p>She missed 3 (a medium and two hard). These ask what job a sentence or paragraph is doing, or how the passage is built.</p>
+    <p class="fixline"><b>How we fix it:</b> we teach her to name the job of the sentence in plain words first (it introduces, it gives an example, it disagrees, it concludes), then look at the choices.</p>
+  </div>
+
+  <div class="cost">
+    <div class="ch"><h4>7. Transitions</h4><div class="tail"><span class="cpts">+22</span><span class="fix high">Very fixable</span></div></div>
+    <p>She missed 3 transition questions, one easy, one medium, one hard. These ask for the right linking word, like "however" or "therefore."</p>
+    <p class="fixline"><b>How we fix it:</b> transitions only come in a few flavors (continue the idea, contrast it, show cause, give an example). We teach her to decide the relationship first, then pick the word. This is one of the fastest skills on the test to fix.</p>
+  </div>
+
+  <div class="cost">
+    <div class="ch"><h4>8. Circles</h4><div class="tail"><span class="cpts">+20</span><span class="fix high">Very fixable</span></div></div>
+    <p>She missed 2 of 3 circle questions (a medium and a hard). Like area and volume, the gap is mostly the formulas (area, circumference, and the equation of a circle) plus a method.</p>
+    <p class="fixline"><b>How we fix it:</b> we lock in the circle formulas and practice the standard setups until they are routine.</p>
+  </div>
+
+  <div class="cost">
+    <div class="ch"><h4>9. Words in context</h4><div class="tail"><span class="cpts">+18</span><span class="fix mid">Fixable</span></div></div>
+    <p>She missed 2, both on the harder module. These give a sentence with a blank and ask for the best word.</p>
+    <p class="fixline"><b>How we fix it:</b> we teach her to cover the answer choices, come up with her own word from the sentence, then match it.</p>
+  </div>
+
+  <div class="cost">
+    <div class="ch"><h4>10. Algebra: the hardest equations and inequalities</h4><div class="tail"><span class="cpts">+18</span><span class="fix mid">Fixable</span></div></div>
+    <p>She gets every easy and medium algebra question right. She only missed 2 hard ones (a two variable equation and an inequality). Her foundation is solid; just the hardest versions trip her.</p>
+    <p class="fixline"><b>How we fix it:</b> we start her straight at the hard level here, since she does not need the easy practice.</p>
+  </div>
+
+  <div class="cost">
+    <div class="ch"><h4>11. Sentence grammar</h4><div class="tail"><span class="cpts">+16</span><span class="fix high">Very fixable</span></div></div>
+    <p>She missed 2 grammar questions, one easy and one medium. The diagnostic calls these "form, structure, and sense," which means subject and verb agreement, verb forms, and how the parts of a sentence fit together. These follow clear rules.</p>
+    <p class="fixline"><b>How we fix it:</b> we teach the handful of rules these questions test and drill them until they are automatic. Rule based skills like this move quickly.</p>
+  </div>
+
+  <div class="cost">
+    <div class="ch"><h4>Smaller single misses</h4><div class="tail"><span class="cpts">+18</span><span class="fix mid">Daily practice</span></div></div>
+    <p>A handful of one off misses add up: one punctuation question (joining or separating two sentences), one factoring question, one comparing two passages, one main idea, and one chart reading. We pick these up in the daily mixed practice instead of spending whole lessons on them.</p>
+    <p class="fixline">For the punctuation miss, we pin down the exact rule (comma, semicolon, or colon) from the question she got wrong, then drill that one.</p>
+  </div>
+</section>
+
+<!-- THE FIX -->
+<section>
+  <div class="eyebrow">The Plan</div>
+  <h2>How we <span class="accent">fix it</span></h2>
+  <p>We go after the biggest point getters first. For Danielle those are also her quickest wins, so she sees a real jump early and trusts that 1400 is back in reach.</p>
+
+  <p class="subh">Every skill is taught the same way:</p>
+  <div class="steps">
+    <div class="step"><b>1. Learn</b>We explain the skill and how to spot it.</div>
+    <div class="step"><b>2. Watch</b>She watches us solve two examples out loud.</div>
+    <div class="step"><b>3. Solve together</b>She tries one with us guiding her.</div>
+    <div class="step"><b>4. Solve with hints</b>She leads; we step in only when she is stuck.</div>
+    <div class="step"><b>5. Solve alone</b>Four correct in a row to move up a level.</div>
+    <div class="step"><b>6. Repeat to mastery</b>Until easy, then medium, then hard is automatic.</div>
+  </div>
+  <p class="note">We start each skill at the level where she is actually stuck, not from scratch. On algebra, for example, she already gets the easy and medium questions, so we jump straight to the hard ones and save the time.</p>
+
+  <p class="subh">Cutting the fatigue: instant recognition</p>
+  <p>Danielle struggles with focus late in the test. To fight that, we lower how hard her brain has to work on each question. The easiest way is to train her to instantly recognize the question type and how to approach it. For example, she looks at a Reading question and immediately knows whether it is a main idea question or a comparison question. In Math, she looks and immediately knows whether it is a nonlinear equation, and whether the calculator will help, yes or no. When that recognition is automatic, she spends her energy solving the problem instead of figuring out what she is looking at, and she holds up far better late in the test, especially in the back half of Math where she is losing the most time right now.</p>
+
+  <p class="subh">Practice, a little every day</p>
+  <p>She practices about 20 questions a day, five days a week. Each day mixes a few questions from the new skill with questions from everything she has already covered. Practicing daily, and mixing old skills with new ones, is what makes a skill stick instead of fading before test day.</p>
+
+  <p class="subh">What she needs to hit on each skill:</p>
+  <div class="targets">
+    <div class="tgt"><b>100%</b><span>Easy</span></div>
+    <div class="tgt"><b>90%</b><span>Medium</span></div>
+    <div class="tgt"><b>80%</b><span>Hard</span></div>
+  </div>
+  <p class="note">On her three most common skills (nonlinear equations and functions, command of evidence, words in context) we push the hard target to 85 percent, because they show up so often. Hitting these targets adds about 9 to 11 more questions in Reading and Writing and 12 to 14 in Math, which is the path from about 1125 to about 1400.</p>
+
+  <p class="subh">Checkpoints, full length practice tests:</p>
+  <ul class="checks">
+    <li><b>End of Week 4.</b> The first big retake. Target: about +100.</li>
+    <li><b>Week 7.</b> Mid point check on the harder questions.</li>
+    <li><b>Week 9.</b> Full timing check, and we update the projection with her real scores.</li>
+    <li><b>Week 10.</b> One last full practice test under real conditions, then a few lighter days going into the test.</li>
+  </ul>
+</section>
+
+<!-- WEEK BY WEEK -->
+<section>
+  <div class="eyebrow">The Schedule</div>
+  <h2>Week by week</h2>
+
+  <div class="phase">Weeks 1 to 4 . Quick wins and protecting the module gap</div>
+  <div class="week"><div class="wk">Wk 1</div><div class="wd">Train instant question recognition in both sections. Start her most common Math skill, nonlinear equations, and start tightening up the easy questions she is missing. <span class="tag">Biggest, fastest points first</span></div></div>
+  <div class="week"><div class="wk">Wk 2</div><div class="wd">Math: nonlinear functions, using the calculator graph. Reading: command of evidence.</div></div>
+  <div class="week"><div class="wk">Wk 3</div><div class="wd">Math: area and volume formulas. Writing: transitions.</div></div>
+  <div class="week"><div class="wk">Wk 4</div><div class="wd">Math: circles. Reading: text structure and purpose. <span class="tag">Full length retake, target about +100</span></div></div>
+
+  <div class="phase">Weeks 5 to 7 . Raising the ceiling</div>
+  <div class="week"><div class="wk">Wk 5</div><div class="wd">Math: algebra at the hard level (two variable equations and inequalities). Reading: words in context.</div></div>
+  <div class="week"><div class="wk">Wk 6</div><div class="wd">Math: factoring and the calculator habit. Writing: the sentence grammar and punctuation rules she missed. <span class="tag">Full length practice test</span></div></div>
+  <div class="week"><div class="wk">Wk 7</div><div class="wd">Math: nonlinear questions at the hard level, plus an area and circles retest. Reading: command of evidence and text structure at the hard level.</div></div>
+
+  <div class="phase">Weeks 8 to 11 . Speed, stamina, and test day</div>
+  <div class="week"><div class="wk">Wk 8</div><div class="wd">Timed drills begin. Reading: 8 questions in 8 minutes. Math: 6 in 8. Plus a two minute cap on hard questions.</div></div>
+  <div class="week"><div class="wk">Wk 9</div><div class="wd">Full sections under time, focused on holding her focus through the Math second module. <span class="tag">Full length practice test</span></div></div>
+  <div class="week"><div class="wk">Wk 10</div><div class="wd">One last full practice test under real test conditions. Clean up the final weak spots. <span class="tag">Final full practice test</span></div></div>
+  <div class="week"><div class="wk">Wk 11</div><div class="wd">Light review, a clear test day plan, and rest. Test: Saturday, Aug 22.</div></div>
+</section>
+
+<footer>Illuminairy . Personalized SAT Plan for Danielle Danso . Built from her June 6 diagnostic</footer>
+
+</div>
+</body>
+</html>

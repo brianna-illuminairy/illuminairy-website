@@ -9,6 +9,7 @@ export function LayoutChrome({ children }: { children: React.ReactNode }) {
     pathname === "/sat-plan-builder" ||
     pathname?.startsWith("/plan") ||
     pathname?.startsWith("/quiz") ||
+    pathname?.startsWith("/danielle") ||
     pathname === "/privacy" ||
     pathname === "/terms" ||
     pathname === "/support-policy" ||

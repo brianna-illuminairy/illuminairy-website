@@ -2,6 +2,10 @@
 
 *Last updated: 2026-06-08*
 
+## Danielle student portal (new)
+
+Private route **`/danielle`** — email allowlist auth (`DANIELLE_ACCESS_ALLOWLIST` in Vercel). SAT plan HTML + diagnostic PDFs in `content/danielle/`. PDFs served at `/danielle/files/[slug]` (cookie path `/danielle`). **Deploy:** set env then push to `main`.
+
 ## Resume here
 
 **Active spec (mobile cold traffic):** [`specs/2026-06-mobile-cold-traffic-funnel/SPEC.md`](../specs/2026-06-mobile-cold-traffic-funnel/SPEC.md)
