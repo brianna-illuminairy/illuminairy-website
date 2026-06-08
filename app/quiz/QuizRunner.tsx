@@ -56,8 +56,8 @@ export default function QuizRunner() {
   const gapScreen = showGapScreen(answers);
 
   useEffect(() => {
-    setLastStep(stepId);
-  }, [stepId, setLastStep]);
+    if (lastStep !== stepId) setLastStep(stepId);
+  }, [stepId, lastStep, setLastStep]);
 
   useEffect(() => {
     if (resumeStep !== requestedStep) {
