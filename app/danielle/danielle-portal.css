@@ -46,23 +46,19 @@
   align-items: center;
 }
 
-.danielle-portal__header-row {
+.danielle-portal__topbar {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
   gap: 12px;
-  margin-top: 18px;
-  padding-bottom: 0;
-  flex-wrap: wrap;
 }
 
 .danielle-portal__nav {
   display: flex;
   gap: 8px;
+  margin-top: 18px;
   padding-bottom: 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-  flex: 1;
-  min-width: 0;
 }
 
 .danielle-portal__practice-cta {
@@ -70,7 +66,6 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  margin-bottom: 10px;
   padding: 8px 14px;
   border-radius: 999px;
   background: #7fd0a0;
@@ -79,7 +74,7 @@
   font-weight: 700;
   letter-spacing: 0.02em;
   white-space: nowrap;
-  transition: background 0.15s ease, transform 0.15s ease;
+  transition: background 0.15s ease;
 }
 
 .danielle-portal__practice-cta:hover {
@@ -317,5 +312,172 @@
 @media (max-width: 640px) {
   .danielle-portal__cards {
     grid-template-columns: 1fr;
+  }
+}
+
+.danielle-week1__section {
+  background: var(--danielle-paper);
+  border: 1px solid var(--danielle-line);
+  border-radius: 16px;
+  padding: 22px 20px;
+  margin-bottom: 18px;
+}
+
+.danielle-week1__heading {
+  font-family: var(--font-display, Georgia, serif);
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--danielle-navy);
+  margin: 0 0 10px;
+}
+
+.danielle-week1__lesson-meta {
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--danielle-green);
+  font-weight: 600;
+  margin: 0 0 8px;
+}
+
+.danielle-week1__focus,
+.danielle-week1__goal-line,
+.danielle-week1__habit {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--danielle-ink);
+  margin: 0 0 12px;
+}
+
+.danielle-week1__goals,
+.danielle-week1__practice-list {
+  margin: 0;
+  padding-left: 20px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--danielle-ink);
+}
+
+.danielle-week1__goals li,
+.danielle-week1__practice-list li {
+  margin-bottom: 8px;
+}
+
+.danielle-week1__table-wrap {
+  overflow-x: auto;
+  margin: 14px 0;
+}
+
+.danielle-week1__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.danielle-week1__table th,
+.danielle-week1__table td {
+  border: 1px solid var(--danielle-line);
+  padding: 10px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.danielle-week1__table th {
+  background: var(--danielle-sage);
+  color: var(--danielle-forest);
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.danielle-week1__table td:first-child {
+  white-space: nowrap;
+  font-weight: 600;
+  color: var(--danielle-forest);
+}
+
+.danielle-week1__slides-heading {
+  font-family: var(--font-display, Georgia, serif);
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--danielle-navy);
+  margin: 22px 0 12px;
+}
+
+.danielle-week1__slides-block {
+  margin-bottom: 18px;
+}
+
+.danielle-week1__slides-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--danielle-muted);
+  margin: 0 0 8px;
+}
+
+.danielle-week1__slide-frame {
+  width: 100%;
+  min-height: 520px;
+  border: 1px solid var(--danielle-line);
+  border-radius: 12px;
+  background: #fff;
+}
+
+.danielle-week1__deck {
+  margin-bottom: 28px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--danielle-line);
+}
+
+.danielle-week1__deck:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.danielle-week1__deck-order {
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--danielle-green);
+  font-weight: 600;
+  margin: 0 0 4px;
+}
+
+.danielle-week1__deck-title {
+  font-family: var(--font-display, Georgia, serif);
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--danielle-navy);
+  margin: 0 0 6px;
+}
+
+.danielle-week1__deck-when {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--danielle-forest);
+  margin: 0 0 8px;
+}
+
+.danielle-week1__deck-why {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--danielle-muted);
+  margin: 0 0 14px;
+}
+
+.danielle-week1__deck-pending {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--danielle-muted);
+  background: var(--danielle-sage);
+  border: 1px dashed var(--danielle-line);
+  border-radius: 12px;
+  padding: 16px 18px;
+}
+
+@media (max-width: 640px) {
+  .danielle-week1__slide-frame {
+    min-height: 420px;
   }
 }

@@ -7,7 +7,7 @@ import { DanielleLoginChrome } from "@/components/danielle/portal-shell";
 export default function DanielleLoginForm() {
   const router = useRouter();
   const params = useSearchParams();
-  const next = params.get("next") ?? "/danielle";
+  const next = params.get("next") ?? "/danielle/diagnostic";
   const [email, setEmail] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -41,8 +41,8 @@ export default function DanielleLoginForm() {
         <p className="danielle-portal__eyebrow">Illuminairy</p>
         <h1 className="danielle-portal__title">Danielle&apos;s SAT plan</h1>
         <p className="danielle-portal__lede">
-          Enter the email we shared with you to view the personalized plan and diagnostic
-          reports.
+          Enter the email we shared with you to view diagnostics, the study plan, and Week 1
+          lessons.
         </p>
         <form onSubmit={submit}>
           <label className="danielle-portal__field">

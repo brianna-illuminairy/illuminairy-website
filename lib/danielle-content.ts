@@ -11,6 +11,18 @@ export const DANIELLE_FILE_MAP = {
   tabular: {
     filename: "diagnostic-tabular.pdf",
     contentType: "application/pdf"
+  },
+  "nonlinear-slides": {
+    filename: "nonlinear-equations-slides.html",
+    contentType: "text/html; charset=utf-8"
+  },
+  "factoring-slides": {
+    filename: "factoring-slides.html",
+    contentType: "text/html; charset=utf-8"
+  },
+  "quadratics-slides": {
+    filename: "quadratics-slides.html",
+    contentType: "text/html; charset=utf-8"
   }
 } as const;
 

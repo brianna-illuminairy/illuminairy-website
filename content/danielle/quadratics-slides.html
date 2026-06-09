@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quadratic Equations · Illuminairy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#F5ECD9; --paper:#FCF8EE; --forest:#234F37; --green:#2F8B55;
+    --ink:#23291F; --muted:#6f7566; --tomato:#D9533B; --sage:#E6EFE3;
+    --line:rgba(35,79,55,.16);
+    --display:'Fraunces',Georgia,serif;
+    --sans:ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    --mono:ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{background:var(--cream);color:var(--ink);font-family:var(--sans);
+    display:flex;align-items:center;justify-content:center;padding:24px;line-height:1.5}
+  .stage{width:100%;max-width:940px;display:flex;flex-direction:column;gap:14px}
+  .topbar{display:flex;align-items:center;justify-content:space-between;font-size:13px}
+  .brand{font-family:var(--display);font-weight:700;color:var(--forest);letter-spacing:.3px}
+  .brand .star{color:var(--green)}
+  .count{font-variant-numeric:tabular-nums;color:var(--muted);letter-spacing:1px}
+  .progress{height:4px;background:var(--line);border-radius:99px;overflow:hidden}
+  .progress .bar{height:100%;width:0;background:var(--green);transition:width .35s ease}
+  .slides{position:relative;background:var(--paper);border:1px solid var(--line);
+    border-radius:18px;min-height:64vh;padding:46px 54px;
+    box-shadow:0 18px 40px -28px rgba(35,79,55,.4)}
+  .slide{display:none;animation:fade .45s ease}
+  .slide.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .kicker{font-size:12px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;
+    color:var(--green);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+  h1{font-family:var(--display);font-weight:700;color:var(--forest);
+    font-size:clamp(32px,5.5vw,60px);line-height:1.02;margin:0 0 16px;letter-spacing:-.5px}
+  h2{font-family:var(--display);font-weight:600;color:var(--forest);
+    font-size:clamp(25px,3.9vw,40px);line-height:1.05;margin:0 0 18px;letter-spacing:-.3px}
+  p{font-size:clamp(16px,2.1vw,20px);margin:0 0 14px;max-width:64ch}
+  .lead{font-size:clamp(18px,2.4vw,23px);color:var(--ink)}
+  .sub{color:var(--muted);font-size:clamp(15px,2vw,19px)}
+  .eq{font-family:var(--mono);background:var(--sage);color:var(--forest);
+    padding:2px 8px;border-radius:6px;font-size:.95em}
+  .eg{font-family:var(--mono);background:var(--sage);color:var(--forest);
+    padding:1px 7px;border-radius:5px;font-size:.85em;margin-left:4px}
+  .tools{list-style:none;padding:0;margin:14px 0 0}
+  .tools li{display:flex;gap:12px;align-items:baseline;margin:0 0 14px;
+    font-size:clamp(15px,2vw,19px)}
+  .tools li .star{color:var(--green);flex:0 0 auto}
+  .tools li b{color:var(--forest)}
+  .steps{list-style:none;padding:0;margin:6px 0 0}
+  .steps li{display:flex;gap:12px;align-items:flex-start;margin:0 0 13px;
+    font-size:clamp(16px,2.1vw,20px)}
+  .steps li .star{color:var(--green);font-size:.85em;margin-top:.35em;flex:0 0 auto}
+  .answer{color:var(--green);font-weight:700}
+  .callout{border-left:4px solid var(--green);background:var(--sage);
+    padding:16px 20px;border-radius:0 12px 12px 0;margin:18px 0;font-size:clamp(15px,2vw,19px)}
+  .callout .tag{display:block;font-size:12px;font-weight:700;letter-spacing:1.5px;
+    text-transform:uppercase;color:var(--green);margin-bottom:6px}
+  .pitfall{border-left:4px solid var(--tomato);background:#fbeae5;
+    padding:16px 20px;border-radius:0 12px 12px 0;margin:14px 0 0;font-size:clamp(15px,2vw,18px)}
+  .pitfall .tag{display:block;font-size:12px;font-weight:700;letter-spacing:1.5px;
+    text-transform:uppercase;color:var(--tomato);margin-bottom:6px}
+  .tip{color:var(--muted);font-size:clamp(14px,1.9vw,17px);margin-top:14px}
+  .cards{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px}
+  .card{border:1px solid var(--line);border-radius:12px;padding:16px 18px;background:#fff}
+  .card h3{margin:0 0 10px;font-size:13px;letter-spacing:1.5px;text-transform:uppercase;
+    color:var(--green);font-weight:700}
+  .card .q{font-family:var(--mono);font-size:14px;color:var(--ink);display:block;margin:5px 0}
+  .frag{opacity:0;transform:translateY(8px);transition:opacity .35s ease,transform .35s ease}
+  .frag.show{opacity:1;transform:none}
+  .nav{display:flex;align-items:center;justify-content:space-between;gap:16px}
+  .dots{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;flex:1}
+  .dot{width:9px;height:9px;border-radius:99px;background:var(--line);border:0;padding:0;
+    cursor:pointer;transition:background .2s,transform .2s}
+  .dot.on{background:var(--green);transform:scale(1.25)}
+  button.arrowbtn{font-family:var(--sans);font-size:20px;line-height:1;cursor:pointer;
+    width:48px;height:48px;border-radius:99px;border:1px solid var(--line);background:#fff;
+    color:var(--forest);transition:background .2s,color .2s,opacity .2s;flex:0 0 auto}
+  button.arrowbtn:hover:not(:disabled){background:var(--forest);color:#fff}
+  button.arrowbtn:disabled{opacity:.3;cursor:default}
+  button:focus-visible,.dot:focus-visible{outline:3px solid var(--green);outline-offset:3px}
+  .hint{margin-top:20px;font-size:13px;color:var(--muted)}
+  .hint kbd{font-family:var(--mono);background:var(--sage);border-radius:5px;padding:1px 7px;
+    border:1px solid var(--line)}
+  @media(max-width:640px){
+    body{padding:12px}
+    .slides{padding:30px 24px;min-height:70vh}
+    .cards{grid-template-columns:1fr}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .slide,.frag,.progress .bar{animation:none;transition:none}
+    .frag{opacity:1;transform:none}
+  }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="topbar">
+    <div class="brand">Illuminairy <span class="star">✶</span></div>
+    <div class="count" id="count">1 / 10</div>
+  </div>
+  <div class="progress"><div class="bar" id="bar"></div></div>
+
+  <main class="slides" id="slides">
+
+    <!-- 1 TITLE -->
+    <section class="slide active">
+      <div class="kicker"><span class="star">✶</span> Illuminairy · Math foundations</div>
+      <h1>Quadratic equations</h1>
+      <p class="lead">Spot it, then pick your tool.</p>
+      <p class="sub">Danielle Danso · Comes after factoring and radicals</p>
+      <div class="hint">Move with <kbd>→</kbd> <kbd>←</kbd> or the buttons. Worked examples reveal one step at a time.</div>
+    </section>
+
+    <!-- 2 THE THREAD -->
+    <section class="slide">
+      <div class="kicker">Why this lesson</div>
+      <h2>Two questions, both quadratics, both missed</h2>
+      <p>Her Q11 took 137 seconds. Her Q4 took 97 seconds. Both ran long, both came back wrong.</p>
+      <div class="callout frag"><span class="tag">The thread</span>On both, the calculator could not hand her the answer. One has a letter constant, one needs an exact radical form. The fix is the by-hand tools, which is why factoring and radicals came first.</div>
+    </section>
+
+    <!-- 3 SPOT IT -->
+    <section class="slide">
+      <div class="kicker">Step 1</div>
+      <h2>How to spot a quadratic</h2>
+      <p>A squared variable is the highest power.</p>
+      <p class="frag">It will ask for the solutions, the number of solutions, the sum or product of the roots, or a solution written in a special form.</p>
+    </section>
+
+    <!-- 4 FIVE TOOLS -->
+    <section class="slide">
+      <div class="kicker">Step 2 · The decision tree</div>
+      <h2>Pick your tool</h2>
+      <ul class="tools">
+        <li class="frag"><span class="star">✶</span><span><b>Factors nicely?</b> Factor and use the zero-product property. <span class="eg">x² + x − 90</span></span></li>
+        <li class="frag"><span class="star">✶</span><span><b>Asks for the sum or product of roots?</b> Sum = −b/a, product = c/a. Do not solve.</span></li>
+        <li class="frag"><span class="star">✶</span><span><b>Asks how many solutions?</b> Use the discriminant <span class="eg">b² − 4ac</span>.</span></li>
+        <li class="frag"><span class="star">✶</span><span><b>Ugly numbers, or "in the form a + b√n"?</b> Quadratic formula, then simplify and match.</span></li>
+        <li class="frag"><span class="star">✶</span><span><b>Hidden structure?</b> A common factor or a perfect square. Factor it out, do not expand.</span></li>
+      </ul>
+    </section>
+
+    <!-- 5 CALC OR HAND -->
+    <section class="slide">
+      <div class="kicker">The habit</div>
+      <h2>Calculator or by hand?</h2>
+      <p>Use the calculator only when you can put in real numbers and read a clean root.</p>
+      <div class="callout"><span class="tag">The rule</span>A letter constant or an exact-form answer means by hand. Both of her misses were by-hand questions.</div>
+    </section>
+
+    <!-- 6 BACKGROUND -->
+    <section class="slide">
+      <div class="kicker">What's underneath</div>
+      <h2>The skills this leans on</h2>
+      <ul class="tools">
+        <li class="frag"><span class="star">✶</span><span>Factoring and the zero-product property <span class="sub">(built in the factoring deck)</span></span></li>
+        <li class="frag"><span class="star">✶</span><span>The quadratic formula</span></li>
+        <li class="frag"><span class="star">✶</span><span>Simplifying radicals <span class="sub">(built in the radical deck)</span></span></li>
+        <li class="frag"><span class="star">✶</span><span>Sum and product of roots, the discriminant, spotting a perfect square</span></li>
+      </ul>
+    </section>
+
+    <!-- 7 WORKED A -->
+    <section class="slide">
+      <div class="kicker">Worked example · Her Q11</div>
+      <h2><span class="eq">y − 42 = (y − c)(y − 42)</span></h2>
+      <ul class="steps">
+        <li class="frag"><span class="star">✶</span><span>Move everything to one side: <span class="eq">(y − 42) − (y − c)(y − 42) = 0</span></span></li>
+        <li class="frag"><span class="star">✶</span><span>Factor out the common <span class="eq">(y − 42)</span>: <span class="eq">(y − 42)[1 − (y − c)] = 0</span></span></li>
+        <li class="frag"><span class="star">✶</span><span>Set each factor to zero: <span class="answer">y = 42</span> and <span class="answer">y = c + 1</span></span></li>
+        <li class="frag"><span class="star">✶</span><span>That is I and III, <span class="answer">choice D</span>.</span></li>
+      </ul>
+      <div class="pitfall frag"><span class="tag">Her trap</span>She chose 42 and c, treating the right side as already solved and ignoring the (y − 42) on the left.</div>
+    </section>
+
+    <!-- 8 WORKED B -->
+    <section class="slide">
+      <div class="kicker">Worked example · Her Q4</div>
+      <h2><span class="eq">x² − 10x + 7 = 0</span>, solution <span class="eq">5 + 3√n</span></h2>
+      <ul class="steps">
+        <li class="frag"><span class="star">✶</span><span>Quadratic formula: <span class="eq">x = (10 ± √(100 − 28)) / 2 = (10 ± √72) / 2</span></span></li>
+        <li class="frag"><span class="star">✶</span><span>Simplify the radical: <span class="eq">√72 = 6√2</span></span></li>
+        <li class="frag"><span class="star">✶</span><span>Divide every term by 2: <span class="eq">x = 5 ± 3√2</span></span></li>
+        <li class="frag"><span class="star">✶</span><span>Match: <span class="eq">3√n = 3√2</span>, so <span class="answer">n = 2</span> (choice A).</span></li>
+      </ul>
+      <div class="pitfall frag"><span class="tag">Her trap</span>She set <span class="eq">3√n = √72</span> and got n = 8, skipping both the simplify and the divide by 2.</div>
+    </section>
+
+    <!-- 9 PRACTICE -->
+    <section class="slide">
+      <div class="kicker">Practice</div>
+      <h2>Your in-session set</h2>
+      <div class="cards">
+        <div class="card"><h3>Mediums · four in a row</h3><span class="q">#5 · x² + x − 90</span><span class="q">#17 · −3x² + 5x + 8</span><span class="q">#16 · x² − 4x − 5, form 2 + √k</span><span class="q">#14 · 3x² − 6x − 11, form 1 + √k / 3</span></div>
+        <div class="card"><h3>Hards · the stretch</h3><span class="q">#13 · 3x² − 19x + 6</span><span class="q">#18 · x² − 6x + 4, form 3 − √n</span><span class="q">#19 · 1 / (x² + 6x + 9) = 3</span><span class="q">#11 · (x − 1)(x + 2) = x(x − 3)</span></div>
+      </div>
+      <p class="tip">Warm up first with the quadratic cards in the recognition deck.</p>
+    </section>
+
+    <!-- 10 CLOSE -->
+    <section class="slide">
+      <div class="kicker"><span class="star">✶</span> On track</div>
+      <h2>Today's win</h2>
+      <p class="lead">She picks the right tool on sight, and gets four in a row on the mediums.</p>
+      <p class="sub">Anything she misses opens the next Math session. Illuminairy <span style="color:var(--green)">✶</span></p>
+    </section>
+
+  </main>
+
+  <div class="nav">
+    <button class="arrowbtn" id="prev" aria-label="Previous">←</button>
+    <div class="dots" id="dots"></div>
+    <button class="arrowbtn" id="next" aria-label="Next">→</button>
+  </div>
+</div>
+
+<script>
+  const slides=[...document.querySelectorAll('.slide')];
+  const bar=document.getElementById('bar');
+  const count=document.getElementById('count');
+  const dotsWrap=document.getElementById('dots');
+  const prevBtn=document.getElementById('prev');
+  const nextBtn=document.getElementById('next');
+  let i=0, f=0;
+
+  slides.forEach((s,idx)=>{
+    const d=document.createElement('button');
+    d.className='dot'; d.setAttribute('aria-label','Go to slide '+(idx+1));
+    d.addEventListener('click',()=>{i=idx;f=0;render();});
+    dotsWrap.appendChild(d);
+  });
+  const dots=[...document.querySelectorAll('.dot')];
+  const frags=idx=>[...slides[idx].querySelectorAll('.frag')];
+
+  function render(){
+    slides.forEach((s,idx)=>s.classList.toggle('active',idx===i));
+    frags(i).forEach((el,k)=>el.classList.toggle('show',k<f));
+    bar.style.width=(i/(slides.length-1)*100)+'%';
+    count.textContent=(i+1)+' / '+slides.length;
+    dots.forEach((d,idx)=>d.classList.toggle('on',idx===i));
+    prevBtn.disabled=(i===0&&f===0);
+    nextBtn.disabled=(i===slides.length-1&&f===frags(i).length);
+  }
+  function next(){
+    if(f<frags(i).length){f++;}
+    else if(i<slides.length-1){i++;f=0;}
+    render();
+  }
+  function prev(){
+    if(f>0){f--;}
+    else if(i>0){i--;f=frags(i).length;}
+    render();
+  }
+  nextBtn.addEventListener('click',next);
+  prevBtn.addEventListener('click',prev);
+  document.addEventListener('keydown',e=>{
+    if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();next();}
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();prev();}
+  });
+  render();
+</script>
+</body>
+</html>

@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nonlinear Equations and Systems · Illuminairy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#F5ECD9; --paper:#FCF8EE; --forest:#234F37; --green:#2F8B55;
+    --ink:#23291F; --muted:#6f7566; --tomato:#D9533B; --sage:#E6EFE3;
+    --line:rgba(35,79,55,.16);
+    --display:'Fraunces',Georgia,serif;
+    --sans:ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    --mono:ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{background:var(--cream);color:var(--ink);font-family:var(--sans);
+    display:flex;align-items:center;justify-content:center;padding:24px;line-height:1.5}
+  .stage{width:100%;max-width:960px;display:flex;flex-direction:column;gap:14px}
+  .topbar{display:flex;align-items:center;justify-content:space-between;font-size:13px}
+  .brand{font-family:var(--display);font-weight:700;color:var(--forest);letter-spacing:.3px}
+  .brand .star{color:var(--green)}
+  .count{font-variant-numeric:tabular-nums;color:var(--muted);letter-spacing:1px}
+  .progress{height:4px;background:var(--line);border-radius:99px;overflow:hidden}
+  .progress .bar{height:100%;width:0;background:var(--green);transition:width .35s ease}
+  .slides{position:relative;background:var(--paper);border:1px solid var(--line);
+    border-radius:18px;min-height:66vh;padding:44px 52px;
+    box-shadow:0 18px 40px -28px rgba(35,79,55,.4)}
+  .slide{display:none;animation:fade .45s ease}
+  .slide.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .kicker{font-size:12px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;
+    color:var(--green);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+  h1{font-family:var(--display);font-weight:700;color:var(--forest);
+    font-size:clamp(30px,5vw,56px);line-height:1.03;margin:0 0 16px;letter-spacing:-.5px}
+  h2{font-family:var(--display);font-weight:600;color:var(--forest);
+    font-size:clamp(25px,3.8vw,40px);line-height:1.06;margin:0 0 8px;letter-spacing:-.3px}
+  p{font-size:clamp(16px,2.1vw,20px);margin:0 0 14px;max-width:64ch}
+  .lead{font-size:clamp(18px,2.4vw,23px);color:var(--ink)}
+  .sub{color:var(--muted);font-size:clamp(15px,2vw,19px)}
+  .defn{color:var(--muted);font-size:clamp(15px,2vw,18px);margin:0 0 18px}
+  .eq{font-family:var(--mono);background:var(--sage);color:var(--forest);
+    padding:2px 8px;border-radius:6px;font-size:.95em}
+  .routine{list-style:none;padding:0;margin:18px 0 0;counter-reset:r}
+  .routine li{display:flex;gap:14px;align-items:flex-start;margin:0 0 16px;
+    font-size:clamp(17px,2.3vw,22px)}
+  .routine li::before{counter-increment:r;content:counter(r);font-family:var(--display);
+    font-weight:700;color:#fff;background:var(--green);width:34px;height:34px;border-radius:99px;
+    display:flex;align-items:center;justify-content:center;flex:0 0 auto;font-size:17px}
+  .overview{list-style:none;padding:0;margin:14px 0 0}
+  .overview li{display:flex;gap:12px;align-items:baseline;margin:0 0 13px;
+    font-size:clamp(15px,2vw,19px)}
+  .overview li .star{color:var(--green);flex:0 0 auto}
+  .overview li b{color:var(--forest)}
+  .spec{margin-top:10px}
+  .spec-row{display:flex;gap:14px;margin:0 0 11px;font-size:clamp(15px,2vw,19px)}
+  .spec-row .lab{flex:0 0 120px;font-weight:700;color:var(--green);font-size:12px;
+    letter-spacing:1px;text-transform:uppercase;padding-top:4px}
+  .spec-row .v{flex:1}
+  .spec-row.warn .lab{color:var(--tomato)}
+  .flashq{font-family:var(--mono);font-size:clamp(20px,3.6vw,34px);color:var(--forest);
+    background:var(--sage);border-radius:14px;padding:26px 24px;text-align:center;
+    margin:6px 0 14px;line-height:1.35;word-break:break-word}
+  .prompt{color:var(--muted);font-size:clamp(14px,1.9vw,17px);text-align:center;
+    margin-bottom:6px;letter-spacing:.3px}
+  .callout{border-left:4px solid var(--green);background:var(--sage);
+    padding:18px 22px;border-radius:0 12px 12px 0;margin:6px 0}
+  .frag{opacity:0;transform:translateY(8px);transition:opacity .35s ease,transform .35s ease}
+  .frag.show{opacity:1;transform:none}
+  .nav{display:flex;align-items:center;justify-content:space-between;gap:16px}
+  .dots{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;flex:1}
+  .dot{width:8px;height:8px;border-radius:99px;background:var(--line);border:0;padding:0;
+    cursor:pointer;transition:background .2s,transform .2s}
+  .dot.on{background:var(--green);transform:scale(1.3)}
+  button.arrowbtn{font-family:var(--sans);font-size:20px;line-height:1;cursor:pointer;
+    width:48px;height:48px;border-radius:99px;border:1px solid var(--line);background:#fff;
+    color:var(--forest);transition:background .2s,color .2s,opacity .2s;flex:0 0 auto}
+  button.arrowbtn:hover:not(:disabled){background:var(--forest);color:#fff}
+  button.arrowbtn:disabled{opacity:.3;cursor:default}
+  button:focus-visible,.dot:focus-visible{outline:3px solid var(--green);outline-offset:3px}
+  .hint{margin-top:20px;font-size:13px;color:var(--muted)}
+  .hint kbd{font-family:var(--mono);background:var(--sage);border-radius:5px;padding:1px 7px;
+    border:1px solid var(--line)}
+  @media(max-width:640px){
+    body{padding:12px}
+    .slides{padding:28px 22px;min-height:72vh}
+    .spec-row{flex-direction:column;gap:2px}
+    .spec-row .lab{flex:none;padding-top:0}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .slide,.frag,.progress .bar{animation:none;transition:none}
+    .frag{opacity:1;transform:none}
+  }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="topbar">
+    <div class="brand">Illuminairy <span class="star">✶</span></div>
+    <div class="count" id="count">1 / 22</div>
+  </div>
+  <div class="progress"><div class="bar" id="bar"></div></div>
+
+  <main class="slides" id="slides">
+
+    <!-- 1 TITLE -->
+    <section class="slide active">
+      <div class="kicker"><span class="star">✶</span> Illuminairy · Math foundations</div>
+      <h1>Nonlinear equations and systems</h1>
+      <p class="lead">Your most common Math question type. The skill is reading it, then knowing exactly how to solve it.</p>
+      <p class="sub">Danielle Danso · Recognition</p>
+      <div class="hint">Move with <kbd>→</kbd> <kbd>←</kbd> or the buttons. On the practice cards, answer out loud first, then reveal.</div>
+    </section>
+
+    <!-- 2 ROUTINE -->
+    <section class="slide">
+      <div class="kicker">The routine, every question</div>
+      <h2>Read it, then make three calls</h2>
+      <ul class="routine">
+        <li>Name the <b>type</b>. Which of the five kinds is this?</li>
+        <li>Calculator or <b>by hand</b>?</li>
+        <li>Name the <b>approach</b>. Factor, quadratic formula, clear the fraction, square both sides, substitute.</li>
+      </ul>
+      <p class="sub" style="margin-top:16px">Only reach for the calculator if it can actually give the answer. A letter constant or an exact form means by hand.</p>
+    </section>
+
+    <!-- 3 OVERVIEW -->
+    <section class="slide">
+      <div class="kicker">The five subtypes</div>
+      <h2>What lives in this domain</h2>
+      <ul class="overview">
+        <li><span class="star">✶</span><span><b>Absolute value:</b> bars around an expression, <span class="eq">|2x − 3| = 7</span>.</span></li>
+        <li><span class="star">✶</span><span><b>Quadratic:</b> a squared variable, <span class="eq">x² − 10x + 7 = 0</span>.</span></li>
+        <li><span class="star">✶</span><span><b>Rational:</b> a variable in a denominator, <span class="eq">1 / (x² + 6x + 9) = 3</span>.</span></li>
+        <li><span class="star">✶</span><span><b>Other nonlinear:</b> a radical or a higher power, <span class="eq">√(x + 5) = x − 1</span>.</span></li>
+        <li><span class="star">✶</span><span><b>System, nonlinear and linear:</b> a line and a curve, <span class="eq">y = 2x</span> and <span class="eq">y = x² − 3</span>.</span></li>
+      </ul>
+    </section>
+
+    <!-- 4 ABS -->
+    <section class="slide">
+      <div class="kicker">Subtype 1 of 5</div>
+      <h2>Absolute value equations</h2>
+      <p class="defn">Absolute value bars around an expression.</p>
+      <div class="spec">
+        <div class="spec-row"><span class="lab">Recognize</span><span class="v">Bars around the expression, like <span class="eq">|2x − 3| = 7</span>.</span></div>
+        <div class="spec-row"><span class="lab">Calc or hand</span><span class="v">By hand. Splitting is faster and exact.</span></div>
+        <div class="spec-row"><span class="lab">Approach</span><span class="v">Isolate the bars, then set the inside equal to the positive and the negative of the other side. Solve both.</span></div>
+        <div class="spec-row warn"><span class="lab">Gotcha</span><span class="v">If the absolute value equals a negative number, there is no solution.</span></div>
+      </div>
+    </section>
+
+    <!-- 5 QUAD -->
+    <section class="slide">
+      <div class="kicker">Subtype 2 of 5</div>
+      <h2>Quadratic equations</h2>
+      <p class="defn">A squared variable is the highest power.</p>
+      <div class="spec">
+        <div class="spec-row"><span class="lab">Recognize</span><span class="v">An <span class="eq">x²</span> term. Asks for solutions, the number of solutions, the sum or product of roots, or a solution in a special form.</span></div>
+        <div class="spec-row"><span class="lab">Calc or hand</span><span class="v">By hand when there is a letter constant or an exact form. Calculator only for a clean numeric root.</span></div>
+        <div class="spec-row"><span class="lab">Approach</span><span class="v">Pick one of five tools: factor, sum and product of roots, discriminant, quadratic formula plus simplify, or hidden structure.</span></div>
+        <div class="spec-row warn"><span class="lab">Gotcha</span><span class="v">A parameter or an "a + b√n" answer means the calculator cannot finish it. See the factoring and radical decks.</span></div>
+      </div>
+    </section>
+
+    <!-- 6 RATIONAL -->
+    <section class="slide">
+      <div class="kicker">Subtype 3 of 5</div>
+      <h2>Rational equations</h2>
+      <p class="defn">A variable sits in a denominator.</p>
+      <div class="spec">
+        <div class="spec-row"><span class="lab">Recognize</span><span class="v">A fraction with a variable on the bottom, set equal to something, like <span class="eq">1 / (x² + 6x + 9) = 3</span>.</span></div>
+        <div class="spec-row"><span class="lab">Calc or hand</span><span class="v">By hand. Clear the fraction.</span></div>
+        <div class="spec-row"><span class="lab">Approach</span><span class="v">Multiply both sides by the denominator to clear it, then solve what is left (often a quadratic).</span></div>
+        <div class="spec-row warn"><span class="lab">Gotcha</span><span class="v">Any value that makes a denominator zero is not allowed. Check answers against that.</span></div>
+      </div>
+    </section>
+
+    <!-- 7 OTHER NONLINEAR -->
+    <section class="slide">
+      <div class="kicker">Subtype 4 of 5</div>
+      <h2>Other nonlinear equations</h2>
+      <p class="defn">Not linear, and not a plain quadratic. A radical or a higher power.</p>
+      <div class="spec">
+        <div class="spec-row"><span class="lab">Recognize</span><span class="v">A square root of x, an <span class="eq">x³</span>, or a variable in an exponent.</span></div>
+        <div class="spec-row"><span class="lab">Calc or hand</span><span class="v">Graph for "how many solutions" or a numeric answer. By hand for an exact answer.</span></div>
+        <div class="spec-row"><span class="lab">Approach</span><span class="v">Isolate, then undo the operation. Square both sides for a radical, factor for a polynomial, or graph and read.</span></div>
+        <div class="spec-row warn"><span class="lab">Gotcha</span><span class="v">Squaring both sides can add fake solutions. Always check them in the original equation.</span></div>
+      </div>
+    </section>
+
+    <!-- 8 SYSTEM -->
+    <section class="slide">
+      <div class="kicker">Subtype 5 of 5</div>
+      <h2>System: nonlinear and linear</h2>
+      <p class="defn">Two equations, one a line and one a curve.</p>
+      <div class="spec">
+        <div class="spec-row"><span class="lab">Recognize</span><span class="v">A line and a curve (a parabola or a circle), asked where they meet.</span></div>
+        <div class="spec-row"><span class="lab">Calc or hand</span><span class="v">Graphing is often fastest. By hand, use substitution.</span></div>
+        <div class="spec-row"><span class="lab">Approach</span><span class="v">Solve the line for one variable, substitute into the curve, solve the resulting quadratic. Or graph both and read the intersections.</span></div>
+        <div class="spec-row warn"><span class="lab">Gotcha</span><span class="v">There can be 0, 1, or 2 solutions. If asked, give both coordinates of each point.</span></div>
+      </div>
+    </section>
+
+    <!-- 9 PRACTICE INTRO -->
+    <section class="slide">
+      <div class="kicker">Now you call it</div>
+      <h2>Twelve to read, not solve</h2>
+      <p class="lead">For each one, say it out loud: the <b>type</b>, then <b>calculator or by hand</b>, then the <b>approach</b>. Then reveal to check.</p>
+      <p class="sub">No solving. We are training the read.</p>
+    </section>
+
+    <!-- 10 card 1 -->
+    <section class="slide">
+      <div class="kicker">Call it · 1 of 12</div>
+      <div class="prompt">Type? Calculator or by hand? Approach?</div>
+      <div class="flashq">|2x − 3| = 7</div>
+      <div class="callout frag"><div class="spec">
+        <div class="spec-row"><span class="lab">Type</span><span class="v">Absolute value</span></div>
+        <div class="spec-row"><span class="lab">Calc or hand</span><span class="v">By hand</span></div>
+        <div class="spec-row"><span class="lab">Approach</span><span class="v">Split into two cases: inside = 7 and inside = −7.</span></div>
+      </div></div>
+    </section>
+
+    <!-- 11 card 2 -->
+    <section class="slide">
+      <div class="kicker">Call it · 2 of 12</div>
+      <div class="prompt">Type? Calculator or by hand? Approach?</div>
+      <div class="flashq">x² + x − 90 = 0&nbsp;&nbsp;(positive solution)</div>
+      <div class="callout frag"><div class="spec">
+        <div class="spec-row"><span class="lab">Type</span><span class="v">Quadratic</span></div>
+        <div class="spec-row"><span class="lab">Calc or hand</span><span class="v">By hand</span></div>
+        <div class="spec-row"><span class="lab">Approach</span><span class="v">Factor: (x + 10)(x − 9).</span></div>
+      </div></div>
+    </section>
+
+    <!-- 12 card 3 -->
+    <section class="slide">
+      <div class="kicker">Call it · 3 of 12</div>
+      <div class="prompt">Type? Calculator or by hand? Approach?</div>
+      <div class="flashq">y = x² − 3&nbsp;&nbsp;and&nbsp;&nbsp;y = 2x</div>
+      <div class="callout frag"><div class="spec">
+        <div class="spec-row"><span class="lab">Type</span><span class="v">System, nonlinear and linear</span></div>
+        <div class="spec-row"><span class="lab">Calc or hand</span><span class="v">Graph, or by hand</span></div>
+        <div class="spec-row"><span class="lab">Approach</span><span class="v">Substitute the line into the parabola, then solve the quadratic.</span></div>
+      </div></div>
+    </section>
+
+    <!-- 13 card 4 -->
+    <section class="slide">
+      <div class="kicker">Call it · 4 of 12</div>
+      <div class="prompt">Type? Calculator or by hand? Approach?</div>
+      <div class="flashq">x² − 10x + 7 = 0&nbsp;&nbsp;(solution is 5 + 3√n)</div>
+      <div class="callout frag"><div class="spec">
+        <div class="spec-row"><span class="lab">Type</span><span class="v">Quadratic</span></div>
+        <div class="spec-row"><span class="lab">Calc or hand</span><span class="v">By hand</span></div>
+        <div class="spec-row"><span class="lab">Approach</span><span class="v">Quadratic formula, then simplify the radical and divide every term.</span></div>
+        <div class="spec-row warn"><span class="lab">Gotcha</span><span class="v">The exact form means the calculator cannot finish it. (This was her Q4.)</span></div>
+      </div></div>
+    </section>
+
+    <!-- 14 card 5 -->
+    <section class="slide">
+      <div class="kicker">Call it · 5 of 12</div>
+      <div class="prompt">Type? Calculator or by hand? Approach?</div>
+      <div class="flashq">√(x + 5) = x − 1</div>
+      <div class="callout frag"><div class="spec">
+        <div class="spec-row"><span class="lab">Type</span><span class="v">Other nonlinear (radical)</span></div>
+        <div class="spec-row"><span class="lab">Calc or hand</span><span class="v">By hand</span></div>
+        <div class="spec-row"><span class="lab">Approach</span><span class="v">Isolate the radical, then square both sides.</span></div>
+        <div class="spec-row warn"><span class="lab">Gotcha</span><span class="v">Squaring can add fake solutions. Check them in the original.</span></div>
+      </div></div>
+    </section>
+
+    <!-- 15 card 6 -->
+    <section class="slide">
+      <div class="kicker">Call it · 6 of 12</div>
+      <div class="prompt">Type? Calculator or by hand? Approach?</div>
+      <div class="flashq">4x² − 12x + k = 0&nbsp;&nbsp;(greatest k for two solutions)</div>
+      <div class="callout frag"><div class="spec">
+        <div class="spec-row"><span class="lab">Type</span><span class="v">Quadratic</span></div>
+        <div class="spec-row"><span class="lab">Calc or hand</span><span class="v">By hand</span></div>
+        <div class="spec-row"><span class="lab">Approach</span><span class="v">Discriminant: set b² − 4ac &gt; 0.</span></div>
+      </div></div>
+    </section>
+
+    <!-- 16 card 7 -->
+    <section class="slide">
+      <div class="kicker">Call it · 7 of 12</div>
+      <div class="prompt">Type? Calculator or by hand? Approach?</div>
+      <div class="flashq">|x + 4| = −2</div>
+      <div class="callout frag"><div class="spec">
+        <div class="spec-row"><span class="lab">Type</span><span class="v">Absolute value</span></div>
+        <div class="spec-row"><span class="lab">Calc or hand</span><span class="v">By hand</span></div>
+        <div class="spec-row"><span class="lab">Approach</span><span class="v">No solution.</span></div>
+        <div class="spec-row warn"><span class="lab">Gotcha</span><span class="v">An absolute value is never negative.</span></div>
+      </div></div>
+    </section>
+
+    <!-- 17 card 8 -->
+    <section class="slide">
+      <div class="kicker">Call it · 8 of 12</div>
+      <div class="prompt">Type? Calculator or by hand? Approach?</div>
+      <div class="flashq">y − 42 = (y − c)(y − 42)</div>
+      <div class="callout frag"><div class="spec">
+        <div class="spec-row"><span class="lab">Type</span><span class="v">Quadratic, with a parameter</span></div>
+        <div class="spec-row"><span class="lab">Calc or hand</span><span class="v">By hand</span></div>
+        <div class="spec-row"><span class="lab">Approach</span><span class="v">Move to one side and factor out the common (y − 42).</span></div>
+        <div class="spec-row warn"><span class="lab">Gotcha</span><span class="v">The letter c means the calculator cannot finish it. (This was her Q11.)</span></div>
+      </div></div>
+    </section>
+
+    <!-- 18 card 9 -->
+    <section class="slide">
+      <div class="kicker">Call it · 9 of 12</div>
+      <div class="prompt">Type? Calculator or by hand? Approach?</div>
+      <div class="flashq">1 / (x² + 6x + 9) = 3</div>
+      <div class="callout frag"><div class="spec">
+        <div class="spec-row"><span class="lab">Type</span><span class="v">Rational</span></div>
+        <div class="spec-row"><span class="lab">Calc or hand</span><span class="v">By hand</span></div>
+        <div class="spec-row"><span class="lab">Approach</span><span class="v">Clear the denominator. Spot the perfect square (x + 3)².</span></div>
+        <div class="spec-row warn"><span class="lab">Gotcha</span><span class="v">x cannot equal −3 (it would make the bottom zero).</span></div>
+      </div></div>
+    </section>
+
+    <!-- 19 card 10 -->
+    <section class="slide">
+      <div class="kicker">Call it · 10 of 12</div>
+      <div class="prompt">Type? Calculator or by hand? Approach?</div>
+      <div class="flashq">2x² + 6x + 4 = 0&nbsp;&nbsp;(sum of the roots)</div>
+      <div class="callout frag"><div class="spec">
+        <div class="spec-row"><span class="lab">Type</span><span class="v">Quadratic</span></div>
+        <div class="spec-row"><span class="lab">Calc or hand</span><span class="v">By hand</span></div>
+        <div class="spec-row"><span class="lab">Approach</span><span class="v">Sum of roots = −b/a. No need to solve.</span></div>
+      </div></div>
+    </section>
+
+    <!-- 20 card 11 -->
+    <section class="slide">
+      <div class="kicker">Call it · 11 of 12</div>
+      <div class="prompt">Type? Calculator or by hand? Approach?</div>
+      <div class="flashq">y = x + 1&nbsp;&nbsp;and&nbsp;&nbsp;x² + y² = 25</div>
+      <div class="callout frag"><div class="spec">
+        <div class="spec-row"><span class="lab">Type</span><span class="v">System, line and circle</span></div>
+        <div class="spec-row"><span class="lab">Calc or hand</span><span class="v">Graph, or by hand</span></div>
+        <div class="spec-row"><span class="lab">Approach</span><span class="v">Substitute the line into the circle, then solve the quadratic.</span></div>
+        <div class="spec-row warn"><span class="lab">Gotcha</span><span class="v">Can have two intersection points. Give both if asked.</span></div>
+      </div></div>
+    </section>
+
+    <!-- 21 card 12 -->
+    <section class="slide">
+      <div class="kicker">Call it · 12 of 12</div>
+      <div class="prompt">Type? Calculator or by hand? Approach?</div>
+      <div class="flashq">(x + 2)² = −9&nbsp;&nbsp;(how many real solutions)</div>
+      <div class="callout frag"><div class="spec">
+        <div class="spec-row"><span class="lab">Type</span><span class="v">Quadratic</span></div>
+        <div class="spec-row"><span class="lab">Calc or hand</span><span class="v">By hand</span></div>
+        <div class="spec-row"><span class="lab">Approach</span><span class="v">A square cannot be negative, so zero real solutions.</span></div>
+      </div></div>
+    </section>
+
+    <!-- 22 CLOSE -->
+    <section class="slide">
+      <div class="kicker"><span class="star">✶</span> On track</div>
+      <h2>What good looks like</h2>
+      <p class="lead">She names the type, the calculator call, and the approach correctly on at least 10 of the 12, in a few seconds each.</p>
+      <p class="sub">That read is what keeps her from sinking four minutes into the wrong method. Illuminairy <span style="color:var(--green)">✶</span></p>
+    </section>
+
+  </main>
+
+  <div class="nav">
+    <button class="arrowbtn" id="prev" aria-label="Previous">←</button>
+    <div class="dots" id="dots"></div>
+    <button class="arrowbtn" id="next" aria-label="Next">→</button>
+  </div>
+</div>
+
+<script>
+  const slides=[...document.querySelectorAll('.slide')];
+  const bar=document.getElementById('bar');
+  const count=document.getElementById('count');
+  const dotsWrap=document.getElementById('dots');
+  const prevBtn=document.getElementById('prev');
+  const nextBtn=document.getElementById('next');
+  let i=0, f=0;
+
+  slides.forEach((s,idx)=>{
+    const d=document.createElement('button');
+    d.className='dot'; d.setAttribute('aria-label','Go to slide '+(idx+1));
+    d.addEventListener('click',()=>{i=idx;f=0;render();});
+    dotsWrap.appendChild(d);
+  });
+  const dots=[...document.querySelectorAll('.dot')];
+  const frags=idx=>[...slides[idx].querySelectorAll('.frag')];
+
+  function render(){
+    slides.forEach((s,idx)=>s.classList.toggle('active',idx===i));
+    frags(i).forEach((el,k)=>el.classList.toggle('show',k<f));
+    bar.style.width=(i/(slides.length-1)*100)+'%';
+    count.textContent=(i+1)+' / '+slides.length;
+    dots.forEach((d,idx)=>d.classList.toggle('on',idx===i));
+    prevBtn.disabled=(i===0&&f===0);
+    nextBtn.disabled=(i===slides.length-1&&f===frags(i).length);
+  }
+  function next(){
+    if(f<frags(i).length){f++;}
+    else if(i<slides.length-1){i++;f=0;}
+    render();
+  }
+  function prev(){
+    if(f>0){f--;}
+    else if(i>0){i--;f=frags(i).length;}
+    render();
+  }
+  nextBtn.addEventListener('click',next);
+  prevBtn.addEventListener('click',prev);
+  document.addEventListener('keydown',e=>{
+    if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();next();}
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();prev();}
+  });
+  render();
+</script>
+</body>
+</html>
