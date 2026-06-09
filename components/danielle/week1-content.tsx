@@ -208,6 +208,16 @@ export function DanielleWeek1Content() {
         {MATH_FOUNDATIONS.map((deck) => (
           <MathFoundationsDeck key={deck.order} {...deck} />
         ))}
+
+        <h3 className="danielle-week1__slides-heading">In-session practice problems</h3>
+        <p className="danielle-week1__focus">
+          Medium and hard quadratics from the Lesson 1 practice ladder. Work these after Deck 4
+          to four correct in a row at medium, then stretch into the hards.
+        </p>
+        <SlideEmbed
+          title="Quadratics · in-session practice"
+          src="/danielle/files/quadratics-practice"
+        />
       </section>
 
       <section className="danielle-week1__section danielle-week1__lesson">

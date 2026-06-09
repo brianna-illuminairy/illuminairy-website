@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quadratics Practice · Illuminairy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#F5ECD9; --paper:#FCF8EE; --forest:#234F37; --green:#2F8B55;
+    --ink:#23291F; --muted:#6f7566; --tomato:#D9533B; --mustard:#C2892B; --sage:#E6EFE3;
+    --line:rgba(35,79,55,.16);
+    --display:'Fraunces',Georgia,serif;
+    --sans:ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    --mono:ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{background:var(--cream);color:var(--ink);font-family:var(--sans);
+    display:flex;align-items:center;justify-content:center;padding:24px;line-height:1.5}
+  .stage{width:100%;max-width:920px;display:flex;flex-direction:column;gap:14px}
+  .topbar{display:flex;align-items:center;justify-content:space-between;font-size:13px}
+  .brand{font-family:var(--display);font-weight:700;color:var(--forest);letter-spacing:.3px}
+  .brand .star{color:var(--green)}
+  .count{font-variant-numeric:tabular-nums;color:var(--muted);letter-spacing:1px}
+  .progress{height:4px;background:var(--line);border-radius:99px;overflow:hidden}
+  .progress .bar{height:100%;width:0;background:var(--green);transition:width .35s ease}
+  .slides{position:relative;background:var(--paper);border:1px solid var(--line);
+    border-radius:18px;min-height:62vh;padding:42px 50px;
+    box-shadow:0 18px 40px -28px rgba(35,79,55,.4)}
+  .slide{display:none;animation:fade .45s ease}
+  .slide.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .kicker{font-size:12px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;
+    color:var(--green);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+  h1{font-family:var(--display);font-weight:700;color:var(--forest);
+    font-size:clamp(34px,5.5vw,60px);line-height:1.02;margin:0 0 16px;letter-spacing:-.5px}
+  .lead{font-size:clamp(18px,2.4vw,23px);color:var(--ink);margin:0 0 14px;max-width:60ch}
+  .sub{color:var(--muted);font-size:clamp(15px,2vw,18px);max-width:60ch}
+  .qhead{display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+  .qdiff{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+    padding:4px 12px;border-radius:99px;color:#fff}
+  .qdiff.easy{background:var(--green)}
+  .qdiff.med{background:var(--mustard)}
+  .qdiff.hard{background:var(--tomato)}
+  .qmeta{font-size:13px;color:var(--muted);letter-spacing:.5px}
+  .display-eq{font-family:var(--mono);font-size:clamp(19px,2.9vw,27px);color:var(--forest);
+    text-align:center;background:var(--sage);border-radius:12px;padding:18px 16px;margin:0 0 18px}
+  .stem{font-size:clamp(18px,2.5vw,23px);color:var(--ink);line-height:1.5;max-width:58ch}
+  .spr{margin-top:26px;display:flex;align-items:center;gap:14px}
+  .spr .box{width:180px;height:46px;border:2px solid var(--line);border-radius:8px;background:#fff}
+  .spr .lab{font-size:13px;color:var(--muted)}
+  .mc-note{margin-top:26px;border-left:4px solid var(--mustard);background:#fbf2dd;
+    padding:14px 18px;border-radius:0 10px 10px 0;font-size:15px;color:#7a5a16}
+  .reveal{margin-top:22px;border-left:4px solid var(--green);background:var(--sage);
+    padding:16px 20px;border-radius:0 12px 12px 0}
+  .reveal .rlabel{font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+    color:var(--green)}
+  .reveal .ans{font-family:var(--mono);font-weight:700;color:var(--green);
+    font-size:clamp(18px,2.5vw,24px);margin-left:8px}
+  .reveal .rwork{margin-top:8px;color:var(--ink);font-size:15px;line-height:1.5}
+  .frag{opacity:0;transform:translateY(8px);transition:opacity .3s ease,transform .3s ease}
+  .frag.show{opacity:1;transform:none}
+  .nav{display:flex;align-items:center;justify-content:space-between;gap:16px}
+  .dots{display:flex;gap:5px;flex-wrap:wrap;justify-content:center;flex:1}
+  .dot{width:7px;height:7px;border-radius:99px;background:var(--line);border:0;padding:0;
+    cursor:pointer;transition:background .2s,transform .2s}
+  .dot.on{background:var(--green);transform:scale(1.35)}
+  button.arrowbtn{font-family:var(--sans);font-size:20px;line-height:1;cursor:pointer;
+    width:48px;height:48px;border-radius:99px;border:1px solid var(--line);background:#fff;
+    color:var(--forest);transition:background .2s,color .2s,opacity .2s;flex:0 0 auto}
+  button.arrowbtn:hover:not(:disabled){background:var(--forest);color:#fff}
+  button.arrowbtn:disabled{opacity:.3;cursor:default}
+  button:focus-visible,.dot:focus-visible{outline:3px solid var(--green);outline-offset:3px}
+  .hint{margin-top:18px;font-size:13px;color:var(--muted)}
+  .hint kbd{font-family:var(--mono);background:var(--sage);border-radius:5px;padding:1px 7px;
+    border:1px solid var(--line)}
+  @media(max-width:640px){
+    body{padding:12px}
+    .slides{padding:28px 22px;min-height:72vh}
+    .spr .box{width:130px}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .slide,.frag,.progress .bar{animation:none;transition:none}
+    .frag{opacity:1;transform:none}
+  }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="topbar">
+    <div class="brand">Illuminairy <span class="star">✶</span></div>
+    <div class="count" id="count">1 / 30</div>
+  </div>
+  <div class="progress"><div class="bar" id="bar"></div></div>
+
+  <main class="slides" id="slides">
+
+    <!-- 1 TITLE -->
+    <section class="slide active">
+      <div class="kicker"><span class="star">✶</span> Illuminairy · Math foundations</div>
+      <h1>Quadratics practice</h1>
+      <p class="lead">One question per slide, in SAT format. She works it, then you reveal the answer.</p>
+      <p class="sub">All 25 from your bank, in three sections by difficulty. Most are student-produced response, which is a real SAT format (she enters a number, no choices). The two multiple-choice items are flagged for you to drop in your bank's choices.</p>
+      <div class="hint">Move with <kbd>→</kbd> <kbd>←</kbd> or the buttons. Reveal the answer with the same forward control.</div>
+    </section>
+
+    <!-- 2 EASY DIVIDER -->
+    <section class="slide">
+      <div class="kicker">Section 1 of 3</div>
+      <h1>Easy</h1>
+      <p class="lead">Five questions. Four in a row to move up.</p>
+    </section>
+
+    <!-- 3  #1 -->
+    <section class="slide">
+      <div class="qhead"><span class="qdiff easy">Easy</span><span class="qmeta">Bank #1 · Solving Quadratic Equations</span></div>
+      <p class="stem">What is the product of the roots for the equation 3x² + 6x − 24 = 0?</p>
+      <div class="spr"><div class="box"></div><span class="lab">Student-produced response</span></div>
+      <div class="reveal frag"><span class="rlabel">Answer</span><span class="ans">−8</span><div class="rwork">Product of roots = c/a = −24/3 = −8.</div></div>
+    </section>
+
+    <!-- 4  #2 -->
+    <section class="slide">
+      <div class="qhead"><span class="qdiff easy">Easy</span><span class="qmeta">Bank #2 · Solving Quadratic Equations</span></div>
+      <p class="stem">If r and q are solutions to 3x² + 6x − 21 = 0, what is the value of r + q?</p>
+      <div class="spr"><div class="box"></div><span class="lab">Student-produced response</span></div>
+      <div class="reveal frag"><span class="rlabel">Answer</span><span class="ans">−2</span><div class="rwork">Sum of roots = −b/a = −6/3 = −2.</div></div>
+    </section>
+
+    <!-- 5  #12 -->
+    <section class="slide">
+      <div class="qhead"><span class="qdiff easy">Easy</span><span class="qmeta">Bank #12 · Solving Quadratic Equations</span></div>
+      <p class="stem">What is the sum of the roots for the equation 2x² + 6x + 4 = 0?</p>
+      <div class="spr"><div class="box"></div><span class="lab">Student-produced response</span></div>
+      <div class="reveal frag"><span class="rlabel">Answer</span><span class="ans">−3</span><div class="rwork">Sum of roots = −b/a = −6/2 = −3.</div></div>
+    </section>
+
+    <!-- 6  #24 -->
+    <section class="slide">
+      <div class="qhead"><span class="qdiff easy">Easy</span><span class="qmeta">Bank #24 · Solving Quadratic Equations</span></div>
+      <p class="stem">If (x − 2)(x + 4) = m + 5 and x = 3, what is the value of m?</p>
+      <div class="spr"><div class="box"></div><span class="lab">Student-produced response</span></div>
+      <div class="reveal frag"><span class="rlabel">Answer</span><span class="ans">2</span><div class="rwork">(1)(7) = 7 = m + 5, so m = 2.</div></div>
+    </section>
+
+    <!-- 7  #25 -->
+    <section class="slide">
+      <div class="qhead"><span class="qdiff easy">Easy</span><span class="qmeta">Bank #25 · Solving Quadratic Equations</span></div>
+      <p class="stem">If (x + 1)(x − 5) = p + 10 and x = 4, what is the value of p?</p>
+      <div class="spr"><div class="box"></div><span class="lab">Student-produced response</span></div>
+      <div class="reveal frag"><span class="rlabel">Answer</span><span class="ans">−15</span><div class="rwork">(5)(−1) = −5 = p + 10, so p = −15.</div></div>
+    </section>
+
+    <!-- 8 MEDIUM DIVIDER -->
+    <section class="slide">
+      <div class="kicker">Section 2 of 3</div>
+      <h1>Medium</h1>
+      <p class="lead">Eight questions. Four in a row to move up.</p>
+    </section>
+
+    <!-- 9  #5 -->
+    <section class="slide">
+      <div class="qhead"><span class="qdiff med">Medium</span><span class="qmeta">Bank #5 · Solving Quadratic Equations</span></div>
+      <div class="display-eq">x² + x − 90 = 0</div>
+      <p class="stem">If c is a solution to the equation above, and c &gt; 0, what is the value of c?</p>
+      <div class="spr"><div class="box"></div><span class="lab">Student-produced response</span></div>
+      <div class="reveal frag"><span class="rlabel">Answer</span><span class="ans">9</span><div class="rwork">Factor: (x + 10)(x − 9) = 0, so x = 9 (positive).</div></div>
+    </section>
+
+    <!-- 10  #17 -->
+    <section class="slide">
+      <div class="qhead"><span class="qdiff med">Medium</span><span class="qmeta">Bank #17 · Solving Quadratic Equations</span></div>
+      <p class="stem">Solve for the positive value of x in the equation −3x² + 5x + 8 = 0.</p>
+      <div class="spr"><div class="box"></div><span class="lab">Student-produced response</span></div>
+      <div class="reveal frag"><span class="rlabel">Answer</span><span class="ans">8/3</span><div class="rwork">−(3x − 8)(x + 1) = 0, so x = 8/3 (positive).</div></div>
+    </section>
+
+    <!-- 11  #16 -->
+    <section class="slide">
+      <div class="qhead"><span class="qdiff med">Medium</span><span class="qmeta">Bank #16 · Solving Quadratic Equations</span></div>
+      <div class="display-eq">x² − 4x − 5 = 0</div>
+      <p class="stem">If 2 + √k is a solution to the equation above, what is the value of k?</p>
+      <div class="spr"><div class="box"></div><span class="lab">Student-produced response</span></div>
+      <div class="reveal frag"><span class="rlabel">Answer</span><span class="ans">9</span><div class="rwork">Roots are 5 and −1. Since 5 = 2 + √9, k = 9.</div></div>
+    </section>
+
+    <!-- 12  #14 -->
+    <section class="slide">
+      <div class="qhead"><span class="qdiff med">Medium</span><span class="qmeta">Bank #14 · Solving Quadratic Equations</span></div>
+      <div class="display-eq">0 = 3x² − 6x − 11</div>
+      <p class="stem">If 1 + (√k)/3 is a solution to the quadratic equation above, what is the value of k?</p>
+      <div class="spr"><div class="box"></div><span class="lab">Student-produced response</span></div>
+      <div class="reveal frag"><span class="rlabel">Answer</span><span class="ans">42</span><div class="rwork">x = (6 ± √168)/6 = 1 ± (√42)/3, so k = 42.</div></div>
+    </section>
+
+    <!-- 13  #4 -->
+    <section class="slide">
+      <div class="qhead"><span class="qdiff med">Medium</span><span class="qmeta">Bank #4 · Solving Quadratic Equations</span></div>
+      <p class="stem">If (−3 + √n)/(−4) is a solution to the equation −2x² + 3x + 6 = 0, what is the value of n?</p>
+      <div class="spr"><div class="box"></div><span class="lab">Student-produced response</span></div>
+      <div class="reveal frag"><span class="rlabel">Answer</span><span class="ans">57</span><div class="rwork">x = (−3 ± √57)/(−4), so n = 57.</div></div>
+    </section>
+
+    <!-- 14  #6 -->
+    <section class="slide">
+      <div class="qhead"><span class="qdiff med">Medium</span><span class="qmeta">Bank #6 · Solving Quadratic Equations</span></div>
+      <p class="stem">If xy = 5 and x² + y² = 45, what is the value of (x + y)²?</p>
+      <div class="spr"><div class="box"></div><span class="lab">Student-produced response</span></div>
+      <div class="reveal frag"><span class="rlabel">Answer</span><span class="ans">55</span><div class="rwork">(x + y)² = x² + y² + 2xy = 45 + 2(5) = 55.</div></div>
+    </section>
+
+    <!-- 15  #8 -->
+    <section class="slide">
+      <div class="qhead"><span class="qdiff med">Medium</span><span class="qmeta">Bank #8 · Solving Quadratic Equations</span></div>
+      <p class="stem">If m and n are solutions to the quadratic equation 4x² − 17x + 4 = 0, what is the value of m + n?</p>
+      <div class="spr"><div class="box"></div><span class="lab">Student-produced response</span></div>
+      <div class="reveal frag"><span class="rlabel">Answer</span><span class="ans">17/4</span><div class="rwork">Sum of roots = −b/a = 17/4.</div></div>
+    </section>
+
+    <!-- 16  #9 -->
+    <section class="slide">
+      <div class="qhead"><span class="qdiff med">Medium</span><span class="qmeta">Bank #9 · Solving a system of a non-linear and linear equations</span></div>
+      <div class="display-eq">2x² + 2y² = 24<br>2xy = 4</div>
+      <p class="stem">Given the system of equations above, what is the value of x + y?</p>
+      <div class="spr"><div class="box"></div><span class="lab">Student-produced response</span></div>
+      <div class="reveal frag"><span class="rlabel">Answer</span><span class="ans">4</span><div class="rwork">x² + y² = 12 and xy = 2, so (x + y)² = 12 + 4 = 16, x + y = 4.</div></div>
+    </section>
+
+    <!-- 17 HARD DIVIDER -->
+    <section class="slide">
+      <div class="kicker">Section 3 of 3</div>
+      <h1>Hard</h1>
+      <p class="lead">Twelve questions. Four in a row to lock the skill.</p>
+    </section>
+
+    <!-- 18  #3 -->
+    <section class="slide">
+      <div class="qhead"><span class="qdiff hard">Hard</span><span class="qmeta">Bank #3 · Solving Quadratic Equations</span></div>
+      <div class="display-eq">3(x − 2)² + 5 = 3x² + 12x − 17</div>
+      <p class="stem">How many solutions does the given equation have?</p>
+      <div class="spr"><div class="box"></div><span class="lab">Student-produced response</span></div>
+      <div class="reveal frag"><span class="rlabel">Answer</span><span class="ans">1</span><div class="rwork">Expanding cancels the x² terms, leaving a linear equation, so one solution.</div></div>
+    </section>
+
+    <!-- 19  #7 -->
+    <section class="slide">
+      <div class="qhead"><span class="qdiff hard">Hard</span><span class="qmeta">Bank #7 · Solving Quadratic Equations</span></div>
+      <p class="stem">What is the greatest possible integer value of k if the quadratic equation 4x² − 12x + k = 0 has two distinct solutions?</p>
+      <div class="spr"><div class="box"></div><span class="lab">Student-produced response</span></div>
+      <div class="reveal frag"><span class="rlabel">Answer</span><span class="ans">8</span><div class="rwork">Discriminant &gt; 0: 144 − 16k &gt; 0, so k &lt; 9. Greatest integer is 8.</div></div>
+    </section>
+
+    <!-- 20  #10 -->
+    <section class="slide">
+      <div class="qhead"><span class="qdiff hard">Hard</span><span class="qmeta">Bank #10 · Solving Quadratic Equations</span></div>
+      <p class="stem">If one of the solutions for the equation 3x² − bx − 6 = 0 is x = −1/3, what is the value of the other root?</p>
+      <div class="spr"><div class="box"></div><span class="lab">Student-produced response</span></div>
+      <div class="reveal frag"><span class="rlabel">Answer</span><span class="ans">6</span><div class="rwork">Product of roots = c/a = −2. Other root = −2 ÷ (−1/3) = 6.</div></div>
+    </section>
+
+    <!-- 21  #11 -->
+    <section class="slide">
+      <div class="qhead"><span class="qdiff hard">Hard</span><span class="qmeta">Bank #11 · Solving Quadratic Equations</span></div>
+      <p class="stem">How many solutions are there to the equation (x − 1)(x + 2) = x(x − 3)?</p>
+      <div class="spr"><div class="box"></div><span class="lab">Student-produced response</span></div>
+      <div class="reveal frag"><span class="rlabel">Answer</span><span class="ans">1</span><div class="rwork">Expanding cancels the x² terms: x − 2 = −3x, so 4x = 2. One solution.</div></div>
+    </section>
+
+    <!-- 22  #13  MC -->
+    <section class="slide">
+      <div class="qhead"><span class="qdiff hard">Hard</span><span class="qmeta">Bank #13 · Solving Quadratic Equations</span></div>
+      <p class="stem">Which of the following is a solution for the equation 3x² − 19x + 6 = 0?</p>
+      <div class="mc-note">Multiple choice. Drop in the four answer choices from your bank.</div>
+      <div class="reveal frag"><span class="rlabel">Answer</span><span class="ans">x = 6 (also x = 1/3)</span><div class="rwork">Factor: (3x − 1)(x − 6) = 0.</div></div>
+    </section>
+
+    <!-- 23  #15 -->
+    <section class="slide">
+      <div class="qhead"><span class="qdiff hard">Hard</span><span class="qmeta">Bank #15 · Solving Quadratic Equations</span></div>
+      <div class="display-eq">3x² − 6x − 11 = 0</div>
+      <p class="stem">One solution to the quadratic equation above can be expressed in the form (3 + √g)/3, where g is a constant. What is the value of g?</p>
+      <div class="spr"><div class="box"></div><span class="lab">Student-produced response</span></div>
+      <div class="reveal frag"><span class="rlabel">Answer</span><span class="ans">42</span><div class="rwork">x = (6 ± √168)/6 = (3 ± √42)/3, so g = 42.</div></div>
+    </section>
+
+    <!-- 24  #18 -->
+    <section class="slide">
+      <div class="qhead"><span class="qdiff hard">Hard</span><span class="qmeta">Bank #18 · Solving Quadratic Equations</span></div>
+      <div class="display-eq">x² − 6x + 4 = 0</div>
+      <p class="stem">The equation above has a solution that can be expressed in the form 3 − √n, where n is a constant. What is the value of n?</p>
+      <div class="spr"><div class="box"></div><span class="lab">Student-produced response</span></div>
+      <div class="reveal frag"><span class="rlabel">Answer</span><span class="ans">5</span><div class="rwork">x = (6 ± √20)/2 = 3 ± √5, so n = 5.</div></div>
+    </section>
+
+    <!-- 25  #19  MC -->
+    <section class="slide">
+      <div class="qhead"><span class="qdiff hard">Hard</span><span class="qmeta">Bank #19 · Solving Rational Equations</span></div>
+      <div class="display-eq">1 / (x² + 6x + 9) = 3</div>
+      <p class="stem">If x is a solution to the given equation, which of the following is a possible value of x + 3?</p>
+      <div class="mc-note">Multiple choice. Drop in the four answer choices from your bank.</div>
+      <div class="reveal frag"><span class="rlabel">Answer</span><span class="ans">√3/3 (or −√3/3)</span><div class="rwork">x² + 6x + 9 = (x + 3)², so (x + 3)² = 1/3 and x + 3 = ±√3/3.</div></div>
+    </section>
+
+    <!-- 26  #20 -->
+    <section class="slide">
+      <div class="qhead"><span class="qdiff hard">Hard</span><span class="qmeta">Bank #20 · Solving Quadratic Equations</span></div>
+      <p class="stem">A chemist is preparing a solution by dissolving 192 grams of a solute in water. The concentration of the solution, c grams per liter, is such that the volume of the solution is 4c + 88 liters. What is the value of c?</p>
+      <div class="spr"><div class="box"></div><span class="lab">Student-produced response</span></div>
+      <div class="reveal frag"><span class="rlabel">Answer</span><span class="ans">2</span><div class="rwork">c = 192 / (4c + 88) gives 4c² + 88c − 192 = 0, then c² + 22c − 48 = 0, (c + 24)(c − 2) = 0, c = 2.</div></div>
+    </section>
+
+    <!-- 27  #21 -->
+    <section class="slide">
+      <div class="qhead"><span class="qdiff hard">Hard</span><span class="qmeta">Bank #21 · Solving Quadratic Equations</span></div>
+      <div class="display-eq">−x² + cx − 484 = 0</div>
+      <p class="stem">In the given equation, c is a positive integer. The equation has no real solutions. What is the greatest possible value of c?</p>
+      <div class="spr"><div class="box"></div><span class="lab">Student-produced response</span></div>
+      <div class="reveal frag"><span class="rlabel">Answer</span><span class="ans">43</span><div class="rwork">No real solutions means c² − 1936 &lt; 0, so c &lt; 44. Greatest integer is 43.</div></div>
+    </section>
+
+    <!-- 28  #22 -->
+    <section class="slide">
+      <div class="qhead"><span class="qdiff hard">Hard</span><span class="qmeta">Bank #22 · Solving Quadratic Equations</span></div>
+      <div class="display-eq">7x² + (34d + c)x + cd = 0</div>
+      <p class="stem">In the given equation, c and d are positive constants. The product of the solutions to this equation is l·cd, where l is a constant. What is the value of l?</p>
+      <div class="spr"><div class="box"></div><span class="lab">Student-produced response</span></div>
+      <div class="reveal frag"><span class="rlabel">Answer</span><span class="ans">1/7</span><div class="rwork">Product of roots = c·d / 7, so l = 1/7.</div></div>
+    </section>
+
+    <!-- 29  #23 -->
+    <section class="slide">
+      <div class="qhead"><span class="qdiff hard">Hard</span><span class="qmeta">Bank #23 · Solving Quadratic Equations</span></div>
+      <div class="display-eq">(x + 2)² = −9</div>
+      <p class="stem">How many distinct real solutions does the given equation have?</p>
+      <div class="spr"><div class="box"></div><span class="lab">Student-produced response</span></div>
+      <div class="reveal frag"><span class="rlabel">Answer</span><span class="ans">0</span><div class="rwork">A square cannot equal a negative number, so there are no real solutions.</div></div>
+    </section>
+
+    <!-- 30 CLOSE -->
+    <section class="slide">
+      <div class="kicker"><span class="star">✶</span> End of set</div>
+      <h1>That is the set</h1>
+      <p class="lead">Twenty-five questions, easy to hard, all from your bank.</p>
+      <p class="sub">Two are multiple choice (#13 and #19) and need your bank's answer choices. Paste them to me and I will format them exactly. Illuminairy <span style="color:var(--green)">✶</span></p>
+    </section>
+
+  </main>
+
+  <div class="nav">
+    <button class="arrowbtn" id="prev" aria-label="Previous">←</button>
+    <div class="dots" id="dots"></div>
+    <button class="arrowbtn" id="next" aria-label="Next">→</button>
+  </div>
+</div>
+
+<script>
+  const slides=[...document.querySelectorAll('.slide')];
+  const bar=document.getElementById('bar');
+  const count=document.getElementById('count');
+  const dotsWrap=document.getElementById('dots');
+  const prevBtn=document.getElementById('prev');
+  const nextBtn=document.getElementById('next');
+  let i=0, f=0;
+
+  slides.forEach((s,idx)=>{
+    const d=document.createElement('button');
+    d.className='dot'; d.setAttribute('aria-label','Go to slide '+(idx+1));
+    d.addEventListener('click',()=>{i=idx;f=0;render();});
+    dotsWrap.appendChild(d);
+  });
+  const dots=[...document.querySelectorAll('.dot')];
+  const frags=idx=>[...slides[idx].querySelectorAll('.frag')];
+
+  function render(){
+    slides.forEach((s,idx)=>s.classList.toggle('active',idx===i));
+    frags(i).forEach((el,k)=>el.classList.toggle('show',k<f));
+    bar.style.width=(i/(slides.length-1)*100)+'%';
+    count.textContent=(i+1)+' / '+slides.length;
+    dots.forEach((d,idx)=>d.classList.toggle('on',idx===i));
+    prevBtn.disabled=(i===0&&f===0);
+    nextBtn.disabled=(i===slides.length-1&&f===frags(i).length);
+  }
+  function next(){
+    if(f<frags(i).length){f++;}
+    else if(i<slides.length-1){i++;f=0;}
+    render();
+  }
+  function prev(){
+    if(f>0){f--;}
+    else if(i>0){i--;f=frags(i).length;}
+    render();
+  }
+  nextBtn.addEventListener('click',next);
+  prevBtn.addEventListener('click',prev);
+  document.addEventListener('keydown',e=>{
+    if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();next();}
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();prev();}
+  });
+  render();
+</script>
+</body>
+</html>
