@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { DanielleNotConfigured } from "@/components/danielle/not-configured";
+import { DaniellePdfViewer } from "@/components/danielle/pdf-viewer";
 import { DaniellePortalShell } from "@/components/danielle/portal-shell";
 import { requireDanielleAuth } from "@/lib/danielle-guard";
 import { isDanielleConfigured } from "@/lib/danielle-auth";
@@ -20,10 +21,10 @@ export default async function DanielleDiagnosticTabularPage() {
         <p className="danielle-portal__eyebrow">Illuminairy · Skill Diagnostic</p>
         <h1>Tabular diagnostic report</h1>
       </div>
-      <iframe
+      <DaniellePdfViewer
         src="/danielle/files/tabular"
         title="Danielle Danso tabular diagnostic report"
-        className="danielle-portal__pdf-frame"
+        openLabel="Open tabular diagnostic PDF"
       />
     </DaniellePortalShell>
   );

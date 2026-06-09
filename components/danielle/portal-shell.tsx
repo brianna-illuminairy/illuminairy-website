@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { IlluminairyLogoV7 } from "@/components/brand/illuminairy-logo-v7";
+import { OwnerQaBadge } from "@/components/danielle/owner-qa-badge";
 import { homeworkPortalLoginUrl } from "@/lib/internal-links";
 
 const NAV = [
@@ -67,7 +68,10 @@ export function DaniellePortalShell({ children }: { children: React.ReactNode })
             <Link href="/danielle/diagnostic" className="danielle-portal__logo" aria-label="Illuminairy">
               <IlluminairyLogoV7 tone="on-dark" height={34} />
             </Link>
-            <HomeworkPortalCta />
+            <div className="danielle-portal__topbar-actions">
+              <OwnerQaBadge />
+              <HomeworkPortalCta />
+            </div>
           </div>
           <DanielleHeaderNav pathname={pathname} />
         </div>

@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
-import { getDanielleSessionEmail, isDanielleAuthenticated } from "@/lib/danielle-auth";
-import { getDaniellePortalRole } from "@/lib/danielle-portal-roles";
+import { getDanielleSessionEmail, getDanielleVisitorContext, isDanielleAuthenticated } from "@/lib/danielle-auth";
 
 export async function GET() {
   const authed = await isDanielleAuthenticated();
@@ -13,8 +12,13 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
   }
 
+  const context = await getDanielleVisitorContext(email);
+
   return NextResponse.json({
-    email,
-    role: getDaniellePortalRole(email)
+    email: context.email,
+    sessionRole: context.sessionRole,
+    visitorRole: context.visitorRole,
+    isOwnerQa: context.isOwnerQa,
+    role: context.visitorRole
   });
 }

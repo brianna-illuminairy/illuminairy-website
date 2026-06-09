@@ -21,14 +21,18 @@ export async function GET(_request: Request, context: RouteContext) {
     return NextResponse.json({ error: "Not found." }, { status: 404 });
   }
 
-  const { buffer, contentType, filename } = readDanielleFile(slug as DanielleFileSlug);
+  try {
+    const { buffer, contentType, filename } = readDanielleFile(slug as DanielleFileSlug);
 
-  return new NextResponse(buffer, {
-    status: 200,
-    headers: {
-      "Content-Type": contentType,
-      "Content-Disposition": `inline; filename="${filename}"`,
-      "Cache-Control": "private, no-store"
-    }
-  });
+    return new NextResponse(buffer, {
+      status: 200,
+      headers: {
+        "Content-Type": contentType,
+        "Content-Disposition": `inline; filename="${filename}"`,
+        "Cache-Control": "private, no-store"
+      }
+    });
+  } catch {
+    return NextResponse.json({ error: "File unavailable." }, { status: 500 });
+  }
 }

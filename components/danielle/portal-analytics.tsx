@@ -7,7 +7,9 @@ import type { DaniellePortalRole } from "@/lib/danielle-portal-roles";
 
 type SessionPayload = {
   email: string;
-  role: DaniellePortalRole;
+  sessionRole: DaniellePortalRole;
+  visitorRole: DaniellePortalRole;
+  isOwnerQa: boolean;
 };
 
 function DaniellePortalAnalyticsInner() {
@@ -35,7 +37,9 @@ function DaniellePortalAnalyticsInner() {
         const session = (await res.json()) as SessionPayload;
         trackDaniellePortalPageView({
           email: session.email,
-          role: session.role,
+          sessionRole: session.sessionRole,
+          visitorRole: session.visitorRole,
+          isOwnerQa: session.isOwnerQa,
           pathname
         });
         if (!cancelled) {

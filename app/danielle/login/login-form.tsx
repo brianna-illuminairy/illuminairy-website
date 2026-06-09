@@ -6,11 +6,20 @@ import { DanielleLoginChrome } from "@/components/danielle/portal-shell";
 import { trackDaniellePortalLogin } from "@/lib/danielle-portal-analytics";
 import type { DaniellePortalRole } from "@/lib/danielle-portal-roles";
 
+type LoginResponse = {
+  ok?: boolean;
+  sessionRole?: DaniellePortalRole;
+  visitorRole?: DaniellePortalRole;
+  isOwnerQa?: boolean;
+};
+
 export default function DanielleLoginForm() {
   const router = useRouter();
   const params = useSearchParams();
   const next = params.get("next") ?? "/danielle/diagnostic";
+  const showStaffField = params.get("staff") === "1";
   const [email, setEmail] = useState("");
+  const [staffCode, setStaffCode] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -22,17 +31,22 @@ export default function DanielleLoginForm() {
       const res = await fetch("/api/danielle/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email })
+        body: JSON.stringify({
+          email,
+          staffCode: staffCode.trim() || undefined
+        })
       });
       if (!res.ok) {
         setError("That email is not authorized for this page.");
         return;
       }
-      const body = (await res.json()) as { ok?: boolean; role?: DaniellePortalRole };
-      const role = body.role ?? "other";
+      const body = (await res.json()) as LoginResponse;
+      const normalizedEmail = email.trim().toLowerCase();
       trackDaniellePortalLogin({
-        email: email.trim().toLowerCase(),
-        role,
+        email: normalizedEmail,
+        sessionRole: body.sessionRole ?? "other",
+        visitorRole: body.visitorRole ?? body.sessionRole ?? "other",
+        isOwnerQa: body.isOwnerQa ?? false,
         pathname: next
       });
       router.push(next);
@@ -65,6 +79,19 @@ export default function DanielleLoginForm() {
               required
             />
           </label>
+          {showStaffField ? (
+            <label className="danielle-portal__field">
+              <span>Staff code</span>
+              <input
+                type="password"
+                className="danielle-portal__input"
+                value={staffCode}
+                onChange={(e) => setStaffCode(e.target.value)}
+                autoComplete="off"
+                placeholder="Illuminairy team only"
+              />
+            </label>
+          ) : null}
           {error ? <p className="danielle-portal__error">{error}</p> : null}
           <button
             type="submit"

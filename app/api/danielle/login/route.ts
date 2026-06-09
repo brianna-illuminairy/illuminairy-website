@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
 import {
   DANIELLE_COOKIE,
+  DANIELLE_VISITOR_COOKIE,
+  danielleVisitorCookieOptions,
   getDanielleAllowlist,
+  isDanielleOwnerQaSecretValid,
   isEmailAllowed,
   normalizeDanielleEmail
 } from "@/lib/danielle-auth";
@@ -13,9 +16,9 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Not configured." }, { status: 503 });
   }
 
-  let body: { email?: string };
+  let body: { email?: string; staffCode?: string };
   try {
-    body = (await request.json()) as { email?: string };
+    body = (await request.json()) as { email?: string; staffCode?: string };
   } catch {
     return NextResponse.json({ error: "Invalid request." }, { status: 400 });
   }
@@ -26,16 +29,24 @@ export async function POST(request: Request) {
   }
 
   const normalized = normalizeDanielleEmail(email);
-  const role = getDaniellePortalRole(normalized);
+  const sessionRole = getDaniellePortalRole(normalized);
+  const ownerQa = isDanielleOwnerQaSecretValid(body.staffCode);
+  const visitorRole = ownerQa ? "owner" : sessionRole;
+  const isOwnerQa = ownerQa && sessionRole !== "owner";
 
-  const response = NextResponse.json({ ok: true, role });
-  response.cookies.set(DANIELLE_COOKIE, normalizeDanielleEmail(email), {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    path: "/danielle",
-    maxAge: 60 * 60 * 24 * 30
+  const response = NextResponse.json({
+    ok: true,
+    sessionRole,
+    visitorRole,
+    isOwnerQa,
+    role: visitorRole
   });
+  response.cookies.set(DANIELLE_COOKIE, normalized, danielleVisitorCookieOptions());
+  if (ownerQa) {
+    response.cookies.set(DANIELLE_VISITOR_COOKIE, "owner", danielleVisitorCookieOptions());
+  } else {
+    response.cookies.set(DANIELLE_VISITOR_COOKIE, "", { ...danielleVisitorCookieOptions(), maxAge: 0 });
+  }
 
   return response;
 }
