@@ -3,6 +3,8 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { DanielleLoginChrome } from "@/components/danielle/portal-shell";
+import { trackDaniellePortalLogin } from "@/lib/danielle-portal-analytics";
+import type { DaniellePortalRole } from "@/lib/danielle-portal-roles";
 
 export default function DanielleLoginForm() {
   const router = useRouter();
@@ -26,6 +28,13 @@ export default function DanielleLoginForm() {
         setError("That email is not authorized for this page.");
         return;
       }
+      const body = (await res.json()) as { ok?: boolean; role?: DaniellePortalRole };
+      const role = body.role ?? "other";
+      trackDaniellePortalLogin({
+        email: email.trim().toLowerCase(),
+        role,
+        pathname: next
+      });
       router.push(next);
       router.refresh();
     } catch {

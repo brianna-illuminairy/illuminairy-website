@@ -17,6 +17,9 @@ function PostHogPageView() {
     if (pathname === "/plan" || pathname.startsWith("/plan/")) {
       return;
     }
+    if (pathname.startsWith("/danielle")) {
+      return;
+    }
     let url = window.location.origin + pathname;
     const query = searchParams.toString();
     if (query) {

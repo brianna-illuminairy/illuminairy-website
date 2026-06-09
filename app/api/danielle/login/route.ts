@@ -5,6 +5,7 @@ import {
   isEmailAllowed,
   normalizeDanielleEmail
 } from "@/lib/danielle-auth";
+import { getDaniellePortalRole } from "@/lib/danielle-portal-roles";
 
 export async function POST(request: Request) {
   const allowlist = getDanielleAllowlist();
@@ -24,7 +25,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
   }
 
-  const response = NextResponse.json({ ok: true });
+  const normalized = normalizeDanielleEmail(email);
+  const role = getDaniellePortalRole(normalized);
+
+  const response = NextResponse.json({ ok: true, role });
   response.cookies.set(DANIELLE_COOKIE, normalizeDanielleEmail(email), {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",

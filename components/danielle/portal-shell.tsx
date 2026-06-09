@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { IlluminairyLogoV7 } from "@/components/brand/illuminairy-logo-v7";
-import { practicePortalLoginUrl } from "@/lib/internal-links";
+import { homeworkPortalLoginUrl } from "@/lib/internal-links";
 
 const NAV = [
   {
@@ -23,15 +23,15 @@ const NAV = [
   }
 ] as const;
 
-function PracticePortalCta() {
+function HomeworkPortalCta() {
   return (
     <a
-      href={practicePortalLoginUrl}
+      href={homeworkPortalLoginUrl}
       className="danielle-portal__practice-cta"
       target="_blank"
       rel="noopener noreferrer"
     >
-      Practice Portal
+      Homework Portal
     </a>
   );
 }
@@ -67,7 +67,7 @@ export function DaniellePortalShell({ children }: { children: React.ReactNode })
             <Link href="/danielle/diagnostic" className="danielle-portal__logo" aria-label="Illuminairy">
               <IlluminairyLogoV7 tone="on-dark" height={34} />
             </Link>
-            <PracticePortalCta />
+            <HomeworkPortalCta />
           </div>
           <DanielleHeaderNav pathname={pathname} />
         </div>
@@ -89,7 +89,7 @@ export function DanielleLoginChrome({ children }: { children: React.ReactNode })
             <span className="danielle-portal__logo" aria-label="Illuminairy">
               <IlluminairyLogoV7 tone="on-dark" height={34} />
             </span>
-            <PracticePortalCta />
+            <HomeworkPortalCta />
           </div>
         </div>
       </header>

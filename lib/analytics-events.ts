@@ -27,7 +27,9 @@ export const AnalyticsEvents = {
   listFitStarted: "list_fit_started",
   listFitCompleted: "list_fit_completed",
   listFitCtaApply: "list_fit_cta_apply",
-  platformWaitlistSubmitted: "platform_waitlist_submitted"
+  platformWaitlistSubmitted: "platform_waitlist_submitted",
+  daniellePortalLogin: "danielle_portal_login",
+  daniellePortalPageView: "danielle_portal_page_view"
 } as const;
 
 export type AnalyticsEventName =
