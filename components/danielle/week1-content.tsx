@@ -39,8 +39,8 @@ const MATH_FOUNDATIONS = [
     title: "Radical simplification",
     when: "Next Math session · first ~20 minutes",
     why: "The other by-hand tool she is missing. It finishes quadratic-formula questions that do not factor cleanly, like her Q4 miss.",
-    src: null,
-    ready: false
+    src: "/danielle/files/radicals-slides",
+    ready: true
   },
   {
     order: 3,
