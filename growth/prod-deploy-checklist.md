@@ -18,7 +18,7 @@ Verify Vercel **Production** env matches `.env.local`:
 - `NEXT_PUBLIC_POSTHOG_KEY`
 - `NEXT_PUBLIC_META_PIXEL_ID`
 - `META_CAPI_ACCESS_TOKEN`
-- `NEXT_PUBLIC_CALENDLY_URL`
+- `NEXT_PUBLIC_CALENDLY_URL` — must equal `PUBLIC_SAT_STRATEGY_CALL_CALENDLY_URL` in `lib/site.ts` (`npm run verify:calendly-parity`). After change: `npm run env:sync` then push `main` to rebuild.
 - `SUPABASE_SERVICE_ROLE_KEY`
 - Klaviyo keys
 

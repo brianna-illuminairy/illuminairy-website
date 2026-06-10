@@ -10,7 +10,7 @@ Two scheduling needs: (1) any family booking an SAT consultation, and (2) vetted
 
 ## Decision
 
-- **Public:** `NEXT_PUBLIC_CALENDLY_URL` → embedded on `/contact#schedule` and SAT pages; also exposed as `site.calendlyUrl` for CTAs.
+- **Public:** `NEXT_PUBLIC_CALENDLY_URL` → `PUBLIC_SAT_STRATEGY_CALL_CALENDLY_URL` in [`lib/site.ts`](../../lib/site.ts) (`sat-planning-session`, one-on-one). Embedded on `/contact#schedule` and Plan Builder s5; must stay in sync with Vercel env (`npm run verify:calendly-parity`, `npm run env:sync`).
 - **Invite-only:** `TUTOR_CALENDLY_URL` in `lib/internal-links.ts` — **never** in public CTAs, client bundles, or sitemap. Sent manually by email after vetting.
 
 Mentor interest uses `/contact?reason=mentor` on the public form, not the tutor Calendly link.

@@ -24,6 +24,10 @@ import {
   UsersRound
 } from "lucide-react";
 
+/** SSOT — public SAT Strategy Call Calendly event. Must match Vercel `NEXT_PUBLIC_CALENDLY_URL` and `.env.example`. */
+export const PUBLIC_SAT_STRATEGY_CALL_CALENDLY_URL =
+  "https://calendly.com/satprep-illuminairy/sat-planning-session";
+
 export const site = {
   name: "Illuminairy",
   legalName: "Zytech Development LLC",
@@ -40,10 +44,9 @@ export const site = {
     lead:
       "Illuminairy matches ambitious professionals and business owners with near-peer mentors who have already achieved the same goal using AI — then guides you there with a personalized plan, accountability, and a high bar."
   },
-  /** Public SAT consultation only — not the invite-only mentor interview link */
+  /** Public SAT Strategy Call — one-on-one event (guests on same booking, not separate bookers). */
   calendlyUrl:
-    process.env.NEXT_PUBLIC_CALENDLY_URL ||
-    "https://calendly.com/satprep-illuminairy/sat-planning-session",
+    process.env.NEXT_PUBLIC_CALENDLY_URL || PUBLIC_SAT_STRATEGY_CALL_CALENDLY_URL,
   typeformUrl: process.env.NEXT_PUBLIC_TYPEFORM_URL || "",
   /** Mentor / SAT instructor application — public embed on /apply/mentor */
   mentorTypeformUrl: process.env.NEXT_PUBLIC_MENTOR_TYPEFORM_URL || "",

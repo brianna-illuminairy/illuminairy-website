@@ -99,4 +99,5 @@ for (const [name, value] of vars) {
 }
 
 console.log("\nDone. Redeploy so NEXT_PUBLIC_* vars are baked into the build:");
-console.log("  npm run deploy:prod\n");
+console.log("  git push origin main   # preferred — keeps git and Vercel in sync");
+console.log("  npm run verify:calendly-parity");
