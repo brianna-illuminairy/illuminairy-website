@@ -1,19 +1,23 @@
 'use client'; // @ts-nocheck
 import { QFScreen, QFOption, QFButton, QFQuestionHead, QFOptOut, QFWhyWeAsk } from '../components/QFShell';
 import { Q2_STAKES_OPTIONS } from '@/lib/quiz-funnel/stakes-copy';
-import { DOUBTS_OPTIONS } from '@/lib/quiz-funnel/doubts-copy';
+import { doubtsOptions, doubtsQuestionHtml } from '@/lib/quiz-funnel/doubts-copy';
 import { NAME_CTA } from '@/lib/quiz-funnel/score-path-copy';
 import {
   Q_WHO_OPTIONS,
   Q_SCORE_LOWER_OPTIONS,
   Q_URGENCY_OPTIONS,
   scoreLowerQuestion,
+  scoreLowerOptionLabel,
+  urgencyOptionLabel,
 } from '@/lib/quiz-funnel/opening-copy';
 import {
   stakesQuestionHtml,
   timesTakenQuestion,
   recentScoreQuestionHtml,
   recentScoreWhyWeAsk,
+  practiceScoreQuestionHtml,
+  practiceScoreWhyWeAsk,
   nextSatQuestionHtml,
   blockerOptionLabel,
   prepQuestionHtml,
@@ -44,20 +48,20 @@ export function QFQScoreLower({ value, onSelect, onBack, qWho = 'child' }) {
       <QFQuestionHead title={scoreLowerQuestion(qWho)} />
       <div className="qf-options">
         {Q_SCORE_LOWER_OPTIONS.map(o => (
-          <QFOption key={o.id} selected={value === o.id} onClick={() => onSelect(o.id)}>{o.label}</QFOption>
+          <QFOption key={o.id} selected={value === o.id} onClick={() => onSelect(o.id)}>{scoreLowerOptionLabel(o.id, qWho)}</QFOption>
         ))}
       </div>
     </QFScreen>
   );
 }
 
-export function QFQ1Trigger({ value, onSelect, onBack }) {
+export function QFQ1Trigger({ value, onSelect, onBack, qWho = 'child' }) {
   return (
     <QFScreen stepIdx={3} onBack={onBack}>
       <QFQuestionHead title="What feels most <em>urgent</em> right now?" />
       <div className="qf-options">
         {Q_URGENCY_OPTIONS.map(o => (
-          <QFOption key={o.id} selected={value === o.id} onClick={() => onSelect(o.id)}>{o.label}</QFOption>
+          <QFOption key={o.id} selected={value === o.id} onClick={() => onSelect(o.id)}>{urgencyOptionLabel(o.id, qWho)}</QFOption>
         ))}
       </div>
     </QFScreen>
@@ -99,6 +103,30 @@ export function QFQ3TimesTaken({ value, onSelect, onBack, qWho = 'child' }) {
   );
 }
 
+export function QFQPracticeScore({ value, onSelect, onBack, qWho = 'child' }) {
+  const opts = [
+    { id: 'u1000',     label: 'Under 1100' },
+    { id: '1100-1200', label: '1100–1200' },
+    { id: '1200-1300', label: '1200–1300' },
+    { id: '1300-1400', label: '1300–1400' },
+    { id: '1400plus',  label: '1400+' },
+  ];
+  return (
+    <QFScreen stepIdx={6} onBack={onBack}>
+      <QFQuestionHead title={practiceScoreQuestionHtml(qWho)} />
+      <div className="qf-options">
+        {opts.map(o => (
+          <QFOption key={o.id} selected={value === o.id} onClick={() => onSelect(o.id)}>{o.label}</QFOption>
+        ))}
+      </div>
+      <QFOptOut onClick={() => onSelect('na')}>No practice test yet</QFOptOut>
+      <QFWhyWeAsk>
+        {practiceScoreWhyWeAsk(qWho)}
+      </QFWhyWeAsk>
+    </QFScreen>
+  );
+}
+
 export function QFQ4RecentScore({ value, onSelect, onBack, q3 = 'sat-1', qWho = 'child' }) {
   const hasSat = ['sat-1', 'sat-2', 'sat-3+'].includes(q3);
   const opts = [
@@ -126,13 +154,13 @@ export function QFQ4RecentScore({ value, onSelect, onBack, q3 = 'sat-1', qWho = 
   );
 }
 
-export function QFQDoubts({ value = /** @type {string[]} */ ([]), onToggle, onContinue, onBack }) {
-  const opts = DOUBTS_OPTIONS;
+export function QFQDoubts({ value = /** @type {string[]} */ ([]), onToggle, onContinue, onBack, qWho = 'child' }) {
+  const opts = doubtsOptions(qWho);
   return (
     <QFScreen stepIdx={7} onBack={onBack}
       actions={<QFButton kind="forest" onClick={onContinue}>Continue</QFButton>}
     >
-      <QFQuestionHead title="Which of these have you <em>heard</em> from your child?" multiSelect />
+      <QFQuestionHead title={doubtsQuestionHtml(qWho)} multiSelect />
       <div className="qf-options">
         {opts.map(o => (
           <QFOption key={o.id} multi selected={value.includes(o.id)} onClick={() => onToggle(o.id)}>{o.label}</QFOption>

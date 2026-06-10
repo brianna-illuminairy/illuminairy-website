@@ -18,6 +18,10 @@ import {
   Q6_BLOCKER_ORDER,
   Q6_SOLUTION_COPY,
 } from "@/lib/quiz-funnel/reveal-insight-copy";
+import {
+  stakesAchievabilityEmphasis,
+  stakesAchievabilityLead,
+} from "@/lib/quiz-funnel/stakes-copy";
 
 /**
  * Reveal assessment — which quiz answers drive which UI.
@@ -193,42 +197,6 @@ export type GoalAchievability = {
   varyDisclaimer: string;
 };
 
-const STAKES_ACHIEVABILITY_LEAD: Record<string, string> = {
-  merit:
-    "A higher score could unlock thousands of dollars in merit scholarships.",
-  "top-choice":
-    "A higher score could make them competitive for their top-choice school.",
-  selective: "A higher score keeps selective colleges on the table.",
-  "app-rounds": "A higher score helps them be ready for early application rounds.",
-  early: "A higher score helps them be ready for early application rounds.",
-};
-
-const STAKES_ACHIEVABILITY_EMPHASIS: Record<string, string> = {
-  merit: "thousands of dollars",
-  "top-choice": "their top-choice school",
-  selective: "selective colleges",
-  "app-rounds": "early application rounds",
-  early: "early application rounds",
-};
-
-const STAKES_ACHIEVABILITY_LEAD_SELF: Record<string, string> = {
-  merit:
-    "A higher score could unlock thousands of dollars in merit scholarships.",
-  "top-choice":
-    "A higher score could make you competitive for your top-choice school.",
-  selective: "A higher score keeps selective colleges on the table.",
-  "app-rounds": "A higher score helps you be ready for early application rounds.",
-  early: "A higher score helps you be ready for early application rounds.",
-};
-
-const STAKES_ACHIEVABILITY_EMPHASIS_SELF: Record<string, string> = {
-  merit: "thousands of dollars",
-  "top-choice": "your top-choice school",
-  selective: "selective colleges",
-  "app-rounds": "early application rounds",
-  early: "early application rounds",
-};
-
 function roundGainPoints(gain: number): number {
   if (gain <= 0) return 0;
   if (gain < 50) return Math.round(gain / 5) * 5;
@@ -320,7 +288,8 @@ export function tierFromPtsPerWeekScale(
 
 export function buildProjectedRangeLine(
   startingScore: number,
-  weeks: number
+  weeks: number,
+  qWho?: string
 ): string {
   const w = Math.max(1, weeks);
   const low = clampSatScore(
@@ -335,7 +304,11 @@ export function buildProjectedRangeLine(
   const aggressive = clampSatScore(
     startingScore + ACHIEVABILITY_PTS_PER_WEEK.aggressive * w
   );
-  return `Over ${w} weeks, mistake-driven tutoring on their weakest skills could land roughly ~${low}–${high}. Students who follow their personalized weekly plan often end up in the Realistic to Aggressive band (~${realistic}–${aggressive}). Results vary.`;
+  const { possessive } = quizSubjectVoice(qWho);
+  const planPhrase = isQuizSelfTaker(qWho)
+    ? "your personalized weekly plan"
+    : "their personalized weekly plan";
+  return `Over ${w} weeks, mistake-driven tutoring on ${possessive} weakest skills could land roughly ~${low}–${high}. Students who follow ${planPhrase} often end up in the Realistic to Aggressive band (~${realistic}–${aggressive}). Results vary.`;
 }
 
 function buildStartingScoreNote(
@@ -631,17 +604,11 @@ function buildInsightParts(
 }
 
 function buildStakesLead(q2?: string, qWho?: string): string {
-  const map = isQuizSelfTaker(qWho)
-    ? STAKES_ACHIEVABILITY_LEAD_SELF
-    : STAKES_ACHIEVABILITY_LEAD;
-  return map[q2 ?? ""] ?? map["top-choice"];
+  return stakesAchievabilityLead(q2, qWho);
 }
 
 function buildStakesEmphasis(q2?: string, qWho?: string): string {
-  const map = isQuizSelfTaker(qWho)
-    ? STAKES_ACHIEVABILITY_EMPHASIS_SELF
-    : STAKES_ACHIEVABILITY_EMPHASIS;
-  return map[q2 ?? ""] ?? map["top-choice"];
+  return stakesAchievabilityEmphasis(q2, qWho);
 }
 
 export function buildGoalAchievability(
@@ -704,24 +671,52 @@ export function buildGoalAchievability(
   };
 }
 
-/** Share payloads saved before achievability shipped — rebuild a minimal view. */
 /** Merge stored/partial achievability with computed defaults so share + reveal never crash. */
-export function resolveGoalAchievabilityForDisplay(plan: {
-  achievability?: Partial<GoalAchievability> | null;
-  metrics?: { gainRange?: string; weeks?: string };
-  subhead?: string;
-}): GoalAchievability {
+export function resolveGoalAchievabilityForDisplay(
+  plan: {
+    q2?: string;
+    achievability?: Partial<GoalAchievability> | null;
+    metrics?: { gainRange?: string; weeks?: string };
+    subhead?: string;
+  },
+  context?: { q2?: string; qWho?: string }
+): GoalAchievability {
   const fallback = buildGoalAchievabilityFallback(plan);
   const partial = plan.achievability;
-  if (!partial) return fallback;
-  return {
+  const q2Resolved = context?.q2 ?? plan.q2;
+  const stakesFromQ2 =
+    q2Resolved != null && q2Resolved !== ""
+      ? buildGoalAchievability({ q2: q2Resolved, qWho: context?.qWho } as QuizAnswersLike)
+      : null;
+
+  if (!partial) {
+    if (stakesFromQ2) {
+      return {
+        ...fallback,
+        stakesLead: stakesFromQ2.stakesLead,
+        stakesEmphasis: stakesFromQ2.stakesEmphasis,
+      };
+    }
+    return fallback;
+  }
+
+  const merged = {
     ...fallback,
     ...partial,
     stats: partial.stats ?? fallback.stats ?? EMPTY_ACHIEVABILITY_STATS,
     tierRanges: partial.tierRanges ?? fallback.tierRanges,
-    stakesEmphasis: partial.stakesEmphasis ?? fallback.stakesEmphasis,
     insightParagraph: partial.insightParagraph ?? fallback.insightParagraph,
   };
+
+  if (stakesFromQ2) {
+    merged.stakesLead = stakesFromQ2.stakesLead;
+    merged.stakesEmphasis = stakesFromQ2.stakesEmphasis;
+  } else {
+    merged.stakesEmphasis = partial.stakesEmphasis ?? fallback.stakesEmphasis;
+    merged.stakesLead = partial.stakesLead ?? fallback.stakesLead;
+  }
+
+  return merged;
 }
 
 export function buildGoalAchievabilityFallback(
@@ -755,8 +750,8 @@ export function buildGoalAchievabilityFallback(
     pointsLine,
     verdictLead: verdict.lead,
     verdictEm: verdict.em,
-    stakesLead: plan.subhead ?? buildStakesLead("merit"),
-    stakesEmphasis: buildStakesEmphasis("merit"),
+    stakesLead: plan.subhead ?? buildStakesLead("top-choice"),
+    stakesEmphasis: buildStakesEmphasis("top-choice"),
     outcomesMeta: achievabilityOutcomesMeta(),
     insightParagraph: buildRevealInsightParagraph(
       { q9: undefined, q6: [] },

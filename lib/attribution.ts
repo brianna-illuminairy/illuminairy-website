@@ -1,6 +1,7 @@
 /** First-touch attribution — browser session + cookie helpers. */
 
 import { applyLandingAttributionInference } from "@/lib/marketing/landing-attribution-infer";
+import { canonicalizeUtmContent } from "@/lib/marketing/utm-content-aliases";
 
 export const VISITOR_COOKIE = "illuminairy_vid";
 export const VISITOR_STORAGE_KEY = "illuminairy_vid";
@@ -88,7 +89,11 @@ function sanitizeAttributionValue(
   const trimmed = value.trim();
   if (!trimmed) return undefined;
   const max = ATTRIBUTION_MAX_LEN[key];
-  return trimmed.length > max ? trimmed.slice(0, max) : trimmed;
+  const clipped = trimmed.length > max ? trimmed.slice(0, max) : trimmed;
+  if (key === "utm_content") {
+    return canonicalizeUtmContent(clipped);
+  }
+  return clipped;
 }
 
 export function sanitizeAttributionSnapshot(

@@ -276,6 +276,7 @@ export function QFS5Approved({
     const resolved = resolveMetaClickIds(attribution.fbclid);
     const fbp = resolved.fbp ?? attribution.fbp;
     const fbc = resolved.fbc ?? attribution.fbc;
+    const fbcTs = resolved.fbcTs;
     const sat_lp_variant = readPersistedLpVariant();
     const lp_variant = readPersistedLpVariantId();
     try {
@@ -289,6 +290,7 @@ export function QFS5Approved({
           attribution,
           fbp,
           fbc,
+          fbcTs,
           sat_lp_variant,
           lp_variant,
         }),

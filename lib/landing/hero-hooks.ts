@@ -69,6 +69,8 @@ const ICON_SCRIPT_HOOKS: Record<string, LandingHeroHook> = {
   script_3: "nov1",
   script_4: "khan",
   script_5: "gap",
+  concerned_mom_good_grades_low_sat: "gap",
+  concerned_mom: "gap",
   script_6: "june",
   angle_a: "gap",
   angle_b: "june",

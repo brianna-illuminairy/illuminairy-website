@@ -4,6 +4,7 @@ import {
   writeQuizSnapshotCookie,
   type QuizSnapshot,
 } from "@/lib/quiz-funnel/quiz-cookie";
+import { canonicalizeQuizStepId } from "@/lib/quiz-funnel/funnel-steps";
 
 /** localStorage keys for Plan Builder in-progress state (client only). */
 export const QUIZ_ANSWERS_STORAGE_KEY = "qf_answers";
@@ -37,7 +38,8 @@ export function readStoredQuizAnswers(): StoredQuizAnswers {
 export function readQuizLastStep(): string | null {
   if (typeof window === "undefined") return null;
   try {
-    return localStorage.getItem(QUIZ_LAST_STEP_STORAGE_KEY);
+    const step = localStorage.getItem(QUIZ_LAST_STEP_STORAGE_KEY);
+    return step ? canonicalizeQuizStepId(step) : null;
   } catch {
     return null;
   }
@@ -57,8 +59,11 @@ function writeLocalAnswers(answers: StoredQuizAnswers): boolean {
 function writeLocalLastStep(step: string | null): boolean {
   if (typeof window === "undefined") return false;
   try {
-    if (step) localStorage.setItem(QUIZ_LAST_STEP_STORAGE_KEY, step);
-    else localStorage.removeItem(QUIZ_LAST_STEP_STORAGE_KEY);
+    if (step) {
+      localStorage.setItem(QUIZ_LAST_STEP_STORAGE_KEY, canonicalizeQuizStepId(step));
+    } else {
+      localStorage.removeItem(QUIZ_LAST_STEP_STORAGE_KEY);
+    }
     return true;
   } catch {
     /* ignore */
@@ -111,10 +116,13 @@ export function mergeQuizSnapshots(
 
   const intakeTime = intake.updatedAt ?? 0;
   const localTime = local.updatedAt ?? 0;
-  const lastStep =
+  const mergedLastStep =
     localTime >= intakeTime
       ? local.lastStep ?? intake.lastStep
       : intake.lastStep ?? local.lastStep;
+  const lastStep = mergedLastStep
+    ? canonicalizeQuizStepId(mergedLastStep)
+    : mergedLastStep;
 
   return {
     answers: mergedAnswers,
@@ -179,7 +187,7 @@ export function persistQuizSnapshot(snapshot: QuizSnapshot): void {
 export function saveQuizLastStep(step: string): void {
   persistQuizSnapshot({
     answers: readStoredQuizAnswers(),
-    lastStep: step,
+    lastStep: canonicalizeQuizStepId(step),
     updatedAt: Date.now(),
   });
 }

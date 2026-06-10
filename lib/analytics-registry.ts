@@ -4,6 +4,7 @@
  */
 
 import { AnalyticsEvents } from "@/lib/analytics-events";
+import { canonicalizeQuizStepId } from "@/lib/quiz-funnel/step-aliases";
 
 export const TouchEvents = {
   pageView: "page_view",
@@ -92,8 +93,12 @@ export const KlaviyoEvents = {
 /** Milestone steps that trigger Klaviyo "Quiz Step Reached" when profile exists. */
 export const KLAVIYO_MILESTONE_STEPS = new Set([
   "achievability",
-  "reveal",
   "v1",
   "s4",
-  "s5"
+  "s5",
 ]);
+
+/** Normalize legacy step IDs before Klaviyo milestone matching. */
+export function klaviyoMilestoneStep(step: string): string {
+  return canonicalizeQuizStepId(step);
+}

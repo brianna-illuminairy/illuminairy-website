@@ -9,18 +9,19 @@ import { planBuilderStepHref } from '@/lib/plan-builder-routes';
 import {
   QUIZ_BOOKED_STEP,
   QUIZ_ENTRY_STEP,
+  canonicalizeQuizStepId,
   resolveGuardedQuizStep,
   resolveQuizResumeStep,
 } from '@/lib/quiz-funnel/funnel-steps';
 import { getQuizRouteSteps } from '@/lib/quiz-funnel/quiz-route';
 import {
-  QFQWho, QFQScoreLower, QFQ1Trigger, QFQ2Stakes, QFQ3TimesTaken, QFQ4RecentScore, QFQDoubts, QFQ5Clock,
+  QFQWho, QFQScoreLower, QFQ1Trigger, QFQ2Stakes, QFQ3TimesTaken, QFQPracticeScore, QFQ4RecentScore, QFQDoubts, QFQ5Clock,
   QFQ6Blocker, QFQ7Tried, QFQ8Goal, QFQ9GPA, QFQName,
 } from './screens/Questions';
 import {
   QFI2Compute, QFIGPAGap, QFV1Projection, QFIDiagnosis, QFISteps,
   QFIComparePrep, QFIDoubtsInsight, QFIHopeScreen,
-  QFSPlanReveal, QFS4PlanHandoff, QFS5Approved, QFS9ThankYou,
+  QFSGoalAchievability, QFS4PlanHandoff, QFS5Approved, QFS9ThankYou,
 } from './lazy-screens';
 import { QFInsightHit } from './components/QFInsightHit';
 import { prepFailureInsight } from '@/lib/quiz-funnel/prep-failure-copy';
@@ -43,7 +44,7 @@ export default function QuizRunner() {
   const search = params.toString();
 
   const rawStep = params.get('step');
-  const requestedStep = rawStep || QUIZ_ENTRY_STEP;
+  const requestedStep = canonicalizeQuizStepId(rawStep || QUIZ_ENTRY_STEP);
   const steps = getSteps(answers);
   const resumeStep =
     !rawStep || requestedStep === QUIZ_BOOKED_STEP
@@ -163,7 +164,7 @@ export default function QuizRunner() {
         />
       );
       break;
-    case 'q1':  stepContent = <QFQ1Trigger   value={a.q1} onSelect={(v: string) => setQAndAdvance('q1', v)} onBack={back} />; break;
+    case 'q1':  stepContent = <QFQ1Trigger   value={a.q1} qWho={qWho} onSelect={(v: string) => setQAndAdvance('q1', v)} onBack={back} />; break;
     case 'q2':  stepContent = <QFQ2Stakes    value={a.q2} qWho={qWho} onSelect={(v: string) => setQAndAdvance('q2', v)} onBack={back} />; break;
     case 'q3':
       stepContent = (
@@ -188,8 +189,8 @@ export default function QuizRunner() {
       );
       break;
     case 'q4':  stepContent = <QFQ4RecentScore value={a.q4} qWho={qWho} onSelect={(v: string) => setQAndAdvance('q4', v)} onBack={back} q3={a.q3} />; break;
-    case 'q-doubts': stepContent = <QFQDoubts value={a.qDoubts} onToggle={(id: string) => toggleQ('qDoubts', id)} onContinue={next} onBack={back} />; break;
-    case 'doubts-insight': stepContent = <QFIDoubtsInsight onContinue={next} onBack={back} qDoubts={a.qDoubts} />; break;
+    case 'q-doubts': stepContent = <QFQDoubts value={a.qDoubts} qWho={qWho} onToggle={(id: string) => toggleQ('qDoubts', id)} onContinue={next} onBack={back} />; break;
+    case 'doubts-insight': stepContent = <QFIDoubtsInsight onContinue={next} onBack={back} qDoubts={a.qDoubts} qWho={qWho} />; break;
     case 'q5':  stepContent = <QFQ5Clock     value={a.q5} qWho={qWho} onSelect={(v: string) => setQAndAdvance('q5', v)} onBack={back} />; break;
     case 'hit-q5-tbd':
       stepContent = (
@@ -250,7 +251,7 @@ export default function QuizRunner() {
     case 'reveal':
     case 's1':
       stepContent = (
-        <QFSPlanReveal
+        <QFSGoalAchievability
           answers={a}
           onContinue={next}
           onBack={back}
@@ -260,7 +261,10 @@ export default function QuizRunner() {
         />
       );
       break;
-    case 'v1':  stepContent = <QFV1Projection onContinue={next} onBack={back} answers={a} />; break;
+    case 'v1':
+      // Plan reveal — Personalized SAT plan (NOT achievability / QFSGoalAchievability)
+      stepContent = <QFV1Projection onContinue={next} onBack={back} answers={a} />;
+      break;
     case 's4':
       stepContent = (
         <QFS4PlanHandoff

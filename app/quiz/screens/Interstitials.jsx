@@ -19,8 +19,9 @@ import { I_GAP_CTA, V1_CTA } from '@/lib/quiz-funnel/score-path-copy';
 import {
   formatSatScoreLabel,
 } from '@/lib/quiz-funnel/score-path-copy';
-import { selectedDoubts, DOUBTS_INSIGHT_COPY } from '@/lib/quiz-funnel/doubts-copy';
+import { selectedDoubts, doubtsInsightCopy } from '@/lib/quiz-funnel/doubts-copy';
 import { buildGoalAchievability, buildTierRanges, GOAL_FEASIBILITY_TIER_LABELS, GOAL_FEASIBILITY_TIER_ORDER, tierFromPtsPerWeekScale, achievabilityOutcomesMeta } from '@/lib/quiz-funnel/goal-achievability';
+import { stakesGoalLabel } from '@/lib/quiz-funnel/stakes-copy';
 import { buildScorePathOutput } from '@/lib/quiz-funnel/score-path-output';
 import { selectedPrepLabels, formatEnglishList } from '@/lib/quiz-funnel/prep-copy';
 import { AchievabilityPlanBlock } from '../components/AchievabilityRating';
@@ -36,9 +37,9 @@ import {
 export { gainTargetForQ5 };
 
 // ─── I · Doubts mirror (echoes selected q-doubts, reframes what we uncover) ───
-export function QFIDoubtsInsight({ onContinue, onBack, qDoubts = /** @type {string[]} */ ([]) }) {
-  const rows = selectedDoubts(qDoubts);
-  const c = DOUBTS_INSIGHT_COPY;
+export function QFIDoubtsInsight({ onContinue, onBack, qDoubts = /** @type {string[]} */ ([]), qWho = 'child' }) {
+  const rows = selectedDoubts(qDoubts, qWho);
+  const c = doubtsInsightCopy(qWho);
   return (
     <QFScreen stepIdx={4} ornament="glow" onBack={onBack}
       actions={<QFButton kind="forest" onClick={onContinue}>{c.cta}</QFButton>}
@@ -84,11 +85,6 @@ const CGPA_LABEL = {
   'u3.0': 'Under 3.0', '3.0-3.3': '3.0–3.3', '3.3-3.5': '3.3–3.5',
   '3.5-3.7': '3.5–3.7', '3.7-3.9': '3.7–3.9', '4.0+': '4.0+',
 };
-const CGOAL_LABEL = {
-  'merit': 'Merit scholarships', 'top-choice': 'Top-choice school',
-  'selective': 'Selective colleges', 'app-rounds': 'Early application rounds',
-  'early': 'Early application rounds',
-};
 
 function firstComputeLabel(arr, map) {
   const ids = Array.isArray(arr) ? arr : [];
@@ -120,7 +116,7 @@ export function QFI2Compute({
   const hasDate = q5 && q5 !== 'tbd' && q5 !== '2027' && CQ5_LONG[q5];
   const hasTarget = q8 && q8 !== 'tbd' && q8 !== 'na';
   const gpaLabel = q9 && CGPA_LABEL[q9];
-  const goalLabel = CGOAL_LABEL[q2];
+  const goalLabel = q2 ? stakesGoalLabel(q2) : null;
 
   // Build a flat reveal sequence: section headers + their rows
   const items = [];
@@ -247,6 +243,8 @@ export function QFIHopeScreen({ onContinue, onBack, q5 = 'oct3', qWho = 'child' 
   const days = date ? Math.round((date.getTime() - funnelToday().getTime()) / 86400000) : null;
   const o = satFirstMonthOutcomes;
   const scoreUp = isQuizSelfTaker(qWho) ? 'your score up' : 'their score up';
+  const planPhrase = isQuizSelfTaker(qWho) ? 'your diagnostic-driven plan' : 'their diagnostic-driven plan';
+  const monthPhrase = isQuizSelfTaker(qWho) ? 'your first 30 days' : 'their first 30 days';
   return (
     <QFScreen stepIdx={6} ornament="glow" onBack={onBack}
       actions={<QFButton kind="forest" onClick={onContinue}>Continue Building My Plan</QFButton>}
@@ -262,8 +260,8 @@ export function QFIHopeScreen({ onContinue, onBack, q5 = 'oct3', qWho = 'child' 
         <div className="qf-stat-callout">
           <span className="qf-stat-callout__pct">{o.hit100PlusPct}%</span>
           <p className="qf-stat-callout__text">
-            of students who follow their diagnostic-driven plan improve{' '}
-            <strong>{o.minPointsFirstMonth}+ points</strong> in their <strong>first 30 days</strong>.
+            of students who follow {planPhrase} improve{' '}
+            <strong>{o.minPointsFirstMonth}+ points</strong> in {monthPhrase}.
           </p>
         </div>
         <QFScoreReportPair caption={null} />
@@ -515,6 +513,7 @@ function planDelayCost(skillPts, ptsPerWeek) {
   return Math.max(40, Math.ceil(base / 10) * 10);
 }
 
+/** Plan reveal — PostHog step `v1`. Personalized SAT plan + chart + "What's on the line". NOT achievability. */
 export function QFV1Projection({ onContinue, onBack, answers = {} }) {
   const { q7 = /** @type {string[]} */ ([]), kidName, qWho = 'child' } = answers;
   const self = isQuizSelfTaker(qWho);
@@ -546,6 +545,7 @@ export function QFV1Projection({ onContinue, onBack, answers = {} }) {
   const stakesLead = assessment.stakesLead;
   const stakesEm = assessment.stakesEmphasis;
   const stakesIdx = stakesEm && stakesLead.includes(stakesEm) ? stakesLead.indexOf(stakesEm) : -1;
+  const goalTargetLabel = self ? 'your' : (displayName ? `${displayName}'s` : voicePossessive);
 
   // Reveal the locked skill rows one at a time.
   const [revealed, setRevealed] = useState(0);
@@ -619,7 +619,7 @@ export function QFV1Projection({ onContinue, onBack, answers = {} }) {
 
         <RoadmapSection eyebrow={dateShort ? `What score is reasonable by ${dateShort}` : 'What score is reasonable'}>
           <p className="qf-lead" style={{ margin: 0 }}>
-            We built {tierArticle} <em>{tierWord}</em> plan toward your <em>{goalScore}</em> target.{' '}
+            We built {tierArticle} <em>{tierWord}</em> plan toward {goalTargetLabel} <em>{goalScore}</em> target.{' '}
             {hasBand ? (
               <>Students with a similar start and {weeks}-week timeline typically improve <em>+{rangeLow}&ndash;+{rangeHigh}</em>, and a Skill Diagnostic plus starting within 7 days makes the upper end realistic.</>
             ) : (

@@ -1,6 +1,13 @@
 # Active context
 
-*Last updated: 2026-06-08*
+*Last updated: 2026-06-09*
+
+## Plan reveal vs achievability (locked naming)
+
+- **Plan reveal** = PostHog step **`v1`** / `QFV1Projection` (after `name` → `i2`). Chart + "What's on the line."
+- **Goal achievability rating** = step **`achievability`** / `QFSGoalAchievability` (before `name`). Tier gauge only.
+- Legacy misnames (`QFSPlanReveal`, `plan-reveal.ts`, aliases `reveal`/`s1`) mean **achievability**, not plan reveal.
+- SSOT: `lib/quiz-funnel/funnel-screen-roles.ts`; events emit `funnel_screen_role`, `is_plan_reveal` on `quiz_step_viewed`.
 
 ## Danielle student portal (new)
 
@@ -35,11 +42,15 @@ Private route **`/danielle`** — email allowlist auth (`DANIELLE_ACCESS_ALLOWLI
 | Banned | “if you want to move forward,” “Take the assessment,” student plan-generator SEO. |
 | Stats | `lib/site.ts` only; “Results vary.” |
 
-## Funnel spine
+## Funnel spine (canonical — see rule for full map)
 
-`q1–q5` → `i1` → `q6` → `q7` → `hit-q7` → `i-compare` → … → `reveal` → `v1` → `s2` → `s3` → `s5` → `s7` → `s9` → `booked`
+`q1-parent-child` → `q-score-lower` → `q1` → `q2` → `q3` → `i-steps` → `q4` → `q-doubts` → `q5` → `hit-outcome-month-one` → `q6` → `q7` → `hit-q7` → `i-diag` → `i-compare` → `q9` → `q8` → `achievability` (projection, before name) → `name` → `i2` → `v1` (PLAN REVEAL) → `s4` → `s5` (booking) → `quiz_lead_submitted` → `quiz_booking_confirmed`.
 
-Key libs: `plan-reveal.ts`, `score-path-copy.ts`, `stakes-copy.ts`, `education-slides.ts`, `prep-failure-copy.ts`, `thank-you-copy.ts`
+- Plan reveal is `v1` (after `name`), NOT `achievability`. Achievability widget shows on both `achievability` and `v1`.
+- Step-ID aliases: `q1-parent-child` ← `q-who`; `achievability` ← `reveal`/`s1`. Old ids `i1/s2/s3/s7/s9/reveal/heard` are dead pre-launch.
+- **Drop-off analysis:** read `.cursor/rules/funnel-flow-canonical.mdc` + `growth/funnel-analysis-playbook.md` first. PostHog window: nothing before **2026-06-07 16:00 UTC** (launch); exclude internal emails; scope `/plan`.
+
+Key libs: `quiz-route.ts`, `step-aliases.ts`, `funnel-screen-roles.ts`, `goal-achievability-screen.ts`, `v1-projection.ts`, `goal-achievability.ts`, `score-path-copy.ts`, `stakes-copy.ts`, `education-slides.ts`, `prep-failure-copy.ts`
 
 ## Recently shipped (2026-06-08)
 

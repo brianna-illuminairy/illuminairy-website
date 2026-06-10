@@ -24,6 +24,7 @@ type Body = QuizAnswersPayload & {
   company?: string;
   fbp?: string;
   fbc?: string;
+  fbcTs?: number;
   lp_variant?: string;
 };
 
@@ -236,7 +237,17 @@ export async function POST(request: Request) {
 
   const result = await upsertLeadFromQuizFunnel(body, {
     visitorId: body.visitorId,
-    attribution: body.attribution
+    attribution: body.attribution,
+    metaMatch: {
+      fbp: body.fbp,
+      fbc: body.fbc,
+      fbcTs: typeof body.fbcTs === "number" ? body.fbcTs : undefined,
+      clientIp:
+        request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
+        request.headers.get("x-real-ip") ??
+        undefined,
+      clientUserAgent: request.headers.get("user-agent") ?? undefined
+    }
   });
 
   if (!result.ok) {
@@ -301,10 +312,14 @@ export async function POST(request: Request) {
     {
       email: result.email,
       phone,
+      firstName: first,
+      lastName: last,
+      externalId: result.leadId,
       clientIp,
       clientUserAgent,
       fbp: body.fbp,
-      fbc: body.fbc
+      fbc: body.fbc,
+      fbcTs: typeof body.fbcTs === "number" ? body.fbcTs : undefined
     },
     {
       funnel: "sat_quiz",
@@ -315,7 +330,8 @@ export async function POST(request: Request) {
       sat_lp_variant: body.sat_lp_variant ?? "",
       lp_variant: body.lp_variant ?? ""
     },
-    result.attribution
+    result.attribution,
+    { eventTimeSec: Math.floor(Date.now() / 1000) }
   );
 
   return NextResponse.json({ ok: true, leadId: result.leadId, eventId });

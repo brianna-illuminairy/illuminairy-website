@@ -115,7 +115,7 @@ These **splice into** the base order when answers match — they are not alterna
 
 | PostHog / route ID today | Proposed label | Component | What parent sees |
 |--------------------------|----------------|-----------|------------------|
-| `achievability` | **`i-goal-achievability`** | `QFSPlanReveal` | Score projection + “Goal score achievability rating” |
+| `achievability` | **`i-goal-achievability`** | `QFSGoalAchievability` | Goal score achievability rating (NOT plan reveal) |
 | `i-gap` (conditional) | **`i-why-smart-kids-low-sat`** | `QFIGPAGap` | “Why smart kids score low on the SAT” — only some paths |
 | **`name`** | **`name`** (keep) | **`QFQName`** | Eyebrow “One last detail”; first-name field; CTA **“Build my plan”** — **before plan is built/revealed** |
 | `i2` | **`i-building-plan-computing`** | `QFI2Compute` | “Building {name}'s SAT plan” → **“Reveal {name}'s plan”** |
@@ -258,26 +258,26 @@ The **22 → 17** figure does **not** reproduce on Jun 7–8 attributed data. It
 
 | | Engineering / PostHog | Parent experience |
 |--|----------------------|-------------------|
-| **First projection** | `step=achievability` (`QFSPlanReveal`, `buildPlanReveal`) | “Is my target realistic?” — achievability rating, not the plan document |
+| **First projection** | `step=achievability` (`QFSGoalAchievability`, `buildGoalAchievabilityScreenModel`) | “Is my target realistic?” — achievability rating, not the plan document |
 | **Loading beat** | `step=i2` | “Building {name}'s SAT plan” |
 | **The plan document** | `step=v1` (`QFV1Projection`) | **“Personalized SAT plan”** + chart + `{Name}'s SAT Plan` — **this is what parents call the reveal** |
 | **CTA that says “Reveal”** | `i2` button: **“Reveal {name}'s plan”** | Leads into **v1**, not achievability |
 
-Code names the **`achievability`** step “plan reveal” ([`Results.jsx`](app/quiz/screens/Results.jsx), [`plan-reveal.ts`](lib/quiz-funnel/plan-reveal.ts)). **Parents who complete the arc** hit **name → i2 → v1** before they see that card. **3/4 Jun 7–8 droppers never reached v1.**
+~~Code names the **`achievability`** step “plan reveal”~~ **Fixed 2026-06-09:** `QFSGoalAchievability` / `goal-achievability-screen.ts`; plan reveal is **`v1` / `QFV1Projection`**. **Parents who complete the arc** hit **name → i2 → v1** before the plan card. **3/4 Jun 7–8 droppers never reached v1.**
 
 **Route / analytics (`quiz_step_viewed.step`):**
 
 | Step ID | Component | Notes |
 |---------|-----------|--------|
-| **`achievability`** | `QFSPlanReveal` | **Only ID fired in production** (Jun 7–8: 9 users, 0 `reveal`, 0 `s1`) |
-| `reveal`, `s1` | Same `QFSPlanReveal` | Deep-link **aliases** in [`QuizRunner.tsx`](app/quiz/QuizRunner.tsx); same screen |
+| **`achievability`** | `QFSGoalAchievability` | **Only ID fired in production** (Jun 7–8: 9 users, 0 `reveal`, 0 `s1`) |
+| `reveal`, `s1` | Same `QFSGoalAchievability` | Deep-link **aliases** in [`QuizRunner.tsx`](app/quiz/QuizRunner.tsx); same screen (NOT plan reveal) |
 | **`i-gap`** (optional) | `QFIGPAGap` | Inserted **between** achievability and name when GPA gap screen applies — **not** titled achievability |
 | **`v1`** | `QFV1Projection` | **Separate step** after name → i2; eyebrow **“Personalized SAT plan”** |
 
 **On-screen “achievability” labeling (parent sees this twice, different steps):**
 
-1. **Plan reveal** (`step=achievability`): H1 = score projection + verdict (`PlanRevealContent`); includes **`AchievabilityPlanBlock`** with label **“Goal score achievability rating”** (tier pills + stat bar).
-2. **v1 projection** (`step=v1`): Card eyebrow **“Personalized SAT plan”**; **same `AchievabilityPlanBlock`** again (duplicate gauge) + TBD skill rows below.
+1. **Goal achievability** (`step=achievability`, NOT plan reveal): H1 = points + tier verdict (`GoalAchievabilityContent`); includes **`AchievabilityPlanBlock`** with label **“Goal score achievability rating”** (tier pills + stat bar).
+2. **Plan reveal** (`step=v1`): Card eyebrow **“Personalized SAT plan”**; chart + “What’s on the line” (`QFV1Projection`); **same `AchievabilityPlanBlock`** again (duplicate gauge) + TBD skill rows below.
 
 So: **one funnel step** named achievability in PostHog, but **two screens** show the achievability rating widget (reveal + v1). Easy to think there are “two achievability steps” when reviewing replays.
 

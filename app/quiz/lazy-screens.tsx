@@ -9,7 +9,7 @@ export {
   QFIHopeScreen,
 } from './screens/Interstitials';
 
-export { QFSPlanReveal } from './screens/Results';
+export { QFSGoalAchievability, QFSPlanReveal } from './screens/Results';
 
 export {
   QFS4PlanHandoff,

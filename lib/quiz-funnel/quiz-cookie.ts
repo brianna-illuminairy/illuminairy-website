@@ -1,4 +1,5 @@
 import type { StoredQuizAnswers } from "@/lib/quiz-funnel/quiz-storage";
+import { canonicalizeQuizStepId } from "@/lib/quiz-funnel/funnel-steps";
 
 /** Cookie mirror of Plan Builder progress — readable on server (SSR resume). */
 export const QUIZ_SNAPSHOT_COOKIE = "qf_snapshot";
@@ -84,17 +85,22 @@ function decodePayload(raw: string): CookiePayload | null {
 }
 
 export function snapshotFromPayload(payload: CookiePayload): QuizSnapshot {
+  const rawStep =
+    typeof payload.s === "string" && payload.s.length > 0 ? payload.s : null;
   return {
     answers: payload.a,
-    lastStep: typeof payload.s === "string" && payload.s.length > 0 ? payload.s : null,
+    lastStep: rawStep ? canonicalizeQuizStepId(rawStep) : null,
     updatedAt: typeof payload.t === "number" && payload.t > 0 ? payload.t : 0,
   };
 }
 
 export function payloadFromSnapshot(snapshot: QuizSnapshot): CookiePayload {
+  const lastStep = snapshot.lastStep
+    ? canonicalizeQuizStepId(snapshot.lastStep)
+    : snapshot.lastStep;
   return {
     v: COOKIE_VERSION,
-    s: snapshot.lastStep,
+    s: lastStep,
     t: snapshot.updatedAt,
     a: trimAnswersForCookie(snapshot.answers),
   };

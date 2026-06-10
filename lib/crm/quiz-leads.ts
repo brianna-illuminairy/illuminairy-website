@@ -17,6 +17,28 @@ import { getVisitorById } from "@/lib/crm/visitors";
 
 export type QuizAnswersPayload = QuizAnswersSnapshotInput;
 
+export type LeadMetaMatchInput = {
+  fbp?: string;
+  fbc?: string;
+  fbcTs?: number;
+  clientIp?: string;
+  clientUserAgent?: string;
+};
+
+function normalizeMetaMatch(input?: LeadMetaMatchInput) {
+  if (!input) return null;
+  const row = {
+    meta_fbp: input.fbp?.trim() || null,
+    meta_fbc: input.fbc?.trim() || null,
+    meta_fbc_ts:
+      typeof input.fbcTs === "number" && input.fbcTs > 0 ? input.fbcTs : null,
+    meta_client_ip: input.clientIp?.trim() || null,
+    meta_client_user_agent: input.clientUserAgent?.trim() || null
+  };
+  const hasAny = Object.values(row).some((v) => v != null);
+  return hasAny ? row : null;
+}
+
 function splitName(full: string) {
   const parts = full.trim().split(/\s+/);
   if (parts.length === 1) return { first: parts[0], last: "" };
@@ -28,6 +50,7 @@ export async function upsertLeadFromQuizFunnel(
   options: {
     visitorId?: string;
     attribution?: AttributionSnapshot;
+    metaMatch?: LeadMetaMatchInput;
   }
 ) {
   const supabase = getSupabaseAdmin();
@@ -69,6 +92,7 @@ export async function upsertLeadFromQuizFunnel(
   const quizSnapshot = buildQuizAnswersSnapshot(answers);
   const promisedGain = promisedGainFromQuizAnswers(answers.q4, answers.q5, answers.q8);
   const gpaGap = showedGpaGapScreen(answers.q4, answers.q9);
+  const metaMatch = normalizeMetaMatch(options.metaMatch);
 
   const leadRow = {
     parent_email: email,
@@ -125,7 +149,8 @@ export async function upsertLeadFromQuizFunnel(
     quiz_furthest_step: quizFurthestStep,
     sat_lp_variant: satLpVariantFromVisitor,
     posthog_distinct_id: posthogDistinctId,
-    updated_at: now
+    updated_at: now,
+    ...(metaMatch ?? {})
   };
 
   const { data: existing } = await supabase
@@ -168,7 +193,8 @@ export async function upsertLeadFromQuizFunnel(
           quiz_answers: leadRow.quiz_answers,
           additional_context: leadRow.additional_context,
           stage: leadRow.stage,
-          updated_at: now
+          updated_at: now,
+          ...(metaMatch ?? {})
         }
       : leadRow;
 

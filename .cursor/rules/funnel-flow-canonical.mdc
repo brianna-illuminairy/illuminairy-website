@@ -1,0 +1,61 @@
+---
+description: Canonical Plan Builder funnel flow, step IDs, aliases, and PostHog analysis rules. Read before analyzing quiz drop-off.
+alwaysApply: true
+---
+
+# Plan Builder funnel: canonical flow + analysis rules
+
+Read this before any quiz / funnel drop-off analysis. Full step table, alias map, and copy-paste HogQL: [`growth/funnel-analysis-playbook.md`](../../growth/funnel-analysis-playbook.md).
+
+SSOT in code: [`lib/quiz-funnel/quiz-route.ts`](../../lib/quiz-funnel/quiz-route.ts) (`getQuizRouteSteps`), [`app/quiz/QuizRunner.tsx`](../../app/quiz/QuizRunner.tsx), [`lib/quiz-funnel/step-aliases.ts`](../../lib/quiz-funnel/step-aliases.ts), [`lib/quiz-funnel/funnel-screen-roles.ts`](../../lib/quiz-funnel/funnel-screen-roles.ts).
+
+## Canonical step order (PostHog `quiz_step_viewed.step`)
+
+`q1-parent-child` -> `q-score-lower` -> `q1` -> `q2` -> `q3` -> `i-steps` -> `q4` -> `q-doubts` -> `q5` -> `hit-outcome-month-one` -> `q6` -> `q7` -> `hit-q7` -> `i-diag` -> `i-compare` -> `q9` -> `q8` -> `achievability` -> `name` -> `i2` -> `v1` -> `s4` -> `s5`, then `quiz_lead_submitted` -> `quiz_booking_confirmed`.
+
+## Facts that get mislabeled (do not repeat the mistake)
+
+- **`v1` = THE PLAN REVEAL** ("Personalized SAT plan", chart, "What's on the line"). Component: `QFV1Projection`. After `name` -> `i2`.
+- **`achievability` = goal score achievability rating** (tier gauge, pre-name). Component: `QFSGoalAchievability` (deprecated alias `QFSPlanReveal`). NOT the plan.
+- The achievability rating widget renders on BOTH `achievability` and `v1`.
+- `name` comes BEFORE the plan reveal. "Continued past the reveal" means reached/continued past **`v1`**.
+- `i2` and `v1` are effectively tied; the pre-reveal drop is `name` -> `i2`, not `i2` -> `v1`.
+- **`s4` = plan handoff** (post-reveal). NOT the plan reveal.
+
+## Search traps (code + analytics)
+
+When the user or task says **"plan reveal"**, go to **`v1` / `QFV1Projection` / `v1-projection.ts`**. Never default to achievability.
+
+| Misleading name | Actually |
+|-----------------|----------|
+| `QFSPlanReveal`, `PlanRevealContent`, `buildPlanReveal`, `plan-reveal.ts` | **`achievability`** step only (deprecated names; use `QFSGoalAchievability`, `GoalAchievabilityContent`, `goal-achievability-screen.ts`) |
+| PostHog aliases `reveal`, `s1` | **`achievability`**, not `v1` |
+| `FUNNEL_STAGE_LABELS.s4` was once "Plan reveal" | **`s4` = plan handoff**; plan reveal label is **`v1`** |
+| `resolveGoalAchievabilityForDisplay` / stale merge | **`achievability` only**; `v1` builds stakes fresh from `answers.q2` |
+
+PostHog events now include `funnel_screen_role`, `funnel_screen_component`, and `is_plan_reveal` on `quiz_step_viewed` (SSOT: `funnel-screen-roles.ts`).
+
+## Conditional screens (inserted/removed per answers)
+
+- `qWho = self` -> remove `q-doubts` (and its `doubts-insight`).
+- `q3 = none` -> remove `q4` (sets `q4 = na`), remove `q-doubts`, insert `hit-q3-none` after `q3`.
+- `qDoubts` non-empty -> insert `doubts-insight` after `q-doubts`.
+- `q5 = tbd | 2027` -> insert `hit-q5-tbd` before `q6`.
+- `q8 = tbd` -> insert `hit-q8-scores` before `q9`.
+- high GPA + known/low SAT band (`showGapScreen`) -> insert `i-gap` before `name`.
+
+## Step ID aliases (same screen, multiple IDs) — count canonically
+
+SSOT: `QUIZ_STEP_ALIAS_GROUPS` in `lib/quiz-funnel/step-aliases.ts`.
+
+- Entry screen: `q1-parent-child` canonical; legacy alias `q-who` (old Meta ad links). New events are already canonical (`canonicalizeQuizStepId` + middleware redirect). Historical events from launch until the fix still carry `q-who`, so UNION them.
+- **Goal achievability (NOT plan reveal):** `achievability` canonical; legacy deep-link aliases `reveal`, `s1`. Plan reveal has **no** aliases — it is always step `v1`.
+- In HogQL: map with the same CASE as `hogqlQuizStepCanonical()` (or `quizStepIdsForCounting()`); NEVER sum per-alias counts (double-counts users).
+- Dead pre-launch prototype IDs to ignore (the window below already excludes them): `i1`, `i-method`, `i3`, `s2`, `s3`, `s7`, `s9`, `hit-q6`, `heard`.
+
+## PostHog analysis window (mandatory)
+
+- Launch = `2026-06-07 16:00:00 UTC` (noon ET 06/07). NEVER analyze funnel data before this; earlier is internal testing and invalid.
+- Always exclude internal emails: `noelbrianna@gmail.com`, `testemil@gmail.com`, `testemial@gmail.com`, `brianna@illuminairy.com`, `support@illuminairy.com`.
+- Scope funnel queries to `/plan` (`properties.$current_url ILIKE '%/plan%'`).
+- **Plan reveal funnel step:** `properties.step = 'v1'` OR `properties.is_plan_reveal = true` (after deploy). Do NOT use `achievability` / `reveal` / `s1` for plan-reveal drop-off.

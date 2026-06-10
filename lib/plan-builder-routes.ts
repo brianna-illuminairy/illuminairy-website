@@ -6,6 +6,7 @@
 
 import {
   QUIZ_ENTRY_STEP,
+  canonicalizeQuizStepId,
   resolveQuizResumeStep,
 } from "@/lib/quiz-funnel/funnel-steps";
 import { getQuizRouteSteps } from "@/lib/quiz-funnel/quiz-route";
@@ -33,7 +34,7 @@ export function planBuilderHref(
   extra: PlanBuilderQuery = {}
 ): string {
   const params = new URLSearchParams();
-  params.set("step", step);
+  params.set("step", canonicalizeQuizStepId(step));
   for (const [key, value] of Object.entries(extra)) {
     if (value != null && value !== "") {
       params.set(key, value);
@@ -92,6 +93,6 @@ export function planBuilderStepHref(
   const params = new URLSearchParams(
     currentSearch?.startsWith("?") ? currentSearch.slice(1) : currentSearch ?? ""
   );
-  params.set("step", step);
+  params.set("step", canonicalizeQuizStepId(step));
   return `${PLAN_BUILDER_PATH}?${params.toString()}`;
 }

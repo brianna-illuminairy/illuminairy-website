@@ -3,6 +3,7 @@ import {
   metaLandingUrl,
   metaSatPlanBuilderLandingUrl
 } from "@/lib/landing/meta-traffic";
+import { canonicalizeUtmContent } from "@/lib/marketing/utm-content-aliases";
 
 /** Live Meta cold ads — source of truth for utm_content → LP hook. */
 export type MetaLiveCreative = {
@@ -77,6 +78,7 @@ export function metaLiveCreativeUrl(creative: MetaLiveCreative): string {
 }
 
 export function heroHookForUtmContent(content: string): LandingHeroHook | null {
-  const row = META_LIVE_CREATIVES.find((c) => c.utmContent === content);
+  const canonical = canonicalizeUtmContent(content);
+  const row = META_LIVE_CREATIVES.find((c) => c.utmContent === canonical);
   return row?.heroHook ?? null;
 }

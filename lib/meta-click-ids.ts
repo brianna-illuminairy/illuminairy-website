@@ -13,15 +13,24 @@
  *      subject to ITP's cookie cap and survives the in-session LP -> quiz hop.
  * The quiz finale then resolves with live cookies first, falling back to the
  * persisted values, so the Lead CAPI event keeps `fbp` / `fbc`.
+ *
+ * Timestamp correctness: Meta's `_fbc` format is `fb.1.<creationTime>.<fbclid>`
+ * where `creationTime` is when the click ID was first observed (≈ ad click /
+ * landing time). We capture that timestamp once at landing and persist it
+ * (`il_fbc_ts`) so every later synthesis — including the server-side CAPI
+ * fallback — reuses the landing time instead of the lead-submit time. Using
+ * the submit time (which can be many minutes after the click) degrades Meta
+ * ad attribution, especially for in-app browsers where the pixel never runs.
  */
 
 const FBP_COOKIE = "_fbp";
 const FBC_COOKIE = "_fbc";
 const FIRST_PARTY_FBP = "il_fbp";
 const FIRST_PARTY_FBC = "il_fbc";
+const FIRST_PARTY_FBC_TS = "il_fbc_ts";
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 180; // 180 days (best-effort; ITP may shorten)
 
-export type MetaClickIds = { fbp?: string; fbc?: string };
+export type MetaClickIds = { fbp?: string; fbc?: string; fbcTs?: number };
 
 function readCookie(name: string): string | undefined {
   if (typeof document === "undefined") return undefined;
@@ -35,26 +44,47 @@ function writeCookie(name: string, value: string) {
   document.cookie = `${name}=${encodeURIComponent(value)}; Path=/; Max-Age=${COOKIE_MAX_AGE}; SameSite=Lax${secure}`;
 }
 
-/** Build a Meta-format `_fbc` value from an `fbclid` query param. */
-function synthesizeFbc(fbclid: string | undefined): string | undefined {
-  if (!fbclid) return undefined;
-  return `fb.1.${Date.now()}.${fbclid}`;
+/** Read the persisted landing-time timestamp (ms) used to synthesize `_fbc`. */
+function readPersistedFbcTimestamp(): number | undefined {
+  const raw = readCookie(FIRST_PARTY_FBC_TS);
+  if (!raw) return undefined;
+  const parsed = Number.parseInt(raw, 10);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : undefined;
 }
 
-/** Resolve fbp/fbc: live pixel cookies first, then persisted first-party, then synthesized fbc. */
+/** Build a Meta-format `_fbc` value from an `fbclid` query param. */
+function synthesizeFbc(fbclid: string | undefined, ts: number): string | undefined {
+  if (!fbclid) return undefined;
+  return `fb.1.${ts}.${fbclid}`;
+}
+
+/**
+ * Resolve fbp/fbc: live pixel cookies first, then persisted first-party, then
+ * synthesized fbc. Synthesis reuses the persisted landing timestamp when known.
+ */
 export function resolveMetaClickIds(fbclid?: string): MetaClickIds {
   const fbp = readCookie(FBP_COOKIE) ?? readCookie(FIRST_PARTY_FBP);
+  const fbcTs = readPersistedFbcTimestamp();
   const fbc =
     readCookie(FBC_COOKIE) ??
     readCookie(FIRST_PARTY_FBC) ??
-    synthesizeFbc(fbclid);
-  return { fbp, fbc };
+    synthesizeFbc(fbclid, fbcTs ?? Date.now());
+  return { fbp, fbc, fbcTs };
 }
 
 /** Capture + persist click IDs (durable first-party cookies). Call at LP load. */
 export function persistMetaClickIds(fbclid?: string): MetaClickIds {
-  const ids = resolveMetaClickIds(fbclid);
-  if (ids.fbp) writeCookie(FIRST_PARTY_FBP, ids.fbp);
-  if (ids.fbc) writeCookie(FIRST_PARTY_FBC, ids.fbc);
-  return ids;
+  // Stamp the landing time once; reuse it on every later page view / resolve.
+  const fbcTs = readPersistedFbcTimestamp() ?? Date.now();
+  const fbp = readCookie(FBP_COOKIE) ?? readCookie(FIRST_PARTY_FBP);
+  const fbc =
+    readCookie(FBC_COOKIE) ??
+    readCookie(FIRST_PARTY_FBC) ??
+    synthesizeFbc(fbclid, fbcTs);
+  if (fbp) writeCookie(FIRST_PARTY_FBP, fbp);
+  if (fbc) {
+    writeCookie(FIRST_PARTY_FBC, fbc);
+    writeCookie(FIRST_PARTY_FBC_TS, String(fbcTs));
+  }
+  return { fbp, fbc, fbcTs };
 }

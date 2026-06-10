@@ -99,3 +99,16 @@ export function stakesVerdictPrefix(q2?: string, qWho?: string): string {
   const goal = stakesGoalPhrase(q2, qWho);
   return `For students working toward ${goal}, `;
 }
+
+/** Plan reveal / achievability — "What's on the line" (mirrors Q2 option phrasing). */
+export function stakesAchievabilityLead(q2?: string, qWho?: string): string {
+  const goal = stakesGoalPhrase(q2, qWho);
+  return isQuizSelfTaker(qWho)
+    ? `A higher score could help you ${goal}.`
+    : `A higher score could help them ${goal}.`;
+}
+
+/** Phrase within stakesAchievabilityLead to emphasize — always a substring of the lead. */
+export function stakesAchievabilityEmphasis(q2?: string, qWho?: string): string {
+  return stakesGoalPhrase(q2, qWho);
+}

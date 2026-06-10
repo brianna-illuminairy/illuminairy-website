@@ -6,7 +6,7 @@ Run **before turning on spend**. Parent must see ad headline echoed on LP hero w
 
 | `lp_variant` | Headline | Meta `utm_content` | `hook` param |
 |---|---|---|---|
-| `variant-goodgrades-lowSAT` | Your child has good grades. / **So why a low SAT score?** | `concerned_mom_good_grades_low_sat`, `script_5` | `gap` or omit |
+| `variant-goodgrades-lowSAT` | Your child has good grades. / **So why a low SAT score?** | **`script_5`** (legacy: `concerned_mom_good_grades_low_sat`) | `gap` or omit |
 | `variant-beforetutoringmoney-realistic-score` | Before SAT tutoring. / **Find out what's realistic first.** | `ad3_before_tutoring` | `tutor` |
 | `variant-highgpa-ap-lowsat` | High GPA, hard AP/IB/honors classes. / **But low SAT?** | `ad4_mom_first_story`, `ad5_high_gpa_student_story` | `student_story` |
 

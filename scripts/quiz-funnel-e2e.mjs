@@ -511,6 +511,48 @@ async function checkNavigation(page) {
   pass("nav", "q4 option tap advances");
 }
 
+async function checkLegacyEntryStepAlias(page) {
+  console.log("\n— Legacy entry step alias (q-who → q1-parent-child) —");
+  const response = await page.goto(
+    `${BASE}/plan?step=q-who&utm_source=meta&utm_campaign=legacy_ad`,
+    { waitUntil: "networkidle" }
+  );
+  const finalUrl = page.url();
+  const step = new URL(finalUrl).searchParams.get("step");
+  if (step !== "q1-parent-child") {
+    fail("legacy-entry", `expected step=q1-parent-child after q-who alias, got ${step} (${finalUrl})`);
+    return;
+  }
+  if (!finalUrl.includes("utm_source=meta") || !finalUrl.includes("utm_campaign=legacy_ad")) {
+    fail("legacy-entry", `UTMs dropped on q-who canonicalize: ${finalUrl}`);
+    return;
+  }
+  const status = response?.status() ?? 0;
+  if (status !== 200 && status !== 308) {
+    fail("legacy-entry", `unexpected status ${status} for q-who alias`);
+    return;
+  }
+  pass("legacy-entry", "q-who deep link canonicalizes to q1-parent-child with UTMs");
+
+  const revealResponse = await page.goto(`${BASE}/plan?step=reveal`, {
+    waitUntil: "networkidle",
+  });
+  const revealStep = new URL(page.url()).searchParams.get("step");
+  if (revealStep !== "achievability") {
+    fail(
+      "legacy-reveal",
+      `expected step=achievability after reveal alias, got ${revealStep}`
+    );
+    return;
+  }
+  const revealStatus = revealResponse?.status() ?? 0;
+  if (revealStatus !== 200 && revealStatus !== 308) {
+    fail("legacy-reveal", `unexpected status ${revealStatus} for reveal alias`);
+    return;
+  }
+  pass("legacy-reveal", "reveal deep link canonicalizes to achievability");
+}
+
 async function checkUtmPreserved(page) {
   console.log("\n— UTM preservation —");
   await page.goto(
@@ -588,6 +630,7 @@ async function main() {
   await checkAutoAdvanceNavigates(page);
   await checkAllRoutedSteps(page);
   await checkNavigation(page);
+  await checkLegacyEntryStepAlias(page);
   await checkUtmPreserved(page);
   await checkHydrationResumePriority(page);
 

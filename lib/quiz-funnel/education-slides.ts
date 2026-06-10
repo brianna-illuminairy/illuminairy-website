@@ -95,20 +95,26 @@ export function educationHitQ8Scores(q2?: string, qWho?: string): EducationSlide
 }
 
 /** After q5 — urgency-relief "hope" screen: improvement happens faster than expected. */
-export function educationHitOutcomeMonthOne(): EducationSlideHit {
+export function educationHitOutcomeMonthOne(qWho?: string): EducationSlideHit {
   const o = satFirstMonthOutcomes;
+  const self = isQuizSelfTaker(qWho);
+  const { possessive } = quizSubjectVoice(qWho);
   return {
     type: "outcome",
     parts: [
-      { text: "Most score improvements happen faster than parents expect." },
+      {
+        text: self
+          ? "Most score improvements happen faster than students expect."
+          : "Most score improvements happen faster than parents expect.",
+      },
     ],
     followUpBlocks: [
       [
-        { text: `${o.hit100PlusPct}% of students who follow their ` },
+        { text: `${o.hit100PlusPct}% of students who follow ${possessive} ` },
         { text: "diagnostic-driven plan", em: true },
         { text: " achieve " },
         { text: `${o.minPointsFirstMonth}+ points`, em: true },
-        { text: " their first month." },
+        { text: ` in ${possessive} first month.` },
       ],
       [
         { text: "Our average student invests " },

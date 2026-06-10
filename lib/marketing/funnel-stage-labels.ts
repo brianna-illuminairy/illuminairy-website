@@ -1,3 +1,5 @@
+import { canonicalizeQuizStepId } from "@/lib/quiz-funnel/step-aliases";
+
 /** Human labels for admin funnel drop-off tables. */
 export const FUNNEL_STAGE_LABELS: Record<string, string> = {
   landing_page: "Landing page",
@@ -6,7 +8,6 @@ export const FUNNEL_STAGE_LABELS: Record<string, string> = {
   lead_submitted: "Lead submitted (s5)",
   call_booked: "Strategy Call booked",
   "q1-parent-child": "Q1 · Who needs SAT help",
-  "q-who": "Q1 · Who needs SAT help",
   "q-score-lower": "Q2 · Score lower than expected",
   q1: "Q3 · What feels most urgent",
   q2: "Q4 · Stakes",
@@ -22,7 +23,9 @@ export const FUNNEL_STAGE_LABELS: Record<string, string> = {
   "i-diag": "Insight · Diagnosis",
   "i-compare": "Insight · Compare prep",
   q8: "Q10 · Goal score",
-  achievability: "Insight · Achievability",
+  achievability: "Goal score achievability (pre-name)",
+  reveal: "Goal score achievability (pre-name)",
+  s1: "Goal score achievability (pre-name)",
   q9: "Q11 · GPA",
   name: "Parent + student name",
   "i-gap": "Insight · GPA gap",
@@ -31,11 +34,12 @@ export const FUNNEL_STAGE_LABELS: Record<string, string> = {
   "hit-q5-tbd": "Insight · Test date TBD",
   "hit-q8-scores": "Insight · Goal TBD",
   i2: "Insight · I2 compute",
-  v1: "Insight · Projection",
-  s4: "Plan reveal",
+  v1: "Plan reveal · Personalized SAT plan",
+  s4: "Plan handoff (post-reveal)",
   s5: "Lead form + booking (s5)"
 };
 
 export function funnelStageLabel(stageId: string): string {
-  return FUNNEL_STAGE_LABELS[stageId] ?? stageId;
+  const canonical = canonicalizeQuizStepId(stageId);
+  return FUNNEL_STAGE_LABELS[canonical] ?? FUNNEL_STAGE_LABELS[stageId] ?? stageId;
 }

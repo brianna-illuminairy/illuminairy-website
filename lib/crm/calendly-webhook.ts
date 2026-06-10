@@ -2,7 +2,11 @@ import { strategyCallStartFromCalendlyWebhook } from "@/lib/crm/calendly-payload
 import { appendTouchEvent } from "@/lib/crm/touch";
 import { trackKlaviyoEvent, upsertKlaviyoProfile } from "@/lib/klaviyo-server";
 import { getSupabaseAdmin } from "@/lib/supabase/server";
-import { sendMetaCapiEvent } from "@/lib/meta-capi";
+import {
+  attributionFromLeadFbclid,
+  metaCapiUserFromLead,
+  sendMetaCapiEvent
+} from "@/lib/meta-capi";
 
 type CalendlyWebhookBody = {
   event?: string;
@@ -30,7 +34,9 @@ export async function handleCalendlyInviteeCreated(body: CalendlyWebhookBody) {
 
   const { data: lead } = await supabase
     .from("leads")
-    .select("id, visitor_id, parent_first, parent_last, parent_phone")
+    .select(
+      "id, visitor_id, parent_first, parent_last, parent_phone, fbclid, meta_fbp, meta_fbc, meta_fbc_ts, meta_client_ip, meta_client_user_agent"
+    )
     .eq("parent_email", email)
     .maybeSingle();
 
@@ -91,10 +97,18 @@ export async function handleCalendlyInviteeCreated(body: CalendlyWebhookBody) {
   const eventId = inviteeId
     ? `schedule_${inviteeId}`
     : `schedule_${lead?.id ?? email}`;
-  void sendMetaCapiEvent("Schedule", eventId, {
-    email,
-    phone: lead?.parent_phone ?? undefined,
-  });
+  const bookedAtSec = Math.floor(new Date(bookedAt).getTime() / 1000);
+  const capiUser = lead
+    ? metaCapiUserFromLead({ ...lead, parent_email: email }, email)
+    : { email };
+  void sendMetaCapiEvent(
+    "Schedule",
+    eventId,
+    capiUser,
+    { funnel: "sat_quiz" },
+    lead ? attributionFromLeadFbclid(lead.fbclid) : undefined,
+    { eventTimeSec: bookedAtSec }
+  );
 
   return { ok: true as const, leadId: lead?.id, eventId, strategyCallAt };
 }

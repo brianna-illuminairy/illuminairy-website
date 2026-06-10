@@ -24,12 +24,18 @@ import {
 import { readStoredQuizAnswers } from "@/lib/quiz-funnel/quiz-storage";
 import { buildQuizAnswersSnapshot } from "@/lib/crm/quiz-answers-snapshot";
 import { QUIZ_ENTRY_STEP } from "@/lib/quiz-funnel/funnel-steps";
+import { canonicalizeQuizStepId } from "@/lib/quiz-funnel/step-aliases";
 import {
   quizDoubtsEventProps,
   shouldAttachQuizDoubtsProps,
   quizPathIncludesQDoubts
 } from "@/lib/quiz-funnel/doubts-analytics";
 import { funnelStageLabel } from "@/lib/marketing/funnel-stage-labels";
+import {
+  funnelScreenComponent,
+  funnelScreenRole,
+  isPlanRevealStep,
+} from "@/lib/quiz-funnel/funnel-screen-roles";
 
 declare global {
   interface Window {
@@ -174,12 +180,13 @@ export function captureQuizStarted(
   answers: Record<string, unknown>,
   meta: { stepId: string; stepIndex: number }
 ) {
+  const step = canonicalizeQuizStepId(meta.stepId);
   const lpContext = persistedLpContext();
   const opening = quizOpeningProps(answers);
   const attr = quizAttributionProps();
   const snapshot = buildQuizAnswersSnapshot(answers);
   recordClientTouch(TouchEvents.quizStarted, {
-    step: meta.stepId,
+    step,
     step_index: meta.stepIndex,
     ...lpContext,
     ...attr,
@@ -188,7 +195,7 @@ export function captureQuizStarted(
   });
   trackQuizGaEvent("quiz_started", {
     funnel: "sat_quiz",
-    step: meta.stepId,
+    step,
     step_index: meta.stepIndex,
     ...lpContext,
     ...attr,
@@ -199,7 +206,7 @@ export function captureQuizStarted(
     ...lpContext,
     ...attr,
     ...opening,
-    step: meta.stepId,
+    step,
     step_index: meta.stepIndex,
     first_start_ever: true
   });
@@ -209,12 +216,13 @@ export function captureQuizSessionStarted(
   answers: Record<string, unknown>,
   meta: { stepId: string; stepIndex: number }
 ) {
+  const step = canonicalizeQuizStepId(meta.stepId);
   const lpContext = persistedLpContext();
   const opening = quizOpeningProps(answers);
   const attr = quizAttributionProps();
   trackQuizGaEvent(Ga4Events.quizSessionStarted, {
     funnel: "sat_quiz",
-    step: meta.stepId,
+    step,
     step_index: meta.stepIndex,
     ...lpContext,
     ...attr,
@@ -225,7 +233,7 @@ export function captureQuizSessionStarted(
     ...lpContext,
     ...attr,
     ...opening,
-    step: meta.stepId,
+    step,
     step_index: meta.stepIndex
   });
 }
@@ -236,6 +244,7 @@ export function captureQuizStep(
   answers: Record<string, unknown>,
   options?: { hasGapScreen?: boolean }
 ) {
+  const step = canonicalizeQuizStepId(stepId);
   const opening = quizOpeningProps(answers);
   const attr = quizAttributionProps();
   const lpContext = persistedLpContext();
@@ -244,8 +253,11 @@ export function captureQuizStep(
   const props = {
     ...lpContext,
     ...attr,
-    step: stepId,
-    step_label: funnelStageLabel(stepId),
+    step,
+    step_label: funnelStageLabel(step),
+    funnel_screen_role: funnelScreenRole(step),
+    funnel_screen_component: funnelScreenComponent(step),
+    is_plan_reveal: isPlanRevealStep(step),
     step_seq: stepIndex + 1,
     step_index: stepIndex,
     has_gap_screen: Boolean(options?.hasGapScreen),
@@ -262,12 +274,12 @@ export function captureQuizStep(
     q9: snapshot.q9 ?? undefined,
     kid_first_name: kid,
     has_kid_name: Boolean(kid),
-    ...(shouldAttachQuizDoubtsProps(stepId, answers)
+    ...(shouldAttachQuizDoubtsProps(step, answers)
       ? quizDoubtsEventProps(snapshot.qDoubts)
       : {})
   };
   recordClientTouch(TouchEvents.quizStepView, {
-    step: stepId,
+    step,
     step_index: stepIndex,
     sat_lp_variant: lpContext.sat_lp_variant,
     has_gap_screen: Boolean(options?.hasGapScreen),
@@ -276,23 +288,23 @@ export function captureQuizStep(
     quiz_answers: snapshot
   });
   trackQuizGaEvent("quiz_step_view", {
-    step: stepId,
+    step,
     step_index: stepIndex,
     funnel: "sat_quiz",
     ...opening,
     ...attr,
     ...lpContext
   });
-  if (stepId === "s5") {
+  if (step === "s5") {
     recordClientTouch(TouchEvents.quizScheduleView, {
-      step: stepId,
+      step,
       step_index: stepIndex,
       ...attr
     });
   }
   if (!getPostHogKey()) return;
   syncQuizPersonProperties(answers);
-  maybeCaptureQuizDoubtsAnswered(stepId, answers);
+  maybeCaptureQuizDoubtsAnswered(step, answers);
   posthog.capture("quiz_step_viewed", props);
 }
 
@@ -461,13 +473,18 @@ export function captureQuizStepBack(meta: {
   from_index: number;
   to_index: number;
 }) {
+  const from_step = canonicalizeQuizStepId(meta.from_step);
+  const to_step = canonicalizeQuizStepId(meta.to_step);
   const payload = {
     funnel: "sat_quiz",
     ...persistedLpContext(),
     ...quizAttributionProps(),
-    from_label: funnelStageLabel(meta.from_step),
-    to_label: funnelStageLabel(meta.to_step),
-    ...meta
+    from_label: funnelStageLabel(from_step),
+    to_label: funnelStageLabel(to_step),
+    from_step,
+    to_step,
+    from_index: meta.from_index,
+    to_index: meta.to_index
   };
   if (getPostHogKey()) {
     posthog.capture(PostHogEvents.quizStepBack, payload);

@@ -1,3 +1,4 @@
+import { canonicalizeUtmContent } from "@/lib/marketing/utm-content-aliases";
 import { getSupabaseAdmin } from "@/lib/supabase/server";
 import { SAT_PARENT_LP_PATHS } from "@/lib/plan-builder-routes";
 
@@ -246,7 +247,9 @@ export async function getCreativeRows(days = 30): Promise<CreativeRow[]> {
   >();
 
   for (const row of data) {
-    const content = row.utm_content?.trim() || "(none)";
+    const content = row.utm_content?.trim()
+      ? canonicalizeUtmContent(row.utm_content)
+      : "(none)";
     const camp = row.utm_campaign?.trim() || "(none)";
     const key = `${camp}::${content}`;
     const bucket = map.get(key) ?? {

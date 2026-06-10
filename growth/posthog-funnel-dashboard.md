@@ -28,7 +28,42 @@ Create one dashboard: **SAT LP → Quiz → Lead → Book**
 7. `quiz_booking_confirmed`
 8. `quiz_thank_you_viewed` (`booked` step)
 
-Legacy URL alias `step=q-who` is still accepted and canonicalized to `step=q1-parent-child`.
+### Step ID aliases (one screen, multiple historical IDs)
+
+Some screens fired under **legacy + canonical** step IDs. Registry: `lib/quiz-funnel/step-aliases.ts`. Print helpers: `node scripts/quiz-step-alias-reference.mjs`.
+
+| Canonical (use going forward) | Legacy aliases (same screen) |
+|--------------------------------|------------------------------|
+| `q1-parent-child` | `q-who` |
+| `achievability` | `reveal`, `s1` (**goal achievability — NOT plan reveal**) |
+
+**Plan reveal** = step **`v1` only** (`QFV1Projection`). Use `properties.step = 'v1'` or `properties.is_plan_reveal = true` (after deploy). Do **not** use `achievability` / `reveal` / `s1` for plan-reveal drop-off.
+
+**Screen role SSOT:** `lib/quiz-funnel/funnel-screen-roles.ts`. New on `quiz_step_viewed`: `funnel_screen_role`, `funnel_screen_component`, `is_plan_reveal`.
+
+**Counting rules (avoid under- and double-count):**
+
+| Mistake | Result |
+|---------|--------|
+| Filter only `q1-parent-child` on blended window | **Under-count** entry (misses `q-who`) |
+| Add `q-who` count + `q1-parent-child` count | **Over-count** users who appear under both |
+| `count(DISTINCT person_id)` where `step IN ('q1-parent-child','q-who')` | **Correct** unique viewers of entry screen |
+| Post-deploy only | `step = 'q1-parent-child'` is enough (middleware + analytics canonicalize at capture) |
+
+HogQL canonical breakdown (historical + new) — use `hogqlQuizStepCanonical()` from `step-aliases.ts` or explicit IN:
+
+```sql
+SELECT count(DISTINCT person_id) AS entry_users
+FROM events
+WHERE event = 'quiz_step_viewed'
+  AND properties.step IN ('q1-parent-child', 'q-who')
+```
+
+Goal score achievability (pre-name, NOT plan reveal): `properties.step IN ('achievability', 'reveal', 's1')`.
+
+Plan reveal (Personalized SAT plan, chart): `properties.step = 'v1'` OR `properties.is_plan_reveal = true`.
+
+Legacy URL aliases redirect to canonical `?step=` before the page loads (middleware).
 
 ## Event notes
 
@@ -75,7 +110,7 @@ Break down `quiz_booking_error` by `error_code`: `invalid_phone`, `invalid_conta
 |-------|------|
 | `quiz_step_back` (PostHog + GA4) | User taps back within `/plan` (not browser back off `q1-parent-child`) |
 
-Break down by `from_step` → `to_step` to find back loops before plan reveal or s5.
+Break down by `from_step` → `to_step` to find back loops before **plan reveal (`v1`)** or s5.
 
 ### q-doubts
 

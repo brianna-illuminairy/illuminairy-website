@@ -1,4 +1,5 @@
 import { getSupabaseAdmin } from "@/lib/supabase/server";
+import { getDanielleNotifyRegistry } from "@/lib/danielle-notify-registry";
 import { normalizeDaniellePhone } from "@/lib/danielle-phone";
 
 export type DanielleNotifySubscription = {
@@ -100,7 +101,26 @@ export async function upsertDanielleNotifySubscription(input: {
   return { ok: true as const };
 }
 
+export async function syncDanielleNotifyRegistry() {
+  const entries = getDanielleNotifyRegistry();
+  const results = [];
+
+  for (const entry of entries) {
+    const saved = await upsertDanielleNotifySubscription({
+      email: entry.email,
+      phone: entry.phone ?? undefined,
+      emailOptIn: true,
+      smsOptIn: Boolean(entry.phone)
+    });
+    results.push({ email: entry.email, ...saved });
+  }
+
+  return results;
+}
+
 export async function listDanielleNotifySubscribers() {
+  await syncDanielleNotifyRegistry();
+
   const supabase = getSupabaseAdmin();
   if (!supabase) {
     return [];

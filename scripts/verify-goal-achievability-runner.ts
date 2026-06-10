@@ -19,6 +19,23 @@ import {
 } from "@/lib/quiz-funnel/reveal-insight-copy";
 import { buildScorePathOutput, type ScorePathOutput } from "@/lib/quiz-funnel/score-path-output";
 import type { QuizAnswersLike } from "@/lib/quiz-funnel/score-path-output";
+import {
+  stakesAchievabilityEmphasis,
+  stakesAchievabilityLead,
+  stakesGoalPhrase,
+  type StakesId,
+} from "@/lib/quiz-funnel/stakes-copy";
+import {
+  doubtsOptions,
+  doubtsQuestionHtml,
+} from "@/lib/quiz-funnel/doubts-copy";
+import {
+  scoreLowerOptionLabel,
+  urgencyOptionLabel,
+} from "@/lib/quiz-funnel/opening-copy";
+import { stakesOptionLabel } from "@/lib/quiz-funnel/subject-voice";
+
+const STAKES_IDS: StakesId[] = ["top-choice", "merit", "selective", "app-rounds"];
 
 type Case = {
   name: string;
@@ -133,12 +150,12 @@ const Q2_CASES: Case[] = [
   {
     name: "q2 top-choice",
     answers: { ...BASE, q2: "top-choice" },
-    expect: { stakesIncludes: "competitive for their top-choice school" },
+    expect: { stakesIncludes: "help them get into their top-choice school" },
   },
   {
     name: "q2 selective",
     answers: { ...BASE, q2: "selective" },
-    expect: { stakesIncludes: "selective colleges" },
+    expect: { stakesIncludes: "stay competitive at selective colleges" },
   },
   {
     name: "q2 app-rounds",
@@ -521,6 +538,79 @@ function assertSkillInsightUnit(): string[] {
   return errors;
 }
 
+function assertSubjectVoiceCopyUnit(): string[] {
+  const errors: string[] = [];
+  if (!doubtsQuestionHtml("self").includes("thought")) {
+    errors.push("self doubts question should use first-person framing");
+  }
+  if (!doubtsQuestionHtml("child").includes("child")) {
+    errors.push("child doubts question should reference child");
+  }
+  const childCantRaise = doubtsOptions("child").find((o) => o.id === "cant-raise");
+  if (!childCantRaise?.label.startsWith("They")) {
+    errors.push("child cant-raise option should be third person");
+  }
+  const selfCantRaise = doubtsOptions("self").find((o) => o.id === "cant-raise");
+  if (!selfCantRaise?.label.startsWith("I")) {
+    errors.push("self cant-raise option should be first person");
+  }
+  if (!urgencyOptionLabel("get-ahead", "self").includes("I need")) {
+    errors.push("self urgency get-ahead should use I");
+  }
+  if (!urgencyOptionLabel("score-low", "child").includes("Their")) {
+    errors.push("child urgency score-low should use Their");
+  }
+  if (!scoreLowerOptionLabel("planning-ahead", "self").includes("I'm")) {
+    errors.push("self score-lower planning-ahead should use I'm");
+  }
+  const selfRange = buildProjectedRangeLine(1200, 10, "self");
+  if (!selfRange.includes("your weakest")) {
+    errors.push("self projected range should use your");
+  }
+  const childRange = buildProjectedRangeLine(1200, 10, "child");
+  if (!childRange.includes("their weakest")) {
+    errors.push("child projected range should use their");
+  }
+  return errors;
+}
+
+function assertStakesAlignmentUnit(): string[] {
+  const errors: string[] = [];
+  for (const qWho of ["child", "self"] as const) {
+    for (const q2 of STAKES_IDS) {
+      const lead = stakesAchievabilityLead(q2, qWho);
+      const emphasis = stakesAchievabilityEmphasis(q2, qWho);
+      const goal = stakesGoalPhrase(q2, qWho);
+      const option = stakesOptionLabel(q2, qWho).toLowerCase();
+
+      if (emphasis !== goal) {
+        errors.push(`q2=${q2} qWho=${qWho}: emphasis must match goal phrase`);
+      }
+      if (!lead.includes(emphasis)) {
+        errors.push(`q2=${q2} qWho=${qWho}: lead must contain emphasis`);
+      }
+      if (!lead.includes(goal)) {
+        errors.push(`q2=${q2} qWho=${qWho}: lead must contain goal phrase`);
+      }
+
+      const assessment = buildGoalAchievability({ ...BASE, q2, qWho });
+      if (assessment.stakesLead !== lead) {
+        errors.push(`q2=${q2} qWho=${qWho}: buildGoalAchievability stakesLead drift`);
+      }
+      if (assessment.stakesEmphasis !== emphasis) {
+        errors.push(`q2=${q2} qWho=${qWho}: buildGoalAchievability stakesEmphasis drift`);
+      }
+
+      const goalWords = goal.split(/\s+/).filter((w) => w.length > 3);
+      const optionHits = goalWords.filter((w) => option.includes(w.replace(/[^a-z-]/gi, "")));
+      if (optionHits.length < Math.min(2, goalWords.length)) {
+        errors.push(`q2=${q2} qWho=${qWho}: reveal goal phrase diverges from Q2 option`);
+      }
+    }
+  }
+  return errors;
+}
+
 const ALL = [
   ...Q6_CASES,
   ...Q2_CASES,
@@ -542,6 +632,16 @@ for (const err of assertQ6SolutionUnit()) {
 
 for (const err of assertSkillInsightUnit()) {
   console.error(`✗ unit: ${err}`);
+  failed++;
+}
+
+for (const err of assertStakesAlignmentUnit()) {
+  console.error(`✗ stakes-align: ${err}`);
+  failed++;
+}
+
+for (const err of assertSubjectVoiceCopyUnit()) {
+  console.error(`✗ subject-voice: ${err}`);
   failed++;
 }
 

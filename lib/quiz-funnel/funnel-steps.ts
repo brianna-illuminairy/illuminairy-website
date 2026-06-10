@@ -6,6 +6,16 @@
 /** Canonical first screen after LP CTA — used in planBuilderEntryFromLanding and quiz_started. */
 export const QUIZ_ENTRY_STEP = "q1-parent-child";
 
+import { canonicalizeQuizStepId } from "@/lib/quiz-funnel/step-aliases";
+
+export {
+  canonicalizeQuizStepId,
+  hogqlQuizStepCanonical,
+  isQuizStepAlias,
+  quizStepIdsForCounting,
+  QUIZ_STEP_ALIAS_GROUPS,
+} from "@/lib/quiz-funnel/step-aliases";
+
 /** Legacy alias kept so old ad links with `step=q-who` do not break. */
 export const QUIZ_ENTRY_STEP_LEGACY = "q-who";
 
@@ -46,11 +56,6 @@ const INTAKE_STEP_SATISFIED: Record<string, (a: QuizIntakeAnswers) => boolean> =
   name: (a) => Boolean(a.kidName?.trim())
 };
 
-function normalizeStepId(step: string): string {
-  if (step === QUIZ_ENTRY_STEP_LEGACY) return QUIZ_ENTRY_STEP;
-  return step;
-}
-
 /**
  * If a deep link skips unanswered intake steps (e.g. old ads using `?step=q1`),
  * return the earliest missing step. Interstitials and insight slides pass through.
@@ -60,7 +65,7 @@ export function resolveGuardedQuizStep(
   requestedStep: string,
   routeSteps: string[]
 ): string {
-  const normalizedRequested = normalizeStepId(requestedStep);
+  const normalizedRequested = canonicalizeQuizStepId(requestedStep);
   const targetIdx = routeSteps.indexOf(normalizedRequested);
   if (targetIdx < 0) return QUIZ_ENTRY_STEP;
 
@@ -90,7 +95,7 @@ export function resolveQuizResumeStep(
     return QUIZ_BOOKED_STEP;
   }
 
-  const saved = lastStep ? normalizeStepId(lastStep) : null;
+  const saved = lastStep ? canonicalizeQuizStepId(lastStep) : null;
   if (saved && routeSteps.includes(saved)) {
     return resolveGuardedQuizStep(answers, saved, routeSteps);
   }

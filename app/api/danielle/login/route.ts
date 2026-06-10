@@ -8,6 +8,9 @@ import {
   isEmailAllowed,
   normalizeDanielleEmail
 } from "@/lib/danielle-auth";
+import { isDanielleNotifyRegistryEmail } from "@/lib/danielle-notify-registry";
+import { dispatchDaniellePortalUpdates } from "@/lib/danielle-portal-notify";
+import { syncDanielleNotifyRegistry } from "@/lib/danielle-portal-subscriptions";
 import { getDaniellePortalRole } from "@/lib/danielle-portal-roles";
 
 export async function POST(request: Request) {
@@ -46,6 +49,10 @@ export async function POST(request: Request) {
     response.cookies.set(DANIELLE_VISITOR_COOKIE, "owner", danielleVisitorCookieOptions());
   } else {
     response.cookies.set(DANIELLE_VISITOR_COOKIE, "", { ...danielleVisitorCookieOptions(), maxAge: 0 });
+  }
+
+  if (!ownerQa && isDanielleNotifyRegistryEmail(normalized)) {
+    void syncDanielleNotifyRegistry().then(() => dispatchDaniellePortalUpdates({ email: normalized }));
   }
 
   return response;

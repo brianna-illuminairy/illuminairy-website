@@ -78,9 +78,6 @@ export function PortalUpdatesBanner() {
             </li>
           ))}
         </ul>
-        <Link href="/danielle/notifications" className="danielle-portal__updates-register">
-          Turn on email and text alerts
-        </Link>
         <button type="button" className="danielle-portal__updates-dismiss" onClick={dismissAll}>
           Dismiss
         </button>
