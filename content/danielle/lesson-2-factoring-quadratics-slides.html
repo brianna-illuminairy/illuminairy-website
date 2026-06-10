@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Factoring Quadratics for the SAT · Illuminairy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#F5ECD9; --paper:#FCF8EE; --forest:#234F37; --green:#2F8B55;
+    --ink:#23291F; --muted:#6f7566; --tomato:#D9533B; --sage:#E6EFE3;
+    --line:rgba(35,79,55,.16);
+    --display:'Fraunces',Georgia,serif;
+    --sans:ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    --mono:ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{background:var(--cream);color:var(--ink);font-family:var(--sans);
+    display:flex;align-items:center;justify-content:center;padding:24px;line-height:1.5}
+  .stage{width:100%;max-width:940px;display:flex;flex-direction:column;gap:14px}
+  .topbar{display:flex;align-items:center;justify-content:space-between;font-size:13px}
+  .brand{font-family:var(--display);font-weight:700;color:var(--forest);letter-spacing:.3px}
+  .brand .star{color:var(--green)}
+  .count{font-variant-numeric:tabular-nums;color:var(--muted);letter-spacing:1px}
+  .progress{height:4px;background:var(--line);border-radius:99px;overflow:hidden}
+  .progress .bar{height:100%;width:0;background:var(--green);transition:width .35s ease}
+  .slides{position:relative;background:var(--paper);border:1px solid var(--line);
+    border-radius:18px;min-height:64vh;padding:44px 52px;
+    box-shadow:0 18px 40px -28px rgba(35,79,55,.4)}
+  .slide{display:none;animation:fade .45s ease}
+  .slide.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .kicker{font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+    color:var(--green);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+  h1{font-family:var(--display);font-weight:700;color:var(--forest);
+    font-size:clamp(28px,5vw,52px);line-height:1.03;margin:0 0 16px;letter-spacing:-.5px}
+  h2{font-family:var(--display);font-weight:600;color:var(--forest);
+    font-size:clamp(21px,3.3vw,34px);line-height:1.08;margin:0 0 16px;letter-spacing:-.3px}
+  p{font-size:clamp(16px,2.1vw,20px);margin:0 0 14px;max-width:64ch}
+  .lead{font-size:clamp(18px,2.4vw,23px);color:var(--ink)}
+  .sub{color:var(--muted);font-size:clamp(15px,2vw,18px)}
+  b{color:var(--forest)}
+  .expr{font-family:var(--mono);font-size:clamp(18px,2.9vw,27px);color:var(--forest);
+    background:var(--sage);border-radius:12px;padding:18px 16px;text-align:center;
+    margin:0 0 18px;line-height:1.5;word-break:break-word}
+  .expr.big{font-size:clamp(21px,3.5vw,33px);padding:24px 18px}
+  .eq{font-family:var(--mono);background:var(--sage);color:var(--forest);
+    padding:2px 8px;border-radius:6px;font-size:.92em}
+  .share{background:#bfe3c6;color:var(--forest);border-radius:5px;padding:1px 6px;
+    font-family:var(--mono);font-weight:700}
+  .lo{background:#f4dfb4;color:#74540f;border-radius:5px;padding:1px 6px;
+    font-family:var(--mono);font-weight:700}
+  .answer{color:var(--green);font-weight:700}
+  .steps{list-style:none;padding:0;margin:6px 0 0;counter-reset:st}
+  .steps li{display:flex;gap:12px;align-items:flex-start;margin:0 0 13px;
+    font-size:clamp(15px,2vw,19px);line-height:1.5}
+  .steps li .star{color:var(--green);font-size:.85em;margin-top:.35em;flex:0 0 auto}
+  .steps.num li{counter-increment:st}
+  .steps.num li .star{display:none}
+  .steps.num li::before{content:counter(st);flex:0 0 auto;width:26px;height:26px;
+    border-radius:99px;background:var(--forest);color:#fff;font-family:var(--mono);
+    font-size:13px;display:flex;align-items:center;justify-content:center;margin-top:.1em}
+  .exlist{list-style:none;padding:0;margin:6px 0 0}
+  .exlist li{margin:0 0 12px;font-family:var(--mono);font-size:clamp(14px,2.1vw,20px);
+    color:var(--forest);line-height:1.5;display:flex;gap:10px;align-items:baseline}
+  .exlist li .star{color:var(--green);font-size:.7em;flex:0 0 auto}
+  .exlist .note{font-family:var(--sans);color:var(--muted);font-size:.8em;margin-left:6px}
+  .two{display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;margin:6px 0 14px}
+  .two .box{font-family:var(--mono);background:var(--sage);color:var(--forest);
+    border-radius:12px;padding:14px 16px;font-size:clamp(15px,2.4vw,22px)}
+  .two .ar{display:flex;flex-direction:column;align-items:center;color:var(--muted);font-size:12px}
+  .two .ar .sym{font-size:24px;color:var(--green);line-height:1}
+  .wr{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:6px 0 0}
+  .wr .col{border-radius:12px;padding:16px 18px;border:1px solid var(--line)}
+  .wr .col.bad{border-color:rgba(217,83,59,.5);background:#fbeae5}
+  .wr .col.good{border-color:rgba(47,139,85,.5);background:var(--sage)}
+  .wr .lbl{font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px}
+  .wr .col.bad .lbl{color:var(--tomato)}
+  .wr .col.good .lbl{color:var(--green)}
+  .wr .col .body{font-size:clamp(13px,1.8vw,16px);line-height:1.7;color:var(--ink)}
+  .wr .col .body .m{font-family:var(--mono);color:var(--forest)}
+  .callout{border-left:4px solid var(--green);background:var(--sage);
+    padding:15px 20px;border-radius:0 12px 12px 0;margin:16px 0 0;font-size:clamp(15px,2vw,19px);line-height:1.55}
+  .callout .tag{display:block;font-size:12px;font-weight:700;letter-spacing:1.5px;
+    text-transform:uppercase;color:var(--green);margin-bottom:6px}
+  .pitfall{border-left:4px solid var(--tomato);background:#fbeae5;
+    padding:15px 20px;border-radius:0 12px 12px 0;margin:16px 0 0;font-size:clamp(15px,2vw,18px)}
+  .pitfall .tag{display:block;font-size:12px;font-weight:700;letter-spacing:1.5px;
+    text-transform:uppercase;color:var(--tomato);margin-bottom:6px}
+  .frac{display:inline-flex;flex-direction:column;text-align:center;vertical-align:middle;
+    font-family:var(--mono);margin:0 2px}
+  .frac .num{border-bottom:2px solid currentColor;padding:0 7px 2px}
+  .frac .den{padding:2px 7px 0}
+  .cancel{text-decoration:line-through;color:var(--muted)}
+  .frag{opacity:0;transform:translateY(8px);transition:opacity .35s ease,transform .35s ease}
+  .frag.show{opacity:1;transform:none}
+  .nav{display:flex;align-items:center;justify-content:space-between;gap:16px}
+  .dots{display:flex;gap:4px;flex-wrap:wrap;justify-content:center;flex:1}
+  .dot{width:6px;height:6px;border-radius:99px;background:var(--line);border:0;padding:0;
+    cursor:pointer;transition:background .2s,transform .2s}
+  .dot.on{background:var(--green);transform:scale(1.4)}
+  button.arrowbtn{font-family:var(--sans);font-size:20px;line-height:1;cursor:pointer;
+    width:48px;height:48px;border-radius:99px;border:1px solid var(--line);background:#fff;
+    color:var(--forest);transition:background .2s,color .2s,opacity .2s;flex:0 0 auto}
+  button.arrowbtn:hover:not(:disabled){background:var(--forest);color:#fff}
+  button.arrowbtn:disabled{opacity:.3;cursor:default}
+  button:focus-visible,.dot:focus-visible{outline:3px solid var(--green);outline-offset:3px}
+  .hint{margin-top:18px;font-size:13px;color:var(--muted)}
+  .hint kbd{font-family:var(--mono);background:var(--sage);border-radius:5px;padding:1px 7px;border:1px solid var(--line)}
+  @media(max-width:640px){
+    body{padding:12px}
+    .slides{padding:26px 20px;min-height:74vh}
+    .wr{grid-template-columns:1fr}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .slide,.frag,.progress .bar{animation:none;transition:none}
+    .frag{opacity:1;transform:none}
+  }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="topbar">
+    <div class="brand">Illuminairy <span class="star">✶</span></div>
+    <div class="count" id="count">1 / 56</div>
+  </div>
+  <div class="progress"><div class="bar" id="bar"></div></div>
+
+  <main class="slides" id="slides">
+
+    <!-- 1 TITLE -->
+    <section class="slide active">
+      <div class="kicker"><span class="star">✶</span> Illuminairy · Math foundations</div>
+      <h1>Factoring quadratics for the SAT</h1>
+      <p class="lead">What a quadratic is, how it disguises itself on the test, every way to factor it, and how to solve. Built from the ground up, with the work shown at every step.</p>
+      <p class="sub">Danielle Danso</p>
+      <div class="hint">Move with <kbd>→</kbd> <kbd>←</kbd> or the buttons. Steps reveal one at a time.</div>
+    </section>
+
+    <!-- ===== PART 1 ===== -->
+    <section class="slide">
+      <div class="kicker">Part 1 of 6</div>
+      <h1>Quadratics on the SAT</h1>
+      <p class="lead">What they are, the shapes they take, and how the test hides them.</p>
+    </section>
+
+    <!-- 3 WHAT IS A QUADRATIC -->
+    <section class="slide">
+      <div class="kicker">The definition</div>
+      <h2>What is a quadratic?</h2>
+      <p>A quadratic is an expression whose highest power is 2. It has an <span class="eq">x²</span> term and nothing higher:</p>
+      <div class="expr big frag">ax² + bx + c</div>
+      <p class="frag sub">a, b, and c are just numbers, and a is not 0. In <span class="eq">x² + 5x + 6</span>, a = 1, b = 5, c = 6.</p>
+      <div class="callout frag"><span class="tag">Expression vs equation</span>The quadratic above is an expression on its own. It becomes a quadratic equation when it is set equal to something, like <span class="eq">y = x² + 5x + 6</span> or <span class="eq">x² + 5x = 6</span>. Solving means finding the x-values that make such an equation true.</div>
+    </section>
+
+    <!-- 4 FORMS ON THE SAT -->
+    <section class="slide">
+      <div class="kicker">How it shows up</div>
+      <h2>The same quadratic, in different forms</h2>
+      <p>One quadratic can be written several ways. The expanded form and the factored form below are the identical quadratic:</p>
+      <ul class="steps">
+        <li class="frag"><span class="star">✶</span><span><b>Expanded:</b> <span class="eq">x² + 5x + 6</span></span></li>
+        <li class="frag"><span class="star">✶</span><span><b>Factored:</b> <span class="eq">(x + 2)(x + 3)</span></span></li>
+      </ul>
+      <p class="frag">The SAT does not always set it equal to zero. It may set it equal to a number, or put terms on both sides of the equals sign:</p>
+      <ul class="steps">
+        <li class="frag"><span class="star">✶</span><span><span class="eq">x² + 5x = −6</span> &nbsp;·&nbsp; equal to a number</span></li>
+        <li class="frag"><span class="star">✶</span><span><span class="eq">y − 42 = (y − c)(y − 42)</span> &nbsp;·&nbsp; terms on both sides, like Q11</span></li>
+      </ul>
+      <div class="callout frag"><span class="tag">First move when solving</span>Whatever form it arrives in, the first step to solve is to gather every term onto one side, so the other side is zero.</div>
+    </section>
+
+    <!-- 5 HARD TO SPOT -->
+    <section class="slide">
+      <div class="kicker">The traps</div>
+      <h2>What can make a quadratic hard to spot</h2>
+      <ul class="steps">
+        <li class="frag"><span class="star">✶</span><span><b>No visible x².</b> It is already in parentheses, like <span class="eq">(y − c)(y − 42)</span>. The <span class="eq">y²</span> only appears if you multiply it out.</span></li>
+        <li class="frag"><span class="star">✶</span><span><b>A letter instead of a number,</b> like the c above. It is still a quadratic in y.</span></li>
+        <li class="frag"><span class="star">✶</span><span><b>A negative in front,</b> like <span class="eq">−x² + 81</span>. The leading minus hides a familiar pattern.</span></li>
+        <li class="frag"><span class="star">✶</span><span><b>Only two terms instead of three.</b> <span class="eq">3x² + 7x</span> has no plain number on its own (no c), and <span class="eq">x² − 49</span> has no x term (no b). Both are still quadratics.</span></li>
+      </ul>
+      <div class="callout frag"><span class="tag">Does x² by itself count?</span>Yes. The only requirement is that the highest power is 2. So <span class="eq">x²</span>, <span class="eq">x² − 49</span>, and <span class="eq">3x² + 7x</span> are all quadratics, even with fewer than three terms. A quadratic does not need a middle term or a constant.</div>
+    </section>
+
+    <!-- 6 TELL-TALE WORDS -->
+    <section class="slide">
+      <div class="kicker">The language</div>
+      <h2>The words that signal a quadratic</h2>
+      <p>When a question uses any of these, it is asking about a quadratic, and they all mean the same thing: the x-values that make the equation true.</p>
+      <div class="callout frag"><span class="tag">All the same word</span><b>solutions = roots = zeros = x-intercepts.</b> Four names for the answers you get from factoring.</div>
+      <ul class="steps">
+        <li class="frag"><span class="star">✶</span><span><b>"How many solutions"</b> is asking how many of those x-values exist (usually two, sometimes one, sometimes none).</span></li>
+        <li class="frag"><span class="star">✶</span><span><b>"In the form a + b√n"</b> tells you the answer will not factor cleanly and involves a square root. We cover these radical-answer cases separately.</span></li>
+      </ul>
+    </section>
+
+    <!-- 7 STANDARD APPROACH -->
+    <section class="slide">
+      <div class="kicker">The plan</div>
+      <h2>How to solve a quadratic equation</h2>
+      <p>Solving means finding the x-values that make the equation true. A question signals this by giving you a quadratic and asking for its solutions, roots, zeros, or x-intercepts. Here is the full process, worked on <span class="eq">x² + 5x = 6</span>:</p>
+      <ul class="steps num">
+        <li class="frag"><span>Move every term onto one side so the other side is zero: <span class="eq">x² + 5x − 6 = 0</span>.</span></li>
+        <li class="frag"><span>Factor the quadratic: <span class="eq">(x + 6)(x − 1) = 0</span>.</span></li>
+        <li class="frag"><span>Set each factor equal to zero: <span class="eq">x + 6 = 0</span> and <span class="eq">x − 1 = 0</span>.</span></li>
+        <li class="frag"><span>Solve each for x: <span class="answer">x = −6</span> or <span class="answer">x = 1</span>. Those are the solutions.</span></li>
+      </ul>
+      <p class="frag sub">The next slide explains why setting it equal to zero is what unlocks the answers.</p>
+    </section>
+
+    <!-- 8 ZERO PRODUCT PROPERTY -->
+    <section class="slide">
+      <div class="kicker">The reason it works</div>
+      <h2>The zero product property</h2>
+      <p>Solving by factoring relies on one rule about multiplying and zero:</p>
+      <div class="expr big">if a · b = 0, then a = 0 or b = 0</div>
+      <p>The only way for a product to equal zero is for at least one of the things being multiplied to be zero. Two numbers that are both non-zero can never multiply to zero.</p>
+      <div class="callout frag"><span class="tag">Why this solves the quadratic</span>Once the equation is factored and set equal to zero, like <span class="eq">(x + 2)(x + 3) = 0</span>, the two factors multiply to zero, so one of them must be zero: either <span class="eq">x + 2 = 0</span> or <span class="eq">x + 3 = 0</span>. Solving each gives <span class="answer">x = −2</span> or <span class="answer">x = −3</span>. That is where both solutions come from.</div>
+    </section>
+
+    <!-- WHAT FACTORING IS -->
+    <section class="slide">
+      <div class="kicker">What factoring is</div>
+      <h2>Factoring, defined</h2>
+      <p>Factoring is the process of breaking down a number, expression, or polynomial into simpler building blocks called factors. It is the reverse of the distributive property, or of ordinary multiplication: when you multiply, you combine smaller parts; when you factor, you break the larger result back down to find those original parts.</p>
+      <div class="callout frag"><span class="tag">One clear way to see it</span>Factoring means dividing every term by the same number, then writing that number outside a set of parentheses.</div>
+      <ul class="steps num">
+        <li class="frag"><span>Take <span class="eq">12 + 18</span>. Both terms divide by 6: <span class="eq">12 ÷ 6 = 2</span> and <span class="eq">18 ÷ 6 = 3</span>.</span></li>
+        <li class="frag"><span>So <span class="eq">12 + 18 = 6(2 + 3)</span>. Writing the 6 outside the parentheses is exactly what factoring is.</span></li>
+        <li class="frag"><span>Check by multiplying back: <span class="eq">6 × 2 = 12</span> and <span class="eq">6 × 3 = 18</span>.</span></li>
+      </ul>
+    </section>
+
+    <!-- 10 FACTOR 16 -->
+    <section class="slide">
+      <div class="kicker">Worked example · numbers</div>
+      <h2>Factor the number 16</h2>
+      <p>Find every pair of whole numbers that multiplies to 16.</p>
+      <ul class="exlist">
+        <li class="frag"><span class="star">✶</span><span>1 × 16</span></li>
+        <li class="frag"><span class="star">✶</span><span>2 × 8</span></li>
+        <li class="frag"><span class="star">✶</span><span>4 × 4</span></li>
+      </ul>
+      <div class="callout frag"><span class="tag">The factors of 16</span><span class="eq">1, 2, 4, 8, 16</span></div>
+    </section>
+
+    <!-- 11 NUMBER LADDER -->
+    <section class="slide">
+      <div class="kicker">More numbers · easy to hard</div>
+      <h2>Find the factor pairs</h2>
+      <ul class="exlist">
+        <li class="frag"><span class="star">✶</span><span>6 → 1×6, 2×3 <span class="note">factors: 1, 2, 3, 6</span></span></li>
+        <li class="frag"><span class="star">✶</span><span>8 → 1×8, 2×4 <span class="note">factors: 1, 2, 4, 8</span></span></li>
+        <li class="frag"><span class="star">✶</span><span>18 → 1×18, 2×9, 3×6 <span class="note">factors: 1, 2, 3, 6, 9, 18</span></span></li>
+        <li class="frag"><span class="star">✶</span><span>24 → 1×24, 2×12, 3×8, 4×6 <span class="note">1, 2, 3, 4, 6, 8, 12, 24</span></span></li>
+        <li class="frag"><span class="star">✶</span><span>36 → 1×36, 2×18, 3×12, 4×9, 6×6 <span class="note">1, 2, 3, 4, 6, 9, 12, 18, 36</span></span></li>
+      </ul>
+    </section>
+
+    <!-- 12 FACTORING IN ALGEBRA -->
+    <section class="slide">
+      <div class="kicker">From numbers to expressions</div>
+      <h2>Factoring in algebra</h2>
+      <p>In algebra, factoring means rewriting an expression as a multiplication problem. It usually means pulling out the common elements that every term shares, or spotting a known pattern.</p>
+      <ul class="steps num">
+        <li class="frag"><span>Take <span class="eq">2x + 6</span>. Both terms are divisible by 2.</span></li>
+        <li class="frag"><span>Divide each by 2: <span class="eq">2x ÷ 2 = x</span> and <span class="eq">6 ÷ 2 = 3</span>.</span></li>
+        <li class="frag"><span>Write the 2 outside the parentheses: <span class="answer">2(x + 3)</span>. Multiply back to check: <span class="eq">2 × x = 2x</span> and <span class="eq">2 × 3 = 6</span>.</span></li>
+      </ul>
+      <p class="frag sub">It is the same move as with numbers: <span class="eq">12 + 18 = 6(2 + 3)</span> becomes <span class="eq">2x + 6 = 2(x + 3)</span>. For a quadratic, the factors come out as two sets of parentheses, each holding an x, like <span class="eq">x² + 5x + 6 = (x + 2)(x + 3)</span>.</p>
+    </section>
+
+    <!-- ===== PART 3 ===== -->
+    <section class="slide">
+      <div class="kicker">Part 3 of 6</div>
+      <h1>The distributive property</h1>
+      <p class="lead">Multiplying things out, and why factoring is the exact reverse.</p>
+    </section>
+
+    <!-- 13 DISTRIBUTIVE -->
+    <section class="slide">
+      <div class="kicker">The definition</div>
+      <h2>What the distributive property is</h2>
+      <p>To multiply a number by a sum in parentheses, you multiply it by each term inside, then add the results.</p>
+      <div class="expr big">a(b + c) = ab + ac</div>
+      <ul class="steps">
+        <li class="frag"><span class="star">✶</span><span><span class="eq">3(x + 5)</span>: 3 times x is <span class="eq">3x</span>, 3 times 5 is <span class="eq">15</span>. So <span class="answer">3x + 15</span>.</span></li>
+        <li class="frag"><span class="star">✶</span><span>It works with subtraction too: <span class="eq">a(b − c) = ab − ac</span>.</span></li>
+      </ul>
+    </section>
+
+    <!-- 14 THREE WAYS TO MULTIPLY -->
+    <section class="slide">
+      <div class="kicker">The three ways</div>
+      <h2>The three ways you multiply things out</h2>
+      <ul class="steps">
+        <li class="frag"><span class="star">✶</span><span><b>Numbers times numbers:</b> <span class="eq">3 · 4 = 12</span>. Plain arithmetic.</span></li>
+        <li class="frag"><span class="star">✶</span><span><b>A term outside times terms inside:</b> <span class="eq">x(x + 4) = x² + 4x</span>. The outside x hits each inside term.</span></li>
+        <li class="frag"><span class="star">✶</span><span><b>Two brackets times each other:</b> <span class="eq">(x + 2)(x + 3)</span>. Every term in the first hits every term in the second, then you combine: <span class="answer">x² + 5x + 6</span>.</span></li>
+      </ul>
+      <div class="callout frag"><span class="tag">The one that makes quadratics</span>The third way is the important one. Multiplying two brackets is what produces an <span class="eq">x²</span> term, which is exactly what a quadratic has.</div>
+    </section>
+
+    <!-- 15 HOW THEY RELATE -->
+    <section class="slide">
+      <div class="kicker">The connection</div>
+      <h2>How distributing and factoring relate</h2>
+      <p>They are opposite directions of the same thing.</p>
+      <div class="two">
+        <div class="box">(x + 2)(x + 3)</div>
+        <div class="ar"><span class="sym">⇄</span><span>multiply / factor</span></div>
+        <div class="box">x² + 5x + 6</div>
+      </div>
+      <ul class="steps">
+        <li class="frag"><span class="star">✶</span><span>Multiplying two brackets makes a quadratic.</span></li>
+        <li class="frag"><span class="star">✶</span><span>So <b>factoring a quadratic means finding the two brackets that multiply to give it.</b> You are running the multiplication backward.</span></li>
+      </ul>
+    </section>
+
+    <!-- ===== PART 4 ===== -->
+    <section class="slide">
+      <div class="kicker">Part 4 of 6</div>
+      <h1>How to factor</h1>
+      <p class="lead">All the methods, each defined, with the work shown step by step.</p>
+    </section>
+
+    <!-- COMMON FACTOR / GCF -->
+    <section class="slide">
+      <div class="kicker">A definition you need first</div>
+      <h2>Common factors and the GCF</h2>
+      <p>A common factor is a number that divides evenly into two or more numbers with no remainder. You find them by listing each number's factors and seeing which ones appear in both lists.</p>
+      <ul class="steps">
+        <li class="frag"><span class="star">✶</span><span>Factors of 12: <span class="eq">1, 2, 3, 4, 6, 12</span></span></li>
+        <li class="frag"><span class="star">✶</span><span>Factors of 18: <span class="eq">1, 2, 3, 6, 9, 18</span></span></li>
+        <li class="frag"><span class="star">✶</span><span>Shared by both: <span class="eq">1, 2, 3, 6</span>. These are the common factors.</span></li>
+      </ul>
+      <div class="callout frag"><span class="tag">Greatest common factor</span>The largest shared factor is the greatest common factor, the GCF. For 12 and 18 it is <span class="eq">6</span>. Factoring a quadratic starts with pulling out the GCF of all its terms.</div>
+    </section>
+
+    <!-- 17 METHOD 1 GCF -->
+    <section class="slide">
+      <div class="kicker">Method 1 · factor out the GCF</div>
+      <h2>Factor out the greatest common factor</h2>
+      <p>Find the greatest common factor of all the terms, pull it out to the front of a set of parentheses, and put what is left, after dividing each term by it, inside the parentheses. This is the first thing to try on any quadratic.</p>
+      <ul class="steps">
+        <li class="frag"><span class="star">✶</span><span>In <span class="eq">3x² + 12x − 36</span>, all three terms divide by 3. Pull the 3 out front and put each remainder inside: <span class="answer">3(x² + 4x − 12)</span>.</span></li>
+        <li class="frag"><span class="star">✶</span><span>In <span class="eq">2x² − 8x</span>, both terms divide by 2, and both also have an x, so the GCF is 2x. Pull <span class="eq">2x</span> out, leftovers inside: <span class="answer">2x(x − 4)</span>.</span></li>
+      </ul>
+    </section>
+
+    <!-- 18 GCF WORKED -->
+    <section class="slide">
+      <div class="kicker">Method 1 · worked step by step</div>
+      <h2>Factor 2x² + 6x</h2>
+      <ul class="steps num">
+        <li class="frag"><span>What is the largest number that divides both 2 and 6? It is <span class="lo">2</span>.</span></li>
+        <li class="frag"><span>Does every term contain an x? Yes, so x is part of the common factor too.</span></li>
+        <li class="frag"><span>So the greatest common factor is <span class="share">2x</span>.</span></li>
+        <li class="frag"><span>Divide each term by the GCF: <span class="eq">2x² ÷ 2x = x</span>, and <span class="eq">6x ÷ 2x = 3</span>.</span></li>
+        <li class="frag"><span>Write <span class="share">2x</span> in front of the parentheses, and put the leftovers inside: <span class="answer">2x(x + 3)</span>.</span></li>
+        <li class="frag"><span>Check by multiplying back: <span class="eq">2x · x = 2x²</span> and <span class="eq">2x · 3 = 6x</span>. It matches the original.</span></li>
+      </ul>
+    </section>
+
+    <!-- 19 GCF LADDER NUMBERS -->
+    <section class="slide">
+      <div class="kicker">Method 1 · only a number in common</div>
+      <h2>Factor out the common number</h2>
+      <ul class="exlist">
+        <li class="frag"><span class="star">✶</span><span>2x + 6 = <span class="answer">2(x + 3)</span></span></li>
+        <li class="frag"><span class="star">✶</span><span>3x + 12 = <span class="answer">3(x + 4)</span></span></li>
+        <li class="frag"><span class="star">✶</span><span>5x − 10 = <span class="answer">5(x − 2)</span></span></li>
+        <li class="frag"><span class="star">✶</span><span>4x + 8 = <span class="answer">4(x + 2)</span></span></li>
+      </ul>
+    </section>
+
+    <!-- 20 GCF LADDER VARIABLE + INVISIBLE 1 -->
+    <section class="slide">
+      <div class="kicker">Method 1 · a variable in common</div>
+      <h2>Factor out the common x, and watch for the invisible 1</h2>
+      <ul class="exlist">
+        <li class="frag"><span class="star">✶</span><span>x² + 4x = <span class="answer">x(x + 4)</span></span></li>
+        <li class="frag"><span class="star">✶</span><span>x² − 7x = <span class="answer">x(x − 7)</span></span></li>
+        <li class="frag"><span class="star">✶</span><span>x² + x = <span class="answer">x(x + 1)</span> <span class="note">the lone x leaves a 1</span></span></li>
+        <li class="frag"><span class="star">✶</span><span>2x² + x = <span class="answer">x(2x + 1)</span> <span class="note">the lone x leaves a 1</span></span></li>
+      </ul>
+      <div class="callout frag"><span class="tag">The invisible 1</span>When a term is just a single x, dividing it by x leaves <span class="eq">1</span>, not nothing. <span class="eq">x ÷ x = 1</span>. Leaving out that 1 is the most common slip here.</div>
+    </section>
+
+    <!-- 21 GCF LADDER BOTH -->
+    <section class="slide">
+      <div class="kicker">Method 1 · a number and a variable in common</div>
+      <h2>Factor out the GCF when it has both</h2>
+      <ul class="exlist">
+        <li class="frag"><span class="star">✶</span><span>2x² + 6x = <span class="answer">2x(x + 3)</span></span></li>
+        <li class="frag"><span class="star">✶</span><span>3x² − 12x = <span class="answer">3x(x − 4)</span></span></li>
+        <li class="frag"><span class="star">✶</span><span>6x² + 9x = <span class="answer">3x(2x + 3)</span> <span class="note">GCF is 3x</span></span></li>
+        <li class="frag"><span class="star">✶</span><span>12x² − 8x = <span class="answer">4x(3x − 2)</span> <span class="note">GCF is 4x</span></span></li>
+      </ul>
+    </section>
+
+    <!-- 22 GCF NEGATIVE -->
+    <section class="slide">
+      <div class="kicker">Method 1 · negatives</div>
+      <h2>Pulling out a negative</h2>
+      <p>When the first term is negative, pull out a negative common factor. Doing so flips the sign of each leftover inside.</p>
+      <ul class="exlist">
+        <li class="frag"><span class="star">✶</span><span>−x² − 3x = <span class="answer">−x(x + 3)</span></span></li>
+        <li class="frag"><span class="star">✶</span><span>−2x² + 4x = <span class="answer">−2x(x − 2)</span></span></li>
+        <li class="frag"><span class="star">✶</span><span>−3x² − 6x = <span class="answer">−3x(x + 2)</span></span></li>
+      </ul>
+      <div class="callout frag"><span class="tag">Watch the flip</span>In <span class="eq">−2x² + 4x</span>, the <span class="eq">+4x</span> divided by <span class="eq">−2x</span> becomes <span class="eq">−2</span>. That sign flip is why the inside reads <span class="eq">(x − 2)</span>.</div>
+    </section>
+
+    <!-- 23 WHAT IS A TRINOMIAL -->
+    <section class="slide">
+      <div class="kicker">A definition you need first</div>
+      <h2>What is a trinomial?</h2>
+      <p>A trinomial is an expression with exactly three terms. "Tri" means three. <span class="eq">x² + 5x + 6</span> has three terms, so it is a trinomial.</p>
+      <div class="callout frag"><span class="tag">Trinomial vs quadratic</span><b>Quadratic</b> describes the highest power (a 2). <b>Trinomial</b> describes the number of terms (three). <span class="eq">x² + 5x + 6</span> is both: a quadratic trinomial. They are not the same word.</div>
+      <p class="frag sub">Not every quadratic is a trinomial. <span class="eq">x² − 9</span> is a quadratic with only two terms. <span class="eq">3x² + 7x</span> is a quadratic with two terms. The method on the next slides is for the three-term kind.</p>
+    </section>
+
+    <!-- 24 METHOD 2 TRINOMIAL TECHNIQUE -->
+    <section class="slide">
+      <div class="kicker">Method 2 · simple trinomial</div>
+      <h2>Find two numbers that fit</h2>
+      <p>For a trinomial <span class="eq">x² + bx + c</span>, you need two numbers that do two jobs at once:</p>
+      <ul class="steps">
+        <li class="frag"><span class="star">✶</span><span>They <b>multiply</b> to give the last number, c.</span></li>
+        <li class="frag"><span class="star">✶</span><span>They <b>add</b> to give the middle number, b.</span></li>
+        <li class="frag"><span class="star">✶</span><span>Once you find them, put one in each bracket, right after the x: <span class="eq">(x + first)(x + second)</span>.</span></li>
+      </ul>
+    </section>
+
+    <!-- 25 TRINOMIAL WORKED -->
+    <section class="slide">
+      <div class="kicker">Method 2 · worked step by step</div>
+      <h2>Factor x² + 5x + 6</h2>
+      <ul class="steps num">
+        <li class="frag"><span>Name the parts: the last number is <span class="lo">6</span>, the middle number is <span class="lo">5</span>.</span></li>
+        <li class="frag"><span>I need two numbers that multiply to 6 and add to 5.</span></li>
+        <li class="frag"><span>List the pairs that multiply to 6: <span class="eq">1 and 6</span> (they add to 7, no), <span class="eq">2 and 3</span> (they add to 5, yes).</span></li>
+        <li class="frag"><span>So the two numbers are <span class="share">2 and 3</span>.</span></li>
+        <li class="frag"><span>Put one in each bracket: <span class="answer">(x + 2)(x + 3)</span>.</span></li>
+        <li class="frag"><span>Check: <span class="eq">x·x = x²</span>, <span class="eq">x·3 + 2·x = 5x</span>, <span class="eq">2·3 = 6</span>. Matches.</span></li>
+      </ul>
+    </section>
+
+    <!-- 26 SIGN RULES CONTEXTUALIZED -->
+    <section class="slide">
+      <div class="kicker">Method 2 · the signs do the searching</div>
+      <h2>The signs tell you which numbers to look for</h2>
+      <p>Before you hunt for the pair, the signs narrow it down so you are not guessing. Read the last sign first.</p>
+      <ul class="steps">
+        <li class="frag"><span class="star">✶</span><span>Last <b>positive</b>, middle <b>positive</b> → both numbers positive. <span class="note" style="color:var(--muted)">x² + 5x + 6</span></span></li>
+        <li class="frag"><span class="star">✶</span><span>Last <b>positive</b>, middle <b>negative</b> → both numbers negative. <span class="note" style="color:var(--muted)">x² − 5x + 6</span></span></li>
+        <li class="frag"><span class="star">✶</span><span>Last <b>negative</b> → one positive, one negative. The bigger one takes the middle's sign. <span class="note" style="color:var(--muted)">x² + x − 6</span></span></li>
+      </ul>
+      <div class="callout frag"><span class="tag">Why this helps factoring</span>Knowing the signs first cuts the list of pairs in half. For <span class="eq">x² − 5x + 6</span> you only check negative pairs, so you go straight to −2 and −3.</div>
+    </section>
+
+    <!-- 27 TRINOMIAL LADDER POS/NEG MIDDLE -->
+    <section class="slide">
+      <div class="kicker">Method 2 · build up</div>
+      <h2>Both positive, then both negative</h2>
+      <ul class="exlist">
+        <li class="frag"><span class="star">✶</span><span>x² + 5x + 6 = <span class="answer">(x + 2)(x + 3)</span></span></li>
+        <li class="frag"><span class="star">✶</span><span>x² + 7x + 12 = <span class="answer">(x + 3)(x + 4)</span></span></li>
+        <li class="frag"><span class="star">✶</span><span>x² + 8x + 15 = <span class="answer">(x + 3)(x + 5)</span></span></li>
+        <li class="frag"><span class="star">✶</span><span>x² − 5x + 6 = <span class="answer">(x − 2)(x − 3)</span></span></li>
+        <li class="frag"><span class="star">✶</span><span>x² − 7x + 12 = <span class="answer">(x − 3)(x − 4)</span></span></li>
+      </ul>
+    </section>
+
+    <!-- 28 TRINOMIAL LADDER MIXED -->
+    <section class="slide">
+      <div class="kicker">Method 2 · last number negative</div>
+      <h2>One positive, one negative</h2>
+      <ul class="exlist">
+        <li class="frag"><span class="star">✶</span><span>x² + x − 6 = <span class="answer">(x + 3)(x − 2)</span> <span class="note">middle is +1x</span></span></li>
+        <li class="frag"><span class="star">✶</span><span>x² − x − 6 = <span class="answer">(x − 3)(x + 2)</span> <span class="note">middle is −1x</span></span></li>
+        <li class="frag"><span class="star">✶</span><span>x² + 2x − 15 = <span class="answer">(x + 5)(x − 3)</span></span></li>
+        <li class="frag"><span class="star">✶</span><span>x² − 2x − 8 = <span class="answer">(x − 4)(x + 2)</span></span></li>
+        <li class="frag"><span class="star">✶</span><span>x² − 5x − 14 = <span class="answer">(x − 7)(x + 2)</span> <span class="note">multiply to −14, add to −5</span></span></li>
+      </ul>
+    </section>
+
+    <!-- 29 METHOD 3 DIFFERENCE OF SQUARES -->
+    <section class="slide">
+      <div class="kicker">Method 3 · difference of squares</div>
+      <h2>A square minus a square</h2>
+      <p>When you see one square minus another square, with no middle term, it always splits into the same two terms with a plus and a minus.</p>
+      <div class="expr big">a² − b² = (a − b)(a + b)</div>
+      <ul class="steps num">
+        <li class="frag"><span>Basic: <span class="eq">x² − 49</span>. Here <span class="eq">a = x</span> and <span class="eq">b = 7</span> (since <span class="eq">7² = 49</span>) → <span class="answer">(x − 7)(x + 7)</span>.</span></li>
+        <li class="frag"><span>Harder: <span class="eq">4x² − 81</span>. Here <span class="eq">a = 2x</span> (since <span class="eq">(2x)² = 4x²</span>) and <span class="eq">b = 9</span> → <span class="answer">(2x − 9)(2x + 9)</span>.</span></li>
+      </ul>
+    </section>
+
+    <!-- 30 METHOD 4 PERFECT SQUARE TRINOMIAL -->
+    <section class="slide">
+      <div class="kicker">Method 4 · perfect square trinomial</div>
+      <h2>When the trinomial is a bracket times itself</h2>
+      <p>A perfect square trinomial is one that factors into the same bracket twice, so you can write it as that bracket squared. You spot it when the two numbers you find come out equal.</p>
+      <div class="expr">a² + 2ab + b² = (a + b)²&nbsp;&nbsp;·&nbsp;&nbsp;a² − 2ab + b² = (a − b)²</div>
+      <ul class="steps num">
+        <li class="frag"><span><span class="eq">x² + 10x + 25</span>: two numbers that multiply to 25 and add to 10 are 5 and 5. Same number, so it is <span class="answer">(x + 5)²</span>.</span></li>
+        <li class="frag"><span><span class="eq">x² − 12x + 36</span>: multiply to 36, add to −12 → −6 and −6 → <span class="answer">(x − 6)²</span>.</span></li>
+      </ul>
+    </section>
+
+    <!-- 31 METHOD 5a · CHUNK IS A COMMON FACTOR -->
+    <section class="slide">
+      <div class="kicker">Method 5 · shared chunk</div>
+      <h2>A common factor can be a whole expression</h2>
+      <p>The common factor does not have to be a number or a single x. When two terms contain the same expression, that whole expression is their common factor. Pull it out front, and combine what is left inside the parentheses, exactly like Method 1.</p>
+      <ul class="steps num">
+        <li class="frag"><span><span class="eq">x(x + 2) + 5(x + 2)</span>: both terms contain <span class="share">(x + 2)</span>, so that is the common factor. Pull it out, leftovers inside: <span class="answer">(x + 2)(x + 5)</span>.</span></li>
+        <li class="frag"><span><span class="eq">3(x − 1) + x(x − 1)</span>: both contain <span class="share">(x − 1)</span> → <span class="answer">(x − 1)(x + 3)</span>.</span></li>
+      </ul>
+      <div class="callout frag"><span class="tag">The idea behind Q11</span>Recognizing a repeated expression as a common factor is the whole move. The Q11 walkthrough later is this same step on a harder equation.</div>
+    </section>
+
+    <!-- 31b METHOD 5b · NAMING THE CHUNK -->
+    <section class="slide">
+      <div class="kicker">Method 5 · shared chunk</div>
+      <h2>When the chunk repeats with a power, rename it</h2>
+      <p>Sometimes the same chunk shows up squared and again on its own, like <span class="eq">(x − 3)²</span> and <span class="eq">(x − 3)</span>. That hides an ordinary quadratic. Renaming the chunk as a single letter (this is called substitution) makes the quadratic visible.</p>
+      <ul class="steps num">
+        <li class="frag"><span>Find the chunk that repeats.</span></li>
+        <li class="frag"><span>Let a single letter, like u, equal that chunk.</span></li>
+        <li class="frag"><span>Factor the simple quadratic in u with the methods you already know.</span></li>
+        <li class="frag"><span>Put the chunk back in place of u.</span></li>
+        <li class="frag"><span>Simplify inside each set of parentheses.</span></li>
+      </ul>
+      <div class="pitfall frag"><span class="tag">Do not expand the chunk</span>Never multiply out <span class="eq">(x − 3)²</span> at the start. It is correct math, but it creates a much bigger expression that is far harder to factor. Keep the chunk whole.</div>
+    </section>
+
+    <!-- 31c METHOD 5c · WORKED A -->
+    <section class="slide">
+      <div class="kicker">Method 5 · worked, step by step</div>
+      <h2>Solve (x − 3)² − 4(x − 3) − 12 = 0</h2>
+      <ul class="steps num">
+        <li class="frag"><span>The chunk <span class="share">(x − 3)</span> repeats. Let <span class="eq">u = (x − 3)</span>.</span></li>
+        <li class="frag"><span>The equation becomes <span class="eq">u² − 4u − 12 = 0</span>, an ordinary trinomial.</span></li>
+        <li class="frag"><span>Factor it: multiply to −12, add to −4 → −6 and 2 → <span class="eq">(u − 6)(u + 2) = 0</span>.</span></li>
+        <li class="frag"><span>Put <span class="eq">(x − 3)</span> back for u: <span class="eq">(x − 3 − 6)(x − 3 + 2) = 0</span>, which is <span class="eq">(x − 9)(x − 1) = 0</span>.</span></li>
+        <li class="frag"><span>Set each factor to zero: <span class="answer">x = 9</span> or <span class="answer">x = 1</span>.</span></li>
+      </ul>
+    </section>
+
+    <!-- 31d METHOD 5d · WORKED B HIDDEN QUADRATIC -->
+    <section class="slide">
+      <div class="kicker">Method 5 · a harder version</div>
+      <h2>Factor x⁴ − 7x² + 12</h2>
+      <p>The chunk here is <span class="eq">x²</span>, because <span class="eq">x⁴</span> is just <span class="eq">(x²)²</span>. The same substitution works.</p>
+      <ul class="steps num">
+        <li class="frag"><span>Let <span class="eq">u = x²</span>. The expression becomes <span class="eq">u² − 7u + 12</span>.</span></li>
+        <li class="frag"><span>Factor: multiply to 12, add to −7 → −3 and −4 → <span class="eq">(u − 3)(u − 4)</span>.</span></li>
+        <li class="frag"><span>Put <span class="eq">x²</span> back for u: <span class="eq">(x² − 3)(x² − 4)</span>.</span></li>
+        <li class="frag"><span><span class="eq">x² − 4</span> is a difference of squares, so factor it further: <span class="answer">(x² − 3)(x − 2)(x + 2)</span>.</span></li>
+      </ul>
+    </section>
+
+    <!-- ===== PART 5 ===== -->
+    <section class="slide">
+      <div class="kicker">Part 5 of 6</div>
+      <h1>The hidden ways</h1>
+      <p class="lead">The disguises the SAT uses to make a familiar pattern look new.</p>
+    </section>
+
+    <!-- 33 HIDDEN -1 -->
+    <section class="slide">
+      <div class="kicker">Hidden trick · the leading −1</div>
+      <h2>A negative in front, hiding a pattern</h2>
+      <p>When a quadratic starts with a negative term, it is hard to factor as written. Pull out a <span class="eq">−1</span> first. That flips every sign inside and uncovers a pattern you know.</p>
+      <ul class="steps num">
+        <li class="frag"><span>Start with <span class="eq">−x² + 81</span>.</span></li>
+        <li class="frag"><span>Pull out <span class="eq">−1</span>: <span class="eq">−1(x² − 81)</span>. Notice the signs inside flipped.</span></li>
+        <li class="frag"><span>Inside is now a difference of squares: <span class="answer">−1(x − 9)(x + 9)</span>.</span></li>
+      </ul>
+    </section>
+
+    <!-- 34 INVISIBLE 1 MIDDLE -->
+    <section class="slide">
+      <div class="kicker">Hidden trick · the invisible 1</div>
+      <h2>A missing number is really a 1</h2>
+      <p>When the middle is just <span class="eq">x</span> or <span class="eq">−x</span> with no number, the number is 1. The SAT leaves it off, but you read it as 1 and factor normally.</p>
+      <ul class="steps num">
+        <li class="frag"><span><span class="eq">x² − x − 12</span> is really <span class="eq">x² − 1x − 12</span>.</span></li>
+        <li class="frag"><span>Two numbers that multiply to −12 and add to −1: <span class="share">−4 and 3</span>.</span></li>
+        <li class="frag"><span>Factored: <span class="answer">(x − 4)(x + 3)</span>.</span></li>
+      </ul>
+    </section>
+
+    <!-- 35 TWO PARTS BOTH HAVE X · RULE -->
+    <section class="slide">
+      <div class="kicker">Hidden trick · two parts, both with an x</div>
+      <h2>If both parts have an x, factor the x out</h2>
+      <p>If a quadratic has only two parts and both parts contain an x, you always just factor the x out front.</p>
+      <div class="expr big">3x² + 7x = 0 &nbsp;→&nbsp; x(3x + 7) = 0</div>
+      <div class="callout frag"><span class="tag">Why one answer is always x = 0</span>After factoring, the x sits outside as one factor, and the stuff inside the parentheses is the other factor. By the zero product property, one of them must be zero. The outside x gives <span class="answer">x = 0</span> right away, and the inside gives the other answer. So <b>x = 0 is always one of the two solutions</b> in this case.</div>
+    </section>
+
+    <!-- 35b TWO PARTS · WORKED EXAMPLES -->
+    <section class="slide">
+      <div class="kicker">Worked, step by step · easy to hard</div>
+      <h2>Both parts have an x</h2>
+      <ul class="steps num">
+        <li class="frag"><span><span class="eq">x² + 9x = 0</span> → factor out x → <span class="eq">x(x + 9) = 0</span> → <span class="answer">x = 0</span> or <span class="answer">x = −9</span>.</span></li>
+        <li class="frag"><span><span class="eq">5x² − 10x = 0</span> → <span class="eq">x(5x − 10) = 0</span> → x = 0, or <span class="eq">5x − 10 = 0</span> → <span class="answer">x = 0</span> or <span class="answer">x = 2</span>.</span></li>
+        <li class="frag"><span><span class="eq">−3x² + 12x = 0</span> → <span class="eq">x(−3x + 12) = 0</span> → x = 0, or <span class="eq">−3x + 12 = 0</span> → <span class="answer">x = 0</span> or <span class="answer">x = 4</span>.</span></li>
+      </ul>
+      <p class="frag sub">The front number does not change the method. You still factor out the x, x = 0 is always one answer, and the inside gives the other.</p>
+    </section>
+
+    <!-- TEMPERATURE TRICK -->
+    <section class="slide">
+      <div class="kicker">Reversed subtraction · the intuition</div>
+      <h2>The temperature trick</h2>
+      <p>Flipping the order of a subtraction never changes the number, it only flips the sign. Two quick questions show why:</p>
+      <ul class="steps num">
+        <li class="frag"><span>The temperature drops from 10 degrees to 7. What is the change? <span class="eq">7 − 10 = </span><span class="answer">−3</span>.</span></li>
+        <li class="frag"><span>The temperature rises from 7 degrees to 10. What is the change? <span class="eq">10 − 7 = </span><span class="answer">+3</span>.</span></li>
+      </ul>
+      <div class="callout frag"><span class="tag">The breakthrough</span>Same number, 3, both times. Only the direction flipped. Reversing the order of a subtraction keeps the size of the answer and only switches its sign from positive to negative.</div>
+    </section>
+
+    <!-- SWITCH AND SLAP -->
+    <section class="slide">
+      <div class="kicker">Reversed subtraction · the rule</div>
+      <h2>Switch and slap</h2>
+      <p>When you see a subtraction bracket in the order you do not want, you can flip it, but it costs a negative sign out front.</p>
+      <ul class="steps num">
+        <li class="frag"><span><b>Spot it:</b> you see <span class="eq">(5 − x)</span>, but you wish it read <span class="eq">(x − 5)</span>.</span></li>
+        <li class="frag"><span><b>Switch it:</b> rewrite the order to match: <span class="eq">(x − 5)</span>.</span></li>
+        <li class="frag"><span><b>Slap it:</b> put a negative sign outside the bracket to pay for the switch: <span class="answer">−(x − 5)</span>.</span></li>
+      </ul>
+      <div class="two">
+        <div class="box">(5 − x)</div>
+        <div class="ar"><span class="sym">=</span><span>switch &amp; slap</span></div>
+        <div class="box">−(x − 5)</div>
+      </div>
+      <div class="callout frag"><span class="tag">Prove it with a number</span>Let <span class="eq">x = 2</span>. Then <span class="eq">(5 − 2) = 3</span>, and <span class="eq">−(2 − 5) = −(−3) = 3</span>. Same answer, so <span class="eq">(5 − x) = −(x − 5)</span> really is true.</div>
+    </section>
+
+    <!-- 36 REVERSED SUBTRACTION -->
+    <section class="slide">
+      <div class="kicker">Hidden trick · reversed subtraction</div>
+      <h2>A flipped subtraction is a hidden −1</h2>
+      <p>When two brackets look almost the same but the subtraction is reversed, one is just <span class="eq">−1</span> times the other.</p>
+      <div class="expr big">5 − x = −(x − 5)</div>
+      <ul class="steps">
+        <li class="frag"><span class="star">✶</span><span>So a fraction like <span class="eq">(x − 5) / (5 − x)</span> is <span class="eq">(x − 5) / −(x − 5)</span>, which simplifies to <span class="answer">−1</span>.</span></li>
+        <li class="frag"><span class="star">✶</span><span>Anytime you see <span class="eq">(a − b)</span> and <span class="eq">(b − a)</span> in the same problem, one is the negative of the other.</span></li>
+      </ul>
+    </section>
+
+    <!-- INVISIBLE 1 WHEN FACTORING -->
+    <section class="slide">
+      <div class="kicker">Hidden trick · the invisible 1</div>
+      <h2>Where the 1 comes from when you factor</h2>
+      <p>When you pull out a common factor, each term inside the parentheses answers one question: <b>the common factor times what gives this term?</b> That "what" is the leftover. When a term is already equal to the common factor, the answer is 1, because anything times 1 is itself.</p>
+      <ul class="steps num">
+        <li class="frag"><span>Factor x out of <span class="eq">x² + x</span>. Ask of each term: x times what?</span></li>
+        <li class="frag"><span><span class="eq">x²</span> is x times <span class="lo">x</span>. And <span class="eq">x</span> is x times <span class="lo">1</span>, since <span class="eq">x · 1 = x</span>.</span></li>
+        <li class="frag"><span>So the leftovers are x and 1: <span class="answer">x(x + 1)</span>.</span></li>
+      </ul>
+      <div class="callout frag"><span class="tag">How to spot it</span>The 1 was always there. A term written as just <span class="eq">x</span> is really <span class="eq">1x</span>, and a bare bracket like <span class="eq">(y − 42)</span> is really <span class="eq">1(y − 42)</span>. The cue is a term with no number in front and nothing else attached to it. Write its 1 in before you factor, and you will not drop it. That is the first step in Q11.</div>
+    </section>
+
+    <!-- PLACEHOLDER RULE + SCRIPT -->
+    <section class="slide">
+      <div class="kicker">Hidden trick · the invisible 1</div>
+      <h2>Protect the empty spot with a 1</h2>
+      <p>When a term is just the common factor with nothing else attached, it is naked. You put a 1 in front of it to hold its spot, so that when you pull the common factor out, there is still something left behind. A term that already has another factor sitting next to it (a roommate) does not need a 1, because the roommate is holding the spot.</p>
+      <div class="expr big frag">In subtraction, nothing leaves 0. In factoring, nothing leaves 1.</div>
+      <div class="callout frag"><span class="tag">Say it in three steps</span><b>1. Identify:</b> both terms share the same block. <b>2. Protect:</b> if a term has nothing else attached to that block, put a 1 in front to hold its spot. <b>3. Pull out:</b> pull the block to the front, open one big set of parentheses, and copy what each term has left.</div>
+    </section>
+
+    <!-- PLACEHOLDER DRILLS -->
+    <section class="slide">
+      <div class="kicker">Your turn · find the naked block</div>
+      <h2>Put the guard 1 where it belongs</h2>
+      <p>Same block in both terms. Whichever term has nothing else attached gets the 1.</p>
+      <div class="wr">
+        <div class="col good frag">
+          <div class="lbl">Left side naked</div>
+          <div class="body"><span class="m">(x + 7) + (x + 7)(x − 5)</span><br>Both share <span class="share">(x + 7)</span>. The left term is naked, so guard it: <span class="m">1(x + 7) + (x + 7)(x − 5)</span><br>Pull out: <span class="answer">(x + 7)[1 + (x − 5)]</span></div>
+        </div>
+        <div class="col good frag">
+          <div class="lbl">Right side naked</div>
+          <div class="body"><span class="m">(2x + 3)(x + 4) − (x + 4)</span><br>Both share <span class="share">(x + 4)</span>. The right term is naked, so guard it: <span class="m">(2x + 3)(x + 4) − 1(x + 4)</span><br>Pull out: <span class="answer">(x + 4)[(2x + 3) − 1]</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== PART 6 ===== -->
+    <section class="slide">
+      <div class="kicker">Part 6 of 6</div>
+      <h1>Solving, and the real Q11</h1>
+      <p class="lead">Putting factoring to work, one step at a time.</p>
+    </section>
+
+    <!-- 38 SET TO ZERO -->
+    <section class="slide">
+      <div class="kicker">The finish</div>
+      <h2>Factor, then set each factor to zero</h2>
+      <div class="expr big">x² + 5x + 6 = 0</div>
+      <ul class="steps num">
+        <li class="frag"><span>Factor: <span class="eq">(x + 2)(x + 3) = 0</span>.</span></li>
+        <li class="frag"><span>Set each factor to zero: <span class="eq">x + 2 = 0</span> and <span class="eq">x + 3 = 0</span>.</span></li>
+        <li class="frag"><span>Solve each: <span class="answer">x = −2</span> and <span class="answer">x = −3</span>. Those are your two solutions.</span></li>
+      </ul>
+    </section>
+
+    <!-- 39 RECOGNIZE FACTORED -->
+    <section class="slide">
+      <div class="kicker">The Q11 skill</div>
+      <h2>A quadratic does not always show an x²</h2>
+      <p>This is the exact step Danielle missed. A quadratic is often already in parentheses, so you never see <span class="eq">x²</span> written out.</p>
+      <div class="callout frag"><span class="tag">The recognition rule</span>If you see two things in parentheses multiplied together, and each one has a variable in it, it is a quadratic. Multiplying them would create the squared term.</div>
+      <ul class="steps">
+        <li class="frag"><span class="star">✶</span><span><span class="eq">(x + 2)(x + 3)</span> multiplies out to <span class="eq">x² + 5x + 6</span>. Quadratic.</span></li>
+        <li class="frag"><span class="star">✶</span><span><span class="eq">(y − c)(y − 42)</span> has a <span class="eq">y²</span> hiding in it, even with the letter c. Quadratic. This is the right side of Q11.</span></li>
+      </ul>
+    </section>
+
+    <!-- 40 DON'T EXPAND -->
+    <section class="slide">
+      <div class="kicker">A trap to avoid</div>
+      <h2>Do not multiply the common bracket back open</h2>
+      <p>When two terms contain the same bracket, that bracket is their common factor. Multiplying it open throws the common factor away and makes more work. Compare both paths on <span class="eq">x(x + 3) + (x + 3)</span>:</p>
+      <div class="wr">
+        <div class="col bad">
+          <div class="lbl">✗ Expanding</div>
+          <div class="body"><span class="m">x(x + 3) + (x + 3)</span><br><span class="m">= x² + 3x + x + 3</span><br><span class="m">= x² + 4x + 3</span><br>The common factor is gone. Now you are factoring from scratch.</div>
+        </div>
+        <div class="col good">
+          <div class="lbl">✓ Leaving it</div>
+          <div class="body"><span class="m">x(x + 3) + 1(x + 3)</span><br>The common factor is <span class="share">(x + 3)</span>.<br><span class="m">= (x + 3)(x + 1)</span><br>One step.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 41 Q11 FACTOR -->
+    <section class="slide">
+      <div class="kicker">Her Q11 · factoring it</div>
+      <h2>Factoring is division: divide every term by the common factor</h2>
+      <div class="expr">(y − 42) − (y − c)(y − 42) = 0</div>
+      <p>The common factor is <span class="share">(y − 42)</span>. Factoring it out means dividing every term by it, so write each term over <span class="eq">(y − 42)</span>:</p>
+      <div class="expr big frag" style="display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap">
+        <span class="frac"><span class="num">(y − 42)</span><span class="den">(y − 42)</span></span>
+        <span>−</span>
+        <span class="frac"><span class="num">(y − c)(y − 42)</span><span class="den">(y − 42)</span></span>
+        <span>= 0</span>
+      </div>
+      <ul class="steps num">
+        <li class="frag"><span>On the right, the <span class="cancel">(y − 42)</span> on top and bottom cancel, leaving <span class="lo">(y − c)</span>.</span></li>
+        <li class="frag"><span>On the left, <span class="eq">(y − 42)</span> over itself. A thing divided by itself is <span class="lo">1</span>, not 0. If it were 0, the whole left term would vanish, which cannot be right. So it leaves <span class="lo">1</span>.</span></li>
+        <li class="frag"><span>The leftovers are 1 and (y − c). Put <span class="share">(y − 42)</span> back out front: <span class="answer">(y − 42)[1 − (y − c)] = 0</span>.</span></li>
+      </ul>
+    </section>
+
+    <!-- 42 Q11 SOLVE -->
+    <section class="slide">
+      <div class="kicker">Her Q11 · solving it</div>
+      <h2>Set the whole thing to zero</h2>
+      <div class="expr">(y − 42)[1 − (y − c)] = 0</div>
+      <ul class="steps num">
+        <li class="frag"><span>First factor: <span class="eq">y − 42 = 0</span> → <span class="answer">y = 42</span>.</span></li>
+        <li class="frag"><span>Second factor: <span class="eq">1 − (y − c) = 0</span>. Open the bracket: <span class="eq">1 − y + c = 0</span>, so <span class="answer">y = c + 1</span>.</span></li>
+      </ul>
+      <div class="pitfall frag"><span class="tag">The exact trap</span>Opening <span class="eq">−(y − c)</span> flips both signs to <span class="eq">−y + c</span>, which gives <span class="eq">c + 1</span>. The test plants <span class="eq">c − 1</span> in the choices to catch a sign slip. The answer is <span class="eq">c + 1</span>.</div>
+    </section>
+
+    <!-- 43 CHECK -->
+    <section class="slide">
+      <div class="kicker">How to be sure</div>
+      <h2>Multiply back to check</h2>
+      <p>Factoring and multiplying are opposites, so to check any factoring, multiply it back out and see if you land on the original.</p>
+      <div class="two">
+        <div class="box">(x + 2)(x + 3)</div>
+        <div class="ar"><span class="sym">→</span><span>multiply back</span></div>
+        <div class="box">x² + 5x + 6</div>
+      </div>
+      <p class="frag">It matches what you started with, so the factoring is right. Do this whenever you are unsure.</p>
+    </section>
+
+    <!-- 44 PRACTICE CHALLENGE -->
+    <section class="slide">
+      <div class="kicker">Practice challenge</div>
+      <h2>What is the positive solution?</h2>
+      <div class="expr big">−2x² − 2x + 24 = 0</div>
+      <ul class="steps num">
+        <li class="frag"><span>The leading term is negative and every term is even, so the common factor is <span class="share">−2</span>. Pull it out: <span class="eq">−2(x² + x − 12) = 0</span>.</span></li>
+        <li class="frag"><span>Factor the trinomial: multiply to −12, add to 1 → 4 and −3 → <span class="eq">−2(x + 4)(x − 3) = 0</span>.</span></li>
+        <li class="frag"><span>Set each factor to zero: <span class="eq">x = −4</span> or <span class="eq">x = 3</span>.</span></li>
+        <li class="frag"><span>The positive solution is <span class="answer">x = 3</span>.</span></li>
+      </ul>
+    </section>
+
+    <!-- 45 CLOSE -->
+    <section class="slide">
+      <div class="kicker"><span class="star">✶</span> The whole routine</div>
+      <h2>How it shows up, and what to do</h2>
+      <ul class="steps">
+        <li class="frag"><span class="star">✶</span><span>Recognize it is a quadratic, even with no visible x², a letter, a negative, or a missing term.</span></li>
+        <li class="frag"><span class="star">✶</span><span>Pull out any common factor first.</span></li>
+        <li class="frag"><span class="star">✶</span><span>Factor the rest: a trinomial pair, a difference of squares, a perfect square, or a shared chunk.</span></li>
+        <li class="frag"><span class="star">✶</span><span>Set each factor to zero and read off both answers. Watch the signs.</span></li>
+      </ul>
+      <p class="sub" style="margin-top:16px">The practice deck drills every one of these until it is automatic. Illuminairy <span style="color:var(--green)">✶</span></p>
+    </section>
+
+  </main>
+
+  <div class="nav">
+    <button class="arrowbtn" id="prev" aria-label="Previous">←</button>
+    <div class="dots" id="dots"></div>
+    <button class="arrowbtn" id="next" aria-label="Next">→</button>
+  </div>
+</div>
+
+<script>
+  const slides=[...document.querySelectorAll('.slide')];
+  const bar=document.getElementById('bar');
+  const count=document.getElementById('count');
+  const dotsWrap=document.getElementById('dots');
+  const prevBtn=document.getElementById('prev');
+  const nextBtn=document.getElementById('next');
+  let i=0, f=0;
+
+  slides.forEach((s,idx)=>{
+    const d=document.createElement('button');
+    d.className='dot'; d.setAttribute('aria-label','Go to slide '+(idx+1));
+    d.addEventListener('click',()=>{i=idx;f=0;render();});
+    dotsWrap.appendChild(d);
+  });
+  const dots=[...document.querySelectorAll('.dot')];
+  const frags=idx=>[...slides[idx].querySelectorAll('.frag')];
+
+  function render(){
+    slides.forEach((s,idx)=>s.classList.toggle('active',idx===i));
+    frags(i).forEach((el,k)=>el.classList.toggle('show',k<f));
+    bar.style.width=(i/(slides.length-1)*100)+'%';
+    count.textContent=(i+1)+' / '+slides.length;
+    dots.forEach((d,idx)=>d.classList.toggle('on',idx===i));
+    prevBtn.disabled=(i===0&&f===0);
+    nextBtn.disabled=(i===slides.length-1&&f===frags(i).length);
+  }
+  function next(){
+    if(f<frags(i).length){f++;}
+    else if(i<slides.length-1){i++;f=0;}
+    render();
+  }
+  function prev(){
+    if(f>0){f--;}
+    else if(i>0){i--;f=frags(i).length;}
+    render();
+  }
+  nextBtn.addEventListener('click',next);
+  prevBtn.addEventListener('click',prev);
+  document.addEventListener('keydown',e=>{
+    if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '){e.preventDefault();next();}
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();prev();}
+  });
+  render();
+</script>
+</body>
+</html>

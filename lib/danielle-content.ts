@@ -20,12 +20,12 @@ export const DANIELLE_FILE_MAP = {
     filename: "factoring-slides.html",
     contentType: "text/html; charset=utf-8"
   },
-  "radicals-slides": {
-    filename: "radicals-slides.html",
+  "lesson-2-slides": {
+    filename: "lesson-2-factoring-quadratics-slides.html",
     contentType: "text/html; charset=utf-8"
   },
-  "quadratics-slides": {
-    filename: "quadratics-slides.html",
+  "radicals-slides": {
+    filename: "radicals-slides.html",
     contentType: "text/html; charset=utf-8"
   }
 } as const;

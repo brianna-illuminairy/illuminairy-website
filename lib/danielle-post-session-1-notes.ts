@@ -10,29 +10,30 @@ export const POST_SESSION_1_WINS = [
   "You engaged for the full hour, asked for a worked example when you needed one, and stayed with the harder diagnostic walk-throughs."
 ] as const;
 
-export const POST_SESSION_1_NEXT = [
-  "More worked examples on shared-expression factoring (including the y minus c pattern from Module 1).",
-  "Radical simplification so exact-form answers are easier to read.",
-  "The quadratic formula for equations that do not factor cleanly.",
-  "Repeated factoring reps until the AC method and the \"keep the 1\" step feel automatic."
-] as const;
+export const POST_SESSION_1_FACTORING_BRIDGE =
+  "As we dove into factoring we identified some areas where we need to continue building higher fluency. One example is going back over how factoring works in expressions with multiple terms and how to spot a shared expression, and what to do when there is a shared expression.";
 
-export const POST_SESSION_1_HOMEWORK = {
-  dueLabel: "Sunday, June 15",
-  headline: "Quadratics homework · due Sunday",
-  body:
-    "We moved your quadratics homework deadline from Thursday to Sunday, June 15 so you have more time to work through the set. Solutions stay visible in the Homework Portal. Work at a steady pace through the week; bring anything still unclear to Thursday's session."
-} as const;
-
-export const QUADRATICS_SCORE_CONTEXT = {
-  headline: "Why we are staying on quadratics and factoring",
+export const POST_SESSION_1_NEXT_SESSION = {
+  headline: "For next session",
+  intro: [
+    "We will continue diving deeper into factoring until we have increased fluency.",
+    "We will also try moving to a whiteboard over slide decks so we can work problems out jointly."
+  ],
   lede:
     "On the Digital SAT Math section, quadratics and factoring overlap across Advanced Math. They are worth a large share of your Math score, especially if you unlock Hard Module 2.",
   bullets: [
     "Advanced Math is roughly 35% of the Math section (about 15 questions). Quadratics and factoring show up across 6 to 9 questions combined.",
     "Quadratic-specific questions alone can account for roughly 40 to 80 scaled points of your 800-point Math score.",
     "Factoring shows up on equivalent expressions, rational expressions, zeros/roots, and Hard Module factor-by-grouping problems (about 4 to 6 questions per test).",
-    "Together, mastering both can influence roughly 70 to 110 scaled points on the path to Hard Module 2. Point values shift with question difficulty; results vary by test form.",
-    "That is why Thursday stays in Math. These skills matter a lot for your August target, and it is normal for them to take more than one session to feel automatic."
-  ]
+    "Together, mastering both can influence roughly 70 to 110 scaled points on the path to Hard Module 2. Point values shift with question difficulty; results vary by test form."
+  ],
+  closing:
+    "So moving Thursday to Math will help us make progress here. Factoring and quadratic intuition skills matter a lot for your August target, and it is normal for them to take more than one session to feel automatic."
+} as const;
+
+export const POST_SESSION_1_HOMEWORK = {
+  dueLabel: "Sunday, June 15",
+  headline: "Quadratics homework · due Sunday",
+  body:
+    "We moved your quadratics homework deadline from Thursday to Sunday, June 15 so you have more time to work through the set. Solutions stay visible in the Homework Portal. Work at a steady pace through the week; bring anything still unclear to Thursday's session."
 } as const;
