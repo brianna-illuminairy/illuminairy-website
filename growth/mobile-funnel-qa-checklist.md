@@ -10,16 +10,6 @@ Operational checklist for cold, anonymous ad traffic on `/sat-plan-builder` -> `
 - [ ] `npm run funnel:completeness` has no critical threshold breaches
 - [ ] Paid ad s5 booking QA on real devices (see device matrix below)
 
-## Paid ad booking gate (optional kill switch)
-
-**Default:** s5 shows Calendly slots for everyone (organic, direct, and paid).
-
-To hold **paid ad traffic** on lead-only s5 during an incident or pre-launch QA, set `PLAN_BUILDER_BOOKING_PAUSED=1` and `NEXT_PUBLIC_PLAN_BUILDER_BOOKING_PAUSED=1` on Vercel Production, then push `main` to rebuild.
-
-- Gate triggers only on **real paid signals** in session (`fbclid`, `gclid`, `msclkid`, or `utm_medium` = paid_social/cpc/ppc). LP-inferred UTMs do not block booking.
-- **QA bypass:** `/plan?plan_booking_qa=$PLAN_BUILDER_BOOKING_QA_SECRET` (7-day cookie; strips secret from URL).
-- **Resume normal booking:** remove PAUSED vars or set to `0`, push `main`.
-
 ## Device matrix (real device)
 
 - [ ] iOS Safari (new visitor)

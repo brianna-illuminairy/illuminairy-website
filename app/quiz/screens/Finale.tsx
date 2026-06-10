@@ -20,7 +20,6 @@ import {
 } from '@/lib/calendly/booking-errors';
 import { countPhoneDigits } from '@/lib/calendly/phone-e164';
 import { QUIZ_TESTIMONIALS } from '@/lib/quiz-funnel/testimonials';
-import { readSessionAttribution } from '@/lib/attribution';
 import { getClientAttributionPayload } from '@/lib/quiz-funnel/client-attribution';
 import { planBuilderStepHref } from '@/lib/plan-builder-routes';
 import { resolveMetaClickIds } from '@/lib/meta-click-ids';
@@ -59,16 +58,6 @@ import {
   type BookingFieldKey,
 } from '@/lib/quiz-funnel/booking-feedback';
 import { QFBookingAlert } from '../components/QFBookingAlert';
-import {
-  hasPlanBuilderBookingQaBypassFromDocument,
-  shouldGatePlanBuilderBooking,
-} from '@/lib/quiz-funnel/plan-builder-booking-gate';
-import {
-  PLAN_BOOKING_GATE_CTA,
-  PLAN_BOOKING_GATE_EYEBROW,
-  PLAN_BOOKING_GATE_HEADLINE,
-  PLAN_BOOKING_GATE_LEAD,
-} from '@/lib/quiz-funnel/plan-booking-gate-copy';
 
 type PlanSchedulerSlot = {
   startTime: string;
@@ -178,26 +167,6 @@ export function QFS5Approved({
   const [slotsAvailable, setSlotsAvailable] = useState(true);
   const [availabilityLoading, setAvailabilityLoading] = useState(true);
   const reloadSlotsRef = useRef<(() => void) | null>(null);
-  const bookingGateTracked = useRef(false);
-
-  const bookingGated = useMemo(() => {
-    const hasQaBypass = hasPlanBuilderBookingQaBypassFromDocument();
-    // Raw session UTMs only — do not infer paid Social from LP path (that blocked organic s5).
-    const attribution = readSessionAttribution();
-    return shouldGatePlanBuilderBooking(attribution, hasQaBypass);
-  }, []);
-
-  useEffect(() => {
-    if (!bookingGated || bookingGateTracked.current) return;
-    bookingGateTracked.current = true;
-    captureQuizBookingError({
-      error_code: 'booking_paused',
-      error_message: 'Paid ad traffic held on s5 until booking QA',
-      step: 's5',
-      slots_available: false,
-      qWho: typeof answers.qWho === 'string' ? answers.qWho : undefined,
-    });
-  }, [bookingGated, answers.qWho]);
 
   const contact = useMemo(
     () => ({
@@ -211,17 +180,12 @@ export function QFS5Approved({
 
   const validation = useMemo(
     () =>
-      bookingGated
-        ? validateBookingContactOnly({
-            ...contact,
-            confirmTcpa: Boolean(confirmTcpa),
-          })
-        : validateBookingContact({
-            ...contact,
-            confirmTcpa: Boolean(confirmTcpa),
-            hasSlot: Boolean(selectedSlot?.startTime),
-          }),
-    [bookingGated, contact, confirmTcpa, selectedSlot?.startTime]
+      validateBookingContact({
+        ...contact,
+        confirmTcpa: Boolean(confirmTcpa),
+        hasSlot: Boolean(selectedSlot?.startTime),
+      }),
+    [contact, confirmTcpa, selectedSlot?.startTime]
   );
 
   const contactReady = useMemo(
@@ -236,7 +200,7 @@ export function QFS5Approved({
   const canSubmit =
     !submitting &&
     !availabilityLoading &&
-    (bookingGated || slotsAvailable) &&
+    slotsAvailable &&
     contactReady &&
     validation.valid;
   const qWho = typeof answers.qWho === 'string' ? answers.qWho : undefined;
@@ -371,15 +335,7 @@ export function QFS5Approved({
       }
       captureQuizLeadSubmitted(answers as Record<string, unknown>, data.eventId, {
         hasGapScreen: showGapScreen(answers as Parameters<typeof showGapScreen>[0]),
-        booking_deferred: bookingGated,
       });
-
-      if (bookingGated) {
-        setSubmitting(false);
-        if (onBooked) onBooked();
-        else onContinue();
-        return;
-      }
 
       const slotStart = selectedSlot?.startTime;
       if (!slotStart) {
@@ -449,9 +405,7 @@ export function QFS5Approved({
     }
   }
 
-  const footerLabel = bookingGated
-    ? PLAN_BOOKING_GATE_CTA
-    : availabilityLoading
+  const footerLabel = availabilityLoading
     ? 'Loading open times…'
     : !slotsAvailable
       ? 'Reload times to continue'
@@ -473,15 +427,7 @@ export function QFS5Approved({
         </QFButton>
       }
     >
-      {bookingGated ? (
-        <p className="qf-lead" style={{ margin: '0 0 18px' }}>
-          {PLAN_BOOKING_GATE_LEAD}
-        </p>
-      ) : null}
       <QFPlanScheduler
-        schedulerEnabled={!bookingGated}
-        eyebrow={bookingGated ? PLAN_BOOKING_GATE_EYEBROW : undefined}
-        headline={bookingGated ? PLAN_BOOKING_GATE_HEADLINE : undefined}
         parentName={String(parentName)}
         parentEmail={String(parentEmail)}
         parentPhone={String(parentPhone)}
