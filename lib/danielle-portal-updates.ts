@@ -9,6 +9,15 @@ export type DaniellePortalUpdate = {
 
 export const DANIELLE_PORTAL_UPDATES: DaniellePortalUpdate[] = [
   {
+    id: "2026-06-10-homework-due-sunday",
+    publishedAt: "2026-06-10",
+    title: "Quadratics homework due Sunday",
+    summary:
+      "Your quadratics homework in the Homework Portal is now due Sunday, June 15 so you have more time to work through it with solutions visible.",
+    href: "/danielle/week-1#homework-due",
+    cta: "Read session note"
+  },
+  {
     id: "2026-06-09-post-session-1",
     publishedAt: "2026-06-09",
     title: "Post Session 1 notes are live",

@@ -1,4 +1,5 @@
 import {
+  POST_SESSION_1_HOMEWORK,
   POST_SESSION_1_NEXT,
   POST_SESSION_1_WINS,
   QUADRATICS_SCORE_CONTEXT
@@ -197,6 +198,14 @@ export function DanielleWeek1Content() {
           </ul>
         </div>
 
+        <div className="danielle-week1__note-card" id="homework-due">
+          <p className="danielle-week1__note-label">Session note</p>
+          <h3 className="danielle-week1__note-title">{POST_SESSION_1_HOMEWORK.headline}</h3>
+          <p className="danielle-week1__focus">
+            <strong>Due {POST_SESSION_1_HOMEWORK.dueLabel}.</strong> {POST_SESSION_1_HOMEWORK.body}
+          </p>
+        </div>
+
         <h3 className="danielle-week1__slides-heading">Building on Thursday</h3>
         <ul className="danielle-week1__practice-list">
           {POST_SESSION_1_NEXT.map((item) => (
@@ -204,9 +213,9 @@ export function DanielleWeek1Content() {
           ))}
         </ul>
         <p className="danielle-week1__habit">
-          <strong>Homework:</strong> Work through assigned practice in the Homework Portal. Solutions
-          are visible so you can study worked examples. Answer what you can; leave anything that
-          still feels confusing and we will tackle it Thursday.
+          <strong>Homework:</strong> Work through assigned quadratics practice in the Homework Portal
+          by <strong>Sunday, June 15</strong>. Solutions are visible so you can study worked
+          examples. Answer what you can; bring anything still confusing to Thursday&apos;s session.
         </p>
         <p className="danielle-week1__habit">
           <strong>Portal alerts:</strong>{" "}
@@ -284,13 +293,18 @@ export function DanielleWeek1Content() {
             Math recognition flashcards
           </li>
           <li>
-            <strong>Thu Jun 11:</strong> Lesson 2 day — light Homework Portal review only
+            <strong>Thu Jun 11:</strong> Lesson 2 day — focus on session; keep chipping away at
+            homework when you have time
           </li>
           <li>
-            <strong>Fri Jun 12:</strong> Homework Portal practice plus a few nonlinear equation reps
+            <strong>Fri Jun 12:</strong> Homework Portal practice (quadratics and factoring) plus a
+            few nonlinear equation reps
           </li>
           <li>
-            <strong>Sat Jun 13:</strong> Mixed Math practice plus recognition flashcards
+            <strong>Sat Jun 13:</strong> Homework Portal practice plus Math recognition flashcards
+          </li>
+          <li>
+            <strong>Sun Jun 15:</strong> Finish quadratics homework in the Homework Portal (due date)
           </li>
         </ul>
       </section>

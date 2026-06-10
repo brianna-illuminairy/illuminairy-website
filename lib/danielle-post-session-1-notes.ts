@@ -17,6 +17,13 @@ export const POST_SESSION_1_NEXT = [
   "Repeated factoring reps until the AC method and the \"keep the 1\" step feel automatic."
 ] as const;
 
+export const POST_SESSION_1_HOMEWORK = {
+  dueLabel: "Sunday, June 15",
+  headline: "Quadratics homework · due Sunday",
+  body:
+    "We moved your quadratics homework deadline from Thursday to Sunday, June 15 so you have more time to work through the set. Solutions stay visible in the Homework Portal. Work at a steady pace through the week; bring anything still unclear to Thursday's session."
+} as const;
+
 export const QUADRATICS_SCORE_CONTEXT = {
   headline: "Why we are staying on quadratics and factoring",
   lede:
