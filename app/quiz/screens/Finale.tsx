@@ -20,6 +20,7 @@ import {
 } from '@/lib/calendly/booking-errors';
 import { countPhoneDigits } from '@/lib/calendly/phone-e164';
 import { QUIZ_TESTIMONIALS } from '@/lib/quiz-funnel/testimonials';
+import { readSessionAttribution } from '@/lib/attribution';
 import { getClientAttributionPayload } from '@/lib/quiz-funnel/client-attribution';
 import { planBuilderStepHref } from '@/lib/plan-builder-routes';
 import { resolveMetaClickIds } from '@/lib/meta-click-ids';
@@ -180,8 +181,9 @@ export function QFS5Approved({
   const bookingGateTracked = useRef(false);
 
   const bookingGated = useMemo(() => {
-    const { attribution } = getClientAttributionPayload();
     const hasQaBypass = hasPlanBuilderBookingQaBypassFromDocument();
+    // Raw session UTMs only — do not infer paid Social from LP path (that blocked organic s5).
+    const attribution = readSessionAttribution();
     return shouldGatePlanBuilderBooking(attribution, hasQaBypass);
   }, []);
 

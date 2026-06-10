@@ -9,15 +9,16 @@ Operational checklist for cold, anonymous ad traffic on `/sat-plan-builder` -> `
 - [ ] `FUNNEL_LAYOUT_UNLOCK=1 npm run agent:verify` passes
 - [ ] `npm run funnel:completeness` has no critical threshold breaches
 - [ ] Paid ad s5 booking QA on real devices (see device matrix below)
-- [ ] Set `PLAN_BUILDER_BOOKING_LIVE=1` and `NEXT_PUBLIC_PLAN_BUILDER_BOOKING_LIVE=1` on Vercel production before turning Meta ads back on
 
-## Paid ad booking gate (until QA sign-off)
+## Paid ad booking gate (optional kill switch)
 
-Production defaults: **paid ad traffic** (Meta `fbclid`, `utm_medium=paid_social`, Google `gclid`, etc.) sees a **lead-only hold** on s5. No Calendly slots load; booking APIs return `booking_paused`.
+**Default:** s5 shows Calendly slots for everyone (organic, direct, and paid).
 
-- **Organic / direct** `/plan` traffic can still book while you QA ads.
+To hold **paid ad traffic** on lead-only s5 during an incident or pre-launch QA, set `PLAN_BUILDER_BOOKING_PAUSED=1` and `NEXT_PUBLIC_PLAN_BUILDER_BOOKING_PAUSED=1` on Vercel Production, then push `main` to rebuild.
+
+- Gate triggers only on **real paid signals** in session (`fbclid`, `gclid`, `msclkid`, or `utm_medium` = paid_social/cpc/ppc). LP-inferred UTMs do not block booking.
 - **QA bypass:** `/plan?plan_booking_qa=$PLAN_BUILDER_BOOKING_QA_SECRET` (7-day cookie; strips secret from URL).
-- **Go live for ads:** set both `PLAN_BUILDER_BOOKING_LIVE` env vars to `1`, redeploy, then resume Meta campaigns.
+- **Resume normal booking:** remove PAUSED vars or set to `0`, push `main`.
 
 ## Device matrix (real device)
 

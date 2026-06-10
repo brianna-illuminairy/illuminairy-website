@@ -8,9 +8,16 @@ function envTruthy(raw: string | undefined): boolean {
   return v === "1" || v === "true" || v === "yes";
 }
 
-/** Client + server: public flag for s5 booking on paid ad traffic. */
+/** Optional kill switch — set PAUSED=1 to hold paid ad traffic on lead-only s5. Default: booking live. */
+export function isPlanBuilderBookingPausedPublic(): boolean {
+  return envTruthy(process.env.NEXT_PUBLIC_PLAN_BUILDER_BOOKING_PAUSED);
+}
+
+/** @deprecated Legacy opt-in flag; booking is live by default. LIVE=1 still forces gate off. */
 export function isPlanBuilderBookingLivePublic(): boolean {
-  return envTruthy(process.env.NEXT_PUBLIC_PLAN_BUILDER_BOOKING_LIVE);
+  if (isPlanBuilderBookingPausedPublic()) return false;
+  if (envTruthy(process.env.NEXT_PUBLIC_PLAN_BUILDER_BOOKING_LIVE)) return true;
+  return true;
 }
 
 export function getPlanBuilderBookingQaSecret(): string {
@@ -23,38 +30,22 @@ export function isPlanBuilderBookingQaSecretValid(code: string | undefined): boo
   return code.trim() === secret;
 }
 
-/** Meta / Google / Microsoft paid click IDs and paid UTMs. */
+/**
+ * Paid click captured in session — not LP-inferred UTMs (those must not block booking).
+ * Requires fb/gclid/msclkid or an explicit paid utm_medium from the landing URL.
+ */
 export function isPaidAdAttribution(attr: AttributionSnapshot): boolean {
   if (attr.fbclid?.trim()) return true;
   if (attr.gclid?.trim()) return true;
   if (attr.msclkid?.trim()) return true;
 
   const medium = attr.utm_medium?.trim().toLowerCase() ?? "";
-  const source = attr.utm_source?.trim().toLowerCase() ?? "";
-
-  if (
+  return (
     medium === "paid_social" ||
     medium === "cpc" ||
     medium === "ppc" ||
     medium === "paid"
-  ) {
-    return true;
-  }
-
-  if (
-    source === "facebook" ||
-    source === "fb" ||
-    source === "meta" ||
-    source === "instagram" ||
-    source.includes("facebook") ||
-    source.includes("meta")
-  ) {
-    if (!medium || medium === "paid_social" || medium === "cpc" || medium === "ppc") {
-      return true;
-    }
-  }
-
-  return false;
+  );
 }
 
 export function isPaidAdSearch(search: string): boolean {

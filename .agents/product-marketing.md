@@ -140,7 +140,7 @@ One promise end-to-end: free **SAT Improvement Plan + score projection** (~2 min
 **Conversion actions (in order):**
 1. Meta ad → `https://illuminairy.com/sat-plan-builder?…` (UTMs per `meta-live-creatives.ts`; `npm run marketing:ad-urls`)
 2. LP hero CTA → `/plan?step=q1-parent-child` (UTMs preserved)
-3. Book SAT Strategy Call on s5 (after `PLAN_BUILDER_BOOKING_LIVE=1` + mobile QA)
+3. Book SAT Strategy Call on s5 (Calendly slots on `/plan?step=s5`; optional `PLAN_BUILDER_BOOKING_PAUSED=1` only for ad hold)
 4. Skill Diagnostic Week 1 → program enrollment
 
 **Current metrics:** PostHog funnel in `growth/posthog-funnel-dashboard.md`.
