@@ -1,0 +1,34 @@
+---
+description: Plan Builder s5 booking lock — no gate, no lead-only hold, owner sign-off while ads run
+globs: app/quiz/**/*,app/api/funnel/**/*,lib/quiz-funnel/**/*,lib/calendly/**/*,middleware.ts,.env.example
+alwaysApply: false
+---
+
+# Plan Builder booking lock (s5)
+
+**Owner approval required** before shipping any change that affects `/plan` step **s5**, Calendly availability/book APIs, or s5 parent-facing copy **while Meta ads are live**.
+
+## Never ship again
+
+- **Booking gate** — holding paid/organic traffic on lead-only s5 instead of Calendly
+- **UTM / attribution gating** — `fbclid`, `utm_medium`, or inferred paid click blocking scheduling (fragile: LP → `/plan`, Safari, in-app browser)
+- **Env toggles** — `PLAN_BUILDER_BOOKING_PAUSED`, `PLAN_BUILDER_BOOKING_LIVE`, `plan_booking_qa` bypass
+- **Lead-only s5 UX** — "Save my plan", "scheduling by email for now", or any CTA that skips Calendly without Brianna's explicit copy approval
+- **Dead analytics** — `booking_deferred`, `booking_paused` (removed Jun 10, 2026; PostHog history only)
+
+## Required behavior
+
+- s5 always loads **Calendly slots** (`PUBLIC_SAT_STRATEGY_CALL_CALENDLY_URL` / `sat-planning-session`)
+- Lead save + book flow: `POST /api/funnel/lead` then `POST /api/funnel/calendly-book` (or equivalent confirm path in `Finale.tsx`)
+- If mobile QA is not done: **pause ads** or use preview/staging — do not gate production booking
+
+## Before merge (agent checklist)
+
+1. Brianna explicitly approved the s5/copy/behavior change (or ads are paused)
+2. `npm run funnel:booking-guard` passes (also in `npm run agent:verify`)
+3. `npm run funnel:e2e` after s5 or booking API edits
+4. `npm run smoke:prod` after deploy — Calendly availability check must pass
+
+## QA instead of gating
+
+Use `growth/mobile-funnel-qa-checklist.md` and real-device passes. Funnel-impacting experiments need a spec note in PR/commit message.

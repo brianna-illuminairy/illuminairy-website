@@ -36,6 +36,7 @@ This is **not** a coursework or AIMA assignment repo. Do not apply academic “s
 
 - **Ship here:** `npm run dev` → http://localhost:3000/plan
 - **Mobile shell + step interaction:** flex viewport shell — `docs/funnel-mobile-shell.md`. Step modes in `lib/quiz-funnel/step-interaction.mjs` (auto-advance, option-tap, explicit CTA, etc.). Do not invent CTAs. Legal footer only: `QFFunnelLegal`. See `app/quiz/LAYOUT.lock.md`, `npm run funnel:cta-guard`, **`npm run funnel:e2e`**.
+- **s5 booking lock:** never gate Calendly on ad traffic — `.cursor/rules/plan-builder-booking-lock.mdc`; `npm run funnel:booking-guard` (in `agent:verify`).
 - **Shell:** `QFShell.tsx` owns chrome + scrollable body + step actions; `layout.tsx` adds the legal strip. Shell CSS in `funnel-responsive.css` (`FUNNEL-MOBILE-SHELL` block).
 - **Funnel flow + analytics (read before any drop-off analysis):** canonical step order, **`v1` = plan reveal** vs **`achievability` = goal rating (NOT plan reveal; deprecated code names `QFSPlanReveal` / `plan-reveal.ts`), step-ID aliases (`reveal`/`s1` → achievability only), and the PostHog analysis window (no data before 2026-06-07 16:00 UTC; exclude internal emails) live in rule `.cursor/rules/funnel-flow-canonical.mdc` + playbook [`growth/funnel-analysis-playbook.md`](growth/funnel-analysis-playbook.md). Code SSOT: `lib/quiz-funnel/quiz-route.ts`, `lib/quiz-funnel/step-aliases.ts`, `lib/quiz-funnel/funnel-screen-roles.ts`.
 
