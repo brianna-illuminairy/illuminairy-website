@@ -22,7 +22,7 @@ npx skills add coreyhaines31/marketingskills --skill product-marketing copywriti
 | LP / hero / section copy | `copywriting` | “Rewrite B3 hero using staged disclosure — use copywriting skill” |
 | Polish existing strings | `copy-editing` | “copy-edit `lib/landing/content.ts` against messaging guide” |
 | Funnel conversion audit | `cro` | “CRO audit `/quiz` reveal → s5 → s9” |
-| Lead form / s5 gate | `signup` | “Optimize quiz lead form for Strategy Call booking” |
+| Lead form / s5 booking | `signup` | “Optimize quiz lead form for Strategy Call booking” |
 | Klaviyo sequences | `emails` | “Draft Flow B emails per klaviyo-quiz-funnel-nurture.md” |
 | Show-up SMS | `sms` | “SMS for T-1h Strategy Call reminder” |
 | Meta/UGC ad angles | `ads` + `ad-creative` | “ad-creative variants for Icon script 1 — no free quiz” |

@@ -152,12 +152,6 @@ export function bookingFeedbackForCode(
         field: "slot",
         retryable: false,
       };
-    case "booking_paused":
-      return {
-        title: "Scheduling unavailable",
-        message: BOOKING_FEEDBACK.availabilityFailed,
-        retryable: false,
-      };
     case "lead_save_failed":
       return {
         title: "Could not save your details",

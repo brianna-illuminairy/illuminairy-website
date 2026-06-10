@@ -324,7 +324,7 @@ export function identifyQuizLead(email: string, answers: Record<string, unknown>
 export function captureQuizLeadSubmitted(
   answers: Record<string, unknown>,
   eventId?: string,
-  options?: { hasGapScreen?: boolean; booking_deferred?: boolean }
+  options?: { hasGapScreen?: boolean }
 ) {
   const q4 = answers.q4 as string | undefined;
   const q5 = answers.q5 as string | undefined;
@@ -359,7 +359,6 @@ export function captureQuizLeadSubmitted(
       readPersistedLpVariantId() ??
       undefined,
     has_gap_screen: Boolean(options?.hasGapScreen),
-    booking_deferred: Boolean(options?.booking_deferred),
     showed_gpa_gap: showedGpaGapScreen(q4, answers.q9 as string | undefined),
     promised_gain_pts: promisedGain ?? undefined,
     weeks_until_test: weeksUntilQ5Test(q5),

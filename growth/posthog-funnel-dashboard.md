@@ -105,7 +105,7 @@ LP view calls `enrichSessionAttributionFromLanding` before quiz navigation so `/
 
 Break down `quiz_booking_validation` by `validation_code` or `field`: `tcpa_required` / `confirmTcpa`, `invalid_contact` / `parentName`, `invalid_phone`, `no_slot`.
 
-Break down `quiz_booking_error` by `error_code`: `lead_save_failed`, `slot_taken`, `calendly_api`, `availability_load`, `network`. Historical rows may include deprecated `booking_paused` (Jun 10, 2026 gate — removed).
+Break down `quiz_booking_error` by `error_code`: `lead_save_failed`, `slot_taken`, `calendly_api`, `availability_load`, `network`. Historical rows may include deprecated gate codes (`booking_paused`, `booking_deferred` on leads) from Jun 10, 2026 — removed from code.
 
 ### Step back (resume debugging)
 
