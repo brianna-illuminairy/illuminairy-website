@@ -26,6 +26,8 @@
     "funnel:completeness": "node scripts/funnel-completeness-monitor.mjs",
     "funnel:step-registry": "node scripts/verify-quiz-step-registry.mjs",
     "funnel:achievability": "node scripts/verify-goal-achievability.mjs",
+    "marketing:utm-aliases": "node scripts/verify-utm-content-aliases.mjs",
+    "marketing:utm-aliases": "node scripts/verify-utm-content-aliases.mjs",
     "funnel:no-em-dash": "node scripts/funnel-no-em-dash.mjs",
     "agent:verify": "npm run funnel:layout-guard && npm run funnel:cta-guard && npm run funnel:step-registry && node scripts/agent-verify.mjs",
     "ralph:status": "node scripts/ralph-loop.mjs status",
@@ -34,7 +36,8 @@
     "crm:migrate": "node scripts/apply-crm-migration.mjs",
     "smoke:prod": "node scripts/smoke-prod.mjs",
     "crm:migrate:api": "node scripts/apply-crm-via-management-api.mjs",
-    "crm:calendly-webhook": "node scripts/setup-calendly-webhook.mjs"
+    "crm:calendly-webhook": "node scripts/setup-calendly-webhook.mjs",
+    "danielle:notify-updates": "node scripts/danielle-notify-updates.mjs"
   },
   "dependencies": {
     "@posthog/nextjs-config": "^1.9.52",

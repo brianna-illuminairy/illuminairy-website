@@ -167,6 +167,36 @@
   box-shadow: 0 18px 40px -28px rgba(31, 39, 51, 0.35);
 }
 
+.danielle-portal__card--wide {
+  max-width: 560px;
+}
+
+.danielle-portal__notify-form {
+  display: grid;
+  gap: 16px;
+}
+
+.danielle-portal__notify-check {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px;
+  align-items: start;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--danielle-ink);
+}
+
+.danielle-portal__notify-check input {
+  margin-top: 4px;
+}
+
+.danielle-portal__notify-success {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--danielle-forest);
+}
+
 .danielle-portal__eyebrow {
   font-size: 11px;
   letter-spacing: 2.5px;
@@ -406,6 +436,15 @@
   margin: 0 0 12px;
 }
 
+.danielle-week1__inline-link {
+  color: var(--danielle-forest);
+  font-weight: 700;
+}
+
+.danielle-week1__inline-link:hover {
+  color: #1b3f2c;
+}
+
 .danielle-week1__goals,
 .danielle-week1__practice-list {
   margin: 0;
@@ -584,6 +623,19 @@
 
 .danielle-portal__updates-link:hover {
   color: #1b3f2c;
+}
+
+.danielle-portal__updates-register {
+  width: fit-content;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--danielle-navy);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.danielle-portal__updates-register:hover {
+  color: var(--danielle-forest);
 }
 
 .danielle-portal__updates-dismiss {

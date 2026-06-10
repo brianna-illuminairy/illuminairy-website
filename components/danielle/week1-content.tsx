@@ -208,6 +208,13 @@ export function DanielleWeek1Content() {
           are visible so you can study worked examples. Answer what you can; leave anything that
           still feels confusing and we will tackle it Thursday.
         </p>
+        <p className="danielle-week1__habit">
+          <strong>Portal alerts:</strong>{" "}
+          <a href="/danielle/notifications" className="danielle-week1__inline-link">
+            Turn on email and text alerts
+          </a>{" "}
+          when session notes or lesson materials are added.
+        </p>
       </section>
 
       <section className="danielle-week1__section">
