@@ -27,10 +27,6 @@ export const DANIELLE_FILE_MAP = {
   "quadratics-slides": {
     filename: "quadratics-slides.html",
     contentType: "text/html; charset=utf-8"
-  },
-  "quadratics-practice": {
-    filename: "quadratics-practice-deck.html",
-    contentType: "text/html; charset=utf-8"
   }
 } as const;
 

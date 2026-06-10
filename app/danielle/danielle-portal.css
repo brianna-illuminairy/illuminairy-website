@@ -533,6 +533,114 @@
   padding: 16px 18px;
 }
 
+.danielle-portal__updates {
+  background: #edf6ef;
+  border-bottom: 1px solid rgba(47, 139, 85, 0.25);
+}
+
+.danielle-portal__updates-inner {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 14px 22px 16px;
+  display: grid;
+  gap: 10px;
+}
+
+.danielle-portal__updates-label {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--danielle-forest);
+}
+
+.danielle-portal__updates-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}
+
+.danielle-portal__updates-list li {
+  display: grid;
+  gap: 4px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--danielle-ink);
+}
+
+.danielle-portal__updates-list strong {
+  color: var(--danielle-navy);
+}
+
+.danielle-portal__updates-link {
+  width: fit-content;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--danielle-forest);
+}
+
+.danielle-portal__updates-link:hover {
+  color: #1b3f2c;
+}
+
+.danielle-portal__updates-dismiss {
+  width: fit-content;
+  border: 1px solid var(--danielle-line);
+  background: #fff;
+  color: var(--danielle-muted);
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.danielle-portal__updates-dismiss:hover {
+  color: var(--danielle-ink);
+}
+
+.danielle-week1__notes {
+  border-color: rgba(47, 139, 85, 0.35);
+  background: linear-gradient(180deg, #f7fbf8 0%, #fffdf8 100%);
+}
+
+.danielle-week1__wins,
+.danielle-week1__score-list {
+  margin: 0 0 16px;
+  padding-left: 20px;
+  color: var(--danielle-ink);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.danielle-week1__wins li,
+.danielle-week1__score-list li {
+  margin-bottom: 10px;
+}
+
+.danielle-week1__score-card {
+  border: 1px solid var(--danielle-line);
+  border-radius: 14px;
+  padding: 18px 20px;
+  background: #fff;
+  margin: 8px 0 18px;
+}
+
+.danielle-week1__score-card-title {
+  margin: 0 0 10px;
+  font-family: var(--font-display, Georgia, serif);
+  font-size: 20px;
+  color: var(--danielle-navy);
+}
+
+#post-session-1,
+#lesson-2 {
+  scroll-margin-top: 24px;
+}
+
 @media (max-width: 640px) {
   .danielle-week1__slide-frame {
     min-height: 420px;

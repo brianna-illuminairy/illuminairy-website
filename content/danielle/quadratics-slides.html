@@ -38,7 +38,7 @@
   h1{font-family:var(--display);font-weight:700;color:var(--forest);
     font-size:clamp(32px,5.5vw,60px);line-height:1.02;margin:0 0 16px;letter-spacing:-.5px}
   h2{font-family:var(--display);font-weight:600;color:var(--forest);
-    font-size:clamp(25px,3.9vw,40px);line-height:1.05;margin:0 0 18px;letter-spacing:-.3px}
+    font-size:clamp(24px,3.7vw,38px);line-height:1.06;margin:0 0 18px;letter-spacing:-.3px}
   p{font-size:clamp(16px,2.1vw,20px);margin:0 0 14px;max-width:64ch}
   .lead{font-size:clamp(18px,2.4vw,23px);color:var(--ink)}
   .sub{color:var(--muted);font-size:clamp(15px,2vw,19px)}
@@ -47,15 +47,35 @@
   .eg{font-family:var(--mono);background:var(--sage);color:var(--forest);
     padding:1px 7px;border-radius:5px;font-size:.85em;margin-left:4px}
   .tools{list-style:none;padding:0;margin:14px 0 0}
-  .tools li{display:flex;gap:12px;align-items:baseline;margin:0 0 14px;
-    font-size:clamp(15px,2vw,19px)}
+  .tools li{display:flex;gap:12px;align-items:baseline;margin:0 0 15px;
+    font-size:clamp(15px,2vw,19px);line-height:1.5}
   .tools li .star{color:var(--green);flex:0 0 auto}
   .tools li b{color:var(--forest)}
   .steps{list-style:none;padding:0;margin:6px 0 0}
   .steps li{display:flex;gap:12px;align-items:flex-start;margin:0 0 13px;
-    font-size:clamp(16px,2.1vw,20px)}
+    font-size:clamp(16px,2.1vw,20px);line-height:1.5}
   .steps li .star{color:var(--green);font-size:.85em;margin-top:.35em;flex:0 0 auto}
+  .step{font-size:clamp(16px,2.1vw,20px);margin:0 0 13px;display:flex;gap:12px;
+    align-items:flex-start;line-height:1.5;max-width:64ch}
+  .step .star{color:var(--green);font-size:.85em;margin-top:.35em;flex:0 0 auto}
   .answer{color:var(--green);font-weight:700}
+  .share{background:#cfe7d2;color:var(--forest);border-radius:5px;padding:1px 6px;font-family:var(--mono);font-weight:600}
+  /* stacked fraction */
+  .frac{display:inline-flex;flex-direction:column;text-align:center;vertical-align:middle;margin:0 4px}
+  .frac .num{border-bottom:2.5px solid currentColor;padding:0 8px 3px}
+  .frac .den{padding:4px 8px 0}
+  .formula{font-family:var(--mono);font-size:clamp(20px,3.2vw,30px);color:var(--forest);
+    background:var(--sage);border-radius:12px;padding:20px 18px;text-align:center;margin:16px 0;
+    display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap}
+  /* example-question cards */
+  .exq{border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:0 0 16px;background:#fff}
+  .exq.warn{border-color:rgba(217,83,59,.45)}
+  .exq-label{font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px}
+  .exq-label.good{color:var(--green)}
+  .exq-label.bad{color:var(--tomato)}
+  .exq-q{font-family:var(--mono);font-size:clamp(15px,2vw,18px);color:var(--forest);
+    margin-bottom:9px;line-height:1.4}
+  .exq-why{font-size:clamp(14px,1.9vw,18px);color:var(--ink);line-height:1.5}
   .callout{border-left:4px solid var(--green);background:var(--sage);
     padding:16px 20px;border-radius:0 12px 12px 0;margin:18px 0;font-size:clamp(15px,2vw,19px)}
   .callout .tag{display:block;font-size:12px;font-weight:700;letter-spacing:1.5px;
@@ -73,22 +93,22 @@
   .frag{opacity:0;transform:translateY(8px);transition:opacity .35s ease,transform .35s ease}
   .frag.show{opacity:1;transform:none}
   .nav{display:flex;align-items:center;justify-content:space-between;gap:16px}
-  .dots{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;flex:1}
-  .dot{width:9px;height:9px;border-radius:99px;background:var(--line);border:0;padding:0;
+  .dots{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;flex:1}
+  .dot{width:8px;height:8px;border-radius:99px;background:var(--line);border:0;padding:0;
     cursor:pointer;transition:background .2s,transform .2s}
-  .dot.on{background:var(--green);transform:scale(1.25)}
+  .dot.on{background:var(--green);transform:scale(1.3)}
   button.arrowbtn{font-family:var(--sans);font-size:20px;line-height:1;cursor:pointer;
     width:48px;height:48px;border-radius:99px;border:1px solid var(--line);background:#fff;
     color:var(--forest);transition:background .2s,color .2s,opacity .2s;flex:0 0 auto}
   button.arrowbtn:hover:not(:disabled){background:var(--forest);color:#fff}
   button.arrowbtn:disabled{opacity:.3;cursor:default}
   button:focus-visible,.dot:focus-visible{outline:3px solid var(--green);outline-offset:3px}
-  .hint{margin-top:20px;font-size:13px;color:var(--muted)}
+  .hint{margin-top:18px;font-size:13px;color:var(--muted)}
   .hint kbd{font-family:var(--mono);background:var(--sage);border-radius:5px;padding:1px 7px;
     border:1px solid var(--line)}
   @media(max-width:640px){
     body{padding:12px}
-    .slides{padding:30px 24px;min-height:70vh}
+    .slides{padding:28px 22px;min-height:72vh}
     .cards{grid-template-columns:1fr}
   }
   @media(prefers-reduced-motion:reduce){
@@ -101,7 +121,7 @@
 <div class="stage">
   <div class="topbar">
     <div class="brand">Illuminairy <span class="star">✶</span></div>
-    <div class="count" id="count">1 / 10</div>
+    <div class="count" id="count">1 / 15</div>
   </div>
   <div class="progress"><div class="bar" id="bar"></div></div>
 
@@ -121,77 +141,154 @@
       <div class="kicker">Why this lesson</div>
       <h2>Two questions, both quadratics, both missed</h2>
       <p>Her Q11 took 137 seconds. Her Q4 took 97 seconds. Both ran long, both came back wrong.</p>
-      <div class="callout frag"><span class="tag">The thread</span>On both, the calculator could not hand her the answer. One has a letter constant, one needs an exact radical form. The fix is the by-hand tools, which is why factoring and radicals came first.</div>
+      <div class="callout frag"><span class="tag">The thread</span>On both, the calculator could not hand her the answer. One has a letter in it, one needs an answer with a square root kept in. The fix is the by-hand tools, which is why factoring and radicals came first.</div>
     </section>
 
     <!-- 3 SPOT IT -->
     <section class="slide">
       <div class="kicker">Step 1</div>
       <h2>How to spot a quadratic</h2>
-      <p>A squared variable is the highest power.</p>
-      <p class="frag">It will ask for the solutions, the number of solutions, the sum or product of the roots, or a solution written in a special form.</p>
+      <p>The biggest power is a square, an <span class="eq">x²</span> term.</p>
+      <p class="frag">It will ask for the solutions, how many solutions there are, the sum or product of the two answers, or a solution written with a square root in it.</p>
     </section>
 
-    <!-- 4 FIVE TOOLS -->
+    <!-- 4 PICK YOUR TOOL -->
     <section class="slide">
-      <div class="kicker">Step 2 · The decision tree</div>
+      <div class="kicker">Step 2 · A menu, not a formula to memorize</div>
       <h2>Pick your tool</h2>
       <ul class="tools">
-        <li class="frag"><span class="star">✶</span><span><b>Factors nicely?</b> Factor and use the zero-product property. <span class="eg">x² + x − 90</span></span></li>
-        <li class="frag"><span class="star">✶</span><span><b>Asks for the sum or product of roots?</b> Sum = −b/a, product = c/a. Do not solve.</span></li>
-        <li class="frag"><span class="star">✶</span><span><b>Asks how many solutions?</b> Use the discriminant <span class="eg">b² − 4ac</span>.</span></li>
-        <li class="frag"><span class="star">✶</span><span><b>Ugly numbers, or "in the form a + b√n"?</b> Quadratic formula, then simplify and match.</span></li>
-        <li class="frag"><span class="star">✶</span><span><b>Hidden structure?</b> A common factor or a perfect square. Factor it out, do not expand.</span></li>
+        <li class="frag"><span class="star">✶</span><span><b>Does it factor nicely?</b> Factor it, then use the zero-product rule: if two things multiply to make zero, one of them has to be zero. Example: <span class="eg">x² + x − 90 = 0</span>.</span></li>
+        <li class="frag"><span class="star">✶</span><span><b>Does it only ask for the sum or the product of the two answers?</b> You do not have to solve. The two answers always add up to <span class="eg">−b/a</span> and multiply to <span class="eg">c/a</span>.</span></li>
+        <li class="frag"><span class="star">✶</span><span><b>Does it ask how many answers there are, not what they are?</b> Use the discriminant, <span class="eg">b² − 4ac</span>. The next slide explains it.</span></li>
+        <li class="frag"><span class="star">✶</span><span><b>Will the answer be messy, like a whole number plus a square root (5 + 3√2)?</b> Use the quadratic formula. The next slide explains it.</span></li>
+        <li class="frag"><span class="star">✶</span><span><b>Is there a repeated piece you can pull out?</b> A shared factor (her Q11) or a perfect square. Pull it out instead of multiplying everything open. That is all "hidden structure" means.</span></li>
       </ul>
     </section>
 
-    <!-- 5 CALC OR HAND -->
+    <!-- 5 THE QUADRATIC FORMULA -->
     <section class="slide">
-      <div class="kicker">The habit</div>
-      <h2>Calculator or by hand?</h2>
-      <p>Use the calculator only when you can put in real numbers and read a clean root.</p>
-      <div class="callout"><span class="tag">The rule</span>A letter constant or an exact-form answer means by hand. Both of her misses were by-hand questions.</div>
+      <div class="kicker">The main by-hand tool</div>
+      <h2>The quadratic formula</h2>
+      <p>When a quadratic does not factor nicely, this always finds the answers. For any equation shaped like <span class="eq">ax² + bx + c = 0</span>:</p>
+      <div class="formula">x =
+        <span class="frac"><span class="num">−b ± √(b² − 4ac)</span><span class="den">2a</span></span>
+      </div>
+      <ul class="steps">
+        <li class="frag"><span class="star">✶</span><span><b>a, b, c</b> are just the numbers in the equation: a sits with the <span class="eq">x²</span>, b sits with the <span class="eq">x</span>, c is the number by itself.</span></li>
+        <li class="frag"><span class="star">✶</span><span>The <b>±</b> means you do it twice, once with a plus and once with a minus. That is what gives the two answers.</span></li>
+        <li class="frag"><span class="star">✶</span><span>The part under the square root, <span class="eq">b² − 4ac</span>, has a name: the <b>discriminant</b>.</span></li>
+      </ul>
+      <div class="callout frag"><span class="tag">What the discriminant tells you</span>Work it out first and it tells you how many answers before you finish. Positive: two answers. Zero: one answer. Negative: no real answers, because you cannot take the square root of a negative.</div>
     </section>
 
-    <!-- 6 BACKGROUND -->
+    <!-- 6 CALC OR HAND, TWO EXAMPLES -->
     <section class="slide">
-      <div class="kicker">What's underneath</div>
+      <div class="kicker">The habit · Two examples</div>
+      <h2>When can she use the calculator?</h2>
+      <div class="exq frag">
+        <div class="exq-label good">✶ Calculator can do this one</div>
+        <div class="exq-q">x² − 5x + 6 = 0. What is the larger solution?</div>
+        <div class="exq-why">All numbers, and it wants a plain number back. Graph it: the curve crosses zero at <span class="eq">x = 2</span> and <span class="eq">x = 3</span>. Read off the larger one, 3. The graph hands her the answer.</div>
+      </div>
+      <div class="exq warn frag">
+        <div class="exq-label bad">✶ Calculator cannot finish this one</div>
+        <div class="exq-q">x² − 10x + 7 = 0 has a solution of the form 5 + 3√n. What is n?</div>
+        <div class="exq-why">Graphing gives a decimal (about 8.24). That decimal does not tell her n. She needs the algebra to reach the exact answer <span class="eq">5 + 3√2</span>, and only then does she see <span class="eq">n = 2</span>. This was her Q4.</div>
+      </div>
+      <div class="callout frag"><span class="tag">The difference</span>The first wants a plain number she can read off the graph. The second wants an exact form (a square root kept in) or has a letter in it, and a decimal cannot give her that.</div>
+    </section>
+
+    <!-- 7 BACKGROUND -->
+    <section class="slide">
+      <div class="kicker">What is underneath</div>
       <h2>The skills this leans on</h2>
       <ul class="tools">
-        <li class="frag"><span class="star">✶</span><span>Factoring and the zero-product property <span class="sub">(built in the factoring deck)</span></span></li>
-        <li class="frag"><span class="star">✶</span><span>The quadratic formula</span></li>
-        <li class="frag"><span class="star">✶</span><span>Simplifying radicals <span class="sub">(built in the radical deck)</span></span></li>
-        <li class="frag"><span class="star">✶</span><span>Sum and product of roots, the discriminant, spotting a perfect square</span></li>
+        <li class="frag"><span class="star">✶</span><span>Factoring and the zero-product rule <span class="sub">(built in the factoring deck)</span></span></li>
+        <li class="frag"><span class="star">✶</span><span>The quadratic formula <span class="sub">(slide 5)</span></span></li>
+        <li class="frag"><span class="star">✶</span><span>Simplifying square roots <span class="sub">(built in the radical deck)</span></span></li>
+        <li class="frag"><span class="star">✶</span><span>Sum and product of the answers, the discriminant, and spotting a repeated piece</span></li>
       </ul>
     </section>
 
-    <!-- 7 WORKED A -->
+    <!-- 8 WORKED A -->
     <section class="slide">
       <div class="kicker">Worked example · Her Q11</div>
       <h2><span class="eq">y − 42 = (y − c)(y − 42)</span></h2>
       <ul class="steps">
-        <li class="frag"><span class="star">✶</span><span>Move everything to one side: <span class="eq">(y − 42) − (y − c)(y − 42) = 0</span></span></li>
-        <li class="frag"><span class="star">✶</span><span>Factor out the common <span class="eq">(y − 42)</span>: <span class="eq">(y − 42)[1 − (y − c)] = 0</span></span></li>
-        <li class="frag"><span class="star">✶</span><span>Set each factor to zero: <span class="answer">y = 42</span> and <span class="answer">y = c + 1</span></span></li>
-        <li class="frag"><span class="star">✶</span><span>That is I and III, <span class="answer">choice D</span>.</span></li>
+        <li class="frag"><span class="star">✶</span><span><b>Step 1.</b> Move everything to one side so it equals zero: <span class="eq">(y − 42) − (y − c)(y − 42) = 0</span></span></li>
+        <li class="frag"><span class="star">✶</span><span><b>Step 2.</b> Rewrite by factoring out the shared piece: <span class="eq">(y − 42)[1 − (y − c)] = 0</span></span></li>
+        <li class="frag"><span class="star">✶</span><span><b>Step 3.</b> Set each factor to zero: <span class="eq">y − 42 = 0</span> and <span class="eq">1 − (y − c) = 0</span></span></li>
+        <li class="frag"><span class="star">✶</span><span><b>Step 4.</b> Solve each one: <span class="answer">y = 42</span> and <span class="answer">y = c + 1</span> (that is I and III, choice D).</span></li>
       </ul>
       <div class="pitfall frag"><span class="tag">Her trap</span>She chose 42 and c, treating the right side as already solved and ignoring the (y − 42) on the left.</div>
     </section>
 
-    <!-- 8 WORKED B -->
+    <!-- 8A SHARED FACTOR -->
     <section class="slide">
-      <div class="kicker">Worked example · Her Q4</div>
-      <h2><span class="eq">x² − 10x + 7 = 0</span>, solution <span class="eq">5 + 3√n</span></h2>
+      <div class="kicker">Her Q11 · Recognizing a shared factor</div>
+      <h2>Two chunks, one shared piece</h2>
+      <p>Move everything to one side: <span class="eq">(y − 42) − (y − c)(y − 42) = 0</span></p>
       <ul class="steps">
-        <li class="frag"><span class="star">✶</span><span>Quadratic formula: <span class="eq">x = (10 ± √(100 − 28)) / 2 = (10 ± √72) / 2</span></span></li>
-        <li class="frag"><span class="star">✶</span><span>Simplify the radical: <span class="eq">√72 = 6√2</span></span></li>
-        <li class="frag"><span class="star">✶</span><span>Divide every term by 2: <span class="eq">x = 5 ± 3√2</span></span></li>
-        <li class="frag"><span class="star">✶</span><span>Match: <span class="eq">3√n = 3√2</span>, so <span class="answer">n = 2</span> (choice A).</span></li>
+        <li class="frag"><span class="star">✶</span><span>It is two chunks being subtracted: <span class="eq">(y − 42)</span> and <span class="eq">(y − c)(y − 42)</span>.</span></li>
+        <li class="frag"><span class="star">✶</span><span>Make the hidden multiplication visible. <span class="eq">(y − 42)</span> is the same as <span class="eq">1·(y − 42)</span>.</span></li>
+        <li class="frag"><span class="star">✶</span><span>Now it reads <span class="eq">1(y − 42) − (y − c)(y − 42)</span>, and both chunks contain <span class="share">(y − 42)</span>.</span></li>
+        <li class="frag"><span class="star">✶</span><span>Pull the shared piece out front: <span class="answer">(y − 42)[1 − (y − c)]</span></span></li>
       </ul>
-      <div class="pitfall frag"><span class="tag">Her trap</span>She set <span class="eq">3√n = √72</span> and got n = 8, skipping both the simplify and the divide by 2.</div>
     </section>
 
-    <!-- 9 PRACTICE -->
+    <!-- 8B WHY THE INSIDE -->
+    <section class="slide">
+      <div class="kicker">Her Q11 · Recognizing a shared factor</div>
+      <h2>Why the inside is [1 − (y − c)]</h2>
+      <ul class="steps">
+        <li class="frag"><span class="star">✶</span><span>The first chunk <span class="eq">1(y − 42)</span> leaves behind <span class="eq">1</span>.</span></li>
+        <li class="frag"><span class="star">✶</span><span>The second chunk <span class="eq">(y − c)(y − 42)</span> leaves behind <span class="eq">(y − c)</span>.</span></li>
+        <li class="frag"><span class="star">✶</span><span>The minus sign stays between them: <span class="answer">(y − 42)[1 − (y − c)]</span></span></li>
+      </ul>
+      <div class="callout frag"><span class="tag">Same idea, simpler</span><span class="eq">3x − 5x = x(3 − 5)</span>. Both terms share x, so you pull it out and the rest stays inside.</div>
+    </section>
+
+    <!-- 8C THE TRICK -->
+    <section class="slide">
+      <div class="kicker">Her Q11 · Recognizing a shared factor</div>
+      <h2>The trick: rename the repeated part</h2>
+      <p>She is not meant to see this instantly. Replace the repeated piece with a single letter.</p>
+      <ul class="steps">
+        <li class="frag"><span class="star">✶</span><span>Let <span class="eq">A = y − 42</span>.</span></li>
+        <li class="frag"><span class="star">✶</span><span>The expression becomes <span class="eq">A − (y − c)A</span>.</span></li>
+        <li class="frag"><span class="star">✶</span><span>Rewrite the first A as 1A: <span class="eq">1A − (y − c)A</span>.</span></li>
+        <li class="frag"><span class="star">✶</span><span>Factor out A: <span class="eq">A[1 − (y − c)]</span>.</span></li>
+        <li class="frag"><span class="star">✶</span><span>Put A back: <span class="answer">(y − 42)[1 − (y − c)]</span></span></li>
+      </ul>
+    </section>
+
+    <!-- 9 WORKED B PART 1 -->
+    <section class="slide">
+      <div class="kicker">Worked example · Her Q4 · Part 1</div>
+      <h2>Find n, given a solution is <span class="eq">5 + 3√n</span></h2>
+      <p>The equation: <span class="eq">x² − 10x + 7 = 0</span></p>
+      <ul class="steps">
+        <li class="frag"><span class="star">✶</span><span>It does not factor nicely and the answer keeps a square root, so use the quadratic formula.</span></li>
+        <li class="frag"><span class="star">✶</span><span>The numbers: <span class="eq">a = 1</span>, <span class="eq">b = −10</span>, <span class="eq">c = 7</span>.</span></li>
+        <li class="frag"><span class="star">✶</span><span>Work out the part under the root first: <span class="eq">b² − 4ac = (−10)² − 4(1)(7) = 100 − 28 = 72</span>. That is where the <span class="eq">√72</span> comes from.</span></li>
+        <li class="frag"><span class="star">✶</span><span>And <span class="eq">−b = 10</span>, <span class="eq">2a = 2</span>. So the formula gives:</span></li>
+      </ul>
+      <div class="formula frag">x = <span class="frac"><span class="num">10 ± √72</span><span class="den">2</span></span></div>
+    </section>
+
+    <!-- 9B WORKED B PART 2 -->
+    <section class="slide">
+      <div class="kicker">Worked example · Her Q4 · Part 2</div>
+      <h2>Simplify the root, divide, then match</h2>
+      <div class="formula">x = <span class="frac"><span class="num">10 ± √72</span><span class="den">2</span></span></div>
+      <p class="step frag"><span class="star">✶</span><span>Simplify <span class="eq">√72</span>. Find a perfect square that divides 72: <span class="eq">72 = 36 × 2</span>. Since <span class="eq">√36 = 6</span>, that makes <span class="eq">√72 = 6√2</span>.</span></p>
+      <div class="formula frag">x = <span class="frac"><span class="num">10 ± 6√2</span><span class="den">2</span></span></div>
+      <p class="step frag"><span class="star">✶</span><span>Divide each part on top by 2: <span class="eq">10 ÷ 2 = 5</span> and <span class="eq">6√2 ÷ 2 = 3√2</span>. So <span class="eq">x = 5 ± 3√2</span>.</span></p>
+      <p class="step frag"><span class="star">✶</span><span>Match it to <span class="eq">5 + 3√n</span>: the <span class="eq">3√2</span> shows <span class="answer">n = 2</span> (choice A).</span></p>
+      <div class="pitfall frag"><span class="tag">Her trap</span>She set <span class="eq">3√n = √72</span> and got n = 8, skipping both the simplify (√72 = 6√2) and the divide by 2.</div>
+    </section>
+
+    <!-- 10 PRACTICE -->
     <section class="slide">
       <div class="kicker">Practice</div>
       <h2>Your in-session set</h2>
@@ -199,10 +296,10 @@
         <div class="card"><h3>Mediums · four in a row</h3><span class="q">#5 · x² + x − 90</span><span class="q">#17 · −3x² + 5x + 8</span><span class="q">#16 · x² − 4x − 5, form 2 + √k</span><span class="q">#14 · 3x² − 6x − 11, form 1 + √k / 3</span></div>
         <div class="card"><h3>Hards · the stretch</h3><span class="q">#13 · 3x² − 19x + 6</span><span class="q">#18 · x² − 6x + 4, form 3 − √n</span><span class="q">#19 · 1 / (x² + 6x + 9) = 3</span><span class="q">#11 · (x − 1)(x + 2) = x(x − 3)</span></div>
       </div>
-      <p class="tip">Warm up first with the quadratic cards in the recognition deck.</p>
+      <p class="tip">The full questions, written out, are in the practice deck.</p>
     </section>
 
-    <!-- 10 CLOSE -->
+    <!-- 11 CLOSE -->
     <section class="slide">
       <div class="kicker"><span class="star">✶</span> On track</div>
       <h2>Today's win</h2>

@@ -1,27 +1,27 @@
+import {
+  POST_SESSION_1_NEXT,
+  POST_SESSION_1_WINS,
+  QUADRATICS_SCORE_CONTEXT
+} from "@/lib/danielle-post-session-1-notes";
+
 const LESSON1_AGENDA = [
   {
     time: "Lesson 1 · Tue Jun 9",
     segment: "Deck 1 · Factoring",
     detail:
-      "Full session on factoring: common factor, trinomials, AC method, special patterns, and the step-by-step recipe. Three of the five quadratic tools depend on this, and it shows up across the whole Math section."
+      "Common factor, trinomials, AC method, special patterns, and the step-by-step recipe."
   },
   {
-    time: "Next Math session · ~20 min",
-    segment: "Deck 2 · Radical simplification",
+    time: "Lesson 1 · Tue Jun 9",
+    segment: "Deck 2 · Nonlinear recognition",
     detail:
-      "Opens the next Math session. The by-hand tool that finishes quadratic-formula questions like her Module 2 Q4 miss (√72 → 6√2, then divide by 2)."
+      "Five nonlinear types, calculator vs by-hand rules, and when exact form means no graphing."
   },
   {
-    time: "After Decks 1 and 2",
-    segment: "Deck 3 · Recognition",
+    time: "Lesson 1 · Tue Jun 9",
+    segment: "Diagnostic walk-through",
     detail:
-      "Spot a quadratic, pick from the five tools, decide calculator or by hand, name the approach. Targets her calculator-first habit and the four-minute time sinks."
-  },
-  {
-    time: "After Deck 3",
-    segment: "Deck 4 · Quadratics apply",
-    detail:
-      "Work her two missed questions step by step (M1 Q11 common-factor move; M2 Q4 formula plus simplify), then four in-session mediums to four-in-a-row, then hards as stretch."
+      "Module 1 Q4 (shared-expression quadratic) and Module 2 Q11 (quadratic with radical answer)."
   }
 ] as const;
 
@@ -30,68 +30,60 @@ const MATH_FOUNDATIONS = [
     order: 1,
     title: "Factoring",
     when: "Lesson 1 · Tuesday, June 9",
-    why: "The foundation. Three of the five quadratic methods depend on it, and it shows up across the whole Math section.",
+    why: "The foundation for every quadratic solve-by-factoring problem on the SAT.",
     src: "/danielle/files/factoring-slides",
     ready: true
   },
   {
     order: 2,
-    title: "Radical simplification",
-    when: "Next Math session · first ~20 minutes",
-    why: "The other by-hand tool she is missing. It finishes quadratic-formula questions that do not factor cleanly, like her Q4 miss.",
-    src: "/danielle/files/radicals-slides",
-    ready: true
-  },
-  {
-    order: 3,
     title: "Recognition · nonlinear equations and systems",
-    when: "After factoring and radicals",
-    why: "Now “the approach is factor” or “the approach is the quadratic formula” means something. Name the type, decide calculator or by hand, name the approach.",
+    when: "Lesson 1 · Tuesday, June 9",
+    why: "Name the type, decide calculator or by hand, then pick the approach.",
     src: "/danielle/files/nonlinear-slides",
     ready: true
   },
   {
-    order: 4,
-    title: "Quadratics · apply",
-    when: "After recognition",
-    why: "Her two missed questions, then the in-session practice ladder. This is where the tools and the read come together on her real misses.",
-    src: "/danielle/files/quadratics-slides",
+    order: 3,
+    title: "Radical simplification",
+    when: "Thursday Lesson 2 · preview",
+    why: "Opens Thursday. Needed for exact-form quadratic answers like your Module 2 miss.",
+    src: "/danielle/files/radicals-slides",
     ready: true
   }
 ] as const;
 
 const LESSON2_AGENDA = [
   {
-    time: "6:00 to 6:10",
-    segment: "Recognition install (Reading)",
+    time: "6:00 to 6:15",
+    segment: "Post Session 1 recap",
     detail:
-      "Rapid-fire naming for reading and writing question types. Name the type only, no solving."
+      "Quick wins check-in, then more worked examples on shared-expression factoring (including the y minus c pattern)."
   },
   {
-    time: "6:10 to 6:20",
-    segment: "Fix the easy miss",
+    time: "6:15 to 6:35",
+    segment: "Factoring depth",
     detail:
-      "Start with the easy command-of-evidence question she missed. Install the method and slow down on easy questions."
+      "AC method reps, negative leading terms, difference of squares, perfect squares, and the \"keep the 1\" step when you split the middle term."
   },
   {
-    time: "6:20 to 6:50",
-    segment: "Command of evidence ladder",
+    time: "6:35 to 6:50",
+    segment: "Radicals + quadratic formula",
     detail:
-      "Read the claim, say what would prove it, then find the matching answer. Work missed hard questions, then practice to 4 in a row through hard."
+      "Radical simplification deck, then the quadratic formula for equations that do not factor cleanly."
   },
   {
     time: "6:50 to 7:00",
     segment: "Wrap and assign",
     detail:
-      "Recap the method. Assign practice, including a few nonlinear-equation questions from Lesson 1 so the skill stays fresh."
+      "Revisit Module 2 Q11 with the new tools. Assign updated practice with solutions visible in the Homework Portal."
   }
 ] as const;
 
 const WEEK_GOALS = [
-  "Name the question type (and for Math, the tool to use) in under 7 seconds on at least 8 of 10 recognition reps.",
-  "Get 4 correct in a row at the medium level on nonlinear equations.",
-  "Get 4 correct in a row on command of evidence, working up to hard.",
-  "Complete at least 90% of the assigned practice."
+  "Name the nonlinear question type (and the Math tool to use) in under 7 seconds on recognition reps.",
+  "Move any quadratic to one side, set equal to zero, and start factoring without hesitating.",
+  "Complete assigned Homework Portal practice and note any problem types that still feel slow.",
+  "Thursday: leave with clearer shared-expression factoring and one clean quadratic-formula rep."
 ] as const;
 
 function AgendaTable({ rows }: { rows: readonly { time: string; segment: string; detail: string }[] }) {
@@ -167,10 +159,56 @@ export function DanielleWeek1Content() {
         <p className="danielle-portal__eyebrow">Illuminairy · Week 1</p>
         <h1>Lesson schedule</h1>
         <p className="danielle-portal__lede">
-          Lesson 1: Tuesday, June 9, 6:00 to 7:00 PM CT (Math). Lesson 2: Thursday, June 11,
-          6:00 to 7:00 PM CT (Reading and Writing).
+          Lesson 1: Tuesday, June 9, 6:00 to 7:00 PM CT (Math, complete). Lesson 2: Thursday,
+          June 11, 6:00 to 7:00 PM CT (Math, factoring depth).
         </p>
       </div>
+
+      <section className="danielle-week1__section danielle-week1__notes" id="post-session-1">
+        <p className="danielle-week1__lesson-meta">Post Session 1 · Tuesday, June 9</p>
+        <h2 className="danielle-week1__heading">Session 1 summary</h2>
+        <p className="danielle-week1__focus">
+          Strong first Math session. You showed up prepared (you had already reviewed the diagnostic
+          and said it matched what you saw on test day), stayed engaged for the full hour, and asked
+          for examples when you needed them. We covered a lot of ground in one session.
+        </p>
+
+        <h3 className="danielle-week1__slides-heading">What you locked in</h3>
+        <ul className="danielle-week1__wins">
+          {POST_SESSION_1_WINS.map((win) => (
+            <li key={win}>{win}</li>
+          ))}
+        </ul>
+
+        <p className="danielle-week1__focus">
+          You started building factoring fluency, including trinomials, the AC method, and special
+          patterns. The shared-expression step from Module 1 (factoring out a common term like y
+          minus 42) is the piece we will keep training until it feels easy. That is normal at this
+          stage, not a setback.
+        </p>
+
+        <div className="danielle-week1__score-card">
+          <h3 className="danielle-week1__score-card-title">{QUADRATICS_SCORE_CONTEXT.headline}</h3>
+          <p className="danielle-week1__focus">{QUADRATICS_SCORE_CONTEXT.lede}</p>
+          <ul className="danielle-week1__score-list">
+            {QUADRATICS_SCORE_CONTEXT.bullets.map((bullet) => (
+              <li key={bullet}>{bullet}</li>
+            ))}
+          </ul>
+        </div>
+
+        <h3 className="danielle-week1__slides-heading">Building on Thursday</h3>
+        <ul className="danielle-week1__practice-list">
+          {POST_SESSION_1_NEXT.map((item) => (
+            <li key={item}>{item}</li>
+          ))}
+        </ul>
+        <p className="danielle-week1__habit">
+          <strong>Homework:</strong> Work through assigned practice in the Homework Portal. Solutions
+          are visible so you can study worked examples. Answer what you can; leave anything that
+          still feels confusing and we will tackle it Thursday.
+        </p>
+      </section>
 
       <section className="danielle-week1__section">
         <h2 className="danielle-week1__heading">Week 1 goals</h2>
@@ -182,58 +220,52 @@ export function DanielleWeek1Content() {
       </section>
 
       <section className="danielle-week1__section danielle-week1__lesson">
-        <p className="danielle-week1__lesson-meta">Lesson 1 · Tuesday, June 9 · 6:00 to 7:00 PM CT · Math</p>
-        <h2 className="danielle-week1__heading">Math foundations · quadratics</h2>
+        <p className="danielle-week1__lesson-meta">Lesson 1 · Tuesday, June 9 · Complete · Math</p>
+        <h2 className="danielle-week1__heading">Math foundations · Session 1</h2>
         <p className="danielle-week1__focus">
-          Both questions she missed on the diagnostic were quadratics the calculator could not
-          finish: one has a letter constant (Module 1 Q11), one needs an exact radical form
-          (Module 2 Q4). Both took her well over the time average. This sequence builds the
-          by-hand tools first, then trains the read, then applies everything to her real misses.
-        </p>
-        <p className="danielle-week1__goal-line">
-          <strong>Session goal:</strong> by the end of the quadratics deck, she names the type and
-          tool before solving and gets 4 medium nonlinear-equation questions right in a row.
+          Both diagnostic misses were quadratics the calculator could not finish: Module 1 Q4
+          (shared-expression pattern) and Module 2 Q11 (exact radical form). Session 1 built the
+          recognition rules and factoring base. Slides stay here for review.
         </p>
         <AgendaTable rows={LESSON1_AGENDA} />
         <p className="danielle-week1__habit">
           <strong>Calculator habit:</strong> read the question first, name the type, decide
-          calculator or by hand, then name the approach. The calculator only comes out when it can
-          actually finish the problem.
+          calculator or by hand, then name the approach.
         </p>
 
-        <h3 className="danielle-week1__slides-heading">Math foundations slides (teaching order)</h3>
-        <p className="danielle-week1__focus">
-          Four decks, one look and one set of controls. Review them in this order.
-        </p>
+        <h3 className="danielle-week1__slides-heading">Session 1 slides (review)</h3>
         {MATH_FOUNDATIONS.map((deck) => (
           <MathFoundationsDeck key={deck.order} {...deck} />
         ))}
-
-        <h3 className="danielle-week1__slides-heading">In-session practice problems</h3>
-        <p className="danielle-week1__focus">
-          Medium and hard quadratics from the Lesson 1 practice ladder. Work these after Deck 4
-          to four correct in a row at medium, then stretch into the hards.
-        </p>
-        <SlideEmbed
-          title="Quadratics · in-session practice"
-          src="/danielle/files/quadratics-practice"
-        />
       </section>
 
-      <section className="danielle-week1__section danielle-week1__lesson">
+      <section
+        className="danielle-week1__section danielle-week1__lesson"
+        id="lesson-2"
+      >
         <p className="danielle-week1__lesson-meta">
-          Lesson 2 · Thursday, June 11 · 6:00 to 7:00 PM CT · Reading and Writing
+          Lesson 2 · Thursday, June 11 · 6:00 to 7:00 PM CT · Math
         </p>
-        <h2 className="danielle-week1__heading">Command of evidence</h2>
+        <h2 className="danielle-week1__heading">Factoring depth + quadratics apply</h2>
         <p className="danielle-week1__focus">
-          Reading recognition, then command of evidence. She missed 3 on the diagnostic (about +26
-          points). One was easy, so this session also focuses on not rushing easy questions.
+          Thursday stays in Math. We go one level deeper on factoring, shared-expression recognition,
+          radicals, and the quadratic formula before moving to Reading and Writing. Both concepts
+          are worth a large share of your Math score, so it is worth taking the time to master them.
         </p>
         <p className="danielle-week1__goal-line">
-          <strong>Session goal:</strong> state the command-of-evidence method on her own and get 4
-          in a row working up to hard.
+          <strong>Session goal:</strong> shared-expression factoring feels clearer, and you can
+          walk through one quadratic-formula problem that ends in simplified radical form.
         </p>
         <AgendaTable rows={LESSON2_AGENDA} />
+
+        <h3 className="danielle-week1__slides-heading">Thursday lesson deck</h3>
+        <p className="danielle-week1__focus">
+          Updated quadratics deck for Lesson 2. Review before Thursday if you want a head start.
+        </p>
+        <SlideEmbed
+          title="Quadratic equations · Lesson 2"
+          src="/danielle/files/quadratics-slides"
+        />
       </section>
 
       <section className="danielle-week1__section">
@@ -241,18 +273,17 @@ export function DanielleWeek1Content() {
         <p className="danielle-week1__focus">About 20 questions a day on non-lesson days.</p>
         <ul className="danielle-week1__practice-list">
           <li>
-            <strong>Wed Jun 10:</strong> Nonlinear equations (medium) plus Math recognition
-            flashcards
+            <strong>Wed Jun 10:</strong> Homework Portal practice (quadratics and factoring) plus
+            Math recognition flashcards
           </li>
           <li>
-            <strong>Thu Jun 11:</strong> Lesson 2 day — light recognition flashcards only
+            <strong>Thu Jun 11:</strong> Lesson 2 day — light Homework Portal review only
           </li>
           <li>
-            <strong>Fri Jun 12:</strong> Command of evidence (easy to hard) plus a few nonlinear
-            equations
+            <strong>Fri Jun 12:</strong> Homework Portal practice plus a few nonlinear equation reps
           </li>
           <li>
-            <strong>Sat Jun 13:</strong> Mixed practice plus Reading recognition flashcards
+            <strong>Sat Jun 13:</strong> Mixed Math practice plus recognition flashcards
           </li>
         </ul>
       </section>

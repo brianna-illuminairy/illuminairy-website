@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { IlluminairyLogoV7 } from "@/components/brand/illuminairy-logo-v7";
 import { OwnerQaBadge } from "@/components/danielle/owner-qa-badge";
+import { PortalUpdatesBanner } from "@/components/danielle/portal-updates-banner";
 import { homeworkPortalLoginUrl } from "@/lib/internal-links";
 
 const NAV = [
@@ -76,6 +77,7 @@ export function DaniellePortalShell({ children }: { children: React.ReactNode })
           <DanielleHeaderNav pathname={pathname} />
         </div>
       </header>
+      <PortalUpdatesBanner />
       <div className="danielle-portal__body">{children}</div>
       <footer className="danielle-portal__footer">
         © {new Date().getFullYear()} Illuminairy · Private student portal
