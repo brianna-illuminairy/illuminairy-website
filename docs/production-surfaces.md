@@ -6,7 +6,7 @@
 git push main  →  Vercel build (npm run build)  →  illuminairy.com (all paths)
 ```
 
-If git and Vercel disagree, something used `deploy:cli` (local upload). Fix: commit → push. See [`deploy.md`](deploy.md).
+If git and Vercel disagree, something bypassed GitHub (e.g. `deploy:cli` or a CLI-only env change without a rebuild). Fix: align env in Vercel dashboard → push `main`. See [`deploy.md`](deploy.md).
 
 ## Surfaces map
 

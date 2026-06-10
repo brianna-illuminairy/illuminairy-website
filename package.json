@@ -36,7 +36,6 @@
     "crm:migrate": "node scripts/apply-crm-migration.mjs",
     "smoke:prod": "node scripts/smoke-prod.mjs",
     "verify:calendly-parity": "node scripts/verify-calendly-parity.mjs",
-    "verify:booking-gate": "node scripts/verify-booking-gate-default.mjs",
     "crm:migrate:api": "node scripts/apply-crm-via-management-api.mjs",
     "crm:calendly-webhook": "node scripts/setup-calendly-webhook.mjs",
     "danielle:notify-updates": "node scripts/danielle-notify-updates.mjs"

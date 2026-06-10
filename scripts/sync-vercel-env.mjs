@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
- * Push variables from .env.local to Vercel.
+ * Push variables from .env.local to Vercel (CLI).
+ * **Owner only** — agents must not run this; use Vercel dashboard + git push instead.
+ * See docs/deploy.md
+ *
  * Run after changing secrets locally: npm run env:sync
  *
  * Requires: vercel CLI logged in, project linked (vercel link).
@@ -99,5 +102,5 @@ for (const [name, value] of vars) {
 }
 
 console.log("\nDone. Redeploy so NEXT_PUBLIC_* vars are baked into the build:");
-console.log("  git push origin main   # preferred — keeps git and Vercel in sync");
+console.log("  git push origin main   # preferred — Vercel rebuilds from GitHub");
 console.log("  npm run verify:calendly-parity");

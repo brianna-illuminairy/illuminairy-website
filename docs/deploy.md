@@ -16,7 +16,9 @@ Vercel is **connected to GitHub**. Pushing `main` triggers one production build 
 5. Vercel builds from GitHub     # ~1 min
 ```
 
-**Do not** use `npm run deploy:cli` for normal releases. That uploads your **local folder** and can put production ahead of git.
+**Do not** use `npm run deploy:cli`, `vercel deploy`, or any other Vercel CLI deploy for normal releases. That uploads your **local folder** and can put production ahead of git.
+
+**Agents:** never run Vercel CLI against production (`vercel deploy`, `vercel env add/update`, `env:sync`) unless Brianna explicitly asks. Ship code with **git push only**; Vercel rebuilds from GitHub. Env var changes: **Vercel dashboard** (Production) by the owner, then push `main` to rebuild so `NEXT_PUBLIC_*` bakes in.
 
 ## Scripts
 
@@ -25,7 +27,8 @@ Vercel is **connected to GitHub**. Pushing `main` triggers one production build 
 | `npm run release` | **Default ship** — verify, push `main`, multi-surface smoke |
 | `npm run agent:verify` | Pre-commit gate (satplan + plan guards + lint + build) |
 | `npm run funnel:e2e` | Plan Builder only — after quiz/shell edits |
-| `npm run env:sync` | Env vars changed (`.env.local` → Vercel) |
+| `npm run env:sync` | **Owner only** — pushes `.env.local` → Vercel via CLI; then push `main` to rebuild. Agents: do not run; use dashboard instead. |
+| `npm run env:pull` | **Owner only** — pull Vercel env to `.env.local` for local dev |
 | `npm run smoke:prod` | After deploy; home, plan, satplan, ad LP, share API |
 | `npm run deploy:cli` | **Emergency only** — `DEPLOY_CLI_OK=1` |
 
@@ -40,12 +43,14 @@ Feature work: branch → PR → merge to `main` → auto-deploy.
 
 ## Environment variables
 
-Client `NEXT_PUBLIC_*` vars are baked at **build** time. After `env:sync`, push to `main` to rebuild.
+Client `NEXT_PUBLIC_*` vars are baked at **build** time. After changing them in the **Vercel dashboard** (Production), push any commit to `main` (or use **Redeploy** on the latest GitHub deployment) so the build picks up new values.
+
+Parity check: `npm run verify:calendly-parity` (git SSOT vs `.env.example` / `.env.local`). Prod check: `npm run smoke:prod` (includes Calendly event path).
 
 ## Agent / Cursor rules
 
-- **Never** `deploy:cli` unless the user explicitly requests an emergency hotfix.
-- **Always** commit → `npm run release` so prod matches GitHub.
+- **Never** `deploy:cli`, `vercel deploy`, or Vercel CLI env mutations unless the user explicitly requests it.
+- **Always** commit → `git push origin main` (or `npm run release`) so prod matches GitHub.
 - Match verify to the surface you changed (`production-surfaces.md`).
 - One funnel change still deploys everything — smoke catches cross-route breakage.
 

@@ -100,12 +100,12 @@ LP view calls `enrichSessionAttributionFromLanding` before quiz navigation so `/
 | Event | When |
 |-------|------|
 | `quiz_booking_validation` (PostHog + GA4) | Client s5 validation only: TCPA unchecked, missing name/phone, no slot picked |
-| `quiz_booking_error` (PostHog + GA4) | Lead save fail, slot taken, Calendly API 5xx, availability load fail, network, `booking_paused` gate |
+| `quiz_booking_error` (PostHog + GA4) | Lead save fail, slot taken, Calendly API 5xx, availability load fail, network |
 | `booking_error` (touch_events, server) | Same failures as `quiz_booking_error` on `POST /api/funnel/calendly-book` |
 
 Break down `quiz_booking_validation` by `validation_code` or `field`: `tcpa_required` / `confirmTcpa`, `invalid_contact` / `parentName`, `invalid_phone`, `no_slot`.
 
-Break down `quiz_booking_error` by `error_code`: `lead_save_failed`, `slot_taken`, `calendly_api`, `availability_load`, `network`, `booking_paused`. Do not mix historical validation rows (filter `field` is set on old events, or use `quiz_booking_validation` after deploy).
+Break down `quiz_booking_error` by `error_code`: `lead_save_failed`, `slot_taken`, `calendly_api`, `availability_load`, `network`. Historical rows may include deprecated `booking_paused` (Jun 10, 2026 gate — removed).
 
 ### Step back (resume debugging)
 

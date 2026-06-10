@@ -4,8 +4,8 @@ Run after `npm run build` passes locally.
 
 ## Vercel deploy
 
-1. Push branch to GitHub (or `vercel deploy --prod` from linked project)
-2. Confirm production deployment succeeds on Vercel dashboard
+1. Push branch to GitHub and merge to `main` (Vercel auto-builds from GitHub — **no** `vercel deploy --prod` or `deploy:cli`)
+2. Confirm production deployment succeeds on Vercel dashboard (source = GitHub commit)
 3. Smoke **`https://illuminairy.com/`**:
    - `/?lp=b3a`, `/?lp=b3b`, `/?lp=b3c` — full 8-section scroll ([viewport QA](./b3-lp-viewport-qa.md))
    - Hero CTA → `/plan?step=q1-parent-child`
@@ -18,7 +18,7 @@ Verify Vercel **Production** env matches `.env.local`:
 - `NEXT_PUBLIC_POSTHOG_KEY`
 - `NEXT_PUBLIC_META_PIXEL_ID`
 - `META_CAPI_ACCESS_TOKEN`
-- `NEXT_PUBLIC_CALENDLY_URL` — must equal `PUBLIC_SAT_STRATEGY_CALL_CALENDLY_URL` in `lib/site.ts` (`npm run verify:calendly-parity`). After change: `npm run env:sync` then push `main` to rebuild.
+- `NEXT_PUBLIC_CALENDLY_URL` — must equal `PUBLIC_SAT_STRATEGY_CALL_CALENDLY_URL` in `lib/site.ts` (`npm run verify:calendly-parity`). Set in **Vercel dashboard** (Production), then push `main` to rebuild.
 - `SUPABASE_SERVICE_ROLE_KEY`
 - Klaviyo keys
 

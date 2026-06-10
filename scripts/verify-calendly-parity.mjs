@@ -60,4 +60,6 @@ if (failed) {
 }
 
 console.log(`\nSSOT: ${PUBLIC_SAT_STRATEGY_CALL_CALENDLY_URL}`);
-console.log("Sync Vercel: npm run env:sync  then push main to rebuild.");
+console.log(
+  "Vercel: set NEXT_PUBLIC_CALENDLY_URL in dashboard (Production), then push main to rebuild."
+);

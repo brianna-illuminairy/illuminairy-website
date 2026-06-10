@@ -14,3 +14,4 @@ Production site for illuminairy.com — SAT Accelerator enrollment, contact, bra
 - Do not apply academic/coursework coding style rules; this is a commercial TypeScript repo.
 - **SAT plan funnel:** step screens are content-only — see `components/sat-plan/LAYOUT.lock.md`; no layout/CSS edits without explicit owner unlock (`FUNNEL_LAYOUT_UNLOCK=1`).
 - Verify with `npm run agent:verify` before claiming done.
+- **Deploy:** git push to `main` only (Vercel builds from GitHub). Never Vercel CLI deploy or prod env unless the owner explicitly asks.

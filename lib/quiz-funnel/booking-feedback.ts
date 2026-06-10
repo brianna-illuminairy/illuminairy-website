@@ -2,7 +2,6 @@ import {
   classifyBookingError,
   type QuizBookingErrorCode,
 } from "@/lib/calendly/booking-errors";
-import { PLAN_BOOKING_GATE_AVAILABILITY_MSG } from "@/lib/quiz-funnel/plan-booking-gate-copy";
 import {
   BOOKING_PHONE_INVALID_MSG,
   isValidBookingPhone,
@@ -155,8 +154,8 @@ export function bookingFeedbackForCode(
       };
     case "booking_paused":
       return {
-        title: "Scheduling by email for now",
-        message: PLAN_BOOKING_GATE_AVAILABILITY_MSG,
+        title: "Scheduling unavailable",
+        message: BOOKING_FEEDBACK.availabilityFailed,
         retryable: false,
       };
     case "lead_save_failed":
