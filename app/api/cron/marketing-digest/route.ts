@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
+import { countOpenAlerts } from "@/lib/admin/alerts";
+import { getCrmPipelineStats } from "@/lib/admin/crm-queries";
 import { site } from "@/lib/site";
 import {
   getAnonymousAbandonCount,
@@ -26,7 +28,8 @@ export async function GET(request: Request) {
     site.supportEmail;
   const apiKey = process.env.RESEND_API_KEY?.trim();
 
-  const [current, previous, steps, anonymousAbandon] = await Promise.all([
+  const [current, previous, steps, anonymousAbandon, crmStats, openAlerts] =
+    await Promise.all([
     getFunnelCounts(7),
     getFunnelCounts(14).then(async (twoWeek) => {
       const last7 = await getFunnelCounts(7);
@@ -39,7 +42,9 @@ export async function GET(request: Request) {
       };
     }),
     getStepDropoffs(7),
-    getAnonymousAbandonCount(7)
+    getAnonymousAbandonCount(7),
+    getCrmPipelineStats(),
+    countOpenAlerts()
   ]);
 
   const leaks = rankFunnelLeaks(current, previous, steps).slice(0, 3);
@@ -53,6 +58,8 @@ export async function GET(request: Request) {
     `Leads: ${current.leads}`,
     `Books: ${current.books}`,
     `Anonymous abandons (step ≥ q3): ${anonymousAbandon}`,
+    `CRM no-shows (past booked, not attended): ${crmStats.noShowCount}`,
+    `Open admin alerts: ${openAlerts}`,
     ``,
     `Top leaks:`,
     ...leaks.map(
@@ -60,7 +67,7 @@ export async function GET(request: Request) {
         `${i + 1}. ${l.label}${l.ratePct !== null ? ` (${l.ratePct}%)` : ""} — ${l.detail}`
     ),
     ``,
-    `Dashboard: https://illuminairy.com/admin/marketing`,
+    `Dashboard: https://illuminairy.com/admin`,
     `PostHog: see growth/posthog-funnel-dashboard.md`
   ];
 

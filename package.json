@@ -39,6 +39,9 @@
     "verify:calendly-parity": "node scripts/verify-calendly-parity.mjs",
     "crm:migrate:api": "node scripts/apply-crm-via-management-api.mjs",
     "crm:calendly-webhook": "node scripts/setup-calendly-webhook.mjs",
+    "crm:backfill-typeform": "node scripts/backfill-typeform-enrollment.mjs",
+    "crm:backfill-stripe-payments": "node scripts/backfill-stripe-payments.mjs",
+    "crm:backfill-danielle-economics": "node scripts/backfill-danielle-economics.mjs",
     "danielle:notify-updates": "node scripts/danielle-notify-updates.mjs"
   },
   "dependencies": {

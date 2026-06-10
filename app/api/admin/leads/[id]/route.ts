@@ -1,6 +1,24 @@
 import { NextResponse } from "next/server";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
+import { getCrmLeadDetail } from "@/lib/admin/crm-queries";
 import { updateLeadPipeline } from "@/lib/crm/admin";
+
+export async function GET(
+  _request: Request,
+  context: { params: Promise<{ id: string }> }
+) {
+  if (!(await isAdminAuthenticated())) {
+    return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
+  }
+
+  const { id } = await context.params;
+  const detail = await getCrmLeadDetail(id);
+  if (!detail) {
+    return NextResponse.json({ error: "Not found." }, { status: 404 });
+  }
+
+  return NextResponse.json({ ok: true, ...detail });
+}
 
 export async function PATCH(
   request: Request,

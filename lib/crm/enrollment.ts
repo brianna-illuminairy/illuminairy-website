@@ -1,3 +1,5 @@
+import { createAdminAlert } from "@/lib/admin/alerts";
+import { ensureSoftwareLicenseCost, recordClientPayment } from "@/lib/crm/economics";
 import { getSupabaseAdmin } from "@/lib/supabase/server";
 import { satProgram } from "@/lib/site";
 import { appendTouchEvent, linkVisitorTouches } from "@/lib/crm/touch";
@@ -142,6 +144,25 @@ export async function recordEnrollmentFromStripe(session: {
     event_type: "checkout_completed",
     source: "webhook",
     payload: { stripe_session_id: session.id }
+  });
+
+  await recordClientPayment({
+    enrollmentId: enrollment.id,
+    clientId,
+    stripeCheckoutSessionId: session.id,
+    amountCents: session.amount_total ?? 0,
+    paidAt: paidAt
+  });
+  await ensureSoftwareLicenseCost(enrollment.id);
+
+  void createAdminAlert({
+    alertType: "new_enrollment_payment",
+    severity: "info",
+    title: `Payment received: ${meta.studentFirstName ?? parentEmail}`,
+    body: `${parentEmail} paid via Stripe checkout.`,
+    source: "stripe",
+    linkUrl: "/admin/finance",
+    dedupeKey: `stripe_payment:${session.id}`
   });
 
   return {

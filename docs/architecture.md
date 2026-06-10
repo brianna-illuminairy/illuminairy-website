@@ -73,6 +73,7 @@ flowchart TB
 | `/api/checkout` | POST | Stripe Checkout session |
 | `/api/webhooks/stripe` | POST | Stripe → client/enrollment + Klaviyo |
 | `/api/webhooks/calendly` | POST | Calendly → lead `call_booked` + Klaviyo |
+| `/api/webhooks/typeform` | POST | Enrollment Typeform → lead/client/student/enrollment |
 
 ## Core libraries
 

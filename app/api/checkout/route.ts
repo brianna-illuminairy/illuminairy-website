@@ -124,7 +124,7 @@ export async function POST(request: Request) {
         studentPhone,
         studentZipCode
       },
-      success_url: `${site.url}/enroll/success?session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `${site.url}/enroll?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${site.url}/enroll?canceled=1`
     });
 

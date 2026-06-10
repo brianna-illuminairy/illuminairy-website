@@ -1,3 +1,4 @@
+import { createAdminAlert } from "@/lib/admin/alerts";
 import {
   deriveLeadSource,
   type AttributionSnapshot
@@ -160,6 +161,7 @@ export async function upsertLeadFromQuizFunnel(
     .maybeSingle();
 
   let leadId: string;
+  let isNewLead = false;
 
   if (existing) {
     const preserveAttribution = Boolean(existing.utm_source || existing.first_touch_at);
@@ -220,6 +222,7 @@ export async function upsertLeadFromQuizFunnel(
       return { ok: false as const, error: error?.message ?? "insert_failed" };
     }
     leadId = data.id;
+    isNewLead = true;
   }
 
   if (options.visitorId) {
@@ -246,6 +249,18 @@ export async function upsertLeadFromQuizFunnel(
       showed_gpa_gap: gpaGap
     }
   });
+
+  if (isNewLead) {
+    void createAdminAlert({
+      alertType: "new_lead",
+      severity: "info",
+      title: `New lead: ${answers.parentName?.trim() || email}`,
+      body: `SAT Score Path lead from ${leadSource}.`,
+      source: "crm",
+      linkUrl: "/admin/crm",
+      dedupeKey: `lead:${leadId}`
+    });
+  }
 
   return {
     ok: true as const,

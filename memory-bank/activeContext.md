@@ -1,6 +1,14 @@
 # Active context
 
-*Last updated: 2026-06-09*
+*Last updated: 2026-06-10*
+
+## Business Management Platform (shipped in repo)
+
+- **`/admin`** — Overview (KPIs + alerts), Marketing, CRM, Finance, Ads, Automations
+- **DB:** `admin_alerts`, `client_payments`, `client_costs`, `client_time_logs`, `ad_spend_daily`, `integration_jobs` (migration applied to Supabase)
+- **`/enroll`** — post-payment intake (Stripe session gate); merges into CRM via `recordEnrollmentFromTypeform` + stripe session link
+- **Crons:** daily marketing digest + 4h PostHog error poll (`vercel.json`)
+- **Danielle economics seeded:** revenue $198, costs $593, 255 logged minutes (run `npm run crm:backfill-*` locally when `.env.local` has Supabase keys)
 
 ## Plan reveal vs achievability (locked naming)
 

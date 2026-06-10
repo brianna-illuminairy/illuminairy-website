@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
+import { createAdminAlert } from "@/lib/admin/alerts";
+import { recordClientPayment } from "@/lib/crm/economics";
 import { recordEnrollmentFromStripe } from "@/lib/crm/enrollment";
 import { onEnrollmentCompleted } from "@/lib/klaviyo-server";
+import { getSupabaseAdmin } from "@/lib/supabase/server";
 import { getStripe } from "@/lib/stripe";
 import { satProgram, site } from "@/lib/site";
 
@@ -87,6 +90,65 @@ export async function POST(request: Request) {
       });
     } else {
       console.log("Enrollment paid (Resend not configured):", session.id);
+    }
+  }
+
+  if (event.type === "payment_intent.succeeded") {
+    const paymentIntent = event.data.object;
+    const amountCents = paymentIntent.amount ?? 0;
+    const parentEmail = (
+      paymentIntent.metadata?.parentEmail ??
+      paymentIntent.receipt_email ??
+      ""
+    )
+      .trim()
+      .toLowerCase();
+
+    let enrollmentId: string | null = null;
+    let clientId: string | null = null;
+
+    if (parentEmail) {
+      const supabase = getSupabaseAdmin();
+      if (supabase) {
+        const { data: client } = await supabase
+          .from("clients")
+          .select("id")
+          .eq("parent_email", parentEmail)
+          .maybeSingle();
+
+        if (client) {
+          clientId = client.id;
+          const { data: enrollment } = await supabase
+            .from("enrollments")
+            .select("id")
+            .eq("client_id", client.id)
+            .order("created_at", { ascending: false })
+            .limit(1)
+            .maybeSingle();
+          enrollmentId = enrollment?.id ?? null;
+        }
+      }
+    }
+
+    const paymentResult = await recordClientPayment({
+      enrollmentId,
+      clientId,
+      stripePaymentIntentId: paymentIntent.id,
+      amountCents,
+      paidAt: new Date(paymentIntent.created * 1000).toISOString(),
+      notes: parentEmail || undefined
+    });
+
+    if (paymentResult.ok && !paymentResult.duplicate) {
+      void createAdminAlert({
+        alertType: "stripe_payment",
+        severity: "info",
+        title: `Stripe payment: $${(amountCents / 100).toFixed(2)}`,
+        body: parentEmail || paymentIntent.id,
+        source: "stripe",
+        linkUrl: "/admin/finance",
+        dedupeKey: `pi:${paymentIntent.id}`
+      });
     }
   }
 

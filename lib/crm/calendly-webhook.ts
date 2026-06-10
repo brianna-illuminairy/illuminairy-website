@@ -1,3 +1,4 @@
+import { createAdminAlert } from "@/lib/admin/alerts";
 import { strategyCallStartFromCalendlyWebhook } from "@/lib/crm/calendly-payload";
 import { appendTouchEvent } from "@/lib/crm/touch";
 import { trackKlaviyoEvent, upsertKlaviyoProfile } from "@/lib/klaviyo-server";
@@ -63,6 +64,16 @@ export async function handleCalendlyInviteeCreated(body: CalendlyWebhookBody) {
         invitee_email: email,
         strategy_call_at: strategyCallAt
       }
+    });
+
+    void createAdminAlert({
+      alertType: "call_booked",
+      severity: "info",
+      title: `Strategy Call booked: ${email}`,
+      body: `Scheduled for ${new Date(strategyCallAt).toLocaleString("en-US", { timeZone: "America/New_York" })} ET.`,
+      source: "calendly",
+      linkUrl: "/admin/crm",
+      dedupeKey: calendlyUri ? `calendly:${calendlyUri}` : `calendly_book:${email}:${strategyCallAt}`
     });
   } else {
     await appendTouchEvent({
