@@ -22,6 +22,7 @@ const DISPLAY_TZ = "America/New_York";
 /** Avoid repeating /users/me + event_types pagination on every book. */
 const EVENT_TYPE_URI_TTL_MS = 15 * 60 * 1000;
 const eventTypeUriCache = new Map<string, { uri: string; expiresAt: number }>();
+const organizationUriCache = new Map<string, { uri: string; expiresAt: number }>();
 
 export type CalendlySlot = {
   startTime: string;
@@ -51,6 +52,31 @@ function parsePublicEventUrl(url: string): { userSlug: string; eventSlug: string
   }
 }
 
+/** Normalize ISO start times so available_times and scheduled_events compare equal. */
+export function normalizeSlotStartTime(iso: string): string {
+  const ms = new Date(iso).getTime();
+  if (Number.isNaN(ms)) return iso;
+  return new Date(ms).toISOString();
+}
+
+async function resolveOrganizationUri(token: string): Promise<string> {
+  const cached = organizationUriCache.get(token);
+  if (cached && cached.expiresAt > Date.now()) {
+    return cached.uri;
+  }
+
+  const me = await calendlyFetch<{ resource: { current_organization: string } }>(
+    "/users/me",
+    token
+  );
+  const uri = me.resource.current_organization;
+  organizationUriCache.set(token, {
+    uri,
+    expiresAt: Date.now() + EVENT_TYPE_URI_TTL_MS,
+  });
+  return uri;
+}
+
 async function calendlyFetch<T>(
   path: string,
   token: string,
@@ -78,11 +104,7 @@ export async function resolveEventTypeUri(token: string, publicUrl: string): Pro
   const parsed = parsePublicEventUrl(publicUrl);
   if (!parsed) throw new Error("Invalid Calendly URL");
 
-  const me = await calendlyFetch<{ resource: { current_organization: string } }>(
-    "/users/me",
-    token
-  );
-  const orgUri = me.resource.current_organization;
+  const orgUri = await resolveOrganizationUri(token);
 
   let pageToken: string | undefined;
   do {
@@ -381,6 +403,7 @@ async function fetchAvailableTimesChunk(
 /**
  * Live check before booking — list UI can be a few minutes stale if the parent
  * spent time on the form or another invitee took the slot.
+ * One-on-one event type: Calendly removes taken slots from available_times.
  */
 export async function isSlotStillAvailable(
   token: string,
@@ -400,8 +423,11 @@ export async function isSlotStillAvailable(
     { fresh: true }
   );
 
+  const normalized = normalizeSlotStartTime(startTimeIso);
   return rows.some(
-    (row) => row.status === "available" && row.start_time === startTimeIso
+    (row) =>
+      row.status === "available" &&
+      normalizeSlotStartTime(row.start_time) === normalized
   );
 }
 

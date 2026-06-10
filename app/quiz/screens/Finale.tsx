@@ -11,9 +11,13 @@ import {
   captureQuizLeadSubmitted,
   captureQuizBookingConfirmed,
   captureQuizBookingError,
+  captureQuizBookingValidation,
   captureQuizThankYouViewed,
 } from '@/lib/quiz-funnel/analytics';
-import { sanitizeBookingErrorMessage } from '@/lib/calendly/booking-errors';
+import {
+  sanitizeBookingErrorMessage,
+  type QuizBookingErrorCode,
+} from '@/lib/calendly/booking-errors';
 import { countPhoneDigits } from '@/lib/calendly/phone-e164';
 import { QUIZ_TESTIMONIALS } from '@/lib/quiz-funnel/testimonials';
 import { getClientAttributionPayload } from '@/lib/quiz-funnel/client-attribution';
@@ -37,7 +41,9 @@ import {
   THANK_YOU_BEFORE_SECTION,
   THANK_YOU_DONE_CTA,
   thankYouHeadline,
+  thankYouHeadlineDeferred,
   thankYouWhenLine,
+  thankYouDeferredWhenLine,
 } from '@/lib/quiz-funnel/thank-you-copy';
 import { strategyCallGoogleCalendarUrl } from '@/lib/quiz-funnel/strategy-call-calendar';
 import { QFPlanHandoff } from '../components/QFPlanHandoff';
@@ -52,6 +58,16 @@ import {
   type BookingFieldKey,
 } from '@/lib/quiz-funnel/booking-feedback';
 import { QFBookingAlert } from '../components/QFBookingAlert';
+import {
+  hasPlanBuilderBookingQaBypassFromDocument,
+  shouldGatePlanBuilderBooking,
+} from '@/lib/quiz-funnel/plan-builder-booking-gate';
+import {
+  PLAN_BOOKING_GATE_CTA,
+  PLAN_BOOKING_GATE_EYEBROW,
+  PLAN_BOOKING_GATE_HEADLINE,
+  PLAN_BOOKING_GATE_LEAD,
+} from '@/lib/quiz-funnel/plan-booking-gate-copy';
 
 type PlanSchedulerSlot = {
   startTime: string;
@@ -161,6 +177,25 @@ export function QFS5Approved({
   const [slotsAvailable, setSlotsAvailable] = useState(true);
   const [availabilityLoading, setAvailabilityLoading] = useState(true);
   const reloadSlotsRef = useRef<(() => void) | null>(null);
+  const bookingGateTracked = useRef(false);
+
+  const bookingGated = useMemo(() => {
+    const { attribution } = getClientAttributionPayload();
+    const hasQaBypass = hasPlanBuilderBookingQaBypassFromDocument();
+    return shouldGatePlanBuilderBooking(attribution, hasQaBypass);
+  }, []);
+
+  useEffect(() => {
+    if (!bookingGated || bookingGateTracked.current) return;
+    bookingGateTracked.current = true;
+    captureQuizBookingError({
+      error_code: 'booking_paused',
+      error_message: 'Paid ad traffic held on s5 until booking QA',
+      step: 's5',
+      slots_available: false,
+      qWho: typeof answers.qWho === 'string' ? answers.qWho : undefined,
+    });
+  }, [bookingGated, answers.qWho]);
 
   const contact = useMemo(
     () => ({
@@ -174,12 +209,17 @@ export function QFS5Approved({
 
   const validation = useMemo(
     () =>
-      validateBookingContact({
-        ...contact,
-        confirmTcpa: Boolean(confirmTcpa),
-        hasSlot: Boolean(selectedSlot?.startTime),
-      }),
-    [contact, confirmTcpa, selectedSlot?.startTime]
+      bookingGated
+        ? validateBookingContactOnly({
+            ...contact,
+            confirmTcpa: Boolean(confirmTcpa),
+          })
+        : validateBookingContact({
+            ...contact,
+            confirmTcpa: Boolean(confirmTcpa),
+            hasSlot: Boolean(selectedSlot?.startTime),
+          }),
+    [bookingGated, contact, confirmTcpa, selectedSlot?.startTime]
   );
 
   const contactReady = useMemo(
@@ -194,7 +234,7 @@ export function QFS5Approved({
   const canSubmit =
     !submitting &&
     !availabilityLoading &&
-    slotsAvailable &&
+    (bookingGated || slotsAvailable) &&
     contactReady &&
     validation.valid;
   const qWho = typeof answers.qWho === 'string' ? answers.qWho : undefined;
@@ -222,7 +262,7 @@ export function QFS5Approved({
     });
   }
 
-  function fieldToErrorCode(field: BookingFieldKey): string {
+  function fieldToValidationCode(field: BookingFieldKey): QuizBookingErrorCode {
     if (field === 'parentPhone') return 'invalid_phone';
     if (field === 'parentName') return 'invalid_contact';
     if (field === 'slot') return 'no_slot';
@@ -230,13 +270,30 @@ export function QFS5Approved({
     return 'unknown';
   }
 
+  function trackValidationFailure(field: BookingFieldKey, message: string) {
+    captureQuizBookingValidation({
+      validation_code: fieldToValidationCode(field),
+      validation_message: sanitizeBookingErrorMessage(message),
+      field,
+      phone_digit_count: countPhoneDigits(String(parentPhone)),
+      slot_weekday: selectedSlot?.weekdayShort,
+      slots_available: slotsAvailable,
+      qWho,
+    });
+  }
+
   function showValidationErrors(): boolean {
     const field = Object.keys(validation.errors)[0] as BookingFieldKey | undefined;
     if (!field) return false;
     const message = validation.errors[field] ?? BOOKING_FEEDBACK.bookingFailed;
-    trackBookingError(fieldToErrorCode(field), message, { field });
+    trackValidationFailure(field, message);
     setBookingAlert(null);
     return false;
+  }
+
+  function handleConfirmClick() {
+    if (!canSubmit || submitting) return;
+    void handleContinue();
   }
 
   useEffect(() => {
@@ -263,12 +320,12 @@ export function QFS5Approved({
   }, [onBooked, onContinue, dispatch, qWho]);
 
   async function handleContinue() {
+    if (!canSubmit || submitting) return;
     setSubmitAttempted(true);
     if (!validation.valid) {
       showValidationErrors();
       return;
     }
-    if (!canSubmit) return;
 
     setSubmitting(true);
     setBookingAlert(null);
@@ -312,7 +369,15 @@ export function QFS5Approved({
       }
       captureQuizLeadSubmitted(answers as Record<string, unknown>, data.eventId, {
         hasGapScreen: showGapScreen(answers as Parameters<typeof showGapScreen>[0]),
+        booking_deferred: bookingGated,
       });
+
+      if (bookingGated) {
+        setSubmitting(false);
+        if (onBooked) onBooked();
+        else onContinue();
+        return;
+      }
 
       const slotStart = selectedSlot?.startTime;
       if (!slotStart) {
@@ -382,7 +447,9 @@ export function QFS5Approved({
     }
   }
 
-  const footerLabel = availabilityLoading
+  const footerLabel = bookingGated
+    ? PLAN_BOOKING_GATE_CTA
+    : availabilityLoading
     ? 'Loading open times…'
     : !slotsAvailable
       ? 'Reload times to continue'
@@ -395,12 +462,24 @@ export function QFS5Approved({
   return (
     <QFScreen stepIdx={18} ornament="glow" onBack={onBack}
       actions={
-        <QFButton kind="forest" onClick={handleContinue} disabled={!canSubmit}>
+        <QFButton
+          kind="forest"
+          onClick={handleConfirmClick}
+          disabled={!canSubmit || submitting}
+        >
           {submitting ? BOOKING_FEEDBACK.confirming : footerLabel}
         </QFButton>
       }
     >
+      {bookingGated ? (
+        <p className="qf-lead" style={{ margin: '0 0 18px' }}>
+          {PLAN_BOOKING_GATE_LEAD}
+        </p>
+      ) : null}
       <QFPlanScheduler
+        schedulerEnabled={!bookingGated}
+        eyebrow={bookingGated ? PLAN_BOOKING_GATE_EYEBROW : undefined}
+        headline={bookingGated ? PLAN_BOOKING_GATE_HEADLINE : undefined}
         parentName={String(parentName)}
         parentEmail={String(parentEmail)}
         parentPhone={String(parentPhone)}
@@ -588,6 +667,7 @@ export function QFS9ThankYou({
   const calendarUrl = callStartIso
     ? strategyCallGoogleCalendarUrl(callStartIso)
     : null;
+  const bookingDeferred = !callStartIso;
 
   const beforeCallItems = useMemo(
     () => buildThankYouBeforeCallItems(answers as Parameters<typeof buildThankYouBeforeCallItems>[0]),
@@ -623,11 +703,15 @@ export function QFS9ThankYou({
     >
       <div className="qf-thank-you">
         <h1 className="qf-h1" style={{ marginBottom: 0 }}>
-          {thankYouHeadline(parentFirst)}
+          {bookingDeferred
+            ? thankYouHeadlineDeferred(parentFirst)
+            : thankYouHeadline(parentFirst)}
         </h1>
 
         <p className="qf-lead" style={{ margin: 0 }}>
-          {thankYouWhenLine(callWhen)}
+          {bookingDeferred
+            ? thankYouDeferredWhenLine()
+            : thankYouWhenLine(callWhen)}
         </p>
 
         <div>

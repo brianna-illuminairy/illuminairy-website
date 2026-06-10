@@ -152,7 +152,7 @@ On `/?lp=b3b&utm_campaign=sat-lp-b3b-results&utm_source=facebook`:
 
 - [ ] PostHog: `funnel_landing_view` + `experiment_exposure` with `sat_lp_variant`
 - [ ] GA4 / Meta: `ViewContent` on load (see [meta-lp-events.md](./meta-lp-events.md))
-- [ ] Click hero CTA → `funnel_cta_click` → lands on `/quiz?step=q1`
+- [ ] Click hero CTA → `funnel_cta_click` → lands on `/plan?step=q1-parent-child`
 - [ ] `sat_lp_variant` in localStorage after first view
 
 ---

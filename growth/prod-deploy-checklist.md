@@ -8,7 +8,7 @@ Run after `npm run build` passes locally.
 2. Confirm production deployment succeeds on Vercel dashboard
 3. Smoke **`https://illuminairy.com/`**:
    - `/?lp=b3a`, `/?lp=b3b`, `/?lp=b3c` — full 8-section scroll ([viewport QA](./b3-lp-viewport-qa.md))
-   - Hero CTA → `/quiz?step=q1`
+   - Hero CTA → `/plan?step=q1-parent-child`
    - Full funnel: S5 lead → S9 Calendly (staging email)
 
 ## Environment parity

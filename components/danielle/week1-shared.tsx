@@ -28,10 +28,12 @@ export function AgendaTable({
 }
 
 export function SlideEmbed({ title, src }: { title: string; src: string }) {
+  const embedSrc = `${src}?embed=1`;
+
   return (
     <div className="danielle-week1__slides-block">
       <h4 className="danielle-week1__slides-title">{title}</h4>
-      <iframe src={src} title={title} className="danielle-week1__slide-frame" />
+      <iframe src={embedSrc} title={title} className="danielle-week1__slide-frame" />
     </div>
   );
 }

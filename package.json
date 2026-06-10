@@ -27,7 +27,7 @@
     "funnel:step-registry": "node scripts/verify-quiz-step-registry.mjs",
     "funnel:achievability": "node scripts/verify-goal-achievability.mjs",
     "marketing:utm-aliases": "node scripts/verify-utm-content-aliases.mjs",
-    "marketing:utm-aliases": "node scripts/verify-utm-content-aliases.mjs",
+    "marketing:ad-urls": "node scripts/meta-ad-urls.mjs",
     "funnel:no-em-dash": "node scripts/funnel-no-em-dash.mjs",
     "agent:verify": "npm run funnel:layout-guard && npm run funnel:cta-guard && npm run funnel:step-registry && node scripts/agent-verify.mjs",
     "ralph:status": "node scripts/ralph-loop.mjs status",

@@ -23,6 +23,30 @@ import {
 import { captureQuizBookingError } from '@/lib/quiz-funnel/analytics';
 import { sanitizeBookingErrorMessage } from '@/lib/calendly/booking-errors';
 import { QFBookingAlert } from './QFBookingAlert';
+import { getClientAttributionPayload } from '@/lib/quiz-funnel/client-attribution';
+
+function attributionAvailabilityQuery() {
+  if (typeof window === 'undefined') return '';
+  const { attribution } = getClientAttributionPayload();
+  const params = new URLSearchParams();
+  for (const key of [
+    'utm_source',
+    'utm_medium',
+    'utm_campaign',
+    'utm_term',
+    'utm_content',
+    'gclid',
+    'fbclid',
+    'msclkid',
+  ]) {
+    const value = attribution[key];
+    if (typeof value === 'string' && value.trim()) {
+      params.set(key, value.trim());
+    }
+  }
+  const qs = params.toString();
+  return qs ? `?${qs}` : '';
+}
 
 /**
  * @param {{
@@ -39,6 +63,9 @@ import { QFBookingAlert } from './QFBookingAlert';
  *   onLoadingChange?: (loading: boolean) => void;
  *   onSlotRequired?: () => void;
  *   onRegisterReload?: (reload: () => void) => void;
+ *   schedulerEnabled?: boolean;
+ *   eyebrow?: string;
+ *   headline?: string;
  * }} props
  */
 export function QFPlanScheduler({
@@ -55,12 +82,16 @@ export function QFPlanScheduler({
   onLoadingChange,
   onSlotRequired,
   onRegisterReload,
+  schedulerEnabled = true,
+  eyebrow = PLAN_SCHEDULER_EYEBROW,
+  headline = PLAN_SCHEDULER_HEADLINE,
 }) {
   const [days, setDays] = useState([]);
   const [activeDayKey, setActiveDayKey] = useState('');
-  const [loading, setLoading] = useState(true);
+  const [availabilityLoading, setAvailabilityLoading] = useState(schedulerEnabled);
   const [availabilityAlert, setAvailabilityAlert] = useState(null);
   const [reloadKey, setReloadKey] = useState(0);
+  const loading = schedulerEnabled && availabilityLoading;
 
   // Keep parent callbacks in refs so loadAvailability stays stable. Parents pass
   // new inline handlers each render; depending on their identity caused an
@@ -82,9 +113,12 @@ export function QFPlanScheduler({
   const showErr = (key) => (showFieldErrors ? fieldErrors[key] : undefined);
 
   const loadAvailability = useCallback(async () => {
+    if (!schedulerEnabled) {
+      return;
+    }
     const prefetched = readPrefetchedAvailability();
     if (prefetched?.length) {
-      setLoading(false);
+      setAvailabilityLoading(false);
       onLoadingChangeRef.current?.(false);
       onAvailabilityReadyRef.current?.(true);
       setDays(prefetched);
@@ -95,11 +129,13 @@ export function QFPlanScheduler({
       return;
     }
 
-    setLoading(true);
+    setAvailabilityLoading(true);
     onLoadingChangeRef.current?.(true);
     setAvailabilityAlert(null);
     try {
-      const res = await fetch('/api/funnel/calendly-availability');
+      const res = await fetch(
+        `/api/funnel/calendly-availability${attributionAvailabilityQuery()}`
+      );
       const data = await res.json().catch(() => ({}));
       const parsed = parseAvailabilityApiResponse(data, res.status);
 
@@ -145,10 +181,16 @@ export function QFPlanScheduler({
         slots_available: false,
       });
     } finally {
-      setLoading(false);
+      setAvailabilityLoading(false);
       onLoadingChangeRef.current?.(false);
     }
-  }, []);
+  }, [schedulerEnabled]);
+
+  useEffect(() => {
+    if (schedulerEnabled) return;
+    onLoadingChangeRef.current?.(false);
+    onAvailabilityReadyRef.current?.(true);
+  }, [schedulerEnabled]);
 
   useEffect(() => {
     onRegisterReload?.(() => {
@@ -157,6 +199,7 @@ export function QFPlanScheduler({
   }, [onRegisterReload]);
 
   useEffect(() => {
+    if (!schedulerEnabled) return undefined;
     let cancelled = false;
     queueMicrotask(() => {
       if (!cancelled) void loadAvailability();
@@ -164,7 +207,7 @@ export function QFPlanScheduler({
     return () => {
       cancelled = true;
     };
-  }, [loadAvailability, reloadKey]);
+  }, [loadAvailability, reloadKey, schedulerEnabled]);
 
   const activeDay = useMemo(
     () => days.find((d) => d.dateKey === activeDayKey) ?? days[0],
@@ -194,9 +237,9 @@ export function QFPlanScheduler({
   return (
     <div className="gap-22 qf-plan-scheduler">
       <div>
-        <p className="qf-meta qf-plan-scheduler__eyebrow">{PLAN_SCHEDULER_EYEBROW}</p>
+        <p className="qf-meta qf-plan-scheduler__eyebrow">{eyebrow}</p>
         <h1 className="qf-h1" style={{ marginBottom: 0 }}>
-          {PLAN_SCHEDULER_HEADLINE}
+          {headline}
         </h1>
       </div>
 
@@ -292,6 +335,7 @@ export function QFPlanScheduler({
         </p>
       ) : null}
 
+      {schedulerEnabled ? (
       <div className="qf-plan-scheduler__calendar">
         {loading ? (
           <div className="qf-plan-scheduler__skeleton" aria-live="polite" aria-busy="true">
@@ -377,6 +421,7 @@ export function QFPlanScheduler({
           </>
         )}
       </div>
+      ) : null}
     </div>
   );
 }

@@ -44,10 +44,21 @@ export function thankYouHeadline(parentFirst: string): string {
   return "Your SAT Strategy Call is confirmed.";
 }
 
+export function thankYouHeadlineDeferred(parentFirst: string): string {
+  if (parentFirst.trim()) {
+    return `${parentFirst.trim()}, your plan is saved.`;
+  }
+  return "Your plan is saved.";
+}
+
 export function thankYouWhenLine(callWhen: string | null): string {
   return (
     callWhen ?? "Check your email for the calendar invite with your call time."
   );
+}
+
+export function thankYouDeferredWhenLine(): string {
+  return "We'll email you within one business day with open Strategy Call times.";
 }
 
 export function thankYouKidInviteLine(kidName: string): string {

@@ -95,6 +95,13 @@
     .slide,.frag,.progress .bar{animation:none;transition:none}
     .frag{opacity:1;transform:none}
   }
+  body.embed{
+    flex-direction:column;align-items:stretch;justify-content:flex-start;
+    padding:10px 14px 12px;height:100%;overflow:hidden
+  }
+  body.embed .stage{flex:1;max-width:none;min-height:0}
+  body.embed .slides{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch}
+  body.embed .hint{display:none}
 </style>
 </head>
 <body>
@@ -382,6 +389,7 @@
 </div>
 
 <script>
+  if(new URLSearchParams(location.search).get('embed')==='1')document.body.classList.add('embed');
   const slides=[...document.querySelectorAll('.slide')];
   const bar=document.getElementById('bar');
   const count=document.getElementById('count');

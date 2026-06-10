@@ -9,6 +9,7 @@ export type QuizBookingErrorCode =
   | "lead_save_failed"
   | "no_slot"
   | "slot_taken"
+  | "booking_paused"
   | "calendly_api"
   | "availability_load"
   | "network"
@@ -24,6 +25,7 @@ export function classifyBookingError(
   if (options?.apiCode === "lead_save_failed") return "lead_save_failed";
   if (options?.apiCode === "no_slot") return "no_slot";
   if (options?.apiCode === "slot_taken") return "slot_taken";
+  if (options?.apiCode === "booking_paused") return "booking_paused";
   if (options?.apiCode === "calendly_api") return "calendly_api";
   if (options?.apiCode === "availability_load") return "availability_load";
   if (options?.apiCode === "network") return "network";

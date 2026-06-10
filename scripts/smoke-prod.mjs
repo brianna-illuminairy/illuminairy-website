@@ -42,7 +42,7 @@ const PAGE_CHECKS = [
   },
   {
     surface: "plan-builder",
-    path: "/quiz?step=q1-parent-child",
+    path: "/plan?step=q1-parent-child",
     label: "Plan Builder entry (q1-parent-child)",
     assert: (html) => {
       if (!html.includes("qf-page") && !html.includes("Who needs SAT help")) {
@@ -52,7 +52,7 @@ const PAGE_CHECKS = [
   },
   {
     surface: "plan-builder",
-    path: "/quiz?step=q1",
+    path: "/plan?step=q1",
     label: "Plan Builder legacy q1 deep link",
     assert: (html) => {
       if (!html.includes("qf-page")) throw new Error("missing Plan Builder shell");
@@ -60,7 +60,7 @@ const PAGE_CHECKS = [
   },
   {
     surface: "plan-builder",
-    path: "/quiz?step=achievability",
+    path: "/plan?step=achievability",
     label: "Goal achievability (deep link)",
     assert: (html) => {
       if (!html.includes("qf-page")) throw new Error("missing Plan Builder shell");

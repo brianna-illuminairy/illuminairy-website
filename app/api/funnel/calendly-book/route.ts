@@ -21,6 +21,10 @@ import {
   type AttributionSnapshot
 } from "@/lib/attribution";
 import { getVisitorById } from "@/lib/crm/visitors";
+import {
+  resolvePlanBuilderBookingGate,
+} from "@/lib/quiz-funnel/plan-builder-booking-gate-server";
+import { PLAN_BOOKING_GATE_AVAILABILITY_MSG } from "@/lib/quiz-funnel/plan-booking-gate-copy";
 
 type CalendlyBookBody = {
   startTime?: string;
@@ -144,6 +148,30 @@ export async function POST(request: Request) {
   });
   const attribution = resolved.attribution;
   const qWho = resolved.qWho;
+
+  const gate = await resolvePlanBuilderBookingGate({ attribution, request });
+  if (gate.gated) {
+    await recordBookingError({
+      errorCode: "booking_paused",
+      errorMessage: PLAN_BOOKING_GATE_AVAILABILITY_MSG,
+      httpStatus: 403,
+      parentEmail,
+      visitorId,
+      startTime,
+      attribution,
+      qWho,
+      retryable: false,
+      payload: {
+        sat_lp_variant: body.sat_lp_variant,
+        lp_variant: body.lp_variant,
+        booking_gate: "paid_ad",
+      },
+    });
+    return funnelApiError(403, "booking_paused", {
+      retryable: false,
+      message: PLAN_BOOKING_GATE_AVAILABILITY_MSG,
+    });
+  }
 
   const token = process.env.CALENDLY_API_TOKEN?.trim();
   if (!token) {

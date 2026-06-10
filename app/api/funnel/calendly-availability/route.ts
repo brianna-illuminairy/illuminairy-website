@@ -3,8 +3,29 @@ import { fetchFunnelSchedulerDays } from "@/lib/calendly/funnel-availability";
 import { funnelApiError } from "@/lib/calendly/funnel-api-errors";
 import { classifyBookingError } from "@/lib/calendly/booking-errors";
 import { BOOKING_FEEDBACK } from "@/lib/quiz-funnel/booking-feedback";
+import { PLAN_BOOKING_GATE_AVAILABILITY_MSG } from "@/lib/quiz-funnel/plan-booking-gate-copy";
+import {
+  attributionFromSearchParams,
+  resolvePlanBuilderBookingGate,
+} from "@/lib/quiz-funnel/plan-builder-booking-gate-server";
 
 export async function GET(request: Request) {
+  const url = new URL(request.url);
+  const attribution = attributionFromSearchParams(url.searchParams);
+  const gate = await resolvePlanBuilderBookingGate({ attribution, request });
+  if (gate.gated) {
+    return NextResponse.json(
+      {
+        ok: false,
+        error: PLAN_BOOKING_GATE_AVAILABILITY_MSG,
+        error_code: "booking_paused",
+        retryable: false,
+        days: [],
+      },
+      { status: 403 }
+    );
+  }
+
   const fresh =
     new URL(request.url).searchParams.get("fresh") === "1" ||
     request.headers.get("cache-control")?.includes("no-cache");

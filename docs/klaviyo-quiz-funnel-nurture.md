@@ -35,8 +35,8 @@ Properties are built in [`lib/klaviyo-quiz-props.ts`](../lib/klaviyo-quiz-props.
 
 | Delay | Subject | Preview text | Body | CTA |
 |-------|---------|--------------|------|-----|
-| 1 hour | Finish booking your SAT Strategy Call | Your starter Improvement Plan is ready — book the free 15-min call. | You have a starter **SAT Improvement Plan** from the Plan Builder. The free 15-minute **SAT Strategy Call** confirms your score projection and schedules Week 1 **Skill Diagnostic**. | `https://illuminairy.com/plan?step=s9` |
-| 24 hours | Still realistic for your child? | Movement usually comes from 5–6 skills — not the whole test. | GPA–SAT mismatch is common. Movement usually comes from **5–6 skills**, not the whole test. Results vary. | Book your free SAT Strategy Call → `https://illuminairy.com/plan?step=s9` |
+| 1 hour | Finish booking your SAT Strategy Call | Your starter Improvement Plan is ready — book the free 15-min call. | You have a starter **SAT Improvement Plan** from the Plan Builder. The free 15-minute **SAT Strategy Call** confirms your score projection and schedules Week 1 **Skill Diagnostic**. | `https://illuminairy.com/plan?step=s5` |
+| 24 hours | Still realistic for your child? | Movement usually comes from 5–6 skills — not the whole test. | GPA–SAT mismatch is common. Movement usually comes from **5–6 skills**, not the whole test. Results vary. | Book your free SAT Strategy Call → `https://illuminairy.com/plan?step=s5` |
 | 72 hours | What Week 1 looks like | Skill Diagnostic after your call — not on the call itself. | Mon/Wed **Skill Diagnostic** (proctored), Fri personalized plan review — **after** your SAT Strategy Call. | Book your free SAT Strategy Call |
 | 7 days | August timeline | If they're aiming for Aug 22, timing matters. | If they're aiming for Aug 22, timing matters. Illuminairy completers: focused path, weekly parent visibility — Results vary. | Book your free SAT Strategy Call |
 
@@ -79,7 +79,7 @@ Properties are built in [`lib/klaviyo-quiz-props.ts`](../lib/klaviyo-quiz-props.
 
 **Subject:** Reschedule your SAT Strategy Call  
 **Preview text:** Pick a new time — your Improvement Plan is still saved.  
-**Body:** Hi {{ first_name|default:"there" }}, your Strategy Call was canceled. Your starter **SAT Improvement Plan** is still saved. Book a new time when you're ready: `https://illuminairy.com/plan?step=s9`
+**Body:** Hi {{ first_name|default:"there" }}, your Strategy Call was canceled. Your starter **SAT Improvement Plan** is still saved. Book a new time when you're ready: `https://illuminairy.com/plan?step=s5`
 
 ## Calendly ops checklist
 

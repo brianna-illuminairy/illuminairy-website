@@ -43,7 +43,7 @@ export const site = {
   /** Public SAT consultation only — not the invite-only mentor interview link */
   calendlyUrl:
     process.env.NEXT_PUBLIC_CALENDLY_URL ||
-    "https://calendly.com/satprep-illuminairy/august-sat",
+    "https://calendly.com/satprep-illuminairy/sat-planning-session",
   typeformUrl: process.env.NEXT_PUBLIC_TYPEFORM_URL || "",
   /** Mentor / SAT instructor application — public embed on /apply/mentor */
   mentorTypeformUrl: process.env.NEXT_PUBLIC_MENTOR_TYPEFORM_URL || "",

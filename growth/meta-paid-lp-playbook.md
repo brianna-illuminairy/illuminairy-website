@@ -2,7 +2,11 @@
 
 **Most ad sets are national/broad** — not geo. Personalization comes from **creative angle** (`utm_content`), not `?metro=`.
 
-All prospecting lands on **`https://illuminairy.com/`** (hero + trust bar + `/plan` CTA).
+All prospecting lands on **`https://illuminairy.com/sat-plan-builder`** (hero + trust bar + `/plan` CTA).
+
+Live per-creative URLs: `npm run marketing:ad-urls` (SSOT: `lib/marketing/meta-live-creatives.ts`).
+
+Organic / brand traffic may still use **`https://illuminairy.com/`** — do not point paid cold ads at `/plan?step=…`.
 
 ---
 
@@ -18,10 +22,12 @@ All prospecting lands on **`https://illuminairy.com/`** (hero + trust bar + `/pl
 
 ---
 
-## Default ad URL (national)
+## Default ad URL (national — live v4 creatives)
+
+Use per-creative URLs from `npm run marketing:ad-urls`. Example (ad1 / script_5):
 
 ```
-https://illuminairy.com/?utm_source=facebook&utm_medium=paid_social&utm_campaign=fall_sat_national&utm_content=script_5
+https://illuminairy.com/sat-plan-builder?utm_source=meta&utm_medium=paid_social&utm_campaign=c1_concerned_mom_cold_test&utm_content=script_5&utm_term=broad_moms_35_58&hook=gap
 ```
 
 | Creative | `utm_content` | LP hero hook |

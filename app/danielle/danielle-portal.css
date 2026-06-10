@@ -513,8 +513,10 @@
 }
 
 .danielle-week1__slide-frame {
+  display: block;
   width: 100%;
-  min-height: 520px;
+  height: min(920px, 94vh);
+  min-height: 820px;
   border: 1px solid var(--danielle-line);
   border-radius: 12px;
   background: #fff;
@@ -802,6 +804,7 @@
 
 @media (max-width: 640px) {
   .danielle-week1__slide-frame {
-    min-height: 420px;
+    height: min(860px, 92vh);
+    min-height: 760px;
   }
 }

@@ -324,7 +324,7 @@ export function identifyQuizLead(email: string, answers: Record<string, unknown>
 export function captureQuizLeadSubmitted(
   answers: Record<string, unknown>,
   eventId?: string,
-  options?: { hasGapScreen?: boolean }
+  options?: { hasGapScreen?: boolean; booking_deferred?: boolean }
 ) {
   const q4 = answers.q4 as string | undefined;
   const q5 = answers.q5 as string | undefined;
@@ -359,6 +359,7 @@ export function captureQuizLeadSubmitted(
       readPersistedLpVariantId() ??
       undefined,
     has_gap_screen: Boolean(options?.hasGapScreen),
+    booking_deferred: Boolean(options?.booking_deferred),
     showed_gpa_gap: showedGpaGapScreen(q4, answers.q9 as string | undefined),
     promised_gain_pts: promisedGain ?? undefined,
     weeks_until_test: weeksUntilQ5Test(q5),
@@ -437,8 +438,22 @@ export type QuizBookingErrorProps = {
   qWho?: string;
 };
 
-/** s5 lead save, Calendly book API, availability load, validation. */
+export type QuizBookingValidationProps = {
+  validation_code: string;
+  validation_message: string;
+  field: string;
+  step?: string;
+  phone_digit_count?: number;
+  slot_weekday?: string;
+  slots_available?: boolean;
+  qWho?: string;
+};
+
+/** s5 lead save, Calendly book API, availability load, network. Not client form validation. */
 const BOOKING_ERROR_DEDUPE_MS = 3000;
+const BOOKING_VALIDATION_DEDUPE_MS = 3000;
+let lastBookingValidationKey = "";
+let lastBookingValidationAt = 0;
 let lastBookingErrorKey = "";
 let lastBookingErrorAt = 0;
 
@@ -462,9 +477,35 @@ export function captureQuizBookingError(props: QuizBookingErrorProps) {
     ...props
   };
   if (getPostHogKey()) {
-    posthog.capture("quiz_booking_error", payload);
+    posthog.capture(PostHogEvents.quizBookingError, payload);
   }
-  trackQuizGaEvent("quiz_booking_error", payload);
+  trackQuizGaEvent(Ga4Events.quizBookingError, payload);
+}
+
+/** s5 client-side validation only (TCPA, name, phone, slot before submit). */
+export function captureQuizBookingValidation(props: QuizBookingValidationProps) {
+  const key = `${props.validation_code}|${props.step ?? "s5"}|${props.field}`;
+  const now = Date.now();
+  if (
+    key === lastBookingValidationKey &&
+    now - lastBookingValidationAt < BOOKING_VALIDATION_DEDUPE_MS
+  ) {
+    return;
+  }
+  lastBookingValidationKey = key;
+  lastBookingValidationAt = now;
+
+  const payload = {
+    funnel: "sat_quiz",
+    step: props.step ?? "s5",
+    ...persistedLpContext(),
+    ...quizAttributionProps(),
+    ...props
+  };
+  if (getPostHogKey()) {
+    posthog.capture(PostHogEvents.quizBookingValidation, payload);
+  }
+  trackQuizGaEvent(Ga4Events.quizBookingValidation, payload);
 }
 
 export function captureQuizStepBack(meta: {

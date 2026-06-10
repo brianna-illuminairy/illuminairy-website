@@ -3,6 +3,7 @@ import {
   metaLandingUrl,
   metaSatPlanBuilderLandingUrl
 } from "@/lib/landing/meta-traffic";
+import { SAT_PLAN_BUILDER_LP_PATH } from "@/lib/plan-builder-routes";
 import { canonicalizeUtmContent } from "@/lib/marketing/utm-content-aliases";
 
 /** Live Meta cold ads — source of truth for utm_content → LP hook. */
@@ -16,13 +17,16 @@ export type MetaLiveCreative = {
   angle: string;
 };
 
+/** All live cold ads land on the ad LP path (never `/plan?step=…`). */
+export const META_LIVE_AD_LP_PATH = SAT_PLAN_BUILDER_LP_PATH;
+
 export const META_LIVE_CREATIVES: readonly MetaLiveCreative[] = [
   {
     id: "ad1_concerned_mom",
     utmContent: "script_5",
     utmCampaign: "c1_concerned_mom_cold_test",
     utmTerm: "broad_moms_35_58",
-    landingPath: "/",
+    landingPath: META_LIVE_AD_LP_PATH,
     heroHook: "gap",
     angle: "Good grades, SAT score shock — v4 default headline (no score band)"
   },
@@ -31,7 +35,7 @@ export const META_LIVE_CREATIVES: readonly MetaLiveCreative[] = [
     utmContent: "ad2_enough_time",
     utmCampaign: "c1_sat_plan_builder_cold_creative_test",
     utmTerm: "broad_moms_35_58",
-    landingPath: "/sat-plan-builder",
+    landingPath: META_LIVE_AD_LP_PATH,
     heroHook: "fall",
     angle: "Do we have enough time before deadlines?"
   },
@@ -40,7 +44,7 @@ export const META_LIVE_CREATIVES: readonly MetaLiveCreative[] = [
     utmContent: "ad3_before_tutoring",
     utmCampaign: "c1_sat_plan_builder_cold_creative_test",
     utmTerm: "broad_moms_35_58",
-    landingPath: "/sat-plan-builder",
+    landingPath: META_LIVE_AD_LP_PATH,
     heroHook: "tutor",
     angle: "Before paying for tutoring — what score is realistic?"
   },
@@ -49,7 +53,7 @@ export const META_LIVE_CREATIVES: readonly MetaLiveCreative[] = [
     utmContent: "ad4_mom_first_story",
     utmCampaign: "c1_sat_plan_builder_cold_creative_test",
     utmTerm: "broad_moms_35_58",
-    landingPath: "/sat-plan-builder",
+    landingPath: META_LIVE_AD_LP_PATH,
     heroHook: "student_story",
     angle: "Same video as ad5 (mom cut) — variant-highgpa-ap-lowsat LP headline"
   },
@@ -58,7 +62,7 @@ export const META_LIVE_CREATIVES: readonly MetaLiveCreative[] = [
     utmContent: "ad5_high_gpa_student_story",
     utmCampaign: "c1_sat_plan_builder_cold_creative_test",
     utmTerm: "broad_moms_35_58",
-    landingPath: "/sat-plan-builder",
+    landingPath: META_LIVE_AD_LP_PATH,
     heroHook: "student_story",
     angle: "Student-led story — 3.9 GPA / 11 AP / 1160, mom asks why score low, 1430 outcome"
   }
@@ -71,10 +75,39 @@ export function metaLiveCreativeUrl(creative: MetaLiveCreative): string {
     term: creative.utmTerm,
     hook: creative.heroHook
   };
-  if (creative.landingPath === "/sat-plan-builder") {
-    return metaSatPlanBuilderLandingUrl(input);
+  if (creative.landingPath === "/") {
+    return metaLandingUrl(input);
   }
-  return metaLandingUrl(input);
+  return metaSatPlanBuilderLandingUrl(input);
+}
+
+export type MetaLiveAdUrlRow = {
+  id: string;
+  utmContent: string;
+  landingPath: string;
+  heroHook: LandingHeroHook;
+  url: string;
+};
+
+/** Copy-paste destinations for Meta Ads Manager — LP entry only. */
+export function metaLiveAdDestinationUrls(): MetaLiveAdUrlRow[] {
+  return META_LIVE_CREATIVES.map((creative) => ({
+    id: creative.id,
+    utmContent: creative.utmContent,
+    landingPath: creative.landingPath,
+    heroHook: creative.heroHook,
+    url: metaLiveCreativeUrl(creative)
+  }));
+}
+
+export function assertMetaAdDestinationUrl(url: string): void {
+  const lower = url.toLowerCase();
+  if (lower.includes("/plan") || lower.includes("/quiz")) {
+    throw new Error(`Meta ad URL must land on LP, not funnel: ${url}`);
+  }
+  if (lower.includes("step=")) {
+    throw new Error(`Meta ad URL must not deep-link a funnel step: ${url}`);
+  }
 }
 
 export function heroHookForUtmContent(content: string): LandingHeroHook | null {

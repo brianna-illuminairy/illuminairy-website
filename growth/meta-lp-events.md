@@ -58,7 +58,8 @@ Rough gates: ~100–200 ParentConfirmed before trusting ad/LP rankings; ~40–60
 ## satprep.illuminairy.com
 
 - **Keep subdomain separate** for now — no 301 in this pass
-- **All new Meta/Google ads** → `https://illuminairy.com/` or `/sat-plan-builder` with UTMs
+- **All new Meta/Google ads** → `https://illuminairy.com/sat-plan-builder` with UTMs (see `npm run marketing:ad-urls`)
+- **Do not** use `/plan?step=…` as an ad destination — LP first, then CTA into the funnel
 - Do not point new campaigns at satprep unless intentionally testing legacy funnel
 
 ## UTM convention (Meta primary — national)
