@@ -8,6 +8,10 @@ import {
 } from "@/lib/danielle-portal-updates";
 
 const STORAGE_KEY = "illuminairy_danielle_seen_updates";
+const EMPTY_UPDATES: DaniellePortalUpdate[] = [];
+
+let cachedSeenKey = "";
+let cachedUnseenUpdates: DaniellePortalUpdate[] = EMPTY_UPDATES;
 
 function readSeenUpdateIds(): string[] {
   if (typeof window === "undefined") {
@@ -38,6 +42,19 @@ function getUnseenUpdates(seenIds: string[]): DaniellePortalUpdate[] {
   return DANIELLE_PORTAL_UPDATES.filter((update) => !seen.has(update.id));
 }
 
+function readUnseenUpdatesSnapshot(): DaniellePortalUpdate[] {
+  const seenIds = readSeenUpdateIds();
+  const seenKey = [...seenIds].sort().join("|");
+
+  if (seenKey === cachedSeenKey) {
+    return cachedUnseenUpdates;
+  }
+
+  cachedSeenKey = seenKey;
+  cachedUnseenUpdates = getUnseenUpdates(seenIds);
+  return cachedUnseenUpdates;
+}
+
 function subscribeToPortalUpdates(onStoreChange: () => void) {
   const handler = () => onStoreChange();
   window.addEventListener("danielle-portal-updates", handler);
@@ -47,8 +64,8 @@ function subscribeToPortalUpdates(onStoreChange: () => void) {
 export function PortalUpdatesBanner() {
   const unseen = useSyncExternalStore(
     subscribeToPortalUpdates,
-    () => getUnseenUpdates(readSeenUpdateIds()),
-    () => [] as DaniellePortalUpdate[]
+    readUnseenUpdatesSnapshot,
+    () => EMPTY_UPDATES
   );
 
   if (unseen.length === 0) {
