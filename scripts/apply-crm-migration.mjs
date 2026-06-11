@@ -93,8 +93,17 @@ const migrationFiles = [
   "20260528190000_quiz_funnel_lead_columns.sql",
   "20260601120000_plan_shares.sql",
   "20260605120000_visitors_analytics.sql",
+  "20260607183000_sat_plan_builder_lp_analytics.sql",
+  "20260607200000_quiz_opening_columns.sql",
   "20260608120000_visitor_quiz_answers.sql",
-  "20260608125500_visitors_fast_attribution_columns.sql"
+  "20260608125500_visitors_fast_attribution_columns.sql",
+  "20260609023000_leads_meta_match_keys.sql",
+  "20260609190000_danielle_portal_notify.sql",
+  "20260610230000_enrollment_typeform.sql",
+  "20260611120000_business_platform.sql",
+  "20260612000000_clients_weekly_report.sql",
+  "20260612120000_crm_v1_followups.sql",
+  "20260612121000_crm_v1_lead_calls.sql"
 ];
 
 async function applyAllMigrations(client) {

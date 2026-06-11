@@ -1,138 +1,135 @@
 # Active context
 
-*Last updated: 2026-06-10*
+*Last updated: 2026-06-11*
 
-## Business Management Platform (shipped in repo)
+## CRM v1 just shipped (2026-06-11 PM)
 
-- **`/admin`** — Overview (KPIs + alerts), Marketing, CRM, Finance, Ads, Automations
-- **DB:** `admin_alerts`, `client_payments`, `client_costs`, `client_time_logs`, `ad_spend_daily`, `integration_jobs` (migration applied to Supabase)
-- **`/enroll`** — post-payment intake (Stripe session gate); merges into CRM via `recordEnrollmentFromTypeform` + stripe session link
-- **Crons:** daily marketing digest + 4h PostHog error poll (`vercel.json`)
-- **Danielle economics seeded:** revenue $198, costs $593, 255 logged minutes (run `npm run crm:backfill-*` locally when `.env.local` has Supabase keys)
+The `/admin/crm` rework from the plan in `.cursor/plans/crm-v1-pipeline_4cf61e79.plan.md` is implemented and ready to deploy. Sumary:
+
+- **Marketing dashboard counts fixed** (`lib/marketing/funnel-metrics.ts`) — `getFunnelCounts`, `getCampaignRows`, `getCreativeRows` now count `DISTINCT lead_id`, exclude internal CRM emails via `INTERNAL_CRM_EMAILS`, and scope `books` to lead_ids that also have a `quiz_lead_submitted` event in the window. Invariant `books ≤ leads` should now hold.
+- **`/admin/crm`** is a three-view shell (`?view=list|pipeline|due`): sortable/filterable leads table → clickable to `/admin/crm/leads/[id]`, kanban with `@dnd-kit/core` (drag between Intake/Booked/Attended/Won/Lost), Due today queue grouped Overdue/Today/This week, plus a Due-today KPI tile.
+- **Lead profile** (`/admin/crm/leads/[id]`) — tabs: Overview (parent/student/source/Calendly cards + quiz answers), Notes (sales notes + next followup datetime + note), Calls (paste-in transcripts), Activity (merged touch_events + calls + conversion event).
+- **Clients list** (`/admin/crm/clients`) + **client profile** (`/admin/crm/clients/[id]`) — tabs: Overview (with weekly-report opt-in dots + payments + lead-history accordion), Ops notes (autosave on `clients.ops_notes`), Students/enrollments, Calls, Activity.
+- **Conversion handoff UX** wired both ways — lead profile gets an emerald banner + locked stage dropdown when `converted_client_id` is set; client profile gets a sky banner back to the original lead; leads list fades converted rows and offers a "Hide converted clients" toggle (defaults on); clients list has a Source utm_campaign column.
+- **New migrations** (not yet applied to prod): `supabase/migrations/20260612120000_crm_v1_followups.sql` (adds `leads.next_followup_at`, `next_followup_note`, `last_activity_at`), `supabase/migrations/20260612121000_crm_v1_lead_calls.sql` (creates polymorphic `lead_calls` table referencing lead_id and/or client_id). Apply via `DATABASE_URL=… npm run crm:migrate` or `SUPABASE_ACCESS_TOKEN=… npm run crm:migrate:api`.
+- **Stripe webhook** (`lib/crm/enrollment.ts`) now logs `[crm] lead X (email) converted -> client Y via stripe session Z` and bumps `last_activity_at` on conversion.
+- **`@dnd-kit/core` + `@dnd-kit/sortable`** added to `package.json`.
+
+Brianna's local `ADMIN_SECRET` is already set; the Vercel env still needs `ADMIN_SECRET` for prod admin access, plus the migrations need to run before deploy.
+
+## Resume here (start next chat with this)
+
+**Pipeline:** Research → UX → gstack review → **visual mockups** → owner gate → PRD/SPEC → build
+
+**Visual mockups:** [`docs/enroll-design-mockups/board.html`](../docs/enroll-design-mockups/board.html)
+
+**UX design:** [`docs/enroll-ux-design.md`](../docs/enroll-ux-design.md)
+
+**Gstack review (CEO 6.5 · Design 6 · Eng 6):** [`docs/enroll-gstack-review.md`](../docs/enroll-gstack-review.md)
+
+**Derived specs (stale until gate passes):**
+- PRD: [`specs/2026-06-enroll-onboarding/PRD.md`](../specs/2026-06-enroll-onboarding/PRD.md)
+- SPEC: [`specs/2026-06-enroll-onboarding/SPEC.md`](../specs/2026-06-enroll-onboarding/SPEC.md)
+- Research (full): [`docs/enroll-onboarding-research.md`](../docs/enroll-onboarding-research.md) · index: [`specs/2026-06-enroll-onboarding/RESEARCH.md`](../specs/2026-06-enroll-onboarding/RESEARCH.md)
+- Checkout truth: [`specs/2026-06-enroll-onboarding/CHECKOUT-TRUTH.md`](../specs/2026-06-enroll-onboarding/CHECKOUT-TRUTH.md)
+
+**Status:** Research → UX → gstack review complete (2026-06-11). **No implementation.** PRD/SPEC written early; refresh after gate. Prior `/enroll` code and `docs/enroll-design-pick.md` are stale.
+
+**Next action:** Brianna answers approval gate in [`docs/enroll-gstack-review.md`](../docs/enroll-gstack-review.md) (4 vs 3 screens, metrics, screen 2 tone) → refresh PRD/SPEC → then build.
+
+---
+
+## /enroll onboarding — session summary (2026-06-10 → 2026-06-11)
+
+### What Brianna asked for
+
+Rebuild `/enroll` (post-Stripe payment) into a **consumer-grade onboarding** experience:
+- Brand in the Aurora / brand-guide neighborhood — **not** `/plan`'s narrow mobile column on desktop
+- **Light surface** (polar white) for moms 45–55 — dark navy only for nav chrome + hero band on welcome/complete
+- **Every element has a purpose** — hierarchy, order, and vertical space budget matter
+- **Take work off the parent** — "breath of fresh air"; Illuminairy works with the kid now
+- **Book Skill Diagnostic ASAP** — activation metric; sooner start = better results
+- **Named human** to come back to (billing, progress, support)
+- **Accurate student data + parent-on-behalf SMS acknowledgment** — SMS is where students engage
+- **Receipt replaces Stripe success page** — confirm payment, trial, next charge, what's included (like a steal)
+- **Echo Stripe payment link verbatim** — two products already shown at checkout:
+  1. **Skill Diagnostic + Plan** — $249 one-time upfront (before diagnostic)
+  2. **Weekly Tutoring** — $99/week with **7-day free trial**, through SAT test day
+- Entity on receipt: **Illuminairy SAT Prep** (Zytech Development LLC fine print)
+- Welcome copy direction: `Welcome to Illuminairy! We're excited to have [Student] in our [Month Day] SAT Program!`
+- Keep **clear step labels in top-right nav** (Brianna likes these)
+- Preview mode: `/enroll?preview=1` for testing without Stripe checkout
+
+### Brand promise (9 principles — spec north star)
+
+See PRD § Brand promise. Load-bearing: diagnostic-first activation, anti-scam receipt, echo checkout, SMS as student channel, named human.
+
+### Spec recommendation (not yet implemented)
+
+**3-step compressed flow:**
+1. Welcome + receipt + book Skill Diagnostic (same screen)
+2. Student contact + parent-on-behalf SMS ack + parent report prefs
+3. Done + named human + this-week agenda
+
+Cut from v1: second guardian (→ parent portal), long welcome agenda (receipt replaces it), decorative aside copy.
+
+### Code state (uncommitted WIP on branch)
+
+Partial rebuild exists in working tree:
+- `app/enroll/enroll.css` — light surface + hero band + forest CTA
+- `components/enroll/enroll-shell.tsx` — nav + progress + split layout
+- `lib/enroll/enroll-copy.tsx`, `enroll-preview.ts`, step components
+- `components/enroll/enroll-order-summary.tsx` — program summary (no pricing yet; needs Stripe receipt)
+- Preview mode in API routes (`session_id=preview`)
+- Inline SVG logo (`IlluminairyLogoV7`)
+
+**Known gaps vs spec:**
+- Still 5 steps; Calendly last
+- No live Stripe receipt ($249 / $99 trial)
+- Welcome title still `Welcome, {parent}.` not Illuminairy + student program line
+- `lib/site.ts` still has stale `tuitionDisplay: "$1,200"`
+- `docs/enroll-gstack-context.md` still references $1,200 / SAT Accelerator
+- SPEC was PLACEHOLDER until 2026-06-11 night session completed it
+
+### Reference assets (design)
+
+Primary: `~/Downloads/illuminairy_brand_guide (1).html` (editorial, desktop-first)
+Also: Aurora Tokens.html, illuminairy_context.html, diagnostic interface uploads
+Rule: [`.cursor/rules/saas-dtc-best-practices.mdc`](../.cursor/rules/saas-dtc-best-practices.mdc) — user assets first, brand SSOT second, SaaS patterns third
+
+---
+
+## Other active work (paused while /enroll spec lands)
+
+**Mobile cold traffic funnel:** [`specs/2026-06-mobile-cold-traffic-funnel/SPEC.md`](../specs/2026-06-mobile-cold-traffic-funnel/SPEC.md) — superseded as ACTIVE by enroll spec; still valid for `/plan` work.
+
+**Plan reveal drop analysis:** [`growth/plan-reveal-drop-playbook.md`](../growth/plan-reveal-drop-playbook.md)
+
+---
 
 ## Plan reveal vs achievability (locked naming)
 
-- **Plan reveal** = PostHog step **`v1`** / `QFV1Projection` (after `name` → `i2`). Chart + "What's on the line."
-- **Goal achievability rating** = step **`achievability`** / `QFSGoalAchievability` (before `name`). Tier gauge only.
-- Legacy misnames (`QFSPlanReveal`, `plan-reveal.ts`, aliases `reveal`/`s1`) mean **achievability**, not plan reveal.
-- SSOT: `lib/quiz-funnel/funnel-screen-roles.ts`; events emit `funnel_screen_role`, `is_plan_reveal` on `quiz_step_viewed`.
+- **Plan reveal** = PostHog step **`v1`** / `QFV1Projection` (after `name` → `i2`).
+- **Goal achievability rating** = step **`achievability`** / `QFSGoalAchievability` (before `name`).
+- SSOT: `lib/quiz-funnel/funnel-screen-roles.ts`
 
-## Danielle student portal (new)
+## Messaging (locked)
 
-Private route **`/danielle`** — email allowlist auth (`DANIELLE_ACCESS_ALLOWLIST` in Vercel). SAT plan HTML + diagnostic PDFs in `content/danielle/`. PDFs served at `/danielle/files/[slug]` (cookie path `/danielle`). **Deploy:** set env then push to `main`.
-
-## Resume here
-
-**Active spec (mobile cold traffic):** [`specs/2026-06-mobile-cold-traffic-funnel/SPEC.md`](../specs/2026-06-mobile-cold-traffic-funnel/SPEC.md)
-
-**Plan reveal drop analysis (Jun 7–8):** [`growth/plan-reveal-drop-playbook.md`](../growth/plan-reveal-drop-playbook.md) — attributed cohort n=9, all replays tagged. Next: `post-plan-value-bridge`, `name-step-parent-drop`, `v1-below-fold-ux`.
-
-**Full session handoff (start next chat with this):** [`session-handoff-2026-05-29-funnel-qa.md`](./session-handoff-2026-05-29-funnel-qa.md)
-
-## Current focus
-
-- **SAT Improvement Plan funnel** — `/quiz` — parent Plan Builder → reveal → SAT Strategy Call → Week 1 Skill Diagnostic → activated plan.
-- **B3 landing** — `/` — PostHog A/B (`b3a` / `b3b` / `b3c`); hands off to `/quiz?step=q1`.
-- **Separate funnels (out of scope unless asked):** `/satplan`, `/assessment`.
-
-## Messaging (locked — do not re-debate)
-
-**Strategy:** [`growth/funnel-strategy.md`](../growth/funnel-strategy.md)  
-**Tactical copy:** [`docs/messaging-guide.md`](../docs/messaging-guide.md)  
-**Rules:** `.cursor/rules/messaging-guide.mdc`, `banned-copy-phrases.mdc`
+Strategy: [`growth/funnel-strategy.md`](../growth/funnel-strategy.md) · Copy: [`docs/messaging-guide.md`](../docs/messaging-guide.md)
 
 | Topic | Decision |
 |-------|----------|
-| Product | **SAT Improvement Plan** (+ score projection). Retire customer-facing **SAT Score Path**. |
-| Call | **SAT Strategy Call** (15 min) — before Week 1. |
-| Diagnostic | **Skill Diagnostic** — Part 1 Mon + Part 2 Wed; Fri plan review. |
-| Audience | Parents — never “quiz” or bare “assessment” on LP/step 1. |
-| Banned | “if you want to move forward,” “Take the assessment,” student plan-generator SEO. |
-| Stats | `lib/site.ts` only; “Results vary.” |
-
-## Funnel spine (canonical — see rule for full map)
-
-`q1-parent-child` → `q-score-lower` → `q1` → `q2` → `q3` → `i-steps` → `q4` → `q-doubts` → `q5` → `hit-outcome-month-one` → `q6` → `q7` → `hit-q7` → `i-diag` → `i-compare` → `q9` → `q8` → `achievability` (projection, before name) → `name` → `i2` → `v1` (PLAN REVEAL) → `s4` → `s5` (booking) → `quiz_lead_submitted` → `quiz_booking_confirmed`.
-
-- Plan reveal is `v1` (after `name`), NOT `achievability`. Achievability widget shows on both `achievability` and `v1`.
-- Step-ID aliases: `q1-parent-child` ← `q-who`; `achievability` ← `reveal`/`s1`. Old ids `i1/s2/s3/s7/s9/reveal/heard` are dead pre-launch.
-- **Drop-off analysis:** read `.cursor/rules/funnel-flow-canonical.mdc` + `growth/funnel-analysis-playbook.md` first. PostHog window: nothing before **2026-06-07 16:00 UTC** (launch); exclude internal emails; scope `/plan`.
-
-Key libs: `quiz-route.ts`, `step-aliases.ts`, `funnel-screen-roles.ts`, `goal-achievability-screen.ts`, `v1-projection.ts`, `goal-achievability.ts`, `score-path-copy.ts`, `stakes-copy.ts`, `education-slides.ts`, `prep-failure-copy.ts`
-
-## Recently shipped (2026-06-08)
-
-- **LP ad message-match (local, uncommitted)** — `student_story` H1 for ad4/ad5; `mom_story` removed; responsive H1; `lp_variant` on LP/quiz/lead; hydration merge cookie∪localStorage; booking error dedupe + structured lead API errors; s5 TCPA tap target; `quiz_step_back`; PostHog dashboard doc updated. Verify: `FUNNEL_LAYOUT_UNLOCK=1 npm run agent:verify` PASS; `npm run funnel:e2e` PASS (37 checks). **Next:** commit + `npm run release`; Meta ad URLs `hook=student_story`; PostHog success metrics after traffic.
-- **Chunk C split (Jun 8)** — keep step-registry refactor (Phase A/B) as a dedicated multi-session track; ship analytics/docs independently now (`step=q1-parent-child` canonical + `q-who` alias, step labels/seq on quiz events, checklist docs updated).
-- **Hydration/resume hardening (Jun 8)** — removed timer-based hydration guards in quiz state/runner; hydration now resolves through reducer action (`HYDRATE`) before redirect + lastStep writes. Resume logic now deterministically prefers guarded saved step. Added e2e regression for stale cookie vs newer localStorage (`checkHydrationResumePriority` in `scripts/quiz-funnel-e2e.mjs`).
-- **Attribution carry-forward hardening (Jun 8, uncommitted)** — landing analytics now persists one canonical attribution snapshot (`utm_*`, click IDs, `landing_page`, `hero_hook`) and reuses it across PostHog + GA4 + touch events for LP view/CTA. Also added attribution fan-out in shared `captureAnalytics()` so downstream custom captures inherit the same source context, plus `qWho` carry-forward (parent vs self) on late events such as booking confirmation / thank-you. Added attribution value sanitization + length caps before session persistence (sessionStorage only, no attribution cookie mirror) to avoid oversized payload regressions. Server routes now resolve canonical attribution + `qWho` from `visitors.first_touch`/`last_touch`/`quiz_answers` and persist that canonical context on touch/lead/booking events.
-- **Mobile funnel architecture docs + spec (Jun 8, uncommitted)** — created:
-- **Mobile funnel architecture docs + spec (Jun 8, shipped)** — created:
-  - `specs/2026-06-mobile-cold-traffic-funnel/SPEC.md`
-  - `docs/funnel-eventing-and-state.md`
-  - `docs/funnel-analytics-standards.md`
-  - `docs/funnel-hydration-and-resume.md`
-  - `docs/funnel-mobile-ux-responsiveness.md`
-  - `.agents/funnel-mobile-ops.md`
-  Also switched `specs/ACTIVE.md` to the mobile cold-traffic funnel spec.
-- **Visitor fast columns migration applied (Jun 8, shipped)** — `visitors_fast_attribution_columns` applied on Supabase via MCP; live columns/indexes: `visitors.first_utm_content`, `visitors.first_hero_hook`, `visitors.quiz_who`.
-- **Completeness ops baseline (Jun 8, shipped)** — added `npm run funnel:completeness` monitor script + standing checklist `growth/mobile-funnel-qa-checklist.md`, and wired docs to include threshold policy (warn <98%, critical <95%).
-- **Plan reveal drop playbook** — PostHog MCP pass on Jun 7–8 attributed cohort. [`growth/plan-reveal-drop-playbook.md`](../growth/plan-reveal-drop-playbook.md): product-order funnel **name→i2→v1** 9→6→6; 3 never saw plan reveal; not “0% reveal→name”.
-
-## Recently shipped (2026-06-07)
-
-- **UTM attribution fix** (`68ed3fe`) — `readAttributionForAnalytics()` merges session + URL for LP/quiz PostHog events; fixes ad5 `funnel_cta_click` showing 0 when replays showed clicks. Deployed prod.
-
-## Recently shipped (2026-05-29)
-
-- `growth/funnel-strategy.md` + LP/quiz P0 vocabulary + analytics enrichment + full slide messaging pass + reveal→booked polish.
-- `npm run funnel:step-registry` — step/switch guard.
-
-## Recently shipped (2026-06-03)
-
-- **LP redesign → v4** — `/` now renders the ported "SAT Landing v4" (`components/landing/v4/*`, `app/landing/landing-v4.css`), replacing the compact B3 LP. Funnel logo header (`IlluminairyLogoV7`), navy CTA card, 3-stat trust bar. Hook-aware H1 (script_5 gap etc.). CTA → `/plan?step=q1` with UTMs.
-- **No sticky CTA** — compact, minimal-scroll page; hero CTA above fold (short-viewport `@media (max-height:720px)` for FB/IG in-app browsers).
-- **Safari/ITP click IDs** — `lib/meta-click-ids.ts` captures/persists `_fbp`/`_fbc` (+ synth from `fbclid`) at LP load; `AttributionSnapshot` gained `fbp`/`fbc`; Finale Lead CAPI now resolves with fallback.
-- **Design archive** — `growth/lp-designs/` (v1–v4/AB/compact + decoded v4) for A/B refs; eslint-ignored.
-- **Copy flags (verbatim)** — "500+ families", "4.8 rating", "College Board 250,000+" not in `lib/site.ts` (owner call).
-- **Verify** — `npm run build` PASS, `/` static; my files lint-clean. `agent:verify` lint blocked by **pre-existing** quiz-file errors (untouched). Session: [`growth/2026-06-03-lp-v4-port-session.md`](../growth/2026-06-03-lp-v4-port-session.md).
-
-## Recently shipped (2026-06-02)
-
-- **B3 LP compact layout** — default `compact` (hero + trust + legal); `?lp_layout=full` for full scroll QA; sticky mobile CTA; `sat_lp_layout` analytics
-- **Trust bar (default)** — score + school **marquee ticker**; R&W and Math split (~14/16 R&W-stronger, varied gaps); `lib/landing/trust-scores.ts`
-- **Trust bar (preview)** — mom reviews carousel via `?trust_bar=mom_reviews`; `lib/landing/trust-bar-variant.ts`
-- **Hero copy** — subhead = score bands only; fine print below CTA; gap hook via `utm_content=script_5`
-- **Layout fix** — removed `100dvh` overflow lock that hid mobile CTA / overlapped hero
-- **Design assets** — `public/illuminairy-lp-compact-design.html`, `public/lp-review.html`, `scripts/export-lp-compact-design-html.mjs`
-- **Session doc** — [`growth/2026-06-02-compact-lp-trust-bar-session.md`](../growth/2026-06-02-compact-lp-trust-bar-session.md)
-- LP CTAs → `planBuilderEntryFromLanding()`; P0 interim images in `lib/landing/assets.ts`
-- **Not deployed** — local/staging review only unless owner requests prod
-
-## Recently shipped (2026-06-01)
-
-- UGC Icon revisions doc, staged-disclosure LP copy, Klaviyo nurture doc, image production checklist
-- Calendly webhook `strategy_call_at` + show-up copy (s7/s9/booked)
-- LP slots: `stepStrategyCall`, `stepWeeklyPlan`
-- **marketingskills** (11 skills in `.agents/skills/`) + [`.agents/product-marketing.md`](../.agents/product-marketing.md) + [`growth/marketingskills-usage.md`](../growth/marketingskills-usage.md)
-- **Plan share virality** — reveal share panel + `/quiz/share/[id]` + API; see [`growth/plan-share-virality.md`](../growth/plan-share-virality.md). **`plan_shares` table applied on prod** (2026-06-01).
-
-## Next (pending)
-
-- [ ] QA share link end-to-end on prod (reveal → copy link → incognito → CTA)
-- [ ] Prod Supabase/UTM + Calendly webhook QA (checklist in `growth/quiz-funnel-qa-log.md`)
-- [ ] Klaviyo Flows B/C/D in UI per `docs/klaviyo-quiz-funnel-nurture.md`
-- [ ] Lighthouse + viewport matrix → `growth/quiz-funnel-qa-log.md`
-- [ ] LP photos #1–#6 per `growth/b3-lp-image-production-checklist.md`
-- [ ] Icon script re-approval + paste from `growth/icon-fall-sat-2026.md`
-- [ ] Parked: late-funnel s3→s9 carrot UI
+| Funnel product | SAT Improvement Plan / Plan Builder (`/plan`) |
+| Call | SAT Strategy Call (15 min) |
+| Diagnostic | Skill Diagnostic (2 hr 14 min, after call) |
+| /enroll program name | **Illuminairy SAT Prep** — not "SAT Accelerator" parent-facing |
+| Stats | `lib/site.ts` only; "Results vary." |
 
 ## Dev quick ref
 
 ```bash
-npm run dev                              # http://localhost:3000/quiz?step=achievability
-npm run funnel:step-registry && npm run build
+npm run dev
+# Preview enroll without Stripe:
+open http://localhost:3000/enroll?preview=1
+npm run agent:verify
 ```
-
-- Answers: `localStorage` `qf_answers`
-- Plan file: `.cursor/plans/funnel_qa_and_analytics_d046016d.plan.md` — **do not edit** unless user asks

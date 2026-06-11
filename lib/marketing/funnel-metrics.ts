@@ -1,3 +1,4 @@
+import { INTERNAL_CRM_EMAILS } from "@/lib/admin/internal-emails";
 import { canonicalizeUtmContent } from "@/lib/marketing/utm-content-aliases";
 import { getSupabaseAdmin } from "@/lib/supabase/server";
 import { SAT_PARENT_LP_PATHS } from "@/lib/plan-builder-routes";
@@ -81,16 +82,77 @@ async function countLandingPageViews(since: string) {
   return countTouches("page_view", since, { paths: SAT_PARENT_LP_PATHS });
 }
 
+async function getExternalLeadIds(): Promise<Set<string>> {
+  const supabase = getSupabaseAdmin();
+  if (!supabase) return new Set<string>();
+
+  const { data, error } = await supabase.from("leads").select("id, parent_email");
+
+  if (error || !data) return new Set<string>();
+
+  const internalLower = INTERNAL_CRM_EMAILS.map((e) => e.toLowerCase());
+  const out = new Set<string>();
+  for (const row of data) {
+    const email = row.parent_email?.trim().toLowerCase();
+    if (!email) continue;
+    if (internalLower.indexOf(email) !== -1) continue;
+    out.add(row.id);
+  }
+
+  return out;
+}
+
+async function distinctLeadIdsForEvent(
+  eventType: string,
+  since: string,
+  externalLeadIds: Set<string>
+): Promise<Set<string>> {
+  const supabase = getSupabaseAdmin();
+  if (!supabase) return new Set();
+
+  const { data, error } = await supabase
+    .from("touch_events")
+    .select("lead_id")
+    .eq("event_type", eventType)
+    .gte("created_at", since)
+    .not("lead_id", "is", null);
+
+  if (error || !data) return new Set();
+
+  const out = new Set<string>();
+  for (const row of data) {
+    if (!row.lead_id) continue;
+    if (!externalLeadIds.has(row.lead_id)) continue;
+    out.add(row.lead_id);
+  }
+  return out;
+}
+
 export async function getFunnelCounts(days = 7): Promise<FunnelCounts> {
   const since = daysAgoIso(days);
-  const [lpViews, ctaClicks, quizStarts, leads, books] = await Promise.all([
-    countLandingPageViews(since),
-    countTouches("funnel_cta_click", since),
-    countTouches("quiz_started", since),
-    countTouches("quiz_lead_submitted", since),
-    countTouches("call_booked", since)
-  ]);
-  return { lpViews, ctaClicks, quizStarts, leads, books };
+  const externalLeadIds = await getExternalLeadIds();
+
+  const [lpViews, ctaClicks, quizStarts, leadIdsSubmitted, leadIdsBooked] =
+    await Promise.all([
+      countLandingPageViews(since),
+      countTouches("funnel_cta_click", since),
+      countTouches("quiz_started", since),
+      distinctLeadIdsForEvent("quiz_lead_submitted", since, externalLeadIds),
+      distinctLeadIdsForEvent("call_booked", since, externalLeadIds)
+    ]);
+
+  const funnelAttributedBooked = new Set<string>();
+  leadIdsBooked.forEach((id) => {
+    if (leadIdsSubmitted.has(id)) funnelAttributedBooked.add(id);
+  });
+
+  return {
+    lpViews,
+    ctaClicks,
+    quizStarts,
+    leads: leadIdsSubmitted.size,
+    books: funnelAttributedBooked.size
+  };
 }
 
 export async function getStepDropoffs(
@@ -163,17 +225,23 @@ export async function getCampaignRows(days = 30): Promise<CampaignRow[]> {
   if (!supabase) return [];
 
   const since = daysAgoIso(days);
+  const externalLeadIds = await getExternalLeadIds();
+
   const { data, error } = await supabase
     .from("touch_events")
-    .select("event_type, utm_campaign")
+    .select("event_type, utm_campaign, lead_id")
     .gte("created_at", since);
 
   if (error || !data) return [];
 
-  const map = new Map<
-    string,
-    { pageViews: number; ctaClicks: number; quizStarts: number; leads: number; books: number }
-  >();
+  type Bucket = {
+    pageViews: number;
+    ctaClicks: number;
+    quizStarts: number;
+    leadSet: Set<string>;
+    bookSet: Set<string>;
+  };
+  const map = new Map<string, Bucket>();
 
   for (const row of data) {
     const camp = row.utm_campaign?.trim() || "(none)";
@@ -181,8 +249,8 @@ export async function getCampaignRows(days = 30): Promise<CampaignRow[]> {
       pageViews: 0,
       ctaClicks: 0,
       quizStarts: 0,
-      leads: 0,
-      books: 0
+      leadSet: new Set<string>(),
+      bookSet: new Set<string>()
     };
     switch (row.event_type) {
       case "page_view":
@@ -195,10 +263,14 @@ export async function getCampaignRows(days = 30): Promise<CampaignRow[]> {
         bucket.quizStarts++;
         break;
       case "quiz_lead_submitted":
-        bucket.leads++;
+        if (row.lead_id && externalLeadIds.has(row.lead_id)) {
+          bucket.leadSet.add(row.lead_id);
+        }
         break;
       case "call_booked":
-        bucket.books++;
+        if (row.lead_id && externalLeadIds.has(row.lead_id)) {
+          bucket.bookSet.add(row.lead_id);
+        }
         break;
       default:
         break;
@@ -207,18 +279,29 @@ export async function getCampaignRows(days = 30): Promise<CampaignRow[]> {
   }
 
   return Array.from(map.entries())
-    .map(([utmCampaign, c]) => ({
-      utmCampaign,
-      ...c,
-      ctaRatePct:
-        c.pageViews > 0
-          ? Math.round((1000 * c.ctaClicks) / c.pageViews) / 10
-          : null,
-      leadRatePct:
-        c.quizStarts > 0
-          ? Math.round((1000 * c.leads) / c.quizStarts) / 10
-          : null
-    }))
+    .map(([utmCampaign, c]) => {
+      // Scope books to funnel-attributed (intersect with leads who submitted)
+      const attributedBooks = new Set<string>();
+      c.bookSet.forEach((id) => {
+        if (c.leadSet.has(id)) attributedBooks.add(id);
+      });
+      return {
+        utmCampaign,
+        pageViews: c.pageViews,
+        ctaClicks: c.ctaClicks,
+        quizStarts: c.quizStarts,
+        leads: c.leadSet.size,
+        books: attributedBooks.size,
+        ctaRatePct:
+          c.pageViews > 0
+            ? Math.round((1000 * c.ctaClicks) / c.pageViews) / 10
+            : null,
+        leadRatePct:
+          c.quizStarts > 0
+            ? Math.round((1000 * c.leadSet.size) / c.quizStarts) / 10
+            : null
+      };
+    })
     .sort((a, b) => b.pageViews - a.pageViews);
 }
 
@@ -227,24 +310,24 @@ export async function getCreativeRows(days = 30): Promise<CreativeRow[]> {
   if (!supabase) return [];
 
   const since = daysAgoIso(days);
+  const externalLeadIds = await getExternalLeadIds();
+
   const { data, error } = await supabase
     .from("touch_events")
-    .select("event_type, utm_campaign, utm_content")
+    .select("event_type, utm_campaign, utm_content, lead_id")
     .gte("created_at", since);
 
   if (error || !data) return [];
 
-  const map = new Map<
-    string,
-    {
-      utmCampaign: string;
-      pageViews: number;
-      ctaClicks: number;
-      quizStarts: number;
-      leads: number;
-      books: number;
-    }
-  >();
+  type CreativeBucket = {
+    utmCampaign: string;
+    pageViews: number;
+    ctaClicks: number;
+    quizStarts: number;
+    leadSet: Set<string>;
+    bookSet: Set<string>;
+  };
+  const map = new Map<string, CreativeBucket>();
 
   for (const row of data) {
     const content = row.utm_content?.trim()
@@ -257,8 +340,8 @@ export async function getCreativeRows(days = 30): Promise<CreativeRow[]> {
       pageViews: 0,
       ctaClicks: 0,
       quizStarts: 0,
-      leads: 0,
-      books: 0
+      leadSet: new Set<string>(),
+      bookSet: new Set<string>()
     };
     switch (row.event_type) {
       case "page_view":
@@ -271,10 +354,14 @@ export async function getCreativeRows(days = 30): Promise<CreativeRow[]> {
         bucket.quizStarts++;
         break;
       case "quiz_lead_submitted":
-        bucket.leads++;
+        if (row.lead_id && externalLeadIds.has(row.lead_id)) {
+          bucket.leadSet.add(row.lead_id);
+        }
         break;
       case "call_booked":
-        bucket.books++;
+        if (row.lead_id && externalLeadIds.has(row.lead_id)) {
+          bucket.bookSet.add(row.lead_id);
+        }
         break;
       default:
         break;
@@ -285,21 +372,25 @@ export async function getCreativeRows(days = 30): Promise<CreativeRow[]> {
   return Array.from(map.entries())
     .map(([key, c]) => {
       const utmContent = key.split("::")[1] ?? "(none)";
+      const attributedBooks = new Set<string>();
+      c.bookSet.forEach((id) => {
+        if (c.leadSet.has(id)) attributedBooks.add(id);
+      });
       return {
         utmContent,
         utmCampaign: c.utmCampaign,
         pageViews: c.pageViews,
         ctaClicks: c.ctaClicks,
         quizStarts: c.quizStarts,
-        leads: c.leads,
-        books: c.books,
+        leads: c.leadSet.size,
+        books: attributedBooks.size,
         ctaRatePct:
           c.pageViews > 0
             ? Math.round((1000 * c.ctaClicks) / c.pageViews) / 10
             : null,
         leadRatePct:
           c.quizStarts > 0
-            ? Math.round((1000 * c.leads) / c.quizStarts) / 10
+            ? Math.round((1000 * c.leadSet.size) / c.quizStarts) / 10
             : null
       };
     })

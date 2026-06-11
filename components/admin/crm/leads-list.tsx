@@ -1,0 +1,241 @@
+"use client";
+
+import Link from "next/link";
+import { useMemo, useState } from "react";
+import type { CrmLeadRow } from "@/lib/admin/crm-queries";
+import { formatBookingDateTime, formatFollowup } from "@/lib/admin/format-booking";
+import { StageBadge } from "./stage-badge";
+
+type SortKey = "newest" | "oldest" | "followup_soonest" | "booking_soonest";
+
+const SORTS: Array<{ id: SortKey; label: string }> = [
+  { id: "newest", label: "Newest" },
+  { id: "oldest", label: "Oldest" },
+  { id: "followup_soonest", label: "Followup soonest" },
+  { id: "booking_soonest", label: "Booking soonest" }
+];
+
+function matchesQuery(lead: CrmLeadRow, q: string): boolean {
+  if (!q) return true;
+  const haystack = [
+    lead.parentEmail,
+    lead.parentFirst,
+    lead.parentLast,
+    lead.studentFirst
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+  return haystack.includes(q.toLowerCase());
+}
+
+export function LeadsList({ leads }: { leads: CrmLeadRow[] }) {
+  const [query, setQuery] = useState("");
+  const [stageFilter, setStageFilter] = useState<string>("all");
+  const [hideConverted, setHideConverted] = useState(true);
+  const [sort, setSort] = useState<SortKey>("newest");
+
+  const stages = useMemo(() => {
+    const set = new Set<string>();
+    for (const l of leads) set.add(l.stage);
+    return Array.from(set);
+  }, [leads]);
+
+  const filtered = useMemo(() => {
+    const out = leads.filter((l) => {
+      if (!matchesQuery(l, query)) return false;
+      if (stageFilter !== "all" && l.stage !== stageFilter) return false;
+      if (hideConverted && l.convertedClientId) return false;
+      return true;
+    });
+
+    out.sort((a, b) => {
+      switch (sort) {
+        case "oldest":
+          return (
+            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+          );
+        case "followup_soonest": {
+          const av = a.nextFollowupAt
+            ? new Date(a.nextFollowupAt).getTime()
+            : Number.POSITIVE_INFINITY;
+          const bv = b.nextFollowupAt
+            ? new Date(b.nextFollowupAt).getTime()
+            : Number.POSITIVE_INFINITY;
+          return av - bv;
+        }
+        case "booking_soonest": {
+          const av = a.bookedCallAt
+            ? new Date(a.bookedCallAt).getTime()
+            : Number.POSITIVE_INFINITY;
+          const bv = b.bookedCallAt
+            ? new Date(b.bookedCallAt).getTime()
+            : Number.POSITIVE_INFINITY;
+          return av - bv;
+        }
+        case "newest":
+        default:
+          return (
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          );
+      }
+    });
+
+    return out;
+  }, [leads, query, stageFilter, hideConverted, sort]);
+
+  return (
+    <section className="space-y-4">
+      <div className="flex flex-wrap items-center gap-3">
+        <input
+          type="search"
+          placeholder="Search by parent or student name, email…"
+          className="w-72 max-w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+        />
+        <select
+          className="rounded-lg border border-border bg-background px-3 py-2 text-sm"
+          value={stageFilter}
+          onChange={(e) => setStageFilter(e.target.value)}
+        >
+          <option value="all">All stages</option>
+          {stages.map((s) => (
+            <option key={s} value={s}>
+              {s}
+            </option>
+          ))}
+        </select>
+        <select
+          className="rounded-lg border border-border bg-background px-3 py-2 text-sm"
+          value={sort}
+          onChange={(e) => setSort(e.target.value as SortKey)}
+        >
+          {SORTS.map((s) => (
+            <option key={s.id} value={s.id}>
+              Sort: {s.label}
+            </option>
+          ))}
+        </select>
+        <label className="flex items-center gap-2 text-sm">
+          <input
+            type="checkbox"
+            checked={hideConverted}
+            onChange={(e) => setHideConverted(e.target.checked)}
+          />
+          Hide converted clients
+        </label>
+        <span className="ml-auto text-xs text-muted-foreground">
+          {filtered.length} of {leads.length}
+        </span>
+      </div>
+
+      <div className="overflow-x-auto rounded-xl border border-border bg-surface">
+        <table className="w-full min-w-[820px] text-left text-sm">
+          <thead className="bg-muted/40">
+            <tr className="border-b border-border text-muted-foreground">
+              <th className="px-4 py-2.5 font-medium">Parent</th>
+              <th className="px-4 py-2.5 font-medium">Student</th>
+              <th className="px-4 py-2.5 font-medium">Stage</th>
+              <th className="px-4 py-2.5 font-medium">Booking</th>
+              <th className="px-4 py-2.5 font-medium">Followup</th>
+              <th className="px-4 py-2.5 font-medium">Source</th>
+              <th className="px-4 py-2.5 font-medium">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filtered.length === 0 ? (
+              <tr>
+                <td colSpan={7} className="px-4 py-8 text-center text-muted-foreground">
+                  {leads.length === 0
+                    ? "No leads yet."
+                    : "No leads match your filters."}
+                </td>
+              </tr>
+            ) : (
+              filtered.map((lead) => (
+                <LeadRow key={lead.id} lead={lead} />
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  );
+}
+
+function LeadRow({ lead }: { lead: CrmLeadRow }) {
+  const booking = formatBookingDateTime(lead.bookedCallAt);
+  const followup = formatFollowup(lead.nextFollowupAt);
+  const isConverted = !!lead.convertedClientId;
+
+  const followupClass =
+    followup?.tone === "overdue"
+      ? "text-rose-700 font-medium"
+      : followup?.tone === "today"
+        ? "text-amber-700 font-medium"
+        : "text-muted-foreground";
+
+  return (
+    <tr
+      className={`border-b border-border/60 hover:bg-muted/30 ${
+        isConverted ? "opacity-60" : ""
+      }`}
+    >
+      <td className="px-4 py-3">
+        <Link
+          href={`/admin/crm/leads/${lead.id}`}
+          className="block"
+        >
+          <span className="block font-medium">
+            {[lead.parentFirst, lead.parentLast].filter(Boolean).join(" ") || "—"}
+          </span>
+          <span className="text-xs text-muted-foreground">{lead.parentEmail}</span>
+        </Link>
+      </td>
+      <td className="px-4 py-3">
+        <Link href={`/admin/crm/leads/${lead.id}`}>{lead.studentFirst ?? "—"}</Link>
+      </td>
+      <td className="px-4 py-3">
+        <StageBadge stage={lead.stage} />
+      </td>
+      <td className="px-4 py-3 text-xs">
+        {booking ? (
+          <span className="block">
+            {booking.absolute}
+            <span className="block text-[10px] text-muted-foreground">
+              {booking.relative}
+            </span>
+          </span>
+        ) : (
+          <span className="text-muted-foreground">—</span>
+        )}
+      </td>
+      <td className={`px-4 py-3 text-xs ${followupClass}`}>
+        {followup ? (
+          <span className="block">
+            {followup.relative}
+            <span className="block text-[10px] opacity-70">{followup.absolute}</span>
+          </span>
+        ) : (
+          <span className="text-muted-foreground">—</span>
+        )}
+      </td>
+      <td className="max-w-[160px] truncate px-4 py-3 font-mono text-[11px] text-muted-foreground">
+        {lead.utmCampaign ?? "—"}
+      </td>
+      <td className="px-4 py-3 text-xs">
+        {isConverted ? (
+          <Link
+            href={`/admin/crm/clients/${lead.convertedClientId}`}
+            className="inline-flex items-center rounded-full bg-emerald-100 px-2 py-0.5 font-medium text-emerald-800 hover:bg-emerald-200"
+          >
+            Client →
+          </Link>
+        ) : (
+          <span className="text-muted-foreground">Lead</span>
+        )}
+      </td>
+    </tr>
+  );
+}

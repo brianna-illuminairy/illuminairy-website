@@ -1,6 +1,6 @@
 # Progress
 
-*Last updated: 2026-06-08*
+*Last updated: 2026-06-11*
 
 ## Shipped
 
@@ -23,10 +23,13 @@
 - [x] Mobile cold-traffic funnel spec + architecture docs (`specs/2026-06-mobile-cold-traffic-funnel`, `docs/funnel-*`)
 - [x] Visitor fast-reporting columns live in Supabase (`first_utm_content`, `first_hero_hook`, `quiz_who`) with indexes
 - [x] Completeness monitor command + ops checklist (`npm run funnel:completeness`, `growth/mobile-funnel-qa-checklist.md`)
+- [x] **CRM v1** (`/admin/crm`) — clickable lead profiles, pipeline kanban, due-today queue, paste-in call notes, clients list + profile, lead↔client conversion banners, merged activity timeline. Marketing dashboard counts fixed (distinct lead_id, internal-email filter, funnel-attributed books). See `.cursor/plans/crm-v1-pipeline_4cf61e79.plan.md`. Requires running `npm run crm:migrate` (or `crm:migrate:api`) once with `DATABASE_URL` / `SUPABASE_DB_PASSWORD` / `SUPABASE_ACCESS_TOKEN` to apply new migrations `20260612120000_crm_v1_followups.sql` + `20260612121000_crm_v1_lead_calls.sql`.
 
 ## In progress
 
-- [ ] Mobile cold-traffic funnel stabilization spec (`specs/2026-06-mobile-cold-traffic-funnel/SPEC.md`) execution (Phases A/B/C)
+- [ ] **`/enroll` post-payment onboarding spec** — [`specs/2026-06-enroll-onboarding/SPEC.md`](../specs/2026-06-enroll-onboarding/SPEC.md) (PRD + CHECKOUT-TRUTH + SPEC drafted 2026-06-11; **awaiting Brianna approval before implementation**)
+- [ ] `/enroll` implementation WIP in working tree (5-step light-surface shell; needs spec-aligned 3-step + Stripe receipt)
+- [ ] Mobile cold-traffic funnel stabilization (`specs/2026-06-mobile-cold-traffic-funnel/SPEC.md`) — Phases A/B/C
 - [ ] Phase B: `POST /api/funnel/lead` + Supabase + Klaviyo + TCPA on contact
 - [ ] Default (son) prep-path triptych art asset
 - [ ] Launch QA: Meta IAB 390×844, Lighthouse baseline

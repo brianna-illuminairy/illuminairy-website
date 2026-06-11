@@ -1,6 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import Link from "next/link";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  useSyncExternalStore
+} from "react";
+import type { CrmLeadRow } from "@/lib/admin/crm-queries";
+import { LeadsList } from "./crm/leads-list";
+import { LeadsPipeline } from "./crm/leads-pipeline";
+import { LeadsDueToday } from "./crm/leads-due-today";
 
 type Pipeline = {
   byStage: Record<string, number>;
@@ -10,19 +21,15 @@ type Pipeline = {
   totalLeads: number;
 };
 
-type LeadRow = {
-  id: string;
-  parentEmail: string;
-  parentFirst: string | null;
-  parentLast: string | null;
-  studentFirst: string | null;
-  stage: string;
-  funnel: string;
-  utmCampaign: string | null;
-  bookedCallAt: string | null;
-  attendedAt: string | null;
-  createdAt: string;
-};
+type Payload = { pipeline: Pipeline; leads: CrmLeadRow[] };
+
+type View = "list" | "pipeline" | "due";
+
+const VIEWS: Array<{ id: View; label: string }> = [
+  { id: "list", label: "List" },
+  { id: "pipeline", label: "Pipeline" },
+  { id: "due", label: "Due today" }
+];
 
 function pct(v: number | null) {
   if (v === null) return "—";
@@ -31,32 +38,29 @@ function pct(v: number | null) {
 
 export function CrmDashboard() {
   const [pipeline, setPipeline] = useState<Pipeline | null>(null);
-  const [leads, setLeads] = useState<LeadRow[]>([]);
+  const [leads, setLeads] = useState<CrmLeadRow[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [detail, setDetail] = useState<{
-    lead: Record<string, unknown>;
-    touches: Array<{ event_type: string; created_at: string; source: string | null }>;
-  } | null>(null);
-  const [saving, setSaving] = useState(false);
+  const [view, setView] = useState<View>(() => {
+    if (typeof window === "undefined") return "list";
+    const params = new URLSearchParams(window.location.search);
+    const v = (params.get("view") ?? "list") as View;
+    return VIEWS.find((x) => x.id === v) ? v : "list";
+  });
 
-  function loadLeads() {
-    return fetch("/api/admin/crm/leads")
+  const setViewAndUrl = useCallback((v: View) => {
+    setView(v);
+    if (typeof window !== "undefined") {
+      const url = new URL(window.location.href);
+      url.searchParams.set("view", v);
+      window.history.replaceState(null, "", url.toString());
+    }
+  }, []);
+
+  const load = useCallback(() => {
+    return fetch("/api/admin/crm/leads", { cache: "no-store" })
       .then(async (res) => {
         if (!res.ok) throw new Error("Could not load CRM.");
-        return res.json() as Promise<{ pipeline: Pipeline; leads: LeadRow[] }>;
-      })
-      .then((json) => {
-        setPipeline(json.pipeline);
-        setLeads(json.leads);
-      });
-  }
-
-  useEffect(() => {
-    void fetch("/api/admin/crm/leads")
-      .then(async (res) => {
-        if (!res.ok) throw new Error("Could not load CRM.");
-        return res.json() as Promise<{ pipeline: Pipeline; leads: LeadRow[] }>;
+        return res.json() as Promise<Payload & { ok?: boolean }>;
       })
       .then((json) => {
         setPipeline(json.pipeline);
@@ -66,38 +70,21 @@ export function CrmDashboard() {
   }, []);
 
   useEffect(() => {
-    if (!selectedId) return;
-    void fetch(`/api/admin/leads/${selectedId}`)
-      .then(async (res) => {
-        if (!res.ok) throw new Error("Could not load lead.");
-        return res.json() as Promise<{
-          lead: Record<string, unknown>;
-          touches: Array<{ event_type: string; created_at: string; source: string | null }>;
-        }>;
-      })
-      .then(setDetail)
-      .catch((err: Error) => setError(err.message));
-  }, [selectedId]);
+    void load();
+  }, [load]);
 
-  async function patchLead(body: Record<string, unknown>) {
-    if (!selectedId) return;
-    setSaving(true);
-    const res = await fetch(`/api/admin/leads/${selectedId}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body)
-    });
-    setSaving(false);
-    if (!res.ok) {
-      setError("Could not update lead.");
-      return;
-    }
-    await loadLeads();
-    const detailRes = await fetch(`/api/admin/leads/${selectedId}`);
-    if (detailRes.ok) {
-      setDetail(await detailRes.json());
-    }
-  }
+  const nowMs = useWallClock();
+
+  const dueTodayCount = useMemo(() => {
+    if (!leads || !nowMs) return 0;
+    const endOfDay = new Date(nowMs);
+    endOfDay.setHours(23, 59, 59, 999);
+    return leads.filter((l) => {
+      if (!l.nextFollowupAt) return false;
+      if (l.stage === "won" || l.stage === "lost") return false;
+      return new Date(l.nextFollowupAt).getTime() <= endOfDay.getTime();
+    }).length;
+  }, [leads, nowMs]);
 
   if (error) {
     return <p className="text-sm text-red-600">{error}</p>;
@@ -108,139 +95,107 @@ export function CrmDashboard() {
   }
 
   return (
-    <div className="space-y-10">
-      <header>
-        <h1 className="text-2xl font-semibold tracking-tight">CRM</h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Leads, bookings, show rate, and pipeline stages (internal emails excluded).
-        </p>
+    <div className="space-y-8">
+      <header className="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-semibold tracking-tight">CRM</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Leads, pipeline, followups. Internal emails excluded.
+          </p>
+        </div>
+        <Link
+          href="/admin/crm/clients"
+          className="rounded-lg border border-border px-3 py-1.5 text-sm font-medium hover:bg-muted"
+        >
+          View clients →
+        </Link>
       </header>
 
-      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {[
-          ["Total leads", pipeline.totalLeads],
-          ["Book rate", pct(pipeline.bookRatePct)],
-          ["Show rate", pct(pipeline.showRatePct)],
-          ["No-show risk", pipeline.noShowCount]
-        ].map(([label, value]) => (
-          <div key={String(label)} className="rounded-xl border border-border bg-surface p-4">
-            <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-              {label}
-            </p>
-            <p className="mt-2 text-2xl font-semibold tabular-nums">{value}</p>
-          </div>
+      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+        <Kpi label="Total leads" value={pipeline.totalLeads} />
+        <Kpi label="Book rate" value={pct(pipeline.bookRatePct)} />
+        <Kpi label="Show rate" value={pct(pipeline.showRatePct)} />
+        <Kpi label="No-show risk" value={pipeline.noShowCount} />
+        <Kpi
+          label="Due today"
+          value={dueTodayCount}
+          onClick={() => setViewAndUrl("due")}
+          highlight={dueTodayCount > 0}
+        />
+      </section>
+
+      <div className="flex items-center gap-1 border-b border-border">
+        {VIEWS.map((v) => (
+          <button
+            key={v.id}
+            type="button"
+            className={`-mb-px border-b-2 px-3 py-2 text-sm font-medium transition-colors ${
+              view === v.id
+                ? "border-foreground text-foreground"
+                : "border-transparent text-muted-foreground hover:text-foreground"
+            }`}
+            onClick={() => setViewAndUrl(v.id)}
+          >
+            {v.label}
+            {v.id === "due" && dueTodayCount > 0 ? (
+              <span className="ml-1.5 rounded-full bg-amber-100 px-1.5 text-xs text-amber-900">
+                {dueTodayCount}
+              </span>
+            ) : null}
+          </button>
         ))}
-      </section>
+      </div>
 
-      <section className="rounded-xl border border-border bg-surface p-5">
-        <h2 className="text-lg font-semibold">Pipeline by stage</h2>
-        <ul className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-5">
-          {Object.entries(pipeline.byStage).map(([stage, count]) => (
-            <li key={stage} className="rounded-lg bg-muted/40 px-3 py-2 text-sm">
-              <span className="font-mono text-xs text-muted-foreground">{stage}</span>
-              <p className="text-lg font-semibold tabular-nums">{count}</p>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <section className="rounded-xl border border-border bg-surface p-5">
-        <h2 className="text-lg font-semibold">Leads</h2>
-        <div className="mt-4 overflow-x-auto">
-          <table className="w-full min-w-[720px] text-left text-sm">
-            <thead>
-              <tr className="border-b border-border text-muted-foreground">
-                <th className="py-2 pr-3 font-medium">Parent</th>
-                <th className="py-2 pr-3 font-medium">Student</th>
-                <th className="py-2 pr-3 font-medium">Stage</th>
-                <th className="py-2 pr-3 font-medium">Funnel</th>
-                <th className="py-2 pr-3 font-medium">Campaign</th>
-                <th className="py-2 font-medium">Booked</th>
-              </tr>
-            </thead>
-            <tbody>
-              {leads.map((lead) => (
-                <tr
-                  key={lead.id}
-                  className={`cursor-pointer border-b border-border/60 hover:bg-muted/30 ${
-                    selectedId === lead.id ? "bg-muted/40" : ""
-                  }`}
-                  onClick={() => {
-                    setSelectedId(lead.id);
-                    setDetail(null);
-                  }}
-                >
-                  <td className="py-2.5 pr-3">
-                    <span className="block font-medium">
-                      {[lead.parentFirst, lead.parentLast].filter(Boolean).join(" ") || "—"}
-                    </span>
-                    <span className="text-xs text-muted-foreground">{lead.parentEmail}</span>
-                  </td>
-                  <td className="py-2.5 pr-3">{lead.studentFirst ?? "—"}</td>
-                  <td className="py-2.5 pr-3 font-mono text-xs">{lead.stage}</td>
-                  <td className="py-2.5 pr-3 font-mono text-xs">{lead.funnel}</td>
-                  <td className="max-w-[140px] truncate py-2.5 pr-3 font-mono text-xs">
-                    {lead.utmCampaign ?? "—"}
-                  </td>
-                  <td className="py-2.5 text-xs text-muted-foreground">
-                    {lead.bookedCallAt
-                      ? new Date(lead.bookedCallAt).toLocaleDateString()
-                      : "—"}
-                    {lead.attendedAt ? " · attended" : ""}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      {detail && selectedId ? (
-        <section className="rounded-xl border border-border bg-surface p-5">
-          <h2 className="text-lg font-semibold">Lead detail</h2>
-          <p className="mt-1 text-sm text-muted-foreground">
-            {String(detail.lead.parent_email ?? "")}
-          </p>
-          <div className="mt-4 flex flex-wrap gap-3">
-            <label className="text-sm">
-              Stage
-              <select
-                className="ml-2 rounded border border-border bg-background px-2 py-1"
-                value={String(detail.lead.stage ?? "")}
-                disabled={saving}
-                onChange={(e) => void patchLead({ stage: e.target.value })}
-              >
-                {[
-                  "intake_submitted",
-                  "call_booked",
-                  "call_attended",
-                  "won",
-                  "lost"
-                ].map((s) => (
-                  <option key={s} value={s}>
-                    {s}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <button
-              type="button"
-              disabled={saving}
-              className="rounded-lg border border-border px-3 py-1.5 text-sm"
-              onClick={() => void patchLead({ attended: true })}
-            >
-              Mark attended
-            </button>
-          </div>
-          <ul className="mt-4 space-y-1 text-xs text-muted-foreground">
-            {detail.touches.slice(0, 8).map((t, i) => (
-              <li key={`${t.event_type}-${i}`}>
-                {t.event_type} · {new Date(t.created_at).toLocaleString()} · {t.source}
-              </li>
-            ))}
-          </ul>
-        </section>
+      {view === "list" ? <LeadsList leads={leads} /> : null}
+      {view === "pipeline" ? (
+        <LeadsPipeline leads={leads} onChange={load} />
       ) : null}
+      {view === "due" ? <LeadsDueToday leads={leads} /> : null}
     </div>
   );
+}
+
+function useWallClock(intervalMs = 60_000): number {
+  return useSyncExternalStore(
+    (callback) => {
+      const id = setInterval(callback, intervalMs);
+      return () => clearInterval(id);
+    },
+    () => Date.now(),
+    () => 0
+  );
+}
+
+function Kpi({
+  label,
+  value,
+  onClick,
+  highlight
+}: {
+  label: string;
+  value: number | string;
+  onClick?: () => void;
+  highlight?: boolean;
+}) {
+  const className = `rounded-xl border p-4 text-left transition-colors ${
+    highlight
+      ? "border-amber-300 bg-amber-50"
+      : "border-border bg-surface hover:border-primary/40"
+  }`;
+  const content = (
+    <>
+      <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+        {label}
+      </p>
+      <p className="mt-2 text-2xl font-semibold tabular-nums">{value}</p>
+    </>
+  );
+  if (onClick) {
+    return (
+      <button type="button" onClick={onClick} className={className}>
+        {content}
+      </button>
+    );
+  }
+  return <div className={className}>{content}</div>;
 }

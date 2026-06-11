@@ -8,6 +8,8 @@ export async function updateLeadPipeline(
     attended_at?: string | null;
     lost_reason?: string | null;
     sales_notes?: string | null;
+    next_followup_at?: string | null;
+    next_followup_note?: string | null;
   }
 ) {
   const supabase = getSupabaseAdmin();
@@ -15,7 +17,10 @@ export async function updateLeadPipeline(
     return { ok: false as const, error: "supabase_not_configured" };
   }
 
-  const { error } = await supabase.from("leads").update(patch).eq("id", leadId);
+  const update: Record<string, unknown> = { ...patch };
+  update.last_activity_at = new Date().toISOString();
+
+  const { error } = await supabase.from("leads").update(update).eq("id", leadId);
 
   if (error) {
     return { ok: false as const, error: error.message };

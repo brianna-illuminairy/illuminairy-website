@@ -85,9 +85,13 @@ export async function recordEnrollmentFromStripe(session: {
       .update({
         stage: "won",
         converted_at: new Date().toISOString(),
-        converted_client_id: clientId
+        converted_client_id: clientId,
+        last_activity_at: new Date().toISOString()
       })
       .eq("id", leadId);
+    console.log(
+      `[crm] lead ${leadId} (${parentEmail}) converted -> client ${clientId} via stripe session ${session.id}`
+    );
   }
 
   const { data: student, error: studentErr } = await supabase

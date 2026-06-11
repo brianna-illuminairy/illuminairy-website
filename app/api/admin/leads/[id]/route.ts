@@ -33,6 +33,8 @@ export async function PATCH(
     stage?: string;
     lost_reason?: string | null;
     sales_notes?: string | null;
+    next_followup_at?: string | null;
+    next_followup_note?: string | null;
     attended?: boolean;
   };
 
@@ -51,6 +53,12 @@ export async function PATCH(
   }
   if (body.sales_notes !== undefined) {
     patch.sales_notes = body.sales_notes;
+  }
+  if (body.next_followup_at !== undefined) {
+    patch.next_followup_at = body.next_followup_at;
+  }
+  if (body.next_followup_note !== undefined) {
+    patch.next_followup_note = body.next_followup_note;
   }
   if (body.attended === true) {
     patch.attended_at = new Date().toISOString();

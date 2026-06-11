@@ -33,6 +33,7 @@
     "agent:verify": "npm run funnel:layout-guard && npm run funnel:cta-guard && npm run funnel:booking-guard && npm run funnel:step-registry && node scripts/agent-verify.mjs",
     "ralph:status": "node scripts/ralph-loop.mjs status",
     "ralph:next": "node scripts/ralph-loop.mjs next",
+    "crm:query": "node scripts/crm-query.mjs",
     "crm:setup": "node scripts/setup-crm.mjs",
     "crm:migrate": "node scripts/apply-crm-migration.mjs",
     "smoke:prod": "node scripts/smoke-prod.mjs",
@@ -45,6 +46,8 @@
     "danielle:notify-updates": "node scripts/danielle-notify-updates.mjs"
   },
   "dependencies": {
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0",
     "@posthog/nextjs-config": "^1.9.52",
     "@supabase/supabase-js": "^2.106.0",
     "lucide-react": "^0.468.0",
