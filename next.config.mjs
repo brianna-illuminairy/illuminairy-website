@@ -7,7 +7,15 @@ const projectRoot = path.dirname(fileURLToPath(import.meta.url));
 const personalApiKey =
   process.env.POSTHOG_PERSONAL_API_KEY ?? process.env.POSTHOG_API_KEY ?? "";
 const posthogProjectId = process.env.POSTHOG_PROJECT_ID ?? "";
+// Set DISABLE_POSTHOG_SOURCEMAPS=1 to skip the post-build upload even if both
+// keys are present. Useful when the personal API key has rotated / is invalid
+// and is blocking deploys, or in any environment where source-map upload is
+// not desired.
+const posthogSourcemapsDisabled =
+  process.env.DISABLE_POSTHOG_SOURCEMAPS === "1" ||
+  process.env.DISABLE_POSTHOG_SOURCEMAPS === "true";
 const posthogSourcemapsEnabled =
+  !posthogSourcemapsDisabled &&
   Boolean(personalApiKey && posthogProjectId) &&
   process.env.NODE_ENV === "production";
 
