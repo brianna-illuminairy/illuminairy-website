@@ -4,16 +4,54 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import type { CrmLeadRow } from "@/lib/admin/crm-queries";
 import { formatBookingDateTime, formatFollowup } from "@/lib/admin/format-booking";
+import { useWallClock } from "@/lib/admin/use-wall-clock";
 import { StageBadge } from "./stage-badge";
 
-type SortKey = "newest" | "oldest" | "followup_soonest" | "booking_soonest";
+type SortKey =
+  | "upcoming_calls"
+  | "newest"
+  | "oldest"
+  | "followup_soonest"
+  | "booking_soonest";
 
 const SORTS: Array<{ id: SortKey; label: string }> = [
+  { id: "upcoming_calls", label: "Upcoming calls first" },
   { id: "newest", label: "Newest" },
   { id: "oldest", label: "Oldest" },
   { id: "followup_soonest", label: "Followup soonest" },
   { id: "booking_soonest", label: "Booking soonest" }
 ];
+
+/**
+ * Three-tier sort that puts what you need to act on at the top:
+ *   1. Future bookings (soonest first) — your next active call leads.
+ *   2. No-show outreach needed: explicit `no_show` stage, OR `call_booked`
+ *      with a past booking and no attended_at. Most-recently-passed first
+ *      since those are freshest.
+ *   3. Everything else by created_at desc.
+ */
+function upcomingCallsRank(
+  lead: {
+    stage: string;
+    bookedCallAt: string | null;
+    attendedAt: string | null;
+    createdAt: string;
+  },
+  now: number
+): { tier: 0 | 1 | 2; tiebreaker: number } {
+  if (lead.bookedCallAt) {
+    const bookedMs = new Date(lead.bookedCallAt).getTime();
+    if (bookedMs >= now && lead.stage !== "no_show") {
+      return { tier: 0, tiebreaker: bookedMs };
+    }
+    if (lead.stage === "no_show" || (!lead.attendedAt && lead.stage === "call_booked")) {
+      return { tier: 1, tiebreaker: -bookedMs };
+    }
+  } else if (lead.stage === "no_show") {
+    return { tier: 1, tiebreaker: -new Date(lead.createdAt).getTime() };
+  }
+  return { tier: 2, tiebreaker: -new Date(lead.createdAt).getTime() };
+}
 
 function matchesQuery(lead: CrmLeadRow, q: string): boolean {
   if (!q) return true;
@@ -33,7 +71,8 @@ export function LeadsList({ leads }: { leads: CrmLeadRow[] }) {
   const [query, setQuery] = useState("");
   const [stageFilter, setStageFilter] = useState<string>("all");
   const [hideConverted, setHideConverted] = useState(true);
-  const [sort, setSort] = useState<SortKey>("newest");
+  const [sort, setSort] = useState<SortKey>("upcoming_calls");
+  const nowMs = useWallClock();
 
   const stages = useMemo(() => {
     const set = new Set<string>();
@@ -51,6 +90,12 @@ export function LeadsList({ leads }: { leads: CrmLeadRow[] }) {
 
     out.sort((a, b) => {
       switch (sort) {
+        case "upcoming_calls": {
+          const ra = upcomingCallsRank(a, nowMs);
+          const rb = upcomingCallsRank(b, nowMs);
+          if (ra.tier !== rb.tier) return ra.tier - rb.tier;
+          return ra.tiebreaker - rb.tiebreaker;
+        }
         case "oldest":
           return (
             new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
@@ -82,7 +127,7 @@ export function LeadsList({ leads }: { leads: CrmLeadRow[] }) {
     });
 
     return out;
-  }, [leads, query, stageFilter, hideConverted, sort]);
+  }, [leads, query, stageFilter, hideConverted, sort, nowMs]);
 
   return (
     <section className="space-y-4">

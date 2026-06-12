@@ -1,14 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-  useSyncExternalStore
-} from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import type { CrmLeadRow } from "@/lib/admin/crm-queries";
+import { useWallClock } from "@/lib/admin/use-wall-clock";
 import { LeadsList } from "./crm/leads-list";
 import { LeadsPipeline } from "./crm/leads-pipeline";
 import { LeadsDueToday } from "./crm/leads-due-today";
@@ -152,17 +147,6 @@ export function CrmDashboard() {
       ) : null}
       {view === "due" ? <LeadsDueToday leads={leads} /> : null}
     </div>
-  );
-}
-
-function useWallClock(intervalMs = 60_000): number {
-  return useSyncExternalStore(
-    (callback) => {
-      const id = setInterval(callback, intervalMs);
-      return () => clearInterval(id);
-    },
-    () => Date.now(),
-    () => 0
   );
 }
 

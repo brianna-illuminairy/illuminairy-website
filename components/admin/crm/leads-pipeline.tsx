@@ -19,7 +19,9 @@ import { stageBadgeTone, stageLabel } from "./stage-badge";
 const COLUMNS: Array<{ id: string; label: string }> = [
   { id: "intake_submitted", label: "Intake" },
   { id: "call_booked", label: "Booked" },
+  { id: "no_show", label: "No-show" },
   { id: "call_attended", label: "Attended" },
+  { id: "diagnostic_scheduled", label: "Diagnostic" },
   { id: "won", label: "Won" },
   { id: "lost", label: "Lost" }
 ];
@@ -105,15 +107,18 @@ export function LeadsPipeline({
         onDragCancel={() => setActiveId(null)}
         onDragEnd={handleDragEnd}
       >
-        <div className="grid gap-3 lg:grid-cols-5">
-          {COLUMNS.map((col) => (
-            <Column
-              key={col.id}
-              id={col.id}
-              label={col.label}
-              leads={byStage[col.id] ?? []}
-            />
-          ))}
+        <div className="overflow-x-auto pb-2">
+          <div className="flex min-w-max gap-3">
+            {COLUMNS.map((col) => (
+              <div key={col.id} className="w-[260px] flex-none">
+                <Column
+                  id={col.id}
+                  label={col.label}
+                  leads={byStage[col.id] ?? []}
+                />
+              </div>
+            ))}
+          </div>
         </div>
         <DragOverlay>
           {activeLead ? <CardContents lead={activeLead} dragging /> : null}

@@ -8,7 +8,9 @@ import { stageBadgeTone, stageLabel } from "./stage-badge";
 const STAGE_OPTIONS = [
   "intake_submitted",
   "call_booked",
+  "no_show",
   "call_attended",
+  "diagnostic_scheduled",
   "won",
   "lost"
 ];

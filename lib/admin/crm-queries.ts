@@ -63,7 +63,10 @@ export async function getCrmPipelineStats(): Promise<CrmPipelineStats> {
     if (lead.booked_call_at) {
       booked++;
       if (lead.attended_at) attended++;
-      else if (new Date(lead.booked_call_at).getTime() < now && lead.stage === "call_booked") {
+      else if (
+        lead.stage === "no_show" ||
+        (new Date(lead.booked_call_at).getTime() < now && lead.stage === "call_booked")
+      ) {
         noShow++;
       }
     }
@@ -285,7 +288,9 @@ export async function getOverviewKpis() {
     .select("id", { count: "exact", head: true });
 
   const books = externalLeads.filter((l) =>
-    ["call_booked", "call_attended", "won"].includes(l.stage)
+    ["call_booked", "no_show", "call_attended", "diagnostic_scheduled", "won"].includes(
+      l.stage
+    )
   ).length;
 
   const { count: alertCount } = await supabase

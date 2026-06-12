@@ -1,21 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useSyncExternalStore } from "react";
+import { useMemo } from "react";
 import type { CrmLeadRow } from "@/lib/admin/crm-queries";
 import { formatFollowup } from "@/lib/admin/format-booking";
+import { useWallClock } from "@/lib/admin/use-wall-clock";
 import { StageBadge } from "./stage-badge";
-
-function useWallClock(intervalMs = 60_000): number {
-  return useSyncExternalStore(
-    (callback) => {
-      const id = setInterval(callback, intervalMs);
-      return () => clearInterval(id);
-    },
-    () => Date.now(),
-    () => 0
-  );
-}
 
 type Bucket = "overdue" | "today" | "thisWeek";
 
