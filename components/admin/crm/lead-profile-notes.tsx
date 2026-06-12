@@ -46,6 +46,8 @@ export function LeadProfileNotes({
   };
 
   const [notes, setNotes] = useState(l.sales_notes ?? "");
+  const [notesSavedValue, setNotesSavedValue] = useState(l.sales_notes ?? "");
+  const [notesSaving, setNotesSaving] = useState(false);
   const [followupAt, setFollowupAt] = useState(
     toDatetimeLocal(l.next_followup_at)
   );
@@ -55,6 +57,24 @@ export function LeadProfileNotes({
   );
   const [savedAt, setSavedAt] = useState<string | null>(null);
   const debounce = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const notesDirty = notes !== notesSavedValue;
+
+  async function saveNotes() {
+    if (!notesDirty || notesSaving) return;
+    setNotesSaving(true);
+    const value = notes;
+    const ok = await onPatch({ sales_notes: value || null });
+    if (ok) {
+      setNotesSavedValue(value);
+      setSavedAt(new Date().toLocaleTimeString());
+    }
+    setNotesSaving(false);
+  }
+
+  function discardNotes() {
+    setNotes(notesSavedValue);
+  }
 
   function scheduleSave(body: Record<string, unknown>) {
     if (debounce.current) clearTimeout(debounce.current);
@@ -119,26 +139,55 @@ export function LeadProfileNotes({
   return (
     <section className="space-y-5 rounded-xl border border-border bg-surface p-4">
       <div>
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-2">
           <h2 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
             Sales notes
           </h2>
-          {savedAt ? (
-            <span className="text-[10px] text-muted-foreground">
-              Saved {savedAt}
-            </span>
-          ) : null}
+          <span className="text-[10px] text-muted-foreground">
+            {notesDirty
+              ? "Unsaved changes"
+              : savedAt
+                ? `Saved ${savedAt}`
+                : null}
+          </span>
         </div>
         <textarea
           className="mt-2 h-40 w-full resize-y rounded-lg border border-border bg-background px-3 py-2 text-sm"
           placeholder="Quick context, why they reached out, payment plan agreed, parent objections, etc."
           value={notes}
-          disabled={saving}
-          onChange={(e) => {
-            setNotes(e.target.value);
-            scheduleSave({ sales_notes: e.target.value });
+          disabled={saving || notesSaving}
+          onChange={(e) => setNotes(e.target.value)}
+          onKeyDown={(e) => {
+            if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
+              e.preventDefault();
+              void saveNotes();
+            }
           }}
         />
+        <div className="mt-2 flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => void saveNotes()}
+            disabled={!notesDirty || notesSaving || saving}
+            className="rounded-lg bg-foreground px-3 py-1.5 text-xs font-medium text-background transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
+            title="\u2318\u23CE to save"
+          >
+            {notesSaving ? "Saving\u2026" : "Save notes"}
+          </button>
+          {notesDirty ? (
+            <button
+              type="button"
+              onClick={discardNotes}
+              disabled={notesSaving}
+              className="rounded-lg border border-border bg-background px-3 py-1.5 text-xs font-medium text-muted-foreground transition hover:text-foreground"
+            >
+              Discard
+            </button>
+          ) : null}
+          <span className="text-[10px] text-muted-foreground">
+            {"\u2318\u23CE to save"}
+          </span>
+        </div>
       </div>
 
       <div className="space-y-3">

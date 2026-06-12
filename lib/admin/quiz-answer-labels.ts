@@ -172,7 +172,10 @@ export const HIDDEN_QUIZ_KEYS = new Set([
   "parentEmail",
   "parentPhone",
   "name",
-  "achievability"
+  "achievability",
+  // planChoice is seeded to 'full' in app/quiz/state.tsx and never set by the
+  // user. Surfacing it as "Plan picked: SAT Accelerator (full)" is misleading.
+  "planChoice"
 ]);
 
 /** Map a step ID like `q-score-lower` to its canonical answer key (`qScoreLower`). */
