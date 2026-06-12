@@ -42,7 +42,6 @@ export function LeadProfileOverview({ detail }: { detail: LeadDetail }) {
     sat_baseline: string | null;
     score_range: string | null;
     main_goal: string | null;
-    additional_context: string | null;
     utm_source: string | null;
     utm_medium: string | null;
     utm_campaign: string | null;
@@ -94,7 +93,6 @@ export function LeadProfileOverview({ detail }: { detail: LeadDetail }) {
         <Row label="Target" value={l.target_exam} />
         <Row label="Baseline" value={l.sat_baseline ?? l.score_range} />
         <Row label="Main goal" value={l.main_goal} />
-        <Row label="Context" value={l.additional_context} />
       </Card>
 
       <Card title="Calendly">

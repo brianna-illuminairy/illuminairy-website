@@ -1,4 +1,5 @@
 import { isInternalCrmEmail } from "@/lib/admin/internal-emails";
+import { collapseAnswerAliases } from "@/lib/admin/quiz-answer-labels";
 import { getSupabaseAdmin } from "@/lib/supabase/server";
 
 export type CrmLeadRow = {
@@ -153,8 +154,12 @@ export async function getCrmLeadDetail(id: string): Promise<LeadDetail | null> {
 
   const allTouches = (touches ?? []) as LeadDetail["touches"];
 
-  // Merge quiz answers from the most recent quiz_lead_submitted / quiz_step_view payloads.
+  // Build the answers map from three sources, oldest -> newest so later writes win.
+  //   1. Touch events (best-effort, captures in-progress drops)
+  //   2. lead.additional_context JSON (funnel metadata like sat_lp_variant)
+  //   3. lead.quiz_answers column (canonical structured snapshot at submission)
   const quizAnswers: Record<string, unknown> = {};
+
   for (let i = allTouches.length - 1; i >= 0; i--) {
     const t = allTouches[i];
     if (t.event_type !== "quiz_step_view" && t.event_type !== "quiz_lead_submitted") {
@@ -165,13 +170,38 @@ export async function getCrmLeadDetail(id: string): Promise<LeadDetail | null> {
     if (answers && typeof answers === "object") {
       Object.assign(quizAnswers, answers);
     }
-    // Some single-step views carry `step` + `value` rather than `answers`.
     const step = (payload as { step?: string }).step;
     const value = (payload as { value?: unknown }).value;
     if (step && value !== undefined && value !== null && value !== "") {
       quizAnswers[step] = value;
     }
   }
+
+  const leadRow = lead as {
+    quiz_answers?: Record<string, unknown> | null;
+    additional_context?: string | null;
+  };
+
+  if (typeof leadRow.additional_context === "string") {
+    try {
+      const parsed = JSON.parse(leadRow.additional_context);
+      if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
+        Object.assign(quizAnswers, parsed as Record<string, unknown>);
+      }
+    } catch {
+      // Older rows may not be JSON; ignore.
+    }
+  }
+
+  if (
+    leadRow.quiz_answers &&
+    typeof leadRow.quiz_answers === "object" &&
+    !Array.isArray(leadRow.quiz_answers)
+  ) {
+    Object.assign(quizAnswers, leadRow.quiz_answers);
+  }
+
+  const mergedAnswers = collapseAnswerAliases(quizAnswers);
 
   let client: LeadDetail["client"] = null;
   const convertedClientId = (lead as { converted_client_id?: string | null })
@@ -188,7 +218,7 @@ export async function getCrmLeadDetail(id: string): Promise<LeadDetail | null> {
   return {
     lead: lead as LeadDetail["lead"],
     touches: allTouches,
-    quizAnswers,
+    quizAnswers: mergedAnswers,
     client
   };
 }

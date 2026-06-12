@@ -1,32 +1,22 @@
 "use client";
 
-const PRIORITY_KEYS = [
-  "qWho",
-  "q-score-lower",
-  "q1",
-  "q2",
-  "q3",
-  "q4",
-  "q-doubts",
-  "q5",
-  "q6",
-  "q7",
-  "q9",
-  "q8",
-  "achievability",
-  "name"
-];
+import {
+  HIDDEN_QUIZ_KEYS,
+  META_KEY_ORDER,
+  QUIZ_KEY_ORDER,
+  formatAnswerValue,
+  getQuestionLabel
+} from "@/lib/admin/quiz-answer-labels";
 
-function format(value: unknown): string {
-  if (value === null || value === undefined) return "—";
-  if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
-    return String(value);
-  }
-  try {
-    return JSON.stringify(value);
-  } catch {
-    return String(value);
-  }
+function Row({ label, value }: { label: string; value: string }) {
+  return (
+    <li className="grid grid-cols-[160px_1fr] gap-3 border-b border-border/50 pb-2 last:border-b-0">
+      <span className="text-xs text-muted-foreground">{label}</span>
+      <span className="break-words">
+        {value === "—" ? <span className="text-muted-foreground">—</span> : value}
+      </span>
+    </li>
+  );
 }
 
 export function LeadProfileQuizAnswers({
@@ -34,8 +24,8 @@ export function LeadProfileQuizAnswers({
 }: {
   answers: Record<string, unknown>;
 }) {
-  const keys = Object.keys(answers);
-  if (keys.length === 0) {
+  const present = Object.keys(answers);
+  if (present.length === 0) {
     return (
       <section className="rounded-xl border border-border bg-surface p-4">
         <h2 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
@@ -48,28 +38,77 @@ export function LeadProfileQuizAnswers({
     );
   }
 
-  // Sort with priority keys first, then alphabetical for the rest.
-  const sorted = [
-    ...PRIORITY_KEYS.filter((k) => k in answers),
-    ...keys.filter((k) => !PRIORITY_KEYS.includes(k)).sort()
-  ];
+  const quizKeys = QUIZ_KEY_ORDER.filter((k) => k in answers);
+  const metaKeys = META_KEY_ORDER.filter((k) => k in answers);
+  const orderedKnown = new Set([
+    ...QUIZ_KEY_ORDER,
+    ...META_KEY_ORDER,
+    ...Array.from(HIDDEN_QUIZ_KEYS)
+  ]);
+  const extras = present.filter((k) => !orderedKnown.has(k)).sort();
 
   return (
-    <section className="rounded-xl border border-border bg-surface p-4">
-      <h2 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-        Quiz answers
-      </h2>
-      <ul className="mt-3 grid gap-2 sm:grid-cols-2">
-        {sorted.map((k) => (
-          <li
-            key={k}
-            className="grid grid-cols-[120px_1fr] gap-2 border-b border-border/50 pb-2 text-sm"
-          >
-            <span className="font-mono text-xs text-muted-foreground">{k}</span>
-            <span className="break-words">{format(answers[k])}</span>
-          </li>
-        ))}
-      </ul>
-    </section>
+    <div className="space-y-4">
+      <section className="rounded-xl border border-border bg-surface p-4">
+        <h2 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+          SAT funnel intake
+        </h2>
+        {quizKeys.length === 0 ? (
+          <p className="mt-3 text-sm text-muted-foreground">
+            No structured intake answers on this lead.
+          </p>
+        ) : (
+          <ul className="mt-3 space-y-2 text-sm">
+            {quizKeys.map((k) => (
+              <Row
+                key={k}
+                label={getQuestionLabel(k)}
+                value={formatAnswerValue(k, answers[k])}
+              />
+            ))}
+          </ul>
+        )}
+      </section>
+
+      {metaKeys.length > 0 ? (
+        <section className="rounded-xl border border-border bg-surface p-4">
+          <h2 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+            Funnel context
+          </h2>
+          <ul className="mt-3 space-y-2 text-sm">
+            {metaKeys.map((k) => (
+              <Row
+                key={k}
+                label={getQuestionLabel(k)}
+                value={formatAnswerValue(k, answers[k])}
+              />
+            ))}
+          </ul>
+        </section>
+      ) : null}
+
+      {extras.length > 0 ? (
+        <section className="rounded-xl border border-dashed border-border bg-surface/50 p-4">
+          <h2 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+            Other fields
+          </h2>
+          <p className="mt-1 text-xs text-muted-foreground">
+            Unlabeled keys captured on this lead. Add labels in
+            <code className="ml-1 font-mono">lib/admin/quiz-answer-labels.ts</code>.
+          </p>
+          <ul className="mt-3 space-y-2 text-sm">
+            {extras.map((k) => (
+              <li
+                key={k}
+                className="grid grid-cols-[160px_1fr] gap-3 border-b border-border/50 pb-2 last:border-b-0"
+              >
+                <span className="font-mono text-xs text-muted-foreground">{k}</span>
+                <span className="break-words">{formatAnswerValue(k, answers[k])}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
+    </div>
   );
 }
