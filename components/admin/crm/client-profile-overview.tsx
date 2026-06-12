@@ -1,31 +1,14 @@
 "use client";
 
 import type { ClientDetail } from "@/lib/admin/clients-queries";
+import { ProfileCard, ProfileRow as BaseRow } from "./profile-card";
 
-function Card({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <section className="rounded-xl border border-border bg-surface p-4">
-      <h2 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-        {title}
-      </h2>
-      <div className="mt-3 space-y-2 text-sm">{children}</div>
-    </section>
-  );
+function Card(props: { title: string; children: React.ReactNode }) {
+  return <ProfileCard {...props} />;
 }
 
 function Row({ label, value }: { label: string; value: React.ReactNode }) {
-  return (
-    <div className="grid grid-cols-[120px_1fr] gap-3">
-      <span className="text-xs text-muted-foreground">{label}</span>
-      <span className="break-words">
-        {value === null || value === undefined || value === "" ? (
-          <span className="text-muted-foreground">—</span>
-        ) : (
-          value
-        )}
-      </span>
-    </div>
-  );
+  return <BaseRow label={label} value={value} labelWidth="120px" />;
 }
 
 export function ClientProfileOverview({ detail }: { detail: ClientDetail }) {
@@ -47,7 +30,7 @@ export function ClientProfileOverview({ detail }: { detail: ClientDetail }) {
   );
 
   return (
-    <div className="grid gap-4 md:grid-cols-2">
+    <div className="grid gap-4 md:grid-cols-2 [&>*]:min-w-0">
       <Card title="Parent">
         <Row
           label="Name"
@@ -56,7 +39,10 @@ export function ClientProfileOverview({ detail }: { detail: ClientDetail }) {
         <Row
           label="Email"
           value={
-            <a className="font-mono text-xs underline" href={`mailto:${c.parent_email}`}>
+            <a
+              className="font-mono text-xs underline [overflow-wrap:anywhere]"
+              href={`mailto:${c.parent_email}`}
+            >
               {c.parent_email}
             </a>
           }

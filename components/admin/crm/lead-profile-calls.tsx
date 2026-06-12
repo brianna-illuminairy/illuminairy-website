@@ -222,7 +222,7 @@ export function LeadProfileCalls({
                 className="rounded-xl border border-border bg-surface p-4"
               >
                 <div className="flex items-start justify-between gap-4">
-                  <div>
+                  <div className="min-w-0 flex-1">
                     <p className="text-sm font-semibold">
                       {when?.absolute ?? c.call_at}
                       {c.duration_minutes ? (
@@ -231,7 +231,9 @@ export function LeadProfileCalls({
                         </span>
                       ) : null}
                     </p>
-                    <p className="mt-1 text-sm">{c.summary ?? "—"}</p>
+                    <p className="mt-1 text-sm break-words [overflow-wrap:anywhere]">
+                      {c.summary ?? "—"}
+                    </p>
                     {c.recording_url ? (
                       <a
                         href={c.recording_url}
@@ -243,7 +245,7 @@ export function LeadProfileCalls({
                       </a>
                     ) : null}
                   </div>
-                  <div className="flex flex-col items-end gap-1">
+                  <div className="flex flex-none flex-col items-end gap-1">
                     {c.transcript ? (
                       <button
                         type="button"

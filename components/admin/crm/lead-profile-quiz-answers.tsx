@@ -9,11 +9,15 @@ import {
 } from "@/lib/admin/quiz-answer-labels";
 
 function Row({ label, value }: { label: string; value: string }) {
+  const empty = value === "—";
   return (
-    <li className="grid grid-cols-[160px_1fr] gap-3 border-b border-border/50 pb-2 last:border-b-0">
+    <li
+      className="grid gap-3 border-b border-border/50 pb-2 last:border-b-0"
+      style={{ gridTemplateColumns: "160px minmax(0, 1fr)" }}
+    >
       <span className="text-xs text-muted-foreground">{label}</span>
-      <span className="break-words">
-        {value === "—" ? <span className="text-muted-foreground">—</span> : value}
+      <span className="min-w-0 break-words [overflow-wrap:anywhere]">
+        {empty ? <span className="text-muted-foreground">—</span> : value}
       </span>
     </li>
   );
@@ -100,10 +104,13 @@ export function LeadProfileQuizAnswers({
             {extras.map((k) => (
               <li
                 key={k}
-                className="grid grid-cols-[160px_1fr] gap-3 border-b border-border/50 pb-2 last:border-b-0"
+                className="grid gap-3 border-b border-border/50 pb-2 last:border-b-0"
+                style={{ gridTemplateColumns: "160px minmax(0, 1fr)" }}
               >
                 <span className="font-mono text-xs text-muted-foreground">{k}</span>
-                <span className="break-words">{formatAnswerValue(k, answers[k])}</span>
+                <span className="min-w-0 break-words [overflow-wrap:anywhere]">
+                  {formatAnswerValue(k, answers[k])}
+                </span>
               </li>
             ))}
           </ul>

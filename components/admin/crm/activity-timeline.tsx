@@ -136,13 +136,17 @@ export function ActivityTimeline({
               item.kind === "call" ? "bg-violet-500" : "bg-sky-500"
             }`}
           />
-          <div className="flex-1">
-            <p className="font-medium">{item.label}</p>
+          <div className="min-w-0 flex-1">
+            <p className="font-medium break-words [overflow-wrap:anywhere]">
+              {item.label}
+            </p>
             {item.detail ? (
-              <p className="mt-0.5 text-xs text-muted-foreground">{item.detail}</p>
+              <p className="mt-0.5 text-xs text-muted-foreground break-words [overflow-wrap:anywhere]">
+                {item.detail}
+              </p>
             ) : null}
           </div>
-          <span className="text-xs text-muted-foreground">
+          <span className="flex-none whitespace-nowrap text-xs text-muted-foreground">
             {new Date(item.at).toLocaleString()}
           </span>
         </li>

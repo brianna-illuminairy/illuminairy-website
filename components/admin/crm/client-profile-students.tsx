@@ -29,27 +29,43 @@ export function ClientProfileStudents({ detail }: { detail: ClientDetail }) {
               </p>
             </header>
             {enrollment ? (
-              <dl className="mt-3 grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
+              <dl
+                className="mt-3 grid gap-x-6 gap-y-2 text-sm"
+                style={{
+                  gridTemplateColumns:
+                    "minmax(0, max-content) minmax(0, 1fr) minmax(0, max-content) minmax(0, 1fr)"
+                }}
+              >
                 <dt className="text-xs text-muted-foreground">Program</dt>
-                <dd>{enrollment.program_label ?? enrollment.program}</dd>
+                <dd className="min-w-0 break-words [overflow-wrap:anywhere]">
+                  {enrollment.program_label ?? enrollment.program}
+                </dd>
                 <dt className="text-xs text-muted-foreground">Status</dt>
-                <dd>{enrollment.status}</dd>
+                <dd className="min-w-0 break-words">{enrollment.status}</dd>
                 <dt className="text-xs text-muted-foreground">Tutor</dt>
-                <dd>{enrollment.tutor_assigned ?? "—"}</dd>
+                <dd className="min-w-0 break-words">
+                  {enrollment.tutor_assigned ?? "—"}
+                </dd>
                 <dt className="text-xs text-muted-foreground">Baseline</dt>
-                <dd>{enrollment.baseline_score ?? "—"}</dd>
+                <dd className="min-w-0 break-words">
+                  {enrollment.baseline_score ?? "—"}
+                </dd>
                 <dt className="text-xs text-muted-foreground">Target</dt>
-                <dd>{enrollment.target_score ?? "—"}</dd>
+                <dd className="min-w-0 break-words">
+                  {enrollment.target_score ?? "—"}
+                </dd>
                 <dt className="text-xs text-muted-foreground">Start date</dt>
-                <dd>{enrollment.program_start_date ?? "—"}</dd>
+                <dd className="min-w-0 break-words">
+                  {enrollment.program_start_date ?? "—"}
+                </dd>
                 <dt className="text-xs text-muted-foreground">Amount paid</dt>
-                <dd>
+                <dd className="min-w-0 break-words">
                   {enrollment.amount_paid_cents
                     ? `$${(enrollment.amount_paid_cents / 100).toLocaleString()}`
                     : "—"}
                 </dd>
                 <dt className="text-xs text-muted-foreground">Paid at</dt>
-                <dd>
+                <dd className="min-w-0 break-words">
                   {enrollment.paid_at
                     ? new Date(enrollment.paid_at).toLocaleDateString()
                     : "—"}

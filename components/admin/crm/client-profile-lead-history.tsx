@@ -71,13 +71,24 @@ export function ClientProfileLeadHistory({ leadId }: { leadId: string }) {
             </div>
           ) : null}
 
-          <dl className="grid grid-cols-2 gap-x-6 gap-y-1 text-sm">
+          <dl
+            className="grid gap-x-6 gap-y-1 text-sm"
+            style={{
+              gridTemplateColumns: "minmax(0, max-content) minmax(0, 1fr)"
+            }}
+          >
             <dt className="text-xs text-muted-foreground">Source</dt>
-            <dd className="font-mono text-xs">{lead.utm_campaign ?? "—"}</dd>
+            <dd className="min-w-0 font-mono text-xs [overflow-wrap:anywhere]">
+              {lead.utm_campaign ?? "—"}
+            </dd>
             <dt className="text-xs text-muted-foreground">Creative</dt>
-            <dd className="font-mono text-xs">{lead.utm_content ?? "—"}</dd>
+            <dd className="min-w-0 font-mono text-xs [overflow-wrap:anywhere]">
+              {lead.utm_content ?? "—"}
+            </dd>
             <dt className="text-xs text-muted-foreground">Landing</dt>
-            <dd className="font-mono text-xs">{lead.landing_page ?? "—"}</dd>
+            <dd className="min-w-0 font-mono text-xs [overflow-wrap:anywhere]">
+              {lead.landing_page ?? "—"}
+            </dd>
             <dt className="text-xs text-muted-foreground">Booked</dt>
             <dd>
               {lead.booked_call_at

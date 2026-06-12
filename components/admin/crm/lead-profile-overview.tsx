@@ -2,32 +2,7 @@
 
 import type { LeadDetail } from "@/lib/admin/crm-queries";
 import { formatBookingDateTime } from "@/lib/admin/format-booking";
-
-function Card({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <section className="rounded-xl border border-border bg-surface p-4">
-      <h2 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-        {title}
-      </h2>
-      <div className="mt-3 space-y-2 text-sm">{children}</div>
-    </section>
-  );
-}
-
-function Row({ label, value }: { label: string; value: React.ReactNode }) {
-  return (
-    <div className="grid grid-cols-[110px_1fr] gap-3">
-      <span className="text-xs text-muted-foreground">{label}</span>
-      <span className="break-words">
-        {value === null || value === undefined || value === "" ? (
-          <span className="text-muted-foreground">—</span>
-        ) : (
-          value
-        )}
-      </span>
-    </div>
-  );
-}
+import { ProfileCard as Card, ProfileRow as Row } from "./profile-card";
 
 export function LeadProfileOverview({ detail }: { detail: LeadDetail }) {
   const l = detail.lead as unknown as {
@@ -60,7 +35,7 @@ export function LeadProfileOverview({ detail }: { detail: LeadDetail }) {
   const booking = formatBookingDateTime(l.booked_call_at);
 
   return (
-    <div className="grid gap-4 md:grid-cols-2">
+    <div className="grid gap-4 md:grid-cols-2 [&>*]:min-w-0">
       <Card title="Parent contact">
         <Row
           label="Name"
@@ -69,7 +44,10 @@ export function LeadProfileOverview({ detail }: { detail: LeadDetail }) {
         <Row
           label="Email"
           value={
-            <a className="font-mono text-xs underline" href={`mailto:${l.parent_email}`}>
+            <a
+              className="font-mono text-xs underline [overflow-wrap:anywhere]"
+              href={`mailto:${l.parent_email}`}
+            >
               {l.parent_email}
             </a>
           }

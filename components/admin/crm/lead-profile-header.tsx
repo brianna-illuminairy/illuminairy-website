@@ -60,11 +60,15 @@ export function LeadProfileHeader({
       ) : null}
 
       <div className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">{parentName}</h1>
+        <div className="min-w-0 flex-1">
+          <h1 className="text-2xl font-semibold tracking-tight [overflow-wrap:anywhere]">
+            {parentName}
+          </h1>
           <p className="mt-1 text-sm text-muted-foreground">
             Student: {lead.student_first ?? "—"} ·{" "}
-            <span className="font-mono text-xs">{lead.parent_email}</span>
+            <span className="font-mono text-xs [overflow-wrap:anywhere]">
+              {lead.parent_email}
+            </span>
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
@@ -123,7 +127,7 @@ export function LeadProfileHeader({
         </div>
       </div>
 
-      <p className="text-[10px] font-mono text-muted-foreground">
+      <p className="text-[10px] font-mono text-muted-foreground [overflow-wrap:anywhere]">
         lead id: {leadId}
       </p>
     </header>

@@ -118,11 +118,11 @@ export function LeadProfile({
 
       {tab === "overview" ? (
         <div className="grid gap-6 lg:grid-cols-3">
-          <div className="space-y-6 lg:col-span-2">
+          <div className="min-w-0 space-y-6 lg:col-span-2">
             <LeadProfileOverview detail={detail} />
             <LeadProfileQuizAnswers answers={detail.quizAnswers} />
           </div>
-          <div className="space-y-6">
+          <div className="min-w-0 space-y-6">
             <LeadProfileNotes
               detail={detail}
               saving={saving}
