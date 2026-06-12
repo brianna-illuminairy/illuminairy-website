@@ -4,7 +4,8 @@ import { useCallback, useEffect, useState } from "react";
 import type { LeadDetail } from "@/lib/admin/crm-queries";
 import { LeadProfileHeader } from "./lead-profile-header";
 import { LeadProfileOverview } from "./lead-profile-overview";
-import { LeadProfileNotes } from "./lead-profile-notes";
+import { LeadProfileFollowups } from "./lead-profile-followups";
+import { LeadProfileSalesNotes } from "./lead-profile-sales-notes";
 import { LeadProfileQuizAnswers } from "./lead-profile-quiz-answers";
 import { LeadProfileCalls } from "./lead-profile-calls";
 import { ActivityTimeline } from "./activity-timeline";
@@ -123,7 +124,7 @@ export function LeadProfile({
             <LeadProfileQuizAnswers answers={detail.quizAnswers} />
           </div>
           <div className="min-w-0 space-y-6">
-            <LeadProfileNotes
+            <LeadProfileFollowups
               detail={detail}
               saving={saving}
               onPatch={patchLead}
@@ -134,7 +135,7 @@ export function LeadProfile({
 
       {tab === "notes" ? (
         <div className="max-w-2xl">
-          <LeadProfileNotes
+          <LeadProfileSalesNotes
             detail={detail}
             saving={saving}
             onPatch={patchLead}
