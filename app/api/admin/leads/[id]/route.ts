@@ -38,6 +38,7 @@ export async function PATCH(
     next_followup_note?: string | null;
     next_followup_kind?: string | null;
     attended?: boolean;
+    complete_followup?: boolean;
   };
 
   try {
@@ -78,6 +79,28 @@ export async function PATCH(
     }
   } else if (body.attended === false) {
     patch.attended_at = null;
+  }
+
+  // `complete_followup: true` advances the serial follow-up state machine.
+  // post_call (send email) -> post_call_check_in (+3 days). Anything else
+  // clears the slot since there's no defined next step.
+  if (body.complete_followup === true) {
+    const detail = await getCrmLeadDetail(id);
+    const currentKind =
+      (detail?.lead as { next_followup_kind?: string | null } | undefined)
+        ?.next_followup_kind ?? null;
+
+    if (currentKind === "post_call") {
+      const threeDaysOut = new Date(Date.now() + 72 * 60 * 60 * 1000);
+      threeDaysOut.setHours(9, 0, 0, 0);
+      patch.next_followup_at = threeDaysOut.toISOString();
+      patch.next_followup_note = "Check in 3 days after the Strategy Call";
+      patch.next_followup_kind = "post_call_check_in";
+    } else {
+      patch.next_followup_at = null;
+      patch.next_followup_note = null;
+      patch.next_followup_kind = null;
+    }
   }
 
   const result = await updateLeadPipeline(id, patch);

@@ -5,7 +5,7 @@ import type { LeadDetail } from "@/lib/admin/crm-queries";
 import { formatFollowup } from "@/lib/admin/format-booking";
 import {
   FOLLOWUP_KIND_CONFIG,
-  FOLLOWUP_KINDS,
+  MANUAL_FOLLOWUP_KINDS,
   type FollowupKind,
   defaultFollowupDateTimeLocal,
   followupKindTone,
@@ -91,6 +91,22 @@ export function LeadProfileNotes({
     });
   }
 
+  async function markDone() {
+    if (debounce.current) clearTimeout(debounce.current);
+    const wasPostCall = followupKind === "post_call";
+    setFollowupKind(wasPostCall ? "post_call_check_in" : null);
+    if (wasPostCall) {
+      const next = defaultFollowupDateTimeLocal(72);
+      setFollowupAt(next);
+      setFollowupNote("Check in 3 days after the Strategy Call");
+    } else {
+      setFollowupAt("");
+      setFollowupNote("");
+    }
+    const ok = await onPatch({ complete_followup: true });
+    if (ok) setSavedAt(new Date().toLocaleTimeString());
+  }
+
   const followupPreview = formatFollowup(l.next_followup_at);
 
   const followupTone =
@@ -139,11 +155,11 @@ export function LeadProfileNotes({
           ) : null}
         </div>
 
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <span className="text-[11px] uppercase tracking-wide text-muted-foreground">
             Mark for:
           </span>
-          {FOLLOWUP_KINDS.map((kind) => {
+          {MANUAL_FOLLOWUP_KINDS.map((kind) => {
             const cfg = FOLLOWUP_KIND_CONFIG[kind];
             const active = followupKind === kind;
             return (
@@ -162,6 +178,21 @@ export function LeadProfileNotes({
               </button>
             );
           })}
+          {followupKind ? (
+            <button
+              type="button"
+              onClick={markDone}
+              disabled={saving}
+              className="ml-auto rounded-full border border-emerald-300 bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-900 transition hover:bg-emerald-100"
+              title={
+                followupKind === "post_call"
+                  ? "Sent the email \u2014 schedule the 3-day check-in"
+                  : "Mark this task done and clear the follow-up"
+              }
+            >
+              {followupKind === "post_call" ? "Email sent \u2192 check-in" : "Mark done"}
+            </button>
+          ) : null}
         </div>
 
         <div className="grid gap-2 sm:grid-cols-[200px_1fr]">

@@ -8,7 +8,13 @@
  * edit both before saving.
  */
 
-export const FOLLOWUP_KINDS = ["no_show_reschedule", "post_call", "general"] as const;
+export const FOLLOWUP_KINDS = [
+  "mark_attendance",
+  "no_show_reschedule",
+  "post_call",
+  "post_call_check_in",
+  "general"
+] as const;
 
 export type FollowupKind = (typeof FOLLOWUP_KINDS)[number];
 
@@ -21,31 +27,60 @@ type KindConfig = {
   defaultOffsetHours: number;
   /** Starter note text the quick-preset button drops into next_followup_note. */
   defaultNote: string;
+  /**
+   * True when this kind is created automatically by DB triggers or the
+   * follow-up state machine. Hidden from the manual preset buttons because
+   * the user shouldn't pick them directly — the system does.
+   */
+  auto: boolean;
 };
 
 export const FOLLOWUP_KIND_CONFIG: Record<FollowupKind, KindConfig> = {
+  mark_attendance: {
+    label: "Mark attendance",
+    shortLabel: "Mark attendance",
+    tone: "bg-sky-100 text-sky-900",
+    defaultOffsetHours: 0,
+    defaultNote: "Mark Strategy Call attended or no-show",
+    auto: true
+  },
   no_show_reschedule: {
     label: "No-show reschedule",
     shortLabel: "Reschedule",
     tone: "bg-amber-100 text-amber-900",
     defaultOffsetHours: 18,
-    defaultNote: "Reach out re: rescheduling the Strategy Call"
+    defaultNote: "Reach out re: rescheduling the Strategy Call",
+    auto: false
   },
   post_call: {
-    label: "Post-call follow-up",
-    shortLabel: "Post-call",
+    label: "Send post-call email",
+    shortLabel: "Post-call email",
     tone: "bg-violet-100 text-violet-900",
-    defaultOffsetHours: 48,
-    defaultNote: "Check in after the Strategy Call"
+    defaultOffsetHours: 0,
+    defaultNote: "Send post-call email",
+    auto: false
+  },
+  post_call_check_in: {
+    label: "Post-call check-in",
+    shortLabel: "Check-in",
+    tone: "bg-fuchsia-100 text-fuchsia-900",
+    defaultOffsetHours: 72,
+    defaultNote: "Check in 3 days after the Strategy Call",
+    auto: true
   },
   general: {
     label: "General follow-up",
     shortLabel: "Follow-up",
     tone: "bg-slate-100 text-slate-800",
     defaultOffsetHours: 24,
-    defaultNote: ""
+    defaultNote: "",
+    auto: false
   }
 };
+
+export const MANUAL_FOLLOWUP_KINDS = FOLLOWUP_KINDS.filter(
+  (k) => !FOLLOWUP_KIND_CONFIG[k].auto
+);
 
 export function isFollowupKind(value: unknown): value is FollowupKind {
   return typeof value === "string" && (FOLLOWUP_KINDS as readonly string[]).includes(value);
