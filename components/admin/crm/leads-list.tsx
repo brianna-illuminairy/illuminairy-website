@@ -4,6 +4,11 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import type { CrmLeadRow } from "@/lib/admin/crm-queries";
 import { formatBookingDateTime, formatFollowup } from "@/lib/admin/format-booking";
+import {
+  FOLLOWUP_KIND_CONFIG,
+  followupKindTone,
+  isFollowupKind
+} from "@/lib/admin/followup-kinds";
 import { useWallClock } from "@/lib/admin/use-wall-clock";
 import { StageBadge } from "./stage-badge";
 
@@ -258,9 +263,16 @@ function LeadRow({ lead }: { lead: CrmLeadRow }) {
       </td>
       <td className={`px-4 py-3 text-xs ${followupClass}`}>
         {followup ? (
-          <span className="block">
-            {followup.relative}
+          <span className="block space-y-1">
+            <span className="block">{followup.relative}</span>
             <span className="block text-[10px] opacity-70">{followup.absolute}</span>
+            {isFollowupKind(lead.nextFollowupKind) ? (
+              <span
+                className={`inline-flex items-center rounded-full px-1.5 py-0.5 text-[9px] font-medium ${followupKindTone(lead.nextFollowupKind)}`}
+              >
+                {FOLLOWUP_KIND_CONFIG[lead.nextFollowupKind].shortLabel}
+              </span>
+            ) : null}
           </span>
         ) : (
           <span className="text-muted-foreground">—</span>

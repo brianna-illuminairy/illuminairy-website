@@ -16,6 +16,7 @@ export type CrmLeadRow = {
   createdAt: string;
   nextFollowupAt: string | null;
   nextFollowupNote: string | null;
+  nextFollowupKind: string | null;
   lastActivityAt: string | null;
   convertedClientId: string | null;
   convertedAt: string | null;
@@ -92,7 +93,7 @@ export async function listCrmLeads(limit = 200): Promise<CrmLeadRow[]> {
   const { data } = await supabase
     .from("leads")
     .select(
-      "id, parent_email, parent_first, parent_last, student_first, stage, funnel, utm_campaign, booked_call_at, attended_at, created_at, next_followup_at, next_followup_note, last_activity_at, converted_client_id, converted_at, sales_notes"
+      "id, parent_email, parent_first, parent_last, student_first, stage, funnel, utm_campaign, booked_call_at, attended_at, created_at, next_followup_at, next_followup_note, next_followup_kind, last_activity_at, converted_client_id, converted_at, sales_notes"
     )
     .order("created_at", { ascending: false })
     .limit(limit);
@@ -113,6 +114,7 @@ export async function listCrmLeads(limit = 200): Promise<CrmLeadRow[]> {
       createdAt: l.created_at,
       nextFollowupAt: l.next_followup_at ?? null,
       nextFollowupNote: l.next_followup_note ?? null,
+      nextFollowupKind: l.next_followup_kind ?? null,
       lastActivityAt: l.last_activity_at ?? null,
       convertedClientId: l.converted_client_id ?? null,
       convertedAt: l.converted_at ?? null,
@@ -235,6 +237,7 @@ export type LeadFollowupRow = {
   stage: string;
   nextFollowupAt: string;
   nextFollowupNote: string | null;
+  nextFollowupKind: string | null;
 };
 
 export async function listLeadsDueToday(): Promise<LeadFollowupRow[]> {
@@ -248,7 +251,7 @@ export async function listLeadsDueToday(): Promise<LeadFollowupRow[]> {
   const { data } = await supabase
     .from("leads")
     .select(
-      "id, parent_email, parent_first, parent_last, student_first, stage, next_followup_at, next_followup_note"
+      "id, parent_email, parent_first, parent_last, student_first, stage, next_followup_at, next_followup_note, next_followup_kind"
     )
     .not("next_followup_at", "is", null)
     .lte("next_followup_at", endOfDay.toISOString())
@@ -265,7 +268,8 @@ export async function listLeadsDueToday(): Promise<LeadFollowupRow[]> {
       studentFirst: l.student_first,
       stage: l.stage,
       nextFollowupAt: l.next_followup_at,
-      nextFollowupNote: l.next_followup_note
+      nextFollowupNote: l.next_followup_note,
+      nextFollowupKind: l.next_followup_kind ?? null
     }));
 }
 

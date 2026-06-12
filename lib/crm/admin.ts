@@ -10,6 +10,7 @@ export async function updateLeadPipeline(
     sales_notes?: string | null;
     next_followup_at?: string | null;
     next_followup_note?: string | null;
+    next_followup_kind?: string | null;
   }
 ) {
   const supabase = getSupabaseAdmin();

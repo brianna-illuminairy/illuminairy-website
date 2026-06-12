@@ -3,6 +3,14 @@
 import { useRef, useState } from "react";
 import type { LeadDetail } from "@/lib/admin/crm-queries";
 import { formatFollowup } from "@/lib/admin/format-booking";
+import {
+  FOLLOWUP_KIND_CONFIG,
+  FOLLOWUP_KINDS,
+  type FollowupKind,
+  defaultFollowupDateTimeLocal,
+  followupKindTone,
+  isFollowupKind
+} from "@/lib/admin/followup-kinds";
 
 function toDatetimeLocal(iso: string | null): string {
   if (!iso) return "";
@@ -34,6 +42,7 @@ export function LeadProfileNotes({
     sales_notes: string | null;
     next_followup_at: string | null;
     next_followup_note: string | null;
+    next_followup_kind: string | null;
   };
 
   const [notes, setNotes] = useState(l.sales_notes ?? "");
@@ -41,6 +50,9 @@ export function LeadProfileNotes({
     toDatetimeLocal(l.next_followup_at)
   );
   const [followupNote, setFollowupNote] = useState(l.next_followup_note ?? "");
+  const [followupKind, setFollowupKind] = useState<FollowupKind | null>(
+    isFollowupKind(l.next_followup_kind) ? l.next_followup_kind : null
+  );
   const [savedAt, setSavedAt] = useState<string | null>(null);
   const debounce = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -50,6 +62,33 @@ export function LeadProfileNotes({
       const ok = await onPatch(body);
       if (ok) setSavedAt(new Date().toLocaleTimeString());
     }, 600);
+  }
+
+  async function applyPreset(kind: FollowupKind) {
+    const cfg = FOLLOWUP_KIND_CONFIG[kind];
+    const datetimeLocal = defaultFollowupDateTimeLocal(cfg.defaultOffsetHours);
+    const isoUtc = fromDatetimeLocal(datetimeLocal);
+    setFollowupKind(kind);
+    setFollowupAt(datetimeLocal);
+    setFollowupNote(cfg.defaultNote);
+    if (debounce.current) clearTimeout(debounce.current);
+    const ok = await onPatch({
+      next_followup_at: isoUtc,
+      next_followup_note: cfg.defaultNote || null,
+      next_followup_kind: kind
+    });
+    if (ok) setSavedAt(new Date().toLocaleTimeString());
+  }
+
+  function clearFollowup() {
+    setFollowupAt("");
+    setFollowupNote("");
+    setFollowupKind(null);
+    scheduleSave({
+      next_followup_at: null,
+      next_followup_note: null,
+      next_followup_kind: null
+    });
   }
 
   const followupPreview = formatFollowup(l.next_followup_at);
@@ -86,10 +125,45 @@ export function LeadProfileNotes({
         />
       </div>
 
-      <div className="space-y-2">
-        <h2 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-          Next followup
-        </h2>
+      <div className="space-y-3">
+        <div className="flex items-center justify-between gap-2">
+          <h2 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+            Next followup
+          </h2>
+          {followupKind ? (
+            <span
+              className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium ${followupKindTone(followupKind)}`}
+            >
+              {FOLLOWUP_KIND_CONFIG[followupKind].label}
+            </span>
+          ) : null}
+        </div>
+
+        <div className="flex flex-wrap gap-2">
+          <span className="text-[11px] uppercase tracking-wide text-muted-foreground">
+            Mark for:
+          </span>
+          {FOLLOWUP_KINDS.map((kind) => {
+            const cfg = FOLLOWUP_KIND_CONFIG[kind];
+            const active = followupKind === kind;
+            return (
+              <button
+                key={kind}
+                type="button"
+                onClick={() => applyPreset(kind)}
+                disabled={saving}
+                className={`rounded-full border px-2.5 py-1 text-xs transition ${
+                  active
+                    ? `border-transparent ${cfg.tone}`
+                    : "border-border bg-background hover:border-foreground/40"
+                }`}
+              >
+                {cfg.label}
+              </button>
+            );
+          })}
+        </div>
+
         <div className="grid gap-2 sm:grid-cols-[200px_1fr]">
           <input
             type="datetime-local"
@@ -98,9 +172,14 @@ export function LeadProfileNotes({
             disabled={saving}
             onChange={(e) => {
               setFollowupAt(e.target.value);
-              scheduleSave({
+              const next: Record<string, unknown> = {
                 next_followup_at: fromDatetimeLocal(e.target.value)
-              });
+              };
+              if (e.target.value && !followupKind) {
+                setFollowupKind("general");
+                next.next_followup_kind = "general";
+              }
+              scheduleSave(next);
             }}
           />
           <input
@@ -115,6 +194,7 @@ export function LeadProfileNotes({
             }}
           />
         </div>
+
         {followupPreview ? (
           <p className={`text-xs ${followupTone}`}>
             Due {followupPreview.relative} · {followupPreview.absolute}
@@ -126,11 +206,7 @@ export function LeadProfileNotes({
           <button
             type="button"
             className="text-xs text-muted-foreground underline"
-            onClick={() => {
-              setFollowupAt("");
-              setFollowupNote("");
-              scheduleSave({ next_followup_at: null, next_followup_note: null });
-            }}
+            onClick={clearFollowup}
           >
             Clear followup
           </button>

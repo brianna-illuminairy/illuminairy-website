@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { getCrmLeadDetail } from "@/lib/admin/crm-queries";
+import { isFollowupKind } from "@/lib/admin/followup-kinds";
 import { updateLeadPipeline } from "@/lib/crm/admin";
 
 export async function GET(
@@ -35,6 +36,7 @@ export async function PATCH(
     sales_notes?: string | null;
     next_followup_at?: string | null;
     next_followup_note?: string | null;
+    next_followup_kind?: string | null;
     attended?: boolean;
   };
 
@@ -59,6 +61,15 @@ export async function PATCH(
   }
   if (body.next_followup_note !== undefined) {
     patch.next_followup_note = body.next_followup_note;
+  }
+  if (body.next_followup_kind !== undefined) {
+    if (body.next_followup_kind !== null && !isFollowupKind(body.next_followup_kind)) {
+      return NextResponse.json(
+        { error: "Invalid next_followup_kind." },
+        { status: 400 }
+      );
+    }
+    patch.next_followup_kind = body.next_followup_kind;
   }
   if (body.attended === true) {
     patch.attended_at = new Date().toISOString();

@@ -4,6 +4,11 @@ import Link from "next/link";
 import { useMemo } from "react";
 import type { CrmLeadRow } from "@/lib/admin/crm-queries";
 import { formatFollowup } from "@/lib/admin/format-booking";
+import {
+  FOLLOWUP_KIND_CONFIG,
+  followupKindTone,
+  isFollowupKind
+} from "@/lib/admin/followup-kinds";
 import { useWallClock } from "@/lib/admin/use-wall-clock";
 import { StageBadge } from "./stage-badge";
 
@@ -107,10 +112,19 @@ function DueRow({ lead, bucket }: { lead: CrmLeadRow; bucket: Bucket }) {
         className={`flex flex-wrap items-center justify-between gap-3 rounded-xl border px-4 py-3 text-sm hover:border-foreground/30 ${tone}`}
       >
         <div className="flex-1 min-w-0">
-          <p className="font-medium">
-            {[lead.parentFirst, lead.parentLast].filter(Boolean).join(" ") ||
-              lead.parentEmail}
-          </p>
+          <div className="flex flex-wrap items-center gap-2">
+            <p className="font-medium">
+              {[lead.parentFirst, lead.parentLast].filter(Boolean).join(" ") ||
+                lead.parentEmail}
+            </p>
+            {isFollowupKind(lead.nextFollowupKind) ? (
+              <span
+                className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium ${followupKindTone(lead.nextFollowupKind)}`}
+              >
+                {FOLLOWUP_KIND_CONFIG[lead.nextFollowupKind].shortLabel}
+              </span>
+            ) : null}
+          </div>
           <p className="text-xs text-muted-foreground">
             {lead.studentFirst ? `${lead.studentFirst} · ` : ""}
             {lead.parentEmail}
