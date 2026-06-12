@@ -1,8 +1,35 @@
 # Active context
 
-*Last updated: 2026-06-11*
+*Last updated: 2026-06-12*
 
-## CRM v1 just shipped (2026-06-11 PM)
+## CRM v4 just shipped (2026-06-12)
+
+Full call-history + lead-intelligence stack. All 11 phases from `.cursor/plans/crm-v4-call-history_*.plan.md` implemented. Live verification pending — run `npm run crm:smoke` first, then follow [`docs/crm-v4-smoke-test.md`](../docs/crm-v4-smoke-test.md) against a real Strategy Call before declaring it production-trusted.
+
+What's live:
+
+- **Phase 0–1** OAuth + heartbeat. Google Meet/Calendar/Gmail/Drive scopes, Calendly + Gemini probes. Encrypted refresh tokens (`INTEGRATION_TOKEN_ENC_KEY`). `/admin/integrations` shows real status.
+- **Phase 2** Meet attendance cron (`/api/cron/meet-attendance`, every 15 min). Tiered identity match → call_status of attended/no_show/confirm. 10-min delayed Calendly no-show POST with owner override.
+- **Phase 3** Gmail in+out incremental sync via `history.list`. Bounce/unsub → `suppression_list`. `awaiting_reply_since` SLA chip on the leads list.
+- **Phase 4** Calendly webhooks now handle no_show.created/deleted + reschedule. Calls tab shows Meet links, scheduled times, override controls.
+- **Phase 5** Lead profile tabs: Calls, Emails, Tasks, Score, Audit, Brief, Script. Today's Calls panel on `/admin/crm`. Heat chip per lead. Integrations pill.
+- **Phase 6** Gemini extract cron: summary + concerns + buying signals + decision + per-call score + auto-tasks + Gmail draft. Task reconciler auto-completes follow-ups when the email is sent.
+- **Phase 7** Pre-call brief cron (`/api/cron/pre-call-brief`, every 5 min, T-3h window) writes markdown to `pre_call_briefs`. Personalized sales script generation on demand.
+- **Phase 8** Heartbeat cron probes all 6 providers every 6 h. `admin_alerts` with `notify=false` on regression (no email noise).
+- **Phase 9** `/admin/compliance` — quiet hours, OOO windows, suppression list CRUD. `canAutomateSend()` consulted by Phase 6 draft creation.
+- **Phase 10** `identity_links` populated on intake + quiz submit. `/api/cron/identity-reconcile` (every 6 h) detects duplicate leads → `crm_audit_log: duplicate_detected`. Manual `/api/admin/leads/[id]/merge-from` for owner-driven merges. Server-side GA4 milestones (`lead_call_booked`, `lead_call_attended`, `lead_call_no_show`, `lead_qualified`, `lead_lost`, `lead_won`) fire when GA4_MEASUREMENT_ID + GA4_API_SECRET are set.
+- **Phase 11** Smoke probe `npm run crm:smoke` + live runbook `docs/crm-v4-smoke-test.md`.
+
+Cron is driven by `.github/workflows/crm-cron.yml` using `CRON_SHARED_SECRET`. Idempotent via `dedupeKey` on `admin_alerts`. Token disconnect alerts skip notify, just turn the chip red.
+
+**Open follow-ups for the owner:**
+
+1. Run `npm run crm:smoke` against prod once envs are deployed.
+2. Walk `docs/crm-v4-smoke-test.md` with a real test Strategy Call.
+3. Apply migration `supabase/migrations/20260612130000_crm_v4_call_intelligence.sql` if not yet on prod.
+4. Add `GA4_MEASUREMENT_ID` and `GA4_API_SECRET` to Vercel if you want server-side conversion attribution.
+
+## CRM v1 (2026-06-11 PM)
 
 The `/admin/crm` rework from the plan in `.cursor/plans/crm-v1-pipeline_4cf61e79.plan.md` is implemented and ready to deploy. Sumary:
 

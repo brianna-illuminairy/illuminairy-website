@@ -2,7 +2,9 @@ import { createHmac, timingSafeEqual } from "crypto";
 import { NextResponse } from "next/server";
 import {
   handleCalendlyInviteeCanceled,
-  handleCalendlyInviteeCreated
+  handleCalendlyInviteeCreated,
+  handleCalendlyInviteeNoShowCreated,
+  handleCalendlyInviteeNoShowDeleted
 } from "@/lib/crm/calendly-webhook";
 
 function verifyCalendlySignature(rawBody: string, signatureHeader: string | null) {
@@ -58,6 +60,10 @@ export async function POST(request: Request) {
     await handleCalendlyInviteeCreated(body);
   } else if (event === "invitee.canceled") {
     await handleCalendlyInviteeCanceled(body);
+  } else if (event === "invitee_no_show.created") {
+    await handleCalendlyInviteeNoShowCreated(body);
+  } else if (event === "invitee_no_show.deleted") {
+    await handleCalendlyInviteeNoShowDeleted(body);
   }
 
   return NextResponse.json({ received: true });

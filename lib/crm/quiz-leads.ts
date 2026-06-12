@@ -15,6 +15,7 @@ import {
 } from "@/lib/quiz-funnel/gains";
 import { appendTouchEvent, getFirstTouchForVisitor, linkVisitorTouches } from "@/lib/crm/touch";
 import { getVisitorById } from "@/lib/crm/visitors";
+import { recordIdentityLink } from "@/lib/crm/identity-stitching";
 
 export type QuizAnswersPayload = QuizAnswersSnapshotInput;
 
@@ -227,6 +228,18 @@ export async function upsertLeadFromQuizFunnel(
 
   if (options.visitorId) {
     await linkVisitorTouches(options.visitorId, leadId);
+  }
+
+  try {
+    await recordIdentityLink({
+      leadId,
+      visitorId: options.visitorId ?? null,
+      email: email,
+      phone: answers.parentPhone?.trim() ?? null,
+      source: "quiz_submit"
+    });
+  } catch (e) {
+    console.error("identity-link:quiz", e);
   }
 
   await appendTouchEvent({

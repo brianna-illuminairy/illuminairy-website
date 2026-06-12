@@ -21,6 +21,10 @@ export type CrmLeadRow = {
   convertedClientId: string | null;
   convertedAt: string | null;
   salesNotes: string | null;
+  leadScoreCurrent: number | null;
+  awaitingReplySince: string | null;
+  urgencyLevel: "low" | "medium" | "high" | "critical" | null;
+  urgencyReason: string | null;
 };
 
 export type CrmPipelineStats = {
@@ -93,7 +97,7 @@ export async function listCrmLeads(limit = 200): Promise<CrmLeadRow[]> {
   const { data } = await supabase
     .from("leads")
     .select(
-      "id, parent_email, parent_first, parent_last, student_first, stage, funnel, utm_campaign, booked_call_at, attended_at, created_at, next_followup_at, next_followup_note, next_followup_kind, last_activity_at, converted_client_id, converted_at, sales_notes"
+      "id, parent_email, parent_first, parent_last, student_first, stage, funnel, utm_campaign, booked_call_at, attended_at, created_at, next_followup_at, next_followup_note, next_followup_kind, last_activity_at, converted_client_id, converted_at, sales_notes, lead_score_current, awaiting_reply_since, urgency_level, urgency_reason"
     )
     .order("created_at", { ascending: false })
     .limit(limit);
@@ -118,6 +122,12 @@ export async function listCrmLeads(limit = 200): Promise<CrmLeadRow[]> {
       lastActivityAt: l.last_activity_at ?? null,
       convertedClientId: l.converted_client_id ?? null,
       convertedAt: l.converted_at ?? null,
+      leadScoreCurrent: (l as { lead_score_current?: number | null }).lead_score_current ?? null,
+      awaitingReplySince:
+        (l as { awaiting_reply_since?: string | null }).awaiting_reply_since ?? null,
+      urgencyLevel:
+        ((l as { urgency_level?: CrmLeadRow["urgencyLevel"] }).urgency_level ?? null) || null,
+      urgencyReason: (l as { urgency_reason?: string | null }).urgency_reason ?? null,
       salesNotes: l.sales_notes ?? null
     }));
 }

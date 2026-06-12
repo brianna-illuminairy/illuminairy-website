@@ -8,14 +8,39 @@ import { LeadProfileFollowups } from "./lead-profile-followups";
 import { LeadProfileSalesNotes } from "./lead-profile-sales-notes";
 import { LeadProfileQuizAnswers } from "./lead-profile-quiz-answers";
 import { LeadProfileCalls } from "./lead-profile-calls";
+import { LeadProfileEmails } from "./lead-profile-emails";
+import { LeadProfileTasks } from "./lead-profile-tasks";
+import { LeadProfileAudit } from "./lead-profile-audit";
+import { LeadProfileScore } from "./lead-profile-score";
+import { LeadProfileBrief } from "./lead-profile-brief";
+import { LeadProfileScript } from "./lead-profile-script";
+import { LeadProfileTags } from "./lead-profile-tags";
+import { IntegrationsPill } from "./integrations-pill";
 import { ActivityTimeline } from "./activity-timeline";
+import type { UrgencyLevel } from "@/lib/admin/lead-tag-suggestions";
 
-type Tab = "overview" | "notes" | "calls" | "activity";
+type Tab =
+  | "overview"
+  | "notes"
+  | "brief"
+  | "script"
+  | "calls"
+  | "emails"
+  | "tasks"
+  | "score"
+  | "audit"
+  | "activity";
 
 const TABS: Array<{ id: Tab; label: string }> = [
   { id: "overview", label: "Overview" },
+  { id: "brief", label: "Brief" },
+  { id: "script", label: "Script" },
   { id: "notes", label: "Notes" },
   { id: "calls", label: "Calls" },
+  { id: "emails", label: "Emails" },
+  { id: "tasks", label: "Tasks" },
+  { id: "score", label: "Score" },
+  { id: "audit", label: "Audit" },
   { id: "activity", label: "Activity" }
 ];
 
@@ -121,6 +146,17 @@ export function LeadProfile({
         <div className="grid gap-6 lg:grid-cols-3">
           <div className="min-w-0 space-y-6 lg:col-span-2">
             <LeadProfileOverview detail={detail} />
+            <LeadProfileTags
+              leadId={leadId}
+              initialUrgencyLevel={
+                (detail.lead as { urgency_level?: UrgencyLevel | null })
+                  .urgency_level ?? null
+              }
+              initialUrgencyReason={
+                (detail.lead as { urgency_reason?: string | null })
+                  .urgency_reason ?? null
+              }
+            />
             <LeadProfileQuizAnswers answers={detail.quizAnswers} />
           </div>
           <div className="min-w-0 space-y-6">
@@ -129,6 +165,7 @@ export function LeadProfile({
               saving={saving}
               onPatch={patchLead}
             />
+            <IntegrationsPill />
           </div>
         </div>
       ) : null}
@@ -144,6 +181,33 @@ export function LeadProfile({
       ) : null}
 
       {tab === "calls" ? <LeadProfileCalls leadId={leadId} /> : null}
+
+      {tab === "emails" ? (
+        <LeadProfileEmails
+          leadId={leadId}
+          awaitingReplySince={
+            (detail.lead as { awaiting_reply_since?: string | null }).awaiting_reply_since ??
+            null
+          }
+        />
+      ) : null}
+
+      {tab === "brief" ? <LeadProfileBrief leadId={leadId} /> : null}
+
+      {tab === "script" ? <LeadProfileScript leadId={leadId} /> : null}
+
+      {tab === "tasks" ? <LeadProfileTasks leadId={leadId} /> : null}
+
+      {tab === "score" ? (
+        <LeadProfileScore
+          leadId={leadId}
+          currentScore={
+            (detail.lead as { lead_score_current?: number | null }).lead_score_current ?? null
+          }
+        />
+      ) : null}
+
+      {tab === "audit" ? <LeadProfileAudit leadId={leadId} /> : null}
 
       {tab === "activity" ? (
         <ActivityTimeline

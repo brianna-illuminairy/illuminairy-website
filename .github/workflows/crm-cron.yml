@@ -1,0 +1,102 @@
+# CRM v4 cron driver. We don't have Vercel Pro, so GitHub Actions hits
+# /api/cron/* routes on production. Each route validates Authorization
+# against CRON_SHARED_SECRET (see lib/crm/cron-auth.ts).
+#
+# Schedules (UTC):
+#   - meet-attendance, gmail-sync, gemini-extract:  every 15 minutes
+#   - task-reconciler:                              every 30 minutes
+#   - pre-call-brief:                               every 5 minutes
+#   - calendly-history, heartbeat-check:            every 6 hours
+#   - lead-score-decay, identity-reconcile:        daily at 13:00 UTC (9am ET)
+#
+# Repo secrets required:
+#   - CRON_SHARED_SECRET    Bearer token sent in Authorization header
+#   - ILLUMINAIRY_BASE_URL  e.g. https://www.illuminairy.com
+#
+# Manual trigger: workflow_dispatch with optional `route` input to fire just
+# one route.
+
+name: crm-cron
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"   # pre-call-brief
+    - cron: "*/15 * * * *"  # meet-attendance + gmail-sync + gemini-extract
+    - cron: "*/30 * * * *"  # task-reconciler
+    - cron: "0 */6 * * *"   # calendly-history + heartbeat-check
+    - cron: "0 13 * * *"    # daily 9am ET: lead-score-decay + identity-reconcile
+  workflow_dispatch:
+    inputs:
+      route:
+        description: "Optional: single cron route name (e.g. meet-attendance) to fire on demand."
+        required: false
+        default: ""
+
+permissions:
+  contents: read
+
+jobs:
+  fire-cron:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Resolve routes for this trigger
+        id: routes
+        env:
+          CRON: ${{ github.event.schedule }}
+          MANUAL_ROUTE: ${{ inputs.route }}
+        run: |
+          set -e
+          declare -a routes
+          if [ -n "$MANUAL_ROUTE" ]; then
+            routes=("$MANUAL_ROUTE")
+          else
+            case "$CRON" in
+              "*/5 * * * *")
+                routes=("pre-call-brief") ;;
+              "*/15 * * * *")
+                routes=("meet-attendance" "gmail-sync" "gemini-extract") ;;
+              "*/30 * * * *")
+                routes=("task-reconciler") ;;
+              "0 */6 * * *")
+                routes=("calendly-history" "heartbeat-check") ;;
+              "0 13 * * *")
+                routes=("lead-score-decay" "identity-reconcile") ;;
+              *)
+                echo "Unknown schedule: $CRON"
+                exit 0 ;;
+            esac
+          fi
+          printf '%s\n' "${routes[@]}"
+          echo "routes=${routes[*]}" >> "$GITHUB_OUTPUT"
+
+      - name: Fire each route
+        env:
+          ROUTES: ${{ steps.routes.outputs.routes }}
+          BASE: ${{ secrets.ILLUMINAIRY_BASE_URL }}
+          SECRET: ${{ secrets.CRON_SHARED_SECRET }}
+        run: |
+          set -euo pipefail
+          if [ -z "$BASE" ] || [ -z "$SECRET" ]; then
+            echo "Missing ILLUMINAIRY_BASE_URL or CRON_SHARED_SECRET repo secret."
+            exit 1
+          fi
+          base="${BASE%/}"
+          fail=0
+          for route in $ROUTES; do
+            url="$base/api/cron/$route"
+            echo "POST $url"
+            code=$(curl -s -o /tmp/body -w "%{http_code}" -X POST \
+              -H "Authorization: Bearer $SECRET" \
+              -H "Content-Type: application/json" \
+              "$url" || echo "000")
+            echo "  HTTP $code"
+            head -c 800 /tmp/body || true
+            echo
+            if [ "$code" != "200" ]; then
+              fail=1
+            fi
+          done
+          if [ $fail -ne 0 ]; then
+            echo "::warning::At least one cron route returned non-200; check logs."
+            exit 1
+          fi

@@ -11,7 +11,38 @@ export type LeadCall = {
   recording_url: string | null;
   created_at: string;
   updated_at: string;
+  // CRM v4 extensions
+  call_status: string | null;
+  scheduled_start: string | null;
+  scheduled_end: string | null;
+  meet_link: string | null;
+  meet_conference_id: string | null;
+  attendance_source: string | null;
+  attendance_decided_at: string | null;
+  attendance_decided_by: string | null;
+  joined_at: string | null;
+  left_at: string | null;
+  participants: unknown[] | null;
+  identity_match: string | null;
+  confidence: number | null;
+  calendly_no_show_uri: string | null;
+  calendly_no_show_pending_until: string | null;
+  transcript_extracted_at: string | null;
+  notes_doc_url: string | null;
+  transcript_doc_url: string | null;
+  next_step_decision: string | null;
+  call_score: Record<string, unknown> | null;
+  gmail_draft_id: string | null;
+  no_show_risk: boolean | null;
+  no_show_risk_reason: string | null;
+  no_show_risk_set_at: string | null;
+  no_show_risk_source: string | null;
+  confirmed_at: string | null;
+  confirmation_source: string | null;
 };
+
+const LEAD_CALL_SELECT =
+  "id, lead_id, client_id, call_at, duration_minutes, summary, transcript, recording_url, created_at, updated_at, call_status, scheduled_start, scheduled_end, meet_link, meet_conference_id, attendance_source, attendance_decided_at, attendance_decided_by, joined_at, left_at, participants, identity_match, confidence, calendly_no_show_uri, calendly_no_show_pending_until, transcript_extracted_at, notes_doc_url, transcript_doc_url, next_step_decision, call_score, gmail_draft_id, no_show_risk, no_show_risk_reason, no_show_risk_set_at, no_show_risk_source, confirmed_at, confirmation_source";
 
 export type LeadCallInput = {
   lead_id?: string | null;
@@ -32,9 +63,7 @@ export async function listLeadCalls(opts: {
 
   let q = supabase
     .from("lead_calls")
-    .select(
-      "id, lead_id, client_id, call_at, duration_minutes, summary, transcript, recording_url, created_at, updated_at"
-    )
+    .select(LEAD_CALL_SELECT)
     .order("call_at", { ascending: false })
     .limit(200);
 
@@ -75,9 +104,7 @@ export async function createLeadCall(input: LeadCallInput): Promise<
   const { data, error } = await supabase
     .from("lead_calls")
     .insert(insertRow)
-    .select(
-      "id, lead_id, client_id, call_at, duration_minutes, summary, transcript, recording_url, created_at, updated_at"
-    )
+    .select(LEAD_CALL_SELECT)
     .single();
 
   if (error || !data) {
@@ -106,9 +133,7 @@ export async function updateLeadCall(
     .from("lead_calls")
     .update(patch)
     .eq("id", id)
-    .select(
-      "id, lead_id, client_id, call_at, duration_minutes, summary, transcript, recording_url, created_at, updated_at"
-    )
+    .select(LEAD_CALL_SELECT)
     .single();
 
   if (error || !data) {

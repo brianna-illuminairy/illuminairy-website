@@ -28,6 +28,11 @@ import {
 export const PUBLIC_SAT_STRATEGY_CALL_CALENDLY_URL =
   "https://calendly.com/satprep-illuminairy/sat-planning-session";
 
+/** SSOT — public Skill Diagnostic Calendly event (2 hr 14 min). Embedded on /enroll after payment. */
+export const PUBLIC_SKILL_DIAGNOSTIC_CALENDLY_URL =
+  process.env.NEXT_PUBLIC_SKILL_DIAGNOSTIC_CALENDLY_URL ||
+  "https://calendly.com/satprep-illuminairy/sat-diagnostic-proctored-full-length-adaptive-testing";
+
 export const site = {
   name: "Illuminairy",
   legalName: "Zytech Development LLC",

@@ -7,6 +7,7 @@ import { useWallClock } from "@/lib/admin/use-wall-clock";
 import { LeadsList } from "./crm/leads-list";
 import { LeadsPipeline } from "./crm/leads-pipeline";
 import { LeadsDueToday } from "./crm/leads-due-today";
+import { TodaysCallsPanel } from "./crm/todays-calls-panel";
 
 type Pipeline = {
   byStage: Record<string, number>;
@@ -118,6 +119,8 @@ export function CrmDashboard() {
           highlight={dueTodayCount > 0}
         />
       </section>
+
+      <TodaysCallsPanel />
 
       <div className="flex items-center gap-1 border-b border-border">
         {VIEWS.map((v) => (

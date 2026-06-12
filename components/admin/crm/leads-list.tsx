@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { CrmLeadRow } from "@/lib/admin/crm-queries";
 import { formatBookingDateTime, formatFollowup } from "@/lib/admin/format-booking";
 import {
@@ -10,6 +10,7 @@ import {
   isFollowupKind
 } from "@/lib/admin/followup-kinds";
 import { useWallClock } from "@/lib/admin/use-wall-clock";
+import { URGENCY_META, type UrgencyLevel } from "@/lib/admin/lead-tag-suggestions";
 import { StageBadge } from "./stage-badge";
 
 type SortKey =
@@ -181,12 +182,13 @@ export function LeadsList({ leads }: { leads: CrmLeadRow[] }) {
       </div>
 
       <div className="overflow-x-auto rounded-xl border border-border bg-surface">
-        <table className="w-full min-w-[820px] text-left text-sm">
+        <table className="w-full min-w-[880px] text-left text-sm">
           <thead className="bg-muted/40">
             <tr className="border-b border-border text-muted-foreground">
               <th className="px-4 py-2.5 font-medium">Parent</th>
               <th className="px-4 py-2.5 font-medium">Student</th>
               <th className="px-4 py-2.5 font-medium">Stage</th>
+              <th className="px-4 py-2.5 font-medium">Heat</th>
               <th className="px-4 py-2.5 font-medium">Booking</th>
               <th className="px-4 py-2.5 font-medium">Followup</th>
               <th className="px-4 py-2.5 font-medium">Source</th>
@@ -196,7 +198,7 @@ export function LeadsList({ leads }: { leads: CrmLeadRow[] }) {
           <tbody>
             {filtered.length === 0 ? (
               <tr>
-                <td colSpan={7} className="px-4 py-8 text-center text-muted-foreground">
+                <td colSpan={8} className="px-4 py-8 text-center text-muted-foreground">
                   {leads.length === 0
                     ? "No leads yet."
                     : "No leads match your filters."}
@@ -247,7 +249,16 @@ function LeadRow({ lead }: { lead: CrmLeadRow }) {
         <Link href={`/admin/crm/leads/${lead.id}`}>{lead.studentFirst ?? "—"}</Link>
       </td>
       <td className="px-4 py-3">
-        <StageBadge stage={lead.stage} />
+        <div className="flex flex-wrap items-center gap-1">
+          <StageBadge stage={lead.stage} />
+          {lead.urgencyLevel ? (
+            <UrgencyChip level={lead.urgencyLevel} reason={lead.urgencyReason} />
+          ) : null}
+        </div>
+        {lead.awaitingReplySince ? <AwaitingReplyChip since={lead.awaitingReplySince} /> : null}
+      </td>
+      <td className="px-4 py-3">
+        <HeatChip score={lead.leadScoreCurrent} />
       </td>
       <td className="px-4 py-3 text-xs">
         {booking ? (
@@ -294,5 +305,61 @@ function LeadRow({ lead }: { lead: CrmLeadRow }) {
         )}
       </td>
     </tr>
+  );
+}
+
+function HeatChip({ score }: { score: number | null }) {
+  if (score === null || score === undefined) {
+    return <span className="text-xs text-muted-foreground">—</span>;
+  }
+  const tone =
+    score >= 80
+      ? "bg-rose-200 text-rose-900"
+      : score >= 60
+        ? "bg-amber-200 text-amber-900"
+        : score >= 40
+          ? "bg-sky-200 text-sky-900"
+          : "bg-slate-200 text-slate-700";
+  return (
+    <span className={`inline-flex h-7 w-10 items-center justify-center rounded-md text-xs font-semibold tabular-nums ${tone}`}>
+      {score}
+    </span>
+  );
+}
+
+function UrgencyChip({
+  level,
+  reason
+}: {
+  level: UrgencyLevel;
+  reason: string | null;
+}) {
+  const meta = URGENCY_META[level];
+  return (
+    <span
+      title={reason ?? meta.description}
+      className={`rounded-full px-1.5 py-0.5 text-[9px] font-semibold uppercase ${meta.tone}`}
+    >
+      {meta.label}
+    </span>
+  );
+}
+
+function AwaitingReplyChip({ since }: { since: string }) {
+  const [now, setNow] = useState<number | null>(null);
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setNow(Date.now());
+    const t = setInterval(() => setNow(Date.now()), 60_000);
+    return () => clearInterval(t);
+  }, []);
+  if (now === null) return null;
+  const days = Math.max(0, Math.floor((now - new Date(since).getTime()) / 86_400_000));
+  const tone =
+    days >= 3 ? "bg-rose-100 text-rose-900" : days >= 1 ? "bg-amber-100 text-amber-900" : "bg-sky-100 text-sky-900";
+  return (
+    <span className={`mt-1 block w-fit rounded-full px-2 py-0.5 text-[10px] font-medium ${tone}`}>
+      Reply due {days === 0 ? "today" : `${days}d`}
+    </span>
   );
 }

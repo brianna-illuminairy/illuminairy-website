@@ -1,0 +1,61 @@
+---
+description: Surface the standard SaaS/DTC pattern up front so Brianna can decide to follow, adapt, or reject it
+alwaysApply: true
+---
+
+# SaaS / DTC pattern check
+
+**Before planning or executing, the order is:**
+
+1. **User-provided reference assets first.** If Brianna has shared HTML files, screenshots, Figma links, brand guides, design variants, attached files, or referenced anything in `~/Downloads/`, **read every one of them and treat them as the primary design / UX / copy input.** Do not override them with funnel parity, `/plan` shell defaults, generic SaaS patterns, or "I think this is what you meant." If she said "I liked the component one and the in-context one a lot," that means look at those files and pull from them.
+2. **Existing brand SSOT second.** `lib/site.ts`, `docs/brand-voice-and-positioning.md`, `docs/messaging-guide.md`, brand guide HTMLs in `~/Downloads/`.
+3. **Standard SaaS / DTC pattern third.** Name the canonical pattern (1 sentence) so Brianna can decide to follow, adapt, or reject. This is a *check-in*, not a mandate. Her call wins.
+
+If she has provided assets and you skipped reading them, you have already failed the task — re-read before proposing or coding.
+
+## How to surface this in chat
+
+1. Identify the surface (post-checkout, signup, onboarding, empty state, pricing, error, etc.).
+2. **List the reference assets she gave for this surface** (filenames + 1-line description of each). If none, say so.
+3. State the canonical pattern in one line ("Standard SaaS pattern here is X — overridable by your reference assets").
+4. Note any obvious tradeoff or where the assets and the pattern diverge.
+5. Ask which direction she wants OR proceed if she's already chosen.
+6. If you don't know the canonical pattern AND have no reference assets, say so and ask before guessing.
+
+## Default patterns (reference, not requirements)
+
+| Surface | Common pattern (consider, don't blindly copy) |
+|---|---|
+| Post-checkout / confirmation | Order summary up top, "what happens next" agenda, transactional email parity, dev-only `?preview=1` param so the page is testable without a charge (see `lib/enroll/enroll-preview.ts`) |
+| Signup / account creation | Email-first single screen → magic link or password, social auth optional |
+| Onboarding wizard | 3–5 steps, progress affordance, prefill everything possible, skip > block, sticky CTA on mobile |
+| Empty states | Illustration + value prop + primary CTA + optional "import / try sample" |
+| Error states | Plain language, what to do, contact path. No raw stack traces |
+| Loading | Skeletons over spinners, optimistic UI for known-safe writes |
+| Forms | Inline validation, label + hint, autocomplete + autofocus first invalid, `enterKeyHint` |
+| Pricing | 2–3 tiers, recommended badge, anchor on annual savings, FAQ + trust strip below |
+| Transactional emails | Plain-text-first, single primary action, support footer, brand wordmark |
+| Auth-gated routes | `not-found` for unauthed > "no access" leak |
+| Webhooks | Idempotent by event id, retry on 5xx only, signed payloads, dead-letter logging |
+| Feature flags / preview | Env-guarded (`VERCEL_ENV !== "production"`), shareable URL, no-op writes |
+| Analytics | Noun-verb event names, one source of truth in `lib/analytics-events.ts` |
+| Breakpoints | Design at 1280, validate at 390, fluid in between |
+| Accessibility | Semantic HTML, focus-visible, 4.5:1 contrast, keyboard reachable |
+
+## When to deviate
+
+- Brand instinct says no (Brianna's voice, Aurora aesthetic, anti-tutor-ad).
+- The pattern would over-engineer a small task.
+- A different pattern serves the user better in this specific funnel.
+- You've shipped this exact surface before and the pattern is wrong for it.
+
+Brand-level rules already locked elsewhere take precedence regardless: `messaging-guide.mdc`, `banned-copy-phrases.mdc`, `funnel-flow-canonical.mdc`, layout locks.
+
+## Self-check before claiming done
+
+1. Did I read every reference asset Brianna shared? (List them.)
+2. Did I name the standard pattern up front, or note we're intentionally deviating?
+3. Is anything novel here that didn't need to be?
+4. Does this work for someone landing without context (preview mode, fresh browser, anon)?
+5. Is mobile as polished as desktop **and** does desktop actually use the desktop space (not pinched into a phone column)?
+6. `npm run agent:verify` clean?

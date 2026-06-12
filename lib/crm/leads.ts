@@ -5,6 +5,7 @@ import {
 import { getSupabaseAdmin } from "@/lib/supabase/server";
 import type { QualificationIntakePayload } from "@/lib/sat-qualification";
 import { appendTouchEvent, getFirstTouchForVisitor, linkVisitorTouches } from "@/lib/crm/touch";
+import { recordIdentityLink } from "@/lib/crm/identity-stitching";
 
 export async function upsertLeadFromIntake(
   payload: QualificationIntakePayload,
@@ -123,6 +124,18 @@ export async function upsertLeadFromIntake(
 
   if (options.visitorId) {
     await linkVisitorTouches(options.visitorId, leadId);
+  }
+
+  try {
+    await recordIdentityLink({
+      leadId,
+      visitorId: options.visitorId ?? null,
+      email: leadRow.parent_email,
+      phone: leadRow.parent_phone ?? null,
+      source: "intake_submitted"
+    });
+  } catch (e) {
+    console.error("identity-link:intake", e);
   }
 
   await appendTouchEvent({

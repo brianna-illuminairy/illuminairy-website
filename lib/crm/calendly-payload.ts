@@ -16,3 +16,34 @@ export function strategyCallStartFromCalendlyWebhook(
 
   return null;
 }
+
+/** Extract scheduled event END ISO from Calendly webhook. Same shapes as start. */
+export function strategyCallEndFromCalendlyWebhook(
+  payload: Record<string, unknown> | undefined
+): string | null {
+  if (!payload) return null;
+
+  const scheduled = payload.scheduled_event as Record<string, unknown> | undefined;
+  if (typeof scheduled?.end_time === "string") return scheduled.end_time;
+
+  const event = payload.event as Record<string, unknown> | undefined;
+  if (typeof event?.end_time === "string") return event.end_time;
+
+  const invitee = payload.invitee as Record<string, unknown> | undefined;
+  const inviteeScheduled = invitee?.scheduled_event as Record<string, unknown> | undefined;
+  if (typeof inviteeScheduled?.end_time === "string") return inviteeScheduled.end_time;
+
+  return null;
+}
+
+/** Extract the Calendly scheduled_event URI (used to fetch invitees + reschedules). */
+export function scheduledEventUriFromCalendlyWebhook(
+  payload: Record<string, unknown> | undefined
+): string | null {
+  if (!payload) return null;
+  const scheduled = payload.scheduled_event as Record<string, unknown> | undefined;
+  if (typeof scheduled?.uri === "string") return scheduled.uri;
+  const event = payload.event as Record<string, unknown> | undefined;
+  if (typeof event?.uri === "string") return event.uri;
+  return null;
+}

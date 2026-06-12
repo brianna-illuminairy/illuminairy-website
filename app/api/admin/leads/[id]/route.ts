@@ -3,6 +3,7 @@ import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { getCrmLeadDetail } from "@/lib/admin/crm-queries";
 import { isFollowupKind } from "@/lib/admin/followup-kinds";
 import { updateLeadPipeline } from "@/lib/crm/admin";
+import { fireLeadMilestone } from "@/lib/crm/ga4-milestones";
 
 export async function GET(
   _request: Request,
@@ -106,6 +107,18 @@ export async function PATCH(
   const result = await updateLeadPipeline(id, patch);
   if (!result.ok) {
     return NextResponse.json({ error: result.error }, { status: 502 });
+  }
+
+  if (body.stage === "qualified") {
+    void fireLeadMilestone({ leadId: id, milestone: "lead_qualified" });
+  } else if (body.stage === "lost") {
+    void fireLeadMilestone({
+      leadId: id,
+      milestone: "lead_lost",
+      extra: { lost_reason: body.lost_reason ?? "" }
+    });
+  } else if (body.stage === "client") {
+    void fireLeadMilestone({ leadId: id, milestone: "lead_won", value: 7000 });
   }
 
   return NextResponse.json({ ok: true });

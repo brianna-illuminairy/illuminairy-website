@@ -16,3 +16,6 @@ quizfunnel/
 archives/curious-cardinals-2026-05-18/
 archives/cc-blog-scrape-latest.json
 .env*
+
+# Local env snapshots (never commit)
+.env-backups/

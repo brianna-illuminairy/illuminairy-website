@@ -1,0 +1,58 @@
+---
+description: Never destructively overwrite .env.local. SSOT for local secrets.
+globs: [".env.local", ".env*.local", ".env-backups/**", "scripts/env-*.mjs", "scripts/sync-vercel-env.mjs"]
+alwaysApply: true
+---
+
+# .env.local protection (hard rule)
+
+`.env.local` is the source of truth for local development secrets (Gemini, GA4, Stripe live, Supabase, etc.). It is **gitignored** — losing values means re-collecting them from the source. This has happened. Do not let it happen again.
+
+## Banned commands
+
+Never run any of these without an explicit, separate user instruction in the current message:
+
+- `vercel env pull` (any form, any directory, any flag)
+- `npx vercel env pull` (any form)
+- `vercel env pull .env.local`
+- `npm run env:sync` (legacy)
+- Any redirect that writes to `.env.local`: `> .env.local`, `tee .env.local`, etc.
+- `cp /any/file .env.local`
+- `rm .env.local`, `mv .env.local`, `truncate .env.local`
+
+If the user asks to pull env from Vercel, route through the safe wrapper instead:
+
+- `npm run env:pull` → safe pull from production (snapshots first, merges non-destructively)
+- `npm run env:pull:dev` → safe pull from development env
+- `npm run env:snapshot` → standalone snapshot to `.env-backups/`
+
+## Before any change to .env.local
+
+1. Run `npm run env:snapshot` (or `node scripts/env-snapshot.mjs`) to backup.
+2. Read the current file with the Read tool to confirm contents.
+3. Use `StrReplace` for surgical edits — never `Write` to `.env.local` (that overwrites).
+4. After the edit, verify with `awk -F=` that you haven't blanked any set values.
+
+## Recovery
+
+Backups live in `.env-backups/.env.local.<timestamp>.bak` (last 20 retained, auto-pruned).
+
+To restore the most recent snapshot:
+
+```bash
+cp $(ls -t .env-backups/*.bak | head -1) .env.local
+```
+
+## Source-of-truth map
+
+| Where | Holds |
+|---|---|
+| `.env.local` | Local dev SSOT — what `next dev` reads. Hand-edited. |
+| Vercel project env (Production scope) | Production SSOT — what production deploy uses. Edit via Vercel dashboard. |
+| Vercel project env (Development scope) | Mostly empty placeholder. **Do not pull from this** — it will blank values. |
+| `~/Downloads/client_secret_*.json` | Google OAuth credentials (one-time, then deleted). |
+| `.env-backups/` | Rolling snapshots. Gitignored. |
+
+## When values diverge
+
+Vercel production env is the production deploy SSOT. `.env.local` is the local dev SSOT. They are intentionally allowed to differ (e.g., test Stripe key locally vs live in prod). Never assume one should mirror the other.
