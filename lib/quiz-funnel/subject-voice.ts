@@ -64,6 +64,18 @@ export function recentScoreWhyWeAsk(qWho?: string, hasSat = true): string {
     : "Optional. The Skill Diagnostic sets the real starting point. A rough band helps us preview your Improvement Plan.";
 }
 
+export function practiceScoreQuestionHtml(qWho?: string): string {
+  return isQuizSelfTaker(qWho)
+    ? "What's your most recent <em>practice</em> score?"
+    : "What's their most recent <em>practice</em> score?";
+}
+
+export function practiceScoreWhyWeAsk(qWho?: string): string {
+  return isQuizSelfTaker(qWho)
+    ? "A rough band is fine. The Skill Diagnostic sets your real starting point; we just want to preview the Improvement Plan."
+    : "A rough band is fine. The Skill Diagnostic sets their real starting point; we just want to preview the Improvement Plan.";
+}
+
 export function nextSatQuestionHtml(qWho?: string): string {
   return isQuizSelfTaker(qWho)
     ? "When's your <em>next</em> SAT?"
