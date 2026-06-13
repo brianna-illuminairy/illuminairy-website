@@ -13,7 +13,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { authorizeCronRequest, cronErrorResponse } from "@/lib/crm/cron-auth";
 import { logAudit } from "@/lib/crm/audit-log";
 import { getCalendlyClient } from "@/lib/integrations/calendly/client";
-import { meetLinkFromCalendlyPayload } from "@/lib/integrations/google/meet";
+import {
+  extractMeetCode,
+  meetLinkFromCalendlyPayload
+} from "@/lib/integrations/google/meet";
+import {
+  getCalendarEvent,
+  meetUrlFromCalendarEvent
+} from "@/lib/integrations/google/calendar";
 import { recordHeartbeat } from "@/lib/integrations/heartbeat";
 import { requireSupabaseAdmin } from "@/lib/supabase/server";
 
@@ -126,10 +133,41 @@ async function reconcileInvitee(args: {
     .maybeSingle();
   const leadId = leadRow?.id ?? null;
 
-  const { meetLink, meetCode } = meetLinkFromCalendlyPayload({
+  // Step 1: try to extract the Meet URL from the Calendly event payload. For
+  // events booked into Calendly's Google integration this is usually a
+  // redirector (calendly.com/events/<id>/google_meet) that doesn't contain
+  // the real meet.google.com code.
+  let { meetLink, meetCode } = meetLinkFromCalendlyPayload({
     location: event.location,
     scheduled_event: event
   });
+
+  // Step 2: if we didn't get a real Meet code, look up the underlying Google
+  // Calendar event. Calendly stores its id at calendar_event.external_id.
+  // The Calendar event carries the real hangoutLink. We swallow lookup errors
+  // (most likely scope/permissions) so the rest of the reconcile still runs.
+  if (!meetCode) {
+    const calEventId = (
+      event as { calendar_event?: { external_id?: string } | null }
+    ).calendar_event?.external_id;
+    if (calEventId) {
+      try {
+        const cal = await getCalendarEvent({ eventId: calEventId });
+        const url = cal ? meetUrlFromCalendarEvent(cal) : null;
+        const code = extractMeetCode(url);
+        if (url && code) {
+          meetLink = url;
+          meetCode = code;
+        }
+      } catch (e) {
+        console.warn(
+          "calendly-history: calendar lookup failed for",
+          calEventId,
+          e instanceof Error ? e.message : e
+        );
+      }
+    }
+  }
 
   // Compute the call_status implied by Calendly state:
   //   - invitee canceled  -> "canceled"

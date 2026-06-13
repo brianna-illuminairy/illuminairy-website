@@ -58,6 +58,13 @@ export type CalendlyScheduledEvent = {
   };
   invitees_counter?: { active: number; limit: number; total: number };
   meeting_notes_html?: string;
+  /**
+   * The underlying Google/Outlook calendar event Calendly created. For Google
+   * bookings the real meet.google.com URL lives on this Calendar event, not on
+   * Calendly's redirector `location.join_url`. Use `external_id` to look it up
+   * via the Calendar API.
+   */
+  calendar_event?: { external_id?: string; kind?: string };
   created_at: string;
   updated_at: string;
 };
