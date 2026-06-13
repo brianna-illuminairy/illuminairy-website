@@ -201,7 +201,7 @@ async function processOne(args: {
       transcript_extracted_at: new Date().toISOString(),
       next_step_decision: extracted.next_step_decision,
       notes_doc_url: docs.notes?.webViewLink ?? null,
-      transcript_doc_url: docs.transcript.webViewLink ?? null,
+      transcript_doc_url: docs.transcript?.webViewLink ?? null,
       call_score: extracted.call_score as unknown as object
     })
     .eq("id", row.id);
