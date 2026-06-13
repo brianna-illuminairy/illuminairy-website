@@ -194,9 +194,20 @@ async function reconcileInvitee(args: {
     updates.call_status = "no_show";
     updates.attendance_source = "calendly_no_show";
   }
-  if (meetCode && !existing.lead_id) {
-    updates.meet_link = meetLink;
-    updates.meet_space_code = meetCode;
+  // Backfill the Meet link/code if we have one from Calendly and the row
+  // doesn't already store it. The old check `!existing.lead_id` was a typo
+  // for `!existing.meet_space_code` — it permanently blocked backfill on every
+  // real row (which always has a lead_id from the original webhook insert).
+  if (meetCode) {
+    const { data: existingMeet } = await supabase
+      .from("lead_calls")
+      .select("meet_space_code")
+      .eq("id", existing.id)
+      .maybeSingle();
+    if (!existingMeet?.meet_space_code) {
+      updates.meet_link = meetLink;
+      updates.meet_space_code = meetCode;
+    }
   }
   if (Object.keys(updates).length > 0) {
     await supabase.from("lead_calls").update(updates).eq("id", existing.id);
