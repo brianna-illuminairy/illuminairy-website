@@ -40,6 +40,16 @@ export async function PATCH(
     next_followup_kind?: string | null;
     attended?: boolean;
     complete_followup?: boolean;
+    parent_first?: string | null;
+    parent_last?: string | null;
+    parent_email?: string;
+    parent_phone?: string | null;
+    student_first?: string | null;
+    student_grade?: string | null;
+    student_school?: string | null;
+    target_exam?: string | null;
+    sat_baseline?: string | null;
+    main_goal?: string | null;
   };
 
   try {
@@ -80,6 +90,34 @@ export async function PATCH(
     }
   } else if (body.attended === false) {
     patch.attended_at = null;
+  }
+
+  // Editable parent + student profile fields. These are validated lightly:
+  // empty strings are coerced to null so blanking a field actually clears it,
+  // and parent_email must look like an email (we keep CRM-search consistent).
+  const STRING_FIELDS = [
+    "parent_first",
+    "parent_last",
+    "parent_phone",
+    "student_first",
+    "student_grade",
+    "student_school",
+    "target_exam",
+    "sat_baseline",
+    "main_goal"
+  ] as const;
+  for (const f of STRING_FIELDS) {
+    if (body[f] !== undefined) {
+      const v = typeof body[f] === "string" ? body[f]!.trim() : body[f];
+      (patch as Record<string, unknown>)[f] = v === "" ? null : v;
+    }
+  }
+  if (body.parent_email !== undefined) {
+    const v = body.parent_email.trim().toLowerCase();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) {
+      return NextResponse.json({ error: "Invalid parent_email." }, { status: 400 });
+    }
+    patch.parent_email = v;
   }
 
   // `complete_followup: true` advances the serial follow-up state machine.

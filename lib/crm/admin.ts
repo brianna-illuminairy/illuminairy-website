@@ -11,6 +11,16 @@ export async function updateLeadPipeline(
     next_followup_at?: string | null;
     next_followup_note?: string | null;
     next_followup_kind?: string | null;
+    parent_first?: string | null;
+    parent_last?: string | null;
+    parent_email?: string;
+    parent_phone?: string | null;
+    student_first?: string | null;
+    student_grade?: string | null;
+    student_school?: string | null;
+    target_exam?: string | null;
+    sat_baseline?: string | null;
+    main_goal?: string | null;
   }
 ) {
   const supabase = getSupabaseAdmin();

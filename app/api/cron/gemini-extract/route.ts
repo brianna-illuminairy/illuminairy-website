@@ -25,6 +25,7 @@ import { addLeadTag, setLeadUrgency } from "@/lib/admin/lead-tags";
 import type { TagCategory } from "@/lib/admin/lead-tag-suggestions";
 import {
   extractCallFromTranscript,
+  type ExtractedStudentProfile,
   type ExtractedTag
 } from "@/lib/integrations/gemini/extract-call";
 import { findCallNotesDoc } from "@/lib/integrations/google/drive";
@@ -58,7 +59,7 @@ async function run(req: NextRequest): Promise<NextResponse> {
   const { data: pending, error } = await supabase
     .from("lead_calls")
     .select(
-      "id, lead_id, call_at, scheduled_start, scheduled_end, summary, attendance_decided_at, leads:lead_id(parent_first, parent_last, parent_email, student_first, student_grade, target_exam, sat_baseline, main_goal, additional_context, sales_notes)"
+      "id, lead_id, call_at, scheduled_start, scheduled_end, summary, attendance_decided_at, leads:lead_id(parent_first, parent_last, parent_email, student_first, student_grade, student_school, target_exam, sat_baseline, main_goal, additional_context, sales_notes)"
     )
     .eq("call_status", "attended")
     .is("transcript_extracted_at", null)
@@ -117,6 +118,7 @@ type ExtractRow = {
         parent_email: string;
         student_first: string | null;
         student_grade: string | null;
+        student_school: string | null;
         target_exam: string | null;
         sat_baseline: string | null;
         main_goal: string | null;
@@ -265,6 +267,16 @@ async function processOne(args: {
         actor: "gemini-extract"
       });
     }
+
+    // Profile field backfill from the call. Only fills BLANK lead fields so
+    // we never overwrite something Brianna typed by hand. Every write is
+    // audited per field so the source of truth is traceable.
+    await applyProfileUpdates({
+      leadId: row.lead_id,
+      callId: row.id,
+      current: l,
+      updates: extracted.student_profile_updates ?? {}
+    });
   }
 
   // Create the Gmail draft.
@@ -303,4 +315,55 @@ function slugify(input: string): string {
     .replace(/[^a-z0-9]+/g, "_")
     .replace(/^_+|_+$/g, "")
     .slice(0, 60);
+}
+
+const PROFILE_FIELDS = [
+  "student_first",
+  "student_grade",
+  "student_school",
+  "sat_baseline",
+  "main_goal"
+] as const;
+type ProfileField = (typeof PROFILE_FIELDS)[number];
+
+async function applyProfileUpdates(args: {
+  leadId: string;
+  callId: string;
+  current: { [K in ProfileField]: string | null };
+  updates: ExtractedStudentProfile;
+}): Promise<void> {
+  const patch: Record<string, string> = {};
+  const filled: Array<{ field: ProfileField; from: string }> = [];
+
+  for (const f of PROFILE_FIELDS) {
+    const existing = (args.current[f] ?? "").trim();
+    if (existing) continue; // never overwrite a value Brianna already set
+    const incoming = (args.updates[f] ?? "").toString().trim();
+    if (!incoming) continue;
+    patch[f] = incoming;
+    filled.push({ field: f, from: incoming });
+  }
+
+  if (filled.length === 0) return;
+
+  const supabase = requireSupabaseAdmin();
+  const { error } = await supabase
+    .from("leads")
+    .update({ ...patch, last_activity_at: new Date().toISOString() })
+    .eq("id", args.leadId);
+  if (error) {
+    console.warn("profile backfill failed", error.message);
+    return;
+  }
+
+  for (const { field, from } of filled) {
+    void logAudit({
+      entityType: "lead",
+      entityId: args.leadId,
+      action: "lead:profile_backfill",
+      source: "gemini",
+      after: { field, value: from, call_id: args.callId },
+      notes: `Gemini filled blank ${field} from call transcript: ${from}`
+    });
+  }
 }

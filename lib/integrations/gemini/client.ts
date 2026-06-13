@@ -1,15 +1,22 @@
 /**
- * Gemini 1.5 Flash API wrapper for call-intelligence extraction.
+ * Gemini Flash API wrapper for call-intelligence extraction.
  *
  * Uses the v1beta `generateContent` endpoint with `response_mime_type =
  * application/json` + a JSON schema for structured output. Owner-only;
  * authenticated by `GEMINI_API_KEY`.
  *
+ * Model: defaults to `gemini-flash-latest` (Google's recommended rolling
+ * alias that always points at the latest Flash GA model). The 1.5 line was
+ * deprecated September 2025 and now returns 404. Override with `GEMINI_MODEL`
+ * env var if a specific snapshot is needed (e.g. `gemini-2.5-flash`).
+ *
  * NOTE: Google has been migrating Gemini auth from `AIzaSy...` to `AQ.` keys
- * in 2026 — both work against this endpoint via the `key=` query param.
+ * in 2026; both work against this endpoint via the `key=` query param. The
+ * AI Studio free tier is on `aistudio.google.com` keys; GCP project keys
+ * require billing to access the 2.x line.
  */
 
-const MODEL = "gemini-1.5-flash-latest";
+const MODEL = process.env.GEMINI_MODEL?.trim() || "gemini-flash-latest";
 const BASE = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`;
 
 export type GeminiContentPart = { text: string };

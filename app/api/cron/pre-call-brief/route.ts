@@ -177,7 +177,7 @@ async function processOne(row: BriefRow): Promise<Record<string, unknown>> {
         lead_id: row.lead_id,
         lead_call_id: row.id,
         context_hash: ctxHash,
-        model: "gemini-1.5-flash-latest",
+        model: process.env.GEMINI_MODEL?.trim() || "gemini-flash-latest",
         brief_markdown: markdown,
         generated_at: new Date().toISOString()
       },

@@ -145,7 +145,7 @@ export function LeadProfile({
       {tab === "overview" ? (
         <div className="grid gap-6 lg:grid-cols-3">
           <div className="min-w-0 space-y-6 lg:col-span-2">
-            <LeadProfileOverview detail={detail} />
+            <LeadProfileOverview detail={detail} saving={saving} onPatch={patchLead} />
             <LeadProfileTags
               leadId={leadId}
               initialUrgencyLevel={

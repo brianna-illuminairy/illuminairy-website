@@ -3,8 +3,28 @@
 import type { LeadDetail } from "@/lib/admin/crm-queries";
 import { formatBookingDateTime } from "@/lib/admin/format-booking";
 import { ProfileCard as Card, ProfileRow as Row } from "./profile-card";
+import { EditableRow } from "./editable-row";
 
-export function LeadProfileOverview({ detail }: { detail: LeadDetail }) {
+function formatUsPhone(raw: string): string {
+  const digits = raw.replace(/\D/g, "");
+  if (digits.length === 10) {
+    return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
+  }
+  if (digits.length === 11 && digits.startsWith("1")) {
+    return `(${digits.slice(1, 4)}) ${digits.slice(4, 7)}-${digits.slice(7)}`;
+  }
+  return raw;
+}
+
+export function LeadProfileOverview({
+  detail,
+  saving,
+  onPatch
+}: {
+  detail: LeadDetail;
+  saving: boolean;
+  onPatch: (body: Record<string, unknown>) => Promise<boolean>;
+}) {
   const l = detail.lead as unknown as {
     parent_first: string | null;
     parent_last: string | null;
@@ -37,40 +57,94 @@ export function LeadProfileOverview({ detail }: { detail: LeadDetail }) {
   return (
     <div className="grid gap-4 md:grid-cols-2 [&>*]:min-w-0">
       <Card title="Parent contact">
-        <Row
-          label="Name"
-          value={[l.parent_first, l.parent_last].filter(Boolean).join(" ")}
+        <EditableRow
+          label="First name"
+          value={l.parent_first}
+          field="parent_first"
+          onSave={onPatch}
+          saving={saving}
+          placeholder="First name"
         />
-        <Row
+        <EditableRow
+          label="Last name"
+          value={l.parent_last}
+          field="parent_last"
+          onSave={onPatch}
+          saving={saving}
+          placeholder="Last name"
+        />
+        <EditableRow
           label="Email"
-          value={
-            <a
-              className="font-mono text-xs underline [overflow-wrap:anywhere]"
-              href={`mailto:${l.parent_email}`}
-            >
-              {l.parent_email}
-            </a>
-          }
+          value={l.parent_email}
+          field="parent_email"
+          onSave={onPatch}
+          saving={saving}
+          type="email"
+          inputMode="email"
+          placeholder="parent@example.com"
         />
-        <Row
+        <EditableRow
           label="Phone"
-          value={
-            l.parent_phone ? (
-              <a className="underline" href={`tel:${l.parent_phone}`}>
-                {l.parent_phone}
-              </a>
-            ) : null
-          }
+          value={l.parent_phone}
+          field="parent_phone"
+          onSave={onPatch}
+          saving={saving}
+          type="tel"
+          inputMode="tel"
+          placeholder="(555) 555-5555"
+          formatDisplay={formatUsPhone}
         />
       </Card>
 
       <Card title="Student">
-        <Row label="Name" value={l.student_first} />
-        <Row label="Grade" value={l.student_grade} />
-        <Row label="School" value={l.student_school} />
-        <Row label="Target" value={l.target_exam} />
-        <Row label="Baseline" value={l.sat_baseline ?? l.score_range} />
-        <Row label="Main goal" value={l.main_goal} />
+        <EditableRow
+          label="Name"
+          value={l.student_first}
+          field="student_first"
+          onSave={onPatch}
+          saving={saving}
+          placeholder="Student first name"
+        />
+        <EditableRow
+          label="Grade"
+          value={l.student_grade}
+          field="student_grade"
+          onSave={onPatch}
+          saving={saving}
+          placeholder="e.g. 11"
+        />
+        <EditableRow
+          label="School"
+          value={l.student_school}
+          field="student_school"
+          onSave={onPatch}
+          saving={saving}
+          placeholder="School name"
+        />
+        <EditableRow
+          label="Target"
+          value={l.target_exam}
+          field="target_exam"
+          onSave={onPatch}
+          saving={saving}
+          placeholder="SAT"
+        />
+        <EditableRow
+          label="Baseline"
+          value={l.sat_baseline ?? l.score_range}
+          field="sat_baseline"
+          onSave={onPatch}
+          saving={saving}
+          placeholder="e.g. 1100-1200"
+        />
+        <EditableRow
+          label="Main goal"
+          value={l.main_goal}
+          field="main_goal"
+          onSave={onPatch}
+          saving={saving}
+          placeholder="e.g. 1400"
+        />
       </Card>
 
       <Card title="Calendly">

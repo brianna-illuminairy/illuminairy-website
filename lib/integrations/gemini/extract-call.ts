@@ -34,6 +34,24 @@ export type ExtractedUrgency = {
   reason: string;
 };
 
+/**
+ * Lead profile fields the call disclosed. Only populate a field when the
+ * transcript EXPLICITLY says it — never guess. These will only overwrite
+ * blank fields on the lead; existing values are preserved.
+ */
+export type ExtractedStudentProfile = {
+  /** Student first name, only if stated on the call. */
+  student_first?: string | null;
+  /** Numeric grade as a string ("9"-"12"). "rising junior" → "11", "rising sophomore" → "10", etc. */
+  student_grade?: string | null;
+  /** Named school only ("Pace Academy"). Skip vague descriptors like "private school". */
+  student_school?: string | null;
+  /** Baseline score or range as parent stated it ("1100-1200", "1050"). */
+  sat_baseline?: string | null;
+  /** Specific target score ("1400", "1500+"). */
+  main_goal?: string | null;
+};
+
 export type ExtractedCall = {
   summary: string;
   parent_top_concerns: string[];
@@ -54,6 +72,8 @@ export type ExtractedCall = {
   objections: ExtractedTag[];
   priorities: ExtractedTag[];
   urgency: ExtractedUrgency;
+  /** Profile facts the call disclosed. Cron applies only to empty fields. */
+  student_profile_updates?: ExtractedStudentProfile;
   draft_email: {
     subject: string;
     body_text: string;
@@ -151,6 +171,26 @@ const SCHEMA = {
         reason: { type: "string" }
       }
     },
+    student_profile_updates: {
+      type: "object",
+      description:
+        "Lead profile facts explicitly disclosed on the call. Only include a field if the transcript clearly states it; omit anything you are guessing.",
+      properties: {
+        student_first: { type: "string" },
+        student_grade: {
+          type: "string",
+          description:
+            "Numeric grade as a string. rising junior=11, rising sophomore=10, rising senior=12, rising freshman=9."
+        },
+        student_school: {
+          type: "string",
+          description:
+            "Named school only (e.g. 'Pace Academy'). Skip vague descriptors like 'private school'."
+        },
+        sat_baseline: { type: "string" },
+        main_goal: { type: "string" }
+      }
+    },
     draft_email: {
       type: "object",
       required: ["subject", "body_text"],
@@ -238,6 +278,13 @@ URGENCY — single value for the lead:
   high      decision needed in the next 2 weeks
   critical  decision needed this week; hard external deadline mentioned
 Reason should be specific ("ED Nov 1", "last SAT before applications", "scholarship deadline next month").
+
+STUDENT_PROFILE_UPDATES — only fill fields the transcript EXPLICITLY states. Skip a field if you'd be guessing. The CRM only writes these into blank profile fields; existing values are preserved.
+  student_first   Use only if the student is named on the call.
+  student_grade   Numeric string. "rising junior" -> "11", "rising sophomore" -> "10", "rising senior" -> "12", "rising freshman" -> "9". Current grade stays as the number ("currently a sophomore" -> "10").
+  student_school  Named school only (e.g. "Pace Academy", "Lakeside High"). Do NOT fill from vague descriptors like "private school" or "his school".
+  sat_baseline    Score or range as stated ("1100-1200", "1050"). Skip if no number given.
+  main_goal       Specific target score ("1400", "1500+"). Skip if no number given.
 
 The draft_email is from the owner to the parent. Match Brianna's voice: warm, specific, no marketer jargon, no em dashes. Reference one specific thing the parent said. Always end with a clear next step the parent can act on.
 
