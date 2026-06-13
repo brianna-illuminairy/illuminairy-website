@@ -153,16 +153,25 @@ async function processOne(args: {
     parentLast: l.parent_last
   });
 
-  if (!docs.transcript) {
-    return { callId: row.id, skipped: "no_transcript_doc_found" };
+  // Prefer the full Transcript doc when Workspace generated one. Fall back to
+  // the Notes by Gemini doc, which always exists when Gemini Notes is on and
+  // contains enough call content (summary, decisions, attributed quotes) for
+  // the extractor to do its job. Skip only when neither doc is present.
+  const sourceDoc = docs.transcript ?? docs.notes;
+  if (!sourceDoc) {
+    return { callId: row.id, skipped: "no_call_doc_found" };
   }
 
   const transcript = await getDocPlainText({
     ownerEmail,
-    documentId: docs.transcript.id
+    documentId: sourceDoc.id
   });
   if (!transcript || transcript.length < 200) {
-    return { callId: row.id, skipped: "transcript_too_short" };
+    return {
+      callId: row.id,
+      skipped: "doc_too_short",
+      source: docs.transcript ? "transcript" : "notes"
+    };
   }
 
   const intakeBlob = [
