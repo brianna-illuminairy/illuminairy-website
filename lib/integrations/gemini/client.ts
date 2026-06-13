@@ -55,7 +55,14 @@ async function callGeminiRaw(args: GeminiCallArgs): Promise<string> {
     ],
     generationConfig: {
       temperature: args.temperature ?? 0.2,
-      maxOutputTokens: args.maxOutputTokens ?? 4096,
+      // gemini-flash-latest currently resolves to gemini-3.5-flash, which has
+      // thinking mode on by default. Thinking tokens come out of the same
+      // budget as the response, so a single "Hello" can burn ~330 thought
+      // tokens before writing 5 real ones. For structured extraction we
+      // don't need reasoning — disable thinking explicitly and give the
+      // schema room to fill out fully.
+      maxOutputTokens: args.maxOutputTokens ?? 8192,
+      thinkingConfig: { thinkingBudget: 0 },
       ...(args.schema
         ? {
             responseMimeType: "application/json",
@@ -90,11 +97,28 @@ async function callGeminiRaw(args: GeminiCallArgs): Promise<string> {
 
 export async function callGemini<T>(args: GeminiCallArgs): Promise<GeminiCallResult<T>> {
   const text = await callGeminiRaw(args);
+  // Strip the occasional ```json fence Gemini emits even with
+  // responseMimeType set, and trim trailing prose so JSON.parse succeeds.
+  const cleaned = stripJsonFence(text);
   let json: T;
   try {
-    json = JSON.parse(text) as T;
-  } catch {
-    throw new Error(`Gemini returned non-JSON: ${text.slice(0, 200)}`);
+    json = JSON.parse(cleaned) as T;
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : String(e);
+    throw new Error(
+      `Gemini returned non-JSON (${msg}). First 400 chars: ${cleaned.slice(0, 400)}`
+    );
   }
   return { raw: text, json };
+}
+
+function stripJsonFence(text: string): string {
+  const t = text.trim();
+  if (t.startsWith("```")) {
+    return t
+      .replace(/^```(?:json)?\s*/i, "")
+      .replace(/```\s*$/, "")
+      .trim();
+  }
+  return t;
 }
