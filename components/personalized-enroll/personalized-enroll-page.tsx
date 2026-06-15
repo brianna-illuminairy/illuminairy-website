@@ -1031,10 +1031,13 @@ function FaqSection({ lead }: { lead: PersonalizedEnrollLead }) {
     {
       q: "Why a paid diagnostic instead of a free trial class?",
       a: [
-        "A free trial class is a generic SAT lesson with a tutor who has not seen any of the student's data yet. We have run them. Either the lesson is too easy and wastes the student's time, or it is on a topic the student does not actually need help with. Neither tells a parent anything useful.",
-        "So instead, what you pay for upfront is the diagnostic, the analysis, and the plan, and then the first week of weekly tutoring is free. That trade gets you a tutor who walks into session 1 already knowing " +
+        "Our tutors' time is costly, and we pay them a fair wage. Each tutor invests 5 to 6 hours upfront on " +
           lead.student.first +
-          "'s exact gaps."
+          "'s diagnostic, her personalized plan, and her initial lesson customization, all before her first session. We start with the diagnostic specifically so we can ensure a successful first session.",
+        "We do not offer trial lessons, but we do ensure a personalized experience with a high-quality tutor from session 1. Every session has quality flags. If " +
+          lead.student.first +
+          " and her tutor are not connecting, or if learning is not happening, we can flag it for review. In those cases we typically investigate the session, provide an additional lesson if warranted, or rematch her with a different tutor, case by case.",
+        "Group SAT prep companies can give a free trial class because adding one more student to a group lesson costs them nothing. Our sessions are one-on-one, so a single trial would cost us the hours of preparation plus the hour of tutoring."
       ]
     },
     {
