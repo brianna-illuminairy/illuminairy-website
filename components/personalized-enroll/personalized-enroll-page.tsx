@@ -102,7 +102,7 @@ function PlanCard({ lead }: { lead: PersonalizedEnrollLead }) {
     {
       nm: "Her first 2 lessons built in detail before week 1",
       ds:
-        "Plus her high-level 12-week plan, both starting with the gap costing her the most points. The plan flexes as she progresses and as her every-4-week mock tests come in."
+        "Plus her high-level 12-week plan, both starting with the gap costing her the most points. The plan flexes as she progresses and as her every-4-week practice tests come in."
     },
     {
       nm: "Two specialized tutors (Math 750+, R&W 750+)",
@@ -113,9 +113,9 @@ function PlanCard({ lead }: { lead: PersonalizedEnrollLead }) {
       ds: "Two sessions per week. 80 to 90 percent are one-on-one."
     },
     {
-      nm: "5 mock tests across the cycle",
+      nm: "5 full-length practice tests across the cycle",
       ds:
-        "Diagnostic plus weeks 4, 8, 12, and Phase 1 review. Every 4 weeks she takes a fresh mock so we can see her real current score and update her plan."
+        "Diagnostic plus weeks 4, 8, 12, and Phase 1 review. Every 4 weeks she takes a fresh full-length practice test so we can see her real current score and update her plan."
     },
     {
       nm: "Personalized homework from 3,500+ practice questions",
@@ -438,7 +438,7 @@ function InvestmentSection({ lead }: { lead: PersonalizedEnrollLead }) {
       hours: "1\u20132 hrs",
       title: "Tutor-built plan and first 2 lessons",
       body:
-        "Using her ranked gaps, an expert tutor drafts her high-level 12-week plan starting with the gap costing her the most points, then builds her first 2 lessons in detail before week 1. The plan flexes as she progresses and as her every-4-week mock tests come in."
+        "Using her ranked gaps, an expert tutor drafts her high-level 12-week plan starting with the gap costing her the most points, then builds her first 2 lessons in detail before week 1. The plan flexes as she progresses and as her every-4-week practice tests come in."
     }
   ];
   return (
@@ -487,9 +487,10 @@ function InvestmentSection({ lead }: { lead: PersonalizedEnrollLead }) {
           color: "var(--fg-soft)"
         }}
       >
-        The ${lead.pricing.diagPrice} is not a mock-test fee. A mock test by
-        itself is free almost anywhere. The analysis and the plan are the
-        product.
+        Concretely, here is the time you are paying for: a proctored
+        evaluation under real test-day conditions, an expert tutor&apos;s
+        review and analysis of her results, and the custom plan and first
+        lessons built from that analysis.
       </p>
       <div
         style={{
@@ -603,13 +604,13 @@ function WhyProctorSection({ lead }: { lead: PersonalizedEnrollLead }) {
   return (
     <section style={sectionShellStyle}>
       <p style={eyebrowStyle}>Why we proctor</p>
-      <h2 style={h2Style}>An unproctored mock is a score, not a plan.</h2>
+      <h2 style={h2Style}>An unproctored practice test is a score, not a plan.</h2>
       <p style={bodyStyle}>
-        The two Blue Book mocks {lead.student.first} already took were
+        The two Blue Book practice tests {lead.student.first} already took were
         unproctored. They give us her score band, but not the signal we need
         to build her plan around. With a proctored evaluation, an expert tutor
         is on the session for the full 2 hours 14 minutes capturing what an
-        unproctored mock cannot show.
+        unproctored practice test cannot show.
       </p>
       <div
         style={{
@@ -629,7 +630,7 @@ function WhyProctorSection({ lead }: { lead: PersonalizedEnrollLead }) {
             margin: 0
           }}
         >
-          What proctoring captures that an unproctored mock cannot
+          What proctoring captures that an unproctored practice test cannot
         </p>
         <ul
           style={{
@@ -1040,10 +1041,10 @@ function FaqSection({ lead }: { lead: PersonalizedEnrollLead }) {
       q:
         "Can " +
         lead.student.first +
-        " skip the diagnostic since she just took two Blue Book mocks?",
+        " skip the diagnostic since she just took two Blue Book practice tests?",
       a: [
         "We strongly recommend against it, and there is a middle option if she really does not want to retake right now.",
-        "The Blue Book mocks were unproctored, on her own laptop, with no observation of timing, pacing, or which questions she paused on. We get one number out of them: 1070 to 1080. Without a proctored diagnostic, weeks 1 through 4 of tutoring would be the tutor guessing at what to teach.",
+        "The Blue Book practice tests were unproctored, on her own laptop, with no observation of timing, pacing, or which questions she paused on. We get one number out of them: 1070 to 1080. Without a proctored diagnostic, weeks 1 through 4 of tutoring would be the tutor guessing at what to teach.",
         "The middle option: a shorter 60-minute proctored mini-diagnostic (one math module, one Reading and Writing module). Same $" +
           lead.pricing.diagPrice +
           " because the analysis and plan work is the same. Reply to " +
