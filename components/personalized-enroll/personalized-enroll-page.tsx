@@ -683,17 +683,14 @@ function CycleOneSection({ lead }: { lead: PersonalizedEnrollLead }) {
         We do not reteach what {lead.student.first} already knows.
       </h2>
       <p style={bodyStyle}>
-        Every session and every reteach is tied directly to a specific SAT
-        question type. We teach through mistake based learning. Each session starts
-        by pulling up the SAT-style questions she got wrong on her last
-        practice round, ranked by point impact. We work through the easy
-        version with her, then medium, then hard, until she can solve that
-        question type on her own.
+        Each session we&apos;ll start by pulling up an SAT problem that she
+        got incorrect. We&apos;ll walk through how to solve that problem with
+        her step by step. We only stop and go back over a foundational topic
+        if it&apos;s blocking her from understanding and being able to solve
+        that problem on her own.
       </p>
       <p style={{ ...bodyStyle, margin: "12px 0 0" }}>
-        The only time we go back to foundational content is when a prerequisite
-        is blocking a specific SAT question. Here is exactly what that looks
-        like in practice:
+        Here&apos;s what that would look like in practice:
       </p>
       <figure
         style={{
