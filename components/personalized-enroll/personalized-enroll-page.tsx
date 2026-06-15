@@ -769,10 +769,11 @@ function CycleOneSection({ lead }: { lead: PersonalizedEnrollLead }) {
           <ul
             style={{
               margin: "12px 0 0",
-              paddingLeft: 18,
+              paddingLeft: 22,
               fontSize: 14,
               lineHeight: 1.6,
-              color: "var(--page-fg)"
+              color: "var(--page-fg)",
+              listStyleType: "disc"
             }}
           >
             <li>Start every session on the SAT questions she missed.</li>
@@ -814,10 +815,11 @@ function CycleOneSection({ lead }: { lead: PersonalizedEnrollLead }) {
           <ul
             style={{
               margin: "12px 0 0",
-              paddingLeft: 18,
+              paddingLeft: 22,
               fontSize: 14,
               lineHeight: 1.6,
-              color: "var(--page-fg)"
+              color: "var(--page-fg)",
+              listStyleType: "disc"
             }}
           >
             <li>
