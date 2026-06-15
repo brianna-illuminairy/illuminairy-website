@@ -844,11 +844,11 @@ function CycleOneSection({ lead }: { lead: PersonalizedEnrollLead }) {
 function TutorsSection({ lead }: { lead: PersonalizedEnrollLead }) {
   const items = [
     {
-      title: "750+ on the section they teach, no recent grads",
+      title: "Verified 750+ digital SAT score on the section they teach",
       body:
-        "Every tutor scored 750 or higher on the section they teach. A math tutor scored 750+ on math, a Reading and Writing tutor scored 750+ on R&W. There is no scenario where a 650 to 700 tutor is on " +
+        "A math tutor has a verified digital SAT score of 750+ on math, a Reading and Writing tutor scored 750+ on R&W. There is no scenario where a 650 to 700 tutor is on " +
         lead.student.first +
-        "'s case. None of our tutors are recent high school graduates or college freshmen, and we explicitly screen against that when matching her."
+        "'s case."
     },
     {
       title: "Trained on the digital SAT, not the paper version",
@@ -880,16 +880,33 @@ function TutorsSection({ lead }: { lead: PersonalizedEnrollLead }) {
         week 1.
       </h2>
       <p style={bodyStyle}>
-        Our tutors are graduate students from schools like Vanderbilt, Duke,
-        Georgia Tech, and Emory. We use near-peer tutors on purpose. Research
-        on near-peer mentorship shows it consistently outperforms
-        authority-based teaching (i.e. teachers who teach the SAT) for SAT
-        prep, and we have seen the same in our own outcomes: students learn
-        faster from someone who recently sat the same digital SAT than they
-        do from a teacher who never has. They&apos;re also more likely to
-        connect on their long-term college ambitions with someone who&apos;s
-        in the same place they hope to be, and to ask questions, than they
-        are with a teacher who&apos;s never been in their shoes.
+        We intentionally prefer tutors who have personally taken the digital
+        SAT. Because the digital SAT only launched recently, our tutors are
+        most often current college students at schools like Vanderbilt, Duke,
+        Georgia Tech, and Emory. That is a deliberate choice, different from
+        hiring an older paper-SAT tutor and training them on the new digital
+        format.
+      </p>
+      <p style={{ ...bodyStyle, margin: "12px 0 0" }}>
+        We require verified digital SAT scores because the test structure,
+        pacing, tools, and student experience are meaningfully different from
+        the paper SAT. In practice, very few experienced tutors are willing to
+        retake something as demanding as the SAT for a part-time tutoring
+        role, especially since long-time tutors have no shortage of clients
+        without retaking the digital format and so are not incentivized to do
+        so. That limits the pool of older tutors who can meet our requirement.
+      </p>
+      <p style={{ ...bodyStyle, margin: "12px 0 0" }}>
+        Beyond the credential, students also tend to respond better to
+        near-peer tutors. When we previously used teachers or more mature
+        tutors, students did not build rapport as quickly, and score
+        improvement was not as strong. Many of those teachers had also never
+        taken the digital SAT themselves, which made it harder to coach from
+        direct experience. Over time we intentionally transitioned toward
+        near-peer tutors because students connected with them better and
+        performed better, which matches the broader research on near-peer
+        mentorship outperforming authority-based teaching (i.e. teachers who
+        teach the SAT) for SAT prep.
       </p>
       <div
         style={{
@@ -953,6 +970,46 @@ function TutorsSection({ lead }: { lead: PersonalizedEnrollLead }) {
             </div>
           </div>
         ))}
+      </div>
+
+      <div
+        style={{
+          marginTop: 22,
+          padding: "18px 22px",
+          borderRadius: 12,
+          background: "var(--surface-2)",
+          border: "1px solid var(--hairline-2)"
+        }}
+      >
+        <p
+          style={{
+            fontFamily: "var(--mono)",
+            fontSize: 10.5,
+            letterSpacing: "0.18em",
+            textTransform: "uppercase",
+            color: "var(--fg-mute)",
+            margin: 0,
+            fontWeight: 600
+          }}
+        >
+          Prefer a tutor with more years of experience?
+        </p>
+        <p
+          style={{
+            margin: "10px 0 0",
+            fontSize: 14,
+            lineHeight: 1.6,
+            color: "var(--page-fg)"
+          }}
+        >
+          If you have a specific preference for a tutor with more years of
+          tutoring or teaching experience, reply to {lead.advisor.first}
+          &apos;s email and she will reach out to our older tutors for{" "}
+          {lead.student.first}. The trade-off is that we may not be able to
+          guarantee they have a verified digital SAT score, since most
+          experienced tutors took the paper version and few are willing to
+          retake the digital for a part-time role.
+        </p>
       </div>
     </section>
   );
