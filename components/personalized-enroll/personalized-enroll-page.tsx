@@ -437,703 +437,104 @@ function PayCard({ lead }: { lead: PersonalizedEnrollLead }) {
     </section>
   );
 }
-function InvestmentSection({ lead }: { lead: PersonalizedEnrollLead }) {
-  const items = [
-    {
-      hours: "2h 14m",
-      title: "Proctored testing",
-      body:
-        "Someone from our team is on the session with " +
-        lead.student.first +
-        " for the full duration, watching how she takes the test. Real test-day conditions, real timing data."
-    },
-    {
-      hours: "2\u20133 hrs",
-      title: "Expert tutor reviews her results",
-      body:
-        "A tutor walks through her test in detail: her time per question, her pacing across both modules, and every wrong answer. For each miss, they note how often that question type appears on the digital SAT and whether it was easy, medium, or hard, and use those two factors to estimate how many points the gap is costing her overall. Those numbers become her ranked gaps, biggest losses first."
-    },
-    {
-      hours: "1\u20132 hrs",
-      title: "Tutor-built plan and first 2 lessons",
-      body:
-        "Using her ranked gaps, an expert tutor drafts her high-level 12-week plan starting with the gap costing her the most points, then builds her first 2 lessons in detail before week 1. The plan flexes as she progresses and as her every-4-week practice tests come in."
-    }
-  ];
-  return (
-    <section
-      style={{
-        background: "var(--surface)",
-        border: "1px solid var(--hairline)",
-        borderRadius: 16,
-        padding: "32px 32px 28px",
-        marginBottom: 28,
-        boxShadow: "0 14px 40px rgba(18,26,43,0.06)"
-      }}
-    >
-      <p
-        style={{
-          fontFamily: "var(--mono)",
-          fontSize: 10.5,
-          fontWeight: 500,
-          letterSpacing: "0.22em",
-          textTransform: "uppercase",
-          color: "var(--em)",
-          margin: 0
-        }}
-      >
-        What the ${lead.pricing.diagPrice} actually buys
-      </p>
-      <h2
-        style={{
-          fontFamily: "var(--display)",
-          fontWeight: 700,
-          fontSize: "clamp(22px,3.4vw,28px)",
-          letterSpacing: "-0.025em",
-          lineHeight: 1.1,
-          margin: "8px 0 0",
-          color: "var(--page-fg)"
-        }}
-      >
-        5 to 6 hours of our team&apos;s time, before tutoring even starts.
-      </h2>
-      <p
-        style={{
-          margin: "12px 0 0",
-          maxWidth: "60ch",
-          fontSize: 15,
-          lineHeight: 1.6,
-          color: "var(--fg-soft)"
-        }}
-      >
-        Concretely, here is the time you are paying for: a proctored
-        evaluation under real test-day conditions, an expert tutor&apos;s
-        review and analysis of her results, and the custom plan and first
-        lessons built from that analysis.
-      </p>
-      <div
-        style={{
-          marginTop: 28,
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-          gap: 20
-        }}
-      >
-        {items.map((it) => (
-          <div
-            key={it.title}
-            style={{
-              border: "1px solid var(--hairline)",
-              background: "rgba(247,250,252,0.7)",
-              borderRadius: 12,
-              padding: 20
-            }}
-          >
-            <span
-              style={{
-                display: "inline-block",
-                fontFamily: "var(--display)",
-                fontWeight: 700,
-                fontSize: 12,
-                letterSpacing: "0.02em",
-                background: "var(--em)",
-                color: "#fff",
-                padding: "5px 10px",
-                borderRadius: 6,
-                marginBottom: 12
-              }}
-            >
-              {it.hours}
-            </span>
-            <h3
-              style={{
-                fontFamily: "var(--display)",
-                fontWeight: 700,
-                fontSize: 17,
-                letterSpacing: "-0.01em",
-                margin: "0 0 6px",
-                color: "var(--page-fg)"
-              }}
-            >
-              {it.title}
-            </h3>
-            <p
-              style={{
-                margin: 0,
-                fontSize: 14,
-                lineHeight: 1.55,
-                color: "var(--fg-soft)"
-              }}
-            >
-              {it.body}
-            </p>
-          </div>
-        ))}
-      </div>
-
-      <div
-        style={{
-          marginTop: 24,
-          padding: "20px 22px",
-          borderRadius: 12,
-          background: "var(--surface-2)"
-        }}
-      >
-        <p
-          style={{
-            fontFamily: "var(--mono)",
-            fontSize: 10.5,
-            letterSpacing: "0.18em",
-            textTransform: "uppercase",
-            color: "var(--fg-mute)",
-            margin: 0,
-            fontWeight: 500
-          }}
-        >
-          What the proctored 2 hours 14 minutes captures that a practice test
-          on her own cannot
-        </p>
-        <p
-          style={{
-            margin: "10px 0 0",
-            fontSize: 14,
-            lineHeight: 1.6,
-            color: "var(--fg-soft)"
-          }}
-        >
-          The two Blue Book practice tests {lead.student.first} already took
-          were unproctored. They give us her score band, but not the signal
-          we need to plan against. With proctoring, an expert tutor sees:
-        </p>
-        <ul
-          style={{
-            margin: "12px 0 0",
-            padding: 0,
-            listStyle: "none",
-            display: "grid",
-            gap: 10
-          }}
-        >
-          {[
-            "Real timing per question, with no pause and no break",
-            "Whether " +
-              lead.student.first +
-              " actually finished each section or guessed the last few",
-            "Where she used Desmos and where she tried to solve mentally",
-            "Where she hesitated, where she rushed, and where her accuracy dropped from fatigue",
-            "Whether she reached module 2 hard, or stayed in module 2 medium because of her module 1 accuracy"
-          ].map((c) => (
-            <li
-              key={c}
-              style={{
-                display: "grid",
-                gridTemplateColumns: "20px 1fr",
-                gap: 12,
-                fontSize: 14,
-                lineHeight: 1.55,
-                color: "var(--page-fg)"
-              }}
-            >
-              <span
-                style={{
-                  marginTop: 2,
-                  width: 20,
-                  height: 20,
-                  borderRadius: 999,
-                  background: "rgba(47,110,71,0.12)",
-                  color: "var(--em)",
-                  display: "inline-flex",
-                  alignItems: "center",
-                  justifyContent: "center"
-                }}
-              >
-                <CheckIcon width={11} height={11} />
-              </span>
-              <span>{c}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </section>
-  );
-}
-const sectionShellStyle: React.CSSProperties = {
-  background: "var(--surface)",
-  border: "1px solid var(--hairline)",
-  borderRadius: 16,
-  padding: "32px 32px 28px",
-  marginBottom: 28,
-  boxShadow: "0 14px 40px rgba(18,26,43,0.06)"
-};
-
-const eyebrowStyle: React.CSSProperties = {
-  fontFamily: "var(--mono)",
-  fontSize: 10.5,
-  fontWeight: 500,
-  letterSpacing: "0.22em",
-  textTransform: "uppercase",
-  color: "var(--em)",
-  margin: 0
-};
-
-const h2Style: React.CSSProperties = {
-  fontFamily: "var(--display)",
-  fontWeight: 700,
-  fontSize: "clamp(22px,3.4vw,28px)",
-  letterSpacing: "-0.025em",
-  lineHeight: 1.1,
-  margin: "8px 0 0",
-  color: "var(--page-fg)"
-};
-
-const bodyStyle: React.CSSProperties = {
-  margin: "14px 0 0",
-  maxWidth: "62ch",
-  fontSize: 15,
-  lineHeight: 1.65,
-  color: "var(--fg-soft)"
-};
-
-function CycleOneSection({ lead }: { lead: PersonalizedEnrollLead }) {
-  return (
-    <section style={sectionShellStyle}>
-      <p style={eyebrowStyle}>What Phase 1 actually looks like</p>
-      <h2 style={h2Style}>
-        We do not reteach what {lead.student.first} already knows.
-      </h2>
-      <p style={bodyStyle}>
-        Each session we&apos;ll start by pulling up an SAT problem that she
-        got incorrect. We&apos;ll walk through how to solve that problem with
-        her step by step. We only stop and go back over a foundational topic
-        if it&apos;s blocking her from understanding and being able to solve
-        that problem on her own.
-      </p>
-      <p style={{ ...bodyStyle, margin: "12px 0 0" }}>
-        Here&apos;s what that would look like in practice:
-      </p>
-      <figure
-        style={{
-          margin: "20px 0 0",
-          padding: "18px 22px",
-          background: "var(--surface-2)",
-          borderLeft: "4px solid var(--em)",
-          borderRadius: 10
-        }}
-      >
-        <blockquote
-          style={{
-            margin: 0,
-            fontStyle: "italic",
-            fontSize: 15,
-            lineHeight: 1.65,
-            color: "var(--page-fg)"
-          }}
-        >
-          She gets a quadratic equation wrong on the SAT. We start reviewing it
-          with her. She does not understand the step where we factored. We
-          explain it. She still does not get it. We pause and reteach
-          perfect-square factoring (or the distributive property, whatever the
-          blocking concept actually was). Then we go back to the SAT question
-          and finish it.
-        </blockquote>
-      </figure>
-      <div
-        style={{
-          marginTop: 24,
-          display: "grid",
-          gap: 16,
-          gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))"
-        }}
-      >
-        <div
-          style={{
-            padding: 20,
-            borderRadius: 12,
-            background: "rgba(119,200,154,0.10)",
-            border: "1px solid rgba(47,110,71,0.32)"
-          }}
-        >
-          <p
-            style={{
-              fontFamily: "var(--mono)",
-              fontSize: 11,
-              letterSpacing: "0.16em",
-              textTransform: "uppercase",
-              color: "var(--em)",
-              margin: 0,
-              fontWeight: 600
-            }}
-          >
-            We do this
-          </p>
-          <ul
-            style={{
-              margin: "12px 0 0",
-              paddingLeft: 22,
-              fontSize: 14,
-              lineHeight: 1.6,
-              color: "var(--page-fg)",
-              listStyleType: "disc"
-            }}
-          >
-            <li>Start every session on the SAT questions she missed.</li>
-            <li>
-              Teach the next prioritized skill at SAT depth, with SAT-style
-              questions only.
-            </li>
-            <li>
-              Pause to reteach a foundational concept only when it is blocking
-              an SAT question we are working on.
-            </li>
-            <li>
-              Re-baseline every 4 weeks and update her plan with what we just
-              learned.
-            </li>
-          </ul>
-        </div>
-        <div
-          style={{
-            padding: 20,
-            borderRadius: 12,
-            background: "var(--surface)",
-            border: "1px solid var(--hairline)"
-          }}
-        >
-          <p
-            style={{
-              fontFamily: "var(--mono)",
-              fontSize: 11,
-              letterSpacing: "0.16em",
-              textTransform: "uppercase",
-              color: "var(--fg-mute)",
-              margin: 0,
-              fontWeight: 600
-            }}
-          >
-            We never do this
-          </p>
-          <ul
-            style={{
-              margin: "12px 0 0",
-              paddingLeft: 22,
-              fontSize: 14,
-              lineHeight: 1.6,
-              color: "var(--page-fg)",
-              listStyleType: "disc"
-            }}
-          >
-            <li>
-              Open an Algebra 1 textbook from page one because she is a
-              sophomore.
-            </li>
-            <li>
-              Spend a session reviewing topics the diagnostic shows she already
-              has.
-            </li>
-            <li>
-              Run a generic SAT review track that does not change based on her
-              actual gaps.
-            </li>
-            <li>Teach a concept that does not appear on the digital SAT.</li>
-          </ul>
-        </div>
-      </div>
-    </section>
-  );
-}
-function TutorsSection({ lead }: { lead: PersonalizedEnrollLead }) {
-  const items = [
-    {
-      title: "Verified 750+ digital SAT score on the section they teach",
-      body:
-        "A math tutor has a verified digital SAT score of 750+ on math, a Reading and Writing tutor scored 750+ on R&W. There is no scenario where a 650 to 700 tutor is on " +
-        lead.student.first +
-        "'s case."
-    },
-    {
-      title: "Trained on the digital SAT, not the paper version",
-      body:
-        "Every tutor has personally taken the digital SAT and is trained specifically on its current format: the Desmos calculator, the built-in formula reference, and the adaptive module 1 / module 2 structure. Tutors who only took the paper version are required to retake the digital before certification, and they retrain whenever the College Board changes the test."
-    },
-    {
-      title: "Shadowed for teaching style, not just the score",
-      body:
-        "Subject-matter expertise alone does not make a great teacher. Every tutor is shadowed before approval and given feedback on their teaching style during certification. After they start, we track their students' accuracy on the question types they taught, and act on that data."
-    },
-    {
-      title: "Introduction email before session 1",
-      body:
-        "Once " +
-        lead.student.first +
-        " is matched, you and " +
-        lead.student.first +
-        " receive an introduction email from her Math tutor and her R&W tutor with their school, program, year, section score, and tutoring background, all before session 1 is scheduled. A 15-minute intro call before session 1 is also available on request, just reply to " +
-        lead.advisor.first +
-        "'s email."
-    }
-  ];
-  return (
-    <section style={sectionShellStyle}>
-      <p style={eyebrowStyle}>About {lead.student.first}&apos;s tutors</p>
-      <h2 style={{ ...h2Style, maxWidth: "30ch" }}>
-        Specialized by section. Trained on the digital SAT. Visible before
-        week 1.
-      </h2>
-      <p style={bodyStyle}>
-        We intentionally prefer tutors who have personally taken the digital
-        SAT. Because the digital SAT only launched recently, our tutors are
-        most often current college students at schools like Vanderbilt, Duke,
-        Georgia Tech, and Emory. That is a deliberate choice, different from
-        hiring an older paper-SAT tutor and training them on the new digital
-        format.
-      </p>
-      <p style={{ ...bodyStyle, margin: "12px 0 0" }}>
-        We require verified digital SAT scores because the test structure,
-        pacing, tools, and student experience are meaningfully different from
-        the paper SAT. In practice, very few experienced tutors are willing to
-        retake something as demanding as the SAT for a part-time tutoring
-        role, especially since long-time tutors have no shortage of clients
-        without retaking the digital format and so are not incentivized to do
-        so. That limits the pool of older tutors who can meet our requirement.
-      </p>
-      <p style={{ ...bodyStyle, margin: "12px 0 0" }}>
-        Beyond the credential, students also tend to respond better to
-        near-peer tutors. When we previously used teachers or more mature
-        tutors, students did not build rapport as quickly, and score
-        improvement was not as strong. Many of those teachers had also never
-        taken the digital SAT themselves, which made it harder to coach from
-        direct experience. Over time we intentionally transitioned toward
-        near-peer tutors because students connected with them better and
-        performed better, which matches the broader research on near-peer
-        mentorship outperforming authority-based teaching (i.e. teachers who
-        teach the SAT) for SAT prep.
-      </p>
-      <div
-        style={{
-          marginTop: 22,
-          display: "grid",
-          gap: 14,
-          gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))"
-        }}
-      >
-        {items.map((it) => (
-          <div
-            key={it.title}
-            style={{
-              display: "grid",
-              gridTemplateColumns: "28px 1fr",
-              gap: 14,
-              padding: 18,
-              borderRadius: 12,
-              border: "1px solid var(--hairline)",
-              background: "var(--surface)"
-            }}
-          >
-            <span
-              style={{
-                marginTop: 1,
-                width: 28,
-                height: 28,
-                borderRadius: 999,
-                background: "rgba(47,110,71,0.10)",
-                color: "var(--em)",
-                display: "inline-flex",
-                alignItems: "center",
-                justifyContent: "center"
-              }}
-            >
-              <CheckIcon width={14} height={14} />
-            </span>
-            <div>
-              <h3
-                style={{
-                  fontFamily: "var(--display)",
-                  fontWeight: 700,
-                  fontSize: 15.5,
-                  letterSpacing: "-0.01em",
-                  margin: 0,
-                  color: "var(--page-fg)"
-                }}
-              >
-                {it.title}
-              </h3>
-              <p
-                style={{
-                  margin: "6px 0 0",
-                  fontSize: 14,
-                  lineHeight: 1.55,
-                  color: "var(--fg-soft)"
-                }}
-              >
-                {it.body}
-              </p>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <div
-        style={{
-          marginTop: 22,
-          padding: "18px 22px",
-          borderRadius: 12,
-          background: "var(--surface-2)",
-          border: "1px solid var(--hairline-2)"
-        }}
-      >
-        <p
-          style={{
-            fontFamily: "var(--mono)",
-            fontSize: 10.5,
-            letterSpacing: "0.18em",
-            textTransform: "uppercase",
-            color: "var(--fg-mute)",
-            margin: 0,
-            fontWeight: 600
-          }}
-        >
-          Prefer a tutor with more years of experience?
-        </p>
-        <p
-          style={{
-            margin: "10px 0 0",
-            fontSize: 14,
-            lineHeight: 1.6,
-            color: "var(--page-fg)"
-          }}
-        >
-          If you have a specific preference for a tutor with more years of
-          tutoring or teaching experience, reply to {lead.advisor.first}
-          &apos;s email and she will reach out to our older tutors for{" "}
-          {lead.student.first}. The trade-off is that we may not be able to
-          guarantee they have a verified digital SAT score, since most
-          experienced tutors took the paper version and few are willing to
-          retake the digital for a part-time role.
-        </p>
-      </div>
-    </section>
-  );
-}
-function RiskReversal({ lead }: { lead: PersonalizedEnrollLead }) {
-  const items = [
-    {
-      title: "Diagnostic and plan first, then billing",
-      body:
-        "The 7 days after enrollment are setup: we run her diagnostic, deliver her Phase 1 plan, and schedule her first session. The first $" +
-        lead.pricing.weeklyPrice +
-        " weekly charge does not hit until day 7."
-    },
-    {
-      title: "Week-to-week, no fixed contract",
-      body:
-        "Each $" +
-        lead.pricing.weeklyPrice +
-        " charge is billed in advance and covers her next 7 days and next 2 tutoring sessions. Cancel before any future billing date to stop further charges."
-    },
-    {
-      title: "Tutors reserved on enrollment",
-      body:
-        "The moment you enroll, " +
-        lead.student.first +
-        "'s Math and R&W tutors are reserved. Her first session is scheduled within 7 days."
-    }
-  ];
-  return (
-    <div className="co-reversal">
-      {items.map((it) => (
-        <div className="co-rev-item" key={it.title}>
-          <span className="co-rev-icon">
-            <svg
-              viewBox="0 0 24 24"
-              strokeWidth={2}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              fill="none"
-              stroke="currentColor"
-            >
-              <path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z" />
-              <path d="M9 12l2 2 4-4" />
-            </svg>
-          </span>
-          <div>
-            <h4>{it.title}</h4>
-            <p>{it.body}</p>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
 function FaqSection({ lead }: { lead: PersonalizedEnrollLead }) {
+  const diag = lead.pricing.diagPrice;
+  const wk = lead.pricing.weeklyPrice;
+  const student = lead.student.first;
+  const advisor = lead.advisor.first;
+
   const faqs: Array<{ q: string; a: string[] }> = [
     {
-      q: "What does the $" + lead.pricing.diagPrice + " actually pay for?",
+      q:
+        "Why are we paying $" +
+        diag +
+        " upfront, and why don't you offer a free trial class?",
       a: [
-        "Five to six hours of our team's time before tutoring even starts: 2 hours 14 minutes proctored on the test with " +
-          lead.student.first +
-          " under real test-day conditions, 2 to 3 hours of expert tutor review and analysis (each miss scored by how often that question type appears on the SAT and whether it was easy, medium, or hard, then converted into how many points that gap is costing her overall), and 1 to 2 hours of plan-building: an expert tutor drafts her high-level 12-week plan starting with the gap costing her the most points, and builds her first 2 lessons in detail before week 1.",
+        "The $" +
+          diag +
+          " covers 5 to 6 hours of our team's time before tutoring starts: 2 hours 14 minutes proctored on the test with " +
+          student +
+          " under real test-day conditions, 2 to 3 hours of expert tutor review and analysis (each miss scored by how often that question type appears on the digital SAT and whether it was easy, medium, or hard, then converted into how many points that gap is costing her overall), and 1 to 2 hours of plan-building: an expert tutor drafts her high-level 12-week plan starting with her highest-impact gap and writes her first 2 lessons in detail before week 1.",
         "Tutoring is separate, billed weekly at $" +
-          lead.pricing.weeklyPrice +
-          "/week. The 7 days right after enrollment are setup time, used to run her diagnostic, analyze the results, build her plan, match her with the right tutors, and schedule her first tutoring sessions. Weekly billing starts on day 7, when tutoring begins."
-      ]
-    },
-    {
-      q: "How does the weekly $" + lead.pricing.weeklyPrice + " billing work?",
-      a: [
-        "Weekly tutoring is billed in advance: each $" +
-          lead.pricing.weeklyPrice +
-          " charge covers the next 7 days and " +
-          lead.student.first +
-          "'s next 2 tutoring sessions. The 7 days right after enrollment are setup, not tutoring. Here is the timeline:",
-        "Today (day 0): you pay $" +
-          lead.pricing.diagPrice +
-          " for the diagnostic, the analysis, and Phase 1 plan. No weekly charge yet.",
-        "Days 0 to 7: setup window. We run her proctored diagnostic, build her plan, and schedule her first session. No tutoring billing yet.",
-        "Day 7: the first $" +
-          lead.pricing.weeklyPrice +
-          " charge hits. That covers her 2 tutoring sessions during days 7 to 14.",
-        "Day 14: the next $" +
-          lead.pricing.weeklyPrice +
-          " charge hits. That covers her 2 sessions during days 14 to 21. And so on, week by week.",
-        "To stop future charges, cancel before the next billing date. The diagnostic ($" +
-          lead.pricing.diagPrice +
-          ") is non-refundable once delivered, and unused sessions in an already-billed week are not refunded. Full terms: Refund and Cancellation Policy."
-      ]
-    },
-    {
-      q: "Why a paid diagnostic instead of a free trial class?",
-      a: [
-        "Our tutors' time is costly, and we pay them a fair wage. Each tutor invests 5 to 6 hours upfront on " +
-          lead.student.first +
-          "'s diagnostic, her personalized plan, and her initial lesson customization, all before her first session. We start with the diagnostic specifically so we can ensure a successful first session.",
-        "We do not offer trial lessons, but we do ensure a personalized experience with a high-quality tutor from session 1. Every session has quality flags. If " +
-          lead.student.first +
-          " and her tutor are not connecting, or if learning is not happening, we can flag it for review. In those cases we typically investigate the session, provide an additional lesson if warranted, or rematch her with a different tutor, case by case.",
-        "We have also found that many students and tutors do not find their groove until a few sessions in. The student gets more comfortable opening up over time, or the tutor adjusts their approach to what the student is responding to. There is no way to capture that in a single trial lesson. Rapport building takes time. Personalization of teaching approaches takes time. The quality flags above are how we make sure that time is well spent.",
-        "Group SAT prep companies can give a free trial class because adding one more student to a group lesson costs them nothing. Our sessions are one-on-one, so a single trial would cost us the hours of preparation plus the hour of tutoring."
+          wk +
+          " per week. The 7 days right after enrollment are setup time used to run her diagnostic, analyze the results, build her plan, match her with the right tutors, and schedule her first sessions. Weekly billing starts on day 7, when tutoring begins.",
+        "We do not offer free trial classes for two reasons. First, a free trial is a generic SAT lesson with a tutor who has not seen the student's data yet, and we have found that does not tell a parent anything useful. Second, our sessions are one-on-one. A group SAT prep company can offer a free trial because adding one more student to a group lesson costs them nothing; a 1:1 trial would cost us the hours of preparation plus the hour of tutoring.",
+        "We have also found that students and tutors often do not find their groove until a few sessions in, when the student is more comfortable opening up and the tutor has adjusted their approach to what the student is responding to. There is no way to capture that in a single trial lesson. Rapport and personalization take time. To handle that adjustment period, every session has quality flags: if " +
+          student +
+          " and her tutor are not connecting, we can flag the session for review, investigate, provide an additional lesson if warranted, or rematch her with a different tutor, case by case."
       ]
     },
     {
       q:
         "Can " +
-        lead.student.first +
+        student +
         " skip the diagnostic since she just took two Blue Book practice tests?",
       a: [
-        "Our program works backwards from the diagnostic results, and we simply cannot develop her personalized lessons without it.",
+        "Our program works backwards from the diagnostic results, and we cannot develop her personalized lessons without it. The Blue Book practice tests she already took were unproctored. They give us her score band, but not the signal we need to build her plan around.",
+        "What an expert tutor sees during a proctored 2 hours 14 minutes that an unproctored practice test cannot show: real timing per question (no pause, no break); whether " +
+          student +
+          " actually finished each section or guessed the last few; where she used Desmos and where she tried to solve mentally; where she hesitated, where she rushed, and where her accuracy dropped from fatigue; and whether she reached module 2 hard, or stayed in module 2 medium because of her module 1 accuracy.",
         "If she would rather not take the full 2 hour 14 minute proctored exam, we can develop a custom 60-minute version (1 Reading and Writing module and 1 Math module, instead of 2 each). The cost would be the same $" +
-          lead.pricing.diagPrice +
+          diag +
           " because we would need to create a custom diagnostic that does not currently exist in our system. Reply to " +
-          lead.advisor.first +
-          "'s email if you'd prefer to move forward this way and we'd be happy to set it up."
+          advisor +
+          "'s email if you would prefer to move forward this way and we will set it up."
       ]
     },
     {
       q: "How do we know Phase 1 will not be reteaching things she already knows?",
       a: [
         "Because the diagnostic prevents it. We do not teach the SAT curriculum from A to Z. We diagnose where she is struggling and only teach those concepts. We rank the questions she misses on the diagnostic by score impact and start with the highest-impact one. If the diagnostic shows she is strong on linear equations and weak on systems with quadratics, she will not see a single linear-equation lesson.",
-        "The only place foundational reteaching shows up is when a prerequisite is blocking her from solving a specific SAT question (example: needing to reteach perfect-square factoring because it is blocking a quadratic equation question we are working on). Every reteach is tied directly to an SAT question type."
+        "Each session opens by pulling up an SAT problem she got incorrect, and we walk through how to solve it with her step by step. The only time we go back to a foundational topic is when a prerequisite is blocking her from solving the SAT question we are working on. Example: if she gets a quadratic equation wrong, we start reviewing it with her, and if she does not understand the step where we factored, we pause and reteach perfect-square factoring (or whatever the blocking concept is). Then we go back to the SAT question and finish it.",
+        "We never open an Algebra 1 textbook from page one because she is a sophomore, never spend a session reviewing topics the diagnostic shows she already has, and never run a generic SAT review track that does not change based on her actual gaps. Every reteach is tied directly to an SAT question type."
       ]
     },
+    {
+      q:
+        "Who will be tutoring " +
+        student +
+        ", and how do we know they're qualified?",
+      a: [
+        "Every tutor has a verified digital SAT score of 750 or higher on the section they teach. A math tutor scored 750+ on math, a Reading and Writing tutor scored 750+ on R&W. There is no scenario where a 650 to 700 tutor is on " +
+          student +
+          "'s case.",
+        "Every tutor has personally taken the digital SAT and is trained specifically on its current format: the Desmos calculator, the built-in formula reference, and the adaptive module 1 / module 2 structure. Tutors who only took the paper version are required to retake the digital before certification, and they retrain whenever the College Board changes the test.",
+        "We intentionally prefer tutors who have personally taken the digital SAT. Because the digital SAT only launched recently, our tutors are most often current college students at schools like Vanderbilt, Duke, Georgia Tech, and Emory. That is a deliberate choice, different from hiring an older paper-SAT tutor and training them on the new digital format. In practice, very few experienced tutors are willing to retake something as demanding as the SAT for a part-time tutoring role, especially since long-time tutors have no shortage of clients without retaking the digital format and so are not incentivized to do so.",
+        "Beyond the credential, students also tend to respond better to near-peer tutors. When we previously used teachers or more mature tutors, students did not build rapport as quickly, and score improvement was not as strong. Many of those teachers had also never taken the digital SAT themselves, which made it harder to coach from direct experience. Over time we intentionally transitioned toward near-peer tutors because students connected with them better and performed better.",
+        "Subject-matter expertise alone does not make a great teacher. Every tutor is shadowed before approval and given feedback on their teaching style during certification. After they start teaching, we track each tutor's students' accuracy on the question types they teach, and we act on that data.",
+        "Before session 1 is scheduled, you and " +
+          student +
+          " will receive an introduction email from her Math tutor and her R&W tutor with their school, program, year, section score, and tutoring background. A 15-minute intro call before session 1 is also available on request, just reply to " +
+          advisor +
+          "'s email.",
+        "If you have a specific preference for someone with more years of tutoring or teaching experience, " +
+          advisor +
+          " can reach out to our older tutors. The trade-off is that we may not be able to guarantee they have a verified digital SAT score, since most experienced tutors took the paper version and few are willing to retake the digital for a part-time role. Reply if you would like to go that route."
+      ]
+    },
+    {
+      q: "Is the first week of weekly classes free?",
+      a: [
+        "Yes, in the sense that no $" +
+          wk +
+          " weekly charge hits during the first 7 days. Those 7 days are setup time, not tutoring time. Here is the full timeline:",
+        "Today (day 0): you pay $" +
+          diag +
+          " for the diagnostic, the analysis, and Phase 1 plan. No weekly charge yet.",
+        "Days 0 to 7: setup window. We run her proctored diagnostic, build her plan, match her with her tutors, and schedule her first sessions. No tutoring billing yet.",
+        "Day 7: the first $" +
+          wk +
+          " charge hits. That covers her 2 tutoring sessions during days 7 to 14.",
+        "Day 14: the next $" +
+          wk +
+          " charge. That covers her 2 sessions during days 14 to 21. And so on, week by week.",
+        "Weekly billing is in advance, so each $" +
+          wk +
+          " charge covers the upcoming 7 days. To stop future charges, cancel before the next billing date. The diagnostic ($" +
+          diag +
+          ") is non-refundable once delivered, and unused sessions in an already-billed week are not refunded. Full terms: Refund and Cancellation Policy."
+      ]
+    }
   ];
 
   return (
@@ -1260,10 +661,6 @@ export function PersonalizedEnrollPage({ lead }: Props) {
           <PlanCard lead={lead} />
           <PayCard lead={lead} />
           <div className="co-grid-content">
-            <InvestmentSection lead={lead} />
-            <CycleOneSection lead={lead} />
-            <TutorsSection lead={lead} />
-            <RiskReversal lead={lead} />
             <FaqSection lead={lead} />
             <NeedHelp lead={lead} />
           </div>
