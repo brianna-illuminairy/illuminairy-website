@@ -1109,6 +1109,7 @@ function FaqSection({ lead }: { lead: PersonalizedEnrollLead }) {
         "We do not offer trial lessons, but we do ensure a personalized experience with a high-quality tutor from session 1. Every session has quality flags. If " +
           lead.student.first +
           " and her tutor are not connecting, or if learning is not happening, we can flag it for review. In those cases we typically investigate the session, provide an additional lesson if warranted, or rematch her with a different tutor, case by case.",
+        "We have also found that many students and tutors do not find their groove until a few sessions in. The student gets more comfortable opening up over time, or the tutor adjusts their approach to what the student is responding to. There is no way to capture that in a single trial lesson. Rapport building takes time. Personalization of teaching approaches takes time. The quality flags above are how we make sure that time is well spent.",
         "Group SAT prep companies can give a free trial class because adding one more student to a group lesson costs them nothing. Our sessions are one-on-one, so a single trial would cost us the hours of preparation plus the hour of tutoring."
       ]
     },
