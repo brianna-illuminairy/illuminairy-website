@@ -867,7 +867,7 @@ function TutorsSection({ lead }: { lead: PersonalizedEnrollLead }) {
         Our tutors are graduate students from schools like Vanderbilt, Duke,
         Georgia Tech, and Emory. We use near-peer tutors on purpose. Research
         on near-peer mentorship shows it consistently outperforms
-        authority-based teaching for SAT prep, and we have seen the same in our
+        authority-based teaching (i.e. teachers who teach the SAT) for SAT prep, and we have seen the same in our
         own outcomes: students learn faster from someone who recently sat the
         same digital SAT than they do from a teacher who never has.
       </p>
