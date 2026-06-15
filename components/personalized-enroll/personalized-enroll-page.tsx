@@ -7,8 +7,11 @@ import {
   phase1Metrics,
   type PersonalizedEnrollLead
 } from "@/lib/personalized-enroll";
+import "./personalized-enroll.css";
 
-function CheckIcon({ className }: { className?: string }) {
+function CheckIcon(props: { width?: number; height?: number }) {
+  const w = props.width ?? 13;
+  const h = props.height ?? 13;
   return (
     <svg
       viewBox="0 0 24 24"
@@ -17,7 +20,8 @@ function CheckIcon({ className }: { className?: string }) {
       strokeLinecap="round"
       strokeLinejoin="round"
       stroke="currentColor"
-      className={className}
+      width={w}
+      height={h}
       aria-hidden="true"
     >
       <path d="M20 6L9 17l-5-5" />
@@ -25,7 +29,7 @@ function CheckIcon({ className }: { className?: string }) {
   );
 }
 
-function ArrowIcon({ className }: { className?: string }) {
+function ArrowIcon() {
   return (
     <svg
       viewBox="0 0 24 24"
@@ -34,7 +38,8 @@ function ArrowIcon({ className }: { className?: string }) {
       strokeWidth={2.4}
       strokeLinecap="round"
       strokeLinejoin="round"
-      className={className}
+      width={18}
+      height={18}
       aria-hidden="true"
     >
       <line x1="4" y1="12" x2="19" y2="12" />
@@ -45,66 +50,45 @@ function ArrowIcon({ className }: { className?: string }) {
 
 function buildStripeUrl(stripeLink: string, email: string): string {
   if (!email) return stripeLink;
-  const url = new URL(stripeLink);
-  url.searchParams.set("prefilled_email", email);
-  return url.toString();
+  try {
+    const url = new URL(stripeLink);
+    url.searchParams.set("prefilled_email", email);
+    return url.toString();
+  } catch {
+    return stripeLink;
+  }
 }
 function TopBar() {
   return (
-    <div className="bg-navy">
-      <div className="mx-auto flex max-w-content items-center justify-center px-6 py-4">
-        <span className="text-sm font-semibold uppercase tracking-[0.22em] text-ivory">
-          Illuminairy
-        </span>
+    <div className="lp-chrome">
+      <div className="lp-container lp-topbar">
+        <span className="lp-wordmark">Illuminairy</span>
       </div>
     </div>
   );
 }
 
 function ProgressStrip() {
-  const steps = [
-    { label: "Free SAT plan", state: "done" as const },
-    { label: "Strategy call", state: "done" as const },
-    { label: "Enroll", state: "active" as const },
-    { label: "Phase 1 begins", state: "next" as const }
+  const steps: Array<{ label: string; state: "done" | "active" | "next" }> = [
+    { label: "Free SAT plan", state: "done" },
+    { label: "Strategy call", state: "done" },
+    { label: "Enroll", state: "active" },
+    { label: "Phase 1 begins", state: "next" }
   ];
   return (
-    <div className="bg-navy-soft">
-      <div className="mx-auto flex max-w-content items-center gap-3 px-6 py-4 text-[10px] font-semibold uppercase tracking-[0.18em] text-ivory/60 sm:gap-5">
+    <div className="co-progress">
+      <div className="lp-container co-progress-inner">
         {steps.map((s, i) => (
-          <div key={s.label} className="flex flex-1 items-center gap-2 sm:gap-3">
-            <span
-              className={
-                "flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[11px] font-bold " +
-                (s.state === "done"
-                  ? "bg-emerald-400 text-navy"
-                  : s.state === "active"
-                  ? "bg-ivory text-navy"
-                  : "border border-ivory/25 text-ivory/45")
-              }
-            >
-              {s.state === "done" ? "\u2713" : i + 1}
-            </span>
-            <span
-              className={
-                s.state === "active"
-                  ? "text-ivory"
-                  : s.state === "done"
-                  ? "text-ivory/75"
-                  : "text-ivory/45"
-              }
-            >
-              {s.label}
-            </span>
-            {i < steps.length - 1 && (
-              <span
-                aria-hidden="true"
-                className={
-                  "ml-auto hidden h-px flex-1 sm:block " +
-                  (s.state === "done" ? "bg-emerald-400/60" : "bg-ivory/15")
-                }
-              />
-            )}
+          <div
+            key={s.label}
+            className={
+              "co-progress-step" +
+              (s.state === "done" ? " done" : "") +
+              (s.state === "active" ? " active" : "")
+            }
+          >
+            <span className="dot">{s.state === "done" ? "\u2713" : i + 1}</span>
+            <span className="lbl">{s.label}</span>
           </div>
         ))}
       </div>
@@ -112,40 +96,6 @@ function ProgressStrip() {
   );
 }
 // SECTION_PROGRESS
-function Hero({ lead }: { lead: PersonalizedEnrollLead }) {
-  return (
-    <section className="mx-auto max-w-content px-6 pt-12 pb-6 sm:pt-14">
-      <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.22em] text-emerald-700">
-        Phase 1 enrollment for {lead.student.first}
-      </p>
-      <h1 className="max-w-[24ch] text-balance text-3xl font-bold leading-[1.05] tracking-tight text-ink sm:text-4xl lg:text-5xl">
-        {lead.student.first}&apos;s foundation cycle starts when you enroll,{" "}
-        <span className="text-emerald-700">{lead.parent.first}</span>.
-      </h1>
-      {lead.welcomeLeadIn && (
-        <p className="mt-5 max-w-[58ch] text-base leading-relaxed text-ink-soft sm:text-lg">
-          {lead.welcomeLeadIn}
-        </p>
-      )}
-      <div className="mt-6 inline-flex flex-wrap items-center gap-3 rounded-full border border-line bg-white px-4 py-2 text-sm text-ink-soft shadow-soft">
-        <span className="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-navy to-emerald-600 text-xs font-bold text-white">
-          {lead.advisor.first
-            .split(" ")
-            .map((p) => p[0])
-            .join("")
-            .slice(0, 2)
-            .toUpperCase()}
-        </span>
-        <span>
-          Built by your advisor{" "}
-          <b className="font-semibold text-ink">{lead.advisor.full}</b>
-        </span>
-        <span aria-hidden className="h-4 w-px bg-line" />
-        <span className="text-ink-muted">From your call on {lead.call.dateLabel}</span>
-      </div>
-    </section>
-  );
-}
 function PlanCard({ lead }: { lead: PersonalizedEnrollLead }) {
   const m = phase1Metrics(lead);
   const included = [
@@ -162,12 +112,11 @@ function PlanCard({ lead }: { lead: PersonalizedEnrollLead }) {
     {
       nm: "Custom 12-week Phase 1 plan",
       ds:
-        "Highest-impact gaps ranked first. Week-1 lesson scripts written out before session 1."
+        "Highest-impact gaps ranked first. Week-1 lesson scripts written before session 1."
     },
     {
       nm: "Two specialized tutors (Math 750+, R&W 750+)",
-      ds:
-        "You see both profiles before session 1. We re-match if either is not a fit."
+      ds: "You see both profiles before session 1. Re-match if either is not a fit."
     },
     {
       nm: "24 one-hour sessions over 12 weeks",
@@ -176,7 +125,7 @@ function PlanCard({ lead }: { lead: PersonalizedEnrollLead }) {
     {
       nm: "5 mock tests across the cycle",
       ds:
-        "Diagnostic + week 4 + week 8 + week 12 + Phase 1 review. We re-baseline every 4 weeks."
+        "Diagnostic plus weeks 4, 8, 12, and Phase 1 review. We re-baseline every 4 weeks."
     },
     {
       nm: "Personalized homework from 3,500+ practice questions",
@@ -185,130 +134,72 @@ function PlanCard({ lead }: { lead: PersonalizedEnrollLead }) {
     {
       nm: "Weekly parent progress reports",
       ds:
-        "Homework completion, accuracy by question type, score trend. You are not left guessing."
+        "Homework completion, accuracy by question type, score trend. Never left guessing."
     }
   ];
+
   return (
-    <aside className="rounded-2xl border border-border bg-surface-elevated p-6 shadow-card sm:p-8">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-emerald-700">
-        Phase 1: Foundation cycle ({lead.phase1.weeks} weeks)
-      </p>
-      <h2 className="mt-2 text-2xl font-bold tracking-tight text-primary">
-        {lead.student.first}&apos;s SAT plan
-      </h2>
-      <p className="mt-1 text-sm leading-relaxed text-primary-muted">
+    <aside className="co-plan">
+      <p className="co-plan-eyebrow">Phase 1: Foundation cycle ({lead.phase1.weeks} weeks)</p>
+      <h2 className="co-plan-title">{lead.student.first}&apos;s SAT plan</h2>
+      <p className="co-plan-sub">
         Built around the path you and {lead.advisor.first} mapped on{" "}
-        {lead.call.dateLabel}. Phase 1 is the foundation cycle. Phase 2 and Phase
-        3 follow once we have her real Phase 1 results.
+        {lead.call.dateLabel}. Phase 1 is the foundation cycle.
       </p>
 
-      <div className="mt-5 grid grid-cols-[1fr,auto,1fr,auto] items-center gap-3 rounded-xl border border-emerald-300/50 bg-emerald-50/60 px-4 py-4 sm:px-5">
-        <div className="flex min-w-0 flex-col gap-1">
-          <span className="text-[9px] font-semibold uppercase tracking-[0.16em] text-primary-muted">
-            Starting
-          </span>
-          <span className="text-3xl font-bold leading-none tracking-tight text-primary-muted sm:text-[34px]">
-            {lead.startScore}
-          </span>
+      <div className="co-target">
+        <div className="seg">
+          <span className="k">Starting</span>
+          <span className="v">{lead.startScore}</span>
         </div>
-        <span className="self-end pb-1 text-lg text-primary-muted">
-          &rarr;
-        </span>
-        <div className="flex min-w-0 flex-col gap-1">
-          <span className="text-[9px] font-semibold uppercase tracking-[0.16em] text-primary-muted">
-            Phase 1 goal
-          </span>
-          <span className="text-3xl font-bold leading-none tracking-tight text-emerald-800 sm:text-[34px]">
-            {m.goalScore}
-          </span>
+        <span className="arrow">&rarr;</span>
+        <div className="seg">
+          <span className="k">Phase 1 goal</span>
+          <span className="v hot">{m.goalScore}</span>
         </div>
-        <span className="self-center whitespace-nowrap rounded-lg bg-emerald-700 px-3 py-1.5 text-sm font-bold text-white">
-          +{m.gain} pts
-        </span>
+        <span className="gain">+{m.gain} pts</span>
       </div>
-
-      <div className="mt-px grid grid-cols-3 gap-px overflow-hidden rounded-b-xl border border-t-0 border-border bg-border">
-        <div className="flex flex-col items-center gap-1 bg-surface-elevated px-2 py-3 text-center">
-          <span className="text-base font-bold leading-none text-primary sm:text-lg">
-            {m.days} days
-          </span>
-          <span className="text-[8.5px] font-semibold uppercase tracking-[0.14em] text-primary-muted">
-            Phase 1 length
-          </span>
+      <div className="co-target-foot">
+        <div className="m">
+          <span className="v">{m.days} days</span>
+          <span className="k">Phase 1 length</span>
         </div>
-        <div className="flex flex-col items-center gap-1 bg-surface-elevated px-2 py-3 text-center">
-          <span className="text-base font-bold leading-none text-primary sm:text-lg">
-            {lead.phase1.reviewDateLabel}
-          </span>
-          <span className="text-[8.5px] font-semibold uppercase tracking-[0.14em] text-primary-muted">
-            Phase 1 review
-          </span>
+        <div className="m">
+          <span className="v">{lead.phase1.reviewDateLabel}</span>
+          <span className="k">Phase 1 review</span>
         </div>
-        <div className="flex flex-col items-center gap-1 bg-surface-elevated px-2 py-3 text-center">
-          <span className="text-base font-bold leading-none text-emerald-700 sm:text-lg">
-            +{lead.phase1.pacePerWeek}/wk
-          </span>
-          <span className="text-[8.5px] font-semibold uppercase tracking-[0.14em] text-primary-muted">
-            Program average pace
-          </span>
+        <div className="m">
+          <span className="v">+{lead.phase1.pacePerWeek}/wk</span>
+          <span className="k">Program avg pace</span>
         </div>
       </div>
 
-      <p className="mt-2 text-[11px] leading-relaxed text-primary-muted">
+      <p
+        style={{
+          marginTop: 10,
+          fontSize: 12,
+          lineHeight: 1.5,
+          color: "var(--fg-mute)"
+        }}
+      >
         Starting score from: {lead.startScoreSource} Pace ({lead.phase1.pacePerWeek}{" "}
-        points/week) is our 12-week program average. Results vary by student.
+        points per week) is our 12-week program average. Results vary by student.
       </p>
 
-      <div className="mt-6 rounded-xl bg-ivory-100 p-5">
-        <p className="mb-2 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-emerald-700">
-          <span className="flex h-5 w-5 items-center justify-center rounded-full bg-gradient-to-br from-navy to-emerald-600 text-[9.5px] font-bold text-white">
-            BZ
-          </span>
-          From your call &middot; {lead.call.dateLabel}
-        </p>
-        <p className="text-sm italic leading-relaxed text-primary">
-          &ldquo;{lead.call.recapPullQuote}&rdquo;
-        </p>
-      </div>
-
-      {lead.longerArc && lead.longerArc.length > 0 && (
-        <div className="mt-5">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-primary-muted">
-            The full arc you and {lead.advisor.first} mapped
-          </p>
-          <ul className="mt-3 space-y-2 text-sm leading-relaxed text-primary">
-            {lead.longerArc.map((line) => (
-              <li key={line} className="flex gap-2">
-                <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-600" />
-                <span>{line}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      <div className="mt-7 border-t border-border pt-6">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-primary-muted">
-          Everything that&apos;s included in Phase 1
-        </p>
-        <ul className="mt-4 space-y-3">
-          {included.map((it) => (
-            <li key={it.nm} className="grid grid-cols-[22px_1fr] gap-3">
-              <span className="mt-0.5 flex h-[22px] w-[22px] items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
-                <CheckIcon className="h-3 w-3" />
-              </span>
-              <div>
-                <span className="block text-[15px] font-semibold leading-snug text-primary">
-                  {it.nm}
-                </span>
-                <span className="mt-1 block text-[13.5px] leading-relaxed text-primary-muted">
-                  {it.ds}
-                </span>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </div>
+      <p className="co-incl-head">Everything that&apos;s included in Phase 1</p>
+      <ul className="co-incl">
+        {included.map((it) => (
+          <li key={it.nm}>
+            <span className="check">
+              <CheckIcon width={12} height={12} />
+            </span>
+            <div>
+              <span className="nm">{it.nm}</span>
+              <span className="ds">{it.ds}</span>
+            </div>
+          </li>
+        ))}
+      </ul>
     </aside>
   );
 }
@@ -331,174 +222,149 @@ function PayCard({ lead }: { lead: PersonalizedEnrollLead }) {
     }
     captureAnalytics(AnalyticsEvents.personalizedEnrollPaymentClicked, {
       slug: lead.slug,
-      email_provided: Boolean(email)
+      source: "main_form"
     });
     window.location.href = buildStripeUrl(lead.pricing.stripeLink, email);
   }
 
   return (
-    <section className="rounded-2xl border border-border bg-surface-elevated p-6 shadow-card lg:sticky lg:top-6 sm:p-8">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-emerald-700">
-        Complete enrollment
-      </p>
-      <h2 className="mt-2 text-2xl font-bold tracking-tight text-primary">
-        Secure {lead.student.first}&apos;s spot
-      </h2>
+    <section className="co-pay">
+      <p className="co-pay-eyebrow">Complete enrollment</p>
+      <h2 className="co-pay-title">Secure {lead.student.first}&apos;s spot</h2>
 
-      <div className="mt-5 rounded-xl border border-border bg-white p-5">
-        <div className="flex items-baseline justify-between gap-3">
-          <div className="text-[14.5px] font-semibold leading-snug text-primary">
+      <div className="co-price">
+        <div className="co-price-row">
+          <div className="co-price-name">
             Diagnostic + analysis + Phase 1 plan
-            <span className="mt-1 block text-[12px] font-normal uppercase tracking-[0.06em] text-primary-muted">
-              One-time &middot; charged today
-            </span>
+            <span className="sub">One-time &middot; charged today</span>
           </div>
-          <div className="text-right">
-            <div className="text-2xl font-bold tracking-tight text-primary">
-              ${lead.pricing.diagPrice}
-            </div>
-            <div className="mt-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-primary-muted">
-              Today
-            </div>
-          </div>
-        </div>
-        <div className="mt-4 flex items-baseline justify-between gap-3 border-t border-border/60 pt-4">
-          <div className="text-[14.5px] font-semibold leading-snug text-primary">
-            Twice-weekly tutoring
-            <span className="mt-1 block text-[12px] font-normal uppercase tracking-[0.06em] text-primary-muted">
-              Billed weekly &middot;{" "}
-              <span className="font-semibold text-emerald-700">First 7 days free</span>{" "}
-              &middot; Cancel anytime
-            </span>
-          </div>
-          <div className="text-right">
-            <div className="text-2xl font-bold tracking-tight text-primary">
-              ${lead.pricing.weeklyPrice}
-            </div>
-            <div className="mt-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-primary-muted">
-              / week
-            </div>
-          </div>
-        </div>
-        <div className="mt-4 flex items-baseline justify-between border-t border-dashed border-border pt-4">
-          <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-primary">
-            Due today
-          </span>
-          <span className="text-2xl font-bold tracking-tight text-emerald-700">
+          <div className="co-price-amt">
             ${lead.pricing.diagPrice}
-          </span>
+            <span className="per">Today</span>
+          </div>
+        </div>
+        <div className="co-price-row">
+          <div className="co-price-name">
+            Twice-weekly tutoring
+            <span className="sub">
+              Billed weekly &middot; first 7 days free &middot; cancel anytime
+            </span>
+          </div>
+          <div className="co-price-amt">
+            ${lead.pricing.weeklyPrice}
+            <span className="per">/ week</span>
+          </div>
+        </div>
+        <div className="co-price-due">
+          <span className="lbl">Due today</span>
+          <span className="amt">${lead.pricing.diagPrice}</span>
         </div>
       </div>
 
-      <div className="mt-5">
-        <span className="block text-[10px] font-semibold uppercase tracking-[0.16em] text-primary">
-          Billing contact
-        </span>
-        <div className="mt-2 overflow-hidden rounded-xl border border-border bg-white focus-within:border-emerald-600 focus-within:ring-2 focus-within:ring-emerald-600/15">
-          <div className="flex">
-            <input
-              className="flex-1 min-w-0 border-0 bg-transparent px-4 py-3 text-[15px] text-primary outline-none placeholder:text-primary-muted/60"
-              type="text"
-              autoComplete="given-name"
-              placeholder="First name"
-              value={first}
-              onChange={(e) => setFirst(e.target.value)}
-            />
-            <span aria-hidden className="w-px bg-border" />
-            <input
-              className="flex-1 min-w-0 border-0 bg-transparent px-4 py-3 text-[15px] text-primary outline-none placeholder:text-primary-muted/60"
-              type="text"
-              autoComplete="family-name"
-              placeholder="Last name"
-              value={last}
-              onChange={(e) => setLast(e.target.value)}
-            />
-          </div>
-          <div className="border-t border-border">
-            <input
-              className="w-full border-0 bg-transparent px-4 py-3 text-[15px] text-primary outline-none placeholder:text-primary-muted/60"
-              type="email"
-              autoComplete="email"
-              placeholder="Email for receipt"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
+      <span className="co-field-label">Billing contact</span>
+      <div className="co-input-group">
+        <div className="co-input-row">
+          <input
+            className="co-input"
+            type="text"
+            autoComplete="given-name"
+            placeholder="First name"
+            value={first}
+            onChange={(e) => setFirst(e.target.value)}
+          />
+          <input
+            className="co-input"
+            type="text"
+            autoComplete="family-name"
+            placeholder="Last name"
+            value={last}
+            onChange={(e) => setLast(e.target.value)}
+          />
+        </div>
+        <div className="co-input-row">
+          <input
+            className="co-input"
+            type="email"
+            autoComplete="email"
+            placeholder="Email for receipt"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
         </div>
       </div>
 
-      <p className="mt-4 rounded-xl border border-border bg-ivory/60 px-4 py-3 text-[12.5px] leading-relaxed text-primary-muted">
+      <p
+        style={{
+          marginTop: 14,
+          padding: "12px 14px",
+          borderRadius: 10,
+          background: "var(--surface-2)",
+          fontSize: 13,
+          lineHeight: 1.5,
+          color: "var(--fg-soft)"
+        }}
+      >
         Card details are collected on the next screen via Stripe&apos;s secure
         checkout. We never see or store your card.
       </p>
 
-      <label
-        htmlFor="tos"
-        className="mt-5 flex cursor-pointer gap-3 text-[13px] leading-relaxed text-primary-muted"
-      >
+      <div className="co-tos">
         <input
-          id="tos"
           type="checkbox"
-          className="mt-1 h-4 w-4 shrink-0 cursor-pointer accent-emerald-700"
+          id="tos"
           checked={tos}
           onChange={(e) => setTos(e.target.checked)}
         />
-        <span>
-          I agree to Illuminairy&apos;s Terms, Refund Policy, and Privacy Policy.
-          I authorize the ${lead.pricing.diagPrice} charge today and weekly
-          billing of ${lead.pricing.weeklyPrice} starting 7 days from now, which
-          I can cancel anytime.
-        </span>
-      </label>
+        <label htmlFor="tos">
+          I agree to Illuminairy&apos;s Terms, Refund Policy, and Privacy Policy. I
+          authorize the ${lead.pricing.diagPrice} charge today and weekly billing
+          of ${lead.pricing.weeklyPrice} starting 7 days from now, which I can
+          cancel anytime.
+        </label>
+      </div>
 
-      <button
-        type="button"
-        onClick={onPay}
-        className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full bg-emerald-500 px-6 py-4 text-base font-bold tracking-tight text-navy shadow-[0_8px_24px_rgba(16,185,129,0.32)] transition hover:bg-emerald-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-700"
-      >
-        Pay ${lead.pricing.diagPrice} and enroll {lead.student.first}
-        <ArrowIcon className="h-5 w-5" />
+      <button type="button" className="co-paybtn" onClick={onPay}>
+        <span>
+          Pay ${lead.pricing.diagPrice} and enroll {lead.student.first}
+        </span>
+        <span className="arrow">
+          <ArrowIcon />
+        </span>
       </button>
 
       {error && (
         <p
           role="alert"
-          className="mt-3 rounded-lg border border-red-300 bg-red-50 px-3 py-2 text-[13px] text-red-800"
+          style={{
+            marginTop: 12,
+            padding: "10px 14px",
+            borderRadius: 10,
+            background: "rgba(176,40,40,0.06)",
+            border: "1px solid rgba(176,40,40,0.22)",
+            color: "#a92929",
+            fontSize: 13.5
+          }}
         >
           {error}
         </p>
       )}
 
-      <div className="mt-5 flex flex-wrap items-center gap-4 text-[10px] font-semibold uppercase tracking-[0.12em] text-primary-muted">
-        <span className="flex items-center gap-1.5">
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={2}
-            className="h-3.5 w-3.5 text-emerald-700"
-            aria-hidden="true"
-          >
+      <div className="co-trust-row">
+        <span>
+          <svg viewBox="0 0 24 24" strokeWidth={2} fill="none" stroke="currentColor">
             <rect x="3" y="11" width="18" height="11" rx="2" />
             <path d="M7 11V7a5 5 0 0 1 10 0v4" />
           </svg>
           256-bit SSL
         </span>
-        <span className="flex items-center gap-1.5">
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={2}
-            className="h-3.5 w-3.5 text-emerald-700"
-            aria-hidden="true"
-          >
+        <span>
+          <svg viewBox="0 0 24 24" strokeWidth={2} fill="none" stroke="currentColor">
             <path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z" />
           </svg>
           PCI compliant
         </span>
-        <span className="flex items-center gap-1.5">
-          <CheckIcon className="h-3.5 w-3.5 text-emerald-700" />
+        <span>
+          <CheckIcon width={13} height={13} />
           Secured by Stripe
         </span>
       </div>
@@ -519,57 +385,164 @@ function InvestmentSection({ lead }: { lead: PersonalizedEnrollLead }) {
       hours: "2\u20133 hrs",
       title: "Hand-done analysis",
       body:
-        "After the test, we review her time per question, her pacing across both modules, and every wrong answer by hand. We classify each miss by question type and weight it by how many points it cost on a real digital SAT."
+        "We review her time per question, her pacing across both modules, and every wrong answer by hand. We classify each miss by question type and weight it by how many points it cost on a real digital SAT."
     },
     {
       hours: "1\u20132 hrs",
       title: "Phase 1 plan + week 1 lessons",
       body:
-        "Custom 12-week Phase 1 plan with her highest-impact gaps ranked first, plus her first week of session-by-session lesson scripts written out so her tutor walks into session 1 already knowing what to teach."
+        "Custom 12-week plan with her highest-impact gaps ranked first, plus her first week of session-by-session lesson scripts written before session 1."
     }
   ];
   return (
-    <section className="mx-auto max-w-content px-6 py-10">
-      <div className="rounded-2xl border border-border bg-surface-elevated p-7 shadow-card sm:p-9">
-        <div className="flex flex-wrap items-baseline justify-between gap-3">
-          <div>
-            <p className="text-[10.5px] font-semibold uppercase tracking-[0.22em] text-emerald-700">
-              What the ${lead.pricing.diagPrice} actually buys
-            </p>
-            <h2 className="mt-2 text-2xl font-bold tracking-tight text-primary sm:text-[26px]">
-              5 to 6 hours of our team&apos;s time, before tutoring even starts.
-            </h2>
-          </div>
-          <span className="rounded-full border border-emerald-300 bg-emerald-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-emerald-800">
-            Per student
-          </span>
-        </div>
-        <p className="mt-3 max-w-[60ch] text-[15px] leading-relaxed text-primary-muted">
-          The ${lead.pricing.diagPrice} is not a mock-test fee. A mock by itself
-          is free almost anywhere. The analysis and the plan are the product.
-        </p>
-        <div className="mt-7 grid gap-5 sm:grid-cols-3">
-          {items.map((it) => (
-            <div
-              key={it.title}
-              className="flex flex-col gap-3 rounded-xl border border-border bg-ivory/40 p-5"
+    <section
+      style={{
+        background: "var(--surface)",
+        border: "1px solid var(--hairline)",
+        borderRadius: 16,
+        padding: "32px 32px 28px",
+        marginBottom: 28,
+        boxShadow: "0 14px 40px rgba(18,26,43,0.06)"
+      }}
+    >
+      <p
+        style={{
+          fontFamily: "var(--mono)",
+          fontSize: 10.5,
+          fontWeight: 500,
+          letterSpacing: "0.22em",
+          textTransform: "uppercase",
+          color: "var(--em)",
+          margin: 0
+        }}
+      >
+        What the ${lead.pricing.diagPrice} actually buys
+      </p>
+      <h2
+        style={{
+          fontFamily: "var(--display)",
+          fontWeight: 700,
+          fontSize: "clamp(22px,3.4vw,28px)",
+          letterSpacing: "-0.025em",
+          lineHeight: 1.1,
+          margin: "8px 0 0",
+          color: "var(--page-fg)"
+        }}
+      >
+        5 to 6 hours of our team&apos;s time, before tutoring even starts.
+      </h2>
+      <p
+        style={{
+          margin: "12px 0 0",
+          maxWidth: "60ch",
+          fontSize: 15,
+          lineHeight: 1.6,
+          color: "var(--fg-soft)"
+        }}
+      >
+        The ${lead.pricing.diagPrice} is not a mock-test fee. A mock test by
+        itself is free almost anywhere. The analysis and the plan are the
+        product.
+      </p>
+      <div
+        style={{
+          marginTop: 28,
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+          gap: 20
+        }}
+      >
+        {items.map((it) => (
+          <div
+            key={it.title}
+            style={{
+              border: "1px solid var(--hairline)",
+              background: "rgba(247,250,252,0.7)",
+              borderRadius: 12,
+              padding: 20
+            }}
+          >
+            <span
+              style={{
+                display: "inline-block",
+                fontFamily: "var(--display)",
+                fontWeight: 700,
+                fontSize: 12,
+                letterSpacing: "0.02em",
+                background: "var(--em)",
+                color: "#fff",
+                padding: "5px 10px",
+                borderRadius: 6,
+                marginBottom: 12
+              }}
             >
-              <span className="inline-flex w-fit items-center gap-1.5 rounded-md bg-emerald-700 px-2 py-1 text-[11px] font-bold tracking-tight text-white">
-                {it.hours}
-              </span>
-              <h3 className="text-[16px] font-bold tracking-tight text-primary">
-                {it.title}
-              </h3>
-              <p className="text-[13.5px] leading-relaxed text-primary-muted">
-                {it.body}
-              </p>
-            </div>
-          ))}
-        </div>
+              {it.hours}
+            </span>
+            <h3
+              style={{
+                fontFamily: "var(--display)",
+                fontWeight: 700,
+                fontSize: 17,
+                letterSpacing: "-0.01em",
+                margin: "0 0 6px",
+                color: "var(--page-fg)"
+              }}
+            >
+              {it.title}
+            </h3>
+            <p
+              style={{
+                margin: 0,
+                fontSize: 14,
+                lineHeight: 1.55,
+                color: "var(--fg-soft)"
+              }}
+            >
+              {it.body}
+            </p>
+          </div>
+        ))}
       </div>
     </section>
   );
 }
+const sectionShellStyle: React.CSSProperties = {
+  background: "var(--surface)",
+  border: "1px solid var(--hairline)",
+  borderRadius: 16,
+  padding: "32px 32px 28px",
+  marginBottom: 28,
+  boxShadow: "0 14px 40px rgba(18,26,43,0.06)"
+};
+
+const eyebrowStyle: React.CSSProperties = {
+  fontFamily: "var(--mono)",
+  fontSize: 10.5,
+  fontWeight: 500,
+  letterSpacing: "0.22em",
+  textTransform: "uppercase",
+  color: "var(--em)",
+  margin: 0
+};
+
+const h2Style: React.CSSProperties = {
+  fontFamily: "var(--display)",
+  fontWeight: 700,
+  fontSize: "clamp(22px,3.4vw,28px)",
+  letterSpacing: "-0.025em",
+  lineHeight: 1.1,
+  margin: "8px 0 0",
+  color: "var(--page-fg)"
+};
+
+const bodyStyle: React.CSSProperties = {
+  margin: "14px 0 0",
+  maxWidth: "62ch",
+  fontSize: 15,
+  lineHeight: 1.65,
+  color: "var(--fg-soft)"
+};
+
 function WhyProctorSection({ lead }: { lead: PersonalizedEnrollLead }) {
   const captures = [
     "Real timing per question (no pause, no break)",
@@ -578,129 +551,233 @@ function WhyProctorSection({ lead }: { lead: PersonalizedEnrollLead }) {
       " actually finished each section, or guessed the last few",
     "Where she pulled up Desmos, and where she tried to solve mentally",
     "Where she hesitated, where she got fidgety, where her accuracy dropped from fatigue",
-    "Whether she reached module 2 hard or stayed in module 2 medium because of her module 1 accuracy",
+    "Whether she reached module 2 hard, or stayed in module 2 medium because of module 1 accuracy",
     "Whether she had any unauthorized materials in reach (notes, formula sheets, phone)"
   ];
   return (
-    <section className="mx-auto max-w-content px-6 py-8">
-      <div className="grid gap-6 lg:grid-cols-[0.95fr,1.05fr]">
-        <div>
-          <p className="text-[10.5px] font-semibold uppercase tracking-[0.22em] text-emerald-700">
-            Why we proctor (and why it matters)
-          </p>
-          <h2 className="mt-2 text-2xl font-bold tracking-tight text-primary sm:text-[28px]">
-            An at-home diagnostic is not the same product.
-          </h2>
-          <p className="mt-4 max-w-[58ch] text-[15px] leading-relaxed text-primary-muted">
-            Most SAT prep companies send a kid a take-home diagnostic with no
-            proctor on the line. The kid takes it on a couch with their phone
-            next to them, with formula sheets they would not have on test day,
-            and with the option to pause whenever they hit a hard question.
-          </p>
-          <p className="mt-3 max-w-[58ch] text-[15px] leading-relaxed text-primary-muted">
-            That is not a planning tool. It is a score with no signal. The two
-            Blue Book mocks {lead.student.first} already took were unproctored,
-            which is why we cannot use them as our planning data. We need to see
-            her take it under the same conditions she will see on test day.
-          </p>
-        </div>
-        <div className="rounded-2xl border border-border bg-surface-elevated p-6 shadow-card sm:p-7">
-          <p className="text-[10.5px] font-semibold uppercase tracking-[0.18em] text-primary-muted">
-            What 2 hours 14 minutes of proctoring captures that an at-home test
-            cannot
-          </p>
-          <ul className="mt-4 space-y-3">
-            {captures.map((c) => (
-              <li
-                key={c}
-                className="grid grid-cols-[20px_1fr] gap-3 text-[14px] leading-relaxed text-primary"
+    <section style={sectionShellStyle}>
+      <p style={eyebrowStyle}>Why we proctor (and why it matters)</p>
+      <h2 style={h2Style}>An at-home diagnostic is not the same product.</h2>
+      <p style={bodyStyle}>
+        Most SAT prep companies send a kid a take-home diagnostic with no
+        proctor on the line. The kid takes it on a couch with their phone next
+        to them, with formula sheets they would not have on test day, and with
+        the option to pause whenever they hit a hard question.
+      </p>
+      <p style={{ ...bodyStyle, margin: "12px 0 0" }}>
+        That is not a planning tool, it is a score with no signal. The two Blue
+        Book mocks {lead.student.first} already took were unproctored, which is
+        why we cannot use them as our planning data. We need to see her take it
+        under the same conditions she will see on test day.
+      </p>
+      <div
+        style={{
+          marginTop: 24,
+          padding: "20px 22px",
+          borderRadius: 12,
+          background: "var(--surface-2)"
+        }}
+      >
+        <p
+          style={{
+            fontFamily: "var(--mono)",
+            fontSize: 10.5,
+            letterSpacing: "0.18em",
+            textTransform: "uppercase",
+            color: "var(--fg-mute)",
+            margin: 0
+          }}
+        >
+          What 2 hours 14 minutes of proctoring captures that an at-home test
+          cannot
+        </p>
+        <ul
+          style={{
+            margin: "14px 0 0",
+            padding: 0,
+            listStyle: "none",
+            display: "grid",
+            gap: 10
+          }}
+        >
+          {captures.map((c) => (
+            <li
+              key={c}
+              style={{
+                display: "grid",
+                gridTemplateColumns: "20px 1fr",
+                gap: 12,
+                fontSize: 14.5,
+                lineHeight: 1.55,
+                color: "var(--page-fg)"
+              }}
+            >
+              <span
+                style={{
+                  marginTop: 2,
+                  width: 20,
+                  height: 20,
+                  borderRadius: 999,
+                  background: "rgba(47,110,71,0.12)",
+                  color: "var(--em)",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center"
+                }}
               >
-                <span className="mt-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
-                  <CheckIcon className="h-2.5 w-2.5" />
-                </span>
-                <span>{c}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
+                <CheckIcon width={11} height={11} />
+              </span>
+              <span>{c}</span>
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   );
 }
 function CycleOneSection({ lead }: { lead: PersonalizedEnrollLead }) {
   return (
-    <section className="mx-auto max-w-content px-6 py-8">
-      <div className="rounded-2xl border border-border bg-surface-elevated p-7 shadow-card sm:p-9">
-        <p className="text-[10.5px] font-semibold uppercase tracking-[0.22em] text-emerald-700">
-          What Phase 1 actually looks like
-        </p>
-        <h2 className="mt-2 text-2xl font-bold tracking-tight text-primary sm:text-[28px]">
-          We do not reteach what {lead.student.first} already knows.
-        </h2>
-        <p className="mt-4 max-w-[64ch] text-[15px] leading-relaxed text-primary-muted">
-          Every session and every reteach is tied directly to a specific SAT
-          question type. Phase 1 is mistake-based learning. Each session starts
-          by pulling up the SAT-style questions she got wrong on her last
-          practice round, ranked by point impact. We work through the easy
-          version with her, then medium, then hard, until she can solve that
-          question type on her own.
-        </p>
-        <p className="mt-3 max-w-[64ch] text-[15px] leading-relaxed text-primary-muted">
-          The only time we go back to foundational content is when a
-          prerequisite is blocking a specific SAT question. Here is exactly what
-          that looks like in practice:
-        </p>
-        <figure className="mt-5 rounded-xl border-l-4 border-emerald-600 bg-ivory/60 p-5">
-          <blockquote className="text-[15px] italic leading-relaxed text-primary">
-            She gets a quadratic equation wrong on the SAT. We start reviewing
-            it with her. She does not understand the step where we factored. We
-            explain it. She still does not get it. We pause and reteach
-            perfect-square factoring (or the distributive property, whatever the
-            blocking concept actually was). Then we go back to the SAT question
-            and finish it.
-          </blockquote>
-        </figure>
-        <div className="mt-6 grid gap-4 sm:grid-cols-2">
-          <div className="rounded-xl border border-emerald-300/60 bg-emerald-50/50 p-5">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-emerald-800">
-              We do this
-            </p>
-            <ul className="mt-3 space-y-2 text-[14px] leading-relaxed text-primary">
-              <li>Start every session on the SAT questions she missed.</li>
-              <li>
-                Teach the next prioritized skill at SAT depth, with SAT-style
-                questions only.
-              </li>
-              <li>
-                Pause to reteach a foundational concept only when it is blocking
-                an SAT question we are working on.
-              </li>
-              <li>
-                Re-baseline every 4 weeks and update her plan with what we just
-                learned.
-              </li>
-            </ul>
-          </div>
-          <div className="rounded-xl border border-border bg-white p-5">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-primary-muted">
-              We never do this
-            </p>
-            <ul className="mt-3 space-y-2 text-[14px] leading-relaxed text-primary">
-              <li>
-                Open an Algebra 1 textbook from page one because she is a
-                sophomore.
-              </li>
-              <li>
-                Spend a session reviewing topics the diagnostic shows she
-                already has.
-              </li>
-              <li>
-                Run a generic SAT review track that does not change based on her
-                actual gaps.
-              </li>
-              <li>Teach a concept that does not appear on the digital SAT.</li>
-            </ul>
-          </div>
+    <section style={sectionShellStyle}>
+      <p style={eyebrowStyle}>What Phase 1 actually looks like</p>
+      <h2 style={h2Style}>
+        We do not reteach what {lead.student.first} already knows.
+      </h2>
+      <p style={bodyStyle}>
+        Every session and every reteach is tied directly to a specific SAT
+        question type. Phase 1 is mistake-based learning. Each session starts
+        by pulling up the SAT-style questions she got wrong on her last
+        practice round, ranked by point impact. We work through the easy
+        version with her, then medium, then hard, until she can solve that
+        question type on her own.
+      </p>
+      <p style={{ ...bodyStyle, margin: "12px 0 0" }}>
+        The only time we go back to foundational content is when a prerequisite
+        is blocking a specific SAT question. Here is exactly what that looks
+        like in practice:
+      </p>
+      <figure
+        style={{
+          margin: "20px 0 0",
+          padding: "18px 22px",
+          background: "var(--surface-2)",
+          borderLeft: "4px solid var(--em)",
+          borderRadius: 10
+        }}
+      >
+        <blockquote
+          style={{
+            margin: 0,
+            fontStyle: "italic",
+            fontSize: 15,
+            lineHeight: 1.65,
+            color: "var(--page-fg)"
+          }}
+        >
+          She gets a quadratic equation wrong on the SAT. We start reviewing it
+          with her. She does not understand the step where we factored. We
+          explain it. She still does not get it. We pause and reteach
+          perfect-square factoring (or the distributive property, whatever the
+          blocking concept actually was). Then we go back to the SAT question
+          and finish it.
+        </blockquote>
+      </figure>
+      <div
+        style={{
+          marginTop: 24,
+          display: "grid",
+          gap: 16,
+          gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))"
+        }}
+      >
+        <div
+          style={{
+            padding: 20,
+            borderRadius: 12,
+            background: "rgba(119,200,154,0.10)",
+            border: "1px solid rgba(47,110,71,0.32)"
+          }}
+        >
+          <p
+            style={{
+              fontFamily: "var(--mono)",
+              fontSize: 11,
+              letterSpacing: "0.16em",
+              textTransform: "uppercase",
+              color: "var(--em)",
+              margin: 0,
+              fontWeight: 600
+            }}
+          >
+            We do this
+          </p>
+          <ul
+            style={{
+              margin: "12px 0 0",
+              paddingLeft: 18,
+              fontSize: 14,
+              lineHeight: 1.6,
+              color: "var(--page-fg)"
+            }}
+          >
+            <li>Start every session on the SAT questions she missed.</li>
+            <li>
+              Teach the next prioritized skill at SAT depth, with SAT-style
+              questions only.
+            </li>
+            <li>
+              Pause to reteach a foundational concept only when it is blocking
+              an SAT question we are working on.
+            </li>
+            <li>
+              Re-baseline every 4 weeks and update her plan with what we just
+              learned.
+            </li>
+          </ul>
+        </div>
+        <div
+          style={{
+            padding: 20,
+            borderRadius: 12,
+            background: "var(--surface)",
+            border: "1px solid var(--hairline)"
+          }}
+        >
+          <p
+            style={{
+              fontFamily: "var(--mono)",
+              fontSize: 11,
+              letterSpacing: "0.16em",
+              textTransform: "uppercase",
+              color: "var(--fg-mute)",
+              margin: 0,
+              fontWeight: 600
+            }}
+          >
+            We never do this
+          </p>
+          <ul
+            style={{
+              margin: "12px 0 0",
+              paddingLeft: 18,
+              fontSize: 14,
+              lineHeight: 1.6,
+              color: "var(--page-fg)"
+            }}
+          >
+            <li>
+              Open an Algebra 1 textbook from page one because she is a
+              sophomore.
+            </li>
+            <li>
+              Spend a session reviewing topics the diagnostic shows she already
+              has.
+            </li>
+            <li>
+              Run a generic SAT review track that does not change based on her
+              actual gaps.
+            </li>
+            <li>Teach a concept that does not appear on the digital SAT.</li>
+          </ul>
         </div>
       </div>
     </section>
@@ -728,17 +805,17 @@ function TutorsSection({ lead }: { lead: PersonalizedEnrollLead }) {
     {
       title: "Per-tutor outcomes are tracked",
       body:
-        "We measure student accuracy on the question types each tutor taught. If a tutor's students consistently underperform on a topic, that is a signal we act on. That is a more reliable quality measure than retake quotas."
+        "We measure student accuracy on the question types each tutor taught. If a tutor's students consistently underperform on a topic, that is a signal we act on. More reliable than retake quotas."
     },
     {
       title: "You see profiles before session 1",
       body:
         "Once " +
         lead.student.first +
-        "'s diagnostic is in and she is matched, both her Math tutor's and R&W tutor's profile (school, program, year, section score) is sent to you before session 1 is scheduled. We re-match if either is not a fit."
+        "'s diagnostic is in and she is matched, both tutor profiles (school, program, year, section score) are sent to you before session 1 is scheduled. We re-match if either is not a fit."
     },
     {
-      title: "Optional 15-min tutor intro call",
+      title: "Optional 15-minute tutor intro call",
       body:
         "If you want a 15-minute introduction call with " +
         lead.student.first +
@@ -748,42 +825,81 @@ function TutorsSection({ lead }: { lead: PersonalizedEnrollLead }) {
     }
   ];
   return (
-    <section className="mx-auto max-w-content px-6 py-8">
-      <div className="rounded-2xl border border-border bg-surface-elevated p-7 shadow-card sm:p-9">
-        <p className="text-[10.5px] font-semibold uppercase tracking-[0.22em] text-emerald-700">
-          About {lead.student.first}&apos;s tutors
-        </p>
-        <h2 className="mt-2 max-w-[28ch] text-2xl font-bold tracking-tight text-primary sm:text-[28px]">
-          Specialized by section. Certified on the digital SAT. Visible before
-          week 1.
-        </h2>
-        <p className="mt-3 max-w-[64ch] text-[15px] leading-relaxed text-primary-muted">
-          Our tutors are graduate students from schools like Vanderbilt, Duke,
-          Georgia Tech, and Emory. They are not 10-year SAT veterans. Our
-          position is that recent high scorers on the digital SAT, paired with
-          our curriculum and shadowing, teach the current digital SAT better
-          than a paper-SAT veteran teaching it second-hand.
-        </p>
-        <div className="mt-6 grid gap-4 sm:grid-cols-2">
-          {items.map((it) => (
-            <div
-              key={it.title}
-              className="grid grid-cols-[26px_1fr] gap-3 rounded-xl border border-border bg-white p-5"
+    <section style={sectionShellStyle}>
+      <p style={eyebrowStyle}>About {lead.student.first}&apos;s tutors</p>
+      <h2 style={{ ...h2Style, maxWidth: "30ch" }}>
+        Specialized by section. Certified on the digital SAT. Visible before
+        week 1.
+      </h2>
+      <p style={bodyStyle}>
+        Our tutors are graduate students from schools like Vanderbilt, Duke,
+        Georgia Tech, and Emory. They are not 10-year SAT veterans. Our
+        position is that recent high scorers on the digital SAT, paired with
+        our curriculum and shadowing, teach the current digital SAT better than
+        a paper-SAT veteran teaching it second-hand.
+      </p>
+      <div
+        style={{
+          marginTop: 22,
+          display: "grid",
+          gap: 14,
+          gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))"
+        }}
+      >
+        {items.map((it) => (
+          <div
+            key={it.title}
+            style={{
+              display: "grid",
+              gridTemplateColumns: "28px 1fr",
+              gap: 14,
+              padding: 18,
+              borderRadius: 12,
+              border: "1px solid var(--hairline)",
+              background: "var(--surface)"
+            }}
+          >
+            <span
+              style={{
+                marginTop: 1,
+                width: 28,
+                height: 28,
+                borderRadius: 999,
+                background: "rgba(47,110,71,0.10)",
+                color: "var(--em)",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center"
+              }}
             >
-              <span className="mt-0.5 flex h-[26px] w-[26px] items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
-                <CheckIcon className="h-3.5 w-3.5" />
-              </span>
-              <div>
-                <h3 className="text-[15px] font-bold tracking-tight text-primary">
-                  {it.title}
-                </h3>
-                <p className="mt-1 text-[13.5px] leading-relaxed text-primary-muted">
-                  {it.body}
-                </p>
-              </div>
+              <CheckIcon width={14} height={14} />
+            </span>
+            <div>
+              <h3
+                style={{
+                  fontFamily: "var(--display)",
+                  fontWeight: 700,
+                  fontSize: 15.5,
+                  letterSpacing: "-0.01em",
+                  margin: 0,
+                  color: "var(--page-fg)"
+                }}
+              >
+                {it.title}
+              </h3>
+              <p
+                style={{
+                  margin: "6px 0 0",
+                  fontSize: 14,
+                  lineHeight: 1.55,
+                  color: "var(--fg-soft)"
+                }}
+              >
+                {it.body}
+              </p>
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
     </section>
   );
@@ -800,7 +916,7 @@ function RiskReversal({ lead }: { lead: PersonalizedEnrollLead }) {
       body:
         "The $" +
         lead.pricing.weeklyPrice +
-        "/week tutoring does not start billing until 7 days from checkout. Cancel inside that window with $0 weekly charge. No fixed contract after."
+        "/week tutoring does not start billing until 7 days from checkout. Cancel inside that window with $0 weekly charge."
     },
     {
       title: "Tutors reserved on enrollment",
@@ -811,36 +927,40 @@ function RiskReversal({ lead }: { lead: PersonalizedEnrollLead }) {
     }
   ];
   return (
-    <section className="mx-auto max-w-content px-6 py-8">
-      <div className="grid gap-5 rounded-2xl border border-border bg-surface-elevated p-6 shadow-card sm:grid-cols-3 sm:p-7">
-        {items.map((it) => (
-          <div key={it.title} className="grid grid-cols-[42px_1fr] gap-3">
-            <span className="flex h-[42px] w-[42px] items-center justify-center rounded-xl bg-emerald-100 text-emerald-700">
-              <CheckIcon className="h-5 w-5" />
-            </span>
-            <div>
-              <h3 className="text-[15px] font-bold tracking-tight text-primary">
-                {it.title}
-              </h3>
-              <p className="mt-1 text-[13.5px] leading-relaxed text-primary-muted">
-                {it.body}
-              </p>
-            </div>
+    <div className="co-reversal">
+      {items.map((it) => (
+        <div className="co-rev-item" key={it.title}>
+          <span className="co-rev-icon">
+            <svg
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              fill="none"
+              stroke="currentColor"
+            >
+              <path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z" />
+              <path d="M9 12l2 2 4-4" />
+            </svg>
+          </span>
+          <div>
+            <h4>{it.title}</h4>
+            <p>{it.body}</p>
           </div>
-        ))}
-      </div>
-    </section>
+        </div>
+      ))}
+    </div>
   );
 }
 function FaqSection({ lead }: { lead: PersonalizedEnrollLead }) {
   const m = phase1Metrics(lead);
-  const faqs = [
+  const faqs: Array<{ q: string; a: string[] }> = [
     {
       q: "What does the $" + lead.pricing.diagPrice + " actually pay for?",
       a: [
         "Five to six hours of our team's time before tutoring even starts: 2 hours 14 minutes proctored on the test with " +
           lead.student.first +
-          " under real test-day conditions, 2 to 3 hours of hand-done analysis (time per question, every miss classified by question type and weighted by points cost), and a custom 12-week plan plus her first week of session-by-session lesson scripts written out before session 1.",
+          " under real test-day conditions, 2 to 3 hours of hand-done analysis (time per question, every miss classified by question type and weighted by points cost), and a custom 12-week plan plus her first week of session-by-session lesson scripts written before session 1.",
         "Tutoring is separate, billed weekly at $" +
           lead.pricing.weeklyPrice +
           "/week. The first week is free. Weekly billing starts 7 days from checkout."
@@ -862,7 +982,7 @@ function FaqSection({ lead }: { lead: PersonalizedEnrollLead }) {
         " skip the diagnostic since she just took two Blue Book mocks?",
       a: [
         "We strongly recommend against it, and there is a middle option if she really does not want to retake right now.",
-        "The Blue Book mocks were unproctored, on her own laptop, with no observation of timing, pacing, or which questions she paused on. We get one number out of them: 1070 to 1080. That tells us her band, but not why she is in that band. Without a proctored diagnostic, weeks 1 through 4 of tutoring would be the tutor guessing at what to teach.",
+        "The Blue Book mocks were unproctored, on her own laptop, with no observation of timing, pacing, or which questions she paused on. We get one number out of them: 1070 to 1080. Without a proctored diagnostic, weeks 1 through 4 of tutoring would be the tutor guessing at what to teach.",
         "The middle option: a shorter 60-minute proctored mini-diagnostic (one math module, one Reading and Writing module). Same $" +
           lead.pricing.diagPrice +
           " because the analysis and plan work is the same. Reply to " +
@@ -888,8 +1008,8 @@ function FaqSection({ lead }: { lead: PersonalizedEnrollLead }) {
           m.goalScore +
           " by " +
           lead.phase1.reviewDateLabel +
-          ". Her highest-impact gaps will be closed and her timing on the digital SAT will be familiar.",
-        "After Phase 1, the October sophomore PSAT becomes her first official benchmark. Phase 2 (the summer before junior year) is the National Merit / PSAT-NMSQT push, with her first official SAT in spring 2027 (May 1 target, March 6 or June 5 backup). Phase 3, if needed, is junior-year final optimization to 1500+. Results vary by student."
+          ".",
+        "After Phase 1, the October sophomore PSAT becomes her first official benchmark. Phase 2 (the summer before junior year) is the National Merit / PSAT-NMSQT push, with her first official SAT in spring 2027. Phase 3, if needed, is junior-year final optimization. Results vary by student."
       ]
     },
     {
@@ -903,86 +1023,70 @@ function FaqSection({ lead }: { lead: PersonalizedEnrollLead }) {
   ];
 
   return (
-    <section className="mx-auto max-w-content px-6 py-8">
-      <div className="rounded-2xl border border-border bg-surface-elevated p-7 shadow-card sm:p-9">
-        <h2 className="text-2xl font-bold tracking-tight text-primary sm:text-[28px]">
-          Your questions, answered
-        </h2>
-        <p className="mt-2 text-[14px] leading-relaxed text-primary-muted">
-          Pulled from your June 9 call and your June 10 reply. If anything is
-          still unclear, {lead.advisor.first} is one message away.
-        </p>
-        <div className="mt-5 divide-y divide-border/70">
-          {faqs.map((f, i) => (
-            <details
-              key={f.q}
-              className="group py-4"
-              {...(i === 0 ? { open: true } : {})}
-            >
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-[15.5px] font-semibold leading-snug text-primary marker:hidden [&::-webkit-details-marker]:hidden">
-                <span>{f.q}</span>
-                <span className="relative h-5 w-5 shrink-0 transition-transform group-open:rotate-45">
-                  <span className="absolute left-0.5 top-2 h-0.5 w-4 rounded bg-emerald-700" />
-                  <span className="absolute left-2 top-0.5 h-4 w-0.5 rounded bg-emerald-700" />
-                </span>
-              </summary>
-              <div className="mt-3 space-y-3 pb-2 pr-7 text-[14.5px] leading-relaxed text-primary-muted">
-                {f.a.map((p, pi) => (
-                  <p key={pi}>{p}</p>
-                ))}
-              </div>
-            </details>
-          ))}
-        </div>
-      </div>
-    </section>
+    <div className="co-faq">
+      <h3>Your questions, answered</h3>
+      <p className="sub">
+        Pulled from your June 9 call and your June 10 reply. If anything is
+        still unclear, {lead.advisor.first} is one message away.
+      </p>
+      {faqs.map((f, i) => (
+        <details key={f.q} {...(i === 0 ? { open: true } : {})}>
+          <summary>
+            {f.q}
+            <span className="plus" />
+          </summary>
+          <div className="answer">
+            {f.a.map((p, pi) => (
+              <p key={pi}>{p}</p>
+            ))}
+          </div>
+        </details>
+      ))}
+    </div>
   );
 }
 function NeedHelp({ lead }: { lead: PersonalizedEnrollLead }) {
-  const mailto = "mailto:" + lead.advisor.email;
   return (
-    <section className="mx-auto max-w-content px-6 py-8">
-      <div className="grid items-center gap-5 rounded-2xl bg-navy p-7 text-ivory shadow-card sm:grid-cols-[1fr_auto] sm:p-8">
-        <div>
-          <h3 className="text-xl font-bold tracking-tight">
-            Anything still on your mind, {lead.parent.first}?
-          </h3>
-          <p className="mt-2 text-[14.5px] leading-relaxed text-ivory/70">
-            {lead.advisor.full} is your direct advisor. Reply to her email or
-            book another call if you want to walk through anything together
-            before you decide.
-          </p>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          <a
-            href={mailto}
-            className="inline-flex items-center gap-2 rounded-full border border-ivory/20 bg-ivory/5 px-4 py-2.5 text-[13.5px] font-semibold text-ivory transition hover:border-ivory/40 hover:bg-ivory/10"
-          >
-            Email {lead.advisor.first}
-          </a>
-          <a
-            href="/contact"
-            className="inline-flex items-center gap-2 rounded-full border border-ivory/20 bg-ivory/5 px-4 py-2.5 text-[13.5px] font-semibold text-ivory transition hover:border-ivory/40 hover:bg-ivory/10"
-          >
-            Book another call
-          </a>
-        </div>
+    <div className="co-help">
+      <div className="co-help-text">
+        <h4>Anything still on your mind, {lead.parent.first}?</h4>
+        <p>
+          {lead.advisor.full} is your direct advisor. Reply to her email or
+          book another call if you want to walk through anything together
+          before you decide.
+        </p>
       </div>
-    </section>
+      <div className="co-help-actions">
+        <a className="co-help-btn" href={"mailto:" + lead.advisor.email}>
+          Email {lead.advisor.first}
+        </a>
+        <a className="co-help-btn" href="/contact">
+          Book another call
+        </a>
+      </div>
+    </div>
   );
 }
 function PageFooter() {
   return (
-    <footer className="bg-navy-deep py-10 text-ivory/45">
-      <div className="mx-auto flex max-w-content flex-col items-center gap-3 px-6 text-center">
-        <ul className="flex flex-wrap justify-center gap-x-5 gap-y-2 text-[10.5px] font-semibold uppercase tracking-[0.18em]">
-          <li><a href="/terms" className="hover:text-emerald-400">Terms</a></li>
-          <li><a href="/privacy" className="hover:text-emerald-400">Privacy</a></li>
-          <li><a href="/refund-policy" className="hover:text-emerald-400">Refund policy</a></li>
-          <li><a href="/contact" className="hover:text-emerald-400">Contact</a></li>
+    <footer className="co-footer">
+      <div className="lp-container">
+        <ul className="links">
+          <li>
+            <a href="/terms">Terms</a>
+          </li>
+          <li>
+            <a href="/privacy">Privacy</a>
+          </li>
+          <li>
+            <a href="/refund-policy">Refund policy</a>
+          </li>
+          <li>
+            <a href="/contact">Contact</a>
+          </li>
         </ul>
-        <p className="max-w-[64ch] text-[10.5px] leading-relaxed">
-          {new Date().getFullYear()} Illuminairy. Tutoring services billed
+        <p className="legal">
+          © {new Date().getFullYear()} Illuminairy. Tutoring services billed
           weekly, cancel anytime. Results vary by student. SAT and PSAT are
           trademarks of the College Board, which is not affiliated with this
           page.
@@ -991,7 +1095,6 @@ function PageFooter() {
     </footer>
   );
 }
-
 function MobilePayBar({ lead }: { lead: PersonalizedEnrollLead }) {
   return (
     <a
@@ -1002,17 +1105,19 @@ function MobilePayBar({ lead }: { lead: PersonalizedEnrollLead }) {
           source: "mobile_paybar"
         })
       }
-      className="fixed inset-x-3 bottom-3 z-40 flex items-center justify-between gap-3 rounded-full border border-emerald-300 bg-emerald-500 px-5 py-3 text-navy shadow-[0_12px_32px_rgba(16,185,129,0.35)] lg:hidden"
+      className="co-mobile-paybar"
     >
-      <span className="flex flex-col text-left leading-tight">
-        <span className="text-[15.5px] font-bold">
+      <span className="co-mobile-paybar-text">
+        <span className="lbl">
           Pay ${lead.pricing.diagPrice} and enroll
         </span>
-        <span className="text-[11px] font-semibold opacity-80">
+        <span className="sub">
           First tutoring week free &middot; cancel anytime
         </span>
       </span>
-      <ArrowIcon className="h-5 w-5" />
+      <span className="co-mobile-paybar-arrow">
+        <ArrowIcon />
+      </span>
     </a>
   );
 }
@@ -1028,17 +1133,18 @@ export function PersonalizedEnrollPage({ lead }: Props) {
   }, [lead.slug]);
 
   return (
-    <>
+    <div className="lp co">
       <TopBar />
       <ProgressStrip />
-      <main className="bg-ivory pb-24 text-ink lg:pb-12">
-        <Hero lead={lead} />
-        <section className="mx-auto max-w-content px-6 pb-2 pt-2">
-          <div className="grid items-start gap-6 lg:grid-cols-[1.05fr_0.95fr] lg:gap-7">
-            <PlanCard lead={lead} />
-            <PayCard lead={lead} />
-          </div>
-        </section>
+
+      <div className="lp-container" style={{ paddingTop: 28, paddingBottom: 6 }}>
+        <div className="co-grid">
+          <PlanCard lead={lead} />
+          <PayCard lead={lead} />
+        </div>
+      </div>
+
+      <div className="lp-container" style={{ paddingTop: 28 }}>
         <InvestmentSection lead={lead} />
         <WhyProctorSection lead={lead} />
         <CycleOneSection lead={lead} />
@@ -1046,9 +1152,10 @@ export function PersonalizedEnrollPage({ lead }: Props) {
         <RiskReversal lead={lead} />
         <FaqSection lead={lead} />
         <NeedHelp lead={lead} />
-      </main>
+      </div>
+
       <PageFooter />
       <MobilePayBar lead={lead} />
-    </>
+    </div>
   );
 }
