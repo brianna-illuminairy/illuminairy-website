@@ -160,18 +160,6 @@ function PlanCard({ lead }: { lead: PersonalizedEnrollLead }) {
         </div>
       </div>
 
-      <p
-        style={{
-          marginTop: 10,
-          fontSize: 12,
-          lineHeight: 1.5,
-          color: "var(--fg-mute)"
-        }}
-      >
-        Starting score from: {lead.startScoreSource} Pace ({lead.phase1.pacePerWeek}{" "}
-        points per week) is our 12-week program average. Results vary by student.
-      </p>
-
       <p className="co-incl-head">Everything that&apos;s included in Phase 1</p>
       <ul className="co-incl">
         {included.map((it) => (
