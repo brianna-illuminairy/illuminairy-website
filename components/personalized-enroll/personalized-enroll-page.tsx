@@ -283,7 +283,7 @@ function PayCard({ lead }: { lead: PersonalizedEnrollLead }) {
           <div className="co-price-name">
             Twice-weekly tutoring
             <span className="sub">
-              Weekly billing starts 7 days from today &middot; cancel anytime
+              Weekly billing starts 7 days from today
             </span>
           </div>
           <div className="co-price-amt">
