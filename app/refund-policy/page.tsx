@@ -46,11 +46,17 @@ export default function RefundPolicyPage() {
           <h2>3. Weekly tutoring billing</h2>
           <p>
             Weekly tutoring is billed in advance on a recurring weekly basis at
-            the rate disclosed at checkout. Each weekly charge entitles the
-            Customer to two (2) tutoring sessions during the corresponding
-            billing week, scheduled subject to tutor availability. Sessions are
-            non-transferable across billing weeks except as expressly permitted
-            below.
+            the rate disclosed at checkout. Each weekly charge is processed
+            for, and entitles the Customer to, two (2) tutoring sessions
+            during the seven (7) calendar days immediately following the date
+            of that charge (the &ldquo;billing week&rdquo;), subject to tutor availability.
+            By way of example, if the Customer enrolls and pays the Skill
+            Diagnostic fee on day 0, the first weekly charge is processed on
+            day 7 and covers the two sessions scheduled to occur during days 7
+            through 14. The next weekly charge is processed on day 14 and
+            covers the two sessions scheduled to occur during days 14 through
+            21, and so forth. Sessions are non-transferable across billing
+            weeks except as expressly permitted in Section 5.
           </p>
 
           <h2>4. Cancellation of weekly tutoring</h2>

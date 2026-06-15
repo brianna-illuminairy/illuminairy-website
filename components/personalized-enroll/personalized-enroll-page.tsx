@@ -204,8 +204,11 @@ function PlanCard({ lead }: { lead: PersonalizedEnrollLead }) {
   );
 }
 function PayCard({ lead }: { lead: PersonalizedEnrollLead }) {
-  const [first, setFirst] = useState("");
-  const [last, setLast] = useState("");
+  const derivedLast =
+    lead.parent.last ??
+    lead.parent.full.replace(lead.parent.first, "").trim();
+  const [first, setFirst] = useState(lead.parent.first ?? "");
+  const [last, setLast] = useState(derivedLast);
   const [email, setEmail] = useState(lead.parent.email ?? "");
   const [tos, setTos] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -293,20 +296,41 @@ function PayCard({ lead }: { lead: PersonalizedEnrollLead }) {
         </div>
       </div>
 
-      <p
-        style={{
-          marginTop: 14,
-          padding: "12px 14px",
-          borderRadius: 10,
-          background: "var(--surface-2)",
-          fontSize: 13,
-          lineHeight: 1.5,
-          color: "var(--fg-soft)"
-        }}
-      >
-        Card details are collected on the next screen via Stripe&apos;s secure
-        checkout. We never see or store your card.
-      </p>
+      <span className="co-field-label mt">Card details</span>
+      <div className="co-card-fallback" aria-hidden="true">
+        <div className="co-cf-num">
+          <span className="co-cf-ph">1234 1234 1234 1234</span>
+          <span className="co-brands">
+            <span className="co-brand mc">
+              <i className="r" />
+              <i className="y" />
+            </span>
+            <span className="co-brand visa">VISA</span>
+            <span className="co-brand amex">AMEX</span>
+            <span className="co-brand disc">DISC</span>
+          </span>
+        </div>
+        <div className="co-cf-row">
+          <div className="co-cf-cell">
+            <span className="co-cf-ph">MM / YY</span>
+          </div>
+          <div className="co-cf-cell">
+            <span className="co-cf-ph">CVC</span>
+            <svg
+              className="co-cf-icon"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              fill="none"
+              stroke="currentColor"
+            >
+              <rect x="2" y="5" width="20" height="14" rx="2" />
+              <line x1="2" y1="10" x2="22" y2="10" />
+            </svg>
+          </div>
+        </div>
+      </div>
 
       <div className="co-tos">
         <input
@@ -905,9 +929,9 @@ function RiskReversal({ lead }: { lead: PersonalizedEnrollLead }) {
     {
       title: "Week-to-week, no fixed contract",
       body:
-        "Cancel before any $" +
+        "Weekly billing is in advance: each $" +
         lead.pricing.weeklyPrice +
-        " weekly charge to stop future billing. Each weekly charge covers 2 tutoring sessions."
+        " charge covers the next 7 days and her next 2 tutoring sessions. Cancel before any future billing date to stop further charges."
     },
     {
       title: "Tutors reserved on enrollment",
@@ -955,6 +979,28 @@ function FaqSection({ lead }: { lead: PersonalizedEnrollLead }) {
         "Tutoring is separate, billed weekly at $" +
           lead.pricing.weeklyPrice +
           "/week. The first week is free. Weekly billing starts 7 days from checkout."
+      ]
+    },
+    {
+      q: "How does the weekly $" + lead.pricing.weeklyPrice + " billing work?",
+      a: [
+        "Weekly tutoring is billed in advance, which means each $" +
+          lead.pricing.weeklyPrice +
+          " charge covers the next 7 days and " +
+          lead.student.first +
+          "'s next 2 tutoring sessions. Concretely:",
+        "Today (day 0): you pay $" +
+          lead.pricing.diagPrice +
+          " for the diagnostic, the analysis, and Phase 1 plan. No weekly charge yet.",
+        "Day 7: the first $" +
+          lead.pricing.weeklyPrice +
+          " charge hits. That covers her 2 tutoring sessions during days 7 to 14.",
+        "Day 14: the next $" +
+          lead.pricing.weeklyPrice +
+          " charge hits. That covers her 2 sessions during days 14 to 21. And so on, week by week.",
+        "To stop future charges, cancel before the next billing date. The diagnostic ($" +
+          lead.pricing.diagPrice +
+          ") is non-refundable once delivered, and unused sessions in an already-billed week are not refunded. Full terms: Refund and Cancellation Policy."
       ]
     },
     {

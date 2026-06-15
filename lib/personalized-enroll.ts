@@ -11,7 +11,7 @@
 
 export type PersonalizedEnrollLead = {
   slug: string;
-  parent: { first: string; full: string; email?: string };
+  parent: { first: string; last?: string; full: string; email?: string };
   student: { first: string; full: string; gradeNote: string };
   /** Their last known score baseline + source so the page is honest. */
   startScore: number;
@@ -46,7 +46,12 @@ export type PersonalizedEnrollLead = {
 
 const sohailShermeen: PersonalizedEnrollLead = {
   slug: "sohail-shermeen",
-  parent: { first: "Sohail", full: "Sohail Yousaf", email: "sohailft@gmail.com" },
+  parent: {
+    first: "Sohail",
+    last: "Yousaf",
+    full: "Sohail Yousaf",
+    email: "sohailft@gmail.com"
+  },
   student: {
     first: "Shermeen",
     full: "Shermeen Yousaf",
