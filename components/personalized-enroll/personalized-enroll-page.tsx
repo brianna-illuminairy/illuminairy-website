@@ -132,10 +132,6 @@ function PlanCard({ lead }: { lead: PersonalizedEnrollLead }) {
     <aside className="co-plan">
       <p className="co-plan-eyebrow">Phase 1: Foundation cycle ({lead.phase1.weeks} weeks)</p>
       <h2 className="co-plan-title">{lead.student.first}&apos;s SAT plan</h2>
-      <p className="co-plan-sub">
-        Built around the path you and {lead.advisor.first} mapped on{" "}
-        {lead.call.dateLabel}. Phase 1 is the foundation cycle.
-      </p>
 
       <div className="co-target">
         <div className="seg">
