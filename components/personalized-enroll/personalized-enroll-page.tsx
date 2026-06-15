@@ -447,7 +447,7 @@ function FaqSection({ lead }: { lead: PersonalizedEnrollLead }) {
         student +
         " skip the diagnostic since she just took two Blue Book practice tests?",
       a: [
-        "Our program works backwards from the diagnostic results, and we cannot develop her personalized lessons without it. The Blue Book practice tests she already took were unproctored. They give us her score band, but not the signal we need to build her plan around.",
+        "Our program works backwards from the diagnostic results, and we cannot develop her personalized lessons without it. The Blue Book practice tests she already took were unproctored, we do not have access to her scores from them, we do not know how much time she spent per question, and they do not give us enough detailed information to build her personalized plan.",
         "What an expert tutor sees during a proctored 2 hours 14 minutes that an unproctored practice test cannot show: real timing per question (no pause, no break); whether " +
           student +
           " actually finished each section or guessed the last few; where she used Desmos and where she tried to solve mentally; where she hesitated, where she rushed, and where her accuracy dropped from fatigue; and whether she reached module 2 hard, or stayed in module 2 medium because of her module 1 accuracy.",
