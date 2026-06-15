@@ -529,28 +529,6 @@ function FaqSection({ lead }: { lead: PersonalizedEnrollLead }) {
     </div>
   );
 }
-function NeedHelp({ lead }: { lead: PersonalizedEnrollLead }) {
-  return (
-    <div className="co-help">
-      <div className="co-help-text">
-        <h4>Anything still on your mind, {lead.parent.first}?</h4>
-        <p>
-          {lead.advisor.full} is your direct advisor. Reply to her email or
-          book another call if you want to walk through anything together
-          before you decide.
-        </p>
-      </div>
-      <div className="co-help-actions">
-        <a className="co-help-btn" href={"mailto:" + lead.advisor.email}>
-          Email {lead.advisor.first}
-        </a>
-        <a className="co-help-btn" href="/contact">
-          Book another call
-        </a>
-      </div>
-    </div>
-  );
-}
 function PageFooter() {
   return (
     <footer className="co-footer">
@@ -635,7 +613,6 @@ export function PersonalizedEnrollPage({ lead }: Props) {
           <PayCard lead={lead} />
           <div className="co-grid-content">
             <FaqSection lead={lead} />
-            <NeedHelp lead={lead} />
           </div>
         </div>
       </div>
