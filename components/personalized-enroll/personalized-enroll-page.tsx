@@ -90,7 +90,26 @@ function PlanCard({ lead }: { lead: PersonalizedEnrollLead }) {
   const m = phase1Metrics(lead);
   const included = [
     {
-      nm: "Proctored full-length digital adaptive Skill Diagnostic",
+      nm: (
+        <>
+          Proctored full-length digital adaptive Skill Diagnostic
+          <span
+            className="co-tip"
+            tabIndex={0}
+            role="img"
+            aria-label="Optional 60-minute single-module version available"
+            data-tip={
+              "Prefer a shorter version? We can build a custom 60-minute proctored exam (1 Reading and Writing module + 1 Math module). Same $" +
+              lead.pricing.diagPrice +
+              ". Reply to " +
+              lead.advisor.first +
+              "'s email to set it up."
+            }
+          >
+            i
+          </span>
+        </>
+      ),
       ds:
         "2 hours 14 minutes. Watched the whole way by us, under real test-day conditions."
     },
@@ -162,8 +181,8 @@ function PlanCard({ lead }: { lead: PersonalizedEnrollLead }) {
 
       <p className="co-incl-head">Everything that&apos;s included in Phase 1</p>
       <ul className="co-incl">
-        {included.map((it) => (
-          <li key={it.nm}>
+        {included.map((it, i) => (
+          <li key={i}>
             <span className="check">
               <CheckIcon width={12} height={12} />
             </span>
@@ -992,7 +1011,6 @@ function RiskReversal({ lead }: { lead: PersonalizedEnrollLead }) {
   );
 }
 function FaqSection({ lead }: { lead: PersonalizedEnrollLead }) {
-  const m = phase1Metrics(lead);
   const faqs: Array<{ q: string; a: string[] }> = [
     {
       q: "What does the $" + lead.pricing.diagPrice + " actually pay for?",
@@ -1061,29 +1079,6 @@ function FaqSection({ lead }: { lead: PersonalizedEnrollLead }) {
         "The only place foundational reteaching shows up is when a prerequisite is blocking her from solving a specific SAT question (example: needing to reteach perfect-square factoring because it is blocking a quadratic equation question we are working on). Every reteach is tied directly to an SAT question type."
       ]
     },
-    {
-      q: "What does Phase 1 success look like, and what comes after?",
-      a: [
-        "Phase 1 (this 12-week cycle) is the foundation. Our program average is +15 points per week. For " +
-          lead.student.first +
-          ", starting at " +
-          lead.startScore +
-          ", that is a target of " +
-          m.goalScore +
-          " by " +
-          lead.phase1.reviewDateLabel +
-          ".",
-        "After Phase 1, the October sophomore PSAT becomes her first official benchmark. Phase 2 (the summer before junior year) is the National Merit / PSAT-NMSQT push, with her first official SAT in spring 2027. Phase 3, if needed, is junior-year final optimization. Results vary by student."
-      ]
-    },
-    {
-      q: "What if 12 weeks is not long enough to hit the Phase 1 goal?",
-      a: [
-        "Enrollment is week to week with no fixed contract, so there is no penalty for needing more time. If at week 12 she is 50 or 80 points short of the Phase 1 target, " +
-          lead.advisor.first +
-          " will walk through her actual gaps with you. From there you can extend Phase 1 by a few weeks, add a third or fourth tutoring session per week to move faster, or move on to Phase 2. The choice is based on her real data, not a fixed schedule."
-      ]
-    }
   ];
 
   return (
