@@ -551,6 +551,90 @@ function InvestmentSection({ lead }: { lead: PersonalizedEnrollLead }) {
           </div>
         ))}
       </div>
+
+      <div
+        style={{
+          marginTop: 24,
+          padding: "20px 22px",
+          borderRadius: 12,
+          background: "var(--surface-2)"
+        }}
+      >
+        <p
+          style={{
+            fontFamily: "var(--mono)",
+            fontSize: 10.5,
+            letterSpacing: "0.18em",
+            textTransform: "uppercase",
+            color: "var(--fg-mute)",
+            margin: 0,
+            fontWeight: 500
+          }}
+        >
+          What the proctored 2 hours 14 minutes captures that a practice test
+          on her own cannot
+        </p>
+        <p
+          style={{
+            margin: "10px 0 0",
+            fontSize: 14,
+            lineHeight: 1.6,
+            color: "var(--fg-soft)"
+          }}
+        >
+          The two Blue Book practice tests {lead.student.first} already took
+          were unproctored. They give us her score band, but not the signal
+          we need to plan against. With proctoring, an expert tutor sees:
+        </p>
+        <ul
+          style={{
+            margin: "12px 0 0",
+            padding: 0,
+            listStyle: "none",
+            display: "grid",
+            gap: 10
+          }}
+        >
+          {[
+            "Real timing per question, with no pause and no break",
+            "Whether " +
+              lead.student.first +
+              " actually finished each section or guessed the last few",
+            "Where she used Desmos and where she tried to solve mentally",
+            "Where she hesitated, where she rushed, and where her accuracy dropped from fatigue",
+            "Whether she reached module 2 hard, or stayed in module 2 medium because of her module 1 accuracy"
+          ].map((c) => (
+            <li
+              key={c}
+              style={{
+                display: "grid",
+                gridTemplateColumns: "20px 1fr",
+                gap: 12,
+                fontSize: 14,
+                lineHeight: 1.55,
+                color: "var(--page-fg)"
+              }}
+            >
+              <span
+                style={{
+                  marginTop: 2,
+                  width: 20,
+                  height: 20,
+                  borderRadius: 999,
+                  background: "rgba(47,110,71,0.12)",
+                  color: "var(--em)",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center"
+                }}
+              >
+                <CheckIcon width={11} height={11} />
+              </span>
+              <span>{c}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
     </section>
   );
 }
@@ -591,91 +675,6 @@ const bodyStyle: React.CSSProperties = {
   color: "var(--fg-soft)"
 };
 
-function WhyProctorSection({ lead }: { lead: PersonalizedEnrollLead }) {
-  const captures = [
-    "Real timing per question, with no pause and no break",
-    "Whether " +
-      lead.student.first +
-      " actually finished each section or guessed the last few",
-    "Where she used Desmos and where she tried to solve mentally",
-    "Where she hesitated, where she rushed, and where her accuracy dropped from fatigue",
-    "Whether she reached module 2 hard, or stayed in module 2 medium because of her module 1 accuracy"
-  ];
-  return (
-    <section style={sectionShellStyle}>
-      <p style={eyebrowStyle}>Why we proctor</p>
-      <h2 style={h2Style}>An unproctored practice test is a score, not a plan.</h2>
-      <p style={bodyStyle}>
-        The two Blue Book practice tests {lead.student.first} already took were
-        unproctored. They give us her score band, but not the signal we need
-        to build her plan around. With a proctored evaluation, an expert tutor
-        is on the session for the full 2 hours 14 minutes capturing what an
-        unproctored practice test cannot show.
-      </p>
-      <div
-        style={{
-          marginTop: 24,
-          padding: "20px 22px",
-          borderRadius: 12,
-          background: "var(--surface-2)"
-        }}
-      >
-        <p
-          style={{
-            fontFamily: "var(--mono)",
-            fontSize: 10.5,
-            letterSpacing: "0.18em",
-            textTransform: "uppercase",
-            color: "var(--fg-mute)",
-            margin: 0
-          }}
-        >
-          What proctoring captures that an unproctored practice test cannot
-        </p>
-        <ul
-          style={{
-            margin: "14px 0 0",
-            padding: 0,
-            listStyle: "none",
-            display: "grid",
-            gap: 10
-          }}
-        >
-          {captures.map((c) => (
-            <li
-              key={c}
-              style={{
-                display: "grid",
-                gridTemplateColumns: "20px 1fr",
-                gap: 12,
-                fontSize: 14.5,
-                lineHeight: 1.55,
-                color: "var(--page-fg)"
-              }}
-            >
-              <span
-                style={{
-                  marginTop: 2,
-                  width: 20,
-                  height: 20,
-                  borderRadius: 999,
-                  background: "rgba(47,110,71,0.12)",
-                  color: "var(--em)",
-                  display: "inline-flex",
-                  alignItems: "center",
-                  justifyContent: "center"
-                }}
-              >
-                <CheckIcon width={11} height={11} />
-              </span>
-              <span>{c}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </section>
-  );
-}
 function CycleOneSection({ lead }: { lead: PersonalizedEnrollLead }) {
   return (
     <section style={sectionShellStyle}>
@@ -1212,7 +1211,6 @@ export function PersonalizedEnrollPage({ lead }: Props) {
 
       <div className="lp-container" style={{ paddingTop: 28 }}>
         <InvestmentSection lead={lead} />
-        <WhyProctorSection lead={lead} />
         <CycleOneSection lead={lead} />
         <TutorsSection lead={lead} />
         <RiskReversal lead={lead} />
