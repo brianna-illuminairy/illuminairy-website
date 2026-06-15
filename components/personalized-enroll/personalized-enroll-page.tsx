@@ -842,37 +842,32 @@ function CycleOneSection({ lead }: { lead: PersonalizedEnrollLead }) {
 function TutorsSection({ lead }: { lead: PersonalizedEnrollLead }) {
   const items = [
     {
-      title: "750+ on the section they teach",
+      title: "750+ on the section they teach, no recent grads",
       body:
-        "A math tutor scored 750+ on math. A Reading and Writing tutor scored 750+ on R&W. There is no scenario where a 650 to 700 tutor is on " +
+        "Every tutor scored 750 or higher on the section they teach. A math tutor scored 750+ on math, a Reading and Writing tutor scored 750+ on R&W. There is no scenario where a 650 to 700 tutor is on " +
         lead.student.first +
-        "'s case."
+        "'s case. None of our tutors are recent high school graduates or college freshmen, and we explicitly screen against that when matching her."
     },
     {
-      title: "Digital SAT only",
+      title: "Trained on the digital SAT, not the paper version",
       body:
-        "Every tutor has personally taken the digital SAT. Tutors who only took the paper version are required to retake the digital before they are certified to teach for us."
+        "Every tutor has personally taken the digital SAT and is trained specifically on its current format: the Desmos calculator, the built-in formula reference, and the adaptive module 1 / module 2 structure. Tutors who only took the paper version are required to retake the digital before certification, and they retrain whenever the College Board changes the test."
     },
     {
-      title: "Trained, shadowed, and quality-monitored",
+      title: "Shadowed for teaching style, not just the score",
       body:
-        "Tutors complete our training, shadow live sessions before they teach, then are themselves shadowed for their first sessions. They retrain whenever the College Board changes the digital SAT. We actively monitor each tutor to make sure their students are scoring well on the question types they teach."
+        "Subject-matter expertise alone does not make a great teacher. Every tutor is shadowed before approval and given feedback on their teaching style during certification. After they start, we track their students' accuracy on the question types they taught, and act on that data."
     },
     {
-      title: "You see profiles before session 1",
+      title: "Introduction email before session 1",
       body:
         "Once " +
         lead.student.first +
-        "'s diagnostic is in and she is matched, both her Math tutor's and her R&W tutor's profile (school, program, year, section score) is sent to you before session 1 is scheduled."
-    },
-    {
-      title: "Optional 15-minute tutor intro call",
-      body:
-        "If you want a 15-minute introduction call with " +
+        " is matched, you and " +
         lead.student.first +
-        "'s matched tutors before session 1, reply to " +
+        " receive an introduction email from her Math tutor and her R&W tutor with their school, program, year, section score, and tutoring background, all before session 1 is scheduled. A 15-minute intro call before session 1 is also available on request, just reply to " +
         lead.advisor.first +
-        "'s email and we will arrange it."
+        "'s email."
     }
   ];
   return (
