@@ -179,18 +179,45 @@
 /* ════════ Grid ════════ */
 .co-grid {
   display: grid;
-  grid-template-columns: 1fr;
   gap: 22px;
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    "plan"
+    "pay"
+    "content";
   padding: 14px 0 56px;
 }
 @media (min-width: 920px) {
   .co-grid {
     grid-template-columns: 1.05fr 0.95fr;
+    grid-template-areas:
+      "plan    pay"
+      "content pay";
     gap: 28px;
     padding: 16px 0 80px;
+    /* align-items: start so .co-pay keeps its natural content height while
+       still occupying a tall grid area (plan + content rows on desktop),
+       which gives position: sticky enough room to stay visible the whole
+       time someone reads the page. */
     align-items: start;
   }
 }
+.co-plan { grid-area: plan; }
+.co-pay { grid-area: pay; }
+.co-grid-content {
+  grid-area: content;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  min-width: 0;
+}
+@media (min-width: 920px) {
+  .co-grid-content { gap: 28px; }
+}
+/* Sections inside .co-grid-content already have marginBottom; suppress it
+   so the flex gap is the only spacing between them. */
+.co-grid-content > section { margin-bottom: 0 !important; }
+.co-grid-content > div { margin-bottom: 0 !important; }
 
 /* ════════ LEFT: Plan summary card ════════ */
 .co-plan {

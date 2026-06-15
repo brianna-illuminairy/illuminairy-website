@@ -1195,20 +1195,19 @@ export function PersonalizedEnrollPage({ lead }: Props) {
       <TopBar />
       <ProgressStrip />
 
-      <div className="lp-container" style={{ paddingTop: 28, paddingBottom: 6 }}>
+      <div className="lp-container" style={{ paddingTop: 28 }}>
         <div className="co-grid">
           <PlanCard lead={lead} />
           <PayCard lead={lead} />
+          <div className="co-grid-content">
+            <InvestmentSection lead={lead} />
+            <CycleOneSection lead={lead} />
+            <TutorsSection lead={lead} />
+            <RiskReversal lead={lead} />
+            <FaqSection lead={lead} />
+            <NeedHelp lead={lead} />
+          </div>
         </div>
-      </div>
-
-      <div className="lp-container" style={{ paddingTop: 28 }}>
-        <InvestmentSection lead={lead} />
-        <CycleOneSection lead={lead} />
-        <TutorsSection lead={lead} />
-        <RiskReversal lead={lead} />
-        <FaqSection lead={lead} />
-        <NeedHelp lead={lead} />
       </div>
 
       <PageFooter />
