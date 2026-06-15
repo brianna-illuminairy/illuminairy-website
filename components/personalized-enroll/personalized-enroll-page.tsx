@@ -3,10 +3,7 @@
 import { useEffect, useState } from "react";
 import { captureAnalytics } from "@/lib/analytics-capture";
 import { AnalyticsEvents } from "@/lib/analytics-events";
-import {
-  phase1Metrics,
-  type PersonalizedEnrollLead
-} from "@/lib/personalized-enroll";
+import { type PersonalizedEnrollLead } from "@/lib/personalized-enroll";
 import "./personalized-enroll.css";
 
 function CheckIcon(props: { width?: number; height?: number }) {
@@ -87,7 +84,6 @@ function ProgressStrip() {
 }
 // SECTION_PROGRESS
 function PlanCard({ lead }: { lead: PersonalizedEnrollLead }) {
-  const m = phase1Metrics(lead);
   const included = [
     {
       nm: (
@@ -156,37 +152,11 @@ function PlanCard({ lead }: { lead: PersonalizedEnrollLead }) {
 
   return (
     <aside className="co-plan co-plan--dark">
-      <p className="co-plan-eyebrow">Phase 1: Foundation cycle ({lead.phase1.weeks} weeks)</p>
-      <h2 className="co-plan-title">{lead.student.first}&apos;s SAT plan</h2>
+      <h2 className="co-plan-title">
+        SAT Diagnostic Evaluation &amp; Weekly Tutoring Program
+      </h2>
 
-      <div className="co-target">
-        <div className="seg">
-          <span className="k">Starting</span>
-          <span className="v">{lead.startScore}</span>
-        </div>
-        <span className="arrow">&rarr;</span>
-        <div className="seg">
-          <span className="k">Phase 1 goal</span>
-          <span className="v hot">{m.goalScore}</span>
-        </div>
-        <span className="gain">+{m.gain} pts</span>
-      </div>
-      <div className="co-target-foot">
-        <div className="m">
-          <span className="v">{m.days} days</span>
-          <span className="k">Phase 1 length</span>
-        </div>
-        <div className="m">
-          <span className="v">{lead.phase1.reviewDateLabel}</span>
-          <span className="k">Phase 1 review</span>
-        </div>
-        <div className="m">
-          <span className="v">+{lead.phase1.pacePerWeek}/wk</span>
-          <span className="k">Program avg pace</span>
-        </div>
-      </div>
-
-      <p className="co-incl-head">Everything that&apos;s included in Phase 1</p>
+      <p className="co-incl-head">What&apos;s included</p>
       <ul className="co-incl">
         {included.map((it, i) => (
           <li key={i}>
@@ -510,9 +480,7 @@ function FaqSection({ lead }: { lead: PersonalizedEnrollLead }) {
         "Subject-matter expertise alone does not make a great teacher. Every tutor is shadowed before approval and given feedback on their teaching style during training. After they start teaching, we track each tutor's students' accuracy on the question types they teach, and we act on that data.",
         "Before session 1 is scheduled, you and " +
           student +
-          " will receive an introduction email from her Math tutor and her R&W tutor with their school, program, year, section score, and tutoring background. A 15-minute intro call before session 1 is also available on request, just reply to " +
-          advisor +
-          "'s email.",
+          " will receive an introduction email from the tutor teaching her first week's lesson, with their school, program, year, section score, and background.",
         "If you have a specific preference for someone with more years of tutoring or teaching experience, " +
           advisor +
           " can reach out to our older tutors. The trade-off is that we may not be able to guarantee they have a verified digital SAT score, since most experienced tutors took the paper version and few are willing to retake the digital for a part-time role. Reply if you would like to go that route."
@@ -521,16 +489,14 @@ function FaqSection({ lead }: { lead: PersonalizedEnrollLead }) {
     {
       q: "Is the first week of weekly classes free?",
       a: [
-        "Yes, in the sense that no $" +
-          wk +
-          " weekly charge hits during the first 7 days. Those 7 days are setup time, not tutoring time. Here is the full timeline:",
+        "Not exactly, and we want to be clear about it. The first 7 days after enrollment are not classes at all. They are setup time we need to schedule her proctored diagnostic, analyze the results by hand, develop her personalized plan, build her initial lessons, and match her with the right tutor. Personalized tutoring sessions do not begin until day 7, which is also when weekly billing begins. Here is the full timeline:",
         "Today (day 0): you pay $" +
           diag +
-          " for the diagnostic, the analysis, and Phase 1 plan. No weekly charge yet.",
-        "Days 0 to 7: setup window. We run her proctored diagnostic, build her plan, match her with her tutors, and schedule her first sessions. No tutoring billing yet.",
+          " for the diagnostic, the analysis, and personalized plan. No weekly charge yet.",
+        "Days 0 to 7: setup window. We schedule and run her proctored diagnostic, build her plan, develop her initial lessons, and match her with her tutor. No tutoring sessions yet, no weekly billing yet.",
         "Day 7: the first $" +
           wk +
-          " charge hits. That covers her 2 tutoring sessions during days 7 to 14.",
+          " charge hits. That covers her 2 personalized tutoring sessions during days 7 to 14.",
         "Day 14: the next $" +
           wk +
           " charge. That covers her 2 sessions during days 14 to 21. And so on, week by week.",
