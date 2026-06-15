@@ -31,7 +31,17 @@ export type PersonalizedEnrollLead = {
   pricing: {
     diagPrice: number;
     weeklyPrice: number;
-    stripeLink: string;
+    /** Stable product IDs in our Stripe account. Their default Price IDs are
+     *  resolved server-side at checkout creation, so changing the price (or
+     *  swapping in a coupon) does not require a code change. */
+    stripeDiagnosticProductId: string;
+    stripeWeeklyProductId: string;
+    /** Days of trial to apply to the weekly subscription. The first weekly
+     *  charge does not hit until trial end. */
+    weeklyTrialDays: number;
+    /** Legacy Stripe Payment Link, kept as a fallback if the on-page checkout
+     *  call fails for any reason. */
+    stripeFallbackLink: string;
   };
   advisor: { first: string; full: string; email: string };
   call: {
@@ -76,7 +86,10 @@ const sohailShermeen: PersonalizedEnrollLead = {
   pricing: {
     diagPrice: 249,
     weeklyPrice: 99,
-    stripeLink: "https://buy.stripe.com/7sYcMY7DK1X19lO7gZc7u01"
+    stripeDiagnosticProductId: "prod_UfmBm2GawHFXRA",
+    stripeWeeklyProductId: "prod_UfmE3JUG5ykfSk",
+    weeklyTrialDays: 7,
+    stripeFallbackLink: "https://buy.stripe.com/7sYcMY7DK1X19lO7gZc7u01"
   },
   advisor: {
     first: "Brianna",

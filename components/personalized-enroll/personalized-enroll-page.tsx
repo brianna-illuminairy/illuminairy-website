@@ -48,16 +48,6 @@ function ArrowIcon() {
   );
 }
 
-function buildStripeUrl(stripeLink: string, email: string): string {
-  if (!email) return stripeLink;
-  try {
-    const url = new URL(stripeLink);
-    url.searchParams.set("prefilled_email", email);
-    return url.toString();
-  } catch {
-    return stripeLink;
-  }
-}
 function TopBar() {
   return (
     <div className="lp-chrome">
@@ -211,11 +201,15 @@ function PayCard({ lead }: { lead: PersonalizedEnrollLead }) {
   const [last, setLast] = useState(derivedLast);
   const [email, setEmail] = useState(lead.parent.email ?? "");
   const [tos, setTos] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  function onPay() {
+  async function onPay() {
     setError(null);
-    if (!first.trim() || !last.trim() || !email.trim()) {
+    const trimmedFirst = first.trim();
+    const trimmedLast = last.trim();
+    const trimmedEmail = email.trim();
+    if (!trimmedFirst || !trimmedLast || !trimmedEmail) {
       setError("Please complete your billing contact.");
       return;
     }
@@ -223,11 +217,47 @@ function PayCard({ lead }: { lead: PersonalizedEnrollLead }) {
       setError("Please agree to the terms to continue.");
       return;
     }
+    setSubmitting(true);
     captureAnalytics(AnalyticsEvents.personalizedEnrollPaymentClicked, {
       slug: lead.slug,
       source: "main_form"
     });
-    window.location.href = buildStripeUrl(lead.pricing.stripeLink, email);
+    try {
+      const res = await fetch("/api/personalized-enroll/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          slug: lead.slug,
+          first: trimmedFirst,
+          last: trimmedLast,
+          email: trimmedEmail,
+          tos: true
+        })
+      });
+      const data = (await res.json().catch(() => ({}))) as {
+        url?: string;
+        error?: string;
+      };
+      if (!res.ok || !data.url) {
+        setError(
+          data.error ??
+            "Could not start checkout. Please try again or email " +
+              lead.advisor.email +
+              "."
+        );
+        setSubmitting(false);
+        return;
+      }
+      window.location.href = data.url;
+    } catch (err) {
+      console.error("personalized-enroll checkout client error:", err);
+      setError(
+        "Could not reach the checkout service. Please try again, or email " +
+          lead.advisor.email +
+          " and we will enroll you directly."
+      );
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -250,7 +280,7 @@ function PayCard({ lead }: { lead: PersonalizedEnrollLead }) {
           <div className="co-price-name">
             Twice-weekly tutoring
             <span className="sub">
-              Billed weekly &middot; first 7 days free &middot; cancel anytime
+              Weekly billing starts 7 days from today &middot; cancel anytime
             </span>
           </div>
           <div className="co-price-amt">
@@ -347,13 +377,22 @@ function PayCard({ lead }: { lead: PersonalizedEnrollLead }) {
         </label>
       </div>
 
-      <button type="button" className="co-paybtn" onClick={onPay}>
+      <button
+        type="button"
+        className="co-paybtn"
+        onClick={onPay}
+        disabled={submitting}
+      >
         <span>
-          Pay ${lead.pricing.diagPrice} and enroll {lead.student.first}
+          {submitting
+            ? "Starting secure checkout\u2026"
+            : `Pay $${lead.pricing.diagPrice} and enroll ${lead.student.first}`}
         </span>
-        <span className="arrow">
-          <ArrowIcon />
-        </span>
+        {!submitting && (
+          <span className="arrow">
+            <ArrowIcon />
+          </span>
+        )}
       </button>
 
       {error && (
@@ -920,18 +959,18 @@ function TutorsSection({ lead }: { lead: PersonalizedEnrollLead }) {
 function RiskReversal({ lead }: { lead: PersonalizedEnrollLead }) {
   const items = [
     {
-      title: "First 7 days of tutoring are free",
+      title: "Diagnostic and plan first, then billing",
       body:
-        "The $" +
+        "The 7 days after enrollment are setup: we run her diagnostic, deliver her Phase 1 plan, and schedule her first session. The first $" +
         lead.pricing.weeklyPrice +
-        "/week tutoring does not start billing until 7 days from checkout. Cancel before then with no weekly charge."
+        " weekly charge does not hit until day 7."
     },
     {
       title: "Week-to-week, no fixed contract",
       body:
-        "Weekly billing is in advance: each $" +
+        "Each $" +
         lead.pricing.weeklyPrice +
-        " charge covers the next 7 days and her next 2 tutoring sessions. Cancel before any future billing date to stop further charges."
+        " charge is billed in advance and covers her next 7 days and next 2 tutoring sessions. Cancel before any future billing date to stop further charges."
     },
     {
       title: "Tutors reserved on enrollment",
@@ -984,14 +1023,15 @@ function FaqSection({ lead }: { lead: PersonalizedEnrollLead }) {
     {
       q: "How does the weekly $" + lead.pricing.weeklyPrice + " billing work?",
       a: [
-        "Weekly tutoring is billed in advance, which means each $" +
+        "Weekly tutoring is billed in advance: each $" +
           lead.pricing.weeklyPrice +
           " charge covers the next 7 days and " +
           lead.student.first +
-          "'s next 2 tutoring sessions. Concretely:",
+          "'s next 2 tutoring sessions. The 7 days right after enrollment are setup, not tutoring. Here is the timeline:",
         "Today (day 0): you pay $" +
           lead.pricing.diagPrice +
           " for the diagnostic, the analysis, and Phase 1 plan. No weekly charge yet.",
+        "Days 0 to 7: setup window. We run her proctored diagnostic, build her plan, and schedule her first session. No tutoring billing yet.",
         "Day 7: the first $" +
           lead.pricing.weeklyPrice +
           " charge hits. That covers her 2 tutoring sessions during days 7 to 14.",
@@ -1129,15 +1169,23 @@ function PageFooter() {
   );
 }
 function MobilePayBar({ lead }: { lead: PersonalizedEnrollLead }) {
+  function handleClick(e: React.MouseEvent<HTMLAnchorElement>) {
+    captureAnalytics(AnalyticsEvents.personalizedEnrollPaymentClicked, {
+      slug: lead.slug,
+      source: "mobile_paybar"
+    });
+    // Scroll the user to the inline form. The form is the functional checkout;
+    // the mobile bar is just a sticky reminder, not a separate checkout path.
+    const target = document.querySelector(".co-pay");
+    if (target) {
+      e.preventDefault();
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }
   return (
     <a
-      href={lead.pricing.stripeLink}
-      onClick={() =>
-        captureAnalytics(AnalyticsEvents.personalizedEnrollPaymentClicked, {
-          slug: lead.slug,
-          source: "mobile_paybar"
-        })
-      }
+      href="#enroll-form"
+      onClick={handleClick}
       className="co-mobile-paybar"
     >
       <span className="co-mobile-paybar-text">
