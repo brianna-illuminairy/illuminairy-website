@@ -424,7 +424,7 @@ function FaqSection({ lead }: { lead: PersonalizedEnrollLead }) {
       q:
         "Why are we paying $" +
         diag +
-        " upfront, and why don't you offer a free trial class?",
+        " upfront, and do you offer a free trial class?",
       a: [
         "The $" +
           diag +
