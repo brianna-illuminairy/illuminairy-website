@@ -1057,7 +1057,7 @@ function FaqSection({ lead }: { lead: PersonalizedEnrollLead }) {
     {
       q: "How do we know Phase 1 will not be reteaching things she already knows?",
       a: [
-        "Because the diagnostic prevents it. We rank her gaps by score impact and start with the highest-impact one. If the diagnostic shows she is strong on linear equations and weak on systems with quadratics, she will not see a single linear-equation lesson in Phase 1.",
+        "Because the diagnostic prevents it. We do not teach the SAT curriculum from A to Z. We diagnose where she is struggling and only teach those concepts. We rank the questions she misses on the diagnostic by score impact and start with the highest-impact one. If the diagnostic shows she is strong on linear equations and weak on systems with quadratics, she will not see a single linear-equation lesson.",
         "The only place foundational reteaching shows up is when a prerequisite is blocking her from solving a specific SAT question (example: needing to reteach perfect-square factoring because it is blocking a quadratic equation question we are working on). Every reteach is tied directly to an SAT question type."
       ]
     },
