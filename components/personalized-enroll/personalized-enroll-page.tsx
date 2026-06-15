@@ -1046,13 +1046,12 @@ function FaqSection({ lead }: { lead: PersonalizedEnrollLead }) {
         lead.student.first +
         " skip the diagnostic since she just took two Blue Book practice tests?",
       a: [
-        "We strongly recommend against it, and there is a middle option if she really does not want to retake right now.",
-        "The Blue Book practice tests were unproctored, on her own laptop, with no observation of timing, pacing, or which questions she paused on. We get one number out of them: 1070 to 1080. Without a proctored diagnostic, weeks 1 through 4 of tutoring would be the tutor guessing at what to teach.",
-        "The middle option: a shorter 60-minute proctored mini-diagnostic (one math module, one Reading and Writing module). Same $" +
+        "Our program works backwards from the diagnostic results, and we simply cannot develop her personalized lessons without it.",
+        "If she would rather not take the full 2 hour 14 minute proctored exam, we can develop a custom 60-minute version (1 Reading and Writing module and 1 Math module, instead of 2 each). The cost would be the same $" +
           lead.pricing.diagPrice +
-          " because the analysis and plan work is the same. Reply to " +
+          " because we would need to create a custom diagnostic that does not currently exist in our system. Reply to " +
           lead.advisor.first +
-          "'s email and we will set it up."
+          "'s email if you'd prefer to move forward this way and we'd be happy to set it up."
       ]
     },
     {
