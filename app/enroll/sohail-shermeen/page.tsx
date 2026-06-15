@@ -1,0 +1,19 @@
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { PersonalizedEnrollPage } from "@/components/personalized-enroll/personalized-enroll-page";
+import { getPersonalizedEnrollLead } from "@/lib/personalized-enroll";
+
+const SLUG = "sohail-shermeen";
+
+export const metadata: Metadata = {
+  title: "Shermeen's Phase 1 enrollment | Illuminairy",
+  description:
+    "Personalized enrollment page built for Sohail and Shermeen after their June 9 Strategy Call. Phase 1 foundation cycle, $249 diagnostic, $99/week tutoring with first week free.",
+  robots: { index: false, follow: false }
+};
+
+export default function SohailShermeenEnrollPage() {
+  const lead = getPersonalizedEnrollLead(SLUG);
+  if (!lead) notFound();
+  return <PersonalizedEnrollPage lead={lead} />;
+}

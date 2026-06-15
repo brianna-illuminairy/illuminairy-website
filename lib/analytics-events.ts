@@ -29,7 +29,13 @@ export const AnalyticsEvents = {
   listFitCtaApply: "list_fit_cta_apply",
   platformWaitlistSubmitted: "platform_waitlist_submitted",
   daniellePortalLogin: "danielle_portal_login",
-  daniellePortalPageView: "danielle_portal_page_view"
+  daniellePortalPageView: "danielle_portal_page_view",
+  postCallSalesPageViewed: "post_call_sales_page_viewed",
+  postCallPaymentClicked: "post_call_payment_clicked",
+  postCallPaymentCompleted: "post_call_payment_completed",
+  postCallLinkSent: "post_call_link_sent",
+  personalizedEnrollPageViewed: "personalized_enroll_page_viewed",
+  personalizedEnrollPaymentClicked: "personalized_enroll_payment_clicked"
 } as const;
 
 export type AnalyticsEventName =
