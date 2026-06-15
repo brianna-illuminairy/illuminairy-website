@@ -110,9 +110,9 @@ function PlanCard({ lead }: { lead: PersonalizedEnrollLead }) {
         "Time per question, pacing across both modules, every wrong answer classified by question type and weighted by points cost."
     },
     {
-      nm: "Custom 12-week Phase 1 plan",
+      nm: "Her first 2 lessons built in detail before week 1",
       ds:
-        "Highest-impact gaps ranked first. Week-1 lesson scripts written before session 1."
+        "Plus her high-level 12-week plan, both starting with the gap costing her the most points. The plan flexes as she progresses and as her every-4-week mock tests come in."
     },
     {
       nm: "Two specialized tutors (Math 750+, R&W 750+)",
@@ -125,7 +125,7 @@ function PlanCard({ lead }: { lead: PersonalizedEnrollLead }) {
     {
       nm: "5 mock tests across the cycle",
       ds:
-        "Diagnostic plus weeks 4, 8, 12, and Phase 1 review. We re-baseline every 4 weeks."
+        "Diagnostic plus weeks 4, 8, 12, and Phase 1 review. Every 4 weeks she takes a fresh mock so we can see her real current score and update her plan."
     },
     {
       nm: "Personalized homework from 3,500+ practice questions",
@@ -385,13 +385,13 @@ function InvestmentSection({ lead }: { lead: PersonalizedEnrollLead }) {
       hours: "2\u20133 hrs",
       title: "Hand-done analysis",
       body:
-        "We review her time per question, her pacing across both modules, and every wrong answer by hand. We classify each miss by question type and weight it by how many points it cost on a real digital SAT."
+        "We look at her time per question and her pacing across both modules. For every wrong answer, we score how often that question type appears on the digital SAT and whether it was easy, medium, or hard, and use that to estimate how many points the gap is costing her. Those scores become her ranked gaps, biggest losses first."
     },
     {
       hours: "1\u20132 hrs",
-      title: "Phase 1 plan + week 1 lessons",
+      title: "12-week plan + first 2 lessons",
       body:
-        "Custom 12-week plan with her highest-impact gaps ranked first, plus her first week of session-by-session lesson scripts written before session 1."
+        "We use her ranked gaps to draft a high-level 12-week plan starting with the gap costing her the most points, then build her first 2 lessons in detail before week 1. The plan flexes as she progresses and as her every-4-week mock tests come in."
     }
   ];
   return (
@@ -960,7 +960,7 @@ function FaqSection({ lead }: { lead: PersonalizedEnrollLead }) {
       a: [
         "Five to six hours of our team's time before tutoring even starts: 2 hours 14 minutes proctored on the test with " +
           lead.student.first +
-          " under real test-day conditions, 2 to 3 hours of hand-done analysis (time per question, every miss classified by question type and weighted by points cost), and a custom 12-week plan plus her first week of session-by-session lesson scripts written before session 1.",
+          " under real test-day conditions, 2 to 3 hours of hand-done analysis (each miss scored by how often that question type appears on the SAT and whether it was easy, medium, or hard, then converted into how many points that gap is costing her overall), and 1 to 2 hours of plan-building: drafting a high-level 12-week plan that starts with the gap costing her the most points, and writing her first 2 lessons in detail before week 1.",
         "Tutoring is separate, billed weekly at $" +
           lead.pricing.weeklyPrice +
           "/week. The first week is free. Weekly billing starts 7 days from checkout."
@@ -1017,7 +1017,7 @@ function FaqSection({ lead }: { lead: PersonalizedEnrollLead }) {
       a: [
         "Enrollment is week to week with no fixed contract, so there is no penalty for needing more time. If at week 12 she is 50 or 80 points short of the Phase 1 target, " +
           lead.advisor.first +
-          " will walk through her actual gaps with you and either extend Phase 1 by a few weeks, increase weekly cadence, or move into the Phase 2 framing. The decision is based on her real data, not a fixed schedule."
+          " will walk through her actual gaps with you. From there you can extend Phase 1 by a few weeks, add a third or fourth tutoring session per week to move faster, or move on to Phase 2. The choice is based on her real data, not a fixed schedule."
       ]
     }
   ];
