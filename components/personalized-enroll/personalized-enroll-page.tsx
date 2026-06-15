@@ -1074,7 +1074,7 @@ function FaqSection({ lead }: { lead: PersonalizedEnrollLead }) {
           " under real test-day conditions, 2 to 3 hours of expert tutor review and analysis (each miss scored by how often that question type appears on the SAT and whether it was easy, medium, or hard, then converted into how many points that gap is costing her overall), and 1 to 2 hours of plan-building: an expert tutor drafts her high-level 12-week plan starting with the gap costing her the most points, and builds her first 2 lessons in detail before week 1.",
         "Tutoring is separate, billed weekly at $" +
           lead.pricing.weeklyPrice +
-          "/week. The first week is free. Weekly billing starts 7 days from checkout."
+          "/week. The 7 days right after enrollment are setup time, used to run her diagnostic, analyze the results, build her plan, match her with the right tutors, and schedule her first tutoring sessions. Weekly billing starts on day 7, when tutoring begins."
       ]
     },
     {
