@@ -1230,3 +1230,97 @@
 .co-tip:hover::before, .co-tip:focus-visible::before {
   opacity: 1;
 }
+
+/* ════════════════════════════════════════════════════════════════
+   Dark navy plan card — matches the original illuminairy-checkout
+   left panel. Applied via .co-plan.co-plan--dark
+   ════════════════════════════════════════════════════════════════ */
+.co-plan--dark {
+  background: radial-gradient(130% 80% at 88% -8%, #1a2c38 0%, var(--navy) 46%, var(--navy-deep) 100%);
+  color: var(--white);
+  border: 1px solid rgba(255,255,255,0.06);
+  box-shadow: 0 20px 60px -32px rgba(14,26,35,0.5);
+  position: relative;
+  overflow: hidden;
+}
+.co-plan--dark .co-plan-eyebrow { color: var(--aurora); }
+.co-plan--dark .co-plan-title { color: var(--white); }
+.co-plan--dark .co-plan-sub { color: rgba(245,248,250,0.66); }
+.co-plan--dark .co-incl-head {
+  color: var(--aurora);
+  border-top-color: rgba(255,255,255,0.12);
+}
+.co-plan--dark .co-incl .nm { color: var(--white); }
+.co-plan--dark .co-incl .ds { color: rgba(245,248,250,0.55); }
+.co-plan--dark .co-incl .check {
+  background: rgba(119,200,154,0.18);
+  color: var(--aurora);
+}
+.co-plan--dark .co-incl .check svg { stroke: var(--aurora); }
+
+/* score target row on dark */
+.co-plan--dark .co-target {
+  background: rgba(119,200,154,0.08);
+  border-color: rgba(119,200,154,0.32);
+}
+.co-plan--dark .co-target .seg .k { color: rgba(245,248,250,0.55); }
+.co-plan--dark .co-target .seg .v { color: rgba(245,248,250,0.85); }
+.co-plan--dark .co-target .seg .v.hot { color: var(--aurora); }
+.co-plan--dark .co-target .arrow { color: rgba(245,248,250,0.45); }
+.co-plan--dark .co-target-foot {
+  background: rgba(255,255,255,0.05);
+  border-color: rgba(255,255,255,0.08);
+}
+.co-plan--dark .co-target-foot .m { background: transparent; }
+.co-plan--dark .co-target-foot .m .v { color: var(--white); }
+.co-plan--dark .co-target-foot .m .v.hot { color: var(--aurora); }
+.co-plan--dark .co-target-foot .m .k { color: rgba(245,248,250,0.55); }
+
+/* Tooltip on the dark panel: bubble flips light so text reads on navy */
+.co-plan--dark .co-tip {
+  background: rgba(119,200,154,0.18);
+  color: var(--aurora);
+}
+.co-plan--dark .co-tip:hover, .co-plan--dark .co-tip:focus-visible {
+  background: rgba(119,200,154,0.28);
+}
+.co-plan--dark .co-tip::after {
+  background: var(--white);
+  color: var(--navy);
+  box-shadow: 0 10px 28px rgba(0,0,0,0.35);
+}
+.co-plan--dark .co-tip::before { border-top-color: var(--white); }
+
+/* ════════════════════════════════════════════════════════════════
+   Pricing block — match original illuminairy-checkout layout
+   Price + cadence on top, description below (single column rows)
+   ════════════════════════════════════════════════════════════════ */
+.co-price-row {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.co-price-amt-row {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+.co-price-amt-num {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 1.5rem;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--page-fg);
+}
+.co-price-amt-cadence {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--fg-mute);
+}
+.co-price-desc {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: var(--fg-mute);
+}

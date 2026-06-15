@@ -92,7 +92,7 @@ function PlanCard({ lead }: { lead: PersonalizedEnrollLead }) {
     {
       nm: (
         <>
-          Proctored full-length digital adaptive Skill Diagnostic
+          Proctored Full-Length Adaptive SAT Diagnostic
           <span
             className="co-tip"
             tabIndex={0}
@@ -110,45 +110,52 @@ function PlanCard({ lead }: { lead: PersonalizedEnrollLead }) {
           </span>
         </>
       ),
-      ds:
-        "2 hours 14 minutes. Watched the whole way by us, under real test-day conditions."
+      ds: "Timed under real test conditions, results in 24 to 48 hours"
     },
     {
-      nm: "Expert tutor review and analysis of her diagnostic",
-      ds:
-        "A tutor walks through her timing, her pacing, and every wrong answer, scoring each miss by how often that question type appears on the SAT and how hard it was. The output is her ranked gaps, biggest losses first."
+      nm: "Personalized SAT Improvement Plan",
+      ds: "Built from your diagnostic results"
     },
     {
-      nm: "Her first 2 lessons built in detail before week 1",
-      ds:
-        "Plus her high-level 12-week plan, both starting with the gap costing her the most points. The plan flexes as she progresses and as her every-4-week practice tests come in."
+      nm: "Twice-Weekly SAT Tutoring",
+      ds: "At least 3 of every 4 sessions are one-on-one"
     },
     {
-      nm: "Two specialized tutors (Math 750+, R&W 750+)",
-      ds: "You see both profiles before session 1. Re-match if either is not a fit."
+      nm: "Personalized Lesson Plans",
+      ds: "Built around your student's specific gaps"
     },
     {
-      nm: "24 one-hour sessions over 12 weeks",
-      ds: "Two sessions per week. 80 to 90 percent are one-on-one."
+      nm: "Homework from 3,500+ SAT Practice Questions",
+      ds: "That match the style and difficulty of the real SAT"
     },
     {
-      nm: "5 full-length practice tests across the cycle",
-      ds:
-        "Diagnostic plus weeks 4, 8, 12, and Phase 1 review. Every 4 weeks she takes a fresh full-length practice test so we can see her real current score and update her plan."
+      nm: "11 Full-Length Digital SAT Practice Tests",
+      ds: "One proctored every 4 weeks to measure progress"
     },
     {
-      nm: "Personalized homework from 3,500+ practice questions",
-      ds: "Mistake-based, mixed easy/medium/hard. Tied to her actual gaps."
+      nm: "Weekly Progress Tracking",
+      ds: "Reports sent to you and your student every week"
     },
     {
-      nm: "Weekly parent progress reports",
-      ds:
-        "Homework completion, accuracy by question type, score trend. Never left guessing."
+      nm: "Aurora, Our AI SAT Study Companion",
+      ds: "24/7 answers, hints, and what-went-wrong explanations"
+    },
+    {
+      nm: "SAT Vocabulary Lists",
+      ds: "With context-based exercises"
+    },
+    {
+      nm: "SAT Learning Library",
+      ds: "Lessons, examples, and strategy guides"
+    },
+    {
+      nm: "Built-in Desmos Calculator",
+      ds: "The same graphing calculator as the real Math section"
     }
   ];
 
   return (
-    <aside className="co-plan">
+    <aside className="co-plan co-plan--dark">
       <p className="co-plan-eyebrow">Phase 1: Foundation cycle ({lead.phase1.weeks} weeks)</p>
       <h2 className="co-plan-title">{lead.student.first}&apos;s SAT plan</h2>
 
@@ -265,35 +272,28 @@ function PayCard({ lead }: { lead: PersonalizedEnrollLead }) {
 
   return (
     <section className="co-pay">
-      <p className="co-pay-eyebrow">Complete enrollment</p>
-      <h2 className="co-pay-title">Secure {lead.student.first}&apos;s spot</h2>
+      <h2 className="co-pay-title">
+        Purchase Diagnostic &amp; Enroll in Weekly Tutoring
+      </h2>
 
       <div className="co-price">
         <div className="co-price-row">
-          <div className="co-price-name">
-            Diagnostic + analysis + Phase 1 plan
-            <span className="sub">One-time &middot; charged today</span>
+          <div className="co-price-amt-row">
+            <span className="co-price-amt-num">${lead.pricing.diagPrice}</span>
+            <span className="co-price-amt-cadence">one time</span>
           </div>
-          <div className="co-price-amt">
-            ${lead.pricing.diagPrice}
-            <span className="per">Today</span>
-          </div>
+          <p className="co-price-desc">
+            Diagnostic, Diagnostic Analysis &amp; Personalized SAT Plan
+          </p>
         </div>
         <div className="co-price-row">
-          <div className="co-price-name">
-            Twice-weekly tutoring
-            <span className="sub">
-              Weekly billing starts 7 days from today
-            </span>
+          <div className="co-price-amt-row">
+            <span className="co-price-amt-num">${lead.pricing.weeklyPrice}</span>
+            <span className="co-price-amt-cadence">per week</span>
           </div>
-          <div className="co-price-amt">
-            ${lead.pricing.weeklyPrice}
-            <span className="per">/ week</span>
-          </div>
-        </div>
-        <div className="co-price-due">
-          <span className="lbl">Due today</span>
-          <span className="amt">${lead.pricing.diagPrice}</span>
+          <p className="co-price-desc">
+            For twice weekly tutoring. Billing starts 7 days from checkout.
+          </p>
         </div>
       </div>
 
@@ -365,56 +365,6 @@ function PayCard({ lead }: { lead: PersonalizedEnrollLead }) {
         </div>
       </div>
 
-      <div className="co-tos">
-        <input
-          type="checkbox"
-          id="tos"
-          checked={tos}
-          onChange={(e) => setTos(e.target.checked)}
-        />
-        <label htmlFor="tos">
-          I agree to Illuminairy&apos;s Terms, Refund Policy, and Privacy Policy. I
-          authorize the ${lead.pricing.diagPrice} charge today and weekly billing
-          of ${lead.pricing.weeklyPrice} starting 7 days from now, which I can
-          cancel anytime.
-        </label>
-      </div>
-
-      <button
-        type="button"
-        className="co-paybtn"
-        onClick={onPay}
-        disabled={submitting}
-      >
-        <span>
-          {submitting
-            ? "Starting secure checkout\u2026"
-            : `Pay $${lead.pricing.diagPrice} and enroll ${lead.student.first}`}
-        </span>
-        {!submitting && (
-          <span className="arrow">
-            <ArrowIcon />
-          </span>
-        )}
-      </button>
-
-      {error && (
-        <p
-          role="alert"
-          style={{
-            marginTop: 12,
-            padding: "10px 14px",
-            borderRadius: 10,
-            background: "rgba(176,40,40,0.06)",
-            border: "1px solid rgba(176,40,40,0.22)",
-            color: "#a92929",
-            fontSize: 13.5
-          }}
-        >
-          {error}
-        </p>
-      )}
-
       <div className="co-trust-row">
         <span>
           <svg viewBox="0 0 24 24" strokeWidth={2} fill="none" stroke="currentColor">
@@ -434,6 +384,62 @@ function PayCard({ lead }: { lead: PersonalizedEnrollLead }) {
           Secured by Stripe
         </span>
       </div>
+
+      <div className="co-tos">
+        <input
+          type="checkbox"
+          id="tos"
+          checked={tos}
+          onChange={(e) => setTos(e.target.checked)}
+        />
+        <label htmlFor="tos">
+          I agree to Illuminairy&apos;s Terms, Refund Policy, and Privacy
+          Policy. I authorize the ${lead.pricing.diagPrice} charge today and
+          weekly billing of ${lead.pricing.weeklyPrice} starting 7 days from
+          now, which I can cancel anytime.
+        </label>
+      </div>
+
+      <button
+        type="button"
+        className="co-paybtn"
+        onClick={onPay}
+        disabled={submitting}
+      >
+        <span>
+          {submitting
+            ? "Starting secure checkout\u2026"
+            : `Pay $${lead.pricing.diagPrice} to start`}
+        </span>
+        {!submitting && (
+          <span className="arrow">
+            <ArrowIcon />
+          </span>
+        )}
+      </button>
+
+      <p className="co-paybtn-foot">
+        You pay ${lead.pricing.diagPrice} today for {lead.student.first}
+        &apos;s diagnostic and plan. The ${lead.pricing.weeklyPrice} per week
+        begins 7 days from today, and you can cancel anytime before then.
+      </p>
+
+      {error && (
+        <p
+          role="alert"
+          style={{
+            marginTop: 12,
+            padding: "10px 14px",
+            borderRadius: 10,
+            background: "rgba(176,40,40,0.06)",
+            border: "1px solid rgba(176,40,40,0.22)",
+            color: "#a92929",
+            fontSize: 13.5
+          }}
+        >
+          {error}
+        </p>
+      )}
     </section>
   );
 }
