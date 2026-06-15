@@ -684,7 +684,7 @@ function CycleOneSection({ lead }: { lead: PersonalizedEnrollLead }) {
       </h2>
       <p style={bodyStyle}>
         Every session and every reteach is tied directly to a specific SAT
-        question type. Phase 1 is mistake-based learning. Each session starts
+        question type. We teach through mistake based learning. Each session starts
         by pulling up the SAT-style questions she got wrong on her last
         practice round, ranked by point impact. We work through the easy
         version with her, then medium, then hard, until she can solve that
