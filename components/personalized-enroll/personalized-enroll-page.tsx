@@ -863,7 +863,7 @@ function TutorsSection({ lead }: { lead: PersonalizedEnrollLead }) {
     <section style={sectionShellStyle}>
       <p style={eyebrowStyle}>About {lead.student.first}&apos;s tutors</p>
       <h2 style={{ ...h2Style, maxWidth: "30ch" }}>
-        Specialized by section. Certified on the digital SAT. Visible before
+        Specialized by section. Trained on the digital SAT. Visible before
         week 1.
       </h2>
       <p style={bodyStyle}>
