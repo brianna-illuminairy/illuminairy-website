@@ -35,7 +35,12 @@ export async function POST(
     return NextResponse.json({ error: "Invalid request." }, { status: 400 });
   }
 
-  if (body.category !== "buying_trigger" && body.category !== "objection" && body.category !== "priority") {
+  if (
+    body.category !== "buying_trigger" &&
+    body.category !== "objection" &&
+    body.category !== "priority" &&
+    body.category !== "data_quality"
+  ) {
     return NextResponse.json({ error: "bad_category" }, { status: 400 });
   }
   if (!body.tag || !body.tag.trim()) {

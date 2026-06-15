@@ -7,7 +7,11 @@
  * without overwhelming the page.
  */
 
-export type TagCategory = "buying_trigger" | "objection" | "priority";
+export type TagCategory =
+  | "buying_trigger"
+  | "objection"
+  | "priority"
+  | "data_quality";
 
 export type TagSuggestion = {
   tag: string;
@@ -67,6 +71,12 @@ export const CATEGORY_META: Record<
     helper:
       "Format / experience / scheduling priorities you should respect in every touchpoint.",
     tone: "bg-emerald-100 text-emerald-900"
+  },
+  data_quality: {
+    label: "Data quality",
+    helper:
+      "Contact or lead quality flags — invalid email/phone, spam, duplicates. Not sales objections.",
+    tone: "bg-zinc-200 text-zinc-900"
   }
 };
 
@@ -173,10 +183,41 @@ export const PRIORITY_SUGGESTIONS: TagSuggestion[] = [
   { tag: "esl_or_international_student", label: "ESL / international student context", group: "Learning needs" }
 ];
 
+export const DATA_QUALITY_SUGGESTIONS: TagSuggestion[] = [
+  {
+    tag: "invalid_contact_info",
+    label: "Invalid contact info (bounce / SMS fail)",
+    group: "Contact",
+    common: true
+  },
+  {
+    tag: "fake_or_spam",
+    label: "Fake or spam lead",
+    group: "Contact",
+    common: true
+  },
+  {
+    tag: "wrong_phone_number",
+    label: "Wrong phone number",
+    group: "Contact"
+  },
+  {
+    tag: "duplicate_lead",
+    label: "Duplicate of another lead",
+    group: "Contact"
+  },
+  {
+    tag: "test_or_internal",
+    label: "Test / internal booking",
+    group: "Contact"
+  }
+];
+
 export const SUGGESTIONS_BY_CATEGORY: Record<TagCategory, TagSuggestion[]> = {
   buying_trigger: BUYING_TRIGGER_SUGGESTIONS,
   objection: OBJECTION_SUGGESTIONS,
-  priority: PRIORITY_SUGGESTIONS
+  priority: PRIORITY_SUGGESTIONS,
+  data_quality: DATA_QUALITY_SUGGESTIONS
 };
 
 export function suggestionLabel(category: TagCategory, slug: string): string {

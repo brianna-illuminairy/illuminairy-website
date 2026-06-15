@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import type { LeadDetail } from "@/lib/admin/crm-queries";
+import { LeadProfileLostReason } from "./lead-profile-lost-reason";
 import { stageBadgeTone, stageLabel } from "./stage-badge";
 
 const STAGE_OPTIONS = [
@@ -19,12 +20,14 @@ export function LeadProfileHeader({
   detail,
   saving,
   onPatch,
-  leadId
+  leadId,
+  onAfterAction
 }: {
   detail: LeadDetail;
   saving: boolean;
   onPatch: (body: Record<string, unknown>) => Promise<boolean>;
   leadId: string;
+  onAfterAction?: () => Promise<void>;
 }) {
   const lead = detail.lead as unknown as {
     parent_first: string | null;
@@ -32,6 +35,7 @@ export function LeadProfileHeader({
     parent_email: string;
     student_first: string | null;
     stage: string;
+    lost_reason: string | null;
     converted_client_id: string | null;
     booked_call_at: string | null;
   };
@@ -128,6 +132,16 @@ export function LeadProfileHeader({
           </button>
         </div>
       </div>
+
+      <LeadProfileLostReason
+        leadId={leadId}
+        stage={lead.stage}
+        lostReason={lead.lost_reason}
+        saving={saving}
+        isConverted={isConverted}
+        onPatch={onPatch}
+        onAfterAction={onAfterAction}
+      />
 
       <p className="text-[10px] font-mono text-muted-foreground [overflow-wrap:anywhere]">
         lead id: {leadId}

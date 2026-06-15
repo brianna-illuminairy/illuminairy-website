@@ -18,7 +18,12 @@ type Props = {
   initialUrgencyReason?: string | null;
 };
 
-const CATEGORY_ORDER: TagCategory[] = ["buying_trigger", "objection", "priority"];
+const CATEGORY_ORDER: TagCategory[] = [
+  "buying_trigger",
+  "objection",
+  "priority",
+  "data_quality"
+];
 
 export function LeadProfileTags({
   leadId,
@@ -131,7 +136,8 @@ export function LeadProfileTags({
   const groupedTags: Record<TagCategory, LeadTag[]> = {
     buying_trigger: [],
     objection: [],
-    priority: []
+    priority: [],
+    data_quality: []
   };
   for (const t of tags ?? []) {
     if (groupedTags[t.category]) groupedTags[t.category].push(t);

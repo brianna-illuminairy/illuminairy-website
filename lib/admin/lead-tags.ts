@@ -51,7 +51,8 @@ export function groupTagsByCategory(tags: LeadTag[]): LeadTagsByCategory {
   const out: LeadTagsByCategory = {
     buying_trigger: [],
     objection: [],
-    priority: []
+    priority: [],
+    data_quality: []
   };
   for (const t of tags) {
     if (out[t.category]) out[t.category].push(t);

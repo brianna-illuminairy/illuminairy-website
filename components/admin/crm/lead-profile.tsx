@@ -112,6 +112,7 @@ export function LeadProfile({
         saving={saving}
         onPatch={patchLead}
         leadId={leadId}
+        onAfterAction={refresh}
       />
 
       <div className="flex items-center gap-1 border-b border-border">
@@ -147,6 +148,10 @@ export function LeadProfile({
           <div className="min-w-0 space-y-6 lg:col-span-2">
             <LeadProfileOverview detail={detail} saving={saving} onPatch={patchLead} />
             <LeadProfileTags
+              key={
+                (detail.lead as { last_activity_at?: string | null })
+                  .last_activity_at ?? leadId
+              }
               leadId={leadId}
               initialUrgencyLevel={
                 (detail.lead as { urgency_level?: UrgencyLevel | null })
