@@ -5,7 +5,7 @@ import { site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Refund and Cancellation Policy",
   description:
-    "Illuminairy refund and cancellation policy for SAT Accelerator and other program enrollment."
+    "Illuminairy refund, cancellation, and rescheduling policy for SAT diagnostics, tutoring, and related programs."
 };
 
 export default function RefundPolicyPage() {
@@ -14,69 +14,148 @@ export default function RefundPolicyPage() {
       <PageHero
         eyebrow="Policy"
         title="Refund and Cancellation Policy"
-        text="This policy explains refund eligibility, missed sessions, cancellations, and how program access works after you enroll."
+        text="This policy governs the Skill Diagnostic, weekly SAT tutoring, rescheduling, cancellations, and how billing and program access work after enrollment."
       />
       <section className="px-5 py-16 sm:px-8 lg:px-12">
         <div className="legal-copy mx-auto max-w-4xl rounded-3xl border border-line bg-ivory-50 p-7 shadow-editorial sm:p-12">
-          <p>Effective date: May 17, 2026</p>
+          <p>Effective date: June 15, 2026</p>
 
-          <h2>Educational services</h2>
+          <h2>1. Educational services</h2>
           <p>
-            Illuminairy provides SAT preparation, private coaching,
-            diagnostics, mentorship, and related learning programs. Payments
-            reserve instructional time, class seats, mentor availability, and
-            program access.
+            Illuminairy (&ldquo;Illuminairy,&rdquo; &ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;) provides
+            SAT preparation, including the Skill Diagnostic, personalized SAT
+            improvement plans, weekly tutoring, mentorship, and related learning
+            programs. Payments reserve instructional time, tutor availability,
+            and program access. By enrolling and submitting payment, the
+            customer (&ldquo;Customer&rdquo;) agrees to the terms below.
           </p>
 
-          <h2>Refund window</h2>
+          <h2>2. Skill Diagnostic and personalized plan</h2>
           <p>
-            For the SAT Accelerator, customers may request a full refund up
-            to 7 days before the program start date. Cancellations made less
-            than 7 days before the program start date but before the first live
-            session may be eligible for a 50% refund.
+            The Skill Diagnostic, the analysis of diagnostic results, and the
+            personalized improvement plan and first lessons developed from those
+            results are non-refundable once any of the following has occurred,
+            in whole or in part: the proctored Skill Diagnostic session has
+            been delivered; the diagnostic analysis has been performed; or the
+            personalized plan or initial lessons have been authored or
+            delivered to the Customer. Customers who have paid for the Skill
+            Diagnostic but have not yet had any of the foregoing performed may
+            request a refund prior to the scheduled diagnostic session.
           </p>
 
-          <h2>After program access begins</h2>
+          <h2>3. Weekly tutoring billing</h2>
           <p>
-            After the first live session or once program access has begun,
-            payments are generally non-refundable. This helps protect reserved
-            class seats, mentor time, and instructional capacity.
+            Weekly tutoring is billed in advance on a recurring weekly basis at
+            the rate disclosed at checkout. Each weekly charge entitles the
+            Customer to two (2) tutoring sessions during the corresponding
+            billing week, scheduled subject to tutor availability. Sessions are
+            non-transferable across billing weeks except as expressly permitted
+            below.
           </p>
 
-          <h2>Missed sessions</h2>
+          <h2>4. Cancellation of weekly tutoring</h2>
           <p>
-            Missed small-group sessions are not refunded. Private 1:1 sessions
-            may be rescheduled with at least 24 hours’ notice, subject to mentor
-            availability. Missed private sessions without timely notice may be
-            forfeited.
+            The Customer may cancel weekly tutoring at any time by submitting a
+            cancellation request to {site.supportEmail} prior to the next
+            scheduled weekly billing date. Cancellation will stop all future
+            weekly charges. Cancellation does not entitle the Customer to a
+            refund of any prior weekly charge already billed, and any sessions
+            in the then-current billing week that have not yet been used will
+            be forfeited as of the cancellation effective date. There is no
+            fixed contract length and no early-termination fee.
           </p>
 
-          <h2>No outcome-based refunds</h2>
+          <h2>5. Rescheduling and missed sessions</h2>
           <p>
-            Illuminairy does not provide refunds based on SAT score outcomes,
-            admissions outcomes, scholarship results, or changes in student
-            effort or availability after the program begins.
+            Sessions may be rescheduled at no additional charge provided the
+            Customer or student gives Illuminairy at least twenty-four (24)
+            hours&apos; notice prior to the originally scheduled session start
+            time, subject to tutor availability. Sessions for which less than
+            twenty-four (24) hours&apos; notice is provided, sessions for which
+            the student fails to appear (a &ldquo;no-show&rdquo;), and sessions during which
+            the student is unable to participate due to causes within the
+            Customer&apos;s or student&apos;s control are deemed delivered for purposes
+            of this policy and the credit for that session is forfeited. No
+            refund or session credit will be issued for forfeited sessions.
           </p>
 
-          <h2>Program cancellation by Illuminairy</h2>
+          <h2>6. No refunds for delivered or forfeited sessions</h2>
           <p>
-            If Illuminairy cancels a program before it begins, customers will
-            receive a refund or the option to transfer to another available
-            program.
+            No refund will be issued for any tutoring session that has been
+            delivered, partially delivered, scheduled and forfeited under
+            Section 5, or otherwise made available to the Customer. No refund
+            will be issued for unused sessions remaining in a billing week
+            following cancellation under Section 4.
           </p>
 
-          <h2>Processing time</h2>
+          <h2>7. Session quality concerns</h2>
           <p>
-            Refunds are returned to the original payment method when possible
-            and may take 5-10 business days depending on the bank or payment
+            If the Customer or student is dissatisfied with the quality of a
+            specific tutoring session, the Customer should notify Illuminairy
+            in writing at {site.supportEmail} as soon as reasonably possible
+            and in any event within seven (7) calendar days of the session.
+            Illuminairy may, at its sole discretion and without obligation,
+            review session recordings, transcripts, materials, and other
+            available records and, where Illuminairy determines a quality issue
+            warrants remediation, may provide a complimentary replacement
+            session. Determination is made solely by Illuminairy and is not
+            subject to appeal. Nothing in this Section 7 entitles the Customer
+            to a refund.
+          </p>
+
+          <h2>8. No outcome-based refunds</h2>
+          <p>
+            Illuminairy makes no guarantee of SAT score outcomes, admissions
+            outcomes, scholarship results, or other educational results. No
+            refund will be issued based on actual or perceived outcomes,
+            student effort, student availability, or changes in the
+            Customer&apos;s or student&apos;s circumstances after enrollment.
+          </p>
+
+          <h2>9. Cancellation by Illuminairy</h2>
+          <p>
+            If Illuminairy cancels a scheduled session for reasons within its
+            reasonable control and is unable to reschedule the session within
+            the same billing week, Illuminairy will, at its option, provide a
+            replacement session in a subsequent week or issue a credit equal to
+            one session of the affected billing week. If Illuminairy
+            terminates a Customer&apos;s program access for reasons not caused by
+            the Customer&apos;s breach of these terms, Illuminairy will refund any
+            prepaid charges covering periods after the termination date.
+          </p>
+
+          <h2>10. Chargebacks</h2>
+          <p>
+            The Customer agrees to contact Illuminairy at {site.supportEmail}
+            to resolve any billing concern before initiating a chargeback or
+            payment dispute. Initiating a chargeback for a charge governed by
+            this policy may, at Illuminairy&apos;s discretion, result in
+            suspension or termination of program access pending resolution.
+          </p>
+
+          <h2>11. Refund processing</h2>
+          <p>
+            Where a refund is issued under this policy, refunds are returned
+            to the original payment method when possible and may take 5 to 10
+            business days to appear depending on the issuing bank or payment
             provider.
           </p>
 
-          <h2>How to request a refund</h2>
+          <h2>12. How to submit a request</h2>
           <p>
-            Send refund requests to {site.supportEmail}. Include the enrolled
-            student name, parent or guardian name, program name, and reason for
-            the request.
+            All refund, cancellation, rescheduling, and quality-review
+            requests must be submitted in writing to {site.supportEmail} and
+            include the enrolled student name, parent or guardian name,
+            program name, and reason for the request. Requests submitted
+            through any other channel may not be processed.
+          </p>
+
+          <h2>13. Updates to this policy</h2>
+          <p>
+            Illuminairy may update this policy from time to time. The version
+            in effect at the time a charge is processed governs that charge.
+            Material updates will be posted on this page with a revised
+            effective date.
           </p>
         </div>
       </section>

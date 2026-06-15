@@ -105,9 +105,9 @@ function PlanCard({ lead }: { lead: PersonalizedEnrollLead }) {
         "2 hours 14 minutes. Watched the whole way by us, under real test-day conditions."
     },
     {
-      nm: "Hand-done analysis of every miss",
+      nm: "Expert tutor review and analysis of her diagnostic",
       ds:
-        "Time per question, pacing across both modules, every wrong answer classified by question type and weighted by points cost."
+        "A tutor walks through her timing, her pacing, and every wrong answer, scoring each miss by how often that question type appears on the SAT and how hard it was. The output is her ranked gaps, biggest losses first."
     },
     {
       nm: "Her first 2 lessons built in detail before week 1",
@@ -383,15 +383,15 @@ function InvestmentSection({ lead }: { lead: PersonalizedEnrollLead }) {
     },
     {
       hours: "2\u20133 hrs",
-      title: "Hand-done analysis",
+      title: "Expert tutor reviews her results",
       body:
-        "We look at her time per question and her pacing across both modules. For every wrong answer, we score how often that question type appears on the digital SAT and whether it was easy, medium, or hard, and use that to estimate how many points the gap is costing her. Those scores become her ranked gaps, biggest losses first."
+        "A tutor walks through her test in detail: her time per question, her pacing across both modules, and every wrong answer. For each miss, they note how often that question type appears on the digital SAT and whether it was easy, medium, or hard, and use those two factors to estimate how many points the gap is costing her overall. Those numbers become her ranked gaps, biggest losses first."
     },
     {
       hours: "1\u20132 hrs",
-      title: "12-week plan + first 2 lessons",
+      title: "Tutor-built plan and first 2 lessons",
       body:
-        "We use her ranked gaps to draft a high-level 12-week plan starting with the gap costing her the most points, then build her first 2 lessons in detail before week 1. The plan flexes as she progresses and as her every-4-week mock tests come in."
+        "Using her ranked gaps, an expert tutor drafts her high-level 12-week plan starting with the gap costing her the most points, then builds her first 2 lessons in detail before week 1. The plan flexes as she progresses and as her every-4-week mock tests come in."
     }
   ];
   return (
@@ -545,30 +545,24 @@ const bodyStyle: React.CSSProperties = {
 
 function WhyProctorSection({ lead }: { lead: PersonalizedEnrollLead }) {
   const captures = [
-    "Real timing per question (no pause, no break)",
+    "Real timing per question, with no pause and no break",
     "Whether " +
       lead.student.first +
-      " actually finished each section, or guessed the last few",
-    "Where she pulled up Desmos, and where she tried to solve mentally",
-    "Where she hesitated, where she got fidgety, where her accuracy dropped from fatigue",
-    "Whether she reached module 2 hard, or stayed in module 2 medium because of module 1 accuracy",
-    "Whether she had any unauthorized materials in reach (notes, formula sheets, phone)"
+      " actually finished each section or guessed the last few",
+    "Where she used Desmos and where she tried to solve mentally",
+    "Where she hesitated, where she rushed, and where her accuracy dropped from fatigue",
+    "Whether she reached module 2 hard, or stayed in module 2 medium because of her module 1 accuracy"
   ];
   return (
     <section style={sectionShellStyle}>
-      <p style={eyebrowStyle}>Why we proctor (and why it matters)</p>
-      <h2 style={h2Style}>An at-home diagnostic is not the same product.</h2>
+      <p style={eyebrowStyle}>Why we proctor</p>
+      <h2 style={h2Style}>An unproctored mock is a score, not a plan.</h2>
       <p style={bodyStyle}>
-        Most SAT prep companies send a kid a take-home diagnostic with no
-        proctor on the line. The kid takes it on a couch with their phone next
-        to them, with formula sheets they would not have on test day, and with
-        the option to pause whenever they hit a hard question.
-      </p>
-      <p style={{ ...bodyStyle, margin: "12px 0 0" }}>
-        That is not a planning tool, it is a score with no signal. The two Blue
-        Book mocks {lead.student.first} already took were unproctored, which is
-        why we cannot use them as our planning data. We need to see her take it
-        under the same conditions she will see on test day.
+        The two Blue Book mocks {lead.student.first} already took were
+        unproctored. They give us her score band, but not the signal we need
+        to build her plan around. With a proctored evaluation, an expert tutor
+        is on the session for the full 2 hours 14 minutes capturing what an
+        unproctored mock cannot show.
       </p>
       <div
         style={{
@@ -588,8 +582,7 @@ function WhyProctorSection({ lead }: { lead: PersonalizedEnrollLead }) {
             margin: 0
           }}
         >
-          What 2 hours 14 minutes of proctoring captures that an at-home test
-          cannot
+          What proctoring captures that an unproctored mock cannot
         </p>
         <ul
           style={{
@@ -798,21 +791,16 @@ function TutorsSection({ lead }: { lead: PersonalizedEnrollLead }) {
         "Every tutor has personally taken the digital SAT. Tutors who only took the paper version are required to retake the digital before they are certified to teach for us."
     },
     {
-      title: "Six-week certification + shadowing",
+      title: "Trained, shadowed, and quality-monitored",
       body:
-        "Tutors complete our certification, shadow live sessions before they teach, then are themselves shadowed for their first sessions. They retrain whenever the College Board changes the digital SAT."
-    },
-    {
-      title: "Per-tutor outcomes are tracked",
-      body:
-        "We measure student accuracy on the question types each tutor taught. If a tutor's students consistently underperform on a topic, that is a signal we act on. More reliable than retake quotas."
+        "Tutors complete our training, shadow live sessions before they teach, then are themselves shadowed for their first sessions. They retrain whenever the College Board changes the digital SAT. We actively monitor each tutor to make sure their students are scoring well on the question types they teach."
     },
     {
       title: "You see profiles before session 1",
       body:
         "Once " +
         lead.student.first +
-        "'s diagnostic is in and she is matched, both tutor profiles (school, program, year, section score) are sent to you before session 1 is scheduled. We re-match if either is not a fit."
+        "'s diagnostic is in and she is matched, both her Math tutor's and her R&W tutor's profile (school, program, year, section score) is sent to you before session 1 is scheduled."
     },
     {
       title: "Optional 15-minute tutor intro call",
@@ -833,10 +821,11 @@ function TutorsSection({ lead }: { lead: PersonalizedEnrollLead }) {
       </h2>
       <p style={bodyStyle}>
         Our tutors are graduate students from schools like Vanderbilt, Duke,
-        Georgia Tech, and Emory. They are not 10-year SAT veterans. Our
-        position is that recent high scorers on the digital SAT, paired with
-        our curriculum and shadowing, teach the current digital SAT better than
-        a paper-SAT veteran teaching it second-hand.
+        Georgia Tech, and Emory. We use near-peer tutors on purpose. Research
+        on near-peer mentorship shows it consistently outperforms
+        authority-based teaching for SAT prep, and we have seen the same in our
+        own outcomes: students learn faster from someone who recently sat the
+        same digital SAT than they do from a teacher who never has.
       </p>
       <div
         style={{
@@ -907,16 +896,18 @@ function TutorsSection({ lead }: { lead: PersonalizedEnrollLead }) {
 function RiskReversal({ lead }: { lead: PersonalizedEnrollLead }) {
   const items = [
     {
-      title: "Diagnostic guarantee",
-      body:
-        "If the diagnostic and Phase 1 plan miss the mark, tell us within 7 days for a full refund. No tutoring charges begin during that window."
-    },
-    {
-      title: "First tutoring week is free",
+      title: "First 7 days of tutoring are free",
       body:
         "The $" +
         lead.pricing.weeklyPrice +
-        "/week tutoring does not start billing until 7 days from checkout. Cancel inside that window with $0 weekly charge."
+        "/week tutoring does not start billing until 7 days from checkout. Cancel before then with no weekly charge."
+    },
+    {
+      title: "Week-to-week, no fixed contract",
+      body:
+        "Cancel before any $" +
+        lead.pricing.weeklyPrice +
+        " weekly charge to stop future billing. Each weekly charge covers 2 tutoring sessions."
     },
     {
       title: "Tutors reserved on enrollment",
@@ -960,7 +951,7 @@ function FaqSection({ lead }: { lead: PersonalizedEnrollLead }) {
       a: [
         "Five to six hours of our team's time before tutoring even starts: 2 hours 14 minutes proctored on the test with " +
           lead.student.first +
-          " under real test-day conditions, 2 to 3 hours of hand-done analysis (each miss scored by how often that question type appears on the SAT and whether it was easy, medium, or hard, then converted into how many points that gap is costing her overall), and 1 to 2 hours of plan-building: drafting a high-level 12-week plan that starts with the gap costing her the most points, and writing her first 2 lessons in detail before week 1.",
+          " under real test-day conditions, 2 to 3 hours of expert tutor review and analysis (each miss scored by how often that question type appears on the SAT and whether it was easy, medium, or hard, then converted into how many points that gap is costing her overall), and 1 to 2 hours of plan-building: an expert tutor drafts her high-level 12-week plan starting with the gap costing her the most points, and builds her first 2 lessons in detail before week 1.",
         "Tutoring is separate, billed weekly at $" +
           lead.pricing.weeklyPrice +
           "/week. The first week is free. Weekly billing starts 7 days from checkout."
@@ -1024,11 +1015,7 @@ function FaqSection({ lead }: { lead: PersonalizedEnrollLead }) {
 
   return (
     <div className="co-faq">
-      <h3>Your questions, answered</h3>
-      <p className="sub">
-        Pulled from your June 9 call and your June 10 reply. If anything is
-        still unclear, {lead.advisor.first} is one message away.
-      </p>
+      <h3>Frequently asked questions</h3>
       {faqs.map((f, i) => (
         <details key={f.q} {...(i === 0 ? { open: true } : {})}>
           <summary>
