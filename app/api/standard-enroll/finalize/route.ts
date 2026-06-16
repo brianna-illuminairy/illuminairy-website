@@ -1,11 +1,17 @@
 /**
- * LOCKED — Sohail Yousaf custom enrollment finalize API (sent Jun 2026).
+ * Standard enrollment finalize API.
  *
- * Serves Sohail's `/enroll/sohail-shermeen` page only. New enrollment pages
- * use `app/api/standard-enroll/finalize/route.ts`. Editing this file risks
- * breaking the live enrollment link Sohail already has.
+ * Step 2 of the on-page checkout. Mirrors Sohail's
+ * `app/api/personalized-enroll/finalize/route.ts` shape — reads the
+ * customer + payment method off the succeeded PaymentIntent and creates
+ * the weekly tutoring Subscription with a 7-day trial.
  *
- * See: app/enroll/sohail-shermeen/LOCK.md
+ * Idempotent: if a subscription already exists for this customer with the
+ * matching `diagnostic_payment_intent_id` metadata, we return that one
+ * instead of creating a duplicate.
+ *
+ * Isolated from Sohail's stack on purpose. Do not import from
+ * `lib/personalized-enroll.ts` here.
  */
 import { NextResponse } from "next/server";
 import { getStripe } from "@/lib/stripe";
@@ -15,19 +21,6 @@ type FinalizePayload = {
   paymentIntentId?: string;
 };
 
-/**
- * Step 2 of the on-page checkout, called by the client after the diagnostic
- * PaymentIntent succeeds.
- *
- * Reads the customer + payment method off the succeeded PaymentIntent and
- * creates the weekly tutoring Subscription with a 7-day trial. The
- * subscription's first invoice generates at trial end (day 7), at which
- * point Stripe will charge the saved payment method automatically.
- *
- * Idempotent: if a subscription already exists for this customer with the
- * matching `payment_intent_id` metadata, we return that one instead of
- * creating a duplicate.
- */
 export async function POST(request: Request) {
   if (!process.env.STRIPE_SECRET_KEY) {
     return NextResponse.json(
@@ -59,7 +52,7 @@ export async function POST(request: Request) {
   try {
     pi = await stripe.paymentIntents.retrieve(paymentIntentId);
   } catch (err) {
-    console.error("personalized-enroll finalize: PI retrieve failed", err);
+    console.error("standard-enroll finalize: PI retrieve failed", err);
     return NextResponse.json(
       { error: "Could not verify payment. Please contact support." },
       { status: 502 }
@@ -85,7 +78,7 @@ export async function POST(request: Request) {
 
   if (!customerId || !paymentMethodId || !weeklyPriceId) {
     console.error(
-      "personalized-enroll finalize: missing pieces on PI",
+      "standard-enroll finalize: missing pieces on PI",
       paymentIntentId,
       { customerId, paymentMethodId, weeklyPriceId }
     );
@@ -97,7 +90,6 @@ export async function POST(request: Request) {
 
   const trialDays = Number.parseInt(trialDaysRaw ?? "7", 10) || 7;
 
-  // Idempotency: if we already created a subscription against this PI, return it.
   try {
     const existing = await stripe.subscriptions.list({
       customer: customerId,
@@ -115,15 +107,10 @@ export async function POST(request: Request) {
       });
     }
   } catch (err) {
-    // Idempotency check failure is non-fatal; we'll attempt creation below.
-    console.warn("personalized-enroll finalize: idempotency check failed", err);
+    console.warn("standard-enroll finalize: idempotency check failed", err);
   }
 
   try {
-    // Make sure the saved payment method is attached as the customer's
-    // default for the upcoming weekly invoice. The PaymentIntent already
-    // attached it via setup_future_usage, but we set it as the default
-    // explicitly so the subscription invoice picks it up.
     await stripe.customers.update(customerId, {
       invoice_settings: { default_payment_method: paymentMethodId }
     });
@@ -138,7 +125,7 @@ export async function POST(request: Request) {
         save_default_payment_method: "on_subscription"
       },
       metadata: {
-        program: "personalized-enroll",
+        program: "standard-enroll",
         flow_step: "weekly_subscription",
         diagnostic_payment_intent_id: paymentIntentId,
         lead_slug: leadSlug ?? "",
@@ -158,7 +145,7 @@ export async function POST(request: Request) {
     });
   } catch (err) {
     console.error(
-      "personalized-enroll finalize: subscription create failed",
+      "standard-enroll finalize: subscription create failed",
       err,
       { paymentIntentId }
     );

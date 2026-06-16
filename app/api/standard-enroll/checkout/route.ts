@@ -1,18 +1,20 @@
 /**
- * LOCKED — Sohail Yousaf custom enrollment checkout API (sent Jun 2026).
+ * Standard enrollment checkout API.
  *
- * Serves Sohail's `/enroll/sohail-shermeen` page only. Do not extend or
- * reuse this route for new pages — new pages must use the standard
- * checkout API at `app/api/standard-enroll/checkout/route.ts`. Editing
- * this file risks breaking the live enrollment link Sohail already has.
+ * Step 1 of the on-page checkout. Mirrors Sohail's
+ * `app/api/personalized-enroll/checkout/route.ts` shape — creates a Stripe
+ * Customer + a PaymentIntent for the diagnostic price, with
+ * `setup_future_usage: "off_session"` so the saved card can start the
+ * weekly subscription on success (see ./finalize).
  *
- * See: app/enroll/sohail-shermeen/LOCK.md
+ * Isolated from Sohail's stack on purpose. Do not import from
+ * `lib/personalized-enroll.ts` here.
  */
 import { NextResponse } from "next/server";
 import {
-  getPersonalizedEnrollLead,
-  type PersonalizedEnrollLead
-} from "@/lib/personalized-enroll";
+  getStandardEnrollLead,
+  type StandardEnrollLead
+} from "@/lib/standard-enroll";
 import { getStripe } from "@/lib/stripe";
 import { site } from "@/lib/site";
 
@@ -30,10 +32,6 @@ function isValidEmail(value: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
 
-/**
- * Resolve the Stripe Price ID for a given product. We do not store Price IDs
- * in code so the Stripe dashboard can swap prices without a deploy.
- */
 async function resolveDefaultPriceId(productId: string): Promise<string> {
   const stripe = getStripe();
   const product = await stripe.products.retrieve(productId);
@@ -52,18 +50,6 @@ async function resolveDefaultPriceId(productId: string): Promise<string> {
   );
 }
 
-/**
- * Step 1 of the on-page checkout.
- *
- * Creates a Stripe Customer and a PaymentIntent for the diagnostic ($249).
- * We use `setup_future_usage: "off_session"` so the card collected for the
- * one-time diagnostic charge is saved on the customer and can be used to
- * start the weekly subscription with trial after this PaymentIntent
- * succeeds (see ./finalize for the second step).
- *
- * Returns a `clientSecret` the client uses to mount Stripe's Payment
- * Element. The whole purchase is completed on our page; no redirect.
- */
 export async function POST(request: Request) {
   if (!process.env.STRIPE_SECRET_KEY) {
     return NextResponse.json(
@@ -102,13 +88,8 @@ export async function POST(request: Request) {
       { status: 400 }
     );
   }
-  // TOS is enforced client-side at submit time via the checkbox + button
-  // disabled state. We do not enforce it here because the PaymentIntent
-  // is created on page mount (before the user has had a chance to tick the
-  // checkbox) so Stripe Elements can mount bound to the PI's allowed
-  // payment methods (card only).
 
-  const lead: PersonalizedEnrollLead | null = getPersonalizedEnrollLead(slug);
+  const lead: StandardEnrollLead | null = getStandardEnrollLead(slug);
   if (!lead) {
     return NextResponse.json(
       { error: "Unknown enrollment link." },
@@ -126,7 +107,7 @@ export async function POST(request: Request) {
       resolveDefaultPriceId(lead.pricing.stripeWeeklyProductId)
     ]);
   } catch (err) {
-    console.error("personalized-enroll price resolve error:", err);
+    console.error("standard-enroll price resolve error:", err);
     return NextResponse.json(
       {
         error: `Could not start checkout. Email ${site.supportEmail} to enroll directly.`
@@ -135,13 +116,11 @@ export async function POST(request: Request) {
     );
   }
 
-  // Look up the diagnostic price in cents from Stripe so we never trust
-  // the lead config's display amount on the server side.
   const diagnosticPrice = await stripe.prices.retrieve(diagnosticPriceId);
   const amountCents = diagnosticPrice.unit_amount;
   if (!amountCents) {
     console.error(
-      "personalized-enroll: diagnostic price has no unit_amount",
+      "standard-enroll: diagnostic price has no unit_amount",
       diagnosticPriceId
     );
     return NextResponse.json(
@@ -157,7 +136,7 @@ export async function POST(request: Request) {
       email,
       name: `${first} ${last}`.trim(),
       metadata: {
-        program: "personalized-enroll",
+        program: "standard-enroll",
         lead_slug: lead.slug,
         parent_first: first,
         parent_last: last,
@@ -171,15 +150,11 @@ export async function POST(request: Request) {
       currency: diagnosticPrice.currency ?? "usd",
       customer: customer.id,
       receipt_email: email,
-      // Save the payment method on the customer so we can attach it to the
-      // weekly subscription after this PaymentIntent succeeds.
       setup_future_usage: "off_session",
-      // Modern integration: Stripe-managed dynamic payment methods, but for
-      // now we lock to card so the form stays simple and predictable.
       payment_method_types: ["card"],
       description: `${lead.student.first} — Skill Diagnostic + Personalized Plan`,
       metadata: {
-        program: "personalized-enroll",
+        program: "standard-enroll",
         flow_step: "diagnostic_charge",
         lead_slug: lead.slug,
         parent_first: first,
@@ -194,7 +169,7 @@ export async function POST(request: Request) {
 
     if (!paymentIntent.client_secret) {
       console.error(
-        "personalized-enroll: PaymentIntent has no client_secret",
+        "standard-enroll: PaymentIntent has no client_secret",
         paymentIntent.id
       );
       return NextResponse.json(
@@ -211,7 +186,7 @@ export async function POST(request: Request) {
       customerId: customer.id
     });
   } catch (err) {
-    console.error("personalized-enroll Stripe intent error:", err);
+    console.error("standard-enroll Stripe intent error:", err);
     return NextResponse.json(
       {
         error: `Could not start checkout. Email ${site.supportEmail} to enroll directly.`

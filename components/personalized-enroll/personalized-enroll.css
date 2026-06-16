@@ -1,3 +1,6 @@
+/* LOCKED — Sohail Yousaf custom enrollment page CSS (sent Jun 2026).
+   Do not edit. New enrollment pages use components/standard-enroll/standard-enroll.css.
+   See: app/enroll/sohail-shermeen/LOCK.md */
 /* Aurora token block — same values as app/landing/landing-v4.css, scoped to .lp wrapper.
    Inlined here so this page can stand alone without importing the landing CSS. */
 .lp, .lp *, .lp *::before, .lp *::after { box-sizing: border-box; }

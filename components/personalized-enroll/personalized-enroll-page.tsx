@@ -1,3 +1,13 @@
+/**
+ * LOCKED — Sohail Yousaf custom enrollment page component (sent Jun 2026).
+ *
+ * Serves `/enroll/sohail-shermeen` only. Do not import from this file in
+ * new pages, and do not edit it without an explicit owner unlock — the
+ * page link was already sent and must remain stable. Build new enrollment
+ * pages on the standard stack: `components/standard-enroll/*`.
+ *
+ * See: app/enroll/sohail-shermeen/LOCK.md
+ */
 "use client";
 
 import { useEffect, useState } from "react";

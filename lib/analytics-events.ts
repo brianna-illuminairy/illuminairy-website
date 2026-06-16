@@ -35,7 +35,9 @@ export const AnalyticsEvents = {
   postCallPaymentCompleted: "post_call_payment_completed",
   postCallLinkSent: "post_call_link_sent",
   personalizedEnrollPageViewed: "personalized_enroll_page_viewed",
-  personalizedEnrollPaymentClicked: "personalized_enroll_payment_clicked"
+  personalizedEnrollPaymentClicked: "personalized_enroll_payment_clicked",
+  standardEnrollPageViewed: "standard_enroll_page_viewed",
+  standardEnrollPaymentClicked: "standard_enroll_payment_clicked"
 } as const;
 
 export type AnalyticsEventName =

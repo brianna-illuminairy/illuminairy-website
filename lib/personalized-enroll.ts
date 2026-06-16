@@ -1,4 +1,17 @@
 /**
+ * LOCKED — Sohail Yousaf custom enrollment page data (sent Jun 2026).
+ *
+ * This file exists to serve `/enroll/sohail-shermeen` only. It is **not** a
+ * template for new enrollment pages. Do not add new leads here, do not
+ * import this file from anything but Sohail's own page + components +
+ * APIs, and do not edit Sohail's lead config without an explicit owner
+ * unlock — the page link was already sent and must remain stable.
+ *
+ * New enrollment pages live in `lib/standard-enroll.ts`.
+ *
+ * See: app/enroll/sohail-shermeen/LOCK.md
+ *
+ * --- Original header ---
  * Personalized post-call enrollment pages (one per high-value lead).
  *
  * URL pattern: /enroll/{slug}  e.g. /enroll/sohail-shermeen
