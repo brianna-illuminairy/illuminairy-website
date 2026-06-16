@@ -1324,3 +1324,16 @@
   line-height: 1.4;
   color: var(--fg-mute);
 }
+
+/* ════════ Stripe PaymentElement wrapper ════════ */
+.co-stripe-element {
+  border: 1px solid var(--hairline);
+  border-radius: 10px;
+  background: var(--surface);
+  padding: 14px 14px;
+  margin-bottom: 16px;
+  min-height: 60px;
+}
+.co-stripe-element .StripeElement {
+  width: 100%;
+}

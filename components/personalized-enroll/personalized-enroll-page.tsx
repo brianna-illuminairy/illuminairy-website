@@ -1,11 +1,27 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { loadStripe, type Stripe as StripeJs } from "@stripe/stripe-js";
+import {
+  CardElement,
+  Elements,
+  useElements,
+  useStripe
+} from "@stripe/react-stripe-js";
 import { captureAnalytics } from "@/lib/analytics-capture";
 import { AnalyticsEvents } from "@/lib/analytics-events";
 import { IlluminairyLogoV7 } from "@/components/brand/illuminairy-logo-v7";
 import { type PersonalizedEnrollLead } from "@/lib/personalized-enroll";
 import "./personalized-enroll.css";
+
+// Load Stripe.js once per module load. The publishable key is read at module
+// init time on the client; if it is missing we render an error state below
+// instead of throwing during the load.
+const STRIPE_PUBLISHABLE_KEY =
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? "";
+const stripePromise: Promise<StripeJs | null> = STRIPE_PUBLISHABLE_KEY
+  ? loadStripe(STRIPE_PUBLISHABLE_KEY)
+  : Promise.resolve(null);
 
 function CheckIcon(props: { width?: number; height?: number }) {
   const w = props.width ?? 13;
@@ -175,6 +191,161 @@ function PlanCard({ lead }: { lead: PersonalizedEnrollLead }) {
   );
 }
 function PayCard({ lead }: { lead: PersonalizedEnrollLead }) {
+  const [clientSecret, setClientSecret] = useState<string | null>(null);
+  const [paymentIntentId, setPaymentIntentId] = useState<string | null>(null);
+  const [intentError, setIntentError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!STRIPE_PUBLISHABLE_KEY) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch("/api/personalized-enroll/checkout", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            slug: lead.slug,
+            first: lead.parent.first,
+            last:
+              lead.parent.last ??
+              lead.parent.full.replace(lead.parent.first, "").trim(),
+            email: lead.parent.email ?? "",
+            tos: false
+          })
+        });
+        const data = (await res.json().catch(() => ({}))) as {
+          clientSecret?: string;
+          paymentIntentId?: string;
+          error?: string;
+        };
+        if (cancelled) return;
+        if (!res.ok || !data.clientSecret) {
+          setIntentError(
+            data.error ??
+              "Could not initialize checkout. Please refresh, or email " +
+                lead.advisor.email +
+                "."
+          );
+          return;
+        }
+        setClientSecret(data.clientSecret);
+        setPaymentIntentId(data.paymentIntentId ?? null);
+      } catch (err) {
+        if (!cancelled) {
+          console.error("personalized-enroll: failed to init PaymentIntent", err);
+          setIntentError(
+            "Could not reach the checkout service. Please refresh."
+          );
+        }
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [lead.slug, lead.parent.first, lead.parent.last, lead.parent.full, lead.parent.email, lead.advisor.email]);
+
+  if (!STRIPE_PUBLISHABLE_KEY) {
+    return (
+      <section className="co-pay">
+        <h2 className="co-pay-title">Purchase Diagnostic &amp; Enroll</h2>
+        <p
+          role="alert"
+          style={{
+            marginTop: 16,
+            padding: "12px 14px",
+            borderRadius: 10,
+            background: "rgba(176,40,40,0.06)",
+            border: "1px solid rgba(176,40,40,0.22)",
+            color: "#a92929",
+            fontSize: 14
+          }}
+        >
+          Checkout is not configured. Please email {lead.advisor.email} to
+          enroll.
+        </p>
+      </section>
+    );
+  }
+
+  if (intentError) {
+    return (
+      <section className="co-pay">
+        <h2 className="co-pay-title">Purchase Diagnostic &amp; Enroll</h2>
+        <p
+          role="alert"
+          style={{
+            marginTop: 16,
+            padding: "12px 14px",
+            borderRadius: 10,
+            background: "rgba(176,40,40,0.06)",
+            border: "1px solid rgba(176,40,40,0.22)",
+            color: "#a92929",
+            fontSize: 14
+          }}
+        >
+          {intentError}
+        </p>
+      </section>
+    );
+  }
+
+  if (!clientSecret) {
+    return (
+      <section className="co-pay">
+        <h2 className="co-pay-title">Purchase Diagnostic &amp; Enroll</h2>
+        <p
+          style={{
+            marginTop: 16,
+            fontSize: 14,
+            color: "var(--fg-mute)"
+          }}
+        >
+          Loading secure checkout&hellip;
+        </p>
+      </section>
+    );
+  }
+
+  // PaymentIntent already exists on the server with payment_method_types =
+  // ["card"], so when Elements mounts bound to this clientSecret it will
+  // only ever render card. No Bank, Klarna, Cash App, Link, etc.
+  return (
+    <Elements
+      stripe={stripePromise}
+      options={{
+        clientSecret,
+        appearance: {
+          theme: "stripe",
+          variables: {
+            colorPrimary: "#2f7d46",
+            colorText: "#121A2B",
+            colorBackground: "#FFFFFF",
+            fontFamily:
+              "var(--font-dm-sans), 'DM Sans', system-ui, sans-serif",
+            borderRadius: "10px"
+          }
+        }
+      }}
+    >
+      <PayCardInner
+        lead={lead}
+        clientSecret={clientSecret}
+        paymentIntentId={paymentIntentId}
+      />
+    </Elements>
+  );
+}
+
+function PayCardInner({
+  lead,
+  clientSecret
+}: {
+  lead: PersonalizedEnrollLead;
+  clientSecret: string;
+  paymentIntentId: string | null;
+}) {
+  const stripe = useStripe();
+  const elements = useElements();
   const derivedLast =
     lead.parent.last ??
     lead.parent.full.replace(lead.parent.first, "").trim();
@@ -183,10 +354,21 @@ function PayCard({ lead }: { lead: PersonalizedEnrollLead }) {
   const [email, setEmail] = useState(lead.parent.email ?? "");
   const [tos, setTos] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [submitLabel, setSubmitLabel] = useState<string>(
+    `Pay $${lead.pricing.diagPrice} to Enroll`
+  );
   const [error, setError] = useState<string | null>(null);
+  const [succeeded, setSucceeded] = useState<{
+    paymentIntentId: string;
+    subscriptionStatus: string;
+  } | null>(null);
 
   async function onPay() {
     setError(null);
+    if (!stripe || !elements) {
+      setError("Payment is still loading, give it a moment and try again.");
+      return;
+    }
     const trimmedFirst = first.trim();
     const trimmedLast = last.trim();
     const trimmedEmail = email.trim();
@@ -198,47 +380,148 @@ function PayCard({ lead }: { lead: PersonalizedEnrollLead }) {
       setError("Please agree to the terms to continue.");
       return;
     }
+
     setSubmitting(true);
     captureAnalytics(AnalyticsEvents.personalizedEnrollPaymentClicked, {
       slug: lead.slug,
       source: "main_form"
     });
+
     try {
-      const res = await fetch("/api/personalized-enroll/checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          slug: lead.slug,
-          first: trimmedFirst,
-          last: trimmedLast,
-          email: trimmedEmail,
-          tos: true
-        })
-      });
-      const data = (await res.json().catch(() => ({}))) as {
-        url?: string;
-        error?: string;
-      };
-      if (!res.ok || !data.url) {
-        setError(
-          data.error ??
-            "Could not start checkout. Please try again or email " +
-              lead.advisor.email +
-              "."
-        );
+      const cardEl = elements.getElement(CardElement);
+      if (!cardEl) {
+        setError("Payment form is not ready, please try again.");
         setSubmitting(false);
+        setSubmitLabel(`Pay $${lead.pricing.diagPrice} to Enroll`);
         return;
       }
-      window.location.href = data.url;
+
+      // Confirm the card payment with the PaymentIntent client secret.
+      // Stripe handles 3DS challenges inline.
+      setSubmitLabel(`Charging $${lead.pricing.diagPrice}\u2026`);
+      const { error: confirmError, paymentIntent } =
+        await stripe.confirmCardPayment(clientSecret, {
+          payment_method: {
+            card: cardEl,
+            billing_details: {
+              name: `${trimmedFirst} ${trimmedLast}`.trim(),
+              email: trimmedEmail
+            }
+          }
+        });
+
+      if (confirmError) {
+        setError(
+          confirmError.message ??
+            "Your card was not accepted. Please try a different card."
+        );
+        setSubmitting(false);
+        setSubmitLabel(`Pay $${lead.pricing.diagPrice} to Enroll`);
+        return;
+      }
+
+      if (!paymentIntent || paymentIntent.status !== "succeeded") {
+        setError(
+          "Payment is processing. We will follow up by email once it confirms."
+        );
+        setSubmitting(false);
+        setSubmitLabel(`Pay $${lead.pricing.diagPrice} to Enroll`);
+        return;
+      }
+
+      // 4. Create the weekly subscription with the saved card + 7-day trial.
+      setSubmitLabel("Setting up weekly tutoring\u2026");
+      const finalizeRes = await fetch(
+        "/api/personalized-enroll/finalize",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ paymentIntentId: paymentIntent.id })
+        }
+      );
+      const finalizeData = (await finalizeRes
+        .json()
+        .catch(() => ({}))) as {
+        subscriptionId?: string;
+        status?: string;
+        error?: string;
+      };
+
+      if (!finalizeRes.ok) {
+        // The diagnostic charge succeeded but subscription create failed.
+        // Show a partial-success state so the parent knows we still owe
+        // them the weekly setup; ops follow-up handles it.
+        setError(
+          finalizeData.error ??
+            "We charged the diagnostic. Please email " +
+              lead.advisor.email +
+              " and we will finish your weekly enrollment within 1 business day."
+        );
+        setSubmitting(false);
+        setSubmitLabel(`Pay $${lead.pricing.diagPrice} to Enroll`);
+        return;
+      }
+
+      // Done.
+      setSucceeded({
+        paymentIntentId: paymentIntent.id,
+        subscriptionStatus: finalizeData.status ?? "trialing"
+      });
+      setSubmitting(false);
     } catch (err) {
-      console.error("personalized-enroll checkout client error:", err);
+      console.error("personalized-enroll on-page checkout client error:", err);
       setError(
-        "Could not reach the checkout service. Please try again, or email " +
+        "Something went wrong. Please try again, or email " +
           lead.advisor.email +
           " and we will enroll you directly."
       );
       setSubmitting(false);
+      setSubmitLabel(`Pay $${lead.pricing.diagPrice} to Enroll`);
     }
+  }
+
+  if (succeeded) {
+    return (
+      <section className="co-pay">
+        <h2 className="co-pay-title">You&apos;re enrolled.</h2>
+        <p
+          style={{
+            margin: "16px 0 0",
+            fontSize: 15,
+            lineHeight: 1.6,
+            color: "var(--page-fg)"
+          }}
+        >
+          Thank you, {first}. We charged ${lead.pricing.diagPrice} for{" "}
+          {lead.student.first}&apos;s diagnostic and Phase 1 plan, and her
+          weekly tutoring is queued up to begin 7 days from now.
+        </p>
+        <p
+          style={{
+            margin: "12px 0 0",
+            fontSize: 14,
+            lineHeight: 1.6,
+            color: "var(--fg-soft)"
+          }}
+        >
+          {lead.advisor.first} will email you within 1 business day with
+          links to schedule {lead.student.first}&apos;s diagnostic and her
+          first tutor introduction. Receipt is on its way to {email}.
+        </p>
+        <p
+          style={{
+            margin: "16px 0 0",
+            fontFamily: "var(--mono)",
+            fontSize: 11,
+            letterSpacing: "0.08em",
+            textTransform: "uppercase",
+            color: "var(--fg-mute)"
+          }}
+        >
+          Reference: {succeeded.paymentIntentId}
+        </p>
+      </section>
+    );
   }
 
   return (
@@ -299,39 +582,22 @@ function PayCard({ lead }: { lead: PersonalizedEnrollLead }) {
       </div>
 
       <span className="co-field-label mt">Card details</span>
-      <div className="co-card-fallback" aria-hidden="true">
-        <div className="co-cf-num">
-          <span className="co-cf-ph">1234 1234 1234 1234</span>
-          <span className="co-brands">
-            <span className="co-brand mc">
-              <i className="r" />
-              <i className="y" />
-            </span>
-            <span className="co-brand visa">VISA</span>
-            <span className="co-brand amex">AMEX</span>
-            <span className="co-brand disc">DISC</span>
-          </span>
-        </div>
-        <div className="co-cf-row">
-          <div className="co-cf-cell">
-            <span className="co-cf-ph">MM / YY</span>
-          </div>
-          <div className="co-cf-cell">
-            <span className="co-cf-ph">CVC</span>
-            <svg
-              className="co-cf-icon"
-              viewBox="0 0 24 24"
-              strokeWidth={2}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              fill="none"
-              stroke="currentColor"
-            >
-              <rect x="2" y="5" width="20" height="14" rx="2" />
-              <line x1="2" y1="10" x2="22" y2="10" />
-            </svg>
-          </div>
-        </div>
+      <div className="co-stripe-element">
+        <CardElement
+          options={{
+            hidePostalCode: false,
+            style: {
+              base: {
+                fontFamily:
+                  "var(--font-dm-sans), 'DM Sans', system-ui, sans-serif",
+                fontSize: "15px",
+                color: "#121A2B",
+                "::placeholder": { color: "rgba(18,26,43,0.42)" }
+              },
+              invalid: { color: "#a92929" }
+            }
+          }}
+        />
       </div>
 
       <div className="co-trust-row">
@@ -373,13 +639,9 @@ function PayCard({ lead }: { lead: PersonalizedEnrollLead }) {
         type="button"
         className="co-paybtn"
         onClick={onPay}
-        disabled={submitting}
+        disabled={submitting || !stripe || !elements}
       >
-        <span>
-          {submitting
-            ? "Starting secure checkout\u2026"
-            : `Pay $${lead.pricing.diagPrice} to Enroll`}
-        </span>
+        <span>{submitLabel}</span>
         {!submitting && (
           <span className="arrow">
             <ArrowIcon />

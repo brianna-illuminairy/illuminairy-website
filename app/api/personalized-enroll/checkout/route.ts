@@ -6,7 +6,7 @@ import {
 import { getStripe } from "@/lib/stripe";
 import { site } from "@/lib/site";
 
-type CheckoutPayload = {
+type IntentPayload = {
   slug?: string;
   first?: string;
   last?: string;
@@ -21,14 +21,10 @@ function isValidEmail(value: string) {
 }
 
 /**
- * Resolve the Stripe Price ID to use for a given product. We do not store
- * Price IDs in code because Stripe lets us swap a product's default price
- * (price changes, coupons) without a deploy. We always charge the product's
- * current default price.
+ * Resolve the Stripe Price ID for a given product. We do not store Price IDs
+ * in code so the Stripe dashboard can swap prices without a deploy.
  */
-async function resolveDefaultPriceId(
-  productId: string
-): Promise<string> {
+async function resolveDefaultPriceId(productId: string): Promise<string> {
   const stripe = getStripe();
   const product = await stripe.products.retrieve(productId);
   const defaultPrice = product.default_price;
@@ -46,6 +42,18 @@ async function resolveDefaultPriceId(
   );
 }
 
+/**
+ * Step 1 of the on-page checkout.
+ *
+ * Creates a Stripe Customer and a PaymentIntent for the diagnostic ($249).
+ * We use `setup_future_usage: "off_session"` so the card collected for the
+ * one-time diagnostic charge is saved on the customer and can be used to
+ * start the weekly subscription with trial after this PaymentIntent
+ * succeeds (see ./finalize for the second step).
+ *
+ * Returns a `clientSecret` the client uses to mount Stripe's Payment
+ * Element. The whole purchase is completed on our page; no redirect.
+ */
 export async function POST(request: Request) {
   if (!process.env.STRIPE_SECRET_KEY) {
     return NextResponse.json(
@@ -56,14 +64,13 @@ export async function POST(request: Request) {
     );
   }
 
-  let body: CheckoutPayload;
+  let body: IntentPayload;
   try {
-    body = (await request.json()) as CheckoutPayload;
+    body = (await request.json()) as IntentPayload;
   } catch {
     return NextResponse.json({ error: "Invalid request." }, { status: 400 });
   }
 
-  // Honeypot
   if (body.company) {
     return NextResponse.json({ ok: true });
   }
@@ -85,12 +92,11 @@ export async function POST(request: Request) {
       { status: 400 }
     );
   }
-  if (body.tos !== true) {
-    return NextResponse.json(
-      { error: "Please agree to the terms to continue." },
-      { status: 400 }
-    );
-  }
+  // TOS is enforced client-side at submit time via the checkbox + button
+  // disabled state. We do not enforce it here because the PaymentIntent
+  // is created on page mount (before the user has had a chance to tick the
+  // checkbox) so Stripe Elements can mount bound to the PI's allowed
+  // payment methods (card only).
 
   const lead: PersonalizedEnrollLead | null = getPersonalizedEnrollLead(slug);
   if (!lead) {
@@ -119,51 +125,67 @@ export async function POST(request: Request) {
     );
   }
 
-  try {
-    const session = await stripe.checkout.sessions.create({
-      mode: "subscription",
-      // Subscription mode accepts both recurring and one-time prices in
-      // line_items. The recurring price ($99/wk) carries the trial; the
-      // one-time price ($249 diagnostic) is billed at session completion
-      // (today). The first weekly invoice generates at trial end (day 7).
-      line_items: [
-        { price: weeklyPriceId, quantity: 1 },
-        { price: diagnosticPriceId, quantity: 1 }
-      ],
-      subscription_data: {
-        trial_period_days: lead.pricing.weeklyTrialDays,
-        metadata: {
-          program: "personalized-enroll",
-          lead_slug: lead.slug,
-          parent_first: first,
-          parent_last: last,
-          student_first: lead.student.first,
-          advisor_full: lead.advisor.full
-        }
+  // Look up the diagnostic price in cents from Stripe so we never trust
+  // the lead config's display amount on the server side.
+  const diagnosticPrice = await stripe.prices.retrieve(diagnosticPriceId);
+  const amountCents = diagnosticPrice.unit_amount;
+  if (!amountCents) {
+    console.error(
+      "personalized-enroll: diagnostic price has no unit_amount",
+      diagnosticPriceId
+    );
+    return NextResponse.json(
+      {
+        error: `Could not start checkout. Email ${site.supportEmail} to enroll directly.`
       },
-      customer_email: email,
-      // Top-level metadata mirrors subscription metadata so the webhook can
-      // identify the lead from either object.
+      { status: 502 }
+    );
+  }
+
+  try {
+    const customer = await stripe.customers.create({
+      email,
+      name: `${first} ${last}`.trim(),
       metadata: {
         program: "personalized-enroll",
         lead_slug: lead.slug,
         parent_first: first,
         parent_last: last,
-        parent_email: email,
         student_first: lead.student.first,
         advisor_full: lead.advisor.full
-      },
-      client_reference_id: lead.slug,
-      success_url: `${site.url}/enroll/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${site.url}/enroll/${lead.slug}?canceled=1`,
-      payment_method_collection: "always",
-      allow_promotion_codes: false
+      }
     });
 
-    if (!session.url) {
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: amountCents,
+      currency: diagnosticPrice.currency ?? "usd",
+      customer: customer.id,
+      receipt_email: email,
+      // Save the payment method on the customer so we can attach it to the
+      // weekly subscription after this PaymentIntent succeeds.
+      setup_future_usage: "off_session",
+      // Modern integration: Stripe-managed dynamic payment methods, but for
+      // now we lock to card so the form stays simple and predictable.
+      payment_method_types: ["card"],
+      description: `${lead.student.first} — Skill Diagnostic + Personalized Plan`,
+      metadata: {
+        program: "personalized-enroll",
+        flow_step: "diagnostic_charge",
+        lead_slug: lead.slug,
+        parent_first: first,
+        parent_last: last,
+        parent_email: email,
+        student_first: lead.student.first,
+        advisor_full: lead.advisor.full,
+        weekly_price_id: weeklyPriceId,
+        weekly_trial_days: String(lead.pricing.weeklyTrialDays)
+      }
+    });
+
+    if (!paymentIntent.client_secret) {
       console.error(
-        "personalized-enroll checkout: Stripe returned a session with no url",
-        session.id
+        "personalized-enroll: PaymentIntent has no client_secret",
+        paymentIntent.id
       );
       return NextResponse.json(
         {
@@ -173,9 +195,13 @@ export async function POST(request: Request) {
       );
     }
 
-    return NextResponse.json({ url: session.url, sessionId: session.id });
+    return NextResponse.json({
+      clientSecret: paymentIntent.client_secret,
+      paymentIntentId: paymentIntent.id,
+      customerId: customer.id
+    });
   } catch (err) {
-    console.error("personalized-enroll Stripe checkout error:", err);
+    console.error("personalized-enroll Stripe intent error:", err);
     return NextResponse.json(
       {
         error: `Could not start checkout. Email ${site.supportEmail} to enroll directly.`

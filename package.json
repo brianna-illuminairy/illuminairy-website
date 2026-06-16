@@ -46,12 +46,17 @@
     "crm:backfill-typeform": "node scripts/backfill-typeform-enrollment.mjs",
     "crm:backfill-stripe-payments": "node scripts/backfill-stripe-payments.mjs",
     "crm:backfill-danielle-economics": "node scripts/backfill-danielle-economics.mjs",
+    "crm:backfill-scores": "node --env-file=.env.local scripts/crm-backfill-scores.mjs",
+    "crm:backfill-scores:extract": "node --env-file=.env.local scripts/crm-backfill-scores.mjs --extract",
+    "crm:gemini-extract-local": "node --env-file=.env.local scripts/crm-gemini-extract-local.mjs",
     "danielle:notify-updates": "node scripts/danielle-notify-updates.mjs"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/sortable": "^10.0.0",
     "@posthog/nextjs-config": "^1.9.52",
+    "@stripe/react-stripe-js": "^6.6.0",
+    "@stripe/stripe-js": "^9.8.0",
     "@supabase/supabase-js": "^2.106.0",
     "lucide-react": "^0.468.0",
     "next": "^16.2.6",
