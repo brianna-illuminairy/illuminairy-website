@@ -55,10 +55,16 @@ export function LeadProfileScore({ leadId, currentScore }: Props) {
       )}
 
       {components && (
-        <div className="grid gap-2 sm:grid-cols-5">
-          {(["base", "intake", "engagement", "call", "decay"] as const).map((k) => (
+        <div className="grid gap-2 sm:grid-cols-3">
+          {(
+            [
+              ["call", "Call quality (max 60)"],
+              ["engagement", "Email (max 25)"],
+              ["recency", "Recency (max 15)"]
+            ] as const
+          ).map(([k, label]) => (
             <div key={k} className="rounded-xl border border-border bg-surface p-3">
-              <p className="text-[10px] uppercase tracking-wide text-muted-foreground">{k}</p>
+              <p className="text-[10px] uppercase tracking-wide text-muted-foreground">{label}</p>
               <p className="text-lg font-semibold">{components[k] ?? 0}</p>
             </div>
           ))}
