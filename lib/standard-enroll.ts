@@ -164,7 +164,7 @@ export const STANDARD_TESTIMONIALS: StandardTestimonial[] = [
     detail: "Parent of a 12th grader · Boston, MA"
   },
   {
-    gain: "1200 → 1490",
+    gain: "1240 → 1490",
     quote:
       "I liked having the same two tutors that stuck with me. And also that they had gone to the same schools I was hoping to get into. They helped me get my score up by 250 points and reviewed my college essays with me which made me feel more confident applying.",
     name: "Sofia D.",

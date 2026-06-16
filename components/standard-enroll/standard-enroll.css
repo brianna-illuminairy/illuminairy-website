@@ -727,7 +727,9 @@
   font-size: 0.74rem;
   color: #7f8c85;
   max-width: 60ch;
-  margin: 0 auto;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
   line-height: 1.5;
   text-align: center;
 }
