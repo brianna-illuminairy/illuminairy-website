@@ -9,6 +9,24 @@ export type DaniellePortalUpdate = {
 
 export const DANIELLE_PORTAL_UPDATES: DaniellePortalUpdate[] = [
   {
+    id: "2026-06-16-week-2-homework-portal",
+    publishedAt: "2026-06-16",
+    title: "Transitions homework sets assigned",
+    summary:
+      "Transitions 1 due Wednesday, June 17. Transitions 2 opens and is due Saturday, June 27. Review slides → flashcards 95% → problem sets.",
+    href: "/danielle/week-2#week-2-homework-workflow",
+    cta: "View homework schedule"
+  },
+  {
+    id: "2026-06-16-transitions-flashcards",
+    publishedAt: "2026-06-16",
+    title: "Week 2 post-session exercise is live",
+    summary:
+      "Transitions category flashcards: 26 most common phrases, four categories, round tracking. Goal is 95% accuracy.",
+    href: "/danielle/week-2/exercises/transitions-flashcards",
+    cta: "Open exercise"
+  },
+  {
     id: "2026-06-16-week-2-transitions",
     publishedAt: "2026-06-16",
     title: "Week 2 Transitions lesson is live",

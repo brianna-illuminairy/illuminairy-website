@@ -1,9 +1,7 @@
-export type TransitionCategory =
-  | "contrast"
-  | "cause"
-  | "add"
-  | "example"
-  | "sequence";
+import type { TransitionCategory } from "@/lib/danielle-transitions-cheat-sheet";
+import { allCommonTransitionPhrases } from "@/lib/danielle-transitions-cheat-sheet";
+
+export type { TransitionCategory };
 
 export type TransitionMatchPair = {
   id: string;
@@ -15,13 +13,13 @@ export type TransitionMatchPair = {
 export const TRANSITION_FOLLOWS_PAIRS: TransitionMatchPair[] = [
   {
     id: "1",
-    phrase: "Granted,",
-    follows: "a point that weakens or contradicts what was just said"
+    phrase: "However,",
+    follows: "an opposite or differing point"
   },
   {
     id: "2",
-    phrase: "Ultimately,",
-    follows: "the final outcome of a process"
+    phrase: "Therefore,",
+    follows: "a logical result of the previous sentence"
   },
   {
     id: "3",
@@ -30,13 +28,13 @@ export const TRANSITION_FOLLOWS_PAIRS: TransitionMatchPair[] = [
   },
   {
     id: "4",
-    phrase: "Therefore,",
-    follows: "a logical result of the previous sentence"
+    phrase: "Nevertheless,",
+    follows: "a point that still holds despite what was just said"
   },
   {
     id: "5",
-    phrase: "In other words,",
-    follows: "a restatement of the previous idea in plainer words"
+    phrase: "Consequently,",
+    follows: "a direct effect or result"
   },
   {
     id: "6",
@@ -45,74 +43,63 @@ export const TRANSITION_FOLLOWS_PAIRS: TransitionMatchPair[] = [
   },
   {
     id: "7",
-    phrase: "However,",
-    follows: "an opposite or differing point"
+    phrase: "Instead,",
+    follows: "what happens or should happen on the other path"
   },
   {
     id: "8",
-    phrase: "Consequently,",
-    follows: "a direct effect or result"
-  },
-  {
-    id: "9",
     phrase: "Moreover,",
     follows: "a stronger or expanded point in the same direction"
   },
   {
-    id: "10",
+    id: "9",
     phrase: "Specifically,",
     follows: "a narrowed detail or example"
   },
   {
-    id: "11",
-    phrase: "That said,",
-    follows: "a contrast or qualification of what was just said"
-  },
-  {
-    id: "12",
-    phrase: "Then,",
-    follows: "the next step in a sequence"
-  },
-  {
-    id: "13",
+    id: "10",
     phrase: "In contrast,",
     follows: "an opposite or differing point"
   },
   {
-    id: "14",
+    id: "11",
     phrase: "Accordingly,",
     follows: "a consequence that matches the prior idea"
   },
   {
-    id: "15",
+    id: "12",
     phrase: "For example,",
     follows: "a concrete illustration"
   },
   {
+    id: "13",
+    phrase: "Similarly,",
+    follows: "a parallel fact in the same direction"
+  },
+  {
+    id: "14",
+    phrase: "Indeed,",
+    follows: "a stronger statement of the same point"
+  },
+  {
+    id: "15",
+    phrase: "In fact,",
+    follows: "a sharper or more surprising version of the same point"
+  },
+  {
     id: "16",
-    phrase: "Subsequently,",
-    follows: "what happens next in time or order"
+    phrase: "As a result,",
+    follows: "what happened because of the previous sentence"
   }
 ];
 
+const chipPhrase = (phrase: string) => phrase.replace(/,$/, "").trim().toLowerCase();
+
+/** Category sort chips aligned to the common Digital SAT word list. */
 export const TRANSITION_SORT_CHIPS: Array<{
   word: string;
   cat: TransitionCategory;
-}> = [
-  { word: "however", cat: "contrast" },
-  { word: "therefore", cat: "cause" },
-  { word: "for example", cat: "example" },
-  { word: "moreover", cat: "add" },
-  { word: "nevertheless", cat: "contrast" },
-  { word: "consequently", cat: "cause" },
-  { word: "for instance", cat: "example" },
-  { word: "furthermore", cat: "add" },
-  { word: "on the other hand", cat: "contrast" },
-  { word: "as a result", cat: "cause" },
-  { word: "specifically", cat: "example" },
-  { word: "in addition", cat: "add" },
-  { word: "instead", cat: "contrast" },
-  { word: "thus", cat: "cause" },
-  { word: "in fact", cat: "example" },
-  { word: "similarly", cat: "add" }
-];
+}> = allCommonTransitionPhrases().map((entry) => ({
+  word: chipPhrase(entry.phrase),
+  cat: entry.category
+}));
