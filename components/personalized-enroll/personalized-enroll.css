@@ -1337,3 +1337,24 @@
 .co-stripe-element .StripeElement {
   width: 100%;
 }
+
+/* ════════ Stripe split-element wrappers ════════
+   Each Stripe field (CardNumber / Expiry / CVC) renders inside its own
+   iframe. We wrap each with .co-cf-stripe so the iframe stretches to the
+   cell, and we keep the surrounding .co-cf-num / .co-cf-row / .co-cf-cell
+   chrome from the original mockup so the form looks like one card on our
+   page, not three Stripe inputs. */
+.co-card-fallback .co-cf-stripe {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+.co-card-fallback .co-cf-stripe .StripeElement {
+  width: 100%;
+  display: block;
+}
+.co-card-fallback .co-cf-stripe .StripeElement--focus {
+  outline: none;
+}

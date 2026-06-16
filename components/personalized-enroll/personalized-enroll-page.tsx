@@ -3,7 +3,9 @@
 import { useEffect, useState } from "react";
 import { loadStripe, type Stripe as StripeJs } from "@stripe/stripe-js";
 import {
-  CardElement,
+  CardCvcElement,
+  CardExpiryElement,
+  CardNumberElement,
   Elements,
   useElements,
   useStripe
@@ -22,6 +24,24 @@ const STRIPE_PUBLISHABLE_KEY =
 const stripePromise: Promise<StripeJs | null> = STRIPE_PUBLISHABLE_KEY
   ? loadStripe(STRIPE_PUBLISHABLE_KEY)
   : Promise.resolve(null);
+
+/** Shared style for all three split card elements so they look like one
+ *  field rather than three Stripe-default inputs. The wrapper divs supply
+ *  border / padding / brand badges. */
+const CARD_ELEMENT_STYLE = {
+  showIcon: false,
+  style: {
+    base: {
+      fontFamily:
+        "var(--font-dm-sans), 'DM Sans', system-ui, sans-serif",
+      fontSize: "15px",
+      fontWeight: "400",
+      color: "#121A2B",
+      "::placeholder": { color: "rgba(18,26,43,0.42)" }
+    },
+    invalid: { color: "#a92929" }
+  }
+} as const;
 
 function CheckIcon(props: { width?: number; height?: number }) {
   const w = props.width ?? 13;
@@ -314,6 +334,9 @@ function PayCard({ lead }: { lead: PersonalizedEnrollLead }) {
       stripe={stripePromise}
       options={{
         clientSecret,
+        // Hide Stripe Link's Autofill prompt — we want the form to look
+        // like our own checkout, not Stripe's.
+        loader: "never",
         appearance: {
           theme: "stripe",
           variables: {
@@ -323,6 +346,9 @@ function PayCard({ lead }: { lead: PersonalizedEnrollLead }) {
             fontFamily:
               "var(--font-dm-sans), 'DM Sans', system-ui, sans-serif",
             borderRadius: "10px"
+          },
+          rules: {
+            ".Input": { border: "none", boxShadow: "none", padding: "0" }
           }
         }
       }}
@@ -388,7 +414,7 @@ function PayCardInner({
     });
 
     try {
-      const cardEl = elements.getElement(CardElement);
+      const cardEl = elements.getElement(CardNumberElement);
       if (!cardEl) {
         setError("Payment form is not ready, please try again.");
         setSubmitting(false);
@@ -582,22 +608,45 @@ function PayCardInner({
       </div>
 
       <span className="co-field-label mt">Card details</span>
-      <div className="co-stripe-element">
-        <CardElement
-          options={{
-            hidePostalCode: false,
-            style: {
-              base: {
-                fontFamily:
-                  "var(--font-dm-sans), 'DM Sans', system-ui, sans-serif",
-                fontSize: "15px",
-                color: "#121A2B",
-                "::placeholder": { color: "rgba(18,26,43,0.42)" }
-              },
-              invalid: { color: "#a92929" }
-            }
-          }}
-        />
+      <div className="co-card-fallback">
+        <div className="co-cf-num">
+          <div className="co-cf-stripe">
+            <CardNumberElement options={CARD_ELEMENT_STYLE} />
+          </div>
+          <span className="co-brands">
+            <span className="co-brand mc">
+              <i className="r" />
+              <i className="y" />
+            </span>
+            <span className="co-brand visa">VISA</span>
+            <span className="co-brand amex">AMEX</span>
+            <span className="co-brand disc">DISC</span>
+          </span>
+        </div>
+        <div className="co-cf-row">
+          <div className="co-cf-cell">
+            <div className="co-cf-stripe">
+              <CardExpiryElement options={CARD_ELEMENT_STYLE} />
+            </div>
+          </div>
+          <div className="co-cf-cell">
+            <div className="co-cf-stripe">
+              <CardCvcElement options={CARD_ELEMENT_STYLE} />
+            </div>
+            <svg
+              className="co-cf-icon"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              fill="none"
+              stroke="currentColor"
+            >
+              <rect x="2" y="5" width="20" height="14" rx="2" />
+              <line x1="2" y1="10" x2="22" y2="10" />
+            </svg>
+          </div>
+        </div>
       </div>
 
       <div className="co-trust-row">
