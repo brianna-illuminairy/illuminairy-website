@@ -755,17 +755,24 @@ function FaqSection({ lead }: { lead: PersonalizedEnrollLead }) {
       q:
         "Can " +
         student +
-        " skip the diagnostic since she just took two Blue Book practice tests?",
+        " skip the diagnostic since she just took two Bluebook practice tests?",
       a: [
-        "Our program works backwards from the diagnostic results, and we cannot develop her personalized lessons without it. The Blue Book practice tests she already took were unproctored, we do not have access to her scores from them, we do not know how much time she spent per question, and they do not give us enough detailed information to build her personalized plan. We may well arrive at a similar overall score on our diagnostic, but the score itself is not what we need; the question-by-question detail is.",
-        "What an expert tutor sees during a proctored 2 hours 14 minutes that an unproctored practice test cannot show: real timing per question (no pause, no break); whether " +
+        "Our program works backwards from the diagnostic results, so we need " +
           student +
-          " actually finished each section or guessed the last few; where she used Desmos and where she tried to solve mentally; where she hesitated, where she rushed, and where her accuracy dropped from fatigue; and whether she reached module 2 hard, or stayed in module 2 medium because of her module 1 accuracy.",
-        "If she would rather not take the full 2 hour 14 minute proctored exam, we can develop a custom 60-minute version (1 Reading and Writing module and 1 Math module, instead of 2 each). The cost would be the same $" +
+          " to take our diagnostic before we can build her personalized lessons.",
+        "The Bluebook practice tests are useful for getting a general score, but they do not give us enough detail to build her tutoring plan. They show broad results, like her Reading and Writing score, Math score, and some general skill areas. Our diagnostic goes several layers deeper.",
+        "For example, we do not just see that geometry is a weakness. We look at which parts of geometry are weak. " +
+          student +
+          " may understand right triangles but struggle with equilateral triangles. She may understand volume in circle-related problems but miss area questions. That level of detail changes what we teach first.",
+        "The same is true for Reading and Writing. We do not just see that grammar is a weakness. We look at the exact grammar skills causing missed points. For example, she may be strong on punctuation overall but struggle with transitions or semicolons. That lets us target the specific skill instead of reteaching content she already knows.",
+        "We also need to understand how she performs under real test conditions. The Bluebook practice tests she took were unproctored. We do not know how much time she spent per question, whether she paused, whether she guessed at the end, or whether she ran out of time.",
+        "Our diagnostic shows us the pattern behind the score. We can see if she gets central idea questions correct but spends twice as much time as she should, leaving too little time for later questions. We can also see if she missed the final questions because she did not know the content or because she ran out of time.",
+        "During the 2-hour and 14-minute proctored diagnostic, we also look at how she works. We can see where she uses Desmos, where she tries to solve mentally, where she hesitates, where she rushes, and where accuracy drops from fatigue. We also see whether she reaches the harder second module or stays in the medium second module because of her module 1 accuracy.",
+        "She may get a similar overall score on our diagnostic as she did on Bluebook, but the score is not the main point. We need the question-by-question detail so we can build a plan that starts with the highest-impact gaps.",
+        "If she would rather not take the full 2-hour and 14-minute diagnostic, we can build a custom 60-minute version with one Reading and Writing module and one Math module instead of two each. The cost would still be $" +
           diag +
-          " because we would need to create a custom diagnostic that does not currently exist in our system. Reply to " +
-          advisor +
-          "'s email if you would prefer to move forward this way and we will set it up."
+          " because we would need to create a custom diagnostic that does not currently exist in our system.",
+        "Just let us know if you would prefer the 60-minute version, and we will set it up."
       ]
     },
     {
