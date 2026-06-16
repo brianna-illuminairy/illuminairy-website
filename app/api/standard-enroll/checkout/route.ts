@@ -76,13 +76,17 @@ export async function POST(request: Request) {
   const last = (body.last ?? "").trim();
   const email = (body.email ?? "").trim();
 
-  if (!slug || !first || !last || !email) {
+  // Slug is the only hard requirement at init time so the Stripe Elements
+  // form can always load. The billing contact is validated client-side at
+  // the Pay click and re-bound via `confirmCardPayment(billing_details)`,
+  // so empty/partial values here are fine.
+  if (!slug) {
     return NextResponse.json(
-      { error: "Please complete your billing contact." },
+      { error: "Missing enrollment link." },
       { status: 400 }
     );
   }
-  if (!isValidEmail(email)) {
+  if (email && !isValidEmail(email)) {
     return NextResponse.json(
       { error: "Please enter a valid email address." },
       { status: 400 }
@@ -131,10 +135,14 @@ export async function POST(request: Request) {
     );
   }
 
+  // Pass undefined (not empty strings) so Stripe doesn't store blanks.
+  const customerName = `${first} ${last}`.trim() || undefined;
+  const customerEmail = email || undefined;
+
   try {
     const customer = await stripe.customers.create({
-      email,
-      name: `${first} ${last}`.trim(),
+      email: customerEmail,
+      name: customerName,
       metadata: {
         program: "standard-enroll",
         lead_slug: lead.slug,
@@ -149,7 +157,7 @@ export async function POST(request: Request) {
       amount: amountCents,
       currency: diagnosticPrice.currency ?? "usd",
       customer: customer.id,
-      receipt_email: email,
+      receipt_email: customerEmail,
       setup_future_usage: "off_session",
       payment_method_types: ["card"],
       description: `${lead.student.first} — Skill Diagnostic + Personalized Plan`,

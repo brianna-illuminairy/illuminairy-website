@@ -129,9 +129,9 @@ export const STANDARD_INCLUDED: StandardIncludedItem[] = [
  */
 export const STANDARD_TESTIMONIALS: StandardTestimonial[] = [
   {
-    gain: "1180 → 1500",
+    gain: "+190 from diagnostic",
     quote:
-      "We tried two other tutoring services before Illuminairy. The difference was night and day. Within four weeks our daughter could explain her math reasoning out loud, which she'd never done before.",
+      "We tried Khan Academy and Bluebook, and we tried an SAT course. None of that worked, and her score was stuck in the 1100s. I knew this was going to work when I overheard a session and she was able to explain her math reasoning out loud, which she'd never done before. We haven't gotten her score back yet but she's up 190 points from her diagnostic.",
     name: "Priya M.",
     detail: "Parent of an 11th grader · Atlanta, GA"
   },
@@ -152,22 +152,158 @@ export const STANDARD_TESTIMONIALS: StandardTestimonial[] = [
   {
     gain: "1090 → 1380",
     quote:
-      "Started below 1100 and didn't think 1300 was realistic. The diagnostic showed me where the easy points were. Three months later I was past my goal.",
-    name: "Marcus T.",
+      "Started below 1100 and didn't think 1300 was realistic. The diagnostic and plan showed how to get my score up quickly. Four months later I was past my goal at a 1380.",
+    name: "Ethan T.",
     detail: "Student · Class of 2025"
   },
   {
     gain: "1370 → 1560",
     quote:
-      "Worth every dollar. The scheduling was flexible enough to work around my son's soccer travel, and the tutor was patient when he had off weeks.",
+      "Worth every dollar. My son played lacrosse and was on a travel team. He needed structure to hold him accountable but also flexibility. They worked around his crazy schedule while also keeping him on track and making sure his SAT wasn't the thing that got in the way.",
     name: "Renee O.",
     detail: "Parent of a 12th grader · Boston, MA"
   },
   {
     gain: "1200 → 1490",
     quote:
-      "I liked having the same two tutors all the way through. By month two they knew exactly where I'd freeze up and could walk me through it in a way that actually stuck.",
+      "I liked having the same two tutors that stuck with me. And also that they had gone to the same schools I was hoping to get into. They helped me get my score up by 250 points and reviewed my college essays with me which made me feel more confident applying.",
     name: "Sofia D.",
+    detail: "Student · Class of 2026"
+  },
+  {
+    gain: "1230 → mid-1500s",
+    quote:
+      "I started tutoring with a 1230 SAT score and was scoring in the mid-1500s by my final practice test. The strategies were clear, practical, and completely changed the way I approached the exam. My instructor, Mr. Chavarria, explained every question in a calm and easy-to-understand way and always made sure I truly understood the material. I would honestly rate it a 20/10 and have already recommended it to several friends.",
+    name: "Jacob A.",
+    detail: "Student · Class of 2025"
+  },
+  {
+    quote:
+      "Wardell has been such an asset to my daughter's SAT study process. He has guided her in her studying. He has helped her and challenged her where she needed it. We couldn't have done this without him. Five stars all the way.",
+    name: "Nadia A.",
+    detail: "Parent of an 11th grader"
+  },
+  {
+    quote:
+      "My tutor, Benjamin, was very professional and greatly helped me with the English part of the digital SAT. If you are looking for help on the SAT, Benjamin is the perfect tutor for it. He made sure I understood exactly what concepts I struggled with and gave tips to understand how to answer those questions. Thank you for helping me reach my goal, Ben.",
+    name: "Emma J.",
+    detail: "Student · Class of 2026"
+  },
+  {
+    quote:
+      "When we were in a pinch trying to get my daughter's SAT scores up in order to qualify for a full scholarship, we turned to Illuminairy in order to provide her with the very best 1:1 tutoring service. Her tutor was incredibly knowledgeable and supportive. She made my daughter feel confident when facing the SAT again. She hasn't taken it yet so I cannot say whether or not she achieved her goal score, but I feel extremely confident that her Illuminairy experience provided her with the absolute best chance possible to succeed.",
+    name: "Jennifer K.",
+    detail: "Parent of a 12th grader · Scholarship push"
+  },
+  {
+    quote:
+      "I called Illuminairy because my senior needed help with her SAT. They have been amazing and paired my daughter with a wonderful teacher. My daughter feels confident about taking the exam and she has scheduled it for next week.",
+    name: "Amy R.",
+    detail: "Parent of a senior"
+  },
+  {
+    quote:
+      "Bhavana was amazing, very smart and helped walk me through all of the problems. I recommend her if you need any SAT help.",
+    name: "Sophia K.",
+    detail: "Student · Class of 2027"
+  },
+  {
+    gain: "Targeting 1500",
+    quote:
+      "Learning tips and tricks will only get one so far. Going through problems with Peter and getting one-to-one help in problem areas is helping my child get closer to her goal of 1500 SAT than any other program we've tried before.",
+    name: "Soraya R.",
+    detail: "Parent of an 11th grader"
+  },
+  {
+    quote:
+      "I searched for a way to help my twins prep for the SAT and I'm so glad I found Illuminairy. They did an initial assessment on the three areas of the SAT and built sessions around the areas they needed to strengthen. Each girl got her own 1-to-1 tutoring sessions twice a week, plus a small-group session, plus practice questions chosen for their weaknesses. They worked with the girls' busy schedules and accommodated changes when needed.",
+    name: "Gabriela L.",
+    detail: "Parent of twins · Class of 2026"
+  },
+  {
+    quote:
+      "Jacob was thorough, patient, accommodating and very positive and motivating, so he gave our daughter an excellent experience. Plus his after-session notes were always provided immediately and described her progress and areas of opportunity.",
+    name: "Lauren F.",
+    detail: "Parent of a junior"
+  },
+  {
+    quote:
+      "Mr. Nath is an excellent tutor. My son loves how quickly he has improved in the SAT prep. I would highly recommend him.",
+    name: "Patricia C.",
+    detail: "Parent of an 11th grader"
+  },
+  {
+    quote:
+      "Illuminairy is a great resource for getting help with SAT prep. My tutor has been very patient with me and has explained the problems to me in a way that is more clear and easier to comprehend. I have learned so many new skills, and I feel more confident going into the exam the second time.",
+    name: "Michael R.",
+    detail: "Student · Retake"
+  },
+  {
+    gain: "Low 1200s → 1510",
+    quote:
+      "I started with a score in the low 1200s, and honestly only properly started studying about a week before my SAT testing date. Illuminairy's practice modules and detailed explanations helped me get a 1510 even on that time crunch. My experience equipped me to remain calm during testing and gave me the confidence to get a relatively good score on my first try.",
+    name: "Olivia R.",
+    detail: "Student · Class of 2026"
+  },
+  {
+    quote:
+      "I liked the multiple practice tests and study plans. I also kind of liked that there was a thing that told me when I was pushing myself too much. I loved how it gave me a personalized study plan as well.",
+    name: "Emily M.",
+    detail: "Student · Class of 2026"
+  },
+  {
+    gain: "Final score: 1540",
+    quote:
+      "After my second-to-last SAT, I decided to ditch all my prior studying ways (locking in last minute) and actually tried out Illuminairy. I loved it. I would credit my 1540 score to this program, and I seriously believe this is the best study material for the SAT. As a graduating senior now, I've told my junior and sophomore friends all about this program.",
+    name: "Joshua P.",
+    detail: "Student · Class of 2025"
+  },
+  {
+    quote:
+      "I loved using Illuminairy's tutoring and practice problems so much for studying for the SAT. I just finished my study plan for the March SAT and got the score that I wanted. They provided detailed explanations for questions I missed and also gave me an extensive weekly study plan to space out what I learned and prepare me in the best way for the actual exam. I would highly recommend everyone try out Illuminairy for SAT tutoring.",
+    name: "Madison C.",
+    detail: "Student · Class of 2026 · March SAT"
+  },
+  {
+    gain: "Upper 1200s → 1470",
+    quote:
+      "My son had taken the SAT a couple of times but was stuck in the upper 1200s to low 1300s. I decided to try Illuminairy and through the blend of tutoring, practice questions and exams, study guide, and other resources they provide, the next time he took it he got a 1470. This is a great program and I highly recommend it. Obviously there is also a place for individual effort and motivation.",
+    name: "Samira K.",
+    detail: "Parent of an 11th grader"
+  },
+  {
+    gain: "1450 → 1530",
+    quote:
+      "I was able to raise my score on the SAT from a 1450 to a 1530. I'm so happy I got tutored and it helped tremendously with my studying. Illuminairy's study plan feature was nice, and I especially appreciated the ability to assign as many questions as I wanted at a hard difficulty level. This helped me master those higher-level questions that can be tricky. It was also really helpful that it broke down my accuracy scores by section so I could see where I needed the most improvement, and then I'd go do questions in that specific area.",
+    name: "Ava L.",
+    detail: "Student · Class of 2026"
+  },
+  {
+    gain: "Beat goal score",
+    quote:
+      "Illuminairy's plan was a super great study tool that truly helped me achieve even higher than my goal score. The massive question bank along with the AI helper when you get stuck is something that Illuminairy does so much better than any free resource I've ever used. Overall, a 10/10 experience with my plan and my tutor, and I would highly recommend it to anyone looking to do well on the SAT.",
+    name: "Noah W.",
+    detail: "Student · Class of 2026"
+  },
+  {
+    gain: "+100 points in 3 weeks",
+    quote:
+      "My child tried using books to prepare and Khan Academy. After months of daily studying, she scored the exact same score. As a last-ditch effort we enrolled her in Illuminairy. She only had three weeks before her final SAT attempt. She did 4 sessions a week and practiced 30 minutes to an hour most days, sometimes only 15 minutes a day, for those three weeks. She increased her score by over 100 points. I wish we had started Illuminairy sooner.",
+    name: "Alicia M.",
+    detail: "Parent of a senior"
+  },
+  {
+    gain: "1080 → 1560 SAT · 1520 PSAT",
+    quote:
+      "I used Illuminairy for 3 rounds of tutoring after my first practice test came back an 1080. They really helped me on the PSAT as well as the SAT. I got a 1520 on the PSAT after 20 weeks of tutoring, and a 1560 on the SAT with an additional set of tutoring. The sheer quantity of practice problems and custom plan made my time very fruitful. It may seem like an expensive purchase, but it will pay me dividends in scholarship and future college opportunities.",
+    name: "Nathan K.",
+    detail: "Student · National Merit track"
+  },
+  {
+    gain: "1100 → 1390 in 6 months",
+    quote:
+      "Illuminairy is truly one of the best SAT tutoring companies out there. I started using them with an 1100 and with every practice test I took I saw improvement. The solutions and practice problem features really help when you have no idea what to do on a problem, and at some point questions become easier. The way they review your missed questions in tutoring is very helpful, and I feel it's one of the best ways of teaching. Overall, amazing experience. In 6 months I was able to raise my score by over 290 points and get to a 1390.",
+    name: "Mia R.",
     detail: "Student · Class of 2026"
   }
 ];
@@ -212,7 +348,7 @@ export function buildStandardFaq(
       label: "Sessions & scheduling",
       items: [
         {
-          q: "How much time should my student expect to spend each week?",
+          q: "How much time should my child expect to spend on the SAT each week?",
           a: [
             "Students are expected to do 30 to 60 minutes of homework a day, five days a week. For the typical student aiming for a 1400 or higher, expect 7 to 10 hours a week of total work. That includes lesson reviews, one-on-one sessions, homework, and practice tests."
           ]
@@ -235,9 +371,8 @@ export function buildStandardFaq(
         {
           q: "Who will be tutoring my student?",
           a: [
-            "Your student will work with near-peer graduate students from schools like Emory, Georgia Tech, Vanderbilt, and Duke. We use near-peer tutors on purpose because students often respond well to someone who recently went through the same test and admissions pressure.",
-            "Every tutor has taken the Digital SAT and scored 1450 or higher. Tutors also complete training and shadowing before working with families, and they retrain whenever the SAT changes.",
-            "We also survey students after sessions so we can keep a high quality bar."
+            "Your student will work with near-peer graduate students from schools like Duke, Emory, Georgia Tech, University of Florida, UT Austin, and Vanderbilt. We use near-peer tutors on purpose because students often respond well to someone who recently went through the same test and admissions pressure.",
+            "Every tutor has taken the SAT and scored 1450 or higher. Tutors also complete training and shadowing before working with families, and they retrain whenever the SAT changes. They are all deeply familiar with the Digital SAT, including the Desmos calculator and adaptive format."
           ]
         },
         {
@@ -270,19 +405,19 @@ export function buildStandardFaq(
         {
           q: "What kind of score increase is possible?",
           a: [
-            "On average, students improve about 182 points over 12 weeks, or about 15 points per week. That is only the average — some students improve by about 10 points per week, and others by about 25.",
+            "On average, students improve about 182 points over 12 weeks, or about 15 points per week. That is only the average. Some students improve by about 10 points per week, and others by about 25.",
             "The range we have seen across families is wide. We have had students gain about 150 points, and others gain 450 points across the program. To give you the best estimate of your student's specific score improvement range, we first need to complete the diagnostic.",
-            "The diagnostic shows us the specific content skills and test-taking skills your student is struggling with, so we can give meaningful feedback on what their score potential looks like and what is realistic on their timeline. Results vary by student."
+            "The diagnostic shows us which specific content and test-taking skills your student is struggling with. From there we can tell you a realistic score range and how long it will likely take to get there. Results vary by student."
           ]
         },
         {
           q: "What does my student need to do to get there?",
           a: [
-            "The biggest factors are simple. Your student needs to show up to each session prepared, work in a quiet space, stay focused during the lesson, and complete the homework between sessions.",
-            "Practice matters. Students improve faster when they put in real work outside of tutoring. That means doing the assigned practice problems, reviewing mistakes, and building the habit of using the strategies correctly on their own.",
-            "Students with full schedules may move more slowly. This is common for students balancing sports, music, clubs, honors classes, AP classes, or IB classes. It does not mean they cannot improve. It usually means they have less time and energy available, so the work may take longer.",
-            "We also teach students how to keep what they learn. Many students are used to studying for a school test, taking the test, and then forgetting the material. The SAT is different. It pulls from several years of math, reading, and writing. It also combines skills, like using factoring inside a harder algebra problem.",
-            "That is why we focus on real understanding, steady practice, and long-term memory. The goal is not to cram for one test day. The goal is to build skills that hold up when the student takes the SAT."
+            "Your student needs to come prepared, work in a quiet place, and pay attention during each session.",
+            "Between sessions, they need to complete the assigned homework and practice problems. They should also bring any questions they could not solve on their own to the next session.",
+            "They also need to track their skill practice. If they are off track, they will need to put in more work between sessions to catch up.",
+            "We use spaced practice and mistake review to improve long-term retention. Many students are used to studying for a school test, taking the test, and then forgetting the material. The SAT is different. It pulls from several years of math, reading, and writing, and it combines skills, like using factoring inside a harder algebra problem.",
+            "That is why we focus on real understanding, steady practice, and long-term retention. The goal is not to cram for one test day. The goal is to build skills that hold up when the student takes the SAT."
           ]
         },
         {
