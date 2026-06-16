@@ -732,17 +732,23 @@ function FaqSection({ lead }: { lead: PersonalizedEnrollLead }) {
       a: [
         "The $" +
           diag +
-          " covers 5 to 6 hours of our team's time before tutoring starts: 2 hours 14 minutes proctored on the test with " +
+          " covers the work we do before tutoring starts. That includes " +
           student +
-          " under real test-day conditions, 2 to 3 hours of expert tutor review and analysis (each miss scored by how often that question type appears on the digital SAT and whether it was easy, medium, or hard, then converted into how many points that gap is costing her overall), and 1 to 2 hours of plan-building: an expert tutor drafts her high-level 12-week plan starting with her highest-impact gap and writes her first 2 lessons in detail before week 1.",
-        "Tutoring is separate, billed weekly at $" +
+          "'s full proctored digital SAT diagnostic, expert review of every missed question, and a custom 12-week tutoring plan.",
+        "The diagnostic takes 2 hours and 14 minutes and is run under real test-day conditions. After that, an expert tutor reviews her results and identifies which gaps are costing her the most points. We do not just count missed questions. We look at the question type, difficulty level, and how often that skill appears on the digital SAT. Then we use that analysis to build her plan.",
+        "Before week 1, we draft her high-level 12-week plan and write her first two lessons in detail. This lets tutoring start with her highest-impact gaps instead of a generic SAT lesson.",
+        "Tutoring is separate and is billed weekly at $" +
           wk +
-          " per week. The 7 days right after enrollment are setup time used to run her diagnostic, analyze the results, build her plan, match her with the right tutors, and schedule her first sessions. Weekly billing starts on day 7, when tutoring begins.",
-        "We do not offer free trial classes for two reasons. First, a free trial is a generic SAT lesson with a tutor who has not seen the student's data yet, and we have found that does not tell a parent anything useful. Second, our sessions are one-on-one. A group SAT prep company can offer a free trial because adding one more student to a group lesson costs them nothing; a 1:1 trial would cost us the hours of preparation plus the hour of tutoring.",
-        "There is also a pricing model difference worth being upfront about. Many SAT prep companies that offer a free trial class are also requiring full upfront payment and a long-term contract for the whole program, often $2,500 to $5,000 or more. That kind of upfront commitment lets them absorb the cost of a single free trial per family. We are intentionally a more affordable option, billed week to week with no long-term contract, so we cannot eat that same upfront cost the same way a company collecting $2,500 or $5,000 at signup can.",
-        "We have also found that students and tutors often do not find their groove until a few sessions in, when the student is more comfortable opening up and the tutor has adjusted their approach to what the student is responding to. There is no way to capture that in a single trial lesson. Rapport and personalization take time. To handle that adjustment period, every session has quality flags: if " +
+          " per week. The first 7 days after enrollment are setup time. We use that week to run the diagnostic, analyze the results, build her plan, match her with the right tutor, and schedule her first sessions. Weekly billing starts on day 7, when tutoring begins.",
+        "We do not offer free trial classes. A trial class is usually a generic SAT lesson with a tutor who knows nothing about " +
           student +
-          " and her tutor are not connecting, we can flag the session for review, investigate, provide an additional lesson if warranted, or rematch her with a different tutor, case by case."
+          " or where she is struggling. That means the tutor may spend the session teaching content she does not need.",
+        "Our tutoring is one-on-one, so a trial class has a real cost. A group SAT prep company can offer a free trial because adding one more student to a group lesson does not change their cost. For us, a one-on-one trial would require prep time plus the tutoring hour.",
+        "Most SAT prep companies that offer free trials also require a long-term contract or full upfront payment, often $2,500 to $5,000 or more. We do not. Our model is week to week, with no long-term contract. That keeps the program more affordable, but it also means we cannot absorb unpaid one-on-one trial lessons the same way a company collecting thousands of dollars upfront can.",
+        "A single trial lesson also does not show the full value of one-on-one tutoring. Students and tutors usually need a few sessions to build rapport. The tutor also needs time to adjust to how the student learns best.",
+        "Instead, we monitor session quality. If " +
+          student +
+          " and her tutor are not connecting, we can review the session, adjust the plan, provide an additional lesson if warranted, or rematch her with a different tutor."
       ]
     },
     {
