@@ -136,13 +136,6 @@ export const STANDARD_TESTIMONIALS: StandardTestimonial[] = [
     detail: "Parent of an 11th grader · Atlanta, GA"
   },
   {
-    gain: "1240 → 1470",
-    quote:
-      "My tutor actually took the digital SAT. She'd say 'on the second module, you're going to see a problem like this' and she was right every time. That made me trust the strategy.",
-    name: "Daniel R.",
-    detail: "Student · Class of 2026"
-  },
-  {
     gain: "1310 → 1530",
     quote:
       "The weekly report meant I never had to nag. I could see exactly what was being taught, what homework was assigned, and whether it was getting done. That alone was worth the price.",
@@ -237,13 +230,6 @@ export const STANDARD_TESTIMONIALS: StandardTestimonial[] = [
       "Illuminairy is a great resource for getting help with SAT prep. My tutor has been very patient with me and has explained the problems to me in a way that is more clear and easier to comprehend. I have learned so many new skills, and I feel more confident going into the exam the second time.",
     name: "Michael R.",
     detail: "Student · Retake"
-  },
-  {
-    gain: "Low 1200s → 1510",
-    quote:
-      "I started with a score in the low 1200s, and honestly only properly started studying about a week before my SAT testing date. Illuminairy's practice modules and detailed explanations helped me get a 1510 even on that time crunch. My experience equipped me to remain calm during testing and gave me the confidence to get a relatively good score on my first try.",
-    name: "Olivia R.",
-    detail: "Student · Class of 2026"
   },
   {
     quote:
