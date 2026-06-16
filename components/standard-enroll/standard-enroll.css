@@ -688,6 +688,9 @@
   margin: 0 auto;
   padding: 30px 24px 40px;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 .std-footer-links {
   display: flex;
