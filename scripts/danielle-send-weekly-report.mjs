@@ -1,15 +1,13 @@
 #!/usr/bin/env node
 /**
- * Send Danielle portal update alerts (email + SMS) to opted-in subscribers.
+ * Send Danielle Week 1 weekly progress report email to parent.
  *
  * Usage:
- *   ADMIN_SECRET=... npm run danielle:notify-updates
- * Optional:
- *   UPDATE_IDS=2026-06-16-week-1-report,2026-06-16-week-2-transitions
- *   EMAIL=dansodanielle9@gmail.com
- *
- * Parent weekly report email (separate from portal updates):
  *   ADMIN_SECRET=... PARENT_EMAIL=... npm run danielle:send-weekly-report
+ *
+ * Optional:
+ *   PARENT_FIRST=...
+ *   DANIELLE_WEEKLY_REPORT_BASE_URL=https://illuminairy.com
  */
 import { readFileSync, existsSync } from "fs";
 import { resolve, dirname } from "path";
@@ -46,22 +44,26 @@ if (!secret) {
   process.exit(1);
 }
 
-const baseUrl = (process.env.DANIELLE_NOTIFY_BASE_URL || "https://illuminairy.com").replace(
-  /\/$/,
-  ""
-);
-const updateIds = process.env.UPDATE_IDS?.split(",").map((id) => id.trim()).filter(Boolean);
-const email = process.env.EMAIL?.trim();
-
-const body = {};
-if (updateIds?.length) {
-  body.updateIds = updateIds;
-}
-if (email) {
-  body.email = email;
+const parentEmail = process.env.PARENT_EMAIL?.trim() || process.env.DANIELLE_PARENT_EMAIL?.trim();
+if (!parentEmail) {
+  console.error("Set PARENT_EMAIL or DANIELLE_PARENT_EMAIL.");
+  process.exit(1);
 }
 
-const response = await fetch(`${baseUrl}/api/danielle/notifications/dispatch`, {
+const baseUrl = (
+  process.env.DANIELLE_WEEKLY_REPORT_BASE_URL ||
+  process.env.DANIELLE_NOTIFY_BASE_URL ||
+  "https://illuminairy.com"
+).replace(/\/$/, "");
+
+const body = {
+  parentEmail,
+  parentFirst: process.env.PARENT_FIRST?.trim() || process.env.DANIELLE_PARENT_FIRST?.trim(),
+  weekLabel: process.env.WEEK_LABEL?.trim() || "Week 1 (June 9 to 16, 2026)",
+  reportPath: "/danielle/week-1/report"
+};
+
+const response = await fetch(`${baseUrl}/api/danielle/weekly-report/send`, {
   method: "POST",
   headers: {
     Authorization: `Bearer ${secret}`,
@@ -72,7 +74,7 @@ const response = await fetch(`${baseUrl}/api/danielle/notifications/dispatch`, {
 
 const text = await response.text();
 if (!response.ok) {
-  console.error("Dispatch failed:", response.status, text);
+  console.error("Weekly report send failed:", response.status, text);
   process.exit(1);
 }
 

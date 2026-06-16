@@ -27,8 +27,22 @@ export const DANIELLE_FILE_MAP = {
   "radicals-slides": {
     filename: "radicals-slides.html",
     contentType: "text/html; charset=utf-8"
+  },
+  "transitions-lesson": {
+    filename: "transitions-lesson-slides.html",
+    contentType: "text/html; charset=utf-8"
+  },
+  "weekly-report-week-1": {
+    filename: "weekly-report-week-1.html",
+    contentType: "text/html; charset=utf-8"
   }
 } as const;
+
+export type DanielleWeeklyReportWeek = "week-1";
+
+const WEEKLY_REPORT_FILES: Record<DanielleWeeklyReportWeek, string> = {
+  "week-1": "weekly-report-week-1.html"
+};
 
 export type DanielleFileSlug = keyof typeof DANIELLE_FILE_MAP;
 
@@ -40,7 +54,16 @@ export function readDanielleFile(slug: DanielleFileSlug) {
 }
 
 export function readDaniellePlanHtml() {
-  const filePath = resolve(CONTENT_DIR, "plan.html");
+  return readDanielleHtmlDocument("plan.html");
+}
+
+export function readDanielleWeeklyReportHtml(week: DanielleWeeklyReportWeek) {
+  const filename = WEEKLY_REPORT_FILES[week];
+  return readDanielleHtmlDocument(filename);
+}
+
+function readDanielleHtmlDocument(filename: string) {
+  const filePath = resolve(CONTENT_DIR, filename);
   const html = readFileSync(filePath, "utf8");
 
   const styleMatch = html.match(/<style[^>]*>([\s\S]*?)<\/style>/i);

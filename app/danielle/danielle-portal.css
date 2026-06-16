@@ -387,6 +387,18 @@
   margin: 0 auto;
 }
 
+.danielle-report-root {
+  max-width: 920px;
+  margin: 0 auto;
+}
+
+.danielle-report-root .savebar {
+  max-width: 860px;
+  margin: 0 auto 12px;
+  text-align: right;
+  padding: 0 8px;
+}
+
 .danielle-plan-root .topbar {
   display: none;
 }

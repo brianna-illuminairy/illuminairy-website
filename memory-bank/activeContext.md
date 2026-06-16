@@ -2,6 +2,14 @@
 
 *Last updated: 2026-06-16*
 
+## Danielle portal Week 2 + Week 1 report (2026-06-16)
+
+- **Week 2** hub + Lesson 1 (Transitions): `/danielle/week-2`, `/danielle/week-2/lesson-1`
+- **Interactive deck:** `/danielle/files/transitions-lesson` (sorting, matching, cheat-sheet study board, copycat round, Khan practice)
+- **Week 1 report:** `/danielle/week-1/report` from `content/danielle/weekly-report-week-1.html`
+- **Mom email:** `npm run danielle:send-weekly-report` with `ADMIN_SECRET` + `PARENT_EMAIL` (or `DANIELLE_PARENT_EMAIL`)
+- **Student pings:** portal updates `2026-06-16-week-1-report`, `2026-06-16-week-2-transitions` — `npm run danielle:notify-updates` after deploy
+
 ## Monique enrollment page + checkout analytics (2026-06-16)
 
 - **`/enroll/monique-kylan`** live in code (standard stack, same pricing as Michelle). CRM lead `fe11cd61…` has `enrollment_page_url` set.

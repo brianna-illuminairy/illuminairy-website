@@ -9,6 +9,24 @@ export type DaniellePortalUpdate = {
 
 export const DANIELLE_PORTAL_UPDATES: DaniellePortalUpdate[] = [
   {
+    id: "2026-06-16-week-2-transitions",
+    publishedAt: "2026-06-16",
+    title: "Week 2 Transitions lesson is live",
+    summary:
+      "Tuesday's interactive Transitions deck is on Week 2 Lesson 1. Open it fullscreen during session for sorting games and your diagnostic revisits.",
+    href: "/danielle/week-2/lesson-1",
+    cta: "Open Lesson 1"
+  },
+  {
+    id: "2026-06-16-week-1-report",
+    publishedAt: "2026-06-16",
+    title: "Week 1 progress report",
+    summary:
+      "Your Week 1 summary is ready: practice stats, score trajectory, what we covered in math, and what is next.",
+    href: "/danielle/week-1/report",
+    cta: "Read Week 1 report"
+  },
+  {
     id: "2026-06-10-lesson-2-deck",
     publishedAt: "2026-06-10",
     title: "Lesson 2 deck and whiteboard session",

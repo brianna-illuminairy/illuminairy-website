@@ -20,6 +20,14 @@ export function DanielleWeek1HubContent() {
       </div>
 
       <section className="danielle-week1__section">
+        <h2 className="danielle-week1__heading">Week 1 progress report</h2>
+        <Link href="/danielle/week-1/report" className="danielle-portal__link-card">
+          <h2>Week 1 report · Jun 9 to 16</h2>
+          <p>Practice stats, score trajectory, session summary, and what is next.</p>
+        </Link>
+      </section>
+
+      <section className="danielle-week1__section">
         <h2 className="danielle-week1__heading">Week 1 lessons</h2>
         <div className="danielle-week1__lesson-links">
           <Link href="/danielle/week-1/lesson-1" className="danielle-portal__link-card">
