@@ -479,11 +479,9 @@ function FaqSection({ lead }: { lead: PersonalizedEnrollLead }) {
         "If you have a specific preference for someone with more years of tutoring or teaching experience, " +
           advisor +
           " can reach out to our older tutors. The trade-off is that we may not be able to guarantee they have a verified digital SAT score, since most experienced tutors took the paper version and few are willing to retake the digital for a part-time role. Reply if you would like to go that route.",
-        "If you would prefer the most experienced option, " +
-          advisor +
-          " can also teach " +
+        "If you would prefer the most experienced option, I can also teach " +
           student +
-          " personally. She has more years of tutoring experience than most of our tutors, scored a perfect SAT on the paper version, holds an MSCS from Georgia Tech and an MBA from Duke, and is trained on the digital SAT format. The honest trade-off is the same one as our older tutors: she has not personally sat the digital SAT, so a near-peer tutor with a verified digital SAT score is the more accurate match for the current test format. Reply if you would like her to take " +
+          " personally. I have more years of tutoring experience than most of our tutors, I scored a perfect SAT on the paper version, I have worked as a graduate-level teaching assistant in math-heavy coursework, I hold an MSCS from Georgia Tech and an MBA from Duke, and I am trained on the digital SAT format. The honest trade-off is the same as our older tutors: I have not personally sat the digital SAT, so a near-peer tutor with a verified digital SAT score is the more accurate match for the current test format. Reply if you would like me to take " +
           student +
           " on directly."
       ]
