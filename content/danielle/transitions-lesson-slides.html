@@ -121,6 +121,8 @@
   .choice.wrong { border-color: var(--tomato); background: #fbe5e0; }
   .choice.wrong .letter { background: var(--tomato); color: white; border-color: var(--tomato); }
   .choice.dim { opacity: 0.45; }
+  .choice.picked { border-color: var(--navy); background: white; box-shadow: 0 0 0 2px var(--mint); }
+  .slide:not(.active) { pointer-events: none; }
 
   /* annotation tags */
   .tag-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
@@ -189,7 +191,17 @@
   }
   .bucket h4 { font-family: 'Fraunces', serif; font-size: 17px; color: var(--navy); margin-bottom: 4px; }
   .bucket .sublbl { font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.15em; color: var(--muted); margin-bottom: 12px; }
-  .bucket .drop-zone { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+  .bucket .drop-zone { flex: 1; display: flex; flex-direction: column; gap: 6px; min-height: 72px; }
+  .bucket.drop-target,
+  .sort-bank.drop-target {
+    background: var(--mint-soft);
+    border-color: var(--forest);
+    box-shadow: 0 0 0 2px var(--mint);
+  }
+  .bucket.drop-ready {
+    outline: 2px dashed var(--navy);
+    outline-offset: 2px;
+  }
   .bucket.contrast { border-top: 4px solid var(--tomato); }
   .bucket.cause { border-top: 4px solid var(--forest); }
   .bucket.add { border-top: 4px solid var(--mustard); }
@@ -197,11 +209,13 @@
 
   .sort-chip {
     padding: 7px 13px; border-radius: 999px; background: var(--cream);
-    border: 1.5px solid var(--line); cursor: pointer; font-weight: 500; font-size: 14px;
+    border: 1.5px solid var(--line); cursor: grab; font-weight: 500; font-size: 14px;
     transition: all 0.15s ease; user-select: none;
   }
+  .sort-chip:active { cursor: grabbing; }
   .sort-chip:hover { border-color: var(--navy); }
   .sort-chip.selected { background: var(--navy); color: var(--cream); border-color: var(--navy); }
+  .sort-chip.dragging { opacity: 0.45; cursor: grabbing; }
   .sort-chip.placed { font-size: 13px; padding: 5px 11px; }
   .sort-chip.right { background: var(--mint-soft); border-color: var(--forest); color: var(--forest); }
   .sort-chip.wrong { background: #fbe5e0; border-color: var(--tomato); color: var(--tomato); }
@@ -225,13 +239,19 @@
   .match-item:hover { border-color: var(--navy); }
   .match-item.selected { background: var(--navy); color: var(--cream); border-color: var(--navy); }
   .match-item.matched { opacity: 0.65; cursor: default; }
+  .match-item.matched.right { opacity: 1; }
   .match-item.matched::after {
     content: attr(data-pair); position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
     font-family: 'JetBrains Mono', monospace; font-size: 10px; background: var(--forest); color: white;
     padding: 2px 6px; border-radius: 4px;
   }
+  .match-item.matched.right::after { content: '✓'; }
   .match-item.right { background: var(--mint-soft); border-color: var(--forest); }
-  .match-item.wrong { background: #fbe5e0; border-color: var(--tomato); }
+  .match-item.wrong { background: #fbe5e0; border-color: var(--tomato); animation: match-wrong-flash 0.35s ease; }
+  @keyframes match-wrong-flash {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(0.98); }
+  }
 
   /* reveal sections */
   .reveal { display: none; }
@@ -281,6 +301,9 @@
   .copycat-choice.selected { background: var(--navy); color: var(--cream); border-color: var(--navy); }
   .copycat-choice.elim { opacity: 0.4; pointer-events: none; }
   .copycat-choice.wrong-pick { border-color: var(--tomato); background: #fbe5e0; }
+  .copycat-choice.stays { border-color: var(--forest); background: var(--mint-soft); }
+  .copycat-feedback-body { display: flex; flex-direction: column; gap: 12px; }
+  .copycat-feedback-body .trace { margin-top: 0; }
 
   body.embed {
     overflow: auto; height: auto;
@@ -917,10 +940,10 @@
     <div class="brand"><span class="brand-star">✦</span><span class="brand-name">Illuminairy</span></div>
     <div class="mono">Activity 01 · sorting</div>
   </div>
-  <div class="eyebrow"><span class="dot"></span><span class="mono">Drag the words into their category</span></div>
+  <div class="eyebrow"><span class="dot"></span><span class="mono">Drag each word into its category</span></div>
   <h2 class="slide-h">Sort each transition into its bucket.</h2>
-  <p class="body">Click a word in the top row to select it, then click a bucket to drop it in. Tap a placed word to send it back. Hit Check when you are done.</p>
-  <p class="sort-hint">Tip: select a chip, then tap the bucket that matches.</p>
+  <p class="body">Drag a word from the top row into a bucket below. Drag back to the top row to undo. On iPad, you can also tap a word, then tap a bucket. Hit Check when you are done.</p>
+  <p class="sort-hint">Tip: drag the chip, or tap to select then tap a bucket.</p>
 
   <div class="gap-md"></div>
 
@@ -973,23 +996,87 @@
   </div>
 </section>
 
+<!-- ============ SLIDE 18a: MATCHING SETUP ============ -->
+<section class="slide">
+  <div class="topbar">
+    <div class="brand"><span class="brand-star">✦</span><span class="brand-name">Illuminairy</span></div>
+    <div class="mono">Activity 02 · setup</div>
+  </div>
+  <div class="eyebrow"><span class="dot"></span><span class="mono">Why this exercise exists</span></div>
+  <h2 class="slide-h">Each transition signals what <span class="accent">sentence B</span> is about to do.</h2>
+  <p class="lead">On the SAT you read sentence A, then sentence B, then pick the word that fits between them. This game trains the same move: given a transition, name the kind of sentence that usually comes next.</p>
+
+  <div class="trace note" style="margin-top: 18px;">
+    <div class="lbl">Read it as two sentences</div>
+    <p><strong>Sentence A:</strong> The poem looks like there is nothing to analyze.<br>
+    <strong>However,</strong><br>
+    <strong>Sentence B:</strong> A critic wrote a whole essay on just the opening stanza.</p>
+    <p style="margin-top: 10px;">Sentence B fights sentence A. "However" is the signal that sentence B will <strong>push back or contrast</strong>. On the board, that matches a description like "an opposite or differing point."</p>
+  </div>
+
+  <div class="twocol" style="margin-top: 18px;">
+    <div class="trace">
+      <div class="lbl">Another pattern</div>
+      <p><strong>Sentence A:</strong> The volcano blocked the sun for a year.<br>
+      <strong>Consequently,</strong><br>
+      <strong>Sentence B:</strong> Crops failed across the Northern Hemisphere.</p>
+      <p style="margin-top: 8px; color: var(--muted); font-size: 14px;">Sentence B is what happened <em>because</em> of A. Match: "a direct effect or result."</p>
+    </div>
+    <div class="trace">
+      <div class="lbl">Not the same as sorting</div>
+      <p>Sorting buckets label the <strong>word</strong> (contrast, cause, addition, example). This exercise labels what <strong>sentence B does</strong> when that word appears. Same idea, different angle. Both build speed for test day.</p>
+    </div>
+  </div>
+
+  <div class="steps" style="margin-top: 18px;">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h4>Pick a transition on the left.</h4>
+        <p>Read the word and think: if this showed up between two sentences, what would I expect sentence B to do?</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h4>Tap the description on the right that fits.</h4>
+        <p>Does B contradict A? Add more? Give an example? Show a result? Pick the line that says that.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h4>Lock all pairs, then hit Check.</h4>
+        <p>Wrong pairs turn red. Use Undo last pair or Reset to try again.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ============ SLIDE 18: MATCHING GAME ============ -->
 <section class="slide">
   <div class="topbar">
     <div class="brand"><span class="brand-star">✦</span><span class="brand-name">Illuminairy</span></div>
     <div class="mono">Activity 02 · matching</div>
   </div>
-  <div class="eyebrow"><span class="dot"></span><span class="mono">Connect each transition to what usually follows it</span></div>
-  <h2 class="slide-h">Match the word to the kind of sentence it sets up.</h2>
-  <p class="body">Click one transition on the left, then click the description on the right that matches. Pairs will lock in. Hit "Check" at the end.</p>
+  <div class="eyebrow"><span class="dot"></span><span class="mono">Now try it · 8 pairs</span></div>
+  <h2 class="slide-h">Match each transition to what sentence B usually does.</h2>
+  <p class="body">Left: the transition word. Right: what the <strong>next sentence</strong> is doing in the passage. Tap one on each side to pair. <strong>Green = correct right away.</strong> Red = try that pair again.</p>
+
+  <div class="trace" style="margin-top: 14px; margin-bottom: 4px;">
+    <div class="lbl">Quick check before you start</div>
+    <p><strong>For instance,</strong> → you are about to read a <strong>specific example</strong> of the idea in sentence A. Find that phrase on the right.</p>
+  </div>
 
   <div class="match-wrap">
     <div class="match-col">
       <h4>Transition word</h4>
+      <p class="mono" style="font-size:10px;color:var(--muted);margin:-4px 0 10px;letter-spacing:0.08em;">What appears between two sentences</p>
       <div class="match-items" id="match-left"></div>
     </div>
     <div class="match-col">
-      <h4>What typically follows</h4>
+      <h4>What sentence B usually does</h4>
+      <p class="mono" style="font-size:10px;color:var(--muted);margin:-4px 0 10px;letter-spacing:0.08em;">The job of the sentence after the blank</p>
       <div class="match-items" id="match-right"></div>
     </div>
   </div>
@@ -1002,31 +1089,97 @@
   </div>
 </section>
 
-<!-- ============ SLIDE 18b: CHEAT SHEET STUDY ============ -->
+<!-- ============ SLIDE 18b-setup: CHEAT SHEET STUDY SETUP ============ -->
 <section class="slide">
+  <div class="topbar">
+    <div class="brand"><span class="brand-star">✦</span><span class="brand-name">Illuminairy</span></div>
+    <div class="mono">Activity 03 · setup</div>
+  </div>
+  <div class="eyebrow"><span class="dot"></span><span class="mono">Your study cheat sheet</span></div>
+  <h2 class="slide-h">Memorize the phrase → what comes next.</h2>
+  <p class="lead">The last board used 8 common words. This one uses <strong>10 high-frequency SAT phrases</strong> with the same left-right match. The goal is recognition: when you see the phrase on a test, you already know what sentence B is about to do.</p>
+
+  <div class="trace note" style="margin-top: 16px;">
+    <div class="lbl">How to use the right column</div>
+    <p>Each line on the right describes the <strong>kind of sentence that follows</strong> the transition, not a dictionary definition of the word. Read it as: "After this phrase, sentence B will…"</p>
+  </div>
+
+  <div class="twocol" style="margin-top: 16px;">
+    <div class="trace">
+      <div class="lbl">Phrase → follows</div>
+      <p><strong>That said,</strong> → a contrast or qualification of what was just said.<br>
+      <em>Example:</em> "The study shows a benefit. <strong>That said,</strong> it only worked for students who already knew the basics."</p>
+    </div>
+    <div class="trace">
+      <div class="lbl">Phrase → follows</div>
+      <p><strong>In other words,</strong> → a restatement of the previous idea in plainer words.<br>
+      <em>Example:</em> "The treaty was nonnegotiable. <strong>In other words,</strong> neither side could change the terms after signing."</p>
+    </div>
+  </div>
+
+  <div class="trick" style="margin-top: 18px;">
+    <div class="lbl">Same game, bigger cheat sheet</div>
+    <h4>Activity 02 trained the move. Activity 03 builds the phrase bank.</h4>
+    <p>You'll see phrases like <em>Accordingly, Subsequently, Specifically,</em> and <em>In contrast</em> on the real test. Matching them here is faster than rereading a static list. <strong>Start over</strong> shuffles a new random set and clears every pair.</p>
+  </div>
+
+  <div class="steps" style="margin-top: 18px;">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h4>Tap a transition on the left.</h4>
+        <p>Say the phrase out loud. What do you expect the next sentence to do?</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h4>Tap the matching line on the right.</h4>
+        <p>On desktop, a green line connects your pair so it feels like drawing a line on a cheat sheet.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h4>Start over for a new round.</h4>
+        <p>Correct pairs turn green as you go. Tap <strong>Start over</strong> to shuffle all 10 phrases and clear the board. Opening the activity slide also resets it fresh for the lesson.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-reset-on-enter="study">
   <div class="topbar">
     <div class="brand"><span class="brand-star">✦</span><span class="brand-name">Illuminairy</span></div>
     <div class="mono">Activity 03 · cheat sheet</div>
   </div>
-  <div class="eyebrow"><span class="dot"></span><span class="mono">Match phrase to what follows</span></div>
-  <h2 class="slide-h">Study board: transition → what comes next.</h2>
-  <p class="body">Tap a transition on the left, then tap what it sets up on the right. Desktop shows connector lines. Shuffle gives you a new set each reset.</p>
+  <div class="eyebrow"><span class="dot"></span><span class="mono">Cheat sheet drill · 10 pairs</span></div>
+  <h2 class="slide-h">Study board: phrase → what sentence B does.</h2>
+  <p class="body">Same match as the last activity, but more SAT phrases to memorize. Left: the transition. Right: what the <strong>next sentence</strong> usually does. <strong>Green = correct right away.</strong> Red = try that pair again. Lines on desktop show correct matches.</p>
+
+  <div class="trace" style="margin-top: 14px; margin-bottom: 4px;">
+    <div class="lbl">Before you match</div>
+    <p><strong>Specifically,</strong> → you are about to read a <strong>narrowed detail or example</strong> of sentence A. <strong>Subsequently,</strong> → what happens <strong>next in time or order</strong>. Use those anchors when the right column feels vague.</p>
+  </div>
+
   <div class="study-wrap" id="study-wrap">
     <svg class="study-lines" id="study-lines" aria-hidden="true"></svg>
     <div class="study-cols">
       <div class="study-col">
-        <h4 class="mono" style="font-size:10px;letter-spacing:0.1em;color:var(--muted);margin-bottom:10px;">TRANSITION</h4>
+        <h4 class="mono" style="font-size:10px;letter-spacing:0.1em;color:var(--muted);margin-bottom:4px;">TRANSITION PHRASE</h4>
+        <p class="mono" style="font-size:9px;color:var(--muted);margin:0 0 10px;letter-spacing:0.06em;">What the passage puts in the blank</p>
         <div class="match-items" id="study-left"></div>
       </div>
       <div class="study-col">
-        <h4 class="mono" style="font-size:10px;letter-spacing:0.1em;color:var(--muted);margin-bottom:10px;">WHAT FOLLOWS</h4>
+        <h4 class="mono" style="font-size:10px;letter-spacing:0.1em;color:var(--muted);margin-bottom:4px;">WHAT SENTENCE B USUALLY DOES</h4>
+        <p class="mono" style="font-size:9px;color:var(--muted);margin:0 0 10px;letter-spacing:0.06em;">The job of the sentence after the blank</p>
         <div class="match-items" id="study-right"></div>
       </div>
     </div>
   </div>
   <div class="game-controls">
     <button class="check-btn" onclick="checkStudy()">Check answers</button>
-    <button class="reset-btn" onclick="resetStudy()">Shuffle</button>
+    <button class="reset-btn" onclick="resetStudy()">Start over</button>
     <button class="reset-btn" onclick="undoStudy()">Undo last pair</button>
     <div class="score-readout" id="study-score"></div>
   </div>
@@ -1040,16 +1193,22 @@
   </div>
   <div class="eyebrow"><span class="dot"></span><span class="mono">Eliminate before you read</span></div>
   <h2 class="slide-h">Which two choices are the same type?</h2>
-  <p class="body">Tap the two transitions that function the same way. Cross them both out before you read the passage.</p>
-  <div class="copycat-choices" id="copycat-round">
-    <button type="button" class="copycat-choice" data-cat="contrast">However,</button>
-    <button type="button" class="copycat-choice" data-cat="contrast">Nevertheless,</button>
-    <button type="button" class="copycat-choice" data-cat="example">For example,</button>
-    <button type="button" class="copycat-choice" data-cat="cause">Therefore,</button>
+  <p class="body">On the SAT, only one answer can be correct. If two choices do the <strong>same job</strong>, they cannot both be right, so they must both be wrong. Tap the two words that match, then read why the other two stay in play.</p>
+
+  <div class="trick" style="margin-top: 16px; background: var(--cream-deep); color: var(--ink);">
+    <div class="lbl" style="color: var(--forest);">What you are looking for</div>
+    <h4 style="color: var(--navy);">Two words from the same category.</h4>
+    <p style="color: var(--ink);">Not synonyms word-for-word. Same <em>function</em>: both contrast, both cause-and-effect, both example, etc. Cross that pair out before you read the passage. The real answer will be one of the other two.</p>
   </div>
-  <div class="trace" id="copycat-feedback" style="margin-top: 18px; display: none;">
-    <div class="lbl">Result</div>
-    <p id="copycat-feedback-text"></p>
+
+  <div class="copycat-choices" id="copycat-round">
+    <button type="button" class="copycat-choice" data-cat="contrast" data-cat-label="Contrast">However,</button>
+    <button type="button" class="copycat-choice" data-cat="contrast" data-cat-label="Contrast">Nevertheless,</button>
+    <button type="button" class="copycat-choice" data-cat="example" data-cat-label="Example">For example,</button>
+    <button type="button" class="copycat-choice" data-cat="cause" data-cat-label="Cause &amp; effect">Therefore,</button>
+  </div>
+  <div id="copycat-feedback" style="margin-top: 18px; display: none;">
+    <div class="copycat-feedback-body" id="copycat-feedback-body"></div>
   </div>
 </section>
 
@@ -1061,7 +1220,7 @@
   </div>
   <div class="eyebrow"><span class="dot"></span><span class="mono">Apply the method</span></div>
   <h2 class="slide-h">Try the Wallace Stevens question again.</h2>
-  <p class="body">Use the three steps. Cover the choices first. Then name the relationship. Then match.</p>
+  <p class="body">Use the three steps. Cover the choices first. Then name the relationship. Then match. <strong>Tap your answer</strong> below (choices highlight when you pick).</p>
 
   <div class="qcard">
     <div class="qmeta">
@@ -1074,10 +1233,10 @@
     </p>
     <p class="qprompt">Which choice completes the text with the most logical transition?</p>
     <div class="choices">
-      <div class="choice"><div class="letter">A</div>Likewise,</div>
-      <div class="choice"><div class="letter">B</div>Nonetheless,</div>
-      <div class="choice"><div class="letter">C</div>In turn,</div>
-      <div class="choice"><div class="letter">D</div>That is,</div>
+      <div class="choice" data-correct="false"><div class="letter">A</div>Likewise,</div>
+      <div class="choice" data-correct="true"><div class="letter">B</div>Nonetheless,</div>
+      <div class="choice" data-correct="false"><div class="letter">C</div>In turn,</div>
+      <div class="choice" data-correct="false"><div class="letter">D</div>That is,</div>
     </div>
     <button class="reveal-btn" onclick="revealNext(this)">Walk through it</button>
     <div class="reveal">
@@ -1109,6 +1268,7 @@
   </div>
   <div class="eyebrow"><span class="dot"></span><span class="mono">Apply the method</span></div>
   <h2 class="slide-h">Now the Cosmic Canvas one.</h2>
+  <p class="body"><strong>Tap your answer</strong> when you are ready. Green marks the correct choice; red marks a wrong pick.</p>
 
   <div class="qcard">
     <div class="qmeta">
@@ -1121,10 +1281,10 @@
     </p>
     <p class="qprompt">Which choice completes the text with the most logical transition?</p>
     <div class="choices">
-      <div class="choice"><div class="letter">A</div>Consequently,</div>
-      <div class="choice"><div class="letter">B</div>Alternatively,</div>
-      <div class="choice"><div class="letter">C</div>Ultimately,</div>
-      <div class="choice"><div class="letter">D</div>Additionally,</div>
+      <div class="choice" data-correct="false"><div class="letter">A</div>Consequently,</div>
+      <div class="choice" data-correct="false"><div class="letter">B</div>Alternatively,</div>
+      <div class="choice" data-correct="true"><div class="letter">C</div>Ultimately,</div>
+      <div class="choice" data-correct="false"><div class="letter">D</div>Additionally,</div>
     </div>
     <button class="reveal-btn" onclick="revealNext(this)">Walk through it</button>
     <div class="reveal">
@@ -1156,6 +1316,7 @@
   </div>
   <div class="eyebrow"><span class="dot"></span><span class="mono">Apply the method · this one is hard</span></div>
   <h2 class="slide-h">The rhythmicity study.</h2>
+  <p class="body"><strong>Tap your answer</strong> when you are ready. Then use Walk through it for the concession breakdown.</p>
 
   <div class="qcard">
     <div class="qmeta">
@@ -1168,10 +1329,10 @@
     </p>
     <p class="qprompt">Which choice completes the text with the most logical transition?</p>
     <div class="choices">
-      <div class="choice"><div class="letter">A</div>In fact,</div>
-      <div class="choice"><div class="letter">B</div>In other words,</div>
-      <div class="choice"><div class="letter">C</div>Granted,</div>
-      <div class="choice"><div class="letter">D</div>As a result,</div>
+      <div class="choice" data-correct="false"><div class="letter">A</div>In fact,</div>
+      <div class="choice" data-correct="false"><div class="letter">B</div>In other words,</div>
+      <div class="choice" data-correct="true"><div class="letter">C</div>Granted,</div>
+      <div class="choice" data-correct="false"><div class="letter">D</div>As a result,</div>
     </div>
     <button class="reveal-btn" onclick="revealNext(this)">Walk through it</button>
     <div class="reveal">
@@ -1457,6 +1618,7 @@
   let current = 0;
   const total = slides.length;
   document.getElementById('totSlide').textContent = String(total).padStart(2, '0');
+  let onSlideEnter = null;
 
   function showSlide(i) {
     slides.forEach((s, idx) => s.classList.toggle('active', idx === i));
@@ -1464,6 +1626,7 @@
     document.getElementById('prevBtn').disabled = (i === 0);
     document.getElementById('nextBtn').disabled = (i === total - 1);
     slides[i].scrollTop = 0;
+    if (onSlideEnter) onSlideEnter(slides[i]);
   }
   function changeSlide(delta) {
     const next = Math.max(0, Math.min(total - 1, current + delta));
@@ -1483,60 +1646,127 @@
     }
   }
 
-  document.querySelectorAll('.qcard .choices').forEach(group => {
-    group.querySelectorAll('.choice[data-correct]').forEach(c => {
-      c.addEventListener('click', () => {
-        const isCorrect = c.getAttribute('data-correct') === 'true';
-        group.querySelectorAll('.choice').forEach(x => {
-          x.classList.remove('correct', 'wrong', 'dim');
-          if (x.getAttribute('data-correct') === 'true') x.classList.add('correct');
-          else x.classList.add('dim');
-        });
-        if (!isCorrect) c.classList.add('wrong');
-      });
+  document.addEventListener('click', (e) => {
+    const choice = e.target.closest('.qcard .choices .choice');
+    if (!choice) return;
+
+    const slide = choice.closest('.slide');
+    if (slide && !slide.classList.contains('active')) return;
+
+    const group = choice.closest('.choices');
+    if (!group) return;
+
+    const choices = Array.from(group.querySelectorAll('.choice'));
+    if (!choices.some((c) => c.hasAttribute('data-correct'))) return;
+    if (group.dataset.answered === 'true') return;
+
+    const isCorrect = choice.getAttribute('data-correct') === 'true';
+    group.dataset.answered = 'true';
+    choices.forEach((x) => {
+      x.classList.remove('correct', 'wrong', 'dim', 'picked');
+      if (x.getAttribute('data-correct') === 'true') x.classList.add('correct');
+      else x.classList.add('dim');
     });
+    if (!isCorrect) {
+      choice.classList.remove('dim');
+      choice.classList.add('wrong');
+    }
   });
 
-  // ============ SORTING GAME ============
-  let selectedChip = null;
-  document.querySelectorAll('#sort-bank .sort-chip').forEach(chip => {
-    chip.addEventListener('click', () => selectChip(chip));
-  });
+  // ============ SORTING GAME (drag and drop + tap fallback) ============
+  const sortBank = document.getElementById('sort-bank');
+  let sortDragChip = null;
+  let sortSelectedChip = null;
 
-  function selectChip(chip) {
-    if (selectedChip) selectedChip.classList.remove('selected');
-    if (selectedChip === chip) { selectedChip = null; return; }
-    selectedChip = chip;
-    chip.classList.add('selected');
+  function clearSortBucketHints() {
+    document.querySelectorAll('.bucket').forEach((b) => b.classList.remove('drop-ready', 'drop-target'));
+    sortBank.classList.remove('drop-target');
   }
 
-  document.querySelectorAll('.drop-zone').forEach(zone => {
-    zone.addEventListener('click', () => {
-      if (!selectedChip) return;
-      selectedChip.classList.remove('selected');
-      selectedChip.classList.add('placed');
-      selectedChip.classList.remove('right', 'wrong');
-      const chipRef = selectedChip;
-      chipRef.onclick = () => returnChip(chipRef);
-      zone.appendChild(selectedChip);
-      selectedChip = null;
+  function placeSortChip(chip, zone) {
+    chip.classList.remove('selected', 'right', 'wrong', 'dragging');
+    chip.classList.add('placed');
+    zone.appendChild(chip);
+    sortSelectedChip = null;
+    sortDragChip = null;
+    clearSortBucketHints();
+  }
+
+  function returnSortChipToBank(chip) {
+    chip.classList.remove('placed', 'right', 'wrong', 'selected', 'dragging');
+    sortBank.appendChild(chip);
+    sortSelectedChip = null;
+    sortDragChip = null;
+    clearSortBucketHints();
+  }
+
+  function wireSortChip(chip) {
+    chip.setAttribute('draggable', 'true');
+    chip.addEventListener('dragstart', (e) => {
+      sortDragChip = chip;
+      chip.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', chip.getAttribute('data-word') || 'chip');
+    });
+    chip.addEventListener('dragend', () => {
+      chip.classList.remove('dragging');
+      if (sortDragChip === chip) sortDragChip = null;
+    });
+    chip.addEventListener('click', () => {
+      if (chip.parentElement?.classList.contains('drop-zone')) {
+        returnSortChipToBank(chip);
+        return;
+      }
+      if (sortSelectedChip) sortSelectedChip.classList.remove('selected');
+      if (sortSelectedChip === chip) {
+        sortSelectedChip = null;
+        clearSortBucketHints();
+        return;
+      }
+      sortSelectedChip = chip;
+      chip.classList.add('selected');
+      document.querySelectorAll('.bucket').forEach((b) => b.classList.add('drop-ready'));
+    });
+  }
+
+  sortBank.querySelectorAll('.sort-chip').forEach(wireSortChip);
+
+  function bindSortDropTarget(el, onDrop) {
+    el.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      el.classList.add('drop-target');
+    });
+    el.addEventListener('dragleave', (e) => {
+      if (!el.contains(e.relatedTarget)) el.classList.remove('drop-target');
+    });
+    el.addEventListener('drop', (e) => {
+      e.preventDefault();
+      el.classList.remove('drop-target');
+      const chip = sortDragChip;
+      if (!chip) return;
+      onDrop(chip, el);
+    });
+    el.addEventListener('click', () => {
+      if (!sortSelectedChip) return;
+      onDrop(sortSelectedChip, el);
+    });
+  }
+
+  bindSortDropTarget(sortBank, (chip) => returnSortChipToBank(chip));
+
+  document.querySelectorAll('.bucket').forEach((bucket) => {
+    bindSortDropTarget(bucket, (chip, bucketEl) => {
+      const zone = bucketEl.querySelector('.drop-zone');
+      if (zone) placeSortChip(chip, zone);
     });
   });
-
-  function returnChip(chip) {
-    chip.classList.remove('placed', 'right', 'wrong', 'selected');
-    chip.onclick = null;
-    chip.addEventListener('click', () => selectChip(chip));
-    document.getElementById('sort-bank').appendChild(chip);
-  }
 
   function checkSort() {
     let correct = 0;
-    let totalChips = 0;
     document.querySelectorAll('.drop-zone').forEach(zone => {
       const expected = zone.getAttribute('data-cat');
       zone.querySelectorAll('.sort-chip').forEach(chip => {
-        totalChips++;
         if (chip.getAttribute('data-cat') === expected) {
           chip.classList.add('right');
           chip.classList.remove('wrong');
@@ -1560,15 +1790,22 @@
   }
 
   function resetSort() {
-    document.querySelectorAll('.drop-zone .sort-chip').forEach(chip => returnChip(chip));
-    const bank = document.getElementById('sort-bank');
-    const chips = Array.from(bank.querySelectorAll('.sort-chip'));
-    shuffle(chips).forEach(chip => bank.appendChild(chip));
+    document.querySelectorAll('.drop-zone .sort-chip').forEach((chip) => returnSortChipToBank(chip));
+    const chips = Array.from(sortBank.querySelectorAll('.sort-chip'));
+    shuffle(chips).forEach((chip) => sortBank.appendChild(chip));
     document.getElementById('sort-score').textContent = '';
     document.getElementById('sort-score').classList.remove('good');
+    clearSortBucketHints();
   }
 
   // ============ MATCHING GAME (shared helpers) ============
+  const matchFlashTimeouts = [];
+
+  function clearMatchFlashTimeouts() {
+    matchFlashTimeouts.forEach((id) => clearTimeout(id));
+    matchFlashTimeouts.length = 0;
+  }
+
   function buildMatchBoard(leftId, rightId, pairs, count) {
     const left = document.getElementById(leftId);
     const right = document.getElementById(rightId);
@@ -1592,14 +1829,16 @@
     });
   }
 
-  function wireMatchGame(leftId, rightId, matchesStore, state) {
+  function wireMatchGame(leftId, rightId, matchesStore, state, options = {}) {
+    const { instantFeedback = false, scoreId = null, onAfterMatch = null } = options;
+
     document.getElementById(leftId).addEventListener('click', (e) => {
       const item = e.target.closest('.match-item');
       if (!item || item.classList.contains('matched')) return;
       if (state.left) state.left.classList.remove('selected');
       state.left = item;
       item.classList.add('selected');
-      tryGenericMatch(state, matchesStore);
+      tryGenericMatch(state, matchesStore, { instantFeedback, scoreId, leftId, onAfterMatch });
     });
     document.getElementById(rightId).addEventListener('click', (e) => {
       const item = e.target.closest('.match-item');
@@ -1607,18 +1846,69 @@
       if (state.right) state.right.classList.remove('selected');
       state.right = item;
       item.classList.add('selected');
-      tryGenericMatch(state, matchesStore);
+      tryGenericMatch(state, matchesStore, { instantFeedback, scoreId, leftId, onAfterMatch });
     });
   }
 
-  function tryGenericMatch(state, matchesStore) {
+  function updateInstantMatchScore(matchesStore, scoreId, leftId) {
+    const readout = document.getElementById(scoreId);
+    if (!readout) return;
+    const total = document.querySelectorAll(`#${leftId} .match-item`).length;
+    const paired = Object.keys(matchesStore).length;
+    const correct = Object.values(matchesStore).filter((m) => m.leftId === m.rightId).length;
+    const left = total - paired;
+    if (paired === 0) {
+      readout.textContent = '';
+      readout.classList.remove('good');
+      return;
+    }
+    if (correct === total) {
+      readout.textContent = `All ${total} correct`;
+      readout.classList.add('good');
+    } else {
+      readout.textContent = `${correct} of ${total} correct · ${left} left`;
+      readout.classList.remove('good');
+    }
+  }
+
+  function tryGenericMatch(state, matchesStore, options = {}) {
+    const { instantFeedback = false, scoreId = null, leftId = null, onAfterMatch = null } = options;
     if (!state.left || !state.right) return;
     const lId = state.left.getAttribute('data-id');
     const rId = state.right.getAttribute('data-id');
+    const isCorrect = lId === rId;
+
+    if (instantFeedback && !isCorrect) {
+      const leftEl = state.left;
+      const rightEl = state.right;
+      leftEl.classList.remove('selected');
+      rightEl.classList.remove('selected');
+      leftEl.classList.add('wrong');
+      rightEl.classList.add('wrong');
+      if (scoreId) {
+        const readout = document.getElementById(scoreId);
+        readout.textContent = 'Not a match — try again';
+        readout.classList.remove('good');
+      }
+      state.left = null;
+      state.right = null;
+      const flashId = setTimeout(() => {
+        leftEl.classList.remove('wrong');
+        rightEl.classList.remove('wrong');
+        if (scoreId && leftId) updateInstantMatchScore(matchesStore, scoreId, leftId);
+      }, 1600);
+      matchFlashTimeouts.push(flashId);
+      return;
+    }
+
     state.left.classList.remove('selected');
     state.right.classList.remove('selected');
     state.left.classList.add('matched');
     state.right.classList.add('matched');
+    if (instantFeedback && isCorrect) {
+      state.left.classList.add('right');
+      state.right.classList.add('right');
+    }
     const pairLabel = String(Object.keys(matchesStore).length + 1);
     state.left.setAttribute('data-pair', pairLabel);
     state.right.setAttribute('data-pair', pairLabel);
@@ -1632,6 +1922,11 @@
     state.history.push(pairLabel);
     state.left = null;
     state.right = null;
+
+    if (instantFeedback && scoreId && leftId) {
+      updateInstantMatchScore(matchesStore, scoreId, leftId);
+    }
+    if (onAfterMatch) onAfterMatch();
   }
 
   function checkGenericMatch(matchesStore, scoreId, leftId) {
@@ -1656,18 +1951,24 @@
     readout.classList.toggle('good', correct === totalPairs);
   }
 
-  function resetGenericMatch(leftId, rightId, matchesStore, state, scoreId, count) {
-    for (const k in matchesStore) delete matchesStore[k];
+  function resetGenericMatch(leftId, rightId, matchesStore, state, scoreId, count, onAfterMatch) {
+    clearMatchFlashTimeouts();
+    if (state.left) state.left.classList.remove('selected', 'wrong');
+    if (state.right) state.right.classList.remove('selected', 'wrong');
     state.left = null;
     state.right = null;
     state.history = [];
+    for (const k in matchesStore) delete matchesStore[k];
     buildMatchBoard(leftId, rightId, MATCH_PAIRS, count);
-    document.getElementById(scoreId).textContent = '';
-    document.getElementById(scoreId).classList.remove('good');
-    if (scoreId === 'study-score') drawStudyLines();
+    const readout = document.getElementById(scoreId);
+    if (readout) {
+      readout.textContent = '';
+      readout.classList.remove('good');
+    }
+    if (onAfterMatch) onAfterMatch();
   }
 
-  function undoGenericMatch(matchesStore, state, scoreId) {
+  function undoGenericMatch(matchesStore, state, scoreId, leftId, onAfterMatch) {
     const history = state.history || [];
     if (!history.length) return;
     const key = history.pop();
@@ -1678,25 +1979,36 @@
     m.left.removeAttribute('data-pair');
     m.right.removeAttribute('data-pair');
     delete matchesStore[key];
-    document.getElementById(scoreId).textContent = '';
-    document.getElementById(scoreId).classList.remove('good');
-    if (scoreId === 'study-score') drawStudyLines();
+    if (scoreId && leftId) {
+      updateInstantMatchScore(matchesStore, scoreId, leftId);
+    } else if (scoreId) {
+      document.getElementById(scoreId).textContent = '';
+      document.getElementById(scoreId).classList.remove('good');
+    }
+    if (onAfterMatch) onAfterMatch();
   }
 
   const matchState = { left: null, right: null, history: [] };
   const matches = {};
   buildMatchBoard('match-left', 'match-right', MATCH_PAIRS, 8);
-  wireMatchGame('match-left', 'match-right', matches, matchState);
+  wireMatchGame('match-left', 'match-right', matches, matchState, {
+    instantFeedback: true,
+    scoreId: 'match-score',
+    leftId: 'match-left'
+  });
 
   function checkMatch() { checkGenericMatch(matches, 'match-score', 'match-left'); }
   function resetMatch() { resetGenericMatch('match-left', 'match-right', matches, matchState, 'match-score', 8); }
-  function undoMatch() { undoGenericMatch(matches, matchState, 'match-score'); }
-
-  // ============ STUDY BOARD ============
+  function undoMatch() { undoGenericMatch(matches, matchState, 'match-score', 'match-left'); }
   const studyMatches = {};
   const studyState = { left: null, right: null, history: [] };
   buildMatchBoard('study-left', 'study-right', MATCH_PAIRS, 10);
-  wireMatchGame('study-left', 'study-right', studyMatches, studyState);
+  wireMatchGame('study-left', 'study-right', studyMatches, studyState, {
+    instantFeedback: true,
+    scoreId: 'study-score',
+    leftId: 'study-left',
+    onAfterMatch: drawStudyLines
+  });
 
   function drawStudyLines() {
     const svg = document.getElementById('study-lines');
@@ -1727,21 +2039,77 @@
     });
   }
 
-  document.getElementById('study-left').addEventListener('click', () => setTimeout(drawStudyLines, 50));
-  document.getElementById('study-right').addEventListener('click', () => setTimeout(drawStudyLines, 50));
-
   function checkStudy() {
     checkGenericMatch(studyMatches, 'study-score', 'study-left');
     drawStudyLines();
   }
-  function resetStudy() { resetGenericMatch('study-left', 'study-right', studyMatches, studyState, 'study-score', 10); }
-  function undoStudy() { undoGenericMatch(studyMatches, studyState, 'study-score'); }
+  function resetStudy() {
+    resetGenericMatch('study-left', 'study-right', studyMatches, studyState, 'study-score', 10, drawStudyLines);
+  }
+  function undoStudy() { undoGenericMatch(studyMatches, studyState, 'study-score', 'study-left', drawStudyLines); }
 
   // ============ COPYCAT ROUND ============
+  const COPYCAT_CAT_EXPLAIN = {
+    contrast: 'Sentence B pushes back on or contradicts sentence A.',
+    example: 'Sentence B gives a specific instance of sentence A.',
+    cause: 'Sentence B is a result or consequence of sentence A.',
+    add: 'Sentence B adds more in the same direction as sentence A.'
+  };
+
   const copycatPicks = [];
+  let copycatSolved = false;
+
+  function copycatChoiceLabel(btn) {
+    return btn.textContent.trim();
+  }
+
+  function showCopycatFeedback(html) {
+    const fb = document.getElementById('copycat-feedback');
+    const body = document.getElementById('copycat-feedback-body');
+    body.innerHTML = html;
+    fb.style.display = 'block';
+  }
+
+  function buildCopycatSuccessFeedback(picked) {
+    const cat = picked[0].getAttribute('data-cat');
+    const catLabel = picked[0].getAttribute('data-cat-label') || cat;
+    const names = picked.map(copycatChoiceLabel).join(' and ');
+    const explain = COPYCAT_CAT_EXPLAIN[cat] || '';
+    const others = Array.from(document.querySelectorAll('#copycat-round .copycat-choice'))
+      .filter((b) => !picked.includes(b));
+
+    let html = `<div class="trace"><div class="lbl">Correct · cross both out</div>
+      <p><strong>${names}</strong> are both <strong>${catLabel}</strong>. ${explain} The test cannot have two correct answers that do the same job, so <strong>both must be wrong</strong>. Eliminate them before you read the passage. The answer will be one of the other two.</p></div>`;
+
+    others.forEach((btn) => {
+      const label = btn.getAttribute('data-cat-label') || btn.getAttribute('data-cat');
+      const word = copycatChoiceLabel(btn);
+      const why = COPYCAT_CAT_EXPLAIN[btn.getAttribute('data-cat')] || '';
+      html += `<div class="trace note"><div class="lbl">Why ${word} stays in play</div>
+        <p><strong>${word}</strong> is <strong>${label}</strong>, not ${catLabel.toLowerCase()}. ${why} Only one of the remaining choices can match the real relationship between the sentences.</p></div>`;
+    });
+    return html;
+  }
+
+  function buildCopycatWrongFeedback(picked) {
+    const a = picked[0];
+    const b = picked[1];
+    const catA = a.getAttribute('data-cat-label');
+    const catB = b.getAttribute('data-cat-label');
+    const nameA = copycatChoiceLabel(a);
+    const nameB = copycatChoiceLabel(b);
+
+    let html = `<div class="trace warn"><div class="lbl">Not a copycat pair</div>
+      <p><strong>${nameA}</strong> is ${catA} (${COPYCAT_CAT_EXPLAIN[a.getAttribute('data-cat')]}). <strong>${nameB}</strong> is ${catB} (${COPYCAT_CAT_EXPLAIN[b.getAttribute('data-cat')]}). Different jobs, so both could still be wrong on their own, but they are not copycats.</p></div>`;
+
+    html += `<div class="trace"><div class="lbl">Hint</div>
+      <p>Look for two words that signal the <strong>same</strong> relationship. In this set, <strong>However</strong> and <strong>Nevertheless</strong> are both contrast words. Cross that pair out first.</p></div>`;
+    return html;
+  }
+
   document.querySelectorAll('#copycat-round .copycat-choice').forEach(btn => {
     btn.addEventListener('click', () => {
-      if (btn.classList.contains('elim')) return;
+      if (copycatSolved || btn.classList.contains('elim')) return;
       if (btn.classList.contains('selected')) {
         btn.classList.remove('selected');
         copycatPicks.splice(copycatPicks.indexOf(btn), 1);
@@ -1752,25 +2120,32 @@
       copycatPicks.push(btn);
       if (copycatPicks.length === 2) {
         const cats = copycatPicks.map(b => b.getAttribute('data-cat'));
-        const fb = document.getElementById('copycat-feedback');
-        const ft = document.getElementById('copycat-feedback-text');
-        fb.style.display = 'block';
         if (cats[0] === cats[1]) {
           copycatPicks.forEach(b => b.classList.add('elim'));
-          ft.textContent = 'Correct. Those two are the same category. Cross them both out before you read the passage.';
+          document.querySelectorAll('#copycat-round .copycat-choice').forEach((b) => {
+            if (!copycatPicks.includes(b)) b.classList.add('stays');
+          });
+          copycatSolved = true;
+          showCopycatFeedback(buildCopycatSuccessFeedback(copycatPicks));
         } else {
           copycatPicks.forEach(b => b.classList.add('wrong-pick'));
-          ft.textContent = 'Not the same category. Try again.';
+          showCopycatFeedback(buildCopycatWrongFeedback(copycatPicks));
           setTimeout(() => {
             copycatPicks.forEach(b => {
               b.classList.remove('selected', 'wrong-pick');
             });
             copycatPicks.length = 0;
-          }, 1200);
+            document.getElementById('copycat-feedback').style.display = 'none';
+          }, 4500);
         }
       }
     });
   });
+
+  onSlideEnter = (slide) => {
+    const key = slide.getAttribute('data-reset-on-enter');
+    if (key === 'study') resetStudy();
+  };
 </script>
 
 </body>

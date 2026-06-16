@@ -30,18 +30,6 @@ export function DanielleWeek2HubContent() {
       </section>
 
       <section className="danielle-week1__section">
-        <h2 className="danielle-week1__heading">Week 1 progress report</h2>
-        <p className="danielle-week1__focus">
-          Your Week 1 summary (June 9 to 16) is on the portal, including practice stats and the score
-          trajectory chart.
-        </p>
-        <Link href="/danielle/week-1/report" className="danielle-portal__link-card">
-          <h2>Week 1 report · Jun 9 to 16</h2>
-          <p>89% practice accuracy, on track for 1400, and what we covered in math week one.</p>
-        </Link>
-      </section>
-
-      <section className="danielle-week1__section">
         <h2 className="danielle-week1__heading">Week 2 goals</h2>
         <ol className="danielle-week1__goals">
           {WEEK_GOALS.map((goal) => (
