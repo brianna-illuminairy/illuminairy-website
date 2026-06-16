@@ -13,7 +13,8 @@ export function LayoutChrome({ children }: { children: React.ReactNode }) {
     pathname === "/privacy" ||
     pathname === "/terms" ||
     pathname === "/support-policy" ||
-    pathname === "/refund-policy";
+    pathname === "/refund-policy" ||
+    pathname === "/contact";
 
   if (isMinimalFunnel) {
     return <main className="funnel-main">{children}</main>;

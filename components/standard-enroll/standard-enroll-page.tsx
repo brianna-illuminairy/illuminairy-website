@@ -690,7 +690,7 @@ function PageFooter() {
             <a href="/refund-policy">Refund policy</a>
           </li>
           <li>
-            <a href="mailto:support@illuminairy.com">Contact</a>
+            <a href="/contact">Contact</a>
           </li>
         </ul>
         <p className="std-footer-legal">
