@@ -25,6 +25,7 @@
     "funnel:cta-guard": "node scripts/quiz-cta-guard.mjs",
     "funnel:e2e": "node scripts/quiz-funnel-e2e.mjs",
     "funnel:analytics-smoke": "node scripts/funnel-analytics-smoke.mjs",
+    "enroll:analytics-smoke": "node scripts/enroll-checkout-analytics-smoke.mjs",
     "funnel:completeness": "node scripts/funnel-completeness-monitor.mjs",
     "funnel:step-registry": "node scripts/verify-quiz-step-registry.mjs",
     "funnel:achievability": "node scripts/verify-goal-achievability.mjs",

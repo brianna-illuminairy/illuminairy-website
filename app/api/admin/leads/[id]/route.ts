@@ -1,9 +1,12 @@
 import { NextResponse } from "next/server";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { getCrmLeadDetail } from "@/lib/admin/crm-queries";
+import { normalizeEnrollmentPageUrl } from "@/lib/admin/enrollment-page-url";
 import { isFollowupKind } from "@/lib/admin/followup-kinds";
 import { updateLeadPipeline } from "@/lib/crm/admin";
+import { applyCallAttendance } from "@/lib/crm/lead-call-attendance";
 import { fireLeadMilestone } from "@/lib/crm/ga4-milestones";
+import { getSupabaseAdmin } from "@/lib/supabase/server";
 
 export async function GET(
   _request: Request,
@@ -50,6 +53,7 @@ export async function PATCH(
     target_exam?: string | null;
     sat_baseline?: string | null;
     main_goal?: string | null;
+    enrollment_page_url?: string | null;
   };
 
   try {
@@ -119,6 +123,23 @@ export async function PATCH(
     }
     patch.parent_email = v;
   }
+  if (body.enrollment_page_url !== undefined) {
+    if (body.enrollment_page_url === null || body.enrollment_page_url.trim() === "") {
+      patch.enrollment_page_url = null;
+    } else {
+      const normalized = normalizeEnrollmentPageUrl(body.enrollment_page_url);
+      if (!normalized) {
+        return NextResponse.json(
+          {
+            error:
+              "Invalid enrollment_page_url. Use a slug, /enroll/slug, or https://illuminairy.com/enroll/…"
+          },
+          { status: 400 }
+        );
+      }
+      patch.enrollment_page_url = normalized;
+    }
+  }
 
   // `complete_followup: true` advances the serial follow-up state machine.
   // post_call (send email) -> post_call_check_in (+3 days). Anything else
@@ -145,6 +166,36 @@ export async function PATCH(
   const result = await updateLeadPipeline(id, patch);
   if (!result.ok) {
     return NextResponse.json({ error: result.error }, { status: 502 });
+  }
+
+  // Header "Mark attended" only touched leads.* — sync lead_calls so Gemini
+  // extract + heat score (call_score) can run on the booking row.
+  if (body.attended === true) {
+    const supabase = getSupabaseAdmin();
+    if (supabase) {
+      const { data: callRow } = await supabase
+        .from("lead_calls")
+        .select("id, call_status")
+        .eq("lead_id", id)
+        .in("call_status", ["booked", "confirmed"])
+        .order("scheduled_start", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      if (callRow?.id) {
+        try {
+          await applyCallAttendance({
+            callId: callRow.id,
+            decision: "attended",
+            source: "manual",
+            actor: "admin",
+            attendanceSource: "manual",
+            notes: "Synced from lead profile Mark attended"
+          });
+        } catch (e) {
+          console.warn("applyCallAttendance after mark attended failed", e);
+        }
+      }
+    }
   }
 
   if (body.stage === "qualified") {

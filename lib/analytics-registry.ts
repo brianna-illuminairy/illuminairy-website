@@ -72,7 +72,11 @@ export const Ga4Events = {
   quizBookingError: "quiz_booking_error",
   quizBookingValidation: "quiz_booking_validation",
   quizStepBack: "quiz_step_back",
-  achievabilityInputEdited: "achievability_input_edited"
+  achievabilityInputEdited: "achievability_input_edited",
+  enrollCheckoutViewed: "enroll_checkout_viewed",
+  beginCheckout: "begin_checkout",
+  purchase: "purchase",
+  enrollCheckoutError: "enroll_checkout_error"
 } as const;
 
 export const MetaEvents = {
@@ -81,7 +85,10 @@ export const MetaEvents = {
   funnelCta: "FunnelCTA",
   parentConfirmed: "ParentConfirmed",
   lead: "Lead",
-  schedule: "Schedule"
+  schedule: "Schedule",
+  initiateCheckout: "InitiateCheckout",
+  purchase: "Purchase",
+  enrollCheckoutError: "EnrollCheckoutError"
 } as const;
 
 export const KlaviyoEvents = {

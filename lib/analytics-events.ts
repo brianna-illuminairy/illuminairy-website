@@ -37,7 +37,11 @@ export const AnalyticsEvents = {
   personalizedEnrollPageViewed: "personalized_enroll_page_viewed",
   personalizedEnrollPaymentClicked: "personalized_enroll_payment_clicked",
   standardEnrollPageViewed: "standard_enroll_page_viewed",
-  standardEnrollPaymentClicked: "standard_enroll_payment_clicked"
+  standardEnrollPaymentClicked: "standard_enroll_payment_clicked",
+  standardEnrollPaymentCompleted: "standard_enroll_payment_completed",
+  standardEnrollPaymentFailed: "standard_enroll_payment_failed",
+  personalizedEnrollPaymentCompleted: "personalized_enroll_payment_completed",
+  personalizedEnrollPaymentFailed: "personalized_enroll_payment_failed"
 } as const;
 
 export type AnalyticsEventName =

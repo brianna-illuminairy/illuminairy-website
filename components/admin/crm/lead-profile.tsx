@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import type { LeadDetail } from "@/lib/admin/crm-queries";
+import { LeadProfileEnrollmentLink } from "./lead-profile-enrollment-link";
 import { LeadProfileHeader } from "./lead-profile-header";
 import { LeadProfileOverview } from "./lead-profile-overview";
 import { LeadProfileFollowups } from "./lead-profile-followups";
@@ -113,6 +114,12 @@ export function LeadProfile({
         onPatch={patchLead}
         leadId={leadId}
         onAfterAction={refresh}
+      />
+
+      <LeadProfileEnrollmentLink
+        detail={detail}
+        saving={saving}
+        onPatch={patchLead}
       />
 
       <div className="flex items-center gap-1 border-b border-border">

@@ -22,12 +22,12 @@ export type ScoreHistoryRow = {
   lead_id: string;
   score: number;
   components: {
-    base: number;
-    intake: number;
-    engagement: number;
-    decay: number;
     call: number;
-    explanation?: string;
+    engagement: number;
+    recency: number;
+    attended_count?: number;
+    recent_email_in?: number;
+    recent_email_out?: number;
   };
   reason: string;
   created_at: string;
@@ -91,16 +91,53 @@ export async function listLeadAudit(leadId: string, limit = 200): Promise<AuditR
   return all.slice(0, limit);
 }
 
+type DbScoreHistoryRow = {
+  id: string;
+  lead_id: string;
+  score: number;
+  breakdown: Record<string, unknown> | null;
+  reason: string | null;
+  recorded_at: string;
+};
+
+/** Map DB `breakdown` JSON to the Score tab component shape. */
+export function normalizeScoreBreakdown(
+  breakdown: Record<string, unknown> | null | undefined
+): ScoreHistoryRow["components"] {
+  const b = breakdown ?? {};
+  const num = (key: string) => {
+    const v = b[key];
+    if (typeof v === "number" && Number.isFinite(v)) return v;
+    const n = Number(v);
+    return Number.isFinite(n) ? n : 0;
+  };
+  return {
+    call: num("call_score"),
+    engagement: num("engagement"),
+    recency: num("recency"),
+    attended_count: num("attended_count"),
+    recent_email_in: num("recent_email_in"),
+    recent_email_out: num("recent_email_out")
+  };
+}
+
 export async function listLeadScoreHistory(leadId: string, limit = 200): Promise<ScoreHistoryRow[]> {
   const supabase = requireSupabaseAdmin();
   const { data, error } = await supabase
     .from("lead_score_history")
-    .select("id, lead_id, score, components, reason, created_at")
+    .select("id, lead_id, score, breakdown, reason, recorded_at")
     .eq("lead_id", leadId)
-    .order("created_at", { ascending: false })
+    .order("recorded_at", { ascending: false })
     .limit(limit);
   if (error) {
     throw new Error(`listLeadScoreHistory failed: ${error.message}`);
   }
-  return (data ?? []) as ScoreHistoryRow[];
+  return ((data ?? []) as DbScoreHistoryRow[]).map((row) => ({
+    id: row.id,
+    lead_id: row.lead_id,
+    score: row.score,
+    components: normalizeScoreBreakdown(row.breakdown),
+    reason: row.reason ?? "recompute",
+    created_at: row.recorded_at
+  }));
 }

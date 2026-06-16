@@ -21,6 +21,7 @@ export async function updateLeadPipeline(
     target_exam?: string | null;
     sat_baseline?: string | null;
     main_goal?: string | null;
+    enrollment_page_url?: string | null;
   }
 ) {
   const supabase = getSupabaseAdmin();

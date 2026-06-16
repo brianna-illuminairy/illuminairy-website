@@ -20,11 +20,24 @@ import {
   useElements,
   useStripe
 } from "@stripe/react-stripe-js";
-import { captureAnalytics } from "@/lib/analytics-capture";
-import { AnalyticsEvents } from "@/lib/analytics-events";
+import {
+  trackEnrollCheckoutViewed,
+  trackEnrollPaymentClicked,
+  trackEnrollPaymentCompleted,
+  trackEnrollPaymentFailed
+} from "@/lib/enroll-checkout-analytics";
 import { IlluminairyLogoV7 } from "@/components/brand/illuminairy-logo-v7";
 import { type PersonalizedEnrollLead } from "@/lib/personalized-enroll";
 import "./personalized-enroll.css";
+
+function personalizedEnrollAnalyticsProps(lead: PersonalizedEnrollLead) {
+  return {
+    program: "personalized_enroll" as const,
+    slug: lead.slug,
+    diagPrice: lead.pricing.diagPrice,
+    weeklyPrice: lead.pricing.weeklyPrice
+  };
+}
 
 // Load Stripe.js once per module load. The publishable key is read at module
 // init time on the client; if it is missing we render an error state below
@@ -418,8 +431,8 @@ function PayCardInner({
     }
 
     setSubmitting(true);
-    captureAnalytics(AnalyticsEvents.personalizedEnrollPaymentClicked, {
-      slug: lead.slug,
+    trackEnrollPaymentClicked({
+      ...personalizedEnrollAnalyticsProps(lead),
       source: "main_form"
     });
 
@@ -447,6 +460,11 @@ function PayCardInner({
         });
 
       if (confirmError) {
+        trackEnrollPaymentFailed({
+          ...personalizedEnrollAnalyticsProps(lead),
+          step: "confirm_card",
+          errorCode: confirmError.code ?? confirmError.type ?? "confirm_failed"
+        });
         setError(
           confirmError.message ??
             "Your card was not accepted. Please try a different card."
@@ -484,9 +502,11 @@ function PayCardInner({
       };
 
       if (!finalizeRes.ok) {
-        // The diagnostic charge succeeded but subscription create failed.
-        // Show a partial-success state so the parent knows we still owe
-        // them the weekly setup; ops follow-up handles it.
+        trackEnrollPaymentFailed({
+          ...personalizedEnrollAnalyticsProps(lead),
+          step: "finalize_subscription",
+          errorCode: finalizeData.error ?? "finalize_failed"
+        });
         setError(
           finalizeData.error ??
             "We charged the diagnostic. Please email " +
@@ -498,7 +518,11 @@ function PayCardInner({
         return;
       }
 
-      // Done.
+      trackEnrollPaymentCompleted({
+        ...personalizedEnrollAnalyticsProps(lead),
+        paymentIntentId: paymentIntent.id,
+        subscriptionStatus: finalizeData.status ?? "trialing"
+      });
       setSucceeded({
         paymentIntentId: paymentIntent.id,
         subscriptionStatus: finalizeData.status ?? "trialing"
@@ -506,6 +530,11 @@ function PayCardInner({
       setSubmitting(false);
     } catch (err) {
       console.error("personalized-enroll on-page checkout client error:", err);
+      trackEnrollPaymentFailed({
+        ...personalizedEnrollAnalyticsProps(lead),
+        step: "client",
+        errorCode: err instanceof Error ? err.message : "client_error"
+      });
       setError(
         "Something went wrong. Please try again, or email " +
           lead.advisor.email +
@@ -892,8 +921,8 @@ function PageFooter() {
 }
 function MobilePayBar({ lead }: { lead: PersonalizedEnrollLead }) {
   function handleClick(e: React.MouseEvent<HTMLAnchorElement>) {
-    captureAnalytics(AnalyticsEvents.personalizedEnrollPaymentClicked, {
-      slug: lead.slug,
+    trackEnrollPaymentClicked({
+      ...personalizedEnrollAnalyticsProps(lead),
       source: "mobile_paybar"
     });
     // Scroll the user to the inline form. The form is the functional checkout;
@@ -930,10 +959,8 @@ type Props = { lead: PersonalizedEnrollLead };
 
 export function PersonalizedEnrollPage({ lead }: Props) {
   useEffect(() => {
-    captureAnalytics(AnalyticsEvents.personalizedEnrollPageViewed, {
-      slug: lead.slug
-    });
-  }, [lead.slug]);
+    trackEnrollCheckoutViewed(personalizedEnrollAnalyticsProps(lead));
+  }, [lead]);
 
   return (
     <div className="lp co">

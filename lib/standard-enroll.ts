@@ -489,8 +489,38 @@ const michelleMichaela: StandardEnrollLead = {
   call: { dateLabel: "June 13, 2026" }
 };
 
+const moniqueKylan: StandardEnrollLead = {
+  slug: "monique-kylan",
+  parent: {
+    first: "Monique",
+    last: "Reynolds",
+    full: "Monique Reynolds",
+    email: "moniquedreynolds@gmail.com"
+  },
+  student: {
+    first: "Kylan",
+    full: "Kylan",
+    gradeNote: "rising junior"
+  },
+  pricing: {
+    diagPrice: 249,
+    weeklyPrice: 99,
+    stripeDiagnosticProductId: "prod_UfmBm2GawHFXRA",
+    stripeWeeklyProductId: "prod_UfmE3JUG5ykfSk",
+    weeklyTrialDays: 7,
+    stripeFallbackLink: "https://buy.stripe.com/7sYcMY7DK1X19lO7gZc7u01"
+  },
+  advisor: {
+    first: "Brianna",
+    full: "Brianna Zajicek",
+    email: "brianna@illuminairy.com"
+  },
+  call: { dateLabel: "June 12, 2026" }
+};
+
 export const standardEnrollLeads: Record<string, StandardEnrollLead> = {
-  [michelleMichaela.slug]: michelleMichaela
+  [michelleMichaela.slug]: michelleMichaela,
+  [moniqueKylan.slug]: moniqueKylan
 };
 
 export function getStandardEnrollLead(

@@ -1,6 +1,27 @@
 # Active context
 
-*Last updated: 2026-06-12*
+*Last updated: 2026-06-16*
+
+## Monique enrollment page + checkout analytics (2026-06-16)
+
+- **`/enroll/monique-kylan`** live in code (standard stack, same pricing as Michelle). CRM lead `fe11cd61…` has `enrollment_page_url` set.
+- **Unified checkout analytics:** `lib/enroll-checkout-analytics.ts` fires PostHog + GA4 + Meta on view, pay click, success, and failure for standard (Michelle/Monique) and personalized (Sohail) pages.
+- **Smoke:** `npm run enroll:analytics-smoke` (after `npm run dev`).
+- **Deploy:** push to `main` for prod URL + analytics.
+
+## Post-call sales research/spec package (2026-06-13)
+
+Completed strict 3-phase spec workflow for post-call sales pages:
+
+1. **Industry only research** saved to [`docs/post-call-sales-research.md`](../docs/post-call-sales-research.md) with explicit external-evidence challenge.
+2. **Audience-only analysis** saved to [`docs/post-call-sales-audience-insights.md`](../docs/post-call-sales-audience-insights.md) with representativeness caveats.
+3. **Synthesis spec package** updated at:
+   - [`specs/2026-06-post-call-sales/RESEARCH.md`](../specs/2026-06-post-call-sales/RESEARCH.md)
+   - [`specs/2026-06-post-call-sales/PRD.md`](../specs/2026-06-post-call-sales/PRD.md)
+   - [`specs/2026-06-post-call-sales/SPEC.md`](../specs/2026-06-post-call-sales/SPEC.md)
+   - [`specs/ACTIVE.md`](../specs/ACTIVE.md) now points to post-call sales SPEC.
+
+Status: **spec-only, no implementation work completed in this pass**.
 
 ## CRM v4 just shipped (2026-06-12)
 

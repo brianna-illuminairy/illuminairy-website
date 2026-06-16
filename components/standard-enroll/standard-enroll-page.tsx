@@ -20,8 +20,12 @@ import {
   useElements,
   useStripe
 } from "@stripe/react-stripe-js";
-import { captureAnalytics } from "@/lib/analytics-capture";
-import { AnalyticsEvents } from "@/lib/analytics-events";
+import {
+  trackEnrollCheckoutViewed,
+  trackEnrollPaymentClicked,
+  trackEnrollPaymentCompleted,
+  trackEnrollPaymentFailed
+} from "@/lib/enroll-checkout-analytics";
 import {
   STANDARD_INCLUDED,
   STANDARD_POST_CALL_STEPS,
@@ -51,6 +55,15 @@ const CARD_ELEMENT_STYLE = {
     invalid: { color: "#9a2b2b" }
   }
 } as const;
+
+function standardEnrollAnalyticsProps(lead: StandardEnrollLead) {
+  return {
+    program: "standard_enroll" as const,
+    slug: lead.slug,
+    diagPrice: lead.pricing.diagPrice,
+    weeklyPrice: lead.pricing.weeklyPrice
+  };
+}
 
 function CheckIcon() {
   return (
@@ -266,8 +279,8 @@ function PayCardInner({
     }
 
     setSubmitting(true);
-    captureAnalytics(AnalyticsEvents.standardEnrollPaymentClicked, {
-      slug: lead.slug,
+    trackEnrollPaymentClicked({
+      ...standardEnrollAnalyticsProps(lead),
       source: "main_form"
     });
 
@@ -293,6 +306,11 @@ function PayCardInner({
         });
 
       if (confirmError) {
+        trackEnrollPaymentFailed({
+          ...standardEnrollAnalyticsProps(lead),
+          step: "confirm_card",
+          errorCode: confirmError.code ?? confirmError.type ?? "confirm_failed"
+        });
         setError(
           confirmError.message ??
             "Your card was not accepted. Please try a different card."
@@ -324,6 +342,11 @@ function PayCardInner({
       };
 
       if (!finalizeRes.ok) {
+        trackEnrollPaymentFailed({
+          ...standardEnrollAnalyticsProps(lead),
+          step: "finalize_subscription",
+          errorCode: finalizeData.error ?? "finalize_failed"
+        });
         setError(
           finalizeData.error ??
             "We charged the diagnostic. Please email " +
@@ -335,6 +358,11 @@ function PayCardInner({
         return;
       }
 
+      trackEnrollPaymentCompleted({
+        ...standardEnrollAnalyticsProps(lead),
+        paymentIntentId: paymentIntent.id,
+        subscriptionStatus: finalizeData.status ?? "trialing"
+      });
       setSucceeded({
         paymentIntentId: paymentIntent.id,
         subscriptionStatus: finalizeData.status ?? "trialing"
@@ -342,6 +370,11 @@ function PayCardInner({
       setSubmitting(false);
     } catch (err) {
       console.error("standard-enroll on-page checkout client error:", err);
+      trackEnrollPaymentFailed({
+        ...standardEnrollAnalyticsProps(lead),
+        step: "client",
+        errorCode: err instanceof Error ? err.message : "client_error"
+      });
       setError(
         "Something went wrong. Please try again, or email " +
           lead.advisor.email +
@@ -708,10 +741,8 @@ type Props = { lead: StandardEnrollLead; init: StandardEnrollInit };
 
 export function StandardEnrollPage({ lead, init }: Props) {
   useEffect(() => {
-    captureAnalytics(AnalyticsEvents.standardEnrollPageViewed, {
-      slug: lead.slug
-    });
-  }, [lead.slug]);
+    trackEnrollCheckoutViewed(standardEnrollAnalyticsProps(lead));
+  }, [lead]);
 
   return (
     <div className="std">
