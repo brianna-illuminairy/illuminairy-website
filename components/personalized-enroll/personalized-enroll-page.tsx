@@ -378,7 +378,7 @@ function PayCard({ lead }: { lead: PersonalizedEnrollLead }) {
         <span>
           {submitting
             ? "Starting secure checkout\u2026"
-            : `Pay $${lead.pricing.diagPrice} to start`}
+            : `Pay $${lead.pricing.diagPrice} to Enroll`}
         </span>
         {!submitting && (
           <span className="arrow">
@@ -572,7 +572,7 @@ function MobilePayBar({ lead }: { lead: PersonalizedEnrollLead }) {
     >
       <span className="co-mobile-paybar-text">
         <span className="lbl">
-          Pay ${lead.pricing.diagPrice} and enroll
+          Pay ${lead.pricing.diagPrice} to Enroll
         </span>
         <span className="sub">
           First tutoring week free &middot; cancel anytime
