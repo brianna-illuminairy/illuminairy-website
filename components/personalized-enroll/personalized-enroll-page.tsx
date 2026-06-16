@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { captureAnalytics } from "@/lib/analytics-capture";
 import { AnalyticsEvents } from "@/lib/analytics-events";
+import { IlluminairyLogoV7 } from "@/components/brand/illuminairy-logo-v7";
 import { type PersonalizedEnrollLead } from "@/lib/personalized-enroll";
 import "./personalized-enroll.css";
 
@@ -47,11 +48,11 @@ function ArrowIcon() {
 
 function TopBar() {
   return (
-    <div className="lp-chrome">
+    <header className="lp-chrome">
       <div className="lp-container lp-topbar">
-        <span className="lp-wordmark">Illuminairy</span>
+        <IlluminairyLogoV7 tone="on-dark" height={34} />
       </div>
-    </div>
+    </header>
   );
 }
 
