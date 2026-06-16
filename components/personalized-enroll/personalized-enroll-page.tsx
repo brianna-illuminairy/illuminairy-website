@@ -243,9 +243,7 @@ function PayCard({ lead }: { lead: PersonalizedEnrollLead }) {
 
   return (
     <section className="co-pay">
-      <h2 className="co-pay-title">
-        Purchase Diagnostic &amp; Enroll in Weekly Tutoring
-      </h2>
+      <h2 className="co-pay-title">Purchase Diagnostic &amp; Enroll</h2>
 
       <div className="co-price">
         <div className="co-price-row">
@@ -367,7 +365,7 @@ function PayCard({ lead }: { lead: PersonalizedEnrollLead }) {
           I agree to Illuminairy&apos;s Terms, Refund Policy, and Privacy
           Policy. I authorize the ${lead.pricing.diagPrice} charge today and
           weekly billing of ${lead.pricing.weeklyPrice} starting 7 days from
-          now, which I can cancel anytime.
+          now.
         </label>
       </div>
 
@@ -388,12 +386,6 @@ function PayCard({ lead }: { lead: PersonalizedEnrollLead }) {
           </span>
         )}
       </button>
-
-      <p className="co-paybtn-foot">
-        You pay ${lead.pricing.diagPrice} today for {lead.student.first}
-        &apos;s diagnostic and plan. The ${lead.pricing.weeklyPrice} per week
-        begins 7 days from today, and you can cancel anytime before then.
-      </p>
 
       {error && (
         <p
@@ -436,7 +428,7 @@ function FaqSection({ lead }: { lead: PersonalizedEnrollLead }) {
           wk +
           " per week. The 7 days right after enrollment are setup time used to run her diagnostic, analyze the results, build her plan, match her with the right tutors, and schedule her first sessions. Weekly billing starts on day 7, when tutoring begins.",
         "We do not offer free trial classes for two reasons. First, a free trial is a generic SAT lesson with a tutor who has not seen the student's data yet, and we have found that does not tell a parent anything useful. Second, our sessions are one-on-one. A group SAT prep company can offer a free trial because adding one more student to a group lesson costs them nothing; a 1:1 trial would cost us the hours of preparation plus the hour of tutoring.",
-        "There is also a pricing model difference worth being upfront about. Many SAT prep companies that offer a free trial class are also selling whole programs upfront for $2,500 to $5,000 or more. That much upfront investment lets them absorb the cost of a single free trial per family. We are intentionally a more affordable option billed week to week, so we cannot eat that same upfront cost the same way a company collecting $2,500 or $5,000 at signup can.",
+        "There is also a pricing model difference worth being upfront about. Many SAT prep companies that offer a free trial class are also requiring full upfront payment and a long-term contract for the whole program, often $2,500 to $5,000 or more. That kind of upfront commitment lets them absorb the cost of a single free trial per family. We are intentionally a more affordable option, billed week to week with no long-term contract, so we cannot eat that same upfront cost the same way a company collecting $2,500 or $5,000 at signup can.",
         "We have also found that students and tutors often do not find their groove until a few sessions in, when the student is more comfortable opening up and the tutor has adjusted their approach to what the student is responding to. There is no way to capture that in a single trial lesson. Rapport and personalization take time. To handle that adjustment period, every session has quality flags: if " +
           student +
           " and her tutor are not connecting, we can flag the session for review, investigate, provide an additional lesson if warranted, or rematch her with a different tutor, case by case."
@@ -514,8 +506,8 @@ function FaqSection({ lead }: { lead: PersonalizedEnrollLead }) {
   return (
     <div className="co-faq">
       <h3>Frequently asked questions</h3>
-      {faqs.map((f, i) => (
-        <details key={f.q} {...(i === 0 ? { open: true } : {})}>
+      {faqs.map((f) => (
+        <details key={f.q}>
           <summary>
             {f.q}
             <span className="plus" />
