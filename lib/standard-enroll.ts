@@ -72,6 +72,17 @@ export type StandardTestimonial = {
   detail: string;
 };
 
+export type StandardBootcampConfig = {
+  sessionsPerWeek: number;
+  sessionLengthMinutes: number;
+  totalSessions: number;
+  startLabel: string;
+  endLabel: string;
+  examLabel: string;
+  /** When true, post-enroll copy skips diagnostic scheduling. */
+  diagnosticComplete: boolean;
+};
+
 export type StandardEnrollLead = {
   slug: string;
   parent: { first: string; last?: string; full: string; email?: string };
@@ -102,6 +113,12 @@ export type StandardEnrollLead = {
   weeklyPromo?: StandardWeeklyPromo;
   /** Drives pay-card session frequency and plan card headline. */
   programVariant?: StandardProgramVariant;
+  /** Bootcamp cadence, dates, and diagnostic status. */
+  bootcamp?: StandardBootcampConfig;
+  /** Optional value-prop block between checkout grid and session photo. */
+  introParagraphs?: string[];
+  /** Replaces "family bundle" on waived-diagnostic copy (e.g. complimentary diagnostic). */
+  diagnosticWaivedLabel?: string;
 };
 
 /**
@@ -180,6 +197,50 @@ export const SHELLY_BOOTCAMP_INCLUDED: StandardIncludedItem[] =
         }
       : it
   );
+
+/** Nada / Soha bootcamp: 3×45-min sessions, mistake-driven focus. */
+export const NADA_BOOTCAMP_INCLUDED: StandardIncludedItem[] = [
+  {
+    nm: "Proctored Full-Length Adaptive SAT Diagnostic",
+    ds: "Already completed. Results and personalized plan in hand."
+  },
+  {
+    nm: "Personalized SAT Improvement Plan",
+    ds: "Built from Soha's diagnostic, ranked by the skills holding her score back"
+  },
+  {
+    nm: "Three Weekly SAT Tutoring Sessions",
+    ds: "Three 45-minute one-on-one sessions per week (27 total), June 23 through August 21, planned backward from the August 22, 2026 SAT"
+  },
+  {
+    nm: "Mistake-Driven Skill Focus",
+    ds: "We start with the questions that cost the most points on the diagnostic, walk through what went wrong, then assign similar problems until she gets them right on her own"
+  },
+  {
+    nm: "Personalized Lesson Plans",
+    ds: "Built around Soha's specific gaps. We do not re-teach what she already knows."
+  },
+  {
+    nm: "Homework from 3,500+ SAT Practice Questions",
+    ds: "Assigned between sessions to reinforce each skill. Wrong answers get reviewed at the start of the next session."
+  },
+  {
+    nm: "11 Full-Length Digital SAT Practice Tests",
+    ds: "One proctored every 4 weeks to measure progress"
+  },
+  {
+    nm: "Weekly Progress Tracking",
+    ds: "Reports sent to you and Soha every week"
+  },
+  {
+    nm: "Aurora, Our AI SAT Study Companion",
+    ds: "24/7 answers, hints, and what-went-wrong explanations"
+  },
+  {
+    nm: "Built-in Desmos Calculator",
+    ds: "The same graphing calculator as the real Math section"
+  }
+];
 
 /**
  * Six real testimonials used in the scrolling marquee below the grid.
@@ -374,6 +435,35 @@ export function buildStandardFaq(
   );
 }
 
+function standardEnrollDiagListPrice(lead: StandardEnrollLead): number {
+  return lead.diagnosticPromo?.listPrice ?? lead.pricing.diagPrice;
+}
+
+function standardEnrollDiagChargePrice(lead: StandardEnrollLead): number {
+  if (lead.diagnosticPromo) return lead.diagnosticPromo.chargePrice;
+  return lead.pricing.diagPrice;
+}
+
+function standardEnrollWeeklyChargePrice(lead: StandardEnrollLead): number {
+  return lead.weeklyPromo?.chargePrice ?? lead.pricing.weeklyPrice;
+}
+
+/** FAQ builder with per-lead waived-diagnostic and bootcamp context. */
+export function buildStandardFaqForLead(lead: StandardEnrollLead): StandardFaqGroup[] {
+  return buildStandardFaqFromPreset(
+    lead.faqPreset ?? "standard-full",
+    standardEnrollDiagListPrice(lead),
+    standardEnrollWeeklyChargePrice(lead),
+    standardEnrollDiagChargePrice(lead),
+    {
+      diagnosticWaivedLabel:
+        lead.diagnosticWaivedLabel ?? lead.diagnosticPromo?.label,
+      diagnosticComplete: lead.bootcamp?.diagnosticComplete,
+      sessionLengthMinutes: lead.bootcamp?.sessionLengthMinutes
+    }
+  );
+}
+
 const michelleMichaela: StandardEnrollLead = {
   slug: "michelle-michaela",
   parent: {
@@ -504,14 +594,84 @@ const shellyAug22Bootcamp: StandardEnrollLead = {
     listPrice: 198,
     chargePrice: 175,
     label: "Family discount"
-  }
+  },
+  bootcamp: {
+    sessionsPerWeek: 4,
+    sessionLengthMinutes: 60,
+    totalSessions: 36,
+    startLabel: "June 23, 2026",
+    endLabel: "August 21, 2026",
+    examLabel: "August 22, 2026",
+    diagnosticComplete: false
+  },
+  diagnosticWaivedLabel: "Family diagnostic bundle"
+};
+
+const nadaSohaAug22Bootcamp: StandardEnrollLead = {
+  slug: "nada-soha-aug22-bootcamp",
+  parent: {
+    first: "Nada",
+    last: "Naveed",
+    full: "Nada Naveed",
+    email: "nj00@hotmail.com"
+  },
+  student: {
+    first: "Soha",
+    full: "Soha",
+    gradeNote: "confirm grade in follow-up"
+  },
+  pricing: {
+    diagPrice: 0,
+    weeklyPrice: 149,
+    stripeDiagnosticProductId: "prod_UfmBm2GawHFXRA",
+    stripeWeeklyProductId: "prod_UisrZC9oUpgzFS",
+    weeklyTrialDays: 7,
+    stripeFallbackLink: "https://buy.stripe.com/7sYcMY7DK1X19lO7gZc7u01"
+  },
+  advisor: {
+    first: "Brianna",
+    full: "Brianna Zajicek",
+    email: "brianna@illuminairy.com"
+  },
+  call: { dateLabel: "June 15, 2026" },
+  faqPreset: "nada-bootcamp",
+  includedOverride: NADA_BOOTCAMP_INCLUDED,
+  programVariant: "aug22-bootcamp",
+  diagnosticPromo: {
+    listPrice: 249,
+    chargePrice: 0,
+    label: "Complimentary diagnostic",
+    displayCode: "NADA-DIAG",
+    stripeCouponId: "zLHxYQCy"
+  },
+  weeklyPromo: {
+    listPrice: 198,
+    chargePrice: 149,
+    label: "Bootcamp rate"
+  },
+  diagnosticWaivedLabel: "Complimentary diagnostic",
+  bootcamp: {
+    sessionsPerWeek: 3,
+    sessionLengthMinutes: 45,
+    totalSessions: 27,
+    startLabel: "June 23, 2026",
+    endLabel: "August 21, 2026",
+    examLabel: "August 22, 2026",
+    diagnosticComplete: true
+  },
+  introParagraphs: [
+    "This bootcamp is built for students who are already scoring above 1250 and have a test date less than 12 weeks away. We do not spread time across the whole SAT. We rank the mistakes from Soha's diagnostic by how many points each one costs, then work through them one by one.",
+    "Each session starts with the questions she missed that matter most. Her tutor walks through what went wrong and how to solve it, then she works similar problems on her own until she gets them right. We assign practice between sessions and review anything she misses at the start of the next session.",
+    "We skip what she already knows and focus only on the skills that are still holding her score back before August 22. Results vary by student."
+  ]
 };
 
 export const standardEnrollLeads: Record<string, StandardEnrollLead> = {
   [michelleMichaela.slug]: michelleMichaela,
   [moniqueKylan.slug]: moniqueKylan,
   [shellyStandard.slug]: shellyStandard,
-  [shellyAug22Bootcamp.slug]: shellyAug22Bootcamp
+  [shellyAug22Bootcamp.slug]: shellyAug22Bootcamp,
+  [nadaSohaAug22Bootcamp.slug]: nadaSohaAug22Bootcamp
 };
 
 export function getStandardEnrollLead(

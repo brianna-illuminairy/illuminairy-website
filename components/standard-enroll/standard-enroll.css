@@ -483,6 +483,39 @@
 .std-formnote.info { background: #eaf5ec; border: 1px solid #bfe0c6; color: #236138; }
 .std-formnote.err { background: #fdecec; border: 1px solid #f0c4c4; color: #9a2b2b; }
 
+/* ===== Program intro (per-lead bootcamp value prop) ===== */
+.std-program-intro {
+  margin: 32px auto 8px;
+  max-width: 720px;
+  padding: 0 24px;
+}
+.std-program-intro .eyebrow {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--green);
+  display: block;
+  margin-bottom: 10px;
+}
+.std-program-intro h3 {
+  font-weight: 800;
+  font-size: 1.45rem;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  margin-bottom: 14px;
+}
+.std-program-intro p {
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin: 0 0 12px;
+}
+.std-program-intro p:last-child {
+  margin-bottom: 0;
+}
+
 /* ===== Inside a session ===== */
 .std-session {
   margin: 8px auto 48px;

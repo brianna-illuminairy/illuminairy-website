@@ -86,6 +86,8 @@ function buildFlowMetadata(
     weekly_trial_days: String(lead.pricing.weeklyTrialDays),
     ...(lead.diagnosticPromo
       ? {
+          diag_promo: lead.diagnosticPromo.displayCode,
+          diag_promo_coupon_id: lead.diagnosticPromo.stripeCouponId,
           family_diag_promo: lead.diagnosticPromo.displayCode,
           family_diag_coupon_id: lead.diagnosticPromo.stripeCouponId
         }

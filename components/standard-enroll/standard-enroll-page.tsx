@@ -30,7 +30,7 @@ import {
   STANDARD_INCLUDED,
   STANDARD_POST_CALL_STEPS,
   STANDARD_TESTIMONIALS,
-  buildStandardFaq,
+  buildStandardFaqForLead,
   standardEnrollStudentLabel,
   standardEnrollStudentPossessive,
   type StandardEnrollLead
@@ -105,9 +105,22 @@ function isAug22Bootcamp(lead: StandardEnrollLead): boolean {
 
 function weeklyTutoringLabel(lead: StandardEnrollLead): string {
   if (isAug22Bootcamp(lead)) {
-    return "Weekly Tutoring 4×/wk";
+    const n = lead.bootcamp?.sessionsPerWeek ?? 4;
+    return `Weekly Tutoring ${n}×/wk`;
   }
   return "Weekly Tutoring 2×/wk";
+}
+
+function diagnosticWaivedIntroLine(lead: StandardEnrollLead): string {
+  if (lead.bootcamp?.diagnosticComplete) {
+    const label = lead.diagnosticWaivedLabel ?? "Complimentary diagnostic";
+    return `${label} already complete. $${getWeeklyChargePrice(lead)}/week tutoring starts 7 days from enroll.`;
+  }
+  const label = lead.diagnosticWaivedLabel;
+  if (label) {
+    return `Diagnostic included (${label.toLowerCase()})`;
+  }
+  return "Diagnostic included with your family bundle";
 }
 
 function CheckIcon() {
@@ -202,7 +215,7 @@ function MobileCheckoutIntro({ lead }: { lead: StandardEnrollLead }) {
   const diagCharge = getDiagChargePrice(lead);
   const diagLine =
     diagCharge === 0
-      ? "Diagnostic included with your family bundle"
+      ? diagnosticWaivedIntroLine(lead)
       : `$${diagCharge} diagnostic today, then $${weekly}/week after your first week`;
 
   return (
@@ -211,8 +224,8 @@ function MobileCheckoutIntro({ lead }: { lead: StandardEnrollLead }) {
         {isBootcamp ? "August 22 SAT Bootcamp" : "SAT Diagnostic & Weekly Tutoring"}
       </h1>
       <p>
-        For {lead.parent.first}. {diagLine}. Weekly billing starts 7 days from
-        enroll.
+        For {lead.parent.first}. {diagLine}
+        {!lead.bootcamp?.diagnosticComplete ? " Weekly billing starts 7 days from enroll." : null}
       </p>
     </div>
   );
@@ -558,9 +571,20 @@ function PayCardInner({
           {succeeded.waivedDiagnostic ? (
             <>
               {" "}
-              {standardEnrollStudentPossessive(lead)} diagnostic and personalized plan are
-              covered by your family bundle, and weekly tutoring is queued up to
-              begin 7 days from now.
+              {lead.bootcamp?.diagnosticComplete ? (
+                <>
+                  {standardEnrollStudentPossessive(lead)} diagnostic is already
+                  complete, and weekly tutoring is queued up to begin 7 days from
+                  now.
+                </>
+              ) : (
+                <>
+                  {standardEnrollStudentPossessive(lead)} diagnostic and personalized plan are
+                  covered by your{" "}
+                  {(lead.diagnosticWaivedLabel ?? "family bundle").toLowerCase()}, and weekly
+                  tutoring is queued up to begin 7 days from now.
+                </>
+              )}
             </>
           ) : (
             <>
@@ -572,9 +596,10 @@ function PayCardInner({
           )}
         </p>
         <p style={{ marginTop: 10, fontSize: "0.88rem", lineHeight: 1.55, color: "#697078" }}>
-          {lead.advisor.first} will email you within 1 business day with links
-          to schedule {standardEnrollStudentLabel(lead)}&apos;s diagnostic and the first
-          tutor introduction.
+          {lead.advisor.first} will email you within 1 business day with{" "}
+          {lead.bootcamp?.diagnosticComplete
+            ? "links to schedule your first tutoring session."
+            : `links to schedule ${standardEnrollStudentLabel(lead)}'s diagnostic and the first tutor introduction.`}
           {!succeeded.waivedDiagnostic ? ` A receipt is on its way to ${email}.` : null}
         </p>
         <p
@@ -776,6 +801,21 @@ function PayCardInner({
   );
 }
 
+function ProgramIntro({ lead }: { lead: StandardEnrollLead }) {
+  const paragraphs = lead.introParagraphs;
+  if (!paragraphs?.length) return null;
+
+  return (
+    <section className="std-program-intro">
+      <span className="eyebrow">Why this bootcamp</span>
+      <h3>Built for a tight timeline and a strong starting score</h3>
+      {paragraphs.map((p, i) => (
+        <p key={i}>{p}</p>
+      ))}
+    </section>
+  );
+}
+
 function SessionShot() {
   return (
     <section className="std-session">
@@ -876,12 +916,7 @@ function ReviewsMarquee() {
 }
 
 function FaqSection({ lead }: { lead: StandardEnrollLead }) {
-  const groups = buildStandardFaq(
-    getDiagListPrice(lead),
-    getWeeklyChargePrice(lead),
-    lead.faqPreset,
-    getDiagChargePrice(lead)
-  );
+  const groups = buildStandardFaqForLead(lead);
   return (
     <div className="std-faq">
       <h3>Frequently Asked Questions</h3>
@@ -965,6 +1000,7 @@ export function StandardEnrollPage({ lead, init }: Props) {
           <PayCard lead={lead} init={init} />
         </div>
       </div>
+      <ProgramIntro lead={lead} />
       <SessionShot />
       <ReviewsMarquee />
       <FaqSection lead={lead} />

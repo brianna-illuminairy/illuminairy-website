@@ -1,16 +1,28 @@
 # Active context
 
-*Last updated: 2026-06-17 (Shelly Sood follow-up implemented)*
+*Last updated: 2026-06-17 (Nada Naveed bootcamp page)*
 
 ## Resume here (start next chat with this)
 
-**Shelly Sood follow-up — built, ready for owner review + send.**
+**Nada Naveed / Soha bootcamp — built, ready for owner review + send.**
 
-- **Handoff:** [`docs/leads/shelly-sood-context.md`](../docs/leads/shelly-sood-context.md)
-- **Email draft:** [`docs/leads/shelly-sood-followup-email.md`](../docs/leads/shelly-sood-followup-email.md) — review before send
-- **Pages:** `/enroll/shelly-standard` ($249 + $99/wk) · `/enroll/shelly-aug22-bootcamp` ($249→$0 family bundle + $175/wk)
-- **Pages/email:** no child names, no older/younger assignment, no math-only scope until Shelly confirms in reply
-- **Owner before send:** CRM `attended_at` on lead `824ec40f-a4d9-4823-902a-8024740909d2`; sales note with both links; push `main` for prod URLs
+- **Handoff:** [`docs/leads/nada-naveed-context.md`](../docs/leads/nada-naveed-context.md)
+- **Page:** `/enroll/nada-soha-aug22-bootcamp` ($249→$0 diagnostic already done + $198→$149/wk, 3×45-min, 27 sessions)
+- **Owner before send:** CRM enrollment URL on lead `8bf26223-7e80-4497-9eaa-e6596cee7e47`; send link to Nada; push `main` for prod URL
+
+---
+
+## Nada Naveed bootcamp (2026-06-17) — shipped in code
+
+**Lead:** nj00@hotmail.com · CRM `8bf26223-7e80-4497-9eaa-e6596cee7e47`
+
+**Built:**
+- Route `app/enroll/nada-soha-aug22-bootcamp/` · Stripe `prod_UisrZC9oUpgzFS` @ $149/wk · coupon `zLHxYQCy` (NADA-DIAG)
+- FAQ preset `nada-bootcamp` (no score-increase / 15-pt language)
+- Bootcamp config fields on `StandardEnrollLead` (sessions/week, 45-min, diagnostic-complete)
+- `scripts/setup-nada-stripe.mjs`
+
+**Not done (owner):** Send enroll link, CRM note, deploy to prod
 
 ---
 

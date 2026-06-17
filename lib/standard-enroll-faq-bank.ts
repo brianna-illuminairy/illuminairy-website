@@ -31,7 +31,8 @@ export type StandardFaqId =
 export type StandardFaqPreset =
   | "standard-full"
   | "shelly-standard"
-  | "shelly-sprint";
+  | "shelly-sprint"
+  | "nada-bootcamp";
 
 export type StandardFaqPricing = {
   /** List or charge price shown on the pay card for the diagnostic line. */
@@ -41,6 +42,12 @@ export type StandardFaqPricing = {
   diagChargePrice?: number;
   /** When set, weekly-start FAQ uses sprint backward-planning copy. */
   sprintExamLabel?: string;
+  /** Label for waived diagnostic (replaces default family bundle wording). */
+  diagnosticWaivedLabel?: string;
+  /** When true, paying-today and weekly-start skip diagnostic booking steps. */
+  diagnosticComplete?: boolean;
+  /** Fixed session length copy for bootcamp presets (e.g. 45). */
+  sessionLengthMinutes?: number;
 };
 
 type FaqEntry = {
@@ -53,10 +60,16 @@ const FAQ_BANK: Record<StandardFaqId, FaqEntry> = {
     group: "Pricing & billing",
     item: (p) => {
       const charge = p.diagChargePrice ?? p.diagPrice;
-      const diagLine =
-        charge === 0
-          ? "Your diagnostic and personalized plan are included today at no charge (family bundle). We still run the full proctored diagnostic and build the improvement plan from it."
-          : `The $${charge} today covers your proctored diagnostic, the full analysis of where your student is losing points, and the personalized improvement plan built from it.`;
+      let diagLine: string;
+      if (charge === 0 && p.diagnosticComplete) {
+        const waivedLabel = p.diagnosticWaivedLabel ?? "Complimentary diagnostic";
+        diagLine = `Your student's diagnostic is already complete at no charge (${waivedLabel.toLowerCase()}). Your personalized plan was built from it. Today you enroll in weekly tutoring only.`;
+      } else if (charge === 0) {
+        const waivedLabel = p.diagnosticWaivedLabel ?? "family bundle";
+        diagLine = `Your diagnostic and personalized plan are included today at no charge (${waivedLabel}). We still run the full proctored diagnostic and build the improvement plan from it.`;
+      } else {
+        diagLine = `The $${charge} today covers your proctored diagnostic, the full analysis of where your student is losing points, and the personalized improvement plan built from it.`;
+      }
       return {
         q: "What exactly am I paying for today?",
         a: [
@@ -90,14 +103,20 @@ const FAQ_BANK: Record<StandardFaqId, FaqEntry> = {
         ? ` For the ${p.sprintExamLabel} test, we work backward from that date so every week between now and test day has a clear focus.`
         : "";
       const charge = p.diagChargePrice ?? p.diagPrice;
-      const setupLead =
-        charge === 0
-          ? "After you enroll, the next 7 days are setup:"
-          : `After you pay the $${charge}, the next 7 days are setup:`;
+      let setupBody: string;
+      if (p.diagnosticComplete) {
+        setupBody =
+          "After you enroll, the next 7 days are setup: we finalize your lesson schedule and book your first tutoring session. There are no sessions and no weekly charge during that time.";
+      } else if (charge === 0) {
+        setupBody =
+          "After you enroll, the next 7 days are setup: we run the diagnostic, get your plan back to you, and build and schedule your first lesson. There are no sessions and no weekly charge during that time.";
+      } else {
+        setupBody = `After you pay the $${charge}, the next 7 days are setup: we run the diagnostic, get your plan back to you, and build and schedule your first lesson. There are no sessions and no weekly charge during that time.`;
+      }
       return {
         q: `When does the tutoring and $${p.weeklyPrice} per week start?`,
         a: [
-          `The weekly fee does not start until your tutoring does. ${setupLead} we run the diagnostic, get your plan back to you, and build and schedule your first lesson. There are no sessions and no weekly charge during that time. Your first weekly charge is 7 days from today. After it starts, enrollment stays week to week, never a fixed contract.${sprintNote}`
+          `The weekly fee does not start until your tutoring does. ${setupBody} Your first weekly charge is 7 days from today. After it starts, enrollment stays week to week, never a fixed contract.${sprintNote}`
         ]
       };
     }
@@ -113,14 +132,25 @@ const FAQ_BANK: Record<StandardFaqId, FaqEntry> = {
   },
   "session-length": {
     group: "Sessions & scheduling",
-    item: () => ({
-      q: "How long is each tutoring session?",
-      a: [
-        "Each session is booked for one hour. We usually create about 45 minutes of lesson content for each session.",
-        "In rare cases, a student may finish before the full 45 minutes. More often, sessions run closer to the full hour because we may need to pause and reteach a concept, work through an example more slowly, or do more practice until the concept clicks.",
-        "We only end early if the student has completed that day's content and is ready to practice on their own."
-      ]
-    })
+    item: (p) => {
+      if (p.sessionLengthMinutes === 45) {
+        return {
+          q: "How long is each tutoring session?",
+          a: [
+            "Each session is 45 minutes, one-on-one with your student's tutor.",
+            "Sessions focus on the mistakes that cost the most points from the diagnostic. Her tutor walks through what went wrong, then she works similar problems until she gets them right on her own."
+          ]
+        };
+      }
+      return {
+        q: "How long is each tutoring session?",
+        a: [
+          "Each session is booked for one hour. We usually create about 45 minutes of lesson content for each session.",
+          "In rare cases, a student may finish before the full 45 minutes. More often, sessions run closer to the full hour because we may need to pause and reteach a concept, work through an example more slowly, or do more practice until the concept clicks.",
+          "We only end early if the student has completed that day's content and is ready to practice on their own."
+        ]
+      };
+    }
   },
   "sessions-per-week": {
     group: "Sessions & scheduling",
@@ -304,6 +334,15 @@ const PRESET_IDS: Record<StandardFaqPreset, StandardFaqId[]> = {
     "tutor-credentials",
     "same-tutor",
     "progress-reports"
+  ],
+  "nada-bootcamp": [
+    "paying-today",
+    "contract",
+    "weekly-start",
+    "tutor-credentials",
+    "same-tutor",
+    "progress-reports",
+    "session-length"
   ]
 };
 
@@ -345,21 +384,31 @@ export function resolveStandardFaq(
 ): StandardFaqGroup[] {
   const ids = PRESET_IDS[preset];
   const enriched: StandardFaqPricing = { ...pricing };
-  if (preset === "shelly-sprint") {
+  if (preset === "shelly-sprint" || preset === "nada-bootcamp") {
     enriched.sprintExamLabel = "August 22, 2026";
   }
   return buildGroupsFromIds(ids, enriched);
 }
 
+export type StandardFaqLeadContext = {
+  diagnosticWaivedLabel?: string;
+  diagnosticComplete?: boolean;
+  sessionLengthMinutes?: number;
+};
+
 export function buildStandardFaqFromPreset(
   preset: StandardFaqPreset | undefined,
   diagPrice: number,
   weeklyPrice: number,
-  diagChargePrice?: number
+  diagChargePrice?: number,
+  leadContext?: StandardFaqLeadContext
 ): StandardFaqGroup[] {
   return resolveStandardFaq(preset ?? "standard-full", {
     diagPrice,
     weeklyPrice,
-    diagChargePrice
+    diagChargePrice,
+    diagnosticWaivedLabel: leadContext?.diagnosticWaivedLabel,
+    diagnosticComplete: leadContext?.diagnosticComplete,
+    sessionLengthMinutes: leadContext?.sessionLengthMinutes
   });
 }
