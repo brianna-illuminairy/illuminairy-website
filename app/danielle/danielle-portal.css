@@ -139,6 +139,21 @@
   color: var(--danielle-muted);
 }
 
+.danielle-portal__footer p + p {
+  margin-top: 6px;
+}
+
+.danielle-portal__footer-link {
+  color: var(--danielle-green);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.danielle-portal__footer-link:hover {
+  color: var(--danielle-forest);
+}
+
 .danielle-portal--login {
   display: flex;
   flex-direction: column;

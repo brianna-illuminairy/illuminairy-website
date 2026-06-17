@@ -40,7 +40,8 @@ const nextConfig = {
   reactStrictMode: true,
   skipTrailingSlashRedirect: true,
   outputFileTracingIncludes: {
-    "/danielle/files/[slug]": ["./content/danielle/**/*"]
+    "/danielle/files/[slug]": ["./content/danielle/**/*"],
+    "/soha/files/[slug]": ["./content/soha/**/*"]
   },
   async redirects() {
     return [

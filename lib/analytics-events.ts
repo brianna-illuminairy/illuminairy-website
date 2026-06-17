@@ -30,6 +30,8 @@ export const AnalyticsEvents = {
   platformWaitlistSubmitted: "platform_waitlist_submitted",
   daniellePortalLogin: "danielle_portal_login",
   daniellePortalPageView: "danielle_portal_page_view",
+  sohaPortalLogin: "soha_portal_login",
+  sohaPortalPageView: "soha_portal_page_view",
   postCallSalesPageViewed: "post_call_sales_page_viewed",
   postCallPaymentClicked: "post_call_payment_clicked",
   postCallPaymentCompleted: "post_call_payment_completed",

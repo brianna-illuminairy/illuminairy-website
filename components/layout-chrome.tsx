@@ -10,6 +10,7 @@ export function LayoutChrome({ children }: { children: React.ReactNode }) {
     pathname?.startsWith("/plan") ||
     pathname?.startsWith("/quiz") ||
     pathname?.startsWith("/danielle") ||
+    pathname?.startsWith("/soha") ||
     pathname === "/privacy" ||
     pathname === "/terms" ||
     pathname === "/support-policy" ||
