@@ -223,7 +223,7 @@ function PlanCard({ lead }: { lead: StandardEnrollLead }) {
           <>
             August 22 SAT Bootcamp
             <br />
-            Diagnostic &amp; 4× Weekly Tutoring
+            Weekly Tutoring
           </>
         ) : (
           <>
