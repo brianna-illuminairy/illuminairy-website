@@ -98,14 +98,13 @@ p{font-size:15.5px;margin:10px 0}
 .session-table th,.session-table td{border:1px solid var(--line);padding:10px 12px;text-align:left}
 .session-table th{background:var(--sage);font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--forest)}
 .chart-wrap{position:relative;margin:18px 0 6px}
-.chart-tip{position:absolute;display:none;z-index:5;min-width:220px;padding:12px 14px;border-radius:12px;background:var(--navy);color:#eaf1ec;font-size:12px;line-height:1.45;box-shadow:0 12px 32px rgba(18,26,43,.28);pointer-events:none}
-.chart-tip.is-visible{display:block}
-.chart-tip b{display:block;color:#fff;font-size:13px;margin-bottom:6px}
-.chart-tip .row{display:flex;justify-content:space-between;gap:12px;padding:2px 0}
-.chart-tip .row span{color:#c9d3cc}
-.chart-tip .row strong{color:#8ad7a8;font-weight:600}
-.chart-tip .plan{color:#8ad7a8;font-size:11px;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.12)}
-.chart-hover{cursor:crosshair}
+.chart-wrap svg{display:block;width:100%;height:auto;min-height:300px;aspect-ratio:720/400}
+.chart-legend{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 14px;margin:10px 0 0;padding:0 4px}
+.chart-legend span{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--muted)}
+.chart-legend i{display:inline-block;width:20px;height:0;border-top:2px dashed;flex-shrink:0}
+.chart-legend b{color:var(--ink);font-weight:600}
+.chart-hint{font-size:13px;color:var(--muted);text-align:center;margin:8px 0 0}
+.chart-hint strong{color:var(--ink);font-weight:600}
 footer{margin-top:46px;text-align:center;color:var(--muted);font-size:12.5px}
 @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 section:nth-of-type(2){animation-delay:.05s}
@@ -134,28 +133,28 @@ section:nth-of-type(4){animation-delay:.15s}
     </div>
 
     <div class="chart-wrap" id="soha-chart-wrap">
-      <div class="chart-tip" id="soha-chart-tip" role="status" aria-live="polite"></div>
-      <svg class="chart-hover" id="soha-chart" viewBox="0 0 720 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Projected score from 1400 to 1525 by August 22">
-        <line x1="60" y1="56" x2="680" y2="56" stroke="#C9C0AC" stroke-width="1" stroke-dasharray="5 5"/>
-        <text x="680" y="48" text-anchor="end" font-size="12" fill="#9a927e" letter-spacing="1">AUG 22 · 1525</text>
+      <svg id="soha-chart" viewBox="0 0 720 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Projected score from 1400 to 1525 by August 22">
+        <g id="soha-chart-tiers"></g>
         <path id="soha-chart-fill" d="" fill="#2F8B5530"/>
         <polyline id="soha-chart-line" points="" fill="none" stroke="#234F37" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
         <circle id="soha-chart-start-dot" cx="60" cy="281" r="6" fill="#234F37"/>
         <circle id="soha-chart-end-dot" cx="680" cy="92" r="7" fill="#234F37"/>
-        <text x="58" y="301" font-family="Fraunces, Georgia, serif" font-size="20" font-weight="600" fill="#1F2733">1400</text>
-        <text x="690" y="76" text-anchor="end" font-family="Fraunces, Georgia, serif" font-size="22" font-weight="600" fill="#234F37">1525</text>
+        <text x="52" y="58" font-size="11" fill="#9a927e" text-anchor="end">1600</text>
+        <text x="58" y="358" font-family="Fraunces, Georgia, serif" font-size="20" font-weight="600" fill="#1F2733">1400</text>
+        <text x="690" y="88" text-anchor="end" font-family="Fraunces, Georgia, serif" font-size="22" font-weight="600" fill="#234F37">1525</text>
+        <text x="680" y="48" text-anchor="end" font-size="12" fill="#9a927e" letter-spacing="1">AUG 22</text>
         <g font-size="10" fill="#9a927e" letter-spacing="1" text-anchor="middle">
-          <text x="60" y="320">START</text>
-          <text x="198" y="320">WK 2</text>
-          <text x="336" y="320">WK 4</text>
-          <text x="473" y="320">WK 6</text>
-          <text x="611" y="320">WK 8</text>
-          <text x="680" y="320">AUG 22</text>
+          <text x="60" y="382">START</text>
+          <text x="198" y="382">WK 2</text>
+          <text x="336" y="382">WK 4</text>
+          <text x="473" y="382">WK 6</text>
+          <text x="611" y="382">WK 8</text>
+          <text x="680" y="382">AUG 22</text>
         </g>
-        <rect id="soha-chart-hit" x="60" y="40" width="620" height="270" fill="transparent"/>
       </svg>
+      <div class="chart-legend" id="soha-chart-legend"></div>
     </div>
-    <p style="font-size:13px;color:var(--muted);text-align:center;margin:2px 0 0">Plan line: <strong>+125 points</strong> over 9 weeks (~13.9/week) from 1400 to 1525. Hover the chart to compare +10 to +25 per week at that week. Week 2, 4, 6, and 8 are labels only; we check real scores at the full practice tests in Weeks 4 and 8.</p>
+    <p class="chart-hint"><strong>Solid line:</strong> this plan (~13.9/wk, 1400 to 1525). <strong>Dotted lines:</strong> Effortless (+5/wk) through Extreme (+20/wk). Week 2, 4, 6, and 8 are labels only. Full practice tests in Weeks 4 and 8.</p>
 
     <div class="stats">
       <div class="stat"><b>1480-1550</b><span>Score Goal</span></div>
@@ -166,11 +165,10 @@ section:nth-of-type(4){animation-delay:.15s}
 
     <div class="rating-label">How hard is this goal, and what is realistic?</div>
     <div class="pills">
-      <div class="pill"><b>Effortless</b><span>+10/wk</span><span class="sc">1490</span></div>
-      <div class="pill"><b>Realistic</b><span>+15/wk</span><span class="sc">1535</span></div>
-      <div class="pill"><b>Ambitious</b><span>+20/wk</span><span class="sc">1580</span></div>
-      <div class="pill"><b>Aggressive</b><span>+25/wk</span><span class="sc">1625</span></div>
-      <div class="pill"><b>Extreme</b><span>+30/wk</span><span class="sc">1670</span></div>
+      <div class="pill"><b>Effortless</b><span>+5/wk</span><span class="sc">1445</span></div>
+      <div class="pill"><b>Realistic</b><span>+10/wk</span><span class="sc">1490</span></div>
+      <div class="pill"><b>Ambitious</b><span>+15/wk</span><span class="sc">1535</span></div>
+      <div class="pill"><b>Extreme</b><span>+20/wk</span><span class="sc">1580</span></div>
     </div>
     <div class="honest"><b>What is realistic:</b> Soha is already at the upper 1300s to lower 1400s. Her gaps are concentrated, not spread across the whole SAT. With 3 tutoring sessions per week and consistent practice, we estimate she should be able to improve her score to somewhere between 1480 and 1550, with ~1525 being a good goal to aim for. We could push for a stretch goal of 1550; however, that requires near-perfect performance on test day.</div>
     <div class="honest" style="border-left-color:var(--green);background:var(--sage);color:#2c5740"><b>First-month checkpoint:</b> At the end of Week 4, I'd administer a full-length practice test to rescore her. If she achieves 1480 or higher, we'll know she is on track. If she is short, we will find out why and adjust our plan.</div>
@@ -250,19 +248,18 @@ section:nth-of-type(4){animation-delay:.15s}
   var START = 1400;
   var END = 1525;
   var WEEKS = 9;
-  var PLAN_PER_WK = (END - START) / WEEKS;
-  var RATES = [
-    { label: "+10/wk", rate: 10 },
-    { label: "+15/wk", rate: 15 },
-    { label: "+20/wk", rate: 20 },
-    { label: "+25/wk", rate: 25 }
+  var TIERS = [
+    { label: "Effortless", rate: 5, color: "#9a927e" },
+    { label: "Realistic", rate: 10, color: "#379BD0" },
+    { label: "Ambitious", rate: 15, color: "#C98A2B" },
+    { label: "Extreme", rate: 20, color: "#2F8B55" }
   ];
   var X0 = 60;
   var X1 = 680;
-  var Y_LO = 300;
-  var Y_HI = 56;
-  var SCORE_MIN = 1380;
-  var SCORE_MAX = 1680;
+  var Y_LO = 348;
+  var Y_HI = 52;
+  var SCORE_MIN = 1395;
+  var SCORE_MAX = 1610;
 
   function weekX(week) {
     return X0 + (week / WEEKS) * (X1 - X0);
@@ -272,27 +269,72 @@ section:nth-of-type(4){animation-delay:.15s}
     return Y_LO - ((score - SCORE_MIN) / (SCORE_MAX - SCORE_MIN)) * (Y_LO - Y_HI);
   }
 
-  function planScore(week) {
-    if (week <= 0) return START;
-    if (week >= WEEKS) return END;
-    return Math.round(START + PLAN_PER_WK * week);
+  function rateScore(week, rate) {
+    return Math.round(START + rate * week);
   }
 
-  var lineWeeks = [0, 2, 4, 6, 8, 9];
-  var points = lineWeeks.map(function (w) {
-    return weekX(w) + "," + scoreY(planScore(w));
-  });
+  var planPoints =
+    weekX(0) + "," + scoreY(START) + " " + weekX(WEEKS) + "," + scoreY(END);
+
+  var tierWeeks = [];
+  for (var w = 0; w <= WEEKS; w++) tierWeeks.push(w);
+
+  var tiersGroup = document.getElementById("soha-chart-tiers");
+  var legend = document.getElementById("soha-chart-legend");
+  if (tiersGroup) {
+    TIERS.forEach(function (tier) {
+      var pts = tierWeeks
+        .map(function (wk) {
+          return weekX(wk) + "," + scoreY(rateScore(wk, tier.rate));
+        })
+        .join(" ");
+      var poly = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+      poly.setAttribute("points", pts);
+      poly.setAttribute("fill", "none");
+      poly.setAttribute("stroke", tier.color);
+      poly.setAttribute("stroke-width", "2");
+      poly.setAttribute("stroke-dasharray", "6 5");
+      poly.setAttribute("stroke-linecap", "round");
+      poly.setAttribute("stroke-linejoin", "round");
+      tiersGroup.appendChild(poly);
+    });
+  }
+  if (legend) {
+    TIERS.forEach(function (tier) {
+      var endScore = rateScore(WEEKS, tier.rate);
+      var item = document.createElement("span");
+      item.innerHTML =
+        '<i style="border-color:' +
+        tier.color +
+        '"></i><b>' +
+        tier.label +
+        "</b> +" +
+        tier.rate +
+        "/wk · " +
+        endScore;
+      legend.appendChild(item);
+    });
+    var planItem = document.createElement("span");
+    planItem.innerHTML =
+      '<i style="border-color:#234F37;border-top-style:solid"></i><b>This plan</b> ~13.9/wk · ' +
+      END;
+    legend.appendChild(planItem);
+  }
 
   var line = document.getElementById("soha-chart-line");
   var fill = document.getElementById("soha-chart-fill");
-  if (line) line.setAttribute("points", points.join(" "));
+  if (line) line.setAttribute("points", planPoints);
   if (fill) {
     fill.setAttribute(
       "d",
       "M" +
-        points[0] +
+        weekX(0) +
+        "," +
+        scoreY(START) +
         " L" +
-        points.slice(1).join(" L") +
+        weekX(WEEKS) +
+        "," +
+        scoreY(END) +
         " L" +
         X1 +
         "," +
@@ -315,70 +357,6 @@ section:nth-of-type(4){animation-delay:.15s}
     endDot.setAttribute("cx", weekX(WEEKS));
     endDot.setAttribute("cy", scoreY(END));
   }
-
-  var wrap = document.getElementById("soha-chart-wrap");
-  var hit = document.getElementById("soha-chart-hit");
-  var tip = document.getElementById("soha-chart-tip");
-  if (!wrap || !hit || !tip) return;
-
-  function showTip(clientX, clientY, week) {
-    week = Math.max(0, Math.min(WEEKS, week));
-    var plan = planScore(week);
-    var weekLabel = week === 0 ? "Start" : week === WEEKS ? "Aug 22" : "Week " + week;
-    var html = "<b>" + weekLabel + " · plan " + plan + "</b>";
-    RATES.forEach(function (tier) {
-      var score = Math.round(START + tier.rate * week);
-      var diff = score - plan;
-      var diffText = (diff > 0 ? "+" : "") + diff;
-      html +=
-        '<div class="row"><span>' +
-        tier.label +
-        " → " +
-        score +
-        '</span><strong>' +
-        diffText +
-        "</strong></div>";
-    });
-    html += '<div class="plan">Plan pace: ~' + PLAN_PER_WK.toFixed(1) + " pts/wk</div>";
-    tip.innerHTML = html;
-    tip.classList.add("is-visible");
-
-    var rect = wrap.getBoundingClientRect();
-    var left = clientX - rect.left + 12;
-    var top = clientY - rect.top - 12;
-    if (left + 230 > rect.width) left = left - 250;
-    if (top < 8) top = 8;
-    tip.style.left = left + "px";
-    tip.style.top = top + "px";
-  }
-
-  function hideTip() {
-    tip.classList.remove("is-visible");
-  }
-
-  function weekFromEvent(evt) {
-    var svg = document.getElementById("soha-chart");
-    if (!svg || !svg.createSVGPoint) return 0;
-    var pt = svg.createSVGPoint();
-    pt.x = evt.clientX;
-    pt.y = evt.clientY;
-    var ctm = svg.getScreenCTM();
-    if (!ctm) return 0;
-    var p = pt.matrixTransform(ctm.inverse());
-    var ratio = (p.x - X0) / (X1 - X0);
-    return Math.round(Math.max(0, Math.min(1, ratio)) * WEEKS);
-  }
-
-  hit.addEventListener("mousemove", function (evt) {
-    showTip(evt.clientX, evt.clientY, weekFromEvent(evt));
-  });
-  hit.addEventListener("mouseleave", hideTip);
-  hit.addEventListener("touchmove", function (evt) {
-    if (!evt.touches[0]) return;
-    var t = evt.touches[0];
-    showTip(t.clientX, t.clientY, weekFromEvent(t));
-  });
-  hit.addEventListener("touchend", hideTip);
 })();
 </script>
 </body>
