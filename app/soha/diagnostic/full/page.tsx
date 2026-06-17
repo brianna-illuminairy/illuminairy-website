@@ -15,7 +15,7 @@ export default async function SohaDiagnosticFullPage() {
   return (
     <SohaPortalShell>
       <Link href="/soha/diagnostic" className="danielle-portal__back">
-        ← All diagnostic reports
+        ← Back to diagnostic analysis
       </Link>
       <div className="danielle-portal__page-head">
         <p className="danielle-portal__eyebrow">Illuminairy · Skill Diagnostic</p>

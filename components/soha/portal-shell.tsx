@@ -10,7 +10,7 @@ export const SOHA_BOOTCAMP_ENROLL_PATH = "/enroll/nada-soha-aug22-bootcamp";
 const NAV = [
   {
     href: "/soha/diagnostic",
-    label: "Diagnostics",
+    label: "Diagnostic",
     match: (path: string) => path.startsWith("/soha/diagnostic")
   },
   {

@@ -97,6 +97,15 @@ p{font-size:15.5px;margin:10px 0}
 .session-table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px}
 .session-table th,.session-table td{border:1px solid var(--line);padding:10px 12px;text-align:left}
 .session-table th{background:var(--sage);font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--forest)}
+.chart-wrap{position:relative;margin:18px 0 6px}
+.chart-tip{position:absolute;display:none;z-index:5;min-width:220px;padding:12px 14px;border-radius:12px;background:var(--navy);color:#eaf1ec;font-size:12px;line-height:1.45;box-shadow:0 12px 32px rgba(18,26,43,.28);pointer-events:none}
+.chart-tip.is-visible{display:block}
+.chart-tip b{display:block;color:#fff;font-size:13px;margin-bottom:6px}
+.chart-tip .row{display:flex;justify-content:space-between;gap:12px;padding:2px 0}
+.chart-tip .row span{color:#c9d3cc}
+.chart-tip .row strong{color:#8ad7a8;font-weight:600}
+.chart-tip .plan{color:#8ad7a8;font-size:11px;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.12)}
+.chart-hover{cursor:crosshair}
 footer{margin-top:46px;text-align:center;color:var(--muted);font-size:12.5px}
 @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 section:nth-of-type(2){animation-delay:.05s}
@@ -124,32 +133,29 @@ section:nth-of-type(4){animation-delay:.15s}
       <div class="right">9 weeks to Aug 22</div>
     </div>
 
-    <div class="chart">
-      <svg viewBox="0 0 720 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Projected score from 1405 to 1480-1550">
-        <line x1="60" y1="80" x2="680" y2="80" stroke="#C9C0AC" stroke-width="1" stroke-dasharray="5 5"/>
-        <text x="680" y="72" text-anchor="end" font-size="12" fill="#9a927e" letter-spacing="1">GOAL 1480-1550</text>
-        <path d="M60,260 L215,210 L370,155 L525,105 L680,80 L680,300 L60,300 Z" fill="#2F8B5530"/>
-        <polyline points="60,260 215,210 370,155 525,105 680,80" fill="none" stroke="#234F37" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
-        <circle cx="60" cy="260" r="5" fill="#234F37"/>
-        <circle cx="215" cy="210" r="6" fill="#2F8B55"/>
-        <circle cx="370" cy="155" r="4" fill="#2F8B55"/>
-        <circle cx="525" cy="105" r="4" fill="#2F8B55"/>
-        <circle cx="680" cy="80" r="7" fill="#234F37"/>
-        <text x="58" y="280" font-family="Fraunces, Georgia, serif" font-size="20" font-weight="600" fill="#1F2733">1405</text>
-        <text x="215" y="196" text-anchor="middle" font-size="14" font-weight="700" fill="#234F37">1440</text>
-        <text x="370" y="141" text-anchor="middle" font-size="14" font-weight="700" fill="#234F37">1480</text>
-        <text x="525" y="91" text-anchor="middle" font-size="14" font-weight="700" fill="#234F37">1520</text>
-        <text x="690" y="64" text-anchor="end" font-family="Fraunces, Georgia, serif" font-size="20" font-weight="600" fill="#234F37">1550</text>
+    <div class="chart-wrap" id="soha-chart-wrap">
+      <div class="chart-tip" id="soha-chart-tip" role="status" aria-live="polite"></div>
+      <svg class="chart-hover" id="soha-chart" viewBox="0 0 720 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Projected score from 1400 to 1525 by August 22">
+        <line x1="60" y1="56" x2="680" y2="56" stroke="#C9C0AC" stroke-width="1" stroke-dasharray="5 5"/>
+        <text x="680" y="48" text-anchor="end" font-size="12" fill="#9a927e" letter-spacing="1">AUG 22 · 1525</text>
+        <path id="soha-chart-fill" d="" fill="#2F8B5530"/>
+        <polyline id="soha-chart-line" points="" fill="none" stroke="#234F37" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+        <circle id="soha-chart-start-dot" cx="60" cy="281" r="6" fill="#234F37"/>
+        <circle id="soha-chart-end-dot" cx="680" cy="92" r="7" fill="#234F37"/>
+        <text x="58" y="301" font-family="Fraunces, Georgia, serif" font-size="20" font-weight="600" fill="#1F2733">1400</text>
+        <text x="690" y="76" text-anchor="end" font-family="Fraunces, Georgia, serif" font-size="22" font-weight="600" fill="#234F37">1525</text>
         <g font-size="10" fill="#9a927e" letter-spacing="1" text-anchor="middle">
           <text x="60" y="320">START</text>
-          <text x="215" y="320">WK 3</text>
-          <text x="370" y="320">WK 6</text>
-          <text x="525" y="320">WK 9</text>
+          <text x="198" y="320">WK 2</text>
+          <text x="336" y="320">WK 4</text>
+          <text x="473" y="320">WK 6</text>
+          <text x="611" y="320">WK 8</text>
           <text x="680" y="320">AUG 22</text>
         </g>
+        <rect id="soha-chart-hit" x="60" y="40" width="620" height="270" fill="transparent"/>
       </svg>
     </div>
-    <p style="font-size:13px;color:var(--muted);text-align:center;margin:2px 0 0">Each score above is where she should be at that check-in. We compare her real practice-test score to it to see if she is on track or if the plan needs adjusting.</p>
+    <p style="font-size:13px;color:var(--muted);text-align:center;margin:2px 0 0">Plan line: <strong>+125 points</strong> over 9 weeks (~13.9/week) from 1400 to 1525. Hover the chart to compare +10 to +25 per week at that week. Week 2, 4, 6, and 8 are labels only; we check real scores at the full practice tests in Weeks 4 and 8.</p>
 
     <div class="stats">
       <div class="stat"><b>1480-1550</b><span>Score Goal</span></div>
@@ -158,105 +164,30 @@ section:nth-of-type(4){animation-delay:.15s}
       <div class="stat"><b>3/wk</b><span>Tutoring Sessions</span></div>
     </div>
 
-    <div class="rating-label">Where she is now vs. where we are aiming</div>
+    <div class="rating-label">How hard is this goal, and what is realistic?</div>
     <div class="pills">
-      <div class="pill"><b>Current</b><span>Diagnostic</span><span class="sc">1380-1430</span></div>
-      <div class="pill on"><b>Primary</b><span>Target</span><span class="sc">1480</span></div>
-      <div class="pill"><b>Stretch</b><span>Target</span><span class="sc">1550</span></div>
+      <div class="pill"><b>Effortless</b><span>+10/wk</span><span class="sc">1490</span></div>
+      <div class="pill"><b>Realistic</b><span>+15/wk</span><span class="sc">1535</span></div>
+      <div class="pill"><b>Ambitious</b><span>+20/wk</span><span class="sc">1580</span></div>
+      <div class="pill"><b>Aggressive</b><span>+25/wk</span><span class="sc">1625</span></div>
+      <div class="pill"><b>Extreme</b><span>+30/wk</span><span class="sc">1670</span></div>
     </div>
-    <div class="honest"><b>What is realistic:</b> Soha is already in the upper 1300s to lower 1400s. Her gaps are concentrated, not spread across the whole SAT. With 3 tutoring sessions per week and consistent practice, reaching the upper 1400s by August 22 is realistic. The stretch to 1550 requires near-perfect performance on test day and depends on the work she puts in between sessions. Results vary by student.</div>
-    <div class="honest" style="border-left-color:var(--green);background:var(--sage);color:#2c5740"><b>First-month checkpoint:</b> full practice test at the end of Week 4. If she is on a 1480 trajectory, she is on track. If she is short, we find out why and adjust before the gap grows.</div>
+    <div class="honest"><b>What is realistic:</b> Soha is already at the upper 1300s to lower 1400s. Her gaps are concentrated, not spread across the whole SAT. With 3 tutoring sessions per week and consistent practice, we estimate she should be able to improve her score to somewhere between 1480 and 1550, with ~1525 being a good goal to aim for. We could push for a stretch goal of 1550; however, that requires near-perfect performance on test day.</div>
+    <div class="honest" style="border-left-color:var(--green);background:var(--sage);color:#2c5740"><b>First-month checkpoint:</b> At the end of Week 4, I'd administer a full-length practice test to rescore her. If she achieves 1480 or higher, we'll know she is on track. If she is short, we will find out why and adjust our plan.</div>
 
     <div class="skills-title">Skills holding her score back, biggest first</div>
-    <div class="srow"><div class="chip">01</div><div class="sname">Transitions<small>Reading and Writing. Easy miss in Module 1 (changed right to wrong on review). Highest routing risk.</small></div><div class="pts">01</div></div>
-    <div class="srow"><div class="chip">02</div><div class="sname">Boundaries<small>Reading and Writing. Medium and hard misses. Incomplete-clause habit.</small></div><div class="pts">02</div></div>
-    <div class="srow"><div class="chip">03</div><div class="sname">Command of Evidence<small>Reading and Writing. Two hard misses in Module 2. True but off-claim answers.</small></div><div class="pts">03</div></div>
-    <div class="srow"><div class="chip">04</div><div class="sname">Subject-verb agreement<small>Reading and Writing. Medium miss with interrupting phrase.</small></div><div class="pts">04</div></div>
-    <div class="srow"><div class="chip">05</div><div class="sname">Factoring and factor theorem<small>Math. Three misses. Calculator used when algebra by hand was required.</small></div><div class="pts">05</div></div>
-    <div class="srow"><div class="chip">06</div><div class="sname">Area and volume setup<small>Math. Cube surface area miss. Circles are solid.</small></div><div class="pts">06</div></div>
-    <div class="srow"><div class="chip">07</div><div class="sname">Hard algebra precision<small>Math. Collinear slopes. Same precision theme as Reading and Writing.</small></div><div class="pts">07</div></div>
-    <div class="total"><span>Attack order</span><b>7 skills</b></div>
+    <p class="note" style="text-align:center;margin:-4px 0 12px">Estimated point impact from her June 17 diagnostic misses, weighted by SAT difficulty and adaptive routing (Module 1 easy and medium misses move the score more than hard Module 2 misses). Total capped at 220 points (1600 minus her 1380 lower bound).</p>
+    <div class="srow"><div class="chip">01</div><div class="sname">Transitions<small>Reading and Writing. Easy miss in Module 1 (changed right to wrong on review). Highest routing risk.</small></div><div class="pts">+52</div></div>
+    <div class="srow"><div class="chip">02</div><div class="sname">Factoring and factor theorem<small>Math. Three misses. Calculator used when algebra by hand was required.</small></div><div class="pts">+48</div></div>
+    <div class="srow"><div class="chip">03</div><div class="sname">Boundaries<small>Reading and Writing. Medium and hard misses. Incomplete-clause habit.</small></div><div class="pts">+33</div></div>
+    <div class="srow"><div class="chip">04</div><div class="sname">Command of Evidence<small>Reading and Writing. Two hard misses in Module 2. True but off-claim answers.</small></div><div class="pts">+22</div></div>
+    <div class="srow"><div class="chip">05</div><div class="sname">Subject-verb agreement<small>Reading and Writing. Medium miss with interrupting phrase.</small></div><div class="pts">+16</div></div>
+    <div class="srow"><div class="chip">06</div><div class="sname">Area and volume setup<small>Math. Cube surface area miss. Circles are solid.</small></div><div class="pts">+16</div></div>
+    <div class="srow"><div class="chip">07</div><div class="sname">Hard algebra precision<small>Math. Collinear slopes. Same precision theme as Reading and Writing.</small></div><div class="pts">+14</div></div>
+    <div class="srow"><div class="chip">+</div><div class="sname">Smaller single misses<small>Percentages / proportional reasoning (Math Module 2). Less frequent on the SAT.</small></div><div class="pts">+13</div></div>
+    <div class="total"><span>Total recoverable</span><b>+214</b></div>
 
     <div class="effort"><span>3 sessions / week</span><span>~110 questions / week</span><span>~1,000 questions total</span></div>
-  </div>
-</section>
-
-<!-- DIAGNOSTIC ANALYSIS -->
-<section>
-  <div class="eyebrow">The Diagnostic</div>
-  <h2>What the diagnostic <span class="accent">shows</span></h2>
-
-  <div class="callout">
-    <h3>Overall performance (June 17, 2026)</h3>
-    <p>Full-length diagnostic, all four modules complete. Total score: <span class="key">1380 to 1430</span>. Reading and Writing: <span class="key">670 to 690</span> (Module 1: 25/27, Module 2: 22/27). Math: <span class="key">710 to 740</span> (Module 1: 21/22, Module 2: 17/22).</p>
-    <p>Math is stronger than Reading and Writing. By difficulty: Reading and Writing 47/54 (88% easy, 87% medium, 87% hard). Math 38/44 (100% easy, 88% medium, 73% hard).</p>
-  </div>
-
-  <div class="callout" style="margin-top:12px">
-    <h3>Adaptive routing risk</h3>
-    <p>The SAT is adaptive. Performance on Module 1 decides which Module 2 she gets. She earned the harder Module 2 in both sections, which is good. But she missed <span class="key">4 easy and medium questions</span> in Reading and Writing. If she performs similarly on test day, she could miss the cutoff for the hard Module 2 in Reading and Writing. That can cap her score for the whole section by up to <span class="key">130 points</span>.</p>
-    <p>Protecting Module 1 accuracy on easy and medium Reading and Writing questions is a first priority, not just hard questions at the end.</p>
-  </div>
-
-  <div class="cost">
-    <div class="ch"><h4>1. Transitions</h4><div class="tail"><span class="fix high">Priority 1</span></div></div>
-    <p>Module 1 Q22 (easy): she chose "For example," but the second sentence contradicts the first. Correct: "In contrast." She changed this answer during review from likely-correct to wrong. That is her single most expensive miss in the section.</p>
-    <p>Module 2 Q23 (medium): she chose "Additionally," but the sentence moves to a final interpretation. Correct: "Ultimately."</p>
-    <p class="fixline"><b>How we fix it:</b> label the relationship before reading the choices: contrast, example, result, addition, conclusion, or alternative. Then pick the word that matches.</p>
-  </div>
-
-  <div class="cost">
-    <div class="ch"><h4>2. Boundaries</h4><div class="tail"><span class="fix high">Priority 2</span></div></div>
-    <p>Module 1 Q18 (medium): she chose a semicolon plus participle phrase ("radioactivity; earning"). The correct answer added "and she earned," making a second full clause.</p>
-    <p>Module 2 Q20 (hard): similar incomplete-clause issue.</p>
-    <p class="fixline"><b>How we fix it:</b> at every punctuation choice, check whether each side is a complete sentence on its own.</p>
-  </div>
-
-  <div class="cost">
-    <div class="ch"><h4>3. Command of Evidence</h4><div class="tail"><span class="fix high">Priority 3</span></div></div>
-    <p>Module 2 Q12 and Q14 (both hard): she picked answers that were factually tied to the passage but not matched to the specific claim. On the CO2 table she focused on process emissions when the claim was about total emissions. On the Kurosawa question she picked a true fact about scholars when the claim needed evidence about his own hybrid approach.</p>
-    <p class="fixline"><b>How we fix it:</b> restate the exact claim before reading the choices. Reject anything that is true but off-claim.</p>
-  </div>
-
-  <div class="cost">
-    <div class="ch"><h4>4. Subject-verb agreement</h4><div class="tail"><span class="fix mid">Priority 4</span></div></div>
-    <p>Module 2 Q22 (medium): she chose "has remained," matching the nearby singular name Henrietta Swan Leavitt. The real subject was the plural "observations."</p>
-    <p class="fixline"><b>How we fix it:</b> cross out the long descriptive phrase in the middle and match the verb to the real subject.</p>
-  </div>
-
-  <div class="flag">Across every Reading and Writing miss, the core issue is the same: she chooses answers that are locally plausible but do not satisfy the full sentence or the full claim.</div>
-
-  <div class="cost">
-    <div class="ch"><h4>5. Calculator discipline and factoring</h4><div class="tail"><span class="fix high">Math priority 1</span></div></div>
-    <p>She is strong with Desmos, but she runs to the calculator on problems that need algebra by hand. Three of six math misses are factoring or factor-theorem questions.</p>
-    <p>Module 2 Q13: 9x³ - 6x² - 24x, 3x + k is a factor. Factor: 3x(3x² - 2x - 8) = 3x(x - 2)(3x + 4), so k = 4. She graphed and entered 13.15 instead.</p>
-    <p>Module 2 Q20: factor theorem gives a = 3/2. She answered 5/2. Module 1 Q9: she spent 333 seconds on a nonlinear equation that needed factoring and zero-product form.</p>
-    <p class="fixline"><b>How we fix it:</b> when she sees "is a factor of," that is a by-hand trigger. Drill GCF first, factor by grouping, ac-method, factor theorem with substitution, and zero-product property until automatic.</p>
-  </div>
-
-  <div class="cost">
-    <div class="ch"><h4>6. Area and volume setup</h4><div class="tail"><span class="fix mid">Math priority 2</span></div></div>
-    <p>Module 2 Q12: cube volume 125,000, find surface area. Side = cube root of 125,000 = 50. Surface area = 6 × 50² = 15,000. She answered 25,000. Cube volume and surface-area relationships are not on the SAT formula sheet.</p>
-    <p>She got every circle question right. This is specifically an area-and-volume setup gap, not geometry across the board.</p>
-    <p class="fixline"><b>How we fix it:</b> focused geometry concept refresh so she has the setup, not only the formula sheet and calculator.</p>
-  </div>
-
-  <div class="cost">
-    <div class="ch"><h4>7. Hard algebra precision</h4><div class="tail"><span class="fix steady">Later in plan</span></div></div>
-    <p>Module 2 Q16: three collinear points, set two slopes equal and simplify to ak + bh = hk. She picked a manipulation that did not simplify correctly.</p>
-    <p class="fixline"><b>How we fix it:</b> same precision habit as Reading and Writing: set up correctly before manipulating.</p>
-  </div>
-
-  <div class="cost">
-    <div class="ch"><h4>8. Multi-step proportional reasoning</h4><div class="tail"><span class="fix steady">Closer to test day</span></div></div>
-    <p>Module 2 Q22: profit and loss question (sell part at a loss, find profit percent needed on the rest to net 20%). Very teachable, but these appear less often on the SAT. Scheduled after factoring is solid.</p>
-  </div>
-
-  <div class="callout" style="margin-top:12px">
-    <h3>Test-taking behavior</h3>
-    <p><span class="key">Keep:</span> fast pace, mark for review, Desmos when the problem suits it, formula sheet, scratch paper when needed.</p>
-    <p><span class="key">Adjust:</span> she finished early and reviewed every Reading and Writing question. On the one answer she changed (Module 1 Q22), she went from right to wrong. One careful pass; mark for review only when truly unsure; bank leftover time for Math.</p>
-    <p><span class="key">Adjust:</span> default to calculator on algebra problems. Put the calculator down when the question type requires factoring or structure recognition.</p>
   </div>
 </section>
 
@@ -269,12 +200,12 @@ section:nth-of-type(4){animation-delay:.15s}
   <table class="session-table">
     <thead><tr><th>Session</th><th>What happens</th></tr></thead>
     <tbody>
-      <tr><td>Session 1</td><td>Lesson + reteach missed diagnostic questions + hard-only practice set on the week's focus skill</td></tr>
-      <tr><td>Session 2</td><td>Same skill family, harder variants + independent practice until 4 correct in a row + maintenance block (~15-20 hard questions) on the other section</td></tr>
-      <tr><td>Session 3</td><td>Timed full module (focus section) + review every miss</td></tr>
+      <tr><td>Session 1</td><td>Lesson + reteach missed diagnostic questions on the week's topic + practice set</td></tr>
+      <tr><td>Session 2</td><td>Harder variants on the same topic until 4 correct in a row</td></tr>
+      <tr><td>Session 3</td><td>More practice on the same topic, or a timed module / practice test when scheduled that week</td></tr>
     </tbody>
   </table>
-  <p class="note">Weeks alternate between Reading and Writing focus and Math focus, starting with Reading and Writing. On focus weeks: 2 sessions on the focus section (hard questions only) plus 1 maintenance block on the other section. Between sessions: ~110 practice questions per week, ~1,000 total by test day.</p>
+  <p class="note">Each week is one topic only. All three sessions and all practice that week stay on that topic until she hits 95% on easy, medium, and hard. Between sessions: ~110 practice questions per week, ~1,000 total by test day.</p>
 
   <p class="subh">Every skill is taught the same way:</p>
   <div class="steps">
@@ -294,11 +225,11 @@ section:nth-of-type(4){animation-delay:.15s}
     <div class="tgt"><b>95%</b><span>Hard</span></div>
   </div>
 
-  <p class="subh">Full-length practice tests:</p>
+  <p class="subh">Check-ins:</p>
   <ul class="checks">
-    <li><b>End of Week 4.</b> First big retake. Target: on a 1480 trajectory.</li>
-    <li><b>Week 7.</b> Midpoint retake. Check hard-question accuracy and routing protection.</li>
-    <li><b>Week 9.</b> Final full practice test under real conditions, then lighter days into the test.</li>
+    <li><b>Week 4.</b> First full practice test. Target: 1480 or higher.</li>
+    <li><b>Week 8.</b> Second full practice test, then review every miss from the diagnostic and both tests.</li>
+    <li><b>Week 9.</b> Final review and practice problems. Test-day pacing and rest going into August 22.</li>
   </ul>
 </section>
 
@@ -307,24 +238,160 @@ section:nth-of-type(4){animation-delay:.15s}
   <div class="eyebrow">The Schedule</div>
   <h2>Week by week</h2>
 
-  <div class="phase">Weeks 1 to 4 · Reading and Writing gaps first, then Math foundations</div>
-  <div class="week"><div class="wk">Wk 1</div><div class="wd"><b>Reading and Writing.</b> Session 1: Transitions (hard drills). Session 2: Boundaries (hard drills) + Math maintenance (15-20 hard). Session 3: Timed Reading and Writing module + review. <span class="tag">~110 questions</span></div></div>
-  <div class="week"><div class="wk">Wk 2</div><div class="wd"><b>Math.</b> Session 1: Factoring + factor theorem. Session 2: Calculator discipline rules + Reading and Writing maintenance (15-20 hard). Session 3: Timed Math module + review. <span class="tag">~110 questions</span></div></div>
-  <div class="week"><div class="wk">Wk 3</div><div class="wd"><b>Reading and Writing.</b> Session 1: Command of Evidence. Session 2: Subject-verb agreement + Math maintenance. Session 3: Timed Reading and Writing module + review. <span class="tag">~110 questions</span></div></div>
-  <div class="week"><div class="wk">Wk 4</div><div class="wd"><b>Math.</b> Session 1: Zero-product / nonlinear setup. Session 2: Area and volume refresh + Reading and Writing maintenance. Session 3: Timed Math module + review. <span class="tag">Full practice test · ~120 questions</span></div></div>
+  <div class="phase">Weeks 1 to 4 · Reading and Writing, highest impact first</div>
+  <div class="week"><div class="wk">Wk 1</div><div class="wd"><b>All transitions.</b> Every session: lesson, diagnostic reteach, and hard-only transition practice until 95% on easy, medium, and hard. <span class="tag">~110 questions</span></div></div>
+  <div class="week"><div class="wk">Wk 2</div><div class="wd"><b>All factoring and factor theorem.</b> Every session: GCF, grouping, ac-method, factor theorem, zero-product form, and calculator-by-hand rules. Reteach all three diagnostic misses. <span class="tag">~110 questions</span></div></div>
+  <div class="week"><div class="wk">Wk 3</div><div class="wd"><b>All boundaries.</b> Every session: complete-clause checks at every punctuation choice. Reteach Module 1 and Module 2 diagnostic misses. <span class="tag">~110 questions</span></div></div>
+  <div class="week"><div class="wk">Wk 4</div><div class="wd"><b>All command of evidence.</b> Every session: restate the claim first, reject true-but-off-claim answers. Reteach both Module 2 diagnostic misses. Session 3: first full practice test. <span class="tag">Full practice test · ~120 questions</span></div></div>
 
-  <div class="phase">Weeks 5 to 7 · Retest weak skills, protect routing</div>
-  <div class="week"><div class="wk">Wk 5</div><div class="wd"><b>Reading and Writing.</b> Session 1: Transitions retest at hard. Session 2: Boundaries retest at hard + Math maintenance. Session 3: Timed Reading and Writing module + review. <span class="tag">~110 questions</span></div></div>
-  <div class="week"><div class="wk">Wk 6</div><div class="wd"><b>Math.</b> Session 1: Factoring edge cases. Session 2: Hard equivalent expressions + Reading and Writing maintenance. Session 3: Timed Math module + review. <span class="tag">~110 questions</span></div></div>
-  <div class="week"><div class="wk">Wk 7</div><div class="wd"><b>Reading and Writing.</b> Session 1: Mixed hard (routing protection). Session 2: Review habit fixes (no second-pass traps) + Math maintenance. Session 3: Timed Reading and Writing module + review. <span class="tag">Mid retake · ~120 questions</span></div></div>
+  <div class="phase">Weeks 5 to 7 · Math depth, then last Reading and Writing skill</div>
+  <div class="week"><div class="wk">Wk 5</div><div class="wd"><b>All geometry.</b> Every session: area and volume setup (cube surface area, formula-sheet gaps). Circles stay in maintenance only; she already got every circle question right. <span class="tag">~110 questions</span></div></div>
+  <div class="week"><div class="wk">Wk 6</div><div class="wd"><b>All nonlinear systems and hard advanced math.</b> Every session: nonlinear equations, equivalent expressions, collinear slopes, and multi-step proportional reasoning. The hardest math problem types from her diagnostic. <span class="tag">~110 questions</span></div></div>
+  <div class="week"><div class="wk">Wk 7</div><div class="wd"><b>All subject-verb agreement.</b> Every session: cross out interrupting phrases and match the verb to the real subject. Reteach her Module 2 diagnostic miss. <span class="tag">~110 questions</span></div></div>
 
-  <div class="phase">Weeks 8 to 9 · Final gaps and test day</div>
-  <div class="week"><div class="wk">Wk 8</div><div class="wd"><b>Math.</b> Session 1: Collinear slopes (hard algebra). Session 2: Proportional multi-step + Reading and Writing maintenance. Session 3: Timed Math module + review. <span class="tag">~110 questions</span></div></div>
-  <div class="week"><div class="wk">Wk 9</div><div class="wd"><b>Both sections.</b> Session 1: Light mixed review. Session 2: Test-day plan and rest strategy. Session 3: Final full practice test under real conditions. <span class="tag">Final retake · ~100 questions</span></div></div>
+  <div class="phase">Weeks 8 to 9 · Second practice test and final review</div>
+  <div class="week"><div class="wk">Wk 8</div><div class="wd"><b>Practice test and review misses.</b> Full-length practice test, then go through every miss from the diagnostic and from the Week 4 and Week 8 tests. Adjust anything still below 95%. <span class="tag">Full practice test · ~120 questions</span></div></div>
+  <div class="week"><div class="wk">Wk 9</div><div class="wd"><b>Final review and practice problems.</b> Mixed review across all skills, hard problem sets in Reading and Writing and Math, and test-day plan going into August 22. <span class="tag">~100 questions</span></div></div>
 </section>
 
 <footer>Illuminairy · Personalized SAT Plan for Soha Naveed · Built from her June 17 diagnostic · Weekly accuracy and score updates sent to you and Soha</footer>
 
 </div>
+<script>
+(function () {
+  var START = 1400;
+  var END = 1525;
+  var WEEKS = 9;
+  var PLAN_PER_WK = (END - START) / WEEKS;
+  var RATES = [
+    { label: "+10/wk", rate: 10 },
+    { label: "+15/wk", rate: 15 },
+    { label: "+20/wk", rate: 20 },
+    { label: "+25/wk", rate: 25 }
+  ];
+  var X0 = 60;
+  var X1 = 680;
+  var Y_LO = 300;
+  var Y_HI = 56;
+  var SCORE_MIN = 1380;
+  var SCORE_MAX = 1680;
+
+  function weekX(week) {
+    return X0 + (week / WEEKS) * (X1 - X0);
+  }
+
+  function scoreY(score) {
+    return Y_LO - ((score - SCORE_MIN) / (SCORE_MAX - SCORE_MIN)) * (Y_LO - Y_HI);
+  }
+
+  function planScore(week) {
+    if (week <= 0) return START;
+    if (week >= WEEKS) return END;
+    return Math.round(START + PLAN_PER_WK * week);
+  }
+
+  var lineWeeks = [0, 2, 4, 6, 8, 9];
+  var points = lineWeeks.map(function (w) {
+    return weekX(w) + "," + scoreY(planScore(w));
+  });
+
+  var line = document.getElementById("soha-chart-line");
+  var fill = document.getElementById("soha-chart-fill");
+  if (line) line.setAttribute("points", points.join(" "));
+  if (fill) {
+    fill.setAttribute(
+      "d",
+      "M" +
+        points[0] +
+        " L" +
+        points.slice(1).join(" L") +
+        " L" +
+        X1 +
+        "," +
+        Y_LO +
+        " L" +
+        X0 +
+        "," +
+        Y_LO +
+        " Z"
+    );
+  }
+
+  var startDot = document.getElementById("soha-chart-start-dot");
+  var endDot = document.getElementById("soha-chart-end-dot");
+  if (startDot) {
+    startDot.setAttribute("cx", weekX(0));
+    startDot.setAttribute("cy", scoreY(START));
+  }
+  if (endDot) {
+    endDot.setAttribute("cx", weekX(WEEKS));
+    endDot.setAttribute("cy", scoreY(END));
+  }
+
+  var wrap = document.getElementById("soha-chart-wrap");
+  var hit = document.getElementById("soha-chart-hit");
+  var tip = document.getElementById("soha-chart-tip");
+  if (!wrap || !hit || !tip) return;
+
+  function showTip(clientX, clientY, week) {
+    week = Math.max(0, Math.min(WEEKS, week));
+    var plan = planScore(week);
+    var weekLabel = week === 0 ? "Start" : week === WEEKS ? "Aug 22" : "Week " + week;
+    var html = "<b>" + weekLabel + " · plan " + plan + "</b>";
+    RATES.forEach(function (tier) {
+      var score = Math.round(START + tier.rate * week);
+      var diff = score - plan;
+      var diffText = (diff > 0 ? "+" : "") + diff;
+      html +=
+        '<div class="row"><span>' +
+        tier.label +
+        " → " +
+        score +
+        '</span><strong>' +
+        diffText +
+        "</strong></div>";
+    });
+    html += '<div class="plan">Plan pace: ~' + PLAN_PER_WK.toFixed(1) + " pts/wk</div>";
+    tip.innerHTML = html;
+    tip.classList.add("is-visible");
+
+    var rect = wrap.getBoundingClientRect();
+    var left = clientX - rect.left + 12;
+    var top = clientY - rect.top - 12;
+    if (left + 230 > rect.width) left = left - 250;
+    if (top < 8) top = 8;
+    tip.style.left = left + "px";
+    tip.style.top = top + "px";
+  }
+
+  function hideTip() {
+    tip.classList.remove("is-visible");
+  }
+
+  function weekFromEvent(evt) {
+    var svg = document.getElementById("soha-chart");
+    if (!svg || !svg.createSVGPoint) return 0;
+    var pt = svg.createSVGPoint();
+    pt.x = evt.clientX;
+    pt.y = evt.clientY;
+    var ctm = svg.getScreenCTM();
+    if (!ctm) return 0;
+    var p = pt.matrixTransform(ctm.inverse());
+    var ratio = (p.x - X0) / (X1 - X0);
+    return Math.round(Math.max(0, Math.min(1, ratio)) * WEEKS);
+  }
+
+  hit.addEventListener("mousemove", function (evt) {
+    showTip(evt.clientX, evt.clientY, weekFromEvent(evt));
+  });
+  hit.addEventListener("mouseleave", hideTip);
+  hit.addEventListener("touchmove", function (evt) {
+    if (!evt.touches[0]) return;
+    var t = evt.touches[0];
+    showTip(t.clientX, t.clientY, weekFromEvent(t));
+  });
+  hit.addEventListener("touchend", hideTip);
+})();
+</script>
 </body>
 </html>
