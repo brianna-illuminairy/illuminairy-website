@@ -21,7 +21,7 @@ import {
 
 export type { StandardFaqPreset };
 
-export type StandardProgramVariant = "standard" | "aug22-sprint";
+export type StandardProgramVariant = "standard" | "aug22-bootcamp";
 
 export type StandardDiagnosticPromo = {
   /** List price shown struck through on the pay card. */
@@ -170,8 +170,8 @@ export const SHELLY_INCLUDED: StandardIncludedItem[] = STANDARD_INCLUDED.map(
       : it
 );
 
-/** Sprint variant: 4×/wk included list for August 22 SAT push. */
-export const SHELLY_SPRINT_INCLUDED: StandardIncludedItem[] =
+/** Bootcamp variant: 4×/wk included list for August 22 SAT push. */
+export const SHELLY_BOOTCAMP_INCLUDED: StandardIncludedItem[] =
   SHELLY_INCLUDED.map((it) =>
     it.nm === "Twice-Weekly SAT Tutoring"
       ? {
@@ -463,8 +463,8 @@ const shellyStandard: StandardEnrollLead = {
   programVariant: "standard"
 };
 
-const shellyAug22Sprint: StandardEnrollLead = {
-  slug: "shelly-aug22-sprint",
+const shellyAug22Bootcamp: StandardEnrollLead = {
+  slug: "shelly-aug22-bootcamp",
   parent: {
     first: "Shelly",
     last: "Sood",
@@ -491,8 +491,8 @@ const shellyAug22Sprint: StandardEnrollLead = {
   },
   call: { dateLabel: "June 16, 2026" },
   faqPreset: "shelly-sprint",
-  includedOverride: SHELLY_SPRINT_INCLUDED,
-  programVariant: "aug22-sprint",
+  includedOverride: SHELLY_BOOTCAMP_INCLUDED,
+  programVariant: "aug22-bootcamp",
   diagnosticPromo: {
     listPrice: 249,
     chargePrice: 0,
@@ -511,7 +511,7 @@ export const standardEnrollLeads: Record<string, StandardEnrollLead> = {
   [michelleMichaela.slug]: michelleMichaela,
   [moniqueKylan.slug]: moniqueKylan,
   [shellyStandard.slug]: shellyStandard,
-  [shellyAug22Sprint.slug]: shellyAug22Sprint
+  [shellyAug22Bootcamp.slug]: shellyAug22Bootcamp
 };
 
 export function getStandardEnrollLead(

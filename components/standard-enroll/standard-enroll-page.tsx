@@ -94,8 +94,12 @@ function getWeeklyListPrice(lead: StandardEnrollLead): number {
   return lead.weeklyPromo?.listPrice ?? lead.pricing.weeklyPrice;
 }
 
+function isAug22Bootcamp(lead: StandardEnrollLead): boolean {
+  return lead.programVariant === "aug22-bootcamp";
+}
+
 function weeklyTutoringLabel(lead: StandardEnrollLead): string {
-  if (lead.programVariant === "aug22-sprint") {
+  if (isAug22Bootcamp(lead)) {
     return "Weekly Tutoring 4×/wk";
   }
   return "Weekly Tutoring 2×/wk";
@@ -188,7 +192,7 @@ function ProgressStrip() {
 }
 
 function MobileCheckoutIntro({ lead }: { lead: StandardEnrollLead }) {
-  const isSprint = lead.programVariant === "aug22-sprint";
+  const isBootcamp = isAug22Bootcamp(lead);
   const weekly = getWeeklyChargePrice(lead);
   const diagCharge = getDiagChargePrice(lead);
   const diagLine =
@@ -199,7 +203,7 @@ function MobileCheckoutIntro({ lead }: { lead: StandardEnrollLead }) {
   return (
     <div className="std-mobile-intro">
       <h1>
-        {isSprint ? "August 22 SAT Sprint" : "SAT Diagnostic & Weekly Tutoring"}
+        {isBootcamp ? "August 22 SAT Bootcamp" : "SAT Diagnostic & Weekly Tutoring"}
       </h1>
       <p>
         For {lead.parent.first}. {diagLine}. Weekly billing starts 7 days from
@@ -211,13 +215,13 @@ function MobileCheckoutIntro({ lead }: { lead: StandardEnrollLead }) {
 
 function PlanCard({ lead }: { lead: StandardEnrollLead }) {
   const included = getIncludedItems(lead);
-  const isSprint = lead.programVariant === "aug22-sprint";
+  const isBootcamp = isAug22Bootcamp(lead);
   return (
     <aside className="std-summary">
       <h2>
-        {isSprint ? (
+        {isBootcamp ? (
           <>
-            August 22 SAT Sprint
+            August 22 SAT Bootcamp
             <br />
             Diagnostic &amp; 4× Weekly Tutoring
           </>

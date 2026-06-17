@@ -37,8 +37,8 @@
 ## Deliverables (built 2026-06-17)
 
 1. **Follow-up email draft:** [`shelly-sood-followup-email.md`](./shelly-sood-followup-email.md) — review before send
-2. **`/enroll/shelly-standard`** — standard enroll; `faqPreset: shelly-standard` (8 FAQs); $249 + $99/wk; 1:1 included override; no student name on page (confirm in email)
-3. **`/enroll/shelly-aug22-sprint`** — August 22 SAT Sprint; 4×/wk **$198 → $175/wk** (family discount on page); diagnostic $249 → $0 (family bundle); `faqPreset: shelly-sprint`
+2. **`/enroll/shelly-standard`** — standard enroll; `faqPreset: shelly-standard` (10 FAQs); $249 + $99/wk; 1:1 included override; no student name on page (confirm in email)
+3. **`/enroll/shelly-aug22-bootcamp`** — August 22 SAT Bootcamp; 4×/wk **$198 → $175/wk** (family discount on page); diagnostic $249 → $0 (family bundle); `faqPreset: shelly-sprint`
 4. **`lib/standard-enroll-faq-bank.ts`** — SSOT FAQ ids + presets
 5. **FAQ bank additions:** `contract`; expanded `tutor-credentials`
 
@@ -71,7 +71,7 @@ Setup script: `node --env-file=.env.local scripts/setup-shelly-stripe.mjs`
 | No contract | Contract FAQ |
 | Tutor grad students, 1450+, shadowing, section specialists | Expanded tutor FAQ |
 | Two diags / $249 bundle | Email + checkout metadata |
-| 4×/wk intensive (August sprint plan) | Sprint pay card only |
+| 4×/wk intensive (August bootcamp plan) | Bootcamp pay card only |
 
 ## Do not use
 

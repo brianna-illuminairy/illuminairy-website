@@ -97,7 +97,7 @@ const FAQ_BANK: Record<StandardFaqId, FaqEntry> = {
       return {
         q: `When does the tutoring and $${p.weeklyPrice} per week start?`,
         a: [
-          `The weekly fee does not start until your tutoring does. ${setupLead} we run the diagnostic, get your plan back to you, and build and schedule your first lesson. There are no sessions and no weekly charge during that time. Your first weekly charge is 7 days from today, and you can cancel anytime before then. After it starts, enrollment stays week to week, never a fixed contract.${sprintNote}`
+          `The weekly fee does not start until your tutoring does. ${setupLead} we run the diagnostic, get your plan back to you, and build and schedule your first lesson. There are no sessions and no weekly charge during that time. Your first weekly charge is 7 days from today. After it starts, enrollment stays week to week, never a fixed contract.${sprintNote}`
         ]
       };
     }
@@ -149,7 +149,7 @@ const FAQ_BANK: Record<StandardFaqId, FaqEntry> = {
       q: "Will my student have the same tutor each week?",
       a: [
         "We believe the relationship between the tutor and student matters. Over time, the tutor learns how the student thinks, where they get stuck, and what kind of explanation works best for them. The student also gets more comfortable asking questions and saying when something does not make sense.",
-        "Because of this, we aim to give each student one primary Math tutor and one primary Reading and Writing tutor. Each tutor scored 750 or higher on the SAT section they teach. This gives your student both consistency and subject-specific support."
+        "Because of this, your student works with the same tutor week to week for each subject we cover. If tutoring is math-only or Reading and Writing only, they have one tutor for that section. If we cover both sections, they have no more than two tutors: one for Reading and Writing and one for Math. Each tutor scored 750 or higher on the SAT section they teach. That gives your student consistency and subject-specific support where it applies."
       ]
     })
   },
@@ -291,6 +291,8 @@ const PRESET_IDS: Record<StandardFaqPreset, StandardFaqId[]> = {
     "weekly-start",
     "tutor-credentials",
     "same-tutor",
+    "score-increase",
+    "student-effort",
     "progress-reports",
     "scheduling"
   ],

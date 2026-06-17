@@ -116,7 +116,12 @@ const nextConfig = {
       },
       {
         source: "/enroll/shelly-senior-sprint",
-        destination: "/enroll/shelly-aug22-sprint",
+        destination: "/enroll/shelly-aug22-bootcamp",
+        permanent: false
+      },
+      {
+        source: "/enroll/shelly-aug22-sprint",
+        destination: "/enroll/shelly-aug22-bootcamp",
         permanent: false
       }
     ];

@@ -18,8 +18,8 @@ const LEADS = {
     weeklyCents: 9900,
     mode: "payment"
   },
-  sprint: {
-    slug: "shelly-aug22-sprint",
+  bootcamp: {
+    slug: "shelly-aug22-bootcamp",
     weeklyProduct: "prod_UimaXmu7UDx54U",
     weeklyCents: 17500,
     couponId: "ocOXTShE",
@@ -136,14 +136,14 @@ async function verifyStripeCatalog(stripe) {
   else bad(`Standard weekly: ${stdWeekly.unit_amount}`);
 
   const sprintWeekly = await stripe.prices.retrieve(
-    await resolveDefaultPriceId(stripe, LEADS.sprint.weeklyProduct)
+    await resolveDefaultPriceId(stripe, LEADS.bootcamp.weeklyProduct)
   );
-  if (sprintWeekly.unit_amount === LEADS.sprint.weeklyCents) {
-    ok("Sprint weekly = $175.00/wk");
-  } else bad(`Sprint weekly: ${sprintWeekly.unit_amount}`);
+  if (sprintWeekly.unit_amount === LEADS.bootcamp.weeklyCents) {
+    ok("Bootcamp weekly = $175.00/wk");
+  } else bad(`Bootcamp weekly: ${sprintWeekly.unit_amount}`);
 
-  const coupon = await stripe.coupons.retrieve(LEADS.sprint.couponId);
-  if (coupon.amount_off === 24900) ok(`Coupon ${LEADS.sprint.couponId}: $249 off`);
+  const coupon = await stripe.coupons.retrieve(LEADS.bootcamp.couponId);
+  if (coupon.amount_off === 24900) ok(`Coupon ${LEADS.bootcamp.couponId}: $249 off`);
   else bad(`Coupon amount_off=${coupon.amount_off}`);
 }
 
@@ -163,11 +163,11 @@ async function verifyCheckoutFlows(stripe) {
 
   const { si, weeklyPriceId: sprintWeekly } = await initSetupCheckout(
     stripe,
-    LEADS.sprint
+    LEADS.bootcamp
   );
-  if (si.metadata.lead_slug === LEADS.sprint.slug) ok("SetupIntent lead_slug correct");
+  if (si.metadata.lead_slug === LEADS.bootcamp.slug) ok("SetupIntent lead_slug correct");
   if (si.metadata.weekly_price_id === sprintWeekly) ok("SetupIntent weekly_price_id set");
-  if (si.metadata.family_diag_promo === LEADS.sprint.promoCode) {
+  if (si.metadata.family_diag_promo === LEADS.bootcamp.promoCode) {
     ok("SetupIntent family_diag_promo=SHELLY-2DIAG");
   }
   if (si.client_secret) ok("SetupIntent client_secret present");
@@ -190,10 +190,10 @@ async function verifyPages() {
       mustNot: ["SHELLY-2DIAG", "$175", "Aliya", "Shaun"]
     },
     {
-      path: "/enroll/shelly-aug22-sprint",
+      path: "/enroll/shelly-aug22-bootcamp",
       must: [
         "Shelly",
-        "August 22 SAT Sprint",
+        "August 22 SAT Bootcamp",
         "SHELLY-2DIAG",
         "Family diagnostic bundle",
         "std-pricing-struck",

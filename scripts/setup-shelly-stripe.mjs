@@ -28,7 +28,7 @@ async function main() {
     name: "Illuminairy SAT Tutoring — 4×/wk Sprint",
     description:
       "Four weekly one-on-one SAT tutoring sessions for August 22, 2026 sprint families.",
-    metadata: { program: "standard-enroll", variant: "aug22-sprint" }
+    metadata: { program: "standard-enroll", variant: "aug22-bootcamp" }
   });
 
   const weeklyPrice = await stripe.prices.create({

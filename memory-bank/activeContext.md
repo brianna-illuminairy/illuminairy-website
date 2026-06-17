@@ -8,7 +8,7 @@
 
 - **Handoff:** [`docs/leads/shelly-sood-context.md`](../docs/leads/shelly-sood-context.md)
 - **Email draft:** [`docs/leads/shelly-sood-followup-email.md`](../docs/leads/shelly-sood-followup-email.md) — review before send
-- **Pages:** `/enroll/shelly-standard` ($249 + $99/wk) · `/enroll/shelly-aug22-sprint` ($249→$0 family bundle + $175/wk)
+- **Pages:** `/enroll/shelly-standard` ($249 + $99/wk) · `/enroll/shelly-aug22-bootcamp` ($249→$0 family bundle + $175/wk)
 - **Pages/email:** no child names, no older/younger assignment, no math-only scope until Shelly confirms in reply
 - **Owner before send:** CRM `attended_at` on lead `824ec40f-a4d9-4823-902a-8024740909d2`; sales note with both links; push `main` for prod URLs
 
@@ -19,10 +19,10 @@
 **Lead:** shellysood@hotmail.com · CRM `824ec40f-a4d9-4823-902a-8024740909d2`
 
 **Built:**
-- `lib/standard-enroll-faq-bank.ts` — presets `shelly-standard` (8) / `shelly-sprint` (6) + `contract` FAQ
+- `lib/standard-enroll-faq-bank.ts` — presets `shelly-standard` (10) / `shelly-sprint` (7) + `contract` FAQ
 - Per-lead `includedOverride` (1:1 bullet), `diagnosticPromo` (SHELLY-2DIAG), SetupIntent checkout for $0 diagnostic
 - Stripe sprint product `prod_UimaXmu7UDx54U` @ $175/wk; coupon `ocOXTShE`
-- Routes: `app/enroll/shelly-standard/`, `app/enroll/shelly-aug22-sprint/` (no student names; kid↔plan mapping in email only as open questions)
+- Routes: `app/enroll/shelly-standard/`, `app/enroll/shelly-aug22-bootcamp/` (no student names; kid↔plan mapping in email only as open questions)
 
 **Not done (owner):** CRM attended_at, send email after copy review, deploy to prod
 
@@ -34,7 +34,7 @@
 
 **Product split (call notes — confirm kid assignment + diagnostic scope in email before treating as fact):**
 - **Option 1:** standard **2 sessions/week** @ $99/wk; open-ended timeline.
-- **Option 2:** **August 22 SAT Sprint** **4 sessions/week** @ $175/wk; diag bundled/waived on sprint page.
+- **Option 2:** **August 22 SAT Bootcamp** **4 sessions/week** @ $175/wk; diag bundled/waived on bootcamp page.
 - Math-only vs math+R/W discussed on call — **do not assign on pages**; ask in follow-up email.
 - Two same-day diagnostics **$249 total** (as offered on call).
 
