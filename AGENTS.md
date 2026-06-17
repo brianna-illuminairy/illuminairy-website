@@ -13,6 +13,7 @@ This is **not** a coursework or AIMA assignment repo. Do not apply academic “s
 | Resource | When |
 |----------|------|
 | [`memory-bank/`](memory-bank/README.md) | Persistent context — update `activeContext.md` and `progress.md` when you finish meaningful work |
+| [`docs/leads/`](docs/leads/) | Per-lead Strategy Call context + follow-up plans (e.g. `shelly-sood-context.md`) |
 | [`docs/architecture.md`](docs/architecture.md) | Routes, APIs, integrations, folder layout |
 | [`docs/decisions/`](docs/decisions/README.md) | Why we chose stacks and patterns — add an ADR for non-trivial choices |
 | [`docs/designer-brief.md`](docs/designer-brief.md) | Brand doc index |
@@ -90,6 +91,7 @@ Non-trivial features: start with a spec. End sessions: update memory-bank.
 | SAT program page | `app/sat-accelerator/page.tsx`, related components |
 | Contact / Calendly embed | `app/contact/page.tsx`, `components/calendly-*` |
 | Enrollment / Stripe | `app/enroll/`, `lib/stripe.ts`, `scripts/setup-stripe.mjs` |
+| Per-lead post-call checkout | `lib/standard-enroll.ts`, `app/enroll/{slug}/`, `docs/leads/` context files; FAQ bank (planned): `lib/standard-enroll-faq-bank.ts` |
 | Analytics | `lib/posthog.ts`, `components/posthog-provider.tsx`, `components/google-analytics.tsx` |
 | SEO | `app/layout.tsx`, `app/sitemap.ts`, `app/robots.ts` |
 

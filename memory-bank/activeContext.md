@@ -1,6 +1,52 @@
 # Active context
 
-*Last updated: 2026-06-16*
+*Last updated: 2026-06-17 (Shelly Sood follow-up implemented)*
+
+## Resume here (start next chat with this)
+
+**Shelly Sood follow-up — built, ready for owner review + send.**
+
+- **Handoff:** [`docs/leads/shelly-sood-context.md`](../docs/leads/shelly-sood-context.md)
+- **Email draft:** [`docs/leads/shelly-sood-followup-email.md`](../docs/leads/shelly-sood-followup-email.md) — review before send
+- **Pages:** `/enroll/shelly-standard` ($249 + $99/wk) · `/enroll/shelly-aug22-sprint` ($249→$0 family bundle + $175/wk)
+- **Pages/email:** no child names, no older/younger assignment, no math-only scope until Shelly confirms in reply
+- **Owner before send:** CRM `attended_at` on lead `824ec40f-a4d9-4823-902a-8024740909d2`; sales note with both links; push `main` for prod URLs
+
+---
+
+## Shelly Sood follow-up (2026-06-17) — shipped in code
+
+**Lead:** shellysood@hotmail.com · CRM `824ec40f-a4d9-4823-902a-8024740909d2`
+
+**Built:**
+- `lib/standard-enroll-faq-bank.ts` — presets `shelly-standard` (8) / `shelly-sprint` (6) + `contract` FAQ
+- Per-lead `includedOverride` (1:1 bullet), `diagnosticPromo` (SHELLY-2DIAG), SetupIntent checkout for $0 diagnostic
+- Stripe sprint product `prod_UimaXmu7UDx54U` @ $175/wk; coupon `ocOXTShE`
+- Routes: `app/enroll/shelly-standard/`, `app/enroll/shelly-aug22-sprint/` (no student names; kid↔plan mapping in email only as open questions)
+
+**Not done (owner):** CRM attended_at, send email after copy review, deploy to prod
+
+---
+
+## Shelly Sood follow-up (2026-06-16) — planning only (superseded)
+
+**Lead:** shellysood@hotmail.com · CRM `824ec40f-a4d9-4823-902a-8024740909d2` · Strategy Call attended Jun 16.
+
+**Product split (call notes — confirm kid assignment + diagnostic scope in email before treating as fact):**
+- **Option 1:** standard **2 sessions/week** @ $99/wk; open-ended timeline.
+- **Option 2:** **August 22 SAT Sprint** **4 sessions/week** @ $175/wk; diag bundled/waived on sprint page.
+- Math-only vs math+R/W discussed on call — **do not assign on pages**; ask in follow-up email.
+- Two same-day diagnostics **$249 total** (as offered on call).
+
+**Key decisions:**
+- No math/R&W scope on page body — diagnostic drives tutoring scope.
+- **FAQ bank** (`lib/standard-enroll-faq-bank.ts`): presets `shelly-standard` (8) / `shelly-sprint` (6); not all 19 FAQs per page.
+- Add **contract FAQ** + expand **tutor credentials** (only FAQ she explicitly asked).
+- **Call consistency:** She did not ask 1:1 — you volunteered it for $99/2×. Override "What's included" bullet away from global *"3 of 4 sessions one-on-one"* for her pages.
+
+**Not built yet:** enroll routes, FAQ bank, email at `docs/leads/shelly-sood-followup-email.md`, Stripe $175/wk product.
+
+---
 
 ## Danielle portal Week 2 + Week 1 report (2026-06-16)
 
@@ -74,6 +120,8 @@ The `/admin/crm` rework from the plan in `.cursor/plans/crm-v1-pipeline_4cf61e79
 Brianna's local `ADMIN_SECRET` is already set; the Vercel env still needs `ADMIN_SECRET` for prod admin access, plus the migrations need to run before deploy.
 
 ## Resume here (start next chat with this)
+
+**Superseded by Shelly follow-up above** when that work is in flight. Otherwise:
 
 **Pipeline:** Research → UX → gstack review → **visual mockups** → owner gate → PRD/SPEC → build
 

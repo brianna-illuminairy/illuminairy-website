@@ -113,6 +113,11 @@ const nextConfig = {
         source: "/go/guide/:slug/download",
         destination: "/",
         permanent: true
+      },
+      {
+        source: "/enroll/shelly-senior-sprint",
+        destination: "/enroll/shelly-aug22-sprint",
+        permanent: false
       }
     ];
   },

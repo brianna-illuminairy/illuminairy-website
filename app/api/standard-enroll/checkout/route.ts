@@ -13,6 +13,7 @@
 import { NextResponse } from "next/server";
 import {
   getStandardEnrollLead,
+  standardEnrollDiagnosticDescription,
   type StandardEnrollLead
 } from "@/lib/standard-enroll";
 import { getStripe } from "@/lib/stripe";
@@ -160,7 +161,7 @@ export async function POST(request: Request) {
       receipt_email: customerEmail,
       setup_future_usage: "off_session",
       payment_method_types: ["card"],
-      description: `${lead.student.first} — Skill Diagnostic + Personalized Plan`,
+      description: standardEnrollDiagnosticDescription(lead),
       metadata: {
         program: "standard-enroll",
         flow_step: "diagnostic_charge",

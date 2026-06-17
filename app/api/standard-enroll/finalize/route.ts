@@ -1,17 +1,9 @@
 /**
  * Standard enrollment finalize API.
  *
- * Step 2 of the on-page checkout. Mirrors Sohail's
- * `app/api/personalized-enroll/finalize/route.ts` shape — reads the
- * customer + payment method off the succeeded PaymentIntent and creates
- * the weekly tutoring Subscription with a 7-day trial.
- *
- * Idempotent: if a subscription already exists for this customer with the
- * matching `diagnostic_payment_intent_id` metadata, we return that one
- * instead of creating a duplicate.
- *
- * Isolated from Sohail's stack on purpose. Do not import from
- * `lib/personalized-enroll.ts` here.
+ * Step 2 of the on-page checkout. Reads the customer + payment method off
+ * a succeeded PaymentIntent, or a succeeded SetupIntent when the diagnostic
+ * was waived, then creates the weekly tutoring Subscription with a 7-day trial.
  */
 import { NextResponse } from "next/server";
 import { getStripe } from "@/lib/stripe";
@@ -19,7 +11,69 @@ import { site } from "@/lib/site";
 
 type FinalizePayload = {
   paymentIntentId?: string;
+  setupIntentId?: string;
 };
+
+async function createWeeklySubscription(opts: {
+  customerId: string;
+  paymentMethodId: string;
+  weeklyPriceId: string;
+  trialDays: number;
+  leadSlug: string;
+  meta: Record<string, string>;
+  idempotencyKey: string;
+}) {
+  const stripe = getStripe();
+
+  try {
+    const existing = await stripe.subscriptions.list({
+      customer: opts.customerId,
+      status: "all",
+      limit: 10
+    });
+    const matched = existing.data.find(
+      (s) => s.metadata?.enrollment_idempotency_key === opts.idempotencyKey
+    );
+    if (matched) {
+      return {
+        subscriptionId: matched.id,
+        status: matched.status,
+        already_existed: true as const
+      };
+    }
+  } catch (err) {
+    console.warn("standard-enroll finalize: idempotency check failed", err);
+  }
+
+  await stripe.customers.update(opts.customerId, {
+    invoice_settings: { default_payment_method: opts.paymentMethodId }
+  });
+
+  const subscription = await stripe.subscriptions.create({
+    customer: opts.customerId,
+    items: [{ price: opts.weeklyPriceId, quantity: 1 }],
+    trial_period_days: opts.trialDays,
+    default_payment_method: opts.paymentMethodId,
+    payment_behavior: "default_incomplete",
+    payment_settings: {
+      save_default_payment_method: "on_subscription"
+    },
+    metadata: {
+      program: "standard-enroll",
+      flow_step: "weekly_subscription",
+      enrollment_idempotency_key: opts.idempotencyKey,
+      lead_slug: opts.leadSlug,
+      ...opts.meta
+    }
+  });
+
+  return {
+    subscriptionId: subscription.id,
+    status: subscription.status,
+    trial_ends_at: subscription.trial_end,
+    already_existed: false as const
+  };
+}
 
 export async function POST(request: Request) {
   if (!process.env.STRIPE_SECRET_KEY) {
@@ -39,14 +93,97 @@ export async function POST(request: Request) {
   }
 
   const paymentIntentId = (body.paymentIntentId ?? "").trim();
-  if (!paymentIntentId) {
+  const setupIntentId = (body.setupIntentId ?? "").trim();
+
+  if (!paymentIntentId && !setupIntentId) {
     return NextResponse.json(
-      { error: "Missing payment intent." },
+      { error: "Missing payment or setup intent." },
       { status: 400 }
     );
   }
 
   const stripe = getStripe();
+
+  if (setupIntentId) {
+    let si;
+    try {
+      si = await stripe.setupIntents.retrieve(setupIntentId);
+    } catch (err) {
+      console.error("standard-enroll finalize: SI retrieve failed", err);
+      return NextResponse.json(
+        { error: "Could not verify card setup. Please contact support." },
+        { status: 502 }
+      );
+    }
+
+    if (si.status !== "succeeded") {
+      return NextResponse.json(
+        {
+          error: `Card setup is not yet complete (status: ${si.status}). Try again in a moment.`
+        },
+        { status: 409 }
+      );
+    }
+
+    const customerId = typeof si.customer === "string" ? si.customer : null;
+    const paymentMethodId =
+      typeof si.payment_method === "string" ? si.payment_method : null;
+    const meta = si.metadata ?? {};
+    const weeklyPriceId = meta.weekly_price_id;
+    const trialDaysRaw = meta.weekly_trial_days;
+    const leadSlug = meta.lead_slug ?? "";
+
+    if (!customerId || !paymentMethodId || !weeklyPriceId) {
+      console.error(
+        "standard-enroll finalize: missing pieces on SI",
+        setupIntentId,
+        { customerId, paymentMethodId, weeklyPriceId }
+      );
+      return NextResponse.json(
+        { error: "Card saved but enrollment setup failed. We will reach out." },
+        { status: 502 }
+      );
+    }
+
+    const trialDays = Number.parseInt(trialDaysRaw ?? "7", 10) || 7;
+
+    try {
+      const result = await createWeeklySubscription({
+        customerId,
+        paymentMethodId,
+        weeklyPriceId,
+        trialDays,
+        leadSlug,
+        meta: {
+          setup_intent_id: setupIntentId,
+          parent_first: meta.parent_first ?? "",
+          parent_last: meta.parent_last ?? "",
+          parent_email: meta.parent_email ?? "",
+          student_first: meta.student_first ?? "",
+          advisor_full: meta.advisor_full ?? "",
+          family_diag_promo: meta.family_diag_promo ?? "",
+          diagnostic_waived: "true"
+        },
+        idempotencyKey: setupIntentId
+      });
+
+      return NextResponse.json(result);
+    } catch (err) {
+      console.error(
+        "standard-enroll finalize: subscription create failed (setup)",
+        err,
+        { setupIntentId }
+      );
+      return NextResponse.json(
+        {
+          error:
+            "We saved your card but could not enroll weekly tutoring automatically. We will reach out within 1 business day to complete it. Reference: " +
+            setupIntentId
+        },
+        { status: 502 }
+      );
+    }
+  }
 
   let pi;
   try {
@@ -74,7 +211,7 @@ export async function POST(request: Request) {
   const meta = pi.metadata ?? {};
   const weeklyPriceId = meta.weekly_price_id;
   const trialDaysRaw = meta.weekly_trial_days;
-  const leadSlug = meta.lead_slug;
+  const leadSlug = meta.lead_slug ?? "";
 
   if (!customerId || !paymentMethodId || !weeklyPriceId) {
     console.error(
@@ -91,58 +228,24 @@ export async function POST(request: Request) {
   const trialDays = Number.parseInt(trialDaysRaw ?? "7", 10) || 7;
 
   try {
-    const existing = await stripe.subscriptions.list({
-      customer: customerId,
-      status: "all",
-      limit: 10
-    });
-    const matched = existing.data.find(
-      (s) => s.metadata?.diagnostic_payment_intent_id === paymentIntentId
-    );
-    if (matched) {
-      return NextResponse.json({
-        subscriptionId: matched.id,
-        status: matched.status,
-        already_existed: true
-      });
-    }
-  } catch (err) {
-    console.warn("standard-enroll finalize: idempotency check failed", err);
-  }
-
-  try {
-    await stripe.customers.update(customerId, {
-      invoice_settings: { default_payment_method: paymentMethodId }
-    });
-
-    const subscription = await stripe.subscriptions.create({
-      customer: customerId,
-      items: [{ price: weeklyPriceId, quantity: 1 }],
-      trial_period_days: trialDays,
-      default_payment_method: paymentMethodId,
-      payment_behavior: "default_incomplete",
-      payment_settings: {
-        save_default_payment_method: "on_subscription"
-      },
-      metadata: {
-        program: "standard-enroll",
-        flow_step: "weekly_subscription",
+    const result = await createWeeklySubscription({
+      customerId,
+      paymentMethodId,
+      weeklyPriceId,
+      trialDays,
+      leadSlug,
+      meta: {
         diagnostic_payment_intent_id: paymentIntentId,
-        lead_slug: leadSlug ?? "",
         parent_first: meta.parent_first ?? "",
         parent_last: meta.parent_last ?? "",
         parent_email: meta.parent_email ?? "",
         student_first: meta.student_first ?? "",
         advisor_full: meta.advisor_full ?? ""
-      }
+      },
+      idempotencyKey: paymentIntentId
     });
 
-    return NextResponse.json({
-      subscriptionId: subscription.id,
-      status: subscription.status,
-      trial_ends_at: subscription.trial_end,
-      already_existed: false
-    });
+    return NextResponse.json(result);
   } catch (err) {
     console.error(
       "standard-enroll finalize: subscription create failed",

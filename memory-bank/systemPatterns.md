@@ -62,3 +62,10 @@ scripts/       → env sync, agent-verify, ralph-loop, PostHog verify
 - Webhook signature verification for Stripe
 - `TUTOR_CALENDLY_URL` server-only; never `NEXT_PUBLIC_*`
 - Rate limiting: rely on provider limits + minimal validation in routes (enhance if abused)
+
+## Post–Strategy Call enrollment pattern
+
+- **Standard stack:** `lib/standard-enroll.ts` + `components/standard-enroll/*` + `app/enroll/{slug}/page.tsx` per lead (e.g. `michelle-michaela`, `monique-kylan`). Sohail uses separate locked stack in `personalized-enroll/`.
+- **Checkout analytics:** `lib/enroll-checkout-analytics.ts` (PostHog + GA4 + Meta).
+- **FAQ bank (2026-06-17):** `lib/standard-enroll-faq-bank.ts` with stable ids; each lead sets `faqPreset`. Presets: `standard-full`, `shelly-standard`, `shelly-sprint`. Sprint $0 diagnostic uses SetupIntent + `diagnosticPromo` on lead config.
+- **Lead intel + follow-up plans:** `docs/leads/{lead}-context.md` (see `shelly-sood-context.md`).

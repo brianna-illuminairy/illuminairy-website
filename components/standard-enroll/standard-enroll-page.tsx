@@ -31,6 +31,8 @@ import {
   STANDARD_POST_CALL_STEPS,
   STANDARD_TESTIMONIALS,
   buildStandardFaq,
+  standardEnrollStudentLabel,
+  standardEnrollStudentPossessive,
   type StandardEnrollLead
 } from "@/lib/standard-enroll";
 import type { StandardEnrollInit } from "@/lib/standard-enroll-server";
@@ -60,9 +62,43 @@ function standardEnrollAnalyticsProps(lead: StandardEnrollLead) {
   return {
     program: "standard_enroll" as const,
     slug: lead.slug,
-    diagPrice: lead.pricing.diagPrice,
+    diagPrice: lead.diagnosticPromo?.listPrice ?? lead.pricing.diagPrice,
     weeklyPrice: lead.pricing.weeklyPrice
   };
+}
+
+function getIncludedItems(lead: StandardEnrollLead) {
+  return lead.includedOverride ?? STANDARD_INCLUDED;
+}
+
+function getDiagChargePrice(lead: StandardEnrollLead): number {
+  if (lead.diagnosticPromo) return lead.diagnosticPromo.chargePrice;
+  return lead.pricing.diagPrice;
+}
+
+function getDiagListPrice(lead: StandardEnrollLead): number {
+  return lead.diagnosticPromo?.listPrice ?? lead.pricing.diagPrice;
+}
+
+function initialSubmitLabel(lead: StandardEnrollLead): string {
+  const charge = getDiagChargePrice(lead);
+  if (charge === 0) return "Enroll — diagnostic covered";
+  return `Purchase Diagnostic & Enroll $${charge}`;
+}
+
+function getWeeklyChargePrice(lead: StandardEnrollLead): number {
+  return lead.weeklyPromo?.chargePrice ?? lead.pricing.weeklyPrice;
+}
+
+function getWeeklyListPrice(lead: StandardEnrollLead): number {
+  return lead.weeklyPromo?.listPrice ?? lead.pricing.weeklyPrice;
+}
+
+function weeklyTutoringLabel(lead: StandardEnrollLead): string {
+  if (lead.programVariant === "aug22-sprint") {
+    return "Weekly Tutoring 4×/wk";
+  }
+  return "Weekly Tutoring 2×/wk";
 }
 
 function CheckIcon() {
@@ -151,17 +187,51 @@ function ProgressStrip() {
   );
 }
 
-function PlanCard() {
+function MobileCheckoutIntro({ lead }: { lead: StandardEnrollLead }) {
+  const isSprint = lead.programVariant === "aug22-sprint";
+  const weekly = getWeeklyChargePrice(lead);
+  const diagCharge = getDiagChargePrice(lead);
+  const diagLine =
+    diagCharge === 0
+      ? "Diagnostic included with your family bundle"
+      : `$${diagCharge} diagnostic today, then $${weekly}/week after your first week`;
+
+  return (
+    <div className="std-mobile-intro">
+      <h1>
+        {isSprint ? "August 22 SAT Sprint" : "SAT Diagnostic & Weekly Tutoring"}
+      </h1>
+      <p>
+        For {lead.parent.first}. {diagLine}. Weekly billing starts 7 days from
+        enroll.
+      </p>
+    </div>
+  );
+}
+
+function PlanCard({ lead }: { lead: StandardEnrollLead }) {
+  const included = getIncludedItems(lead);
+  const isSprint = lead.programVariant === "aug22-sprint";
   return (
     <aside className="std-summary">
       <h2>
-        SAT Diagnostic Evaluation
-        <br />
-        &amp; Weekly Tutoring Program
+        {isSprint ? (
+          <>
+            August 22 SAT Sprint
+            <br />
+            Diagnostic &amp; 4× Weekly Tutoring
+          </>
+        ) : (
+          <>
+            SAT Diagnostic Evaluation
+            <br />
+            &amp; Weekly Tutoring Program
+          </>
+        )}
       </h2>
       <p className="std-incl-label">What&apos;s included</p>
       <ul className="std-incl">
-        {STANDARD_INCLUDED.map((it) => (
+        {included.map((it) => (
           <li key={it.nm}>
             <span className="check">
               <CheckIcon />
@@ -225,25 +295,27 @@ function PayCard({
         }
       }}
     >
-      <PayCardInner
-        lead={lead}
-        clientSecret={init.clientSecret}
-        paymentIntentId={init.paymentIntentId}
-      />
+      <PayCardInner lead={lead} clientSecret={init.clientSecret} mode={init.mode} />
     </Elements>
   );
 }
 
 function PayCardInner({
   lead,
-  clientSecret
+  clientSecret,
+  mode
 }: {
   lead: StandardEnrollLead;
   clientSecret: string;
-  paymentIntentId: string | null;
+  mode: "payment" | "setup";
 }) {
   const stripe = useStripe();
   const elements = useElements();
+  const diagCharge = getDiagChargePrice(lead);
+  const diagList = getDiagListPrice(lead);
+  const promo = lead.diagnosticPromo;
+  const weeklyPromo = lead.weeklyPromo;
+  const weeklyCharge = getWeeklyChargePrice(lead);
   const derivedLast =
     lead.parent.last ?? lead.parent.full.replace(lead.parent.first, "").trim();
   const [first, setFirst] = useState(lead.parent.first ?? "");
@@ -251,14 +323,17 @@ function PayCardInner({
   const [email, setEmail] = useState(lead.parent.email ?? "");
   const [tos, setTos] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [submitLabel, setSubmitLabel] = useState<string>(
-    `Purchase Diagnostic & Enroll $${lead.pricing.diagPrice}`
-  );
+  const [submitLabel, setSubmitLabel] = useState<string>(initialSubmitLabel(lead));
   const [error, setError] = useState<string | null>(null);
   const [succeeded, setSucceeded] = useState<{
-    paymentIntentId: string;
+    referenceId: string;
     subscriptionStatus: string;
+    waivedDiagnostic: boolean;
   } | null>(null);
+
+  function resetSubmitLabel() {
+    setSubmitLabel(initialSubmitLabel(lead));
+  }
 
   async function onPay() {
     setError(null);
@@ -284,24 +359,103 @@ function PayCardInner({
       source: "main_form"
     });
 
+    const billingDetails = {
+      name: `${trimmedFirst} ${trimmedLast}`.trim(),
+      email: trimmedEmail
+    };
+
     try {
       const cardEl = elements.getElement(CardNumberElement);
       if (!cardEl) {
         setError("Payment form is not ready, please try again.");
         setSubmitting(false);
-        setSubmitLabel(`Purchase Diagnostic & Enroll $${lead.pricing.diagPrice}`);
+        resetSubmitLabel();
         return;
       }
 
-      setSubmitLabel(`Charging $${lead.pricing.diagPrice}\u2026`);
+      if (mode === "setup") {
+        setSubmitLabel("Saving card\u2026");
+        const { error: confirmError, setupIntent } =
+          await stripe.confirmCardSetup(clientSecret, {
+            payment_method: {
+              card: cardEl,
+              billing_details: billingDetails
+            }
+          });
+
+        if (confirmError) {
+          trackEnrollPaymentFailed({
+            ...standardEnrollAnalyticsProps(lead),
+            step: "confirm_card",
+            errorCode: confirmError.code ?? confirmError.type ?? "confirm_failed"
+          });
+          setError(
+            confirmError.message ??
+              "Your card was not accepted. Please try a different card."
+          );
+          setSubmitting(false);
+          resetSubmitLabel();
+          return;
+        }
+
+        if (!setupIntent || setupIntent.status !== "succeeded") {
+          setError(
+            "Card setup is processing. We will follow up by email once it confirms."
+          );
+          setSubmitting(false);
+          resetSubmitLabel();
+          return;
+        }
+
+        setSubmitLabel("Setting up weekly tutoring\u2026");
+        const finalizeRes = await fetch("/api/standard-enroll/finalize", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ setupIntentId: setupIntent.id })
+        });
+        const finalizeData = (await finalizeRes.json().catch(() => ({}))) as {
+          subscriptionId?: string;
+          status?: string;
+          error?: string;
+        };
+
+        if (!finalizeRes.ok) {
+          trackEnrollPaymentFailed({
+            ...standardEnrollAnalyticsProps(lead),
+            step: "finalize_subscription",
+            errorCode: finalizeData.error ?? "finalize_failed"
+          });
+          setError(
+            finalizeData.error ??
+              "We saved your card. Please email " +
+                lead.advisor.email +
+                " and we will finish your weekly enrollment within 1 business day."
+          );
+          setSubmitting(false);
+          resetSubmitLabel();
+          return;
+        }
+
+        trackEnrollPaymentCompleted({
+          ...standardEnrollAnalyticsProps(lead),
+          paymentIntentId: setupIntent.id,
+          subscriptionStatus: finalizeData.status ?? "trialing"
+        });
+        setSucceeded({
+          referenceId: setupIntent.id,
+          subscriptionStatus: finalizeData.status ?? "trialing",
+          waivedDiagnostic: true
+        });
+        setSubmitting(false);
+        return;
+      }
+
+      setSubmitLabel(`Charging $${diagCharge}\u2026`);
       const { error: confirmError, paymentIntent } =
         await stripe.confirmCardPayment(clientSecret, {
           payment_method: {
             card: cardEl,
-            billing_details: {
-              name: `${trimmedFirst} ${trimmedLast}`.trim(),
-              email: trimmedEmail
-            }
+            billing_details: billingDetails
           }
         });
 
@@ -316,7 +470,7 @@ function PayCardInner({
             "Your card was not accepted. Please try a different card."
         );
         setSubmitting(false);
-        setSubmitLabel(`Purchase Diagnostic & Enroll $${lead.pricing.diagPrice}`);
+        resetSubmitLabel();
         return;
       }
 
@@ -325,7 +479,7 @@ function PayCardInner({
           "Payment is processing. We will follow up by email once it confirms."
         );
         setSubmitting(false);
-        setSubmitLabel(`Purchase Diagnostic & Enroll $${lead.pricing.diagPrice}`);
+        resetSubmitLabel();
         return;
       }
 
@@ -354,7 +508,7 @@ function PayCardInner({
               " and we will finish your weekly enrollment within 1 business day."
         );
         setSubmitting(false);
-        setSubmitLabel(`Purchase Diagnostic & Enroll $${lead.pricing.diagPrice}`);
+        resetSubmitLabel();
         return;
       }
 
@@ -364,8 +518,9 @@ function PayCardInner({
         subscriptionStatus: finalizeData.status ?? "trialing"
       });
       setSucceeded({
-        paymentIntentId: paymentIntent.id,
-        subscriptionStatus: finalizeData.status ?? "trialing"
+        referenceId: paymentIntent.id,
+        subscriptionStatus: finalizeData.status ?? "trialing",
+        waivedDiagnostic: false
       });
       setSubmitting(false);
     } catch (err) {
@@ -381,7 +536,7 @@ function PayCardInner({
           " and we will enroll you directly."
       );
       setSubmitting(false);
-      setSubmitLabel(`Purchase Diagnostic & Enroll $${lead.pricing.diagPrice}`);
+      resetSubmitLabel();
     }
   }
 
@@ -390,14 +545,28 @@ function PayCardInner({
       <section className="std-pay">
         <h2>You&apos;re enrolled.</h2>
         <p style={{ marginTop: 12, fontSize: "0.95rem", lineHeight: 1.55, color: "#11212b" }}>
-          Thank you, {first}. We charged ${lead.pricing.diagPrice} for{" "}
-          {lead.student.first}&apos;s diagnostic and personalized plan, and
-          weekly tutoring is queued up to begin 7 days from now.
+          Thank you, {first}.
+          {succeeded.waivedDiagnostic ? (
+            <>
+              {" "}
+              {standardEnrollStudentPossessive(lead)} diagnostic and personalized plan are
+              covered by your family bundle, and weekly tutoring is queued up to
+              begin 7 days from now.
+            </>
+          ) : (
+            <>
+              {" "}
+              We charged ${diagCharge} for {standardEnrollStudentPossessive(lead)} diagnostic
+              and personalized plan, and weekly tutoring is queued up to begin 7
+              days from now.
+            </>
+          )}
         </p>
         <p style={{ marginTop: 10, fontSize: "0.88rem", lineHeight: 1.55, color: "#697078" }}>
           {lead.advisor.first} will email you within 1 business day with links
-          to schedule {lead.student.first}&apos;s diagnostic and the first
-          tutor introduction. A receipt is on its way to {email}.
+          to schedule {standardEnrollStudentLabel(lead)}&apos;s diagnostic and the first
+          tutor introduction.
+          {!succeeded.waivedDiagnostic ? ` A receipt is on its way to ${email}.` : null}
         </p>
         <p
           style={{
@@ -409,11 +578,16 @@ function PayCardInner({
             color: "#9aa29a"
           }}
         >
-          Reference: {succeeded.paymentIntentId}
+          Reference: {succeeded.referenceId}
         </p>
       </section>
     );
   }
+
+  const tosChargeLine =
+    diagCharge === 0
+      ? `I authorize weekly billing of $${weeklyCharge} starting 7 days from now.`
+      : `I authorize the $${diagCharge} charge today and weekly billing of $${weeklyCharge} starting 7 days from now.`;
 
   return (
     <section className="std-pay">
@@ -421,15 +595,41 @@ function PayCardInner({
         <div className="std-pricing-row">
           <div className="std-pricing-desc">
             Full Length Diagnostic &amp; Personalized Plan
+            {promo ? (
+              <span className="std-pricing-promo">
+                {promo.label} · code {promo.displayCode} applied
+              </span>
+            ) : null}
           </div>
-          <div className="std-pricing-amt">${lead.pricing.diagPrice}</div>
+          <div className="std-pricing-amt">
+            {promo && promo.listPrice > promo.chargePrice ? (
+              <>
+                <span className="std-pricing-struck">${promo.listPrice}</span>{" "}
+                <span>${promo.chargePrice}</span>
+              </>
+            ) : (
+              <>${diagList}</>
+            )}
+          </div>
         </div>
         <div className="std-pricing-row">
           <div className="std-pricing-desc">
-            Weekly Tutoring 2X/wk
+            {weeklyTutoringLabel(lead)}
+            {weeklyPromo ? (
+              <span className="std-pricing-promo">{weeklyPromo.label} applied</span>
+            ) : null}
             <span className="sub">Billing starts 7 days from checkout.</span>
           </div>
-          <div className="std-pricing-amt">${lead.pricing.weeklyPrice}</div>
+          <div className="std-pricing-amt">
+            {weeklyPromo && weeklyPromo.listPrice > weeklyPromo.chargePrice ? (
+              <>
+                <span className="std-pricing-struck">${weeklyPromo.listPrice}</span>{" "}
+                <span>${weeklyPromo.chargePrice}</span>
+              </>
+            ) : (
+              <>${weeklyCharge}</>
+            )}
+          </div>
         </div>
       </div>
 
@@ -518,9 +718,7 @@ function PayCardInner({
         <label htmlFor="std-tos">
           I agree to Illuminairy&apos;s <a href="/terms">Terms</a>,{" "}
           <a href="/refund-policy">Refund Policy</a>, and{" "}
-          <a href="/privacy">Privacy Policy</a>. I authorize the $
-          {lead.pricing.diagPrice} charge today and weekly billing of $
-          {lead.pricing.weeklyPrice} starting 7 days from now.
+          <a href="/privacy">Privacy Policy</a>. {tosChargeLine}
         </label>
       </div>
 
@@ -670,8 +868,10 @@ function ReviewsMarquee() {
 
 function FaqSection({ lead }: { lead: StandardEnrollLead }) {
   const groups = buildStandardFaq(
-    lead.pricing.diagPrice,
-    lead.pricing.weeklyPrice
+    getDiagListPrice(lead),
+    getWeeklyChargePrice(lead),
+    lead.faqPreset,
+    getDiagChargePrice(lead)
   );
   return (
     <div className="std-faq">
@@ -750,8 +950,9 @@ export function StandardEnrollPage({ lead, init }: Props) {
       <TopBar />
       <ProgressStrip />
       <div className="std-wrap">
+        <MobileCheckoutIntro lead={lead} />
         <div className="std-grid">
-          <PlanCard />
+          <PlanCard lead={lead} />
           <PayCard lead={lead} init={init} />
         </div>
       </div>
