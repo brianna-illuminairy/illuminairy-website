@@ -279,8 +279,8 @@ export function SohaDiagnosticAnalysisContent() {
           <li>Subject-verb agreement</li>
         </ol>
         <p>
-          We attack these in order until she hits <strong>95% accuracy</strong> on easy, medium, and
-          hard for the current skill before moving to the next.
+          We attack these in order until she hits <strong>100% on easy, 95% on medium, and 90% on hard</strong> for
+          the current skill before moving to the next.
         </p>
       </section>
 
