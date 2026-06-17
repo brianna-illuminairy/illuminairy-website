@@ -199,7 +199,7 @@ async function verifyPages() {
         "std-pricing-struck",
         "Weekly Tutoring 4",
         "Family discount applied",
-        "Enroll — diagnostic covered"
+        "Enroll in August 22 Bootcamp"
       ],
       mustNot: ["Purchase Diagnostic &amp; Enroll $249", "Aliya", "Shaun"]
     }

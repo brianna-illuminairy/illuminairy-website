@@ -82,7 +82,12 @@ function getDiagListPrice(lead: StandardEnrollLead): number {
 
 function initialSubmitLabel(lead: StandardEnrollLead): string {
   const charge = getDiagChargePrice(lead);
-  if (charge === 0) return "Enroll — diagnostic covered";
+  if (charge === 0) {
+    if (isAug22Bootcamp(lead)) {
+      return "Enroll in August 22 Bootcamp";
+    }
+    return "Enroll ($0 due today)";
+  }
   return `Purchase Diagnostic & Enroll $${charge}`;
 }
 
@@ -378,7 +383,7 @@ function PayCardInner({
       }
 
       if (mode === "setup") {
-        setSubmitLabel("Saving card\u2026");
+        setSubmitLabel("Enrolling\u2026");
         const { error: confirmError, setupIntent } =
           await stripe.confirmCardSetup(clientSecret, {
             payment_method: {
