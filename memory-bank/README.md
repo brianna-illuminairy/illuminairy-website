@@ -17,10 +17,11 @@ Persistent context for humans and AI working on Illuminairy. Inspired by the [Cu
 
 1. **Start of session** — Skim `activeContext.md` and `progress.md`.
 2. **During work** — Follow `AGENTS.md` and `docs/architecture.md`.
-3. **End of session** — Update `activeContext.md` and `progress.md`; add an ADR if you made a durable decision.
+3. **End of session** — Update `activeContext.md` and `progress.md`; add an ADR if you made a durable decision. For post–Strategy Call leads, add or update `docs/leads/{name}-context.md`.
 
 ## Relationship to other docs
 
 - **Brand & copy** → `docs/` (voice, visual, SAT messaging, competitor intel)
 - **Decisions (ADRs)** → `docs/decisions/`
 - **Agent instructions** → `AGENTS.md` and `.cursor/rules/`
+- **Post-call lead handoffs** → `docs/leads/` (context + email drafts)

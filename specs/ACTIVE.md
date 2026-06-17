@@ -1,1 +1,1 @@
-specs/2026-06-mobile-cold-traffic-funnel/SPEC.md
+specs/2026-06-post-call-sales/SPEC.md

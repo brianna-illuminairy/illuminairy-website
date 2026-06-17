@@ -265,6 +265,18 @@ export function LeadProfileCalls({
                       >
                         {status.replace(/_/g, " ")}
                       </span>
+                      {typeof (c.call_score as { overall?: number } | null)?.overall ===
+                        "number" && (
+                        <span
+                          className="rounded-full bg-violet-100 px-2 py-0.5 text-[10px] font-semibold text-violet-900"
+                          title={
+                            (c.call_score as { rationale?: string })?.rationale ??
+                            "Gemini call quality score (0–100)"
+                          }
+                        >
+                          Call score {(c.call_score as { overall: number }).overall}
+                        </span>
+                      )}
                       {c.no_show_risk && (
                         <span
                           title={c.no_show_risk_reason ?? ""}
