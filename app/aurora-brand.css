@@ -1,0 +1,49 @@
+/* Illuminairy Aurora Product System — brand guide v3 tokens (SSOT)
+   Import on customer-facing surfaces: portal, enroll, LP, funnel. */
+
+:root {
+  /* Brand guide v3 */
+  --aurora-celestial: #0057a8;
+  --aurora-green: #77c89a;
+  --aurora-glow: #b8f5d1;
+  --aurora-glow-bright: #b8f5d1;
+  --aurora-navy: #121a2b;
+  --aurora-navy-mid: #1c2a42;
+  --aurora-white: #f5f8fa;
+  --aurora-paper: #ffffff;
+  --aurora-silver: #bcc3cc;
+  --aurora-ink: #121a2b;
+  --aurora-forest: #2f6e47;
+  --aurora-forest-2: #1a4d2f;
+  --aurora-cyan: #4fd1c5;
+  --aurora-muted: rgba(18, 26, 43, 0.66);
+  --aurora-muted-dark: #9fb0a6;
+  --aurora-line: rgba(18, 26, 43, 0.1);
+  --aurora-line-solid: #e6e3da;
+  --aurora-line-dark: rgba(255, 255, 255, 0.12);
+  --aurora-mint: #b8f5d1;
+  --aurora-mint-hover: #a7e3a1;
+  --aurora-content-max: 1080px;
+  --aurora-shadow-soft: 0 8px 40px -20px rgba(18, 26, 43, 0.12);
+  --aurora-shadow: 0 20px 60px -32px rgba(18, 26, 43, 0.18);
+  --aurora-radius: 16px;
+  --aurora-radius-lg: 20px;
+
+  /* Semantic aliases */
+  --aurora-bg: var(--aurora-white);
+  --aurora-ink-on-dark: #eef3fb;
+  --aurora-display: var(--font-display), "Source Serif 4", Georgia, serif;
+  --aurora-body: "Hanken Grotesk", var(--font-hanken), system-ui, sans-serif;
+  --aurora-mono: var(--font-dm-mono), "DM Mono", ui-monospace, monospace;
+}
+
+/* Italic ban on product aurora scopes */
+.aurora,
+.aurora em,
+.aurora i,
+.std,
+.std em,
+.lp,
+.lp em {
+  font-style: normal;
+}
