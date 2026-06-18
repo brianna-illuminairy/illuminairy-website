@@ -16,7 +16,8 @@ const STRATEGY_ITEMS = [
   "On Math, open Desmos early and use it freely.",
   "If you are stuck for more than 60 seconds, flag it, pick your best guess, and move on.",
   "Read the full question and every answer choice before picking.",
-  "No phone, notes, or outside help. Treat it like test day.",
+  "Scratch paper and a pencil or pen are allowed. Use them for Math work, underlining, and crossing out wrong choices.",
+  "No phone, textbooks, or formula sheets. Scratch paper is fine; study notes are not.",
   "Take the break between sections. Stand up and stretch."
 ] as const;
 
@@ -24,6 +25,10 @@ const SCORING_MYTHS = [
   {
     myth: "Wrong answers cost more than leaving a question blank.",
     fact: "False. The digital SAT has no wrong-answer penalty. A blank and a wrong answer both count as a miss. Always pick an answer."
+  },
+  {
+    myth: "You have to do everything in your head because the test is on a computer.",
+    fact: "False. You get scratch paper and a pencil or pen. On test day the center provides them; for today, grab blank paper before you start."
   },
   {
     myth: "You have to get every question right.",
@@ -549,6 +554,11 @@ export function PreDiagnosticLesson() {
             This is a simplified version of what you will see. Click around: pick an answer, jump to
             another question number, flag a question, and open the calculator.
           </p>
+          <p className="skye-scoring__rule">
+            <strong>Scratch paper is allowed.</strong> The test is on screen, but you can write on paper:
+            show Math steps, sketch diagrams, underline in passages. Have blank paper and a pencil ready
+            before you start today.
+          </p>
           <BluebookMockup />
         </>
       )
@@ -614,8 +624,8 @@ export function PreDiagnosticLesson() {
             Diagnostic. Log in with the account we set up for you.
           </p>
           <p>
-            The diagnostic takes about <strong>2 hours and 14 minutes</strong>. Find a quiet spot, charge your
-            laptop, and give yourself the full block.
+            The diagnostic takes about <strong>2 hours and 14 minutes</strong>. Before you start: quiet spot,
+            charged laptop, and <strong>blank scratch paper plus a pencil or pen</strong>.
           </p>
           <div className="skye-ready-cta">
             <a
