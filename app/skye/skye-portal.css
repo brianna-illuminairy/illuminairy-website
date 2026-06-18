@@ -308,6 +308,67 @@
   color: #9a2b2b;
 }
 
+.skye-myth-list {
+  display: grid;
+  gap: 8px;
+  margin: 14px 0;
+}
+
+.skye-myth-card {
+  display: grid;
+  gap: 6px;
+  padding: 14px 16px;
+  border: 1px dashed var(--aurora-line-solid);
+  border-radius: 12px;
+  background: var(--aurora-bg);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.skye-myth-card:hover {
+  border-color: var(--aurora-green);
+}
+
+.skye-myth-card.is-open {
+  border-style: solid;
+  border-color: var(--aurora-forest);
+  background: rgba(47, 110, 71, 0.08);
+  cursor: default;
+}
+
+.skye-myth-card__tag {
+  font-family: var(--aurora-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--aurora-muted);
+}
+
+.skye-myth-card.is-open .skye-myth-card__tag {
+  color: var(--aurora-forest);
+}
+
+.skye-myth-card__text {
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.skye-myth-card__cta {
+  font-size: 12px;
+  color: var(--aurora-celestial);
+  font-weight: 600;
+}
+
+.skye-scoring__rule {
+  padding: 12px 14px;
+  background: rgba(0, 87, 168, 0.08);
+  border-radius: 10px;
+  border-left: 3px solid var(--aurora-celestial);
+  font-size: 14px;
+  margin: 12px 0;
+}
+
 .skye-bluebook {
   border: 1px solid var(--aurora-line-solid);
   border-radius: 12px;

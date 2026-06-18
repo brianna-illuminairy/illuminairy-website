@@ -7,17 +7,48 @@ import {
 } from "@/components/skye/skill-taxonomy-explorer";
 import { homeworkPortalLoginUrl } from "@/lib/internal-links";
 
-const SLIDE_COUNT = 13;
+const SLIDE_COUNT = 14;
 
 const STRATEGY_ITEMS = [
+  "No wrong-answer penalty: a guess and a blank both count as a miss, but a guess might be right.",
+  "Answer every question before time runs out. Never leave bubbles empty on purpose.",
   "This is a baseline, not a grade. Wrong answers tell us what to work on.",
-  "Answer every question. A guess is better than a blank.",
   "On Math, open Desmos early and use it freely.",
-  "If you are stuck for more than 60 seconds, flag it and move on.",
+  "If you are stuck for more than 60 seconds, flag it, pick your best guess, and move on.",
   "Read the full question and every answer choice before picking.",
   "No phone, notes, or outside help. Treat it like test day.",
   "Take the break between sections. Stand up and stretch."
 ] as const;
+
+const SCORING_MYTHS = [
+  {
+    myth: "Wrong answers cost more than leaving a question blank.",
+    fact: "False. The digital SAT has no wrong-answer penalty. A blank and a wrong answer both count as a miss. Always pick an answer."
+  },
+  {
+    myth: "You have to get every question right.",
+    fact: "No one does. Your job is to attempt every question, not to be perfect."
+  },
+  {
+    myth: "Skipping a question is fine if you come back later.",
+    fact: "Flag it and move on, but submit an answer before the module timer ends. An empty question is still a miss."
+  },
+  {
+    myth: "Random guessing will hurt your score.",
+    fact: "A blank gives you 0% on that question. A guess on a 4-choice question gives you a 25% chance. When stuck, guess."
+  }
+] as const;
+
+const SCORING_QUIZ = {
+  question: "On the digital SAT, a wrong answer compared to a blank:",
+  options: [
+    { label: "Costs extra points (penalty)", correct: false },
+    { label: "Counts the same — both are a miss", correct: true },
+    { label: "Is better than a blank", correct: false },
+    { label: "Does not count at all", correct: false }
+  ],
+  explain: "There is no guessing penalty. Wrong and blank are both incorrect. The only difference: a guess can be right."
+} as const;
 
 type QuizOption = {
   label: string;
@@ -161,6 +192,90 @@ function QuickQuiz() {
         </p>
       ) : null}
     </div>
+  );
+}
+
+function ScoringMythCards() {
+  const [open, setOpen] = useState<Set<number>>(new Set());
+
+  function toggle(index: number) {
+    setOpen((prev) => {
+      const next = new Set(prev);
+      if (next.has(index)) next.delete(index);
+      else next.add(index);
+      return next;
+    });
+  }
+
+  return (
+    <div className="skye-myth-list">
+      {SCORING_MYTHS.map((item, i) => (
+        <button
+          key={item.myth}
+          type="button"
+          className={`skye-myth-card${open.has(i) ? " is-open" : ""}`}
+          onClick={() => toggle(i)}
+          aria-expanded={open.has(i)}
+        >
+          <span className="skye-myth-card__tag">{open.has(i) ? "Fact" : "Myth?"}</span>
+          <span className="skye-myth-card__text">{open.has(i) ? item.fact : item.myth}</span>
+          {!open.has(i) ? <span className="skye-myth-card__cta">Tap to check</span> : null}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function ScoringQuiz() {
+  const [picked, setPicked] = useState<number | null>(null);
+  const answered = picked !== null;
+  const correct = answered && SCORING_QUIZ.options[picked].correct;
+
+  return (
+    <div className="skye-quiz">
+      <p className="skye-quiz__question">{SCORING_QUIZ.question}</p>
+      <div className="skye-quiz__options">
+        {SCORING_QUIZ.options.map((opt, i) => {
+          let cls = "skye-quiz__option";
+          if (answered) {
+            if (opt.correct) cls += " is-correct";
+            else if (i === picked) cls += " is-wrong";
+          }
+          return (
+            <button
+              key={opt.label}
+              type="button"
+              className={cls}
+              disabled={answered}
+              onClick={() => setPicked(i)}
+            >
+              {opt.label}
+            </button>
+          );
+        })}
+      </div>
+      {answered ? (
+        <p className={`skye-quiz__feedback${correct ? " skye-quiz__feedback--correct" : " skye-quiz__feedback--wrong"}`}>
+          {correct ? "Right." : "Not quite."} {SCORING_QUIZ.explain}
+        </p>
+      ) : null}
+    </div>
+  );
+}
+
+function ScoringRulesSlide() {
+  return (
+    <>
+      <p>
+        Biggest rookie mistake: leaving questions blank because you are afraid a wrong answer will hurt
+        you extra. On the <strong>digital SAT, that is not true.</strong>
+      </p>
+      <ScoringMythCards />
+      <p className="skye-scoring__rule">
+        <strong>Rule to remember:</strong> wrong = miss. blank = miss. guess = might be right. Always answer.
+      </p>
+      <ScoringQuiz />
+    </>
   );
 }
 
@@ -476,6 +591,11 @@ export function PreDiagnosticLesson() {
     },
     {
       eyebrow: `Slide 12 of ${SLIDE_COUNT}`,
+      title: "Scoring rules (no guessing penalty)",
+      body: <ScoringRulesSlide />
+    },
+    {
+      eyebrow: `Slide 13 of ${SLIDE_COUNT}`,
       title: "Your strategy today",
       body: (
         <>
@@ -485,7 +605,7 @@ export function PreDiagnosticLesson() {
       )
     },
     {
-      eyebrow: `Slide 13 of ${SLIDE_COUNT}`,
+      eyebrow: `Slide 14 of ${SLIDE_COUNT}`,
       title: "You are ready",
       body: (
         <>
