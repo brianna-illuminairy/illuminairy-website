@@ -123,7 +123,7 @@ export function SohaDiagnosticAnalysisContent() {
           </p>
           <PriorityList items={RW_PRIORITY} />
           <p>
-            In our study plan we would tutor her until she&apos;s reached the required level of
+            In the SAT Improvement Plan we would tutor her until she&apos;s reached the required level of
             accuracy, attacking one skill at a time, starting with the one costing the most points.
           </p>
         </section>
@@ -229,7 +229,7 @@ export function SohaDiagnosticAnalysisContent() {
           </p>
           <PriorityList items={MATH_PRIORITY} />
           <p>
-            In our study plan we would tutor her until she&apos;s reached the required level of
+            In the SAT Improvement Plan we would tutor her until she&apos;s reached the required level of
             accuracy, attacking one skill at a time, starting with the one costing the most points.
           </p>
         </section>
@@ -262,7 +262,7 @@ export function SohaDiagnosticAnalysisContent() {
 
           <p className="soha-report__plan-link">
             For projected scores, checkpoints, and the week-by-week schedule, see the{" "}
-            <Link href="/soha/plan">Study Plan</Link> tab.
+            <Link href="/soha/plan">SAT Improvement Plan</Link> tab.
           </p>
         </section>
 

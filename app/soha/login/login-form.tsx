@@ -57,10 +57,9 @@ export default function SohaLoginForm() {
     <SohaLoginChrome>
       <div className="danielle-portal__card">
         <p className="danielle-portal__eyebrow">Illuminairy</p>
-        <h1 className="danielle-portal__title">Soha&apos;s SAT plan</h1>
+        <h1 className="danielle-portal__title">Soha&apos;s SAT Improvement Plan</h1>
         <p className="danielle-portal__lede">
-          Enter the email we shared with you to view diagnostic results and the personalized study
-          plan.
+          Enter the email we shared with you to view diagnostic results and the SAT Improvement Plan.
         </p>
         <form onSubmit={submit}>
           <label className="danielle-portal__field">

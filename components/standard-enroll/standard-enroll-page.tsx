@@ -28,9 +28,9 @@ import {
 } from "@/lib/enroll-checkout-analytics";
 import {
   STANDARD_INCLUDED,
-  STANDARD_POST_CALL_STEPS,
   STANDARD_TESTIMONIALS,
   buildStandardFaqForLead,
+  standardEnrollProgressSteps,
   standardEnrollStudentLabel,
   standardEnrollStudentPossessive,
   type StandardEnrollLead
@@ -187,11 +187,12 @@ function TopBar() {
   );
 }
 
-function ProgressStrip() {
+function ProgressStrip({ lead }: { lead: StandardEnrollLead }) {
+  const steps = standardEnrollProgressSteps(lead);
   return (
     <div className="std-progress">
       <div className="std-progress-inner">
-        {STANDARD_POST_CALL_STEPS.map((s, i) => (
+        {steps.map((s, i) => (
           <div
             key={s.label}
             className={
@@ -992,7 +993,7 @@ export function StandardEnrollPage({ lead, init }: Props) {
     <div className="std">
       <StarSymbol />
       <TopBar />
-      <ProgressStrip />
+      <ProgressStrip lead={lead} />
       <div className="std-wrap">
         <MobileCheckoutIntro lead={lead} />
         <div className="std-grid">

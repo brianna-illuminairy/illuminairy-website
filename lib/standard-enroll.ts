@@ -133,6 +133,21 @@ export const STANDARD_POST_CALL_STEPS: StandardProgressStep[] = [
   { label: "Tutoring", state: "next" }
 ];
 
+/** Progress strip for checkout — Diagnostic done when already completed. */
+export function standardEnrollProgressSteps(
+  lead: StandardEnrollLead
+): StandardProgressStep[] {
+  if (lead.bootcamp?.diagnosticComplete) {
+    return [
+      { label: "Free SAT Plan", state: "done" },
+      { label: "Free Strategy Call", state: "done" },
+      { label: "Diagnostic", state: "done" },
+      { label: "Tutoring", state: "active" }
+    ];
+  }
+  return STANDARD_POST_CALL_STEPS;
+}
+
 /**
  * Standard "What's included" list (9 items). SAT Vocabulary Lists and
  * SAT Learning Library were intentionally removed Jun 15, 2026.

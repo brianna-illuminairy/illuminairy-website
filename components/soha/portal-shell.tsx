@@ -15,7 +15,7 @@ const NAV = [
   },
   {
     href: "/soha/plan",
-    label: "Study Plan",
+    label: "SAT Improvement Plan",
     match: (path: string) => path === "/soha/plan"
   }
 ] as const;
