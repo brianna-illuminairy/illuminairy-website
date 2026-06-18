@@ -802,6 +802,80 @@
   line-height: 1.45;
 }
 
+.skye-nav__tabs {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin: 14px 0 10px;
+}
+
+@media (min-width: 560px) {
+  .skye-nav__tabs {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.skye-nav__tab {
+  padding: 10px 10px;
+  border: 1px solid var(--aurora-line-solid);
+  border-radius: 10px;
+  background: var(--aurora-paper);
+  font-family: var(--aurora-body);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+}
+
+.skye-nav__tab.is-active {
+  border-color: var(--aurora-celestial);
+  background: rgba(0, 87, 168, 0.08);
+  color: var(--aurora-celestial);
+}
+
+.skye-nav__panel {
+  padding: 14px 16px;
+  border: 1px solid var(--aurora-line-solid);
+  border-radius: 12px;
+  background: var(--aurora-bg);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.skye-nav__panel-short {
+  font-weight: 600;
+  margin: 0 0 8px;
+}
+
+.skye-nav__panel p {
+  margin: 0 0 8px;
+}
+
+.skye-nav__panel-example {
+  padding: 10px 12px;
+  background: var(--aurora-paper);
+  border-radius: 8px;
+  font-size: 13px;
+  margin: 0 !important;
+}
+
+.skye-nav__workflow {
+  margin-top: 14px;
+  display: grid;
+  gap: 8px;
+}
+
+.skye-nav__workflow-title {
+  font-weight: 600;
+  font-size: 14px;
+  margin: 0 0 4px;
+}
+
+.skye-nav__workflow-step .skye-checklist__box {
+  font-family: var(--aurora-mono);
+  font-size: 11px;
+}
+
 .skye-bluebook__footer {
   display: flex;
   justify-content: space-between;

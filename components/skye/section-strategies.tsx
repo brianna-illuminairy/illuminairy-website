@@ -24,6 +24,12 @@ const RW_STRATEGIES: StrategyTip[] = [
     how: "Replace the vocab word with each answer choice and read the sentence. The right one should sound natural and keep the meaning."
   },
   {
+    id: "skip-return",
+    name: "Skip and come back",
+    when: "A passage or question is taking too long.",
+    how: "Mark for Review, pick a guess if you have one, click the next question number, and return on the review screen before the module ends."
+  },
+  {
     id: "eliminate-two",
     name: "Cross off two wrong answers",
     when: "Every multiple-choice question.",
@@ -50,6 +56,12 @@ const RW_STRATEGIES: StrategyTip[] = [
 ];
 
 const MATH_STRATEGIES: StrategyTip[] = [
+  {
+    id: "skip-return",
+    name: "Skip and come back",
+    when: "A problem is eating your time.",
+    how: "Mark for Review, guess if needed, jump to an easier question, and fix flagged ones on the end-of-module review screen."
+  },
   {
     id: "plug-choices",
     name: "Plug in the answer choices",
@@ -151,13 +163,12 @@ export function ReadingWritingStrategiesSlide() {
   return (
     <>
       <p>
-        You do not need fancy tricks today. These six habits cover most Reading &amp; Writing questions. Tap
-        each to expand.
+        These seven habits cover most Reading &amp; Writing questions. Tap each to expand.
       </p>
       <StrategyList tips={RW_STRATEGIES} />
       <p className="skye-scoring__rule">
-        <strong>Default move when stuck:</strong> eliminate two choices, pick your best guess, flag it, and
-        move on. No extra penalty for trying.
+        <strong>Default move when stuck:</strong> eliminate two choices, pick your best guess, Mark for
+        Review, and skip ahead. No extra penalty for trying.
       </p>
     </>
   );
@@ -168,7 +179,7 @@ export function MathStrategiesSlide() {
     <>
       <p>
         On Math, you always have scratch paper, Desmos, the Reference sheet, and multiple choice. These
-        seven moves are the ones tutors use most. Tap each to expand.
+        eight moves are the ones tutors use most. Tap each to expand.
       </p>
       <StrategyList tips={MATH_STRATEGIES} />
       <p className="skye-scoring__rule">

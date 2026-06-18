@@ -6,19 +6,20 @@ import {
   SkillTaxonomyExplorerSlide,
   SkillTaxonomyHierarchySlide
 } from "@/components/skye/skill-taxonomy-explorer";
+import { TestNavigationSlide } from "@/components/skye/test-navigation-slide";
 import { ReferenceSheetSlide } from "@/components/skye/reference-sheet-slide";
 import { MathSamplesSlide, ReadingWritingSamplesSlide } from "@/components/skye/sample-questions";
 import { MathStrategiesSlide, ReadingWritingStrategiesSlide } from "@/components/skye/section-strategies";
 import { homeworkPortalLoginUrl } from "@/lib/internal-links";
 
-const SLIDE_COUNT = 20;
+const SLIDE_COUNT = 21;
 
 const STRATEGY_ITEMS = [
   "No wrong-answer penalty: a guess and a blank both count as a miss, but a guess might be right.",
   "Answer every question before time runs out. Never leave bubbles empty on purpose.",
   "This is a baseline, not a grade. Wrong answers tell us what to work on.",
   "On Math, open Desmos early and use it freely.",
-  "If you are stuck for more than 60 seconds, flag it, pick your best guess, and move on.",
+  "If you are stuck for more than 60 seconds, eliminate, guess, Mark for Review, and skip ahead.",
   "Read the full question and every answer choice before picking.",
   "Scratch paper and a pencil or pen are allowed. Use them for Math work, underlining, and crossing out wrong choices.",
   "No phone, textbooks, or outside notes. Bluebook's built-in Reference sheet on Math is allowed.",
@@ -40,7 +41,7 @@ const SCORING_MYTHS = [
   },
   {
     myth: "Skipping a question is fine if you come back later.",
-    fact: "Flag it and move on, but submit an answer before the module timer ends. An empty question is still a miss."
+    fact: "Mark for Review and move on, but submit an answer before the module timer ends. An empty question is still a miss."
   },
   {
     myth: "Random guessing will hurt your score.",
@@ -348,7 +349,7 @@ function BluebookMockup() {
                 })
               }
             >
-              Flag
+              Mark for Review
             </button>
             <button
               type="button"
@@ -381,11 +382,15 @@ function BluebookMockup() {
         </div>
         <div className="skye-bluebook__callout">
           <span className="skye-bluebook__callout-num">3</span>
-          <span>Number bar jumps between questions. Flag ones you want to revisit.</span>
+          <span>Number bar: click any question to skip ahead. Mark for Review on ones to revisit.</span>
         </div>
         <div className="skye-bluebook__callout">
           <span className="skye-bluebook__callout-num">4</span>
           <span>Calculator opens Desmos on Math. Try the button above.</span>
+        </div>
+        <div className="skye-bluebook__callout">
+          <span className="skye-bluebook__callout-num">5</span>
+          <span>Next slide walks through skip ahead, Mark for Review, and elimination on scratch paper.</span>
         </div>
       </div>
     </div>
@@ -593,6 +598,11 @@ export function PreDiagnosticLesson() {
     },
     {
       eyebrow: `Slide 15 of ${SLIDE_COUNT}`,
+      title: "Skip ahead, Mark for Review, eliminate",
+      body: <TestNavigationSlide />
+    },
+    {
+      eyebrow: `Slide 16 of ${SLIDE_COUNT}`,
       title: "Desmos: your Math calculator",
       body: (
         <>
@@ -609,12 +619,12 @@ export function PreDiagnosticLesson() {
       )
     },
     {
-      eyebrow: `Slide 16 of ${SLIDE_COUNT}`,
+      eyebrow: `Slide 17 of ${SLIDE_COUNT}`,
       title: "Built-in Reference sheet (Math)",
       body: <ReferenceSheetSlide />
     },
     {
-      eyebrow: `Slide 17 of ${SLIDE_COUNT}`,
+      eyebrow: `Slide 18 of ${SLIDE_COUNT}`,
       title: "What a diagnostic is (and is not)",
       body: (
         <>
@@ -633,12 +643,12 @@ export function PreDiagnosticLesson() {
       )
     },
     {
-      eyebrow: `Slide 18 of ${SLIDE_COUNT}`,
+      eyebrow: `Slide 19 of ${SLIDE_COUNT}`,
       title: "Scoring rules (no guessing penalty)",
       body: <ScoringRulesSlide />
     },
     {
-      eyebrow: `Slide 19 of ${SLIDE_COUNT}`,
+      eyebrow: `Slide 20 of ${SLIDE_COUNT}`,
       title: "Your strategy today",
       body: (
         <>
@@ -648,7 +658,7 @@ export function PreDiagnosticLesson() {
       )
     },
     {
-      eyebrow: `Slide 20 of ${SLIDE_COUNT}`,
+      eyebrow: `Slide 21 of ${SLIDE_COUNT}`,
       title: "You are ready",
       body: (
         <>
