@@ -10,6 +10,11 @@ const NAV = [
     href: "/skye/pre-diagnostic",
     label: "Pre-Diagnostic Lesson",
     match: (path: string) => path.startsWith("/skye/pre-diagnostic")
+  },
+  {
+    href: "/skye/diagnostic",
+    label: "Diagnostic Reports",
+    match: (path: string) => path.startsWith("/skye/diagnostic")
   }
 ] as const;
 

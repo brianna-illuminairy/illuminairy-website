@@ -41,7 +41,8 @@ const nextConfig = {
   skipTrailingSlashRedirect: true,
   outputFileTracingIncludes: {
     "/danielle/files/[slug]": ["./content/danielle/**/*"],
-    "/soha/files/[slug]": ["./content/soha/**/*"]
+    "/soha/files/[slug]": ["./content/soha/**/*"],
+    "/skye/files/[slug]": ["./content/skye/**/*"]
   },
   async redirects() {
     return [
