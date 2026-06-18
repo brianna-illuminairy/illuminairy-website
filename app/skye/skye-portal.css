@@ -596,6 +596,69 @@
   margin-top: 6px;
 }
 
+.skye-strategy-list {
+  display: grid;
+  gap: 8px;
+  margin: 14px 0;
+}
+
+.skye-strategy-card {
+  border: 1px solid var(--aurora-line-solid);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--aurora-paper);
+}
+
+.skye-strategy-card.is-open {
+  border-color: rgba(119, 200, 154, 0.4);
+}
+
+.skye-strategy-card__head {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border: none;
+  background: var(--aurora-bg);
+  cursor: pointer;
+  text-align: left;
+  font-family: var(--aurora-body);
+}
+
+.skye-strategy-card__name {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.skye-strategy-card__toggle {
+  font-family: var(--aurora-mono);
+  font-size: 16px;
+  color: var(--aurora-forest);
+  flex-shrink: 0;
+}
+
+.skye-strategy-card__body {
+  padding: 12px 14px 14px;
+  font-size: 13px;
+  line-height: 1.5;
+  display: grid;
+  gap: 8px;
+}
+
+.skye-strategy-card__body p {
+  margin: 0;
+}
+
+.skye-strategy-card__example {
+  padding: 10px 12px;
+  background: var(--aurora-bg);
+  border-radius: 8px;
+  font-family: var(--aurora-mono);
+  font-size: 12px;
+}
+
 .skye-bluebook__footer {
   display: flex;
   justify-content: space-between;

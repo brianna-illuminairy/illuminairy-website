@@ -7,9 +7,10 @@ import {
   SkillTaxonomyHierarchySlide
 } from "@/components/skye/skill-taxonomy-explorer";
 import { MathSamplesSlide, ReadingWritingSamplesSlide } from "@/components/skye/sample-questions";
+import { MathStrategiesSlide, ReadingWritingStrategiesSlide } from "@/components/skye/section-strategies";
 import { homeworkPortalLoginUrl } from "@/lib/internal-links";
 
-const SLIDE_COUNT = 17;
+const SLIDE_COUNT = 19;
 
 const STRATEGY_ITEMS = [
   "No wrong-answer penalty: a guess and a blank both count as a miss, but a guess might be right.",
@@ -543,6 +544,16 @@ export function PreDiagnosticLesson() {
     },
     {
       eyebrow: `Slide 10 of ${SLIDE_COUNT}`,
+      title: "Reading & Writing strategies",
+      body: <ReadingWritingStrategiesSlide />
+    },
+    {
+      eyebrow: `Slide 11 of ${SLIDE_COUNT}`,
+      title: "Math strategies",
+      body: <MathStrategiesSlide />
+    },
+    {
+      eyebrow: `Slide 12 of ${SLIDE_COUNT}`,
       title: "Timing and question counts",
       body: (
         <>
@@ -552,7 +563,7 @@ export function PreDiagnosticLesson() {
       )
     },
     {
-      eyebrow: `Slide 11 of ${SLIDE_COUNT}`,
+      eyebrow: `Slide 13 of ${SLIDE_COUNT}`,
       title: "Quick check",
       body: (
         <>
@@ -562,7 +573,7 @@ export function PreDiagnosticLesson() {
       )
     },
     {
-      eyebrow: `Slide 12 of ${SLIDE_COUNT}`,
+      eyebrow: `Slide 14 of ${SLIDE_COUNT}`,
       title: "The Bluebook screen",
       body: (
         <>
@@ -580,7 +591,7 @@ export function PreDiagnosticLesson() {
       )
     },
     {
-      eyebrow: `Slide 13 of ${SLIDE_COUNT}`,
+      eyebrow: `Slide 15 of ${SLIDE_COUNT}`,
       title: "Desmos: your Math calculator",
       body: (
         <>
@@ -597,7 +608,7 @@ export function PreDiagnosticLesson() {
       )
     },
     {
-      eyebrow: `Slide 14 of ${SLIDE_COUNT}`,
+      eyebrow: `Slide 16 of ${SLIDE_COUNT}`,
       title: "What a diagnostic is (and is not)",
       body: (
         <>
@@ -616,12 +627,12 @@ export function PreDiagnosticLesson() {
       )
     },
     {
-      eyebrow: `Slide 15 of ${SLIDE_COUNT}`,
+      eyebrow: `Slide 17 of ${SLIDE_COUNT}`,
       title: "Scoring rules (no guessing penalty)",
       body: <ScoringRulesSlide />
     },
     {
-      eyebrow: `Slide 16 of ${SLIDE_COUNT}`,
+      eyebrow: `Slide 18 of ${SLIDE_COUNT}`,
       title: "Your strategy today",
       body: (
         <>
@@ -631,7 +642,7 @@ export function PreDiagnosticLesson() {
       )
     },
     {
-      eyebrow: `Slide 17 of ${SLIDE_COUNT}`,
+      eyebrow: `Slide 19 of ${SLIDE_COUNT}`,
       title: "You are ready",
       body: (
         <>
