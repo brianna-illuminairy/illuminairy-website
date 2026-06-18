@@ -72,6 +72,12 @@ const MATH_STRATEGIES: StrategyTip[] = [
     example: "y = 2x + 1 and y = -x + 5 → click the intersection point"
   },
   {
+    id: "reference-sheet",
+    name: "Open the Reference sheet",
+    when: "Area, volume, circle, or special right-triangle problems.",
+    how: "Click Reference in the toolbar. Match the shape in the question to the formula on the sheet. Plug the numbers they give you into that formula."
+  },
+  {
     id: "scratch-steps",
     name: "Write every step on scratch paper",
     when: "Algebra, fractions, or multi-step word problems.",
@@ -161,13 +167,13 @@ export function MathStrategiesSlide() {
   return (
     <>
       <p>
-        On Math, you always have scratch paper, Desmos, and multiple choice. These six moves are the ones
-        tutors use most. Tap each to expand.
+        On Math, you always have scratch paper, Desmos, the Reference sheet, and multiple choice. These
+        seven moves are the ones tutors use most. Tap each to expand.
       </p>
       <StrategyList tips={MATH_STRATEGIES} />
       <p className="skye-scoring__rule">
-        <strong>Default order when stuck:</strong> write it on paper → try plugging in a choice → graph it in
-        Desmos → guess and flag.
+        <strong>Default order when stuck:</strong> write it on paper → open Reference if it is geometry → try
+        plugging in a choice → graph it in Desmos → guess and flag.
       </p>
     </>
   );

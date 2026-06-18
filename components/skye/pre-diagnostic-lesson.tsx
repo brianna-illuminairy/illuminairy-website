@@ -6,11 +6,12 @@ import {
   SkillTaxonomyExplorerSlide,
   SkillTaxonomyHierarchySlide
 } from "@/components/skye/skill-taxonomy-explorer";
+import { ReferenceSheetSlide } from "@/components/skye/reference-sheet-slide";
 import { MathSamplesSlide, ReadingWritingSamplesSlide } from "@/components/skye/sample-questions";
 import { MathStrategiesSlide, ReadingWritingStrategiesSlide } from "@/components/skye/section-strategies";
 import { homeworkPortalLoginUrl } from "@/lib/internal-links";
 
-const SLIDE_COUNT = 19;
+const SLIDE_COUNT = 20;
 
 const STRATEGY_ITEMS = [
   "No wrong-answer penalty: a guess and a blank both count as a miss, but a guess might be right.",
@@ -20,7 +21,7 @@ const STRATEGY_ITEMS = [
   "If you are stuck for more than 60 seconds, flag it, pick your best guess, and move on.",
   "Read the full question and every answer choice before picking.",
   "Scratch paper and a pencil or pen are allowed. Use them for Math work, underlining, and crossing out wrong choices.",
-  "No phone, textbooks, or formula sheets. Scratch paper is fine; study notes are not.",
+  "No phone, textbooks, or outside notes. Bluebook's built-in Reference sheet on Math is allowed.",
   "Take the break between sections. Stand up and stretch."
 ] as const;
 
@@ -609,6 +610,11 @@ export function PreDiagnosticLesson() {
     },
     {
       eyebrow: `Slide 16 of ${SLIDE_COUNT}`,
+      title: "Built-in Reference sheet (Math)",
+      body: <ReferenceSheetSlide />
+    },
+    {
+      eyebrow: `Slide 17 of ${SLIDE_COUNT}`,
       title: "What a diagnostic is (and is not)",
       body: (
         <>
@@ -627,12 +633,12 @@ export function PreDiagnosticLesson() {
       )
     },
     {
-      eyebrow: `Slide 17 of ${SLIDE_COUNT}`,
+      eyebrow: `Slide 18 of ${SLIDE_COUNT}`,
       title: "Scoring rules (no guessing penalty)",
       body: <ScoringRulesSlide />
     },
     {
-      eyebrow: `Slide 18 of ${SLIDE_COUNT}`,
+      eyebrow: `Slide 19 of ${SLIDE_COUNT}`,
       title: "Your strategy today",
       body: (
         <>
@@ -642,7 +648,7 @@ export function PreDiagnosticLesson() {
       )
     },
     {
-      eyebrow: `Slide 19 of ${SLIDE_COUNT}`,
+      eyebrow: `Slide 20 of ${SLIDE_COUNT}`,
       title: "You are ready",
       body: (
         <>
