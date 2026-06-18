@@ -1,13 +1,15 @@
 "use client";
 
 import { useCallback, useMemo, useState } from "react";
+import { AdaptiveModulesSlide } from "@/components/skye/adaptive-modules-slide";
 import {
   SkillTaxonomyExplorerSlide,
   SkillTaxonomyHierarchySlide
 } from "@/components/skye/skill-taxonomy-explorer";
+import { MathSamplesSlide, ReadingWritingSamplesSlide } from "@/components/skye/sample-questions";
 import { homeworkPortalLoginUrl } from "@/lib/internal-links";
 
-const SLIDE_COUNT = 14;
+const SLIDE_COUNT = 17;
 
 const STRATEGY_ITEMS = [
   "No wrong-answer penalty: a guess and a blank both count as a miss, but a guess might be right.",
@@ -504,29 +506,43 @@ export function PreDiagnosticLesson() {
           <p>The test has two big sections. Each section splits into two timed modules.</p>
           <SatStructureDiagram />
           <p style={{ fontSize: 14, color: "var(--aurora-muted)" }}>
-            <strong>Adaptive</strong> means Module 2 adjusts to how you did on Module 1. Do your best on
-            every question in Module 1; it shapes what comes next.
+            Next slide explains how Module 2 changes based on Module 1.
           </p>
         </>
       )
     },
     {
       eyebrow: `Slide 4 of ${SLIDE_COUNT}`,
+      title: "How adaptive modules work",
+      body: <AdaptiveModulesSlide />
+    },
+    {
+      eyebrow: `Slide 5 of ${SLIDE_COUNT}`,
       title: "How your report labels every question",
       body: <SkillTaxonomyHierarchySlide />
     },
     {
-      eyebrow: `Slide 5 of ${SLIDE_COUNT}`,
+      eyebrow: `Slide 6 of ${SLIDE_COUNT}`,
       title: "Reading & Writing skills on the diagnostic",
       body: <SkillTaxonomyExplorerSlide initialSection="rw" />
     },
     {
-      eyebrow: `Slide 6 of ${SLIDE_COUNT}`,
+      eyebrow: `Slide 7 of ${SLIDE_COUNT}`,
       title: "Math skills on the diagnostic",
       body: <SkillTaxonomyExplorerSlide initialSection="math" />
     },
     {
-      eyebrow: `Slide 7 of ${SLIDE_COUNT}`,
+      eyebrow: `Slide 8 of ${SLIDE_COUNT}`,
+      title: "Example Reading & Writing questions",
+      body: <ReadingWritingSamplesSlide />
+    },
+    {
+      eyebrow: `Slide 9 of ${SLIDE_COUNT}`,
+      title: "Example Math questions",
+      body: <MathSamplesSlide />
+    },
+    {
+      eyebrow: `Slide 10 of ${SLIDE_COUNT}`,
       title: "Timing and question counts",
       body: (
         <>
@@ -536,7 +552,7 @@ export function PreDiagnosticLesson() {
       )
     },
     {
-      eyebrow: `Slide 8 of ${SLIDE_COUNT}`,
+      eyebrow: `Slide 11 of ${SLIDE_COUNT}`,
       title: "Quick check",
       body: (
         <>
@@ -546,7 +562,7 @@ export function PreDiagnosticLesson() {
       )
     },
     {
-      eyebrow: `Slide 9 of ${SLIDE_COUNT}`,
+      eyebrow: `Slide 12 of ${SLIDE_COUNT}`,
       title: "The Bluebook screen",
       body: (
         <>
@@ -564,7 +580,7 @@ export function PreDiagnosticLesson() {
       )
     },
     {
-      eyebrow: `Slide 10 of ${SLIDE_COUNT}`,
+      eyebrow: `Slide 13 of ${SLIDE_COUNT}`,
       title: "Desmos: your Math calculator",
       body: (
         <>
@@ -581,7 +597,7 @@ export function PreDiagnosticLesson() {
       )
     },
     {
-      eyebrow: `Slide 11 of ${SLIDE_COUNT}`,
+      eyebrow: `Slide 14 of ${SLIDE_COUNT}`,
       title: "What a diagnostic is (and is not)",
       body: (
         <>
@@ -600,12 +616,12 @@ export function PreDiagnosticLesson() {
       )
     },
     {
-      eyebrow: `Slide 12 of ${SLIDE_COUNT}`,
+      eyebrow: `Slide 15 of ${SLIDE_COUNT}`,
       title: "Scoring rules (no guessing penalty)",
       body: <ScoringRulesSlide />
     },
     {
-      eyebrow: `Slide 13 of ${SLIDE_COUNT}`,
+      eyebrow: `Slide 16 of ${SLIDE_COUNT}`,
       title: "Your strategy today",
       body: (
         <>
@@ -615,7 +631,7 @@ export function PreDiagnosticLesson() {
       )
     },
     {
-      eyebrow: `Slide 14 of ${SLIDE_COUNT}`,
+      eyebrow: `Slide 17 of ${SLIDE_COUNT}`,
       title: "You are ready",
       body: (
         <>
