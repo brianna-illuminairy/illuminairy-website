@@ -820,97 +820,8 @@
   line-height: 1.5;
 }
 
-/* projection */
-.soha-report__proj {
-  border: 1px solid var(--sr-line);
-  border-radius: 4px;
-  padding: 30px 32px;
-  background: var(--sr-paper);
-  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.02);
-}
-
-.soha-report__milestones {
-  display: flex;
-  align-items: stretch;
-  gap: 14px;
-  margin: 4px 0 6px;
-  flex-wrap: wrap;
-}
-
-.soha-report__mstone {
-  flex: 1;
-  min-width: 150px;
-  border: 1px solid var(--sr-line);
-  border-radius: 4px;
-  padding: 20px 22px;
-  background: #fff;
-}
-
-.soha-report__mstone.now {
-  border-color: #cddfd1;
-  background: var(--sr-sage);
-}
-
-.soha-report__mstone.stretch {
-  border-style: dashed;
-  border-color: #a8cfc0;
-}
-
-.soha-report__mstone-t {
-  font-family: var(--sr-mono);
-  font-size: 10px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--sr-muted-2);
-  display: block;
-  margin-bottom: 10px;
-}
-
-.soha-report__mstone-v {
-  font-family: var(--sr-display);
-  font-weight: 600;
-  font-size: 32px;
-  line-height: 1;
-  color: var(--sr-forest);
-}
-
-.soha-report__mstone.stretch .soha-report__mstone-v {
-  color: var(--sr-teal);
-}
-
-.soha-report__marrow {
-  display: flex;
-  align-items: center;
-  color: var(--sr-muted-2);
-  font-size: 26px;
-  font-family: var(--sr-mono);
-}
-
-.soha-report__planrow {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  margin-top: 28px;
-}
-
-.soha-report__plan-card {
-  border: 1px solid var(--sr-line);
-  border-radius: 4px;
-  padding: 16px 18px;
-  font-size: 13px;
-  color: var(--sr-muted);
-  background: #fff;
-}
-
-.soha-report__plan-n {
-  font-family: var(--sr-display);
-  font-weight: 600;
-  font-size: 30px;
-  color: var(--sr-green);
-  line-height: 1;
-}
-
 .soha-report__plan-link {
+  margin-top: 24px;
   font-size: 14px;
   color: var(--sr-muted);
 }
@@ -970,8 +881,7 @@
 
   .soha-report__diffstrip,
   .soha-report__patterns,
-  .soha-report__ka,
-  .soha-report__planrow {
+  .soha-report__ka {
     grid-template-columns: 1fr;
   }
 
@@ -987,14 +897,6 @@
 
   .soha-report__subscores > div {
     flex: 1;
-  }
-
-  .soha-report__marrow {
-    display: none;
-  }
-
-  .soha-report__mstone {
-    min-width: 100%;
   }
 
   .soha-report__qc {

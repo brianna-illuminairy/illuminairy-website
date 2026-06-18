@@ -83,7 +83,7 @@ export const RW_MISS_TABLE = [
   {
     mod: "2",
     q: "22",
-    topic: "Subject-Verb Agreement",
+    topic: "Form, Structure & Sense (Subject-Verb)",
     diff: "med" as const,
     correct: "c",
     marked: "a",
@@ -146,8 +146,13 @@ export const MATH_MISS_TABLE = [
 ];
 
 export const RW_PRIORITY = [
-  { topic: "Transitions", pts: "X pts" },
-  { topic: "Boundaries", pts: "X pts" },
-  { topic: "Command of Evidence", pts: "X pts" },
-  { topic: "Subject-Verb Agreement", pts: "X pts" },
+  { topic: "Transitions", pts: "52 pts" },
+  { topic: "Boundaries", pts: "33 pts" },
+  { topic: "Command of Evidence", pts: "22 pts" },
+  { topic: "Subject Verb Agreement", pts: "16 pts" },
+];
+
+export const MATH_PRIORITY = [
+  { topic: "Factoring and factor theorem", pts: "48 pts" },
+  { topic: "Surface area / non-formula geometry", pts: "16 pts" },
 ];

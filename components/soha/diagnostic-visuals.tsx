@@ -1,5 +1,4 @@
 import type { ReactNode } from "react";
-import { SOHA_PLAN_OUTLOOK } from "@/lib/soha/plan-outlook";
 import {
   DIFFICULTY_READOUT,
   QUESTION_MAP,
@@ -50,9 +49,9 @@ export function DiagnosticHero() {
       <div className="soha-report__hero-note">
         <div className="soha-report__hero-rule" />
         <p>
-          Soha is performing in the upper 1300s to the lower 1400s; we estimate her current
-          performance is between 1380 and 1430. Her math is stronger than her reading and writing;
-          she scored 710-740 on math and 670-690 on reading and writing.
+          Soha is performing in the upper 1300s to the lower 1400s, we estimate her current
+          performance is between 1380 and 1430. Her math is stronger than her reading and writing,
+          she scored 710-740 on math and a 670-690 on reading and writing.
         </p>
       </div>
     </div>
@@ -289,48 +288,12 @@ export function HabitsGrid() {
           </li>
           <li>
             <span className="m">✦</span>
-            <span>Defaulting to the calculator on algebra problems that need factoring by hand</span>
+            <span>
+              Plugging into the calculator before identifying whether the question can be solved with
+              it
+            </span>
           </li>
         </ul>
-      </div>
-    </div>
-  );
-}
-
-export function ScoreProjection() {
-  const o = SOHA_PLAN_OUTLOOK;
-
-  return (
-    <div className="soha-report__proj">
-      <div className="soha-report__milestones">
-        <div className="soha-report__mstone now">
-          <span className="soha-report__mstone-t">Now</span>
-          <span className="soha-report__mstone-v">{o.startScore}</span>
-        </div>
-        <span className="soha-report__marrow">›</span>
-        <div className="soha-report__mstone">
-          <span className="soha-report__mstone-t">This plan · {o.testDate}</span>
-          <span className="soha-report__mstone-v">{o.planGoal}</span>
-        </div>
-        <span className="soha-report__marrow">›</span>
-        <div className="soha-report__mstone stretch">
-          <span className="soha-report__mstone-t">Stretch</span>
-          <span className="soha-report__mstone-v">{o.stretchGoal}</span>
-        </div>
-      </div>
-      <div className="soha-report__planrow">
-        <div className="soha-report__plan-card">
-          <div className="soha-report__plan-n">{o.tutoringPerWeek}</div>
-          <div>Tutoring sessions per week.</div>
-        </div>
-        <div className="soha-report__plan-card">
-          <div className="soha-report__plan-n">{o.questionsPerWeek}</div>
-          <div>Questions per week on average across the nine-week plan.</div>
-        </div>
-        <div className="soha-report__plan-card">
-          <div className="soha-report__plan-n">{o.totalQuestions}</div>
-          <div>Total questions by {o.testDate} toward the {o.planGoal} goal.</div>
-        </div>
       </div>
     </div>
   );
