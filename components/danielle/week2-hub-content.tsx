@@ -56,6 +56,12 @@ export function DanielleWeek2HubContent() {
             <h2>Lesson 1 · Tue Jun 16</h2>
             <p>Session summary, homework steps, and interactive Transitions lesson replay.</p>
           </Link>
+          <Link href="/danielle/week-2/lesson-2" className="danielle-portal__link-card">
+            <h2>Lesson 2 · Thu Jun 18</h2>
+            <p>
+              Medium transitions deck plus Homework Portal timed set: 30 questions, 37-minute timer.
+            </p>
+          </Link>
         </div>
       </section>
 

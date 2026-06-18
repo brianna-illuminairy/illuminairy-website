@@ -32,6 +32,10 @@ export const DANIELLE_FILE_MAP = {
     filename: "transitions-lesson-slides.html",
     contentType: "text/html; charset=utf-8"
   },
+  "transitions-lesson-02": {
+    filename: "transitions-lesson-02-slides.html",
+    contentType: "text/html; charset=utf-8"
+  },
   "weekly-report-week-1": {
     filename: "weekly-report-week-1.html",
     contentType: "text/html; charset=utf-8"

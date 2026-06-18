@@ -10,6 +10,11 @@ const LESSONS = [
     match: (path: string) => path.includes("/lesson-1")
   },
   {
+    href: "/danielle/week-2/lesson-2",
+    label: "Lesson 2 · Thu Jun 18",
+    match: (path: string) => path.includes("/lesson-2")
+  },
+  {
     href: "/danielle/week-2/exercises",
     label: "Post-session exercises",
     match: (path: string) => path.includes("/exercises")

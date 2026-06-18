@@ -1,0 +1,1369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Transitions Lesson 02 | Illuminairy</title>
+<style>
+  :root {
+    --cream: #f5ecd9;
+    --cream-deep: #ece1c4;
+    --navy: #14213d;
+    --navy-soft: #1f2d4f;
+    --forest: #2d5a3d;
+    --mint: #a7d4b4;
+    --mint-soft: #d4e9dc;
+    --tomato: #d9543b;
+    --mustard: #d4a02a;
+    --lagoon: #4a8a99;
+    --plum: #8a5cb8;
+    --ink: #1a1a1a;
+    --muted: #6b6457;
+    --line: #d8cdb2;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: Calibri, "Segoe UI", Candara, Tahoma, sans-serif;
+    font-weight: 500;
+    line-height: 1.55;
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  .display { font-family: Calibri, "Segoe UI", Candara, Tahoma, sans-serif; font-weight: 700; letter-spacing: -0.02em; }
+  .mono { font-family: Calibri, "Segoe UI", Candara, Tahoma, sans-serif; text-transform: uppercase; letter-spacing: 0.08em; font-size: 11px; font-weight: 700; }
+
+  .deck { width: 100vw; height: 100vh; position: relative; }
+  .slide {
+    position: absolute; inset: 0;
+    padding: 48px 72px 88px;
+    display: none;
+    flex-direction: column;
+    overflow-y: auto;
+  }
+  .slide.active { display: flex; }
+
+  .topbar {
+    display: flex; justify-content: space-between; align-items: center;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 14px; margin-bottom: 28px;
+  }
+  .brand { display: flex; align-items: center; gap: 10px; }
+  .brand-star { color: var(--navy); font-size: 18px; }
+  .brand-name { font-family: Calibri, "Segoe UI", Candara, Tahoma, sans-serif; font-weight: 700; font-size: 18px; color: var(--navy); letter-spacing: -0.015em; }
+  .topbar .mono { color: var(--muted); }
+
+  .nav {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 16px 72px; display: flex; justify-content: space-between; align-items: center;
+    border-top: 1px solid var(--line);
+    background: var(--cream);
+  }
+  .nav-btn {
+    background: var(--navy); color: var(--cream);
+    border: none; border-radius: 999px;
+    padding: 10px 22px; font-family: inherit; font-weight: 600; font-size: 14px;
+    cursor: pointer; transition: all 0.15s ease;
+  }
+  .nav-btn:hover { background: var(--navy-soft); transform: translateY(-1px); }
+  .nav-btn:disabled { background: var(--line); color: var(--muted); cursor: not-allowed; transform: none; }
+  .nav-counter { font-family: Calibri, "Segoe UI", Candara, Tahoma, sans-serif; font-size: 12px; color: var(--muted); letter-spacing: 0.1em; }
+
+  h1.title { font-family: Calibri, "Segoe UI", Candara, Tahoma, sans-serif; font-weight: 700; font-size: 76px; line-height: 1.02; color: var(--navy); letter-spacing: -0.035em; }
+  h1.title .sub { display: block; font-family: Calibri, "Segoe UI", Candara, Tahoma, sans-serif; font-weight: 500; font-size: 22px; color: var(--muted); margin-top: 18px; letter-spacing: -0.005em; max-width: 720px; line-height: 1.45; }
+  h2.slide-h { font-family: Calibri, "Segoe UI", Candara, Tahoma, sans-serif; font-weight: 700; font-size: 42px; line-height: 1.08; color: var(--navy); letter-spacing: -0.025em; margin-bottom: 16px; }
+  h2.slide-h .accent { color: var(--forest); }
+  h2.slide-h .warn { color: var(--tomato); }
+  h3.sub-h { font-family: Calibri, "Segoe UI", Candara, Tahoma, sans-serif; font-weight: 600; font-size: 17px; color: var(--navy); margin-bottom: 10px; }
+  p.body { font-size: 17px; color: var(--ink); max-width: 800px; }
+  p.lead { font-size: 19px; color: var(--ink); max-width: 820px; line-height: 1.55; }
+
+  .eyebrow { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 12px; color: var(--forest); }
+  .eyebrow .dot { width: 6px; height: 6px; background: var(--forest); border-radius: 50%; }
+  .eyebrow.warn { color: var(--tomato); }
+  .eyebrow.warn .dot { background: var(--tomato); }
+
+  .qcard {
+    background: white; border: 1px solid var(--line); border-radius: 16px;
+    padding: 24px 28px; margin-top: 16px;
+  }
+  .qmeta { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+  .qmeta span { font-family: Calibri, "Segoe UI", Candara, Tahoma, sans-serif; font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em; padding: 4px 10px; border-radius: 999px; background: var(--cream); color: var(--navy); font-weight: 600; }
+  .qmeta span.diff-e { background: var(--mint-soft); color: var(--forest); }
+  .qmeta span.diff-m { background: #fff0c9; color: #8a6a10; }
+  .qmeta span.diff-h { background: #f8d5cd; color: #8e2a17; }
+  .qmeta span.time { background: var(--cream-deep); color: var(--muted); }
+  .passage { font-size: 16px; line-height: 1.65; color: var(--ink); margin-bottom: 14px; }
+  .passage .blank { display: inline-block; min-width: 80px; border-bottom: 2px solid var(--navy); height: 1.2em; vertical-align: bottom; margin: 0 4px; }
+  .qprompt { font-weight: 600; color: var(--navy); margin-bottom: 12px; font-size: 15px; }
+  .choices { display: flex; flex-direction: column; gap: 8px; }
+  .choice {
+    display: flex; align-items: center; gap: 14px;
+    padding: 12px 16px; border: 1.5px solid var(--line); border-radius: 12px;
+    background: var(--cream);
+    cursor: pointer; transition: all 0.15s ease;
+    font-size: 15px; font-weight: 500;
+  }
+  .choice:hover { border-color: var(--navy); background: white; }
+  .choice .letter {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: white; border: 1.5px solid var(--navy); color: var(--navy);
+    display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px;
+    flex-shrink: 0;
+  }
+  .choice.correct { border-color: var(--forest); background: var(--mint-soft); }
+  .choice.correct .letter { background: var(--forest); color: white; border-color: var(--forest); }
+  .choice.wrong { border-color: var(--tomato); background: #fbe5e0; }
+  .choice.wrong .letter { background: var(--tomato); color: white; border-color: var(--tomato); }
+  .choice.dim { opacity: 0.5; }
+  .choice.her-pick { border-color: var(--tomato); background: #fbe5e0; position: relative; }
+  .choice.her-pick::after {
+    content: "your pick"; position: absolute; right: 12px;
+    font-family: Calibri, "Segoe UI", Candara, Tahoma, sans-serif; font-size: 9px; letter-spacing: 0.1em;
+    color: var(--tomato); font-weight: 700;
+  }
+  .choice.answer { border-color: var(--forest); background: var(--mint-soft); position: relative; }
+  .choice.answer::after {
+    content: "answer"; position: absolute; right: 12px;
+    font-family: Calibri, "Segoe UI", Candara, Tahoma, sans-serif; font-size: 9px; letter-spacing: 0.1em;
+    color: var(--forest); font-weight: 700;
+  }
+
+  .twocol { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 16px; }
+  .threecol { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; margin-top: 16px; }
+
+  .trace { background: white; border-left: 4px solid var(--forest); padding: 16px 20px; margin-top: 10px; border-radius: 0 12px 12px 0; }
+  .trace .lbl { font-family: Calibri, "Segoe UI", Candara, Tahoma, sans-serif; font-size: 11px; letter-spacing: 0.14em; color: var(--forest); text-transform: uppercase; font-weight: 700; margin-bottom: 8px; }
+  .trace p { font-size: 15px; line-height: 1.6; }
+  .trace.warn { border-left-color: var(--tomato); }
+  .trace.warn .lbl { color: var(--tomato); }
+  .trace.note { border-left-color: var(--lagoon); }
+  .trace.note .lbl { color: var(--lagoon); }
+
+  .trick {
+    background: var(--navy); color: var(--cream); padding: 20px 24px; border-radius: 14px;
+    margin-top: 14px;
+  }
+  .trick .lbl { font-family: Calibri, "Segoe UI", Candara, Tahoma, sans-serif; font-size: 11px; letter-spacing: 0.15em; color: var(--mint); margin-bottom: 8px; font-weight: 700; }
+  .trick h4 { font-family: Calibri, "Segoe UI", Candara, Tahoma, sans-serif; font-weight: 700; font-size: 22px; margin-bottom: 6px; letter-spacing: -0.015em; line-height: 1.25; }
+  .trick p { font-size: 14px; line-height: 1.55; opacity: 0.92; }
+
+  /* score bar */
+  .scorebar { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 18px; }
+  .score-tile {
+    background: white; border: 1px solid var(--line); border-radius: 14px;
+    padding: 24px 28px;
+  }
+  .score-tile .level { font-family: Calibri, "Segoe UI", Candara, Tahoma, sans-serif; font-size: 11px; letter-spacing: 0.14em; color: var(--muted); margin-bottom: 8px; font-weight: 700; }
+  .score-tile .num { font-family: Calibri, "Segoe UI", Candara, Tahoma, sans-serif; font-weight: 700; font-size: 64px; color: var(--navy); line-height: 1; letter-spacing: -0.04em; }
+  .score-tile .pct { display: inline-block; font-family: Calibri, "Segoe UI", Candara, Tahoma, sans-serif; font-size: 26px; color: var(--muted); margin-left: 12px; font-weight: 500; letter-spacing: -0.02em; }
+  .score-tile .delta { margin-top: 14px; font-size: 15px; color: var(--ink); line-height: 1.5; }
+  .score-tile.good { border-top: 4px solid var(--forest); }
+  .score-tile.gap { border-top: 4px solid var(--tomato); }
+
+  /* job framework cards */
+  .jobs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 14px; }
+  .job {
+    background: white; border: 1px solid var(--line); border-radius: 12px;
+    padding: 16px 18px;
+  }
+  .job .verb { font-family: Calibri, "Segoe UI", Candara, Tahoma, sans-serif; font-weight: 700; font-size: 22px; color: var(--navy); margin-bottom: 4px; line-height: 1.1; letter-spacing: -0.015em; }
+  .job .cat-label { font-family: Calibri, "Segoe UI", Candara, Tahoma, sans-serif; font-size: 10px; letter-spacing: 0.14em; color: var(--muted); text-transform: uppercase; margin-bottom: 8px; font-weight: 700; }
+  .job .words { font-size: 14px; color: var(--ink); line-height: 1.5; }
+  .job.j1 { border-top: 3px solid var(--tomato); }
+  .job.j2 { border-top: 3px solid var(--mustard); }
+  .job.j3 { border-top: 3px solid var(--plum); }
+  .job.j4 { border-top: 3px solid var(--forest); }
+  .job.j5 { border-top: 3px solid var(--lagoon); }
+  .job.j6 { border-top: 3px solid #4a8a99; }
+  .job.j7 { border-top: 3px solid #8a5cb8; }
+
+  .reveal { display: none; }
+  .reveal.shown { display: block; }
+  .reveal-btn { background: var(--mustard); color: var(--navy); border: none; padding: 9px 20px; border-radius: 999px; font-family: inherit; font-weight: 700; font-size: 13px; cursor: pointer; margin-top: 14px; }
+  .reveal-btn:hover { background: #c08f1f; }
+
+  /* word matching activity */
+  .word-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 14px;
+  }
+  .word-col h4 { font-family: Calibri, "Segoe UI", Candara, Tahoma, sans-serif; font-size: 10px; letter-spacing: 0.15em; color: var(--muted); margin-bottom: 10px; }
+  .word-items { display: flex; flex-direction: column; gap: 7px; }
+  .word-item {
+    padding: 11px 14px; background: white; border: 1.5px solid var(--line); border-radius: 10px;
+    cursor: pointer; font-size: 14px; transition: all 0.15s ease; position: relative;
+  }
+  .word-item:hover { border-color: var(--navy); }
+  .word-item.selected { background: var(--navy); color: var(--cream); border-color: var(--navy); }
+  .word-item.matched { opacity: 0.65; cursor: default; }
+  .word-item.matched::after {
+    content: attr(data-pair); position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+    font-family: Calibri, "Segoe UI", Candara, Tahoma, sans-serif; font-size: 10px; background: var(--forest); color: white;
+    padding: 2px 6px; border-radius: 4px;
+  }
+  .word-item.right { background: var(--mint-soft); border-color: var(--forest); }
+  .word-item.wrong { background: #fbe5e0; border-color: var(--tomato); }
+
+  .game-controls { display: flex; gap: 10px; align-items: center; margin-top: 14px; }
+  .check-btn { background: var(--forest); color: white; border: none; border-radius: 999px; padding: 9px 20px; font-family: inherit; font-weight: 600; font-size: 13px; cursor: pointer; }
+  .check-btn:hover { background: #1f4329; }
+  .reset-btn { background: transparent; color: var(--muted); border: 1.5px solid var(--line); border-radius: 999px; padding: 9px 20px; font-family: inherit; font-weight: 500; font-size: 13px; cursor: pointer; }
+  .reset-btn:hover { border-color: var(--navy); color: var(--navy); }
+  .score-readout { margin-left: auto; font-family: Calibri, "Segoe UI", Candara, Tahoma, sans-serif; font-size: 12px; color: var(--muted); letter-spacing: 0.1em; }
+  .score-readout.good { color: var(--forest); }
+
+  /* trap detector */
+  .trap-passage {
+    background: white; border: 1px solid var(--line); border-radius: 12px;
+    padding: 18px 22px; margin-top: 12px; font-size: 16px; line-height: 1.65;
+  }
+  .trap-options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+  .trap-opt {
+    padding: 14px 18px; background: white; border: 1.5px solid var(--line); border-radius: 10px;
+    cursor: pointer; font-size: 15px; line-height: 1.5; transition: all 0.15s ease;
+  }
+  .trap-opt:hover { border-color: var(--navy); }
+  .trap-opt.correct { background: var(--mint-soft); border-color: var(--forest); }
+  .trap-opt.wrong { background: #fbe5e0; border-color: var(--tomato); }
+  .trap-opt.dim { opacity: 0.5; }
+  .trap-opt strong { font-family: Calibri, "Segoe UI", Candara, Tahoma, sans-serif; font-weight: 700; font-size: 17px; color: var(--navy); display: block; margin-bottom: 4px; letter-spacing: -0.015em; }
+
+  /* lookalike battles */
+  .battle { background: white; border: 1px solid var(--line); border-radius: 14px; padding: 18px 22px; margin-top: 14px; }
+  .battle .vs { display: flex; align-items: center; gap: 16px; margin-bottom: 10px; }
+  .battle .word-l, .battle .word-r { font-family: Calibri, "Segoe UI", Candara, Tahoma, sans-serif; font-weight: 700; font-size: 24px; color: var(--navy); letter-spacing: -0.02em; }
+  .battle .vs-bar { font-family: Calibri, "Segoe UI", Candara, Tahoma, sans-serif; font-size: 10px; color: var(--muted); letter-spacing: 0.2em; padding: 4px 10px; background: var(--cream); border-radius: 999px; }
+  .battle .diff { font-size: 14px; color: var(--ink); line-height: 1.5; }
+  .battle .diff strong { color: var(--forest); }
+
+  /* timing rule */
+  .timer-card { background: white; border: 1px solid var(--line); border-radius: 14px; padding: 22px 26px; margin-top: 14px; }
+  .timer-row { display: grid; grid-template-columns: 100px 1fr 100px; gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--line); align-items: center; }
+  .timer-row:last-child { border-bottom: none; }
+  .timer-row .diff { font-family: Calibri, "Segoe UI", Candara, Tahoma, sans-serif; font-size: 11px; letter-spacing: 0.12em; color: var(--muted); font-weight: 600; }
+  .timer-row .target { font-family: Calibri, "Segoe UI", Candara, Tahoma, sans-serif; font-size: 24px; color: var(--forest); font-weight: 700; letter-spacing: -0.02em; }
+  .timer-row .target.bad { color: var(--tomato); }
+  .timer-row .note { font-size: 14px; color: var(--ink); }
+
+  .gap-sm { height: 12px; }
+  .gap-md { height: 20px; }
+
+  .slide::-webkit-scrollbar { width: 8px; }
+  .slide::-webkit-scrollbar-track { background: transparent; }
+  .slide::-webkit-scrollbar-thumb { background: var(--line); border-radius: 4px; }
+
+  .title-slide { justify-content: center; align-items: flex-start; }
+  .title-mark { font-size: 22px; color: var(--forest); margin-bottom: 26px; letter-spacing: 0.3em; font-family: Calibri, "Segoe UI", Candara, Tahoma, sans-serif; font-weight: 600; }
+  .constellation { position: absolute; right: 80px; top: 50%; transform: translateY(-50%); opacity: 0.15; }
+
+  body.embed {
+    overflow: auto;
+    height: auto;
+  }
+  body.embed .deck {
+    width: 100%;
+    height: auto;
+    min-height: 100vh;
+  }
+  body.embed .slide {
+    position: relative;
+    inset: auto;
+    min-height: 58vh;
+  }
+  body.embed .slide.active { display: flex; }
+  body.embed .nav {
+    position: sticky;
+    bottom: 0;
+    z-index: 20;
+  }
+  body.embed .constellation { display: none; }
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+
+<!-- ============ SLIDE 1: TITLE ============ -->
+<section class="slide active title-slide">
+  <div class="topbar" style="width: 100%;">
+    <div class="brand"><span class="brand-star">✦</span><span class="brand-name">Illuminairy</span></div>
+    <div class="mono">SAT R&amp;W · Expression of Ideas</div>
+  </div>
+  <div style="margin-top: auto; margin-bottom: auto;">
+    <div class="title-mark">✦ ✦ ✦ &nbsp;&nbsp; LESSON 02</div>
+    <h1 class="title">Transitions, round two.
+      <span class="sub">You crushed easy. Medium is the next ceiling. Six misses, one big pattern, plus a few tricky words you haven't seen yet.</span>
+    </h1>
+  </div>
+  <svg class="constellation" width="280" height="280" viewBox="0 0 280 280">
+    <circle cx="50" cy="60" r="3" fill="#2d5a3d"/>
+    <circle cx="140" cy="50" r="5" fill="#14213d"/>
+    <circle cx="220" cy="110" r="3" fill="#d4a02a"/>
+    <circle cx="60" cy="170" r="4" fill="#14213d"/>
+    <circle cx="160" cy="220" r="3" fill="#d9543b"/>
+    <circle cx="240" cy="200" r="3" fill="#2d5a3d"/>
+    <line x1="50" y1="60" x2="140" y2="50" stroke="#14213d" stroke-width="0.5"/>
+    <line x1="140" y1="50" x2="220" y2="110" stroke="#14213d" stroke-width="0.5"/>
+    <line x1="60" y1="170" x2="160" y2="220" stroke="#14213d" stroke-width="0.5"/>
+    <line x1="160" y1="220" x2="240" y2="200" stroke="#14213d" stroke-width="0.5"/>
+  </svg>
+</section>
+
+<!-- ============ SLIDE 2: SCORE RECAP ============ -->
+<section class="slide">
+  <div class="topbar">
+    <div class="brand"><span class="brand-star">✦</span><span class="brand-name">Illuminairy</span></div>
+    <div class="mono">Where you landed</div>
+  </div>
+  <div class="eyebrow"><span class="dot"></span><span class="mono">Practice sets 1 &amp; 2</span></div>
+  <h2 class="slide-h">The numbers.</h2>
+  <p class="body">First lesson worked on easy. Now we need to do the same thing on medium.</p>
+
+  <div class="scorebar">
+    <div class="score-tile good">
+      <div class="level">Easy questions · Practice Set 01</div>
+      <div><span class="num">26</span><span class="pct">/ 27 · 96%</span></div>
+      <div class="delta">One missed (Billy Joel). 155 seconds on it though, which is the other thing we need to talk about.</div>
+    </div>
+    <div class="score-tile gap">
+      <div class="level">Medium questions · Practice Set 02</div>
+      <div><span class="num">22</span><span class="pct">/ 28 · 78.5%</span></div>
+      <div class="delta">Six missed. Goal for the medium band is 90% or higher. That's three or four more right per set.</div>
+    </div>
+  </div>
+
+  <div class="trick">
+    <div class="lbl">The hidden problem</div>
+    <h4>Two of your misses ate 155 and 233 seconds.</h4>
+    <p>Long times on missed questions means you weren't running the method, you were vibe-checking each choice and second-guessing. Once we tighten the method, the time fixes itself.</p>
+  </div>
+</section>
+
+<!-- ============ SLIDE 3: THE PATTERN ============ -->
+<section class="slide">
+  <div class="topbar">
+    <div class="brand"><span class="brand-star">✦</span><span class="brand-name">Illuminairy</span></div>
+    <div class="mono">What the misses have in common</div>
+  </div>
+  <div class="eyebrow warn"><span class="dot"></span><span class="mono">The big finding</span></div>
+  <h2 class="slide-h">Cause &amp; effect is the bottleneck.</h2>
+  <p class="lead">It came up in three of your six misses. Twice you didn't spot it when it was the right answer. Once you reached for it when the answer was something else.</p>
+
+  <div class="twocol">
+    <div class="trace warn">
+      <div class="lbl">When you missed it</div>
+      <p><strong>Yeats:</strong> picked "Likewise" (addition). Answer: "Consequently" (cause &amp; effect).</p>
+      <p style="margin-top: 6px;"><strong>Stoclet House:</strong> picked "Subsequently" (sequence). Answer: "Therefore" (cause &amp; effect).</p>
+    </div>
+    <div class="trace warn">
+      <div class="lbl">When you over-applied it</div>
+      <p><strong>Bauhaus:</strong> picked "Therefore" (cause &amp; effect). Answer: "In fact" (reinforcement).</p>
+    </div>
+  </div>
+
+  <div class="gap-sm"></div>
+
+  <p class="body">The other three misses all share a smaller pattern: you forced a relationship onto sentences that don't actually have it. We'll fix all of this with one new framework and seven specific walk-throughs.</p>
+</section>
+
+<!-- ============ SLIDE 4: THE 7 JOBS FRAMEWORK ============ -->
+<section class="slide">
+  <div class="topbar">
+    <div class="brand"><span class="brand-star">✦</span><span class="brand-name">Illuminairy</span></div>
+    <div class="mono">New framework</div>
+  </div>
+  <div class="eyebrow"><span class="dot"></span><span class="mono">Expanding the four categories from lesson 01</span></div>
+  <h2 class="slide-h">What is the second sentence <span class="accent">doing</span>?</h2>
+  <p class="body">Last time we covered four categories. To get medium right consistently, you need to split a couple of them. There are seven jobs the second sentence can do. Each job has its own family of words.</p>
+
+  <div class="jobs">
+    <div class="job j1">
+      <div class="cat-label">Job 01</div>
+      <div class="verb">Push back</div>
+      <div class="words">however, nonetheless, granted, that said, yet, still, on the other hand</div>
+    </div>
+    <div class="job j2">
+      <div class="cat-label">Job 02</div>
+      <div class="verb">Pile on</div>
+      <div class="words">moreover, furthermore, also, likewise, similarly, in addition</div>
+    </div>
+    <div class="job j3">
+      <div class="cat-label">Job 03 · NEW</div>
+      <div class="verb">Intensify</div>
+      <div class="words">in fact, indeed</div>
+    </div>
+    <div class="job j4">
+      <div class="cat-label">Job 04</div>
+      <div class="verb">Result from</div>
+      <div class="words">therefore, consequently, thus, accordingly, hence, as a result</div>
+    </div>
+    <div class="job j5">
+      <div class="cat-label">Job 05</div>
+      <div class="verb">Exemplify</div>
+      <div class="words">for example, for instance, specifically, in particular</div>
+    </div>
+    <div class="job j6">
+      <div class="cat-label">Job 06 · NEW</div>
+      <div class="verb">Restate</div>
+      <div class="words">in other words, that is</div>
+    </div>
+    <div class="job j7">
+      <div class="cat-label">Job 07</div>
+      <div class="verb">Sequence</div>
+      <div class="words">then, next, subsequently, eventually, finally, ultimately, meanwhile</div>
+    </div>
+  </div>
+
+  <div class="trick">
+    <div class="lbl">The two new ones</div>
+    <h4>Intensify and Restate get their own slots now.</h4>
+    <p>"In fact" and "indeed" don't just add information, they double down on the previous claim. "In other words" and "that is" don't add either, they say the same thing in plainer words. Mixing these up with Pile On or Result From is exactly what happened on Bauhaus.</p>
+  </div>
+</section>
+
+<!-- ============ SLIDE 5: PILE ON vs INTENSIFY ============ -->
+<section class="slide">
+  <div class="topbar">
+    <div class="brand"><span class="brand-star">✦</span><span class="brand-name">Illuminairy</span></div>
+    <div class="mono">Sharpening the new jobs</div>
+  </div>
+  <div class="eyebrow"><span class="dot"></span><span class="mono">Pile on vs Intensify</span></div>
+  <h2 class="slide-h">Two ways to "keep going in the same direction."</h2>
+
+  <div class="twocol">
+    <div class="trace">
+      <div class="lbl">Pile on (Addition)</div>
+      <p><strong>The library doubled its book holdings. Moreover, it tripled its digital media.</strong></p>
+      <p style="margin-top: 8px; color: var(--muted); font-size: 14px; line-height: 1.55;">Two <em>separate</em> facts about the library. Sentence two adds something new on top of sentence one. Both true, but they're different facts.</p>
+    </div>
+    <div class="trace">
+      <div class="lbl">Intensify (Reinforcement)</div>
+      <p><strong>The library has grown significantly. In fact, it has doubled in size over the past decade.</strong></p>
+      <p style="margin-top: 8px; color: var(--muted); font-size: 14px; line-height: 1.55;">Sentence two is the <em>same idea</em> as sentence one, just with stronger evidence. It doesn't add a new fact, it backs up the first claim with proof.</p>
+    </div>
+  </div>
+
+  <div class="trick">
+    <div class="lbl">The test that separates them</div>
+    <h4>Does sentence 2 prove sentence 1, or add a second point next to it?</h4>
+    <p>Proof → Intensify (in fact, indeed). Second point → Pile on (moreover, also, in addition). The Bauhaus question hinged exactly on this distinction.</p>
+  </div>
+</section>
+
+<!-- ============ SLIDE 6: CAUSE & EFFECT - THE "SO" TEST ============ -->
+<section class="slide">
+  <div class="topbar">
+    <div class="brand"><span class="brand-star">✦</span><span class="brand-name">Illuminairy</span></div>
+    <div class="mono">Sharpening Result From</div>
+  </div>
+  <div class="eyebrow warn"><span class="dot"></span><span class="mono">Your weakest spot</span></div>
+  <h2 class="slide-h">Cause &amp; effect needs a real cause.</h2>
+  <p class="lead">"Therefore," "consequently," and "thus" only work if sentence one literally <em>causes</em> sentence two. Not "leads to," not "is related to." Causes.</p>
+
+  <div class="qcard">
+    <h3 class="sub-h">The "so" test</h3>
+    <p class="body">Replace the blank with the word "so." If the sentence reads naturally, cause &amp; effect is the relationship. If "so" feels forced, it's a different job.</p>
+
+    <div class="gap-md"></div>
+
+    <div class="trace">
+      <div class="lbl">Test 1 — Yeats</div>
+      <p>Yeats was fascinated by mysticism, <strong>so</strong> his poems are deeply symbolic.</p>
+      <p style="margin-top: 4px; color: var(--forest); font-weight: 700; font-size: 14px;">Reads naturally. Cause &amp; effect.</p>
+    </div>
+    <div class="trace">
+      <div class="lbl">Test 2 — Stoclet House</div>
+      <p>The Stoclet House is preserved down to its original furniture, <strong>so</strong> it qualifies for UNESCO status.</p>
+      <p style="margin-top: 4px; color: var(--forest); font-weight: 700; font-size: 14px;">Reads naturally. Cause &amp; effect.</p>
+    </div>
+    <div class="trace warn">
+      <div class="lbl">Test 3 — Bauhaus (the trap)</div>
+      <p>The Bauhaus reshaped architecture, <strong>so</strong> its principles still influence today.</p>
+      <p style="margin-top: 4px; color: var(--tomato); font-weight: 700; font-size: 14px;">Reads okay, but loosely. The second sentence isn't really a <em>result</em>, it's another way of saying the first sentence is still true. That's Intensify (in fact), not Result From.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 7: BILLY JOEL ============ -->
+<section class="slide">
+  <div class="topbar">
+    <div class="brand"><span class="brand-star">✦</span><span class="brand-name">Illuminairy</span></div>
+    <div class="mono">Walk-through 01 · Set 1, Q19</div>
+  </div>
+  <div class="eyebrow warn"><span class="dot"></span><span class="mono">The only easy one you missed</span></div>
+  <h2 class="slide-h">Billy Joel.</h2>
+
+  <div class="qcard">
+    <div class="qmeta">
+      <span class="diff-e">Easy</span>
+      <span>Transitions</span>
+      <span class="time">155 sec on this · target ~25 sec</span>
+    </div>
+    <p class="passage">
+      Billy Joel is a singer and songwriter who is best known for the song "Piano Man." He started his music career in earnest when he found he did not have enough credits to graduate high school and claimed he did not care about finishing his education. <span class="blank"></span> twenty-five years later he contacted his former school and wrote essays that allowed him to belatedly receive a degree.
+    </p>
+    <div class="choices">
+      <div class="choice her-pick"><div class="letter">A</div>Inevitably,</div>
+      <div class="choice"><div class="letter">B</div>Simultaneously,</div>
+      <div class="choice"><div class="letter">C</div>Consequently,</div>
+      <div class="choice answer"><div class="letter">D</div>Nonetheless,</div>
+    </div>
+
+    <button class="reveal-btn" onclick="revealNext(this)">Walk it through</button>
+    <div class="reveal">
+      <div class="trace">
+        <div class="lbl">Plain words</div>
+        <p>Sentence A: He dropped out and said he didn't care about a diploma.<br>Sentence B: 25 years later he went back and did the work to get it.</p>
+      </div>
+      <div class="trace">
+        <div class="lbl">What's the second sentence doing?</div>
+        <p>He <em>said</em> he didn't care. He <em>then</em> did the opposite of what that suggests. Sentence two pushes back on sentence one. Push back = contrast/concession. The answer is in the "Nonetheless" family.</p>
+      </div>
+      <div class="trace warn">
+        <div class="lbl">Why "Inevitably" tripped you</div>
+        <p>"Inevitably" means "it was bound to happen." But nothing in sentence one suggests he was bound to come back for the degree, the opposite. He said he didn't care. Him doing it 25 years later is a reversal, not an inevitability. Memorize this: <strong>inevitably = it was always going to happen</strong>. If the second sentence is a surprise, "inevitably" is wrong.</p>
+      </div>
+      <div class="trace note">
+        <div class="lbl">Quick eliminations on the rest</div>
+        <p>B "Simultaneously" means at the same time. The events are 25 years apart, so this is impossible. C "Consequently" = caused by. His dropping out didn't <em>cause</em> him to come back. It was the opposite, he came back <em>despite</em> his earlier attitude. Both gone.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 8: YEATS ============ -->
+<section class="slide">
+  <div class="topbar">
+    <div class="brand"><span class="brand-star">✦</span><span class="brand-name">Illuminairy</span></div>
+    <div class="mono">Walk-through 02 · Set 2, Q8</div>
+  </div>
+  <div class="eyebrow warn"><span class="dot"></span><span class="mono">Missed cause &amp; effect #1</span></div>
+  <h2 class="slide-h">Yeats.</h2>
+
+  <div class="qcard">
+    <div class="qmeta">
+      <span class="diff-m">Medium</span>
+      <span>Transitions</span>
+      <span class="time">25 sec on this</span>
+    </div>
+    <p class="passage">
+      William Butler Yeats is considered one of the foremost poets of the 20th century. He was influential in the Irish Literary Revival, and he was also deeply fascinated by mysticism and astrology. <span class="blank"></span> many of his poems are deeply symbolic and have allusive imagery.
+    </p>
+    <div class="choices">
+      <div class="choice"><div class="letter">A</div>However,</div>
+      <div class="choice her-pick"><div class="letter">B</div>Likewise,</div>
+      <div class="choice"><div class="letter">C</div>Notwithstanding,</div>
+      <div class="choice answer"><div class="letter">D</div>Consequently,</div>
+    </div>
+
+    <button class="reveal-btn" onclick="revealNext(this)">Walk it through</button>
+    <div class="reveal">
+      <div class="trace">
+        <div class="lbl">Plain words</div>
+        <p>Sentence A: Yeats was fascinated by mysticism and astrology.<br>Sentence B: His poems are full of symbols and allusions.</p>
+      </div>
+      <div class="trace">
+        <div class="lbl">Apply the "so" test</div>
+        <p>"Yeats was fascinated by mysticism, <strong>so</strong> his poems are symbolic." Reads naturally. That's cause &amp; effect. His interest in mysticism is the cause; the symbolic style of his poems is the effect.</p>
+      </div>
+      <div class="trace warn">
+        <div class="lbl">Why "Likewise" tripped you</div>
+        <p>"Likewise" means "in the same way." It's a Pile On word. It would work if sentence two were a second separate fact about Yeats ("Likewise, he was an active politician"). But sentence two isn't a separate fact, it's the <em>consequence</em> of the fascination from sentence one. His symbolic style isn't <em>similar</em> to his mysticism, it's <em>caused by</em> it.</p>
+      </div>
+      <div class="trace note">
+        <div class="lbl">Spot the trap going forward</div>
+        <p>When two sentences are clearly related and you start to reach for an addition word, run the "so" test first. If "so" fits, the answer is in the Result From family, not Pile On.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 9: STOCLET ============ -->
+<section class="slide">
+  <div class="topbar">
+    <div class="brand"><span class="brand-star">✦</span><span class="brand-name">Illuminairy</span></div>
+    <div class="mono">Walk-through 03 · Set 2, Q3</div>
+  </div>
+  <div class="eyebrow warn"><span class="dot"></span><span class="mono">Missed cause &amp; effect #2</span></div>
+  <h2 class="slide-h">Stoclet House.</h2>
+
+  <div class="qcard">
+    <div class="qmeta">
+      <span class="diff-m">Medium</span>
+      <span>Transitions</span>
+      <span class="time">194 sec on this · target ~45 sec</span>
+    </div>
+    <p class="passage">
+      Since it was completed in 1911, the Stoclet House in Belgium has been among the finest examples of the Vienna Secession of the Art Nouveau style. The integrity of the exterior architecture and garden remains almost untouched, and the interior has undergone few changes. Even much of the furniture is original. <span class="blank"></span> the house fulfills the architectural criteria necessary for a UNESCO World Heritage site, which it became in 2009.
+    </p>
+    <div class="choices">
+      <div class="choice her-pick"><div class="letter">A</div>Subsequently,</div>
+      <div class="choice"><div class="letter">B</div>Otherwise,</div>
+      <div class="choice answer"><div class="letter">C</div>Therefore,</div>
+      <div class="choice"><div class="letter">D</div>However,</div>
+    </div>
+
+    <button class="reveal-btn" onclick="revealNext(this)">Walk it through</button>
+    <div class="reveal">
+      <div class="trace">
+        <div class="lbl">Plain words</div>
+        <p>Sentence A: The house is preserved, even the furniture is original.<br>Sentence B: The house qualifies for UNESCO status.</p>
+      </div>
+      <div class="trace">
+        <div class="lbl">Apply the "so" test</div>
+        <p>"The house is fully preserved, <strong>so</strong> it qualifies for UNESCO." Reads naturally. The preservation is the cause; the UNESCO qualification is the effect.</p>
+      </div>
+      <div class="trace warn">
+        <div class="lbl">Why "Subsequently" tripped you (and ate 194 seconds)</div>
+        <p>The passage mentions two dates (1911 and 2009), so your brain locked onto time order. "Subsequently" means "next in time" — and yes, 2009 is after 1911. But the relationship between the two sentences isn't time, it's <em>logic</em>. The qualification didn't just happen <em>later</em>, it happened <em>because</em> the house met the criteria. Time order is incidental. The logic is causal.</p>
+      </div>
+      <div class="trace note">
+        <div class="lbl">The check that would have saved you</div>
+        <p>When you find yourself between a Sequence word and a Result From word, ask: "Did the second event happen <em>just because time passed</em>, or because the first event <em>caused</em> it?" If A caused B, use Result From. Time alone is rarely the relationship a transitions question is testing.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 10: BAUHAUS ============ -->
+<section class="slide">
+  <div class="topbar">
+    <div class="brand"><span class="brand-star">✦</span><span class="brand-name">Illuminairy</span></div>
+    <div class="mono">Walk-through 04 · Set 2, Q25</div>
+  </div>
+  <div class="eyebrow warn"><span class="dot"></span><span class="mono">Over-applied cause &amp; effect</span></div>
+  <h2 class="slide-h">Bauhaus.</h2>
+
+  <div class="qcard">
+    <div class="qmeta">
+      <span class="diff-m">Medium</span>
+      <span>Transitions</span>
+      <span class="time">233 sec on this · the slowest of any miss</span>
+    </div>
+    <p class="passage">
+      The Bauhaus movement, a revolutionary art and design school founded in Germany, made significant strides in architecture by embracing functionalism and industrial materials. This approach, which emphasized simplicity, efficiency, and the integration of art with technology, reshaped the field of architecture. <span class="blank"></span> the Bauhaus's groundbreaking principles continue to influence modern architectural practices even today.
+    </p>
+    <div class="choices">
+      <div class="choice her-pick"><div class="letter">A</div>Therefore,</div>
+      <div class="choice"><div class="letter">B</div>In contrast,</div>
+      <div class="choice answer"><div class="letter">C</div>In fact,</div>
+      <div class="choice"><div class="letter">D</div>Nevertheless,</div>
+    </div>
+
+    <button class="reveal-btn" onclick="revealNext(this)">Walk it through</button>
+    <div class="reveal">
+      <div class="trace">
+        <div class="lbl">Plain words</div>
+        <p>Sentence A: The Bauhaus changed architecture.<br>Sentence B: Its principles still influence architecture today.</p>
+      </div>
+      <div class="trace">
+        <div class="lbl">What's sentence 2 doing?</div>
+        <p>Sentence 2 is the same claim as sentence 1, with stronger evidence. Sentence 1 says the Bauhaus changed architecture. Sentence 2 backs that up: yes, in fact, it still does. Job = Intensify.</p>
+      </div>
+      <div class="trace warn">
+        <div class="lbl">Why "Therefore" tripped you (and ate 233 seconds)</div>
+        <p>You were thinking "the Bauhaus changed architecture, therefore its influence continues." That sounds reasonable. But the continued influence isn't really a <em>logical consequence</em> of past influence, it's <em>more evidence</em> for the original claim. The two sentences are making the same point, just hitting it twice. That's not Result From, that's Intensify.</p>
+      </div>
+      <div class="trace note">
+        <div class="lbl">The cleaner test</div>
+        <p>Ask: "Is sentence 2 a new fact that follows from sentence 1, or is it the same fact restated with more punch?" If new fact → Result From. If same fact with proof → Intensify. The 233 seconds means you were stuck between two interpretations. Run this test and you can settle it in five seconds.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 11: BAKLAVA ============ -->
+<section class="slide">
+  <div class="topbar">
+    <div class="brand"><span class="brand-star">✦</span><span class="brand-name">Illuminairy</span></div>
+    <div class="mono">Walk-through 05 · Set 2, Q2</div>
+  </div>
+  <div class="eyebrow warn"><span class="dot"></span><span class="mono">Forced contrast onto a sequence</span></div>
+  <h2 class="slide-h">Baklava.</h2>
+
+  <div class="qcard">
+    <div class="qmeta">
+      <span class="diff-m">Medium</span>
+      <span>Transitions · Sequence</span>
+      <span class="time">37 sec on this · fine timing</span>
+    </div>
+    <p class="passage">
+      Baklava, a sweet and sticky dessert, originates from an eighth century B.C.E delicacy consisting of layered flatbread sprinkled with nuts. This dessert enjoyed by the Assyrian people was later adapted by the Ancient Greek and Roman people by adding honey, cheese, and bay leaves between the layers of bread. <span class="blank"></span> the Ottoman Empire brought about the way of making baklava that is closest to today's version around 500 years ago.
+    </p>
+    <div class="choices">
+      <div class="choice"><div class="letter">A</div>Consequently,</div>
+      <div class="choice answer"><div class="letter">B</div>Finally,</div>
+      <div class="choice her-pick"><div class="letter">C</div>Regardless,</div>
+      <div class="choice"><div class="letter">D</div>For instance,</div>
+    </div>
+
+    <button class="reveal-btn" onclick="revealNext(this)">Walk it through</button>
+    <div class="reveal">
+      <div class="trace">
+        <div class="lbl">Plain words</div>
+        <p>Sentence A: Assyrians had basic baklava. Greeks and Romans added honey, cheese, bay leaves.<br>Sentence B: The Ottomans made the version closest to today's around 500 years ago.</p>
+      </div>
+      <div class="trace">
+        <div class="lbl">What's the structure?</div>
+        <p>This whole passage is a timeline: Assyrian (8th c. BCE) → Greek/Roman → Ottoman (500 years ago). Sentence B is the last step in that timeline. Job = Sequence. "Finally" is the sequence word that closes a list of steps.</p>
+      </div>
+      <div class="trace warn">
+        <div class="lbl">Why "Regardless" tripped you</div>
+        <p>"Regardless" is a contrast word, it means "in spite of what was just said." But nothing in sentence A is being contradicted or qualified by sentence B. The Ottomans aren't fighting the Greek/Roman version, they're the next step after it. There's no contrast anywhere in this passage, so a contrast word can't be the answer.</p>
+      </div>
+      <div class="trace note">
+        <div class="lbl">The rule this teaches</div>
+        <p>If you can't point to <em>where the contrast is</em> in the passage, don't pick a contrast word. Same goes for the other categories. The transition has to match a relationship that's actually on the page, not one you imagined.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 12: BLS / UNLESS ============ -->
+<section class="slide">
+  <div class="topbar">
+    <div class="brand"><span class="brand-star">✦</span><span class="brand-name">Illuminairy</span></div>
+    <div class="mono">Walk-through 06 · Set 2, Q11</div>
+  </div>
+  <div class="eyebrow warn"><span class="dot"></span><span class="mono">Conditional logic</span></div>
+  <h2 class="slide-h">Bureau of Labor Statistics.</h2>
+
+  <div class="qcard">
+    <div class="qmeta">
+      <span class="diff-m">Medium</span>
+      <span>Transitions</span>
+      <span class="time">69 sec on this</span>
+    </div>
+    <p class="passage">
+      In the early months of 1942, the Bureau of Labor Statistics issued a warning about a looming challenge that the United States would soon face. <span class="blank"></span> prompt action was carried out, the country would confront a severe shortage of six million workers, jeopardizing its productivity by the end of 1943.
+    </p>
+    <div class="choices">
+      <div class="choice her-pick"><div class="letter">A</div>If</div>
+      <div class="choice"><div class="letter">B</div>While</div>
+      <div class="choice answer"><div class="letter">C</div>Unless</div>
+      <div class="choice"><div class="letter">D</div>Therefore,</div>
+    </div>
+
+    <button class="reveal-btn" onclick="revealNext(this)">Walk it through</button>
+    <div class="reveal">
+      <div class="trace">
+        <div class="lbl">Plain words</div>
+        <p>Sentence A: BLS warned about a coming problem.<br>Sentence B: [blank] action is taken, the country will have a six-million worker shortage.</p>
+      </div>
+      <div class="trace">
+        <div class="lbl">What does the second sentence need?</div>
+        <p>The shortage happens if action is <em>not</em> taken. So we need a conditional that means "without" or "if not." That's "unless." "Unless prompt action was carried out" = "if prompt action was <em>not</em> carried out."</p>
+      </div>
+      <div class="trace warn">
+        <div class="lbl">Why "If" tripped you</div>
+        <p>"If" is a positive conditional. "If prompt action was carried out, the country would face a shortage" would mean: taking action causes the shortage. That's backwards. Taking action is what <em>prevents</em> the shortage. So "if" fails the logic test.</p>
+      </div>
+      <div class="trace note">
+        <div class="lbl">The if/unless rule</div>
+        <p><strong>If X happens, Y happens.</strong> X causes Y. Positive condition.<br><strong>Unless X happens, Y happens.</strong> Without X, Y happens. X is what would prevent Y.<br>When the action would <em>stop</em> the bad outcome, use "unless." When the action would <em>cause</em> the outcome, use "if."</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 13: GAMMA-RAY / UNDERSTANDABLY ============ -->
+<section class="slide">
+  <div class="topbar">
+    <div class="brand"><span class="brand-star">✦</span><span class="brand-name">Illuminairy</span></div>
+    <div class="mono">Walk-through 07 · Set 2, Q19</div>
+  </div>
+  <div class="eyebrow warn"><span class="dot"></span><span class="mono">Reading the reaction, not the event</span></div>
+  <h2 class="slide-h">Gamma-ray bursts.</h2>
+
+  <div class="qcard">
+    <div class="qmeta">
+      <span class="diff-m">Medium</span>
+      <span>Transitions</span>
+      <span class="time">41 sec on this</span>
+    </div>
+    <p class="passage">
+      For many years, astronomers believed that gamma-ray bursts (GRB) either lasted no longer than 2 seconds or for even less time. <span class="blank"></span> they were shocked when two NASA telescopes observed a GRB that lasted for 50 seconds.
+    </p>
+    <div class="choices">
+      <div class="choice answer"><div class="letter">A</div>Understandably,</div>
+      <div class="choice her-pick"><div class="letter">B</div>Surprisingly,</div>
+      <div class="choice"><div class="letter">C</div>Interestingly,</div>
+      <div class="choice"><div class="letter">D</div>Conclusively,</div>
+    </div>
+
+    <button class="reveal-btn" onclick="revealNext(this)">Walk it through</button>
+    <div class="reveal">
+      <div class="trace">
+        <div class="lbl">Read carefully: what is the blank describing?</div>
+        <p>The blank introduces sentence B. Sentence B says: "<em>they were shocked</em> when telescopes observed a 50-second GRB." The blank is describing the astronomers' <strong>reaction</strong> (being shocked), not the discovery itself.</p>
+      </div>
+      <div class="trace">
+        <div class="lbl">Is their reaction expected or unexpected?</div>
+        <p>They believed GRBs were at most 2 seconds. They saw one that lasted 50 seconds. Of course they were shocked. Their shock is completely understandable given what they used to believe. So we want a word that says "their reaction makes sense." That's "Understandably."</p>
+      </div>
+      <div class="trace warn">
+        <div class="lbl">Why "Surprisingly" tripped you</div>
+        <p>The <em>discovery</em> was surprising, yes. But the blank isn't describing the discovery, it's describing the astronomers' reaction to it. "Surprisingly, they were shocked" would mean their shock itself was surprising, like, "weirdly, they reacted by being shocked." That's not the meaning the passage wants. The shock is the expected reaction to a surprising finding.</p>
+      </div>
+      <div class="trace note">
+        <div class="lbl">The mini-rule</div>
+        <p>When a transition word describes <em>how someone reacted</em>, ask whether the reaction is the obvious response given the setup. If yes, use "Understandably" or "Naturally." If the reaction is itself unexpected, then use "Surprisingly" or "Strangely."</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 14: VOCAB CLINIC ============ -->
+<section class="slide">
+  <div class="topbar">
+    <div class="brand"><span class="brand-star">✦</span><span class="brand-name">Illuminairy</span></div>
+    <div class="mono">Vocab clinic</div>
+  </div>
+  <div class="eyebrow"><span class="dot"></span><span class="mono">Tricky transitions you've now seen</span></div>
+  <h2 class="slide-h">Ten transition words to know cold.</h2>
+  <p class="body">These showed up in your misses or in their distractors. Memorize what each one signals.</p>
+
+  <div class="word-grid" style="grid-template-columns: 1fr; gap: 8px;">
+    <div style="display: grid; grid-template-columns: 200px 1fr; gap: 18px; padding: 14px 18px; background: white; border: 1px solid var(--line); border-radius: 10px; align-items: center;">
+      <span class="display" style="font-size: 23px; color: var(--navy);">Nonetheless</span>
+      <span style="font-size: 15px; line-height: 1.55;"><strong style="color: var(--tomato);">Push back.</strong> Sentence 2 happens <em>in spite of</em> sentence 1. Same family as "nevertheless" and "even so."</span>
+    </div>
+    <div style="display: grid; grid-template-columns: 200px 1fr; gap: 18px; padding: 14px 18px; background: white; border: 1px solid var(--line); border-radius: 10px; align-items: center;">
+      <span class="display" style="font-size: 23px; color: var(--navy);">In fact</span>
+      <span style="font-size: 15px; line-height: 1.55;"><strong style="color: var(--plum);">Intensify.</strong> Sentence 2 backs up sentence 1 with stronger evidence. Same family as "indeed."</span>
+    </div>
+    <div style="display: grid; grid-template-columns: 200px 1fr; gap: 18px; padding: 14px 18px; background: white; border: 1px solid var(--line); border-radius: 10px; align-items: center;">
+      <span class="display" style="font-size: 23px; color: var(--navy);">Subsequently</span>
+      <span style="font-size: 15px; line-height: 1.55;"><strong style="color: #8a5cb8;">Sequence.</strong> Means "after that, in time." Pure time order. Does <em>not</em> mean "as a result."</span>
+    </div>
+    <div style="display: grid; grid-template-columns: 200px 1fr; gap: 18px; padding: 14px 18px; background: white; border: 1px solid var(--line); border-radius: 10px; align-items: center;">
+      <span class="display" style="font-size: 23px; color: var(--navy);">Inevitably</span>
+      <span style="font-size: 15px; line-height: 1.55;"><strong style="color: #8a5cb8;">Sequence + fate.</strong> Means "it was bound to happen." Only fits if the passage shows that the outcome was unavoidable.</span>
+    </div>
+    <div style="display: grid; grid-template-columns: 200px 1fr; gap: 18px; padding: 14px 18px; background: white; border: 1px solid var(--line); border-radius: 10px; align-items: center;">
+      <span class="display" style="font-size: 23px; color: var(--navy);">Understandably</span>
+      <span style="font-size: 15px; line-height: 1.55;"><strong style="color: var(--forest);">Reaction signal.</strong> The reaction described in sentence 2 makes sense given sentence 1. "Naturally" is the same.</span>
+    </div>
+    <div style="display: grid; grid-template-columns: 200px 1fr; gap: 18px; padding: 14px 18px; background: white; border: 1px solid var(--line); border-radius: 10px; align-items: center;">
+      <span class="display" style="font-size: 23px; color: var(--navy);">Granted</span>
+      <span style="font-size: 15px; line-height: 1.55;"><strong style="color: var(--tomato);">Push back (soft).</strong> Means "I admit this next point, which weakens what I just said." Concession word.</span>
+    </div>
+    <div style="display: grid; grid-template-columns: 200px 1fr; gap: 18px; padding: 14px 18px; background: white; border: 1px solid var(--line); border-radius: 10px; align-items: center;">
+      <span class="display" style="font-size: 23px; color: var(--navy);">Unless</span>
+      <span style="font-size: 15px; line-height: 1.55;"><strong style="color: var(--mustard);">Negative conditional.</strong> Means "if not." Use when the action would <em>prevent</em> the outcome.</span>
+    </div>
+    <div style="display: grid; grid-template-columns: 200px 1fr; gap: 18px; padding: 14px 18px; background: white; border: 1px solid var(--line); border-radius: 10px; align-items: center;">
+      <span class="display" style="font-size: 23px; color: var(--navy);">Regardless</span>
+      <span style="font-size: 15px; line-height: 1.55;"><strong style="color: var(--tomato);">Push back.</strong> Means "no matter what was just said." Only fits if there's actually something to push back on.</span>
+    </div>
+    <div style="display: grid; grid-template-columns: 200px 1fr; gap: 18px; padding: 14px 18px; background: white; border: 1px solid var(--line); border-radius: 10px; align-items: center;">
+      <span class="display" style="font-size: 23px; color: var(--navy);">Notwithstanding</span>
+      <span style="font-size: 15px; line-height: 1.55;"><strong style="color: var(--tomato);">Push back.</strong> Same as "despite this." Sentence 2 happens even though sentence 1 might suggest otherwise.</span>
+    </div>
+    <div style="display: grid; grid-template-columns: 200px 1fr; gap: 18px; padding: 14px 18px; background: white; border: 1px solid var(--line); border-radius: 10px; align-items: center;">
+      <span class="display" style="font-size: 23px; color: var(--navy);">Otherwise</span>
+      <span style="font-size: 15px; line-height: 1.55;"><strong style="color: var(--mustard);">Conditional.</strong> Means "if not, then this would happen." Used to introduce what would happen in the opposite scenario.</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 15: WORD MATCHING ACTIVITY ============ -->
+<section class="slide">
+  <div class="topbar">
+    <div class="brand"><span class="brand-star">✦</span><span class="brand-name">Illuminairy</span></div>
+    <div class="mono">Activity 01 · word-to-job</div>
+  </div>
+  <div class="eyebrow"><span class="dot"></span><span class="mono">Match each tricky word to its job</span></div>
+  <h2 class="slide-h">Match the word to what it actually does.</h2>
+  <p class="body">Click a word on the left. Then click the job on the right. Pairs will lock. Check at the end.</p>
+
+  <div class="word-grid">
+    <div class="word-col">
+      <h4>Word</h4>
+      <div class="word-items" id="match-left-2">
+        <div class="word-item" data-id="1">Nonetheless</div>
+        <div class="word-item" data-id="2">In fact</div>
+        <div class="word-item" data-id="3">Subsequently</div>
+        <div class="word-item" data-id="4">Inevitably</div>
+        <div class="word-item" data-id="5">Understandably</div>
+        <div class="word-item" data-id="6">Granted</div>
+        <div class="word-item" data-id="7">Unless</div>
+        <div class="word-item" data-id="8">Otherwise</div>
+      </div>
+    </div>
+    <div class="word-col">
+      <h4>What it does</h4>
+      <div class="word-items" id="match-right-2">
+        <div class="word-item" data-id="3">Says "next in time" with no causal claim</div>
+        <div class="word-item" data-id="5">Says the reaction makes sense given the setup</div>
+        <div class="word-item" data-id="1">Pushes back: this happened in spite of that</div>
+        <div class="word-item" data-id="7">Negative conditional, means "if not"</div>
+        <div class="word-item" data-id="2">Intensifies: same point with more proof</div>
+        <div class="word-item" data-id="8">Conditional, means "if not this, then that"</div>
+        <div class="word-item" data-id="4">Says the outcome was bound to happen</div>
+        <div class="word-item" data-id="6">Admits a counterpoint that softens the claim</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="game-controls">
+    <button class="check-btn" onclick="checkMatch2()">Check answers</button>
+    <button class="reset-btn" onclick="resetMatch2()">Reset</button>
+    <div class="score-readout" id="match-score-2"></div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 16: LOOKALIKE BATTLES ============ -->
+<section class="slide">
+  <div class="topbar">
+    <div class="brand"><span class="brand-star">✦</span><span class="brand-name">Illuminairy</span></div>
+    <div class="mono">Lookalike battles</div>
+  </div>
+  <div class="eyebrow"><span class="dot"></span><span class="mono">Words that fool you</span></div>
+  <h2 class="slide-h">Three matchups you've now lost.</h2>
+
+  <div class="battle">
+    <div class="vs">
+      <span class="word-l">Subsequently</span>
+      <span class="vs-bar">vs</span>
+      <span class="word-r" style="color: var(--forest);">Therefore</span>
+    </div>
+    <p class="diff">Both can follow a list of facts about something good or impressive. <strong>Subsequently</strong> just means "after that in time." <strong>Therefore</strong> means "as a logical result." Test: did the second thing happen <em>because</em> of the first thing, or just <em>later than</em> it? Stoclet House was preserved <em>therefore</em> it qualified for UNESCO, not <em>subsequently</em> it qualified for UNESCO.</p>
+  </div>
+
+  <div class="battle">
+    <div class="vs">
+      <span class="word-l">Therefore</span>
+      <span class="vs-bar">vs</span>
+      <span class="word-r" style="color: var(--forest);">In fact</span>
+    </div>
+    <p class="diff">Both sound like they "continue the same direction." <strong>Therefore</strong> introduces a new fact that follows logically from the first one. <strong>In fact</strong> doubles down on the original claim with more evidence. Test: is sentence 2 a new fact, or the same fact backed up? Bauhaus's modern influence isn't a new fact that <em>follows from</em> its past influence, it's the same fact <em>proven again</em>. That's "In fact," not "Therefore."</p>
+  </div>
+
+  <div class="battle">
+    <div class="vs">
+      <span class="word-l">Likewise</span>
+      <span class="vs-bar">vs</span>
+      <span class="word-r" style="color: var(--forest);">Consequently</span>
+    </div>
+    <p class="diff"><strong>Likewise</strong> means "in the same way" — two separate facts that happen to be parallel. <strong>Consequently</strong> means "as a result" — one thing causes the other. Test: are the two sentences separate parallel facts, or is one the cause of the other? Yeats's fascination with mysticism didn't <em>parallel</em> his symbolic poems, it <em>caused</em> them.</p>
+  </div>
+</section>
+
+<!-- ============ SLIDE 17: TRAP DETECTOR ACTIVITY ============ -->
+<section class="slide">
+  <div class="topbar">
+    <div class="brand"><span class="brand-star">✦</span><span class="brand-name">Illuminairy</span></div>
+    <div class="mono">Activity 02 · trap detector</div>
+  </div>
+  <div class="eyebrow"><span class="dot"></span><span class="mono">Spot the trap before picking the word</span></div>
+  <h2 class="slide-h">Read each passage. Name the trap.</h2>
+
+  <div class="trap-passage">
+    <p style="font-weight: 600; margin-bottom: 8px;">Passage A</p>
+    <p>Researchers initially hypothesized that the new species of beetle would be found only in subtropical forests. <span class="blank"></span> further fieldwork revealed populations thriving in alpine meadows above 9,000 feet.</p>
+  </div>
+  <p style="font-family: Calibri, "Segoe UI", Candara, Tahoma, sans-serif; font-size: 11px; color: var(--muted); letter-spacing: 0.15em; margin-top: 10px;">WHAT TRAP IS THIS QUESTION TESTING?</p>
+  <div class="trap-options" id="trap-A">
+    <div class="trap-opt" data-correct="false"><strong>Sequence trap</strong>Picking "subsequently" when the answer wants a logical relationship</div>
+    <div class="trap-opt" data-correct="true"><strong>Contrast trap</strong>Setup-then-flip pattern, needs "however" or "nonetheless"</div>
+    <div class="trap-opt" data-correct="false"><strong>Reinforcement trap</strong>Two sentences making the same point, needs "in fact"</div>
+    <div class="trap-opt" data-correct="false"><strong>Cause trap</strong>Sentence 2 is the result of sentence 1, needs "therefore"</div>
+  </div>
+
+  <button class="reveal-btn" onclick="revealNext(this)">Show the answer</button>
+  <div class="reveal">
+    <div class="trace" style="margin-top: 14px;">
+      <div class="lbl">Contrast trap</div>
+      <p>"Initially hypothesized" sets up an expectation. "Further fieldwork revealed" knocks it down. Classic setup-then-flip. The word you want is in the "however / nonetheless" family. If you see "initially," "at first," "originally," or "may seem" in sentence 1, expect contrast in sentence 2.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 18: TRAP DETECTOR ROUND 2 ============ -->
+<section class="slide">
+  <div class="topbar">
+    <div class="brand"><span class="brand-star">✦</span><span class="brand-name">Illuminairy</span></div>
+    <div class="mono">Activity 02 · round 2</div>
+  </div>
+  <div class="eyebrow"><span class="dot"></span><span class="mono">Same drill, harder passage</span></div>
+  <h2 class="slide-h">Name the trap.</h2>
+
+  <div class="trap-passage">
+    <p style="font-weight: 600; margin-bottom: 8px;">Passage B</p>
+    <p>Marie Tharp's seafloor maps were dismissed as "girl talk" by the male geologists of her era, who refused to allow her on research vessels. <span class="blank"></span> her work eventually proved the existence of the Mid-Atlantic Ridge and reshaped the field of plate tectonics.</p>
+  </div>
+  <p style="font-family: Calibri, "Segoe UI", Candara, Tahoma, sans-serif; font-size: 11px; color: var(--muted); letter-spacing: 0.15em; margin-top: 10px;">WHAT TRAP IS THIS QUESTION TESTING?</p>
+  <div class="trap-options" id="trap-B">
+    <div class="trap-opt" data-correct="false"><strong>Cause trap</strong>The dismissal caused her work to succeed, needs "consequently"</div>
+    <div class="trap-opt" data-correct="false"><strong>Reinforcement trap</strong>Sentence 2 backs up sentence 1, needs "in fact"</div>
+    <div class="trap-opt" data-correct="true"><strong>Contrast / concession trap</strong>Setup-then-flip across time, needs "nonetheless" or "still"</div>
+    <div class="trap-opt" data-correct="false"><strong>Example trap</strong>Sentence 2 gives an example of sentence 1, needs "for instance"</div>
+  </div>
+
+  <button class="reveal-btn" onclick="revealNext(this)">Show the answer</button>
+  <div class="reveal">
+    <div class="trace" style="margin-top: 14px;">
+      <div class="lbl">Contrast / concession trap</div>
+      <p>The first sentence says she was dismissed and excluded. The second sentence says she succeeded anyway. That's "Nonetheless." The trap here is the cause trap — you might be tempted to read "the dismissal caused her work to succeed" but it didn't. She succeeded <em>despite</em> the dismissal, not <em>because</em> of it. When the second sentence flips the first across time, that's still contrast, not sequence and not cause.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 19: TRAP DETECTOR ROUND 3 ============ -->
+<section class="slide">
+  <div class="topbar">
+    <div class="brand"><span class="brand-star">✦</span><span class="brand-name">Illuminairy</span></div>
+    <div class="mono">Activity 02 · round 3</div>
+  </div>
+  <div class="eyebrow"><span class="dot"></span><span class="mono">Final round</span></div>
+  <h2 class="slide-h">Name the trap.</h2>
+
+  <div class="trap-passage">
+    <p style="font-weight: 600; margin-bottom: 8px;">Passage C</p>
+    <p>Bioluminescent algae produce light through a chemical reaction involving the protein luciferin and the enzyme luciferase. <span class="blank"></span> this same reaction has been adapted by researchers for use in medical imaging, allowing the tracking of cancer cells inside living tissue.</p>
+  </div>
+  <p style="font-family: Calibri, "Segoe UI", Candara, Tahoma, sans-serif; font-size: 11px; color: var(--muted); letter-spacing: 0.15em; margin-top: 10px;">WHAT TRAP IS THIS QUESTION TESTING?</p>
+  <div class="trap-options" id="trap-C">
+    <div class="trap-opt" data-correct="false"><strong>Cause trap</strong>Sentence 2 is a logical result of sentence 1, needs "therefore"</div>
+    <div class="trap-opt" data-correct="false"><strong>Contrast trap</strong>Setup-then-flip, needs "however"</div>
+    <div class="trap-opt" data-correct="true"><strong>Addition trap</strong>Two separate facts about the same chemistry, needs "in addition" or "moreover"</div>
+    <div class="trap-opt" data-correct="false"><strong>Restatement trap</strong>Sentence 2 says the same thing differently, needs "in other words"</div>
+  </div>
+
+  <button class="reveal-btn" onclick="revealNext(this)">Show the answer</button>
+  <div class="reveal">
+    <div class="trace" style="margin-top: 14px;">
+      <div class="lbl">Addition trap</div>
+      <p>Sentence 1 explains the natural reaction. Sentence 2 says researchers also use the reaction. Two true facts about the same chemistry, but one isn't the <em>cause</em> of the other (researchers didn't borrow it <em>because</em> algae produce light, they just use the same reaction). And nothing is being contradicted. Job = Pile on. "In addition" or "Moreover" is the answer. Cause traps love to disguise themselves as addition, so always run the "so" test first.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 20: MIXED PRACTICE 1 ============ -->
+<section class="slide">
+  <div class="topbar">
+    <div class="brand"><span class="brand-star">✦</span><span class="brand-name">Illuminairy</span></div>
+    <div class="mono">Mixed practice · 01 of 03</div>
+  </div>
+  <div class="eyebrow"><span class="dot"></span><span class="mono">No labels this time</span></div>
+  <h2 class="slide-h">Run the method.</h2>
+
+  <div class="qcard">
+    <div class="qmeta">
+      <span class="diff-m">Medium</span>
+      <span>Transitions</span>
+    </div>
+    <p class="passage">
+      The first commercial passenger flight, in 1914, carried a single passenger across Tampa Bay in 23 minutes. <span class="blank"></span> commercial aviation now moves more than four billion passengers across the world each year, with flights covering every inhabited continent.
+    </p>
+    <div class="choices" id="mp1">
+      <div class="choice" data-correct="false"><div class="letter">A</div>Likewise,</div>
+      <div class="choice" data-correct="false"><div class="letter">B</div>Therefore,</div>
+      <div class="choice" data-correct="true"><div class="letter">C</div>Today,</div>
+      <div class="choice" data-correct="false"><div class="letter">D</div>In fact,</div>
+    </div>
+    <button class="reveal-btn" onclick="revealNext(this)">Show answer</button>
+    <div class="reveal">
+      <div class="trace" style="margin-top: 12px;">
+        <div class="lbl">Walk-through</div>
+        <p>Sentence A: 1914, one passenger, 23 minutes. Sentence B: today, 4 billion passengers, global. The relationship is a contrast across time, showing how much it has grown. "Today" is the sequence word that signals "now compared to then." Tempting trap: "In fact" or "Therefore." But sentence 2 isn't proving sentence 1 or following from it logically, it's contrasting then to now. Answer is <strong>C</strong>.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 21: MIXED PRACTICE 2 ============ -->
+<section class="slide">
+  <div class="topbar">
+    <div class="brand"><span class="brand-star">✦</span><span class="brand-name">Illuminairy</span></div>
+    <div class="mono">Mixed practice · 02 of 03</div>
+  </div>
+  <div class="eyebrow"><span class="dot"></span><span class="mono">Cause &amp; effect or reinforcement?</span></div>
+  <h2 class="slide-h">Run the "so" test before picking.</h2>
+
+  <div class="qcard">
+    <div class="qmeta">
+      <span class="diff-m">Medium</span>
+      <span>Transitions</span>
+    </div>
+    <p class="passage">
+      Octopuses have been observed using coconut shells as portable shelters, carrying them across the seafloor and reassembling them around their bodies when threatened. <span class="blank"></span> these animals display one of the most sophisticated tool-use behaviors of any invertebrate, rivaling that of some primates.
+    </p>
+    <div class="choices" id="mp2">
+      <div class="choice" data-correct="false"><div class="letter">A</div>However,</div>
+      <div class="choice" data-correct="true"><div class="letter">B</div>In fact,</div>
+      <div class="choice" data-correct="false"><div class="letter">C</div>Therefore,</div>
+      <div class="choice" data-correct="false"><div class="letter">D</div>Subsequently,</div>
+    </div>
+    <button class="reveal-btn" onclick="revealNext(this)">Show answer</button>
+    <div class="reveal">
+      <div class="trace" style="margin-top: 12px;">
+        <div class="lbl">Walk-through</div>
+        <p>Sentence A: octopuses carry coconut shells around as shelters. Sentence B: they display sophisticated tool use, rivaling primates. Is sentence B a <em>result</em> of sentence A? No, sentence B is a <em>broader claim</em> that sentence A is evidence for. Sentence B intensifies sentence A by stating its larger significance. That's "In fact." </p>
+        <p style="margin-top: 8px;"><strong>"So" test:</strong> "Octopuses carry coconut shells, <em>so</em> they display sophisticated tool use." Reads loose. The shell-carrying <em>is</em> the tool use, it doesn't <em>cause</em> the tool use. Fail. Not Therefore. Answer is <strong>B</strong>.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 22: MIXED PRACTICE 3 ============ -->
+<section class="slide">
+  <div class="topbar">
+    <div class="brand"><span class="brand-star">✦</span><span class="brand-name">Illuminairy</span></div>
+    <div class="mono">Mixed practice · 03 of 03</div>
+  </div>
+  <div class="eyebrow"><span class="dot"></span><span class="mono">Concession word in disguise</span></div>
+  <h2 class="slide-h">Last one before hard practice.</h2>
+
+  <div class="qcard">
+    <div class="qmeta">
+      <span class="diff-h">Hard</span>
+      <span>Transitions</span>
+    </div>
+    <p class="passage">
+      Recent studies have demonstrated that bilingual children develop stronger executive function and metalinguistic awareness than their monolingual peers. <span class="blank"></span> these advantages have been observed primarily in children raised in environments where both languages are used regularly at home, suggesting that simple exposure to a second language at school may not be sufficient.
+    </p>
+    <div class="choices" id="mp3">
+      <div class="choice" data-correct="false"><div class="letter">A</div>For instance,</div>
+      <div class="choice" data-correct="false"><div class="letter">B</div>Consequently,</div>
+      <div class="choice" data-correct="true"><div class="letter">C</div>That said,</div>
+      <div class="choice" data-correct="false"><div class="letter">D</div>In fact,</div>
+    </div>
+    <button class="reveal-btn" onclick="revealNext(this)">Show answer</button>
+    <div class="reveal">
+      <div class="trace" style="margin-top: 12px;">
+        <div class="lbl">Walk-through</div>
+        <p>Sentence A: bilingual kids have advantages. Sentence B: but only when both languages are used at home. Sentence B walks back sentence A by adding a limit on when the advantage actually shows up. That's a concession, the soft-contrast family. "That said" is the concession word here. </p>
+        <p style="margin-top: 8px;">Eliminations: "For instance" would mean sentence B is an example of the advantage, but it's actually a <em>limit</em> on the advantage. "Consequently" would mean the limit is caused by the advantage, which makes no sense. "In fact" would strengthen sentence A, but sentence B weakens it. Answer is <strong>C</strong>.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 23: TIMING RULES ============ -->
+<section class="slide">
+  <div class="topbar">
+    <div class="brand"><span class="brand-star">✦</span><span class="brand-name">Illuminairy</span></div>
+    <div class="mono">Timing</div>
+  </div>
+  <div class="eyebrow warn"><span class="dot"></span><span class="mono">The other reason medium is hard</span></div>
+  <h2 class="slide-h">If you spend 233 seconds, you're guessing.</h2>
+  <p class="body">Long times on a single transitions question mean you've stopped using the method and started reading each choice over and over to see which "feels right." That's vibe-checking. Vibe-checking is what gets these wrong.</p>
+
+  <div class="timer-card">
+    <div class="timer-row">
+      <span class="diff">Easy</span>
+      <span class="note">Target time per question. If you're past this, move on with your best read and flag it.</span>
+      <span class="target">~25s</span>
+    </div>
+    <div class="timer-row">
+      <span class="diff">Medium</span>
+      <span class="note">Same rule. Medium passages are slightly longer so you get a little more.</span>
+      <span class="target">~45s</span>
+    </div>
+    <div class="timer-row">
+      <span class="diff">Hard</span>
+      <span class="note">Hard questions deserve more time, but not three minutes.</span>
+      <span class="target">~75s</span>
+    </div>
+  </div>
+
+  <div class="trick">
+    <div class="lbl">The hard cap</div>
+    <h4>Two-minute rule: if you've been on a transitions question for two minutes, commit to a choice and move on.</h4>
+    <p>Two minutes is already double the time budget for hard. After that, more thinking does not produce a better answer, it produces a worse one. The method gives you the answer in 30 to 60 seconds or it doesn't. Pick the choice that survives elimination and go.</p>
+  </div>
+</section>
+
+<!-- ============ SLIDE 24: WRAP ============ -->
+<section class="slide">
+  <div class="topbar">
+    <div class="brand"><span class="brand-star">✦</span><span class="brand-name">Illuminairy</span></div>
+    <div class="mono">What to do next</div>
+  </div>
+  <div class="eyebrow"><span class="dot"></span><span class="mono">Heading into hard practice</span></div>
+  <h2 class="slide-h">Pull up the hard set.</h2>
+  <p class="lead">You're going to do hard transitions questions next, with these three things in front of you.</p>
+
+  <div class="gap-md"></div>
+
+  <div class="threecol">
+    <div class="job j4" style="grid-column: span 1;">
+      <div class="cat-label">Rule 01</div>
+      <div class="verb">Run the "so" test</div>
+      <div class="words" style="margin-top: 8px;">Before picking a cause &amp; effect word, replace the blank with "so." If it sounds forced, the answer is in a different family.</div>
+    </div>
+    <div class="job j3" style="grid-column: span 1;">
+      <div class="cat-label">Rule 02</div>
+      <div class="verb">Name the job</div>
+      <div class="words" style="margin-top: 8px;">Pick from the 7 jobs (push back, pile on, intensify, result from, exemplify, restate, sequence) <em>before</em> looking at the choices. The choices should confirm, not decide.</div>
+    </div>
+    <div class="job j1" style="grid-column: span 1;">
+      <div class="cat-label">Rule 03</div>
+      <div class="verb">45-second cap</div>
+      <div class="words" style="margin-top: 8px;">If you've been on a transitions question for 45 seconds and you're still torn, commit and move. More time hurts these.</div>
+    </div>
+  </div>
+
+  <div class="trick" style="margin-top: 20px;">
+    <div class="lbl">One more thing</div>
+    <h4>Watch for the cause / sequence / reinforcement triangle.</h4>
+    <p>Almost all of your medium misses lived in this triangle. Two sentences are clearly related, the question is <em>how</em> they relate. Result from (therefore), Sequence (subsequently), and Intensify (in fact) all look similar at a glance. The "so" test plus "is sentence 2 a new fact or the same fact" handles 90% of these.</p>
+  </div>
+</section>
+
+</div>
+
+<!-- ============ NAV ============ -->
+<div class="nav">
+  <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)">← Previous</button>
+  <div class="nav-counter"><span id="curSlide">01</span> / <span id="totSlide">24</span></div>
+  <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">Next →</button>
+</div>
+
+<script>
+  if (new URLSearchParams(location.search).get('embed') === '1') {
+    document.body.classList.add('embed');
+  }
+
+  const slides = document.querySelectorAll('.slide');
+  let current = 0;
+  const total = slides.length;
+  document.getElementById('totSlide').textContent = String(total).padStart(2, '0');
+
+  function showSlide(i) {
+    slides.forEach((s, idx) => s.classList.toggle('active', idx === i));
+    document.getElementById('curSlide').textContent = String(i + 1).padStart(2, '0');
+    document.getElementById('prevBtn').disabled = (i === 0);
+    document.getElementById('nextBtn').disabled = (i === total - 1);
+    slides[i].scrollTop = 0;
+  }
+  function changeSlide(delta) {
+    const next = Math.max(0, Math.min(total - 1, current + delta));
+    if (next !== current) { current = next; showSlide(current); }
+  }
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight') changeSlide(1);
+    if (e.key === 'ArrowLeft') changeSlide(-1);
+  });
+  showSlide(0);
+
+  function revealNext(btn) {
+    const rev = btn.nextElementSibling;
+    if (rev && rev.classList.contains('reveal')) {
+      rev.classList.add('shown');
+      btn.style.display = 'none';
+    }
+  }
+
+  // Choice click handlers for mini-tests (mixed practice)
+  document.querySelectorAll('.qcard .choices').forEach(group => {
+    const hasDataCorrect = group.querySelector('.choice[data-correct]');
+    if (!hasDataCorrect) return; // skip walk-through cards which use her-pick/answer instead
+    group.querySelectorAll('.choice[data-correct]').forEach(c => {
+      c.addEventListener('click', () => {
+        group.querySelectorAll('.choice').forEach(x => {
+          x.classList.remove('correct', 'wrong', 'dim');
+          if (x.getAttribute('data-correct') === 'true') x.classList.add('correct');
+          else x.classList.add('dim');
+        });
+        if (c.getAttribute('data-correct') !== 'true') c.classList.add('wrong');
+      });
+    });
+  });
+
+  // Trap detector click handler
+  document.querySelectorAll('.trap-options').forEach(group => {
+    group.querySelectorAll('.trap-opt').forEach(opt => {
+      opt.addEventListener('click', () => {
+        const isCorrect = opt.getAttribute('data-correct') === 'true';
+        group.querySelectorAll('.trap-opt').forEach(o => {
+          o.classList.remove('correct', 'wrong', 'dim');
+          if (o.getAttribute('data-correct') === 'true') o.classList.add('correct');
+          else o.classList.add('dim');
+        });
+        if (!isCorrect) opt.classList.add('wrong');
+      });
+    });
+  });
+
+  // ============ MATCHING GAME (slide 15) ============
+  let matchSelectedLeft2 = null, matchSelectedRight2 = null;
+  const matches2 = {};
+
+  document.querySelectorAll('#match-left-2 .word-item').forEach(item => {
+    item.addEventListener('click', () => {
+      if (item.classList.contains('matched')) return;
+      if (matchSelectedLeft2) matchSelectedLeft2.classList.remove('selected');
+      matchSelectedLeft2 = item;
+      item.classList.add('selected');
+      tryMatch2();
+    });
+  });
+  document.querySelectorAll('#match-right-2 .word-item').forEach(item => {
+    item.addEventListener('click', () => {
+      if (item.classList.contains('matched')) return;
+      if (matchSelectedRight2) matchSelectedRight2.classList.remove('selected');
+      matchSelectedRight2 = item;
+      item.classList.add('selected');
+      tryMatch2();
+    });
+  });
+
+  function tryMatch2() {
+    if (matchSelectedLeft2 && matchSelectedRight2) {
+      const lId = matchSelectedLeft2.getAttribute('data-id');
+      const rId = matchSelectedRight2.getAttribute('data-id');
+      matchSelectedLeft2.classList.remove('selected');
+      matchSelectedRight2.classList.remove('selected');
+      matchSelectedLeft2.classList.add('matched');
+      matchSelectedRight2.classList.add('matched');
+      const pairLabel = String(Object.keys(matches2).length + 1);
+      matchSelectedLeft2.setAttribute('data-pair', pairLabel);
+      matchSelectedRight2.setAttribute('data-pair', pairLabel);
+      matches2[pairLabel] = { left: matchSelectedLeft2, right: matchSelectedRight2, leftId: lId, rightId: rId };
+      matchSelectedLeft2 = null;
+      matchSelectedRight2 = null;
+    }
+  }
+
+  function checkMatch2() {
+    let correct = 0;
+    const totalPairs = document.querySelectorAll('#match-left-2 .word-item').length;
+    Object.values(matches2).forEach(m => {
+      if (m.leftId === m.rightId) {
+        m.left.classList.add('right');
+        m.right.classList.add('right');
+        m.left.classList.remove('wrong');
+        m.right.classList.remove('wrong');
+        correct++;
+      } else {
+        m.left.classList.add('wrong');
+        m.right.classList.add('wrong');
+        m.left.classList.remove('right');
+        m.right.classList.remove('right');
+      }
+    });
+    const readout = document.getElementById('match-score-2');
+    readout.textContent = `${correct} of ${totalPairs} pairs correct`;
+    readout.classList.toggle('good', correct === totalPairs);
+  }
+
+  function resetMatch2() {
+    document.querySelectorAll('#match-left-2 .word-item, #match-right-2 .word-item').forEach(item => {
+      item.classList.remove('matched', 'selected', 'right', 'wrong');
+      item.removeAttribute('data-pair');
+    });
+    for (const k in matches2) delete matches2[k];
+    matchSelectedLeft2 = null;
+    matchSelectedRight2 = null;
+    document.getElementById('match-score-2').textContent = '';
+    document.getElementById('match-score-2').classList.remove('good');
+  }
+</script>
+
+</body>
+</html>

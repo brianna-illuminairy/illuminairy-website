@@ -70,4 +70,20 @@ export const POST_SESSION_2_HOMEWORK = {
     "Two Transitions problem sets live in the Homework Portal (separate login). Follow the steps below on this portal first, then open the Homework Portal for Transitions 1 and 2."
 } as const;
 
+/** After Week 2 Lesson 2 (medium session). Assigned in my.illuminairy.com Homework Portal. */
+export const POST_SESSION_2_LESSON_2_HOMEWORK = {
+  headline: "Homework Portal · Timed Transitions practice",
+  title: "Timed Transitions practice",
+  dueLabel: "Sunday, June 22",
+  problemCount: 30,
+  durationMinutes: 37,
+  body:
+    "Complete the timed set in the Homework Portal: 30 Transitions questions with a 37-minute timer. Run it in one sitting, test conditions. Use the three rules from tonight before you look at choices.",
+  rules: [
+    "Run the \"so\" test before any cause-and-effect word.",
+    "Name the job sentence two is doing before you read the choices.",
+    "If you are past 45 seconds on a question, commit and move."
+  ] as const
+} as const;
+
 export const WEEK2_SLIDE_DECK_HREF = "/danielle/files/transitions-lesson";
