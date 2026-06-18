@@ -1,106 +1,42 @@
 import Link from "next/link";
+import type { ReactNode } from "react";
+import {
+  AccuracyByDifficulty,
+  GoalRangeVisual,
+  MathMissHabits,
+  MathStatsStrip,
+  RwMissBreakdown,
+  ScoreOverviewCards,
+  ScoringModelCompare,
+  SectionScoreCompare,
+  TotalScoreScale,
+  TutoringPriorityLadder,
+  WeeklyProgramStrip,
+} from "@/components/soha/diagnostic-visuals";
 
-function ScoreBar({
-  label,
-  low,
-  high,
-  max = 800,
-  accent = "rw"
-}: {
-  label: string;
-  low: number;
-  high: number;
-  max?: number;
-  accent?: "rw" | "math" | "total";
-}) {
-  const mid = (low + high) / 2;
-  const left = (low / max) * 100;
-  const width = ((high - low) / max) * 100;
-  const marker = (mid / max) * 100;
-
-  return (
-    <div className={`soha-diag__bar soha-diag__bar--${accent}`}>
-      <div className="soha-diag__bar-head">
-        <span className="soha-diag__bar-label">{label}</span>
-        <span className="soha-diag__bar-score">
-          {low}–{high}
-        </span>
-      </div>
-      <div className="soha-diag__bar-track" aria-hidden="true">
-        <div className="soha-diag__bar-range" style={{ left: `${left}%`, width: `${width}%` }} />
-        <div className="soha-diag__bar-dot" style={{ left: `${marker}%` }} />
-      </div>
-    </div>
-  );
-}
-
-function DifficultyRow({
-  section,
-  easy,
-  medium,
-  hard,
-  correct,
-  total
-}: {
-  section: string;
-  easy: string;
-  medium: string;
-  hard: string;
-  correct: string;
-  total: string;
-}) {
-  return (
-    <div className="soha-diag__diff-row">
-      <div className="soha-diag__diff-head">
-        <strong>{section}</strong>
-        <span>
-          {correct} of {total}
-        </span>
-      </div>
-      <div className="soha-diag__diff-pills">
-        <span className="soha-diag__pill">Easy {easy}</span>
-        <span className="soha-diag__pill">Medium {medium}</span>
-        <span className="soha-diag__pill">Hard {hard}</span>
-      </div>
-    </div>
-  );
-}
-
-function MissCard({
-  id,
+function MissLine({
   difficulty,
-  topic,
-  note
+  children,
 }: {
-  id: string;
-  difficulty: string;
-  topic: string;
-  note: string;
+  difficulty?: "easy" | "medium" | "hard";
+  children: ReactNode;
 }) {
-  const diffClass =
-    difficulty === "Easy"
-      ? "soha-diag__miss-tag--easy"
-      : difficulty === "Medium"
-        ? "soha-diag__miss-tag--medium"
-        : "soha-diag__miss-tag--hard";
-
-  return (
-    <div className="soha-diag__miss">
-      <div className="soha-diag__miss-top">
-        <span className="soha-diag__miss-id">{id}</span>
-        <span className={`soha-diag__miss-tag ${diffClass}`}>{difficulty}</span>
-        <span className="soha-diag__miss-topic">{topic}</span>
-      </div>
-      <p>{note}</p>
-    </div>
-  );
+  const cls = difficulty
+    ? `soha-diag__plain-miss soha-diag__plain-miss--${difficulty}`
+    : "soha-diag__plain-miss";
+  return <li className={cls}>{children}</li>;
 }
 
-function FixCard({ title, body }: { title: string; body: string }) {
+function PatternBlock({ index, title, body }: { index: number; title: string; body: string }) {
   return (
-    <div className="soha-diag__fix">
-      <h4>{title}</h4>
-      <p>{body}</p>
+    <div className="soha-diag__pattern">
+      <span className="soha-diag__pattern-num" aria-hidden="true">
+        {index}
+      </span>
+      <div>
+        <h4>{title}</h4>
+        <p>{body}</p>
+      </div>
     </div>
   );
 }
@@ -111,322 +47,339 @@ export function SohaDiagnosticAnalysisContent() {
       <header className="soha-diag__hero">
         <p className="danielle-portal__eyebrow">Illuminairy · Skill Diagnostic</p>
         <h1>Diagnostic analysis</h1>
-        <p className="soha-diag__meta">
-          Full-length diagnostic · June 17, 2026 · All four modules complete
-        </p>
       </header>
 
-      <section className="soha-diag__section" aria-labelledby="soha-overall">
-        <h2 id="soha-overall">Overall performance</h2>
+      <nav className="soha-diag__toc" aria-label="On this page">
+        <a href="#soha-overall">Overall</a>
+        <a href="#soha-rw">Reading and Writing</a>
+        <a href="#soha-math">Math</a>
+        <a href="#soha-behavior">Test habits</a>
+        <a href="#soha-realistic">What to expect</a>
+      </nav>
+
+      <section className="soha-diag__panel" id="soha-overall" aria-labelledby="soha-overall-h">
+        <h2 id="soha-overall-h">Overall performance</h2>
+
         <p>
           Based on the full-length diagnostic taken June 17, 2026, with all four modules complete.
         </p>
 
-        <div className="soha-diag__score-grid">
-          <div className="soha-diag__score-card soha-diag__score-card--total">
-            <span className="soha-diag__score-card-label">Total score</span>
-            <strong>1380–1430</strong>
-            <span className="soha-diag__score-card-sub">of 1600</span>
-          </div>
-          <div className="soha-diag__score-card">
-            <span className="soha-diag__score-card-label">Reading and Writing</span>
-            <strong>670–690</strong>
-            <span className="soha-diag__score-card-sub">
-              Module 1: 25/27 · Module 2: 22/27
-            </span>
-          </div>
-          <div className="soha-diag__score-card">
-            <span className="soha-diag__score-card-label">Math</span>
-            <strong>710–740</strong>
-            <span className="soha-diag__score-card-sub">
-              Module 1: 21/22 · Module 2: 17/22
-            </span>
-          </div>
-        </div>
+        <ScoreOverviewCards />
+        <TotalScoreScale />
+        <SectionScoreCompare />
 
-        <div className="soha-diag__bars">
-          <ScoreBar label="Total (estimated)" low={1380} high={1430} max={1600} accent="total" />
-          <ScoreBar label="Reading and Writing" low={670} high={690} accent="rw" />
-          <ScoreBar label="Math" low={710} high={740} accent="math" />
-        </div>
+        <ul className="soha-diag__score-lines">
+          <li>
+            <strong>Total score:</strong> 1380 to 1430
+          </li>
+          <li>
+            <strong>Reading and Writing:</strong> 670 to 690 (Module 1: 25 of 27, Module 2: 22 of
+            27)
+          </li>
+          <li>
+            <strong>Math:</strong> 710 to 740 (Module 1: 21 of 22, Module 2: 17 of 22)
+          </li>
+        </ul>
 
-        <div className="soha-diag__diff-block">
-          <h3>By difficulty</h3>
-          <DifficultyRow
-            section="Reading and Writing"
-            correct="47"
-            total="54"
-            easy="88%"
-            medium="87%"
-            hard="87%"
-          />
-          <DifficultyRow section="Math" correct="38" total="44" easy="100%" medium="88%" hard="73%" />
-        </div>
+        <p className="soha-diag__subhead">By difficulty</p>
+        <AccuracyByDifficulty />
+        <ul className="soha-diag__score-lines">
+          <li>Reading and Writing, 47 of 54: 88% easy, 87% medium, 87% hard</li>
+          <li>Math, 38 of 44: 100% easy, 88% medium, 73% hard</li>
+        </ul>
 
         <p>
-          Soha is performing in the upper 1300s to the lower 1400s. We estimate her current
-          performance is between <strong>1380 and 1430</strong>. Her math is stronger than her
-          reading and writing: <strong>710–740</strong> on math and <strong>670–690</strong> on
-          reading and writing.
+          Soha is performing in the upper 1300s to the lower 1400s; we estimate her current
+          performance is between 1380 and 1430. Her math is stronger than her reading and writing;
+          she scored 710-740 on math and 670-690 on reading and writing.
         </p>
 
-        <div className="soha-diag__callout soha-diag__callout--warn">
-          <h3>Routing risk on Reading and Writing</h3>
+        <div className="soha-diag__alert">
           <p>
-            She missed <strong>4 easy and medium questions</strong> in reading and writing. If she
-            performs similarly on test day, she could miss the cutoff for the hard Module 2 in that
-            section. That can cap her score for the whole section by up to{" "}
-            <strong>130 points</strong>.
+            One area of concern was that she got a total of 4 medium and easy questions incorrect on
+            reading and writing, which means there&apos;s still some risk that on test day, if she
+            performs similarly, she could end up not testing into the hard version of Module 2
+            Reading and Writing. If she misses the cutoff, that can cap her score and could cost her
+            up to 130 points alone.
           </p>
         </div>
       </section>
 
-      <section className="soha-diag__section" aria-labelledby="soha-rw">
-        <h2 id="soha-rw">Reading and writing performance</h2>
+      <section className="soha-diag__panel" id="soha-rw" aria-labelledby="soha-rw-h">
+        <h2 id="soha-rw-h">Reading and writing performance</h2>
+
         <p>
-          She missed <strong>7 questions</strong> total: <strong>3</strong> standard English
-          convention questions (2 on boundaries), <strong>2</strong> on transitions, and{" "}
-          <strong>2</strong> on command of evidence.
+          Moving into her section-level performance for reading and writing, she missed 7 total
+          questions. She got 3 standard English convention questions incorrect, 2 of which were on
+          boundaries. She also got 2 questions incorrect on transitions and 2 incorrect on command of
+          evidence.
         </p>
-        <p className="soha-diag__note">
-          Below, misses are sorted by module and difficulty. Difficulty is what determines how much
-          each miss moves her score.
+        <RwMissBreakdown />
+        <p>
+          Here is what she missed, sorted by difficulty, because difficulty is what determines the
+          cost.
         </p>
 
-        <h3>Module 1</h3>
-        <MissCard
-          id="Q22"
-          difficulty="Easy"
-          topic="Transitions"
-          note="The single most expensive miss in the section. She changed this answer during review, from a likely-correct choice to the wrong one."
-        />
-        <MissCard
-          id="Q18"
-          difficulty="Medium"
-          topic="Boundaries"
-          note="Incomplete-clause punctuation choice."
-        />
+        <p className="soha-diag__group-label">Module 1</p>
+        <ul className="soha-diag__miss-list">
+          <MissLine difficulty="easy">
+            <strong>Q22 Transitions: Easy.</strong> This is the single most expensive miss in the
+            section. She also changed this answer during review, from a likely-correct choice to the
+            wrong one. More on that below.
+          </MissLine>
+          <MissLine difficulty="medium">
+            <strong>Q18 Boundaries: Medium.</strong>
+          </MissLine>
+        </ul>
 
-        <h3>Module 2</h3>
-        <MissCard
-          id="Q22"
-          difficulty="Medium"
-          topic="Subject-verb agreement"
-          note="Matched the nearby singular name instead of the plural subject."
-        />
-        <MissCard id="Q23" difficulty="Medium" topic="Transitions" note="Relationship label mismatch." />
-        <MissCard
-          id="Q12"
-          difficulty="Hard"
-          topic="Command of Evidence"
-          note="True fact, but not matched to the specific claim."
-        />
-        <MissCard
-          id="Q14"
-          difficulty="Hard"
-          topic="Command of Evidence"
-          note="Same pattern: factually tied to the passage but off-claim."
-        />
-        <MissCard
-          id="Q20"
-          difficulty="Hard"
-          topic="Boundaries"
-          note="Both sides of the punctuation were not complete clauses."
-        />
+        <p className="soha-diag__group-label">Module 2</p>
+        <ul className="soha-diag__miss-list">
+          <MissLine difficulty="medium">
+            <strong>Q22 Subject-Verb Agreement: Medium</strong>
+          </MissLine>
+          <MissLine difficulty="medium">
+            <strong>Q23 Transitions: Medium</strong>
+          </MissLine>
+          <MissLine difficulty="hard">
+            <strong>Q12 Command of Evidence: Hard</strong>
+          </MissLine>
+          <MissLine difficulty="hard">
+            <strong>Q14 Command of Evidence: Hard</strong>
+          </MissLine>
+          <MissLine difficulty="hard">
+            <strong>Q20 Boundaries: Hard</strong>
+          </MissLine>
+        </ul>
 
-        <div className="soha-diag__callout">
-          <h3>What the scoring model says</h3>
+        <ScoringModelCompare />
+
+        <div className="soha-diag__insight">
           <p>
-            At face value, hard Command of Evidence looks like the biggest problem (two hard
-            misses). Through the SAT scoring model, the opposite is true. The three hard misses in
-            Module 2 do not move her score as much as the easy and medium misses in Module 1.
+            Read at face value, it looks like her biggest problem is hard Command of Evidence
+            questions, since that has the highest raw count of mistakes. Through the SAT scoring
+            model, the opposite is true. The three hard misses in Module 2 do not cost her as many
+            points as easy questions on Module 1. The question which likely cost her the most
+            points was the easy transition question she missed in Module 1 followed by the three
+            medium misses. Those are the ones that actually move her score the most, and the easy
+            miss is the one that also puts her routing at risk.
           </p>
           <p>
-            The question that likely moved her score the most was the <strong>easy transition</strong>{" "}
-            miss in Module 1, followed by the three medium misses. The easy miss is also the one
-            that puts her routing at risk.
+            Across every question she missed, the core underlying issue was the same. She was choosing
+            answers that were locally plausible but did not satisfy the full sentence or the full
+            claim.
           </p>
         </div>
 
-        <p>
-          Across every miss, the core issue is the same: she chooses answers that are locally
-          plausible but do not satisfy the full sentence or the full claim.
-        </p>
-
-        <h3>Four versions of that pattern</h3>
-        <FixCard
+        <p className="soha-diag__subhead">Four specific versions of this</p>
+        <PatternBlock
+          index={1}
           title="Boundaries and complete clauses"
-          body='On the Marie Curie question she chose a semicolon plus a participle phrase ("radioactivity; earning"). She saw that the sentence needed a break, but did not test whether both sides were complete sentences. The correct answer added "and she earned," which makes a second full clause. Fix: at every punctuation choice, check whether each side is a complete sentence on its own.'
+          body='On the Marie Curie question she chose a semicolon plus a participle phrase, "radioactivity; earning." She correctly saw that the sentence needed a break, but she did not test whether both sides of the punctuation were complete sentences. The correct answer added "and she earned," which makes a second full clause. The fix is a single habit: at every punctuation choice, check whether each side is a complete sentence on its own.'
         />
-        <FixCard
+        <PatternBlock
+          index={2}
           title="Transitions"
-          body='On the cortisol question she chose "For example," but the second sentence contradicts the first, so the answer was "In contrast." On the painting question she chose "Additionally," but the sentence moves to a final interpretation, so "Ultimately" fit. She picks transitions based on whether the next sentence is related, rather than naming the exact relationship first. Fix: label the relationship before looking at the choices: contrast, example, result, addition, conclusion, or alternative.'
+          body='On the cortisol question she chose "For example," but the second sentence contradicts the first instead of illustrating it, so the answer was "In contrast." On the painting question she chose "Additionally," but the sentence moves to a final interpretation, so "Ultimately" fit. She is picking transitions based on whether the next sentence is related, rather than naming the exact relationship first. The fix is to label the relationship before looking at the choices: contrast, example, result, addition, conclusion, or alternative.'
         />
-        <FixCard
+        <PatternBlock
+          index={3}
           title="Command of Evidence"
-          body='On the CO2 table she picked an answer about process emissions, but the claim was about total emissions and the "necessary but not sufficient" logic. On the Kurosawa question she picked a true fact about scholars analyzing his films, but the claim needed evidence that the diverse later works reflect his own hybrid approach. Fix: restate the exact claim before reading the choices, then reject anything that is true but off-claim.'
+          body='On the CO2 table she picked an answer about process emissions, but the claim was about total emissions and the "necessary but not sufficient" logic. On the Kurosawa question she picked a true fact about scholars analyzing his films, but the claim needed evidence that the diverse later works reflect his own hybrid approach. Both answers were factually tied to the passage but not matched to the specific claim. The fix is to restate the exact claim before reading the choices, then reject anything that is true but off-claim.'
         />
-        <FixCard
+        <PatternBlock
+          index={4}
           title="Subject-verb agreement with interrupting phrases"
-          body='On the Henrietta Swan Leavitt question she chose "has remained," matching the nearby singular name, but the real subject was the plural "observations." Fix: cross out the long descriptive phrase in the middle and match the verb to the real subject.'
+          body='On the Henrietta Swan Leavitt question she chose "has remained," matching the nearby singular name, but the real subject was the plural "observations." The fix is the classic move: cross out the long descriptive phrase in the middle and match the verb to the real subject.'
         />
 
-        <h3>Priority order for tutoring</h3>
-        <ol className="soha-diag__priority">
-          <li>Transitions</li>
-          <li>Boundaries</li>
-          <li>Command of Evidence</li>
-          <li>Subject-verb agreement</li>
-        </ol>
+        <p className="soha-diag__subhead">Order of importance</p>
+        <TutoringPriorityLadder />
+        <p>As far as order of importance is concerned, I&apos;d estimate she&apos;s losing:</p>
+        <ul className="soha-diag__score-lines">
+          <li>Transitions X pts</li>
+          <li>Boundaries X pts</li>
+          <li>Command of Evidence X pts</li>
+          <li>Subject-Verb Agreement X pts</li>
+        </ul>
         <p>
-          We attack these in order until she hits <strong>100% on easy, 95% on medium, and 90% on hard</strong> for
-          the current skill before moving to the next.
+          We would plan to attack them in priority order until she&apos;s able to answer the easy,
+          medium, and hard questions at 95% accuracy before moving on to the next topic.
         </p>
       </section>
 
-      <section className="soha-diag__section" aria-labelledby="soha-math">
-        <h2 id="soha-math">Math performance</h2>
+      <section className="soha-diag__panel" id="soha-math" aria-labelledby="soha-math-h">
+        <h2 id="soha-math-h">Math performance</h2>
+
         <p>
-          Her math is fairly strong and she benefits from Desmos and the built-in calculator.
-          Dependency on the calculator also led to several misses: she used it by default even on
-          questions that needed to be solved by hand.
+          Her math is fairly strong and she&apos;s benefiting from strong use of the Desmos
+          calculator; however, her dependency on the Desmos calculator also led her to the questions
+          she missed since she resorted to using it by default even for questions that needed to be
+          solved by hand.
         </p>
 
-        <div className="soha-diag__stat-strip">
-          <div>
-            <strong>6</strong>
-            <span>misses total</span>
-          </div>
-          <div>
-            <strong>13/13</strong>
-            <span>easy correct</span>
-          </div>
-          <div>
-            <strong>14/16</strong>
-            <span>medium correct</span>
-          </div>
-        </div>
+        <p>
+          She missed 6 math questions; however, those were not evenly distributed across difficulty
+          levels like what we saw in the reading and writing modules. Instead, she was perfect on
+          easy questions (13 of 13) and solid on medium (14 of 16). Out of the questions that
+          she&apos;s getting incorrect, they trace back to two specific habits, and some minor
+          content gaps.
+        </p>
+        <MathStatsStrip />
+        <MathMissHabits />
 
-        <h3>Habit 1: Calculator on problems that need algebra</h3>
+        <p className="soha-diag__subhead">
+          The big one: she runs to the calculator on problems that need algebra
+        </p>
         <p>
           This showed up across Module 2 and is the highest-value fix because it hits her most
-          frequent question types. Three of six math misses are factoring or factor-theorem questions
-          where the move is algebra by hand, and the calculator either cannot get there or leads her
-          to the wrong conclusion.
+          frequent question types. Three of her six math misses are factoring or factor-theorem
+          questions where the move is algebra by hand, and the calculator either cannot get there or
+          actively leads her to the wrong conclusion.
         </p>
-        <MissCard
-          id="M2 Q13"
-          difficulty="Hard"
-          topic="Equivalent expressions / factoring"
-          note="9x³ − 6x² − 24x with 3x + k a factor. Factor: 3x(3x² − 2x − 8) = 3x(x − 2)(3x + 4), so k = 4. She graphed and entered 13.15 instead. There is no graphing path to k here."
-        />
-        <MissCard
-          id="M2 Q20"
-          difficulty="Hard"
-          topic="Factor theorem"
-          note="If x + 2a is a factor, then f(−2a) = 0, which solves to a = 3/2. She answered 5/2."
-        />
-        <MissCard
-          id="M1 Q9"
-          difficulty="Medium"
-          topic="Nonlinear equations"
-          note="She spent 333 seconds on a problem that needed structure recognition, factoring, and zero-product form."
-        />
         <p>
-          <strong>Fix:</strong> Desmos and the calculator are for genuinely calculator-friendly
-          problems and for checking work, not for factoring or factor-theorem questions. When she
-          sees &quot;is a factor of,&quot; that is a by-hand trigger. Drill GCF first, factor by
-          grouping, the ac-method, factor theorem with substitution, and edge cases that look
-          graphable but are not.
+          The clearest example is Module 2 Q13. The question gives 9x³ - 6x² - 24x and says 3x + k
+          is a factor, then asks for k. The path is to factor: 9x³ - 6x² - 24x = 3x(3x² - 2x - 8) =
+          3x(x - 2)(3x + 4), so 3x + k matches 3x + 4 and k = 4. Instead of factoring, she tried to
+          graph her way to the answer and entered 13.15, which was a point where two curves crossed
+          on the graphing calculator. There is no graphing path to k here. The question is built to
+          reward factoring, and the calculator pulled her away from it.
         </p>
-
-        <h3>Habit 2: Zero-product setup</h3>
         <p>
-          For Math Module 1 Q9, the issue was not that she does not understand quadratics. She did
-          not recognize the equation needed to be rearranged into zero-product form before solving.
+          The same pattern produced two more misses. Module 2 Q20 states that x + 2a is a factor of
+          f(x) and asks for a. The move is the factor theorem: if x + 2a is a factor, then f(-2a) =
+          0, which solves to a = 3/2. She answered 5/2. And Module 1 Q9, the nonlinear equation she
+          spent 333 seconds on, was the same family: recognize the structure, bring everything to
+          one side, factor, and set each factor to zero. In all three, the answer comes from seeing
+          structure, and the calculator hides the structure rather than revealing it.
+        </p>
+        <p>
+          The fix has two parts. First, calculator discipline: the calculator and Desmos are for
+          genuinely calculator-friendly problems and for checking work, not for factoring or
+          factor-theorem questions. When she sees &quot;is a factor of,&quot; that is a by-hand
+          trigger. Second, she needs to drill the SAT&apos;s tricky factoring patterns so factoring
+          by hand is fast and automatic: greatest common factor first, factor by grouping, the
+          ac-method, the factor theorem with substitution, and the edge cases that look graphable but
+          are not.
         </p>
 
-        <h3>Content gap: Area and volume setup</h3>
-        <p>
-          Module 2 Q12: cube volume 125,000, find surface area. Side = ∛125,000 = 50. Surface area =
-          6 × 50² = <strong>15,000</strong>. She answered 25,000. Cube volume and surface-area
-          relationships are not on the SAT formula sheet. She got every circle question right (M1
-          Q13, M1 Q21, M2 Q10), so this is specifically an area-and-volume setup gap, not geometry
-          across the board.
-        </p>
-
-        <h3>Other math misses</h3>
-        <MissCard
-          id="M2 Q16"
-          difficulty="Hard"
-          topic="Collinear points / slopes"
-          note="Set the two slopes equal and simplify to ak + bh = hk. She picked a manipulation that did not simplify correctly. Same precision theme as reading and writing."
-        />
-        <MissCard
-          id="M2 Q22"
-          difficulty="Hard"
-          topic="Percentages / proportional reasoning"
-          note="Profit and loss multi-step question. Very teachable, but these appear less often on the SAT. Schedule closer to test day, after factoring is solid."
-        />
-
-        <p>
-          <strong>Primary focus:</strong> factoring and all factoring edge cases so she does not
-          miss equivalent expressions, factor theorem, or quadratic equations that require
-          factoring. These cannot be done on the calculator.
+        <p className="soha-diag__subhead">
+          Next: She&apos;s not defaulting to the zero product property for solving quadratic
+          equations
         </p>
         <p>
-          <strong>Secondary focus:</strong> geometry refresh for questions that cannot be solved
-          solely from the built-in formula sheet.
+          She struggled with a Module 1 math problem for over 3 minutes trying to figure it out when
+          her setup was incorrect. For Math Module 1 Q9, the issue was not &quot;she doesn&apos;t
+          understand quadratics.&quot; It was more specifically a setup and strategy issue: she did
+          not recognize the equation needed to be rearranged into zero-product form.
+        </p>
+
+        <p className="soha-diag__subhead">
+          The second leak: geometry setup from memory, not just from the formula sheet
+        </p>
+        <p>
+          On Module 2 Q12, a cube has a volume of 125,000 cubic units and the question asks for its
+          surface area. The path is side = cube root of 125,000 = 50, then surface area = 6 times
+          50² = 15,000. She answered 25,000, which means the setup was off. The cube volume and
+          surface-area relationships are not on the SAT formula sheet, so this question rewards
+          remembering the concept, not looking it up. The read here is that she leaned on the formula
+          sheet and calculator, but the core setup was not there to begin with. Worth noting: she
+          got every circle question right (Module 1 Q13 and Q21, Module 2 Q10), so this is
+          specifically an area-and-volume setup gap, not geometry across the board. The fix is a
+          focused geometry concept refresh so she has the concept and the tools, not only the tools.
+          It&apos;s common for kids who haven&apos;t touched geometry in a couple of years to
+          struggle here.
+        </p>
+
+        <p className="soha-diag__subhead">Two other misses round out the math</p>
+        <p>
+          Module 2 Q16, a hard algebra question about three collinear points, where the move is to
+          set the two slopes equal and simplify to ak + bh = hk. She picked a manipulation that did
+          not simplify correctly. This is the same precision theme as her Reading and Writing
+          misses, applied to algebra.
+        </p>
+        <p>
+          Module 2 Q22, a profit and loss proportional-reasoning question (sell part at a loss, then
+          find the profit percent needed on the rest to net 20%). This one is very teachable, but
+          these multi-step proportional questions do not appear often on the SAT, so I would schedule
+          it closer to the test date, after factoring is solid, since factoring affects far more
+          questions.
+        </p>
+        <p>
+          My primary focus would be on getting her factoring and all factoring edge/hard cases done
+          so that she doesn&apos;t miss problems on equivalent expressions, the factor theorem, or
+          quadratic equations that require factoring. And this has to be taught since they cannot be
+          done on the calculator. My secondary focus would be geometry refresh for questions that
+          cannot be solved solely using the built-in formula sheet.
         </p>
       </section>
 
-      <section className="soha-diag__section" aria-labelledby="soha-behavior">
-        <h2 id="soha-behavior">Test-taking behavior</h2>
-        <div className="soha-diag__two-col">
-          <div className="soha-diag__list-card soha-diag__list-card--good">
-            <h3>Strong habits to keep</h3>
+      <section className="soha-diag__panel" id="soha-behavior" aria-labelledby="soha-behavior-h">
+        <h2 id="soha-behavior-h">Test-taking behavior</h2>
+
+        <div className="soha-diag__habits">
+          <div className="soha-diag__habit-col">
+            <h3>Strong habits worth keeping</h3>
             <ul>
               <li>Fast, efficient pace</li>
-              <li>Used mark for review well</li>
+              <li>Used the mark for review tool well</li>
               <li>Comfortable with Desmos and the calculator</li>
               <li>Used the built-in formula sheet</li>
               <li>Used scratch paper when she needed it</li>
             </ul>
           </div>
-          <div className="soha-diag__list-card soha-diag__list-card--adjust">
-            <h3>Habits to adjust</h3>
+          <div className="soha-diag__habit-col">
+            <h3>Two habits to adjust</h3>
             <ul>
               <li>
-                <strong>Review pass:</strong> She finished early and re-read every reading and
-                writing question. The one answer she changed (Module 1 Q22) went from right to
-                wrong. One careful pass; mark for review only when truly unsure; bank leftover time
-                for math.
+                <strong>First, how she reviews.</strong> She finished early and went back over her
+                answers. On a school test I would encourage that. On a test that runs two hours and
+                fourteen minutes, I would not have her review every Reading and Writing question
+                twice. Switching back and forth between question types drains mental stamina, and
+                that fatigue carries into the math section where she needs it most. Two facts from
+                her own session make the case. During review she mostly did not change her answers,
+                so the second pass added almost nothing. And the one Reading and Writing answer she
+                did change, Q22, she changed from right to wrong, and that is an easy question in
+                Module 1, so it is also her most expensive miss in the section. The review habit did
+                not just fail to help. On the one question it touched, it cost her the most valuable
+                point. My recommendation: one careful pass, use mark for review only for questions
+                she is truly unsure of, and bank the leftover time and energy for math.
               </li>
               <li>
-                <strong>Calculator default:</strong> Put the calculator down on algebra and
-                factoring questions. Tool use is strong when the problem type suits it.
+                <strong>Second, her default to the calculator on algebra problems,</strong> which I
+                cover in the math section. Her tool use is strong when the problem suits it. The
+                change is knowing when to put the calculator down and factor.
               </li>
             </ul>
           </div>
         </div>
       </section>
 
-      <section className="soha-diag__section" aria-labelledby="soha-realistic">
-        <h2 id="soha-realistic">What score is realistic</h2>
+      <section className="soha-diag__panel" id="soha-realistic" aria-labelledby="soha-realistic-h">
+        <h2 id="soha-realistic-h">What score is realistic</h2>
+
+        <GoalRangeVisual />
+        <WeeklyProgramStrip />
+
         <p>
-          Her gaps are fairly concentrated. In the 9 weeks between now and test day, reaching the
-          upper 1400s (about <strong>1480</strong>) is realistic. With strong work between sessions,
-          the 1500s are possible, but that requires near-perfect performance on test day. Results
-          vary by student.
+          Based on her gaps being fairly concentrated, I&apos;m confident that in the 9 weeks
+          between now and test day she could reach the upper 1400s, say 1480, no problem. I also
+          think if she really pushed and put in the work we could get her into the 1500s. To get
+          into the 1500s requires near-perfect performance, but I feel strongly she&apos;s a
+          candidate for that level of performance. I think it would take 3 tutoring sessions a week,
+          where the first 2 are tutoring and reteaching concepts and approaches, then the final
+          we&apos;d test what she&apos;d learn. We&apos;d also use the tutoring lessons to go over
+          questions she got wrong, show her how to do them correctly, and then have her practice
+          until she was able to solve them correctly and accurately for easy, medium, and hard by
+          herself for several in a row. Her final tutoring session each week would be a timed module
+          test where she&apos;d complete a full set of math or reading and writing problems, and
+          then afterwards we would review and discuss any of the questions she got wrong. I&apos;d
+          expect her to complete 100 problems or more each week and around 1000 total problems
+          between now and test day to hit 1500+. Each week I&apos;d report back on her improvements
+          in accuracy and her estimated score improvement for that week.
         </p>
-        <p>
-          The program runs <strong>3 tutoring sessions per week</strong>: the first two reteach
-          concepts and missed questions; the third is a timed module set plus review. She should
-          complete about <strong>100+ practice questions per week</strong> (~1,000 total by test
-          day). Each week we report accuracy improvements and estimated score movement.
-        </p>
+
         <p className="soha-diag__note">
-          The full week-by-week schedule lives on the{" "}
+          The week-by-week schedule is on the{" "}
           <Link href="/soha/plan" className="soha-diag__inline-link">
             Study Plan
           </Link>{" "}
@@ -434,20 +387,12 @@ export function SohaDiagnosticAnalysisContent() {
         </p>
       </section>
 
-      <section className="soha-diag__section soha-diag__appendix" aria-labelledby="soha-appendix">
-        <h2 id="soha-appendix">Appendix: raw diagnostic reports</h2>
-        <p>Download or open the full PDF exports from the June 17 diagnostic session.</p>
-        <div className="danielle-portal__cards">
-          <Link href="/soha/diagnostic/full" className="danielle-portal__link-card">
-            <h2>Full report</h2>
-            <p>
-              Complete breakdown with section scores, timing charts, and question-level detail.
-            </p>
-          </Link>
-          <Link href="/soha/diagnostic/tabular" className="danielle-portal__link-card">
-            <h2>Tabular report</h2>
-            <p>Skill-by-skill table of misses, difficulty, and time per question.</p>
-          </Link>
+      <section className="soha-diag__appendix" aria-labelledby="soha-appendix-h">
+        <h2 id="soha-appendix-h">Raw reports</h2>
+        <p>PDF exports from the June 17 diagnostic session.</p>
+        <div className="soha-diag__doc-links">
+          <Link href="/soha/diagnostic/full">Full report →</Link>
+          <Link href="/soha/diagnostic/tabular">Tabular report →</Link>
         </div>
       </section>
     </article>

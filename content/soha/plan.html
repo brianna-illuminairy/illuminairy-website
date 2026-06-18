@@ -90,6 +90,12 @@ p{font-size:15.5px;margin:10px 0}
 .checks li:last-child{border-bottom:none}
 .checks li::before{content:"\2736";position:absolute;left:2px;color:var(--green)}
 .phase{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--green);font-weight:600;margin:22px 0 8px}
+.plan-phase{font-size:14.5px;font-weight:600;color:var(--forest);margin:26px 0 12px;letter-spacing:0;text-transform:none;line-height:1.4}
+.week-item{padding:14px 0;border-bottom:1px solid var(--line)}
+.week-item:last-child{border-bottom:none}
+.week-title{font-weight:600;font-size:15.5px;margin:0 0 8px}
+.week-item p{margin:0 0 8px;font-size:14.5px}
+.week-vol{font-size:13px;color:var(--muted);margin:0}
 .week{display:flex;gap:14px;padding:13px 0;border-bottom:1px solid var(--line)}
 .week .wk{flex-shrink:0;width:54px;font-family:var(--display);font-weight:600;color:var(--ink);font-size:15px}
 .week .wd{flex:1;font-size:14.5px}
@@ -123,15 +129,26 @@ section:nth-of-type(4){animation-delay:.15s}
       <div class="right">9 weeks to Aug 22</div>
     </div>
 
-    <div class="chart" id="soha-chart-wrap">
-      <svg id="soha-chart" viewBox="0 0 720 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Projected score from 1400 to 1525 by August 22">
+    <div class="chart">
+      <svg viewBox="0 0 720 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Projected score from 1400 to 1525 by August 22">
         <line x1="60" y1="56" x2="680" y2="56" stroke="#C9C0AC" stroke-width="1" stroke-dasharray="5 5"/>
         <text x="680" y="48" text-anchor="end" font-size="12" fill="#9a927e" letter-spacing="1">GOAL 1525</text>
-        <g id="soha-chart-fill"></g>
-        <g id="soha-chart-line"></g>
-        <g id="soha-chart-dots"></g>
-        <g id="soha-chart-scores"></g>
-        <g id="soha-chart-labels" font-size="10" fill="#9a927e" letter-spacing="1" text-anchor="middle"></g>
+        <path d="M60,271 L336,156 L611,113 L680,92 L680,300 L60,300 Z" fill="#2F8B5530"/>
+        <polyline points="60,271 336,156 611,113 680,92" fill="none" stroke="#234F37" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+        <circle cx="60" cy="271" r="5" fill="#234F37"/>
+        <circle cx="336" cy="156" r="6" fill="#2F8B55"/>
+        <circle cx="611" cy="113" r="6" fill="#2F8B55"/>
+        <circle cx="680" cy="92" r="7" fill="#234F37"/>
+        <text x="58" y="291" font-family="Fraunces, Georgia, serif" font-size="20" font-weight="600" fill="#1F2733">1400</text>
+        <text x="336" y="142" text-anchor="middle" font-size="14" font-weight="700" fill="#234F37">1480</text>
+        <text x="611" y="99" text-anchor="middle" font-size="14" font-weight="700" fill="#234F37">1510</text>
+        <text x="690" y="76" text-anchor="end" font-family="Fraunces, Georgia, serif" font-size="22" font-weight="600" fill="#234F37">1525</text>
+        <g font-size="10" fill="#9a927e" letter-spacing="1" text-anchor="middle">
+          <text x="60" y="320">START</text>
+          <text x="336" y="320">WK 4 · PT</text>
+          <text x="611" y="320">WK 8 · PT</text>
+          <text x="680" y="320">AUG 22</text>
+        </g>
       </svg>
     </div>
 
@@ -167,7 +184,75 @@ section:nth-of-type(4){animation-delay:.15s}
   </div>
 </section>
 
-<!-- THE FIX -->
+<!-- THE SCHEDULE -->
+<section>
+  <div class="eyebrow">The Schedule</div>
+  <h2>Nine-Week SAT Study Plan</h2>
+
+  <p style="margin-top:4px;font-size:15px">Mastery target for each skill area: 100% accuracy on easy questions, 95% accuracy on medium questions, and 90% accuracy on hard questions.</p>
+
+  <div class="plan-phase">Weeks 1–4: Reading and Writing, prioritized by highest-impact skill gaps</div>
+
+  <div class="week-item">
+    <p class="week-title">Week 1: Transitions</p>
+    <p>Focus on transition questions across all difficulty levels. Each session should include a short lesson, diagnostic reteaching, and hard-only transition practice. Emphasis should be placed on identifying the exact relationship between sentences before reviewing the answer choices.</p>
+    <p class="week-vol">Estimated volume: 110 questions.</p>
+  </div>
+
+  <div class="week-item">
+    <p class="week-title">Week 2: Factoring, Factor Theorem, and Zero-Product Form</p>
+    <p>Focus on factoring and symbolic equation setup. Sessions should cover greatest common factor, grouping, the ac-method, factor theorem, zero-product form, and calculator-by-hand decision rules. Reteach the diagnostic miss in this area, with emphasis on moving all terms to one side before factoring.</p>
+    <p class="week-vol">Estimated volume: 110 questions.</p>
+  </div>
+
+  <div class="week-item">
+    <p class="week-title">Week 3: Boundaries and Punctuation</p>
+    <p>Focus on sentence boundaries, independent clauses, dependent clauses, commas, semicolons, colons, and conjunctions. Each session should require a complete-clause check before selecting any punctuation answer. Reteach the diagnostic misses in this area until the clause-check process is automatic.</p>
+    <p class="week-vol">Estimated volume: 110 questions.</p>
+  </div>
+
+  <div class="week-item">
+    <p class="week-title">Week 4: Command of Evidence</p>
+    <p>Focus on evidence questions in both text and data formats. Each session should begin by restating the claim in simple terms before evaluating the answer choices. Emphasis should be placed on rejecting answers that are true but do not directly support the claim. Reteach the diagnostic misses in this area. Session 3 should include the first full-length practice test.</p>
+    <p class="week-vol">Estimated volume: full practice test plus approximately 120 questions.</p>
+  </div>
+
+  <div class="plan-phase">Weeks 5–7: Math depth, followed by the final Reading and Writing skill gap</div>
+
+  <div class="week-item">
+    <p class="week-title">Week 5: Geometry</p>
+    <p>Focus on geometry setup, especially area, volume, surface area, and formula-sheet gaps. Circles should remain in light maintenance only, since she answered every circle question correctly on the diagnostic.</p>
+    <p class="week-vol">Estimated volume: 110 questions.</p>
+  </div>
+
+  <div class="week-item">
+    <p class="week-title">Week 6: Nonlinear Systems and Advanced Math</p>
+    <p>Focus on nonlinear equations, equivalent expressions, collinear slopes, and multi-step proportional reasoning. Sessions should emphasize setup, structure, and deciding when a problem should be solved by hand rather than with the calculator.</p>
+    <p class="week-vol">Estimated volume: 110 questions.</p>
+  </div>
+
+  <div class="week-item">
+    <p class="week-title">Week 7: Subject-Verb Agreement</p>
+    <p>Focus on identifying the true subject of the sentence and matching it to the correct verb. Each session should require crossing out interrupting phrases before choosing an answer. Reteach the diagnostic miss in this area until the process is automatic.</p>
+    <p class="week-vol">Estimated volume: 110 questions.</p>
+  </div>
+
+  <div class="plan-phase">Weeks 8–9: Second practice test and final review</div>
+
+  <div class="week-item">
+    <p class="week-title">Week 8: Practice Test and Missed-Question Review</p>
+    <p>Complete a second full-length practice test. Afterward, review every missed question from the diagnostic, the Week 4 practice test, and the Week 8 practice test. Any skill area still below target should receive additional focused practice.</p>
+    <p class="week-vol">Estimated volume: full practice test plus approximately 120 questions.</p>
+  </div>
+
+  <div class="week-item">
+    <p class="week-title">Week 9: Final Review and Test-Day Preparation</p>
+    <p>Complete mixed review across all targeted Reading and Writing and Math skills. Prioritize hard problem sets, recurring error types, and test-day execution. The week should end with a clear plan for pacing, calculator use, question triage, and final review before the August 22 test date.</p>
+    <p class="week-vol">Estimated volume: 100 questions.</p>
+  </div>
+</section>
+
+<!-- THE PLAN -->
 <section>
   <div class="eyebrow">The Plan</div>
 
@@ -191,135 +276,6 @@ section:nth-of-type(4){animation-delay:.15s}
   </ul>
 </section>
 
-<!-- WEEK BY WEEK -->
-<section>
-  <div class="eyebrow">The Schedule</div>
-  <h2>Week by week</h2>
-
-  <div class="phase">Weeks 1 to 4 · Reading and Writing, highest impact first</div>
-  <div class="week"><div class="wk">Wk 1</div><div class="wd"><b>All transitions.</b> Every session: lesson, diagnostic reteach, and hard-only transition practice until 100% easy, 95% medium, 90% hard. <span class="tag">~110 questions</span></div></div>
-  <div class="week"><div class="wk">Wk 2</div><div class="wd"><b>All factoring and factor theorem.</b> Every session: GCF, grouping, ac-method, factor theorem, zero-product form, and calculator-by-hand rules. Reteach her diagnostic misses on this skill until 100% easy, 95% medium, 90% hard. <span class="tag">~110 questions</span></div></div>
-  <div class="week"><div class="wk">Wk 3</div><div class="wd"><b>All boundaries.</b> Every session: complete-clause checks at every punctuation choice. Reteach her diagnostic misses on this skill until 100% easy, 95% medium, 90% hard. <span class="tag">~110 questions</span></div></div>
-  <div class="week"><div class="wk">Wk 4</div><div class="wd"><b>All command of evidence.</b> Every session: restate the claim first, reject true-but-off-claim answers. Reteach her diagnostic misses on this skill until 100% easy, 95% medium, 90% hard. Session 3: first full practice test. <span class="tag">Full practice test · ~120 questions</span></div></div>
-
-  <div class="phase">Weeks 5 to 7 · Math depth, then last Reading and Writing skill</div>
-  <div class="week"><div class="wk">Wk 5</div><div class="wd"><b>All geometry.</b> Every session: area and volume setup (cube surface area, formula-sheet gaps) until 100% easy, 95% medium, 90% hard. Circles stay in maintenance only; she already got every circle question right. <span class="tag">~110 questions</span></div></div>
-  <div class="week"><div class="wk">Wk 6</div><div class="wd"><b>All nonlinear systems and hard advanced math.</b> Every session: nonlinear equations, equivalent expressions, collinear slopes, and multi-step proportional reasoning until 100% easy, 95% medium, 90% hard. <span class="tag">~110 questions</span></div></div>
-  <div class="week"><div class="wk">Wk 7</div><div class="wd"><b>All subject-verb agreement.</b> Every session: cross out interrupting phrases and match the verb to the real subject. Reteach her diagnostic misses on this skill until 100% easy, 95% medium, 90% hard. <span class="tag">~110 questions</span></div></div>
-
-  <div class="phase">Weeks 8 to 9 · Second practice test and final review</div>
-  <div class="week"><div class="wk">Wk 8</div><div class="wd"><b>Practice test and review misses.</b> Full-length practice test, then go through every miss from the diagnostic and from the Week 4 and Week 8 tests. Adjust anything still below target (100% easy, 95% medium, 90% hard). <span class="tag">Full practice test · ~120 questions</span></div></div>
-  <div class="week"><div class="wk">Wk 9</div><div class="wd"><b>Final review and practice problems.</b> Mixed review across all skills, hard problem sets in Reading and Writing and Math, and test-day plan going into August 22. <span class="tag">~100 questions</span></div></div>
-</section>
-
 </div>
-<script>
-(function () {
-  var WEEKS = 9;
-  var X0 = 60;
-  var X1 = 680;
-  var Y_LO = 300;
-  var Y_HI = 56;
-  var SCORE_MIN = 1380;
-  var SCORE_MAX = 1550;
-  var CHECKPOINTS = [
-    { week: 0, score: 1400, label: "START" },
-    { week: 4, score: 1480, label: "WK 4 · PT" },
-    { week: 8, score: 1510, label: "WK 8 · PT" },
-    { week: 9, score: 1525, label: "AUG 22" }
-  ];
-
-  function weekX(week) {
-    return X0 + (week / WEEKS) * (X1 - X0);
-  }
-
-  function scoreY(score) {
-    return Y_LO - ((score - SCORE_MIN) / (SCORE_MAX - SCORE_MIN)) * (Y_LO - Y_HI);
-  }
-
-  var svgNs = "http://www.w3.org/2000/svg";
-  var pts = CHECKPOINTS.map(function (cp) {
-    return { x: weekX(cp.week), y: scoreY(cp.score), score: cp.score, label: cp.label, week: cp.week };
-  });
-
-  var fillPath =
-    "M" +
-    pts.map(function (p) {
-      return p.x + "," + p.y;
-    }).join(" L") +
-    " L" +
-    X1 +
-    "," +
-    Y_LO +
-    " L" +
-    X0 +
-    "," +
-    Y_LO +
-    " Z";
-
-  var fillG = document.getElementById("soha-chart-fill");
-  if (fillG) {
-    var fill = document.createElementNS(svgNs, "path");
-    fill.setAttribute("d", fillPath);
-    fill.setAttribute("fill", "#2F8B5530");
-    fillG.appendChild(fill);
-  }
-
-  var lineG = document.getElementById("soha-chart-line");
-  if (lineG) {
-    var line = document.createElementNS(svgNs, "polyline");
-    line.setAttribute(
-      "points",
-      pts
-        .map(function (p) {
-          return p.x + "," + p.y;
-        })
-        .join(" ")
-    );
-    line.setAttribute("fill", "none");
-    line.setAttribute("stroke", "#234F37");
-    line.setAttribute("stroke-width", "3");
-    line.setAttribute("stroke-linejoin", "round");
-    line.setAttribute("stroke-linecap", "round");
-    lineG.appendChild(line);
-  }
-
-  var dotsG = document.getElementById("soha-chart-dots");
-  var scoresG = document.getElementById("soha-chart-scores");
-  var labelsG = document.getElementById("soha-chart-labels");
-  pts.forEach(function (p, i) {
-    var isEnd = i === pts.length - 1;
-    var isStart = i === 0;
-    if (dotsG) {
-      var dot = document.createElementNS(svgNs, "circle");
-      dot.setAttribute("cx", p.x);
-      dot.setAttribute("cy", p.y);
-      dot.setAttribute("r", isEnd ? "7" : isStart ? "5" : "6");
-      dot.setAttribute("fill", isStart || isEnd ? "#234F37" : "#2F8B55");
-      dotsG.appendChild(dot);
-    }
-    if (scoresG) {
-      var scoreText = document.createElementNS(svgNs, "text");
-      scoreText.setAttribute("x", isStart ? p.x - 2 : p.x);
-      scoreText.setAttribute("y", p.y - (isEnd ? 18 : 14));
-      scoreText.setAttribute("text-anchor", isStart ? "start" : isEnd ? "end" : "middle");
-      scoreText.setAttribute("font-family", isStart || isEnd ? "Fraunces, Georgia, serif" : "inherit");
-      scoreText.setAttribute("font-size", isStart || isEnd ? "20" : "14");
-      scoreText.setAttribute("font-weight", "600");
-      scoreText.setAttribute("fill", "#234F37");
-      if (isEnd) scoreText.setAttribute("x", p.x + 10);
-      scoreText.textContent = String(p.score);
-      scoresG.appendChild(scoreText);
-    }
-    if (labelsG) {
-      var label = document.createElementNS(svgNs, "text");
-      label.setAttribute("x", p.x);
-      label.setAttribute("y", "320");
-      label.textContent = p.label;
-      labelsG.appendChild(label);
-    }
-  });
-})();
-</script>
 </body>
 </html>

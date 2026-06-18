@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { SohaPortalAnalytics } from "@/components/soha/portal-analytics";
 import "../danielle/danielle-portal.css";
+import "./soha-diagnostic.css";
 
 export const dynamic = "force-dynamic";
 
