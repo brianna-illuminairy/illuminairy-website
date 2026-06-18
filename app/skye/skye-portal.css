@@ -876,6 +876,80 @@
   font-size: 11px;
 }
 
+.skye-pace {
+  margin-bottom: 16px;
+}
+
+.skye-pace__intro {
+  font-size: 14px;
+  margin: 0 0 12px;
+  line-height: 1.5;
+}
+
+.skye-pace__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+@media (max-width: 560px) {
+  .skye-pace__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.skye-pace__card {
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--aurora-line-solid);
+  display: grid;
+  gap: 4px;
+}
+
+.skye-pace__card--rw {
+  background: rgba(0, 87, 168, 0.08);
+  border-color: rgba(0, 87, 168, 0.2);
+}
+
+.skye-pace__card--math {
+  background: rgba(47, 110, 71, 0.08);
+  border-color: rgba(47, 110, 71, 0.2);
+}
+
+.skye-pace__section {
+  font-weight: 600;
+  font-size: 14px;
+  margin: 0;
+}
+
+.skye-pace__module {
+  font-family: var(--aurora-mono);
+  font-size: 11px;
+  color: var(--aurora-muted);
+  margin: 0;
+}
+
+.skye-pace__cap {
+  font-family: var(--aurora-display);
+  font-weight: 600;
+  font-size: 22px;
+  margin: 6px 0 0;
+  line-height: 1.1;
+}
+
+.skye-pace__cap-detail {
+  font-size: 13px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.skye-pace__note {
+  font-size: 12px;
+  color: var(--aurora-muted);
+  margin: 6px 0 0;
+  line-height: 1.4;
+}
+
 .skye-bluebook__footer {
   display: flex;
   justify-content: space-between;

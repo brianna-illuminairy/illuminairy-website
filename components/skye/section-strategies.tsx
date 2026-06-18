@@ -27,7 +27,7 @@ const RW_STRATEGIES: StrategyTip[] = [
     id: "skip-return",
     name: "Skip and come back",
     when: "A passage or question is taking too long.",
-    how: "Mark for Review, pick a guess if you have one, click the next question number, and return on the review screen before the module ends."
+    how: "Mark for Review once you hit your first-pass cap (about 1 minute on R&W, 1½ minutes on Math), pick a guess if you have one, click the next question number, and return on the review screen."
   },
   {
     id: "eliminate-two",
@@ -60,7 +60,7 @@ const MATH_STRATEGIES: StrategyTip[] = [
     id: "skip-return",
     name: "Skip and come back",
     when: "A problem is eating your time.",
-    how: "Mark for Review, guess if needed, jump to an easier question, and fix flagged ones on the end-of-module review screen."
+    how: "Mark for Review once you hit about 1½ minutes, guess if needed, jump to an easier question, and fix flagged ones on the end-of-module review screen."
   },
   {
     id: "plug-choices",

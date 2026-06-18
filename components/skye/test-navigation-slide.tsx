@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { FIRST_PASS_PACE } from "@/lib/skye/first-pass-pacing";
 
 const NAV_TACTICS = [
   {
@@ -39,11 +40,50 @@ const NAV_TACTICS = [
 
 const WORKFLOW_STEPS = [
   "Read the question.",
-  "Try it for about 60 seconds.",
+  `Try it, but do not pass your first-pass time cap (${FIRST_PASS_PACE.rw.capLabel} on R&W, ${FIRST_PASS_PACE.math.capLabel} on Math).`,
   "Eliminate what you can on scratch paper.",
   "Pick a guess, Mark for Review if still unsure, skip ahead.",
   "Come back on the review screen before the module ends."
 ] as const;
+
+function FirstPassPacingGuide() {
+  const sections = [
+    {
+      id: "rw",
+      label: "Reading & Writing",
+      ...FIRST_PASS_PACE.rw,
+      note: "Many are faster. If you are still stuck when you hit the cap, move on."
+    },
+    {
+      id: "math",
+      label: "Math",
+      ...FIRST_PASS_PACE.math,
+      note: "Use scratch paper and Desmos inside the cap. Longer questions get flagged, not stared at."
+    }
+  ] as const;
+
+  return (
+    <div className="skye-pace">
+      <p className="skye-pace__intro">
+        <strong>First-pass rule:</strong> answer every question once before you polish. These caps keep time
+        for the review screen at the end of each module.
+      </p>
+      <div className="skye-pace__grid">
+        {sections.map((section) => (
+          <div key={section.id} className={`skye-pace__card skye-pace__card--${section.id}`}>
+            <p className="skye-pace__section">{section.label}</p>
+            <p className="skye-pace__module">
+              {section.questionsPerModule} questions · {section.moduleMinutes} minutes per module
+            </p>
+            <p className="skye-pace__cap">{section.capLabel}</p>
+            <p className="skye-pace__cap-detail">Try not to spend more than {section.capDetail}</p>
+            <p className="skye-pace__note">{section.note}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export function TestNavigationSlide() {
   const [active, setActive] = useState<(typeof NAV_TACTICS)[number]["id"]>("skip");
@@ -62,6 +102,8 @@ export function TestNavigationSlide() {
 
   return (
     <>
+      <FirstPassPacingGuide />
+
       <p>
         Bluebook lets you <strong>move around</strong>, <strong>bookmark questions</strong>, and{" "}
         <strong>eliminate choices on paper</strong>. None of these pause the timer. Tap each tactic below.
