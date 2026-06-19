@@ -1,4 +1,10 @@
-import { DM_Mono, DM_Sans, Schibsted_Grotesk, Source_Serif_4 } from "next/font/google";
+import {
+  DM_Mono,
+  DM_Sans,
+  Hanken_Grotesk,
+  Schibsted_Grotesk,
+  Source_Serif_4
+} from "next/font/google";
 
 /** Editorial display serif — medium weight, restrained (replaces Fraunces). */
 export const displaySerif = Source_Serif_4({
@@ -6,6 +12,14 @@ export const displaySerif = Source_Serif_4({
   variable: "--font-display",
   display: "swap",
   weight: ["400", "500", "600"]
+});
+
+/** Primary UI body — Aurora product system. */
+export const hankenGrotesk = Hanken_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-hanken",
+  display: "swap",
+  weight: ["400", "500", "600", "700"]
 });
 
 export const schibstedGrotesk = Schibsted_Grotesk({
@@ -30,4 +44,4 @@ export const dmSans = DM_Sans({
   weight: ["300", "400", "500"]
 });
 
-export const funnelFontClassName = `${displaySerif.variable} ${schibstedGrotesk.variable} ${dmMono.variable} ${dmSans.variable}`;
+export const funnelFontClassName = `${displaySerif.variable} ${hankenGrotesk.variable} ${schibstedGrotesk.variable} ${dmMono.variable} ${dmSans.variable}`;
