@@ -3,22 +3,76 @@ import {
   MATH_MISS_TABLE,
   QUESTION_MAP,
   RW_MISS_TABLE,
-  SKYE_FORMULAS,
   SKYE_HERO,
 } from "@/lib/skye/diagnostic-report-data";
 import {
-  Callout,
+  MATH_WALKTHROUGH_ROWS,
+  SKYE_ADAPTIVE_INTRO,
+  SKYE_ADAPTIVE_MATH,
+  SKYE_ADAPTIVE_RW,
+  SKYE_DIAG_LEDE,
+  SKYE_MATH_AFTER_TABLE,
+  SKYE_MATH_FORMULAS,
+  SKYE_MATH_FORMULAS_FOOT,
+  SKYE_MATH_FORMULAS_INTRO,
+  SKYE_MATH_INTRO,
+  SKYE_MATH_QUESTION_TYPES,
+  SKYE_MATH_SKILLS,
+  SKYE_MATH_SKILLS_INTRO,
+  SKYE_RW_INTRO_BULLETS,
+  SKYE_RW_INTRO_LEAD,
+  SKYE_RW_SKILLS,
+  SKYE_RW_SKILLS_RANK_HEAD,
+  SKYE_SKIP_TIME,
+} from "@/lib/skye/diagnostic-analysis-copy";
+import {
   DiagnosticHero,
   DifficultyReadout,
-  FormulaGrid,
-  MissTable,
-  PatternCard,
   QuestionPerformanceMap,
+  MissTable,
   SectionHead,
-  TeachingStepsList,
 } from "@/components/diagnostic/report-visuals";
 import { SkyeAdaptiveRoutingDiagram } from "@/components/skye/adaptive-routing-diagram";
 import Link from "next/link";
+
+function ProseParagraphs({ lines }: { lines: string[] }) {
+  return (
+    <>
+      {lines.map((line) => (
+        <p key={line.slice(0, 48)}>{line}</p>
+      ))}
+    </>
+  );
+}
+
+function MathWalkthroughTable() {
+  return (
+    <div className="diag-report__tablewrap diag-report__tablewrap--wide">
+      <table className="diag-report__table diag-report__table--walkthrough">
+        <thead>
+          <tr>
+            <th>Question</th>
+            <th>How to solve it</th>
+            <th>Desmos once set up?</th>
+            <th>Off-sheet formula</th>
+            <th>What she answered</th>
+          </tr>
+        </thead>
+        <tbody>
+          {MATH_WALKTHROUGH_ROWS.map((row) => (
+            <tr key={row.question}>
+              <td className="diag-report__tq">{row.question}</td>
+              <td>{row.how}</td>
+              <td>{row.desmos}</td>
+              <td>{row.formula}</td>
+              <td>{row.marked}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
 
 export function SkyeDiagnosticAnalysisContent() {
   return (
@@ -43,142 +97,101 @@ export function SkyeDiagnosticAnalysisContent() {
 
         <DiagnosticHero {...SKYE_HERO} />
 
+        <p className="diag-report__lede diag-report__lede--intro">{SKYE_DIAG_LEDE}</p>
+
         <section className="diag-report__section" id="skye-overall">
-          <SectionHead num="01" title="Question Level Performance" />
+          <SectionHead num="01" title="Performance Overview" />
           <QuestionPerformanceMap sections={QUESTION_MAP} totalCorrect={63} totalQuestions={98} />
           <DifficultyReadout rows={DIFFICULTY_READOUT} />
         </section>
 
-        <section className="diag-report__section" id="skye-adaptive">
-          <SectionHead num="02" title="Adaptive Routing" />
-          <p>
-            The Digital SAT adapts Module 2 based on Module 1 performance. Skye answered 14 of 27 on
-            Reading and Writing Module 1 (about 4 questions below the hard-module cutoff) and 11 of
-            22 on Math Module 1 (about 2–3 below cutoff). That shaped an easier Module 2 mix in both
-            sections.
-          </p>
+        <section className="diag-report__section diag-report__prose" id="skye-adaptive">
+          <SectionHead num="02" title="Adaptive Results" />
+          <ProseParagraphs lines={SKYE_ADAPTIVE_INTRO} />
           <SkyeAdaptiveRoutingDiagram />
-          <Callout tag="Module 2 routing">
-            <p>
-              On Reading and Writing, missing the Module 1 cutoff means even a strong Module 2 caps
-              the section score. The first goal is to find the easiest Module 1 mistakes and fix them.
-              On Math, she received only one hard question in Module 2 because of Module 1 routing.
-            </p>
-          </Callout>
+          <p>{SKYE_ADAPTIVE_RW}</p>
+          <p>{SKYE_ADAPTIVE_MATH}</p>
         </section>
 
-        <section className="diag-report__section" id="skye-rw">
-          <SectionHead num="03" title="Reading & Writing Analysis" />
-          <p>
-            Most Reading and Writing misses share one habit: she does not pin down what the question
-            is asking before she picks, so she chooses the answer that sounds related to the passage
-            instead of the one that matches the exact logic, structure, or main idea.
-          </p>
+        <section className="diag-report__section diag-report__prose" id="skye-rw">
+          <SectionHead num="03" title="Reading and Writing Analysis" />
+          <p>{SKYE_RW_INTRO_LEAD}</p>
+          <ul>
+            {SKYE_RW_INTRO_BULLETS.map((item) => (
+              <li key={item.slice(0, 40)}>{item}</li>
+            ))}
+          </ul>
+
           <MissTable rows={RW_MISS_TABLE} />
           <p className="diag-report__tnote">
-            Correct answer vs. answer marked · 19 Reading and Writing misses across both modules.
+            Question-level miss table · 19 Reading and Writing misses across both modules.
           </p>
 
-          <div className="diag-report__patterns">
-            <PatternCard
-              index={1}
-              title="Transitions (4 missed, 3 easy in Module 1)"
-              body='On the cortisol question she chose "Thus" where the sentences contrast, so the answer was "In contrast." On the poem question she chose "In turn" where the move was "Nonetheless." She picks transition words by surface relation, not by naming the relationship first.'
-              fix="Learn the five transition types, memorize which SAT words belong to each, then label the relationship between sentences before looking at choices."
-            />
-            <PatternCard
-              index={2}
-              title="Reading logic: structure, detail, main idea, evidence"
-              body='On the gravitational-waves function question she chose "highlights skepticism," which the text never states. On the Ferguson evidence question she chose standardized/uniform language when the claim was about varied recovery by country.'
-              fix="Name the question job first (main idea, detail, function, structure, or evidence), then reject any choice that does a different job even if it repeats passage words."
-            />
-            <PatternCard
-              index={3}
-              title="Boundaries"
-              body='She used a semicolon before a phrase that was not a complete sentence, missed a comma before "and" joining two full sentences, and missed the closing comma on an interrupting phrase.'
-              fix="Label each side as independent or dependent, then apply comma, semicolon, or period rules."
-            />
-            <PatternCard
-              index={4}
-              title="Words in Context"
-              body='She chose "impedes" in a positive sentence, "transient" when the clue was "approaching," and "involved in" where grammar after "to" required a plain verb.'
-              fix="Cover choices, read tone and grammar, predict the missing word, then match an answer to both meaning and form."
-            />
-            <PatternCard
-              index={5}
-              title="Rhetorical Synthesis"
-              body='She chose an answer that was not an advantage when the goal asked for one, and she did not hold the stated goal in mind long enough to eliminate off-goal choices.'
-              fix="Read the goal first, name the task in plain words, then eliminate any answer that does not do exactly that job."
-            />
-          </div>
+          <h3 className="diag-report__gap-title">{SKYE_RW_SKILLS_RANK_HEAD}</h3>
 
-          <h3 className="diag-report__gap-title">Transitions teaching order</h3>
-          <TeachingStepsList
-            steps={[
-              {
-                title: "Learn the transition types",
-                body: "Addition, contrast, cause and effect, example, and emphasis or restatement cover almost every question.",
-              },
-              {
-                title: "Memorize SAT words in each group",
-                body: "Her errors were words filed in the wrong type. Drill sorting until it is automatic.",
-              },
-              {
-                title: "Relationship first, word second",
-                body: "On each question, decide how the two sentences relate, then pick from that group only.",
-              },
-            ]}
-          />
+          {SKYE_RW_SKILLS.map((skill) => (
+            <div key={skill.rank} className="diag-report__skill-block" id={`skye-rw-skill-${skill.rank}`}>
+              <h4 className="diag-report__skill-title">
+                {skill.rank}. {skill.title}
+              </h4>
+              <p>{skill.lead}</p>
+              <ul className="diag-report__miss-bullets">
+                {skill.misses.map((miss) => (
+                  <li key={miss.q}>
+                    <strong>{miss.q}:</strong> {miss.text}
+                  </li>
+                ))}
+              </ul>
+              <ProseParagraphs lines={skill.body} />
+            </div>
+          ))}
         </section>
 
-        <section className="diag-report__section" id="skye-math">
-          <SectionHead num="04" title="Math Analysis" />
+        <section className="diag-report__section diag-report__prose" id="skye-math">
+          <SectionHead num="04" title="Math: a deep look at all 15 misses" />
+          <ProseParagraphs lines={SKYE_MATH_INTRO} />
+
           <p>
-            The math is not about raw ability. The SAT asks familiar topics in unfamiliar wording.
-            She was often unsure how to start and tried different approaches until something seemed
-            to fit. When she is not sure what a question is asking, even Desmos cannot tell her what
-            to enter.
+            The table below shows, for each missed question, how to solve it, whether Desmos can
+            finish it once it is set up, the off-sheet formula it needs, and what she answered.
           </p>
+          <MathWalkthroughTable />
+
+          <ProseParagraphs lines={SKYE_MATH_AFTER_TABLE} />
+
+          <h3 className="diag-report__gap-title">The skills and question types to build</h3>
+          <p>{SKYE_MATH_SKILLS_INTRO}</p>
+          <p>The skills to build:</p>
+          <ol>
+            {SKYE_MATH_SKILLS.map((item) => (
+              <li key={item.slice(0, 32)}>{item}</li>
+            ))}
+          </ol>
+          <p>{SKYE_MATH_QUESTION_TYPES}</p>
+
+          <h3 className="diag-report__gap-title">Formulas she needs to know by heart</h3>
+          <p>{SKYE_MATH_FORMULAS_INTRO}</p>
+          <ol>
+            {SKYE_MATH_FORMULAS.map((item) => (
+              <li key={item.slice(0, 32)}>{item}</li>
+            ))}
+          </ol>
+          <p>{SKYE_MATH_FORMULAS_FOOT}</p>
+
           <MissTable rows={MATH_MISS_TABLE} />
           <p className="diag-report__tnote">
-            Correct answer vs. answer marked · 15 math misses across both modules.
+            Tabular reference · 15 math misses across both modules (same rows as mentor table above).
           </p>
-
-          <Callout tag="Module 1 pattern">
-            <p>
-              She missed every systems-of-equations question and every nonlinear-equation question in
-              Math Module 1 (0 of 2 and 0 of 4). Medium questions are core SAT content; three easy
-              misses in Module 1 also hurt adaptive routing.
-            </p>
-          </Callout>
-
-          <h3 className="diag-report__gap-title">Formulas to know by heart</h3>
-          <p>None of these are on the SAT reference sheet. They showed up in 9 of her 15 math misses.</p>
-          <FormulaGrid items={SKYE_FORMULAS} />
-
-          <h3 className="diag-report__gap-title">Skills to build (in session order)</h3>
-          <ul>
-            <li>Systems of equations: crossings and number of solutions</li>
-            <li>Factoring and the zero-product rule</li>
-            <li>Slope from two points and line equations</li>
-            <li>Exponential form a · b^x from words</li>
-            <li>Circle measures: radians, degrees, arc length</li>
-            <li>Perpendicular slope (negative reciprocal)</li>
-            <li>Function transformations such as h(x + 2)</li>
-            <li>Equation manipulation: divide every term, isolate a variable</li>
-          </ul>
         </section>
 
-        <section className="diag-report__section" id="skye-focus">
-          <SectionHead num="05" title="Where to Focus" />
-          <Callout tag="Strengths to keep">
-            <p>
-              Inferences (all correct), most Command of Evidence where the claim match was clear,
-              Problem-Solving and Data Analysis in Math Module 1, linear equations, lines and angles,
-              and area/volume. Her trouble is the specific logic-matching habit on the skills above,
-              not passage comprehension overall.
-            </p>
-          </Callout>
+        <section className="diag-report__section diag-report__prose" id="skye-focus">
+          <SectionHead num="05" title="Where not to spend session time" />
+          <p>
+            <strong>Reading:</strong> {SKYE_SKIP_TIME.reading}
+          </p>
+          <p>
+            <strong>Math:</strong> {SKYE_SKIP_TIME.math}
+          </p>
           <p className="diag-report__plan-link">
             For skill priority, recoverable points, and the week-by-week schedule, see the{" "}
             <Link href="/skye/plan">Improvement Plan</Link> tab.

@@ -151,7 +151,7 @@ export const SKYE_HERO = {
   totalRange: "1090–1140",
   rwRange: "540–560",
   mathRange: "550–580",
-  note: "Skye scored 1090–1140 on her June 18 full-length diagnostic. Reading and writing (540–560) and math (550–580) are close, but Module 1 routing in both sections capped her second-module difficulty mix.",
+  note: "Skye scored 1090–1140 on her June 18 full-length diagnostic. Reading and writing (540–560) and math (550–580) are close. Module 1 routing in both sections shaped her Module 2 difficulty mix.",
 };
 
 export const SKYE_FORMULAS = [

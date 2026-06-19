@@ -57,6 +57,82 @@
 .diag-report__lede {
   color: var(--sr-muted);
   font-size: 15px;
+  line-height: 1.65;
+  margin: 0 0 28px;
+}
+
+.diag-report__lede--intro {
+  margin-top: -8px;
+  max-width: 62ch;
+}
+
+.diag-report__prose p {
+  margin: 0 0 1em;
+  line-height: 1.68;
+  color: var(--sr-ink);
+}
+
+.diag-report__prose ul,
+.diag-report__prose ol {
+  margin: 0 0 1.25em 1.35em;
+  padding: 0;
+  line-height: 1.65;
+}
+
+.diag-report__prose li {
+  margin-bottom: 0.65em;
+}
+
+.diag-report__prose li:last-child {
+  margin-bottom: 0;
+}
+
+.diag-report__skill-block {
+  margin: 2.5rem 0 0;
+  padding-top: 1.75rem;
+  border-top: 1px solid var(--sr-line-soft);
+}
+
+.diag-report__skill-title {
+  font-family: var(--sr-display);
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin: 0 0 0.85em;
+  color: var(--sr-navy);
+  line-height: 1.35;
+}
+
+.diag-report__miss-bullets {
+  list-style: none;
+  margin: 0 0 1.25em;
+  padding: 0;
+}
+
+.diag-report__miss-bullets li {
+  padding: 0.65em 0 0.65em 0.85em;
+  border-left: 2px solid rgba(0, 87, 168, 0.2);
+  margin-bottom: 0.5em;
+}
+
+.diag-report__tablewrap--wide {
+  overflow-x: auto;
+}
+
+.diag-report__table--walkthrough td {
+  vertical-align: top;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.diag-report__table--walkthrough .diag-report__tq {
+  min-width: 11rem;
+  white-space: nowrap;
+}
+
+@media (max-width: 720px) {
+  .diag-report__table--walkthrough {
+    min-width: 720px;
+  }
 }
 
 /* masthead */
