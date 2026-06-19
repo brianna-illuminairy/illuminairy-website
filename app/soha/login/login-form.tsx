@@ -55,18 +55,18 @@ export default function SohaLoginForm() {
 
   return (
     <SohaLoginChrome>
-      <div className="danielle-portal__card">
-        <p className="danielle-portal__eyebrow">Illuminairy</p>
-        <h1 className="danielle-portal__title">Soha&apos;s SAT Improvement Plan</h1>
-        <p className="danielle-portal__lede">
+      <div className="aurora-portal__card">
+        <p className="aurora-eyebrow">Illuminairy</p>
+        <h1 className="aurora-portal__title">Soha&apos;s SAT Improvement Plan</h1>
+        <p className="aurora-portal__lede">
           Enter the email we shared with you to view diagnostic results and the SAT Improvement Plan.
         </p>
         <form onSubmit={submit}>
-          <label className="danielle-portal__field">
+          <label className="aurora-portal__field">
             <span>Email</span>
             <input
               type="email"
-              className="danielle-portal__input"
+              className="aurora-portal__input"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               autoComplete="email"
@@ -74,11 +74,11 @@ export default function SohaLoginForm() {
             />
           </label>
           {showStaffField ? (
-            <label className="danielle-portal__field">
+            <label className="aurora-portal__field">
               <span>Staff code</span>
               <input
                 type="password"
-                className="danielle-portal__input"
+                className="aurora-portal__input"
                 value={staffCode}
                 onChange={(e) => setStaffCode(e.target.value)}
                 autoComplete="off"
@@ -86,11 +86,11 @@ export default function SohaLoginForm() {
               />
             </label>
           ) : null}
-          {error ? <p className="danielle-portal__error">{error}</p> : null}
+          {error ? <p className="aurora-portal__error">{error}</p> : null}
           <button
             type="submit"
             disabled={loading || !email.trim()}
-            className="danielle-portal__button"
+            className="aurora-portal__button aurora-btn-primary"
           >
             {loading ? "Signing in…" : "Continue"}
           </button>

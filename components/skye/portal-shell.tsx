@@ -9,13 +9,19 @@ const NAV = [
   {
     href: "/skye/pre-diagnostic",
     label: "Pre-Diagnostic Lesson",
-    match: (path: string) => path.startsWith("/skye/pre-diagnostic")
+    match: (path: string) => path.startsWith("/skye/pre-diagnostic"),
   },
   {
     href: "/skye/diagnostic",
-    label: "Diagnostic Reports",
-    match: (path: string) => path.startsWith("/skye/diagnostic")
-  }
+    label: "Diagnostic Analysis",
+    match: (path: string) =>
+      path.startsWith("/skye/diagnostic") && !path.startsWith("/skye/diagnostic/login"),
+  },
+  {
+    href: "/skye/plan",
+    label: "Improvement Plan",
+    match: (path: string) => path.startsWith("/skye/plan"),
+  },
 ] as const;
 
 function HomeworkPortalCta() {

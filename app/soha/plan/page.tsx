@@ -15,7 +15,7 @@ export default async function SohaPlanPage() {
   return (
     <SohaPortalShell>
       <style dangerouslySetInnerHTML={{ __html: styles }} />
-      <div className="danielle-plan-root" dangerouslySetInnerHTML={{ __html: bodyHtml }} />
+      <div className="aurora-portal__plan-root" dangerouslySetInnerHTML={{ __html: bodyHtml }} />
     </SohaPortalShell>
   );
 }

@@ -33,25 +33,25 @@ export function SohaPdfViewer({ src, title, openLabel }: SohaPdfViewerProps) {
   );
 
   return (
-    <div className="danielle-portal__pdf-viewer">
-      <div className="danielle-portal__pdf-actions">
+    <div className="aurora-portal__pdf-viewer">
+      <div className="aurora-portal__pdf-actions">
         <a
           href={src}
           target="_blank"
           rel="noopener noreferrer"
-          className="danielle-portal__pdf-open"
+          className="aurora-portal__pdf-open"
         >
           {openLabel}
         </a>
         {!embedInline ? (
-          <p className="danielle-portal__pdf-hint">
+          <p className="aurora-portal__pdf-hint">
             On iPhone and iPad, use the button above to open the PDF. In-page preview is not
             supported in mobile Safari.
           </p>
         ) : null}
       </div>
       {embedInline ? (
-        <iframe src={src} title={title} className="danielle-portal__pdf-frame" />
+        <iframe src={src} title={title} className="aurora-portal__pdf-frame" />
       ) : null}
     </div>
   );

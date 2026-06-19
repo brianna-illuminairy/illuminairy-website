@@ -20,16 +20,16 @@ import {
 
 export function SohaDiagnosticAnalysisContent() {
   return (
-    <article className="soha-report">
-      <div className="soha-report__aurora" aria-hidden="true" />
+    <article className="diag-report">
+      <div className="diag-report__aurora" aria-hidden="true" />
 
-      <div className="soha-report__wrap">
-        <header className="soha-report__mast">
-          <div className="soha-report__brand">
-            <span className="soha-report__star">✦</span>
-            <span className="soha-report__brand-name">Illuminairy</span>
+      <div className="diag-report__wrap">
+        <header className="diag-report__mast">
+          <div className="diag-report__brand">
+            <span className="diag-report__star">✦</span>
+            <span className="diag-report__brand-name">Illuminairy</span>
           </div>
-          <div className="soha-report__meta">
+          <div className="diag-report__meta">
             <div>
               Test · <b>Full Length Diagnostic Test</b>
             </div>
@@ -41,13 +41,13 @@ export function SohaDiagnosticAnalysisContent() {
 
         <DiagnosticHero />
 
-        <section className="soha-report__section" id="soha-overall">
+        <section className="diag-report__section" id="soha-overall">
           <SectionHead num="01" title="Question Level Performance" />
           <QuestionPerformanceMap />
           <DifficultyReadout />
         </section>
 
-        <section className="soha-report__section" id="soha-rw">
+        <section className="diag-report__section" id="soha-rw">
           <SectionHead num="02" title="Reading & Writing Performance" />
 
           <p>
@@ -61,7 +61,7 @@ export function SohaDiagnosticAnalysisContent() {
           </p>
 
           <MissTable rows={RW_MISS_TABLE} />
-          <p className="soha-report__tnote">
+          <p className="diag-report__tnote">
             Correct answer vs. answer marked · sourced from the question-level breakdown.
           </p>
 
@@ -87,9 +87,9 @@ export function SohaDiagnosticAnalysisContent() {
             She is choosing answers that are locally plausible but does not satisfy the full sentence
             or the full claim being tested.
           </p>
-          <p className="soha-report__lede">Four examples of this from her diagnostic are below:</p>
+          <p className="diag-report__lede">Four examples of this from her diagnostic are below:</p>
 
-          <div className="soha-report__patterns">
+          <div className="diag-report__patterns">
             <PatternCard
               index={1}
               title="Boundaries and complete clauses"
@@ -128,7 +128,7 @@ export function SohaDiagnosticAnalysisContent() {
           </p>
         </section>
 
-        <section className="soha-report__section" id="soha-math">
+        <section className="diag-report__section" id="soha-math">
           <SectionHead num="03" title="Math Performance" />
 
           <p>
@@ -149,11 +149,11 @@ export function SohaDiagnosticAnalysisContent() {
           </p>
 
           <MissTable rows={MATH_MISS_TABLE} />
-          <p className="soha-report__tnote">
+          <p className="diag-report__tnote">
             Correct answer vs. answer marked · 6 math misses across both modules.
           </p>
 
-          <h3 className="soha-report__gap-title">Gap 1: Factoring and the factor theorem</h3>
+          <h3 className="diag-report__gap-title">Gap 1: Factoring and the factor theorem</h3>
           <p>
             She struggles with questions that require factoring or the factor theorem, the same
             questions she was trying to plug into the calculator to solve which needed to be factored
@@ -181,7 +181,7 @@ export function SohaDiagnosticAnalysisContent() {
             recognize the equation needed to be rearranged into zero-product form.
           </p>
 
-          <h3 className="soha-report__gap-title">Gap 2: Geometry beyond the formula sheet</h3>
+          <h3 className="diag-report__gap-title">Gap 2: Geometry beyond the formula sheet</h3>
           <p>
             The second area I saw her struggling, even for some questions she got right (one of them I
             believe she guessed on), was geometry for problems which cannot be solved using the
@@ -199,21 +199,21 @@ export function SohaDiagnosticAnalysisContent() {
             provided in the formula sheets.
           </p>
 
-          <h3 className="soha-report__gap-title">Two remaining misses</h3>
-          <div className="soha-report__misslines">
-            <div className="soha-report__missline">
-              <span className="soha-report__missline-star">✦</span>
+          <h3 className="diag-report__gap-title">Two remaining misses</h3>
+          <div className="diag-report__misslines">
+            <div className="diag-report__missline">
+              <span className="diag-report__missline-star">✦</span>
               <div>
-                <span className="soha-report__missline-q">Module 2 Q16</span>, a hard algebra question
+                <span className="diag-report__missline-q">Module 2 Q16</span>, a hard algebra question
                 about three collinear points, where the move is to set the two slopes equal and simplify
                 to ak + bh = hk. I believe her error here was her inability to simplify the equation
                 accurately.
               </div>
             </div>
-            <div className="soha-report__missline">
-              <span className="soha-report__missline-star">✦</span>
+            <div className="diag-report__missline">
+              <span className="diag-report__missline-star">✦</span>
               <div>
-                <span className="soha-report__missline-q">Module 2 Q22</span>, a profit and loss
+                <span className="diag-report__missline-q">Module 2 Q22</span>, a profit and loss
                 proportional-reasoning question (sell part at a loss, then find the profit percent
                 needed on the rest to net 20%). This one is very teachable, but these multi-step
                 proportional questions do not appear often on the SAT, so I would schedule it closer to
@@ -234,7 +234,7 @@ export function SohaDiagnosticAnalysisContent() {
           </p>
         </section>
 
-        <section className="soha-report__section" id="soha-behavior">
+        <section className="diag-report__section" id="soha-behavior">
           <SectionHead num="04" title="Test-Taking Behavior" />
 
           <HabitsGrid />
@@ -260,24 +260,24 @@ export function SohaDiagnosticAnalysisContent() {
             she should or shouldn&apos;t use the calculator.
           </p>
 
-          <p className="soha-report__plan-link">
+          <p className="diag-report__plan-link">
             For projected scores, checkpoints, and the week-by-week schedule, see the{" "}
             <Link href="/soha/plan">SAT Improvement Plan</Link> tab.
           </p>
         </section>
 
-        <section className="soha-report__section soha-report__appendix" id="soha-appendix">
+        <section className="diag-report__section diag-report__appendix" id="soha-appendix">
           <SectionHead num="—" title="Raw Reports" />
-          <p className="soha-report__lede">PDF exports from the June 17 diagnostic session.</p>
-          <div className="soha-report__doc-links">
+          <p className="diag-report__lede">PDF exports from the June 17 diagnostic session.</p>
+          <div className="diag-report__doc-links">
             <Link href="/soha/diagnostic/full">Full report →</Link>
             <Link href="/soha/diagnostic/tabular">Tabular report →</Link>
           </div>
         </section>
 
-        <footer className="soha-report__foot">
+        <footer className="diag-report__foot">
           <span>
-            <span className="soha-report__star">✦</span> Illuminairy · SAT Diagnostic Analysis
+            <span className="diag-report__star">✦</span> Illuminairy · SAT Diagnostic Analysis
           </span>
           <span>Soha Naveed · June 17, 2026</span>
         </footer>

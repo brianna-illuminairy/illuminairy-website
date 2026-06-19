@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { SkyePortalAnalytics } from "@/components/skye/portal-analytics";
 import "../aurora-brand.css";
 import "../aurora-components.css";
+import "../diagnostic-report.css";
+import "../design/data-viz/data-viz.css";
 import "./skye-portal.css";
 
 export const dynamic = "force-dynamic";

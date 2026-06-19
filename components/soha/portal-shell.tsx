@@ -22,7 +22,7 @@ const NAV = [
 
 function SohaEnrollCta() {
   return (
-    <Link href={SOHA_BOOTCAMP_ENROLL_PATH} className="danielle-portal__practice-cta">
+    <Link href={SOHA_BOOTCAMP_ENROLL_PATH} className="aurora-btn-ghost">
       Bootcamp enrollment
     </Link>
   );
@@ -30,28 +30,32 @@ function SohaEnrollCta() {
 
 function SohaPortalFooter() {
   return (
-    <footer className="danielle-portal__footer">
-      <p>
-        Parents:{" "}
-        <Link href={SOHA_BOOTCAMP_ENROLL_PATH} className="danielle-portal__footer-link">
-          August 22 bootcamp enrollment
-        </Link>
-      </p>
-      <p>© {new Date().getFullYear()} Illuminairy · Private student portal</p>
+    <footer className="aurora-footer">
+      <div className="aurora-footer__inner">
+        <p className="aurora-footer__legal">
+          Parents:{" "}
+          <Link href={SOHA_BOOTCAMP_ENROLL_PATH} style={{ color: "var(--aurora-green)" }}>
+            August 22 bootcamp enrollment
+          </Link>
+        </p>
+        <p className="aurora-footer__legal" style={{ marginTop: "8px" }}>
+          © {new Date().getFullYear()} Illuminairy · Private student portal
+        </p>
+      </div>
     </footer>
   );
 }
 
 function SohaHeaderNav({ pathname }: { pathname: string }) {
   return (
-    <nav className="danielle-portal__nav" aria-label="Student portal">
+    <nav className="aurora-nav" aria-label="Student portal">
       {NAV.map((item) => {
         const active = item.match(pathname);
         return (
           <Link
             key={item.href}
             href={item.href}
-            className={`danielle-portal__nav-link${active ? " is-active" : ""}`}
+            className={`aurora-nav__link${active ? " is-active" : ""}`}
             aria-current={active ? "page" : undefined}
           >
             {item.label}
@@ -66,21 +70,19 @@ export function SohaPortalShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname() ?? "";
 
   return (
-    <div className="danielle-portal">
-      <header className="danielle-portal__header">
-        <div className="danielle-portal__header-inner">
-          <div className="danielle-portal__topbar">
-            <Link href="/soha/diagnostic" className="danielle-portal__logo" aria-label="Illuminairy">
+    <div className="aurora-portal">
+      <header className="aurora-header">
+        <div className="aurora-header__inner" style={{ flexDirection: "column", alignItems: "stretch" }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px", width: "100%" }}>
+            <Link href="/soha/diagnostic" aria-label="Illuminairy">
               <IlluminairyLogoV7 tone="on-dark" height={34} />
             </Link>
-            <div className="danielle-portal__topbar-actions">
-              <SohaEnrollCta />
-            </div>
+            <SohaEnrollCta />
           </div>
           <SohaHeaderNav pathname={pathname} />
         </div>
       </header>
-      <div className="danielle-portal__body">{children}</div>
+      <div className="aurora-body-wrap">{children}</div>
       <SohaPortalFooter />
     </div>
   );
@@ -88,20 +90,16 @@ export function SohaPortalShell({ children }: { children: React.ReactNode }) {
 
 export function SohaLoginChrome({ children }: { children: React.ReactNode }) {
   return (
-    <div className="danielle-portal danielle-portal--login">
-      <header className="danielle-portal__header">
-        <div className="danielle-portal__header-inner">
-          <div className="danielle-portal__topbar">
-            <span className="danielle-portal__logo" aria-label="Illuminairy">
-              <IlluminairyLogoV7 tone="on-dark" height={34} />
-            </span>
-            <div className="danielle-portal__topbar-actions">
-              <SohaEnrollCta />
-            </div>
-          </div>
+    <div className="aurora-portal aurora-portal--login">
+      <header className="aurora-header">
+        <div className="aurora-header__inner">
+          <span aria-label="Illuminairy">
+            <IlluminairyLogoV7 tone="on-dark" height={34} />
+          </span>
+          <SohaEnrollCta />
         </div>
       </header>
-      <div className="danielle-portal__login-wrap">{children}</div>
+      <div className="aurora-body-wrap">{children}</div>
       <SohaPortalFooter />
     </div>
   );

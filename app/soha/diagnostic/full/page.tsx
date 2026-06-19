@@ -14,11 +14,11 @@ export default async function SohaDiagnosticFullPage() {
 
   return (
     <SohaPortalShell>
-      <Link href="/soha/diagnostic" className="danielle-portal__back">
+      <Link href="/soha/diagnostic" className="aurora-portal__back">
         ← Back to diagnostic analysis
       </Link>
-      <div className="danielle-portal__page-head">
-        <p className="danielle-portal__eyebrow">Illuminairy · Skill Diagnostic</p>
+      <div className="aurora-portal__page-head">
+        <p className="aurora-eyebrow">Illuminairy · Skill Diagnostic</p>
         <h1>Full diagnostic report</h1>
       </div>
       <SohaPdfViewer
