@@ -93,13 +93,13 @@ export const QUESTION_MAP = [
 
 export const DIFFICULTY_READOUT = [
   {
-    label: "Reading and Writing · 34 of 54",
+    label: "Reading and Writing · 34 of 54 correct",
     easy: 67,
     medium: 52,
     hard: 77,
   },
   {
-    label: "Math · 29 of 44",
+    label: "Math · 29 of 44 correct",
     easy: 86,
     medium: 56,
     hard: 73,
@@ -151,7 +151,6 @@ export const SKYE_HERO = {
   totalRange: "1090–1140",
   rwRange: "540–560",
   mathRange: "550–580",
-  note: "Skye scored 1090–1140 on her June 18 full-length diagnostic. Reading and writing (540–560) and math (550–580) are close. Module 1 routing in both sections shaped her Module 2 difficulty mix.",
 };
 
 export const SKYE_FORMULAS = [

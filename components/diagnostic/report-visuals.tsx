@@ -24,7 +24,7 @@ export type DiagnosticHeroProps = {
   totalRange: string;
   rwRange: string;
   mathRange: string;
-  note: string;
+  note?: string;
 };
 
 export function DiagnosticHero({
@@ -56,10 +56,12 @@ export function DiagnosticHero({
           <span className="diag-report__ss-rng">{mathRange}</span>
         </div>
       </div>
-      <div className="diag-report__hero-note">
-        <div className="diag-report__hero-rule" />
-        <p>{note}</p>
-      </div>
+      {note ? (
+        <div className="diag-report__hero-note">
+          <div className="diag-report__hero-rule" />
+          <p>{note}</p>
+        </div>
+      ) : null}
     </div>
   );
 }
@@ -127,26 +129,34 @@ export function QuestionPerformanceMap({
 
 export function DifficultyReadout({ rows }: { rows: readonly DifficultyRow[] }) {
   return (
-    <div className="diag-report__diffstrip">
-      {rows.map((row) => (
-        <div key={row.label} className="diag-report__dr">
-          <p className="diag-report__dr-h">{row.label}</p>
-          <div className="diag-report__dr-cells">
-            {(
-              [
-                ["Easy", row.easy],
-                ["Medium", row.medium],
-                ["Hard", row.hard],
-              ] as const
-            ).map(([label, pct]) => (
-              <div key={label} className="diag-report__dr-d">
-                <div className={`diag-report__dr-pct ${pctClass(pct)}`}>{pct}%</div>
-                <div className="diag-report__dr-t">{label}</div>
-              </div>
-            ))}
+    <div className="diag-report__diffwrap">
+      <p className="diag-report__diff-lede">
+        Each percentage is the share of questions answered correctly at that difficulty level
+        (easy, medium, or hard).
+      </p>
+      <div className="diag-report__diffstrip">
+        {rows.map((row) => (
+          <div key={row.label} className="diag-report__dr">
+            <p className="diag-report__dr-h">{row.label}</p>
+            <p className="diag-report__dr-sub">Correct rate by difficulty</p>
+            <div className="diag-report__dr-cells">
+              {(
+                [
+                  ["Easy", row.easy],
+                  ["Medium", row.medium],
+                  ["Hard", row.hard],
+                ] as const
+              ).map(([label, pct]) => (
+                <div key={label} className="diag-report__dr-d">
+                  <div className={`diag-report__dr-pct ${pctClass(pct)}`}>{pct}%</div>
+                  <div className="diag-report__dr-t">{label}</div>
+                  <div className="diag-report__dr-cap">answered correctly</div>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 }

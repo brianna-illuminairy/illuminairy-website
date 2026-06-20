@@ -547,11 +547,21 @@
 }
 
 /* difficulty readout */
+.diag-report__diffwrap {
+  margin-top: 18px;
+}
+
+.diag-report__diff-lede {
+  margin: 0 0 12px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--sr-muted);
+}
+
 .diag-report__diffstrip {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 18px;
-  margin-top: 18px;
 }
 
 .diag-report__dr {
@@ -567,7 +577,14 @@
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--sr-muted);
+  margin: 0 0 6px;
+}
+
+.diag-report__dr-sub {
   margin: 0 0 14px;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--sr-muted-2);
 }
 
 .diag-report__dr-cells {
@@ -606,6 +623,13 @@
   text-transform: uppercase;
   color: var(--sr-muted-2);
   margin-top: 7px;
+}
+
+.diag-report__dr-cap {
+  font-size: 11px;
+  line-height: 1.35;
+  color: var(--sr-muted-2);
+  margin-top: 4px;
 }
 
 /* table */

@@ -18,6 +18,8 @@ import {
   SKYE_MATH_QUESTION_TYPES,
   SKYE_MATH_SKILLS,
   SKYE_MATH_SKILLS_INTRO,
+  SKYE_OVERVIEW_INTRO,
+  SKYE_OVERVIEW_INTRO_FOOTNOTE,
   SKYE_RW_INTRO_BULLETS,
   SKYE_RW_INTRO_LEAD,
   SKYE_RW_SKILLS,
@@ -97,7 +99,7 @@ function MathWalkthroughTable() {
             <th>How to solve it</th>
             <th>Desmos once set up?</th>
             <th>Off-sheet formula</th>
-            <th>What she answered</th>
+            <th>Marked answer vs correct</th>
           </tr>
         </thead>
         <tbody>
@@ -139,8 +141,10 @@ export function SkyeDiagnosticAnalysisContent() {
 
         <DiagnosticHero {...SKYE_HERO} />
 
-        <section className="diag-report__section" id="skye-overall">
+        <section className="diag-report__section diag-report__prose" id="skye-overall">
           <SectionHead num="01" title="Performance Overview" />
+          <ProseParagraphs lines={SKYE_OVERVIEW_INTRO} />
+          <p className="diag-report__tnote">{SKYE_OVERVIEW_INTRO_FOOTNOTE}</p>
           <QuestionPerformanceMap sections={QUESTION_MAP} totalCorrect={63} totalQuestions={98} />
           <DifficultyReadout rows={DIFFICULTY_READOUT} />
         </section>
@@ -192,16 +196,16 @@ export function SkyeDiagnosticAnalysisContent() {
           <ProseParagraphs lines={SKYE_MATH_INTRO} />
 
           <p>
-            The table below shows, for each missed question, how to solve it, whether Desmos can
-            finish it once it is set up, the off-sheet formula it needs, and what she answered.
+            The table below walks through each missed math question: how to solve it, whether
+            Desmos can finish the problem once it is set up, which off-sheet formula applies, and
+            how the marked answer compares to the correct approach.
           </p>
           <MathWalkthroughTable />
 
           <ProseParagraphs lines={SKYE_MATH_AFTER_TABLE} />
 
-          <h3 className="diag-report__gap-title">The skills and question types to build</h3>
+          <h3 className="diag-report__gap-title">Skills and question types to build</h3>
           <p>{SKYE_MATH_SKILLS_INTRO}</p>
-          <p>The skills to build:</p>
           <ul className="diag-report__skill-ul">
             {SKYE_MATH_SKILLS.map((item) => (
               <RwSkillListItemView
@@ -212,7 +216,7 @@ export function SkyeDiagnosticAnalysisContent() {
           </ul>
           <p>{SKYE_MATH_QUESTION_TYPES}</p>
 
-          <h3 className="diag-report__gap-title">Formulas she needs to know by heart</h3>
+          <h3 className="diag-report__gap-title">Formulas to know by heart</h3>
           <p>{SKYE_MATH_FORMULAS_INTRO}</p>
           <ul className="diag-report__skill-ul">
             {SKYE_MATH_FORMULAS.map((item) => (

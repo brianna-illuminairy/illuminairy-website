@@ -55,13 +55,13 @@ export const QUESTION_MAP: SectionMap[] = [
 
 export const DIFFICULTY_READOUT = [
   {
-    label: "Reading and Writing · 47 of 54",
+    label: "Reading and Writing · 47 of 54 correct",
     easy: 88,
     medium: 87,
     hard: 87,
   },
   {
-    label: "Math · 38 of 44",
+    label: "Math · 38 of 44 correct",
     easy: 100,
     medium: 88,
     hard: 73,
