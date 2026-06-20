@@ -133,7 +133,7 @@ export const SOHA_MATH_GAP2_RESOLVE =
 export const SOHA_MATH_REMAINING = [
   {
     q: "Module 2 Q16",
-    text: "a hard algebra question about three collinear points, where the move is to set the two slopes equal and simplify to ak + bh = hk. I believe her error here was her inability to simplify the equation accurately.",
+    text: "a hard algebra question about three collinear points, where the move is to set the two slopes equal and simplify to ak + bh = hk. h and k have varying meanings depending on circles or parabolas. You need to know and understand their relationships and meanings, which I've covered in the formulas section below.",
   },
   {
     q: "Module 2 Q22",
