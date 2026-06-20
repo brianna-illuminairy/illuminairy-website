@@ -22,6 +22,10 @@ export function SohaPlanScheduleContent() {
       <section className="skye-plan__section">
         <p className="aurora-eyebrow">The Schedule</p>
         <h2 className="soha-plan-schedule__title">Nine-week SAT improvement plan</h2>
+        <p className="soha-plan-schedule__lede">
+          Weeks 1–7 cover ranked skills from the diagnostic. Weeks 8–9 shift to mistake-driven
+          practice, full test review, and test-day prep.
+        </p>
 
         <MilestoneRibbon
           weeks={sohaMilestoneWeeks()}
@@ -32,10 +36,23 @@ export function SohaPlanScheduleContent() {
 
         <ol className="skye-plan__topic-list skye-plan__topic-list--schedule">
           {SOHA_WEEKLY_PLAN.map((week) => (
-            <li key={week.week} className={activeWeek === week.week ? "is-current" : undefined}>
+            <li
+              key={week.week}
+              className={[
+                activeWeek === week.week ? "is-current" : "",
+                week.week >= 8 ? "soha-plan-schedule__week--mistake-driven" : "",
+              ]
+                .filter(Boolean)
+                .join(" ") || undefined}
+            >
+              {week.week === 8 ? (
+                <p className="soha-plan-schedule__phase-label">Weeks 8–9 · Mistake-driven practice</p>
+              ) : null}
               <div className="skye-plan__topic-head">
                 <span className="skye-plan__topic-week">Week {week.week}</span>
-                <span className="skye-plan__topic-name">{weekTopicLabel(week.skillLabel)}</span>
+                <span className="skye-plan__topic-name">
+                  {week.section === "review" ? week.skillLabel : weekTopicLabel(week.skillLabel)}
+                </span>
               </div>
               <ul className="skye-plan__topic-bullets">
                 <li>{week.summary}</li>

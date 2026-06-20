@@ -2,9 +2,12 @@ import type { MilestonePin, MilestoneWeek } from "@/components/data-viz/mileston
 import { SOHA_WEEKLY_PLAN } from "@/lib/soha/weekly-plan";
 
 export function sohaMilestoneWeeks(): MilestoneWeek[] {
-  return SOHA_WEEKLY_PLAN.filter((w) => w.section !== "review" || w.points != null).map((w) => ({
+  return SOHA_WEEKLY_PLAN.map((w) => ({
     week: w.week,
-    skill: w.skillLabel.split(",")[0]?.trim() ?? w.skillLabel,
+    skill:
+      w.section === "review"
+        ? w.skillLabel.split(" and ")[0]?.trim() ?? w.skillLabel
+        : w.skillLabel.split(",")[0]?.trim() ?? w.skillLabel,
     points: w.points ?? null,
     highlight: w.section === "rw",
   }));

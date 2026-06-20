@@ -9,8 +9,29 @@
   font-size: clamp(1.5rem, 2.5vw, 2rem);
   font-weight: 600;
   letter-spacing: -0.02em;
-  margin: 0 0 24px;
+  margin: 0 0 12px;
   color: var(--aurora-ink);
+}
+
+.soha-plan-schedule__lede {
+  margin: 0 0 24px;
+  max-width: 62ch;
+  line-height: 1.55;
+  color: var(--aurora-ink-soft, #3d4a57);
+}
+
+.soha-plan-schedule__phase-label {
+  font-family: var(--aurora-mono, monospace);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--aurora-forest, #1a4d2f);
+  margin: 8px 0 14px;
+}
+
+.soha-plan-schedule__week--mistake-driven {
+  border-left: 3px solid rgba(47, 110, 71, 0.35);
+  padding-left: 14px;
 }
 
 .soha-plan-schedule__section h2 {
