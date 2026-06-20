@@ -7,9 +7,9 @@ import { homeworkPortalLoginUrl } from "@/lib/internal-links";
 
 const NAV = [
   {
-    href: "/skye/pre-diagnostic",
-    label: "Pre-Diagnostic Lesson",
-    match: (path: string) => path.startsWith("/skye/pre-diagnostic"),
+    href: "/skye/profile",
+    label: "Profile",
+    match: (path: string) => path.startsWith("/skye/profile"),
   },
   {
     href: "/skye/diagnostic",
@@ -88,7 +88,7 @@ export function SkyePortalShell({ children }: { children: React.ReactNode }) {
       <header className="aurora-header">
         <div className="aurora-header__inner" style={{ flexDirection: "column", alignItems: "stretch" }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px", width: "100%" }}>
-            <Link href="/skye/pre-diagnostic" aria-label="Illuminairy">
+            <Link href="/skye/profile" aria-label="Illuminairy">
               <IlluminairyLogoV7 tone="on-dark" height={34} />
             </Link>
             <HomeworkPortalCta />

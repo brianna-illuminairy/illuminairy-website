@@ -7,6 +7,7 @@ import {
   skyeMilestoneWeeks,
   skyeRwLedgerRows,
 } from "@/lib/data-viz/adapters/skye-plan";
+import { approachForWeek } from "@/lib/skye/plan-topic-approaches";
 import { PLAN_TOTALS } from "@/lib/skye/plan-skill-data";
 import { currentPlanWeek, SKYE_WEEKLY_PLAN } from "@/lib/skye/weekly-plan";
 
@@ -50,6 +51,7 @@ export function SkyePlanSkillContent() {
           footerLeft="Section subtotal"
           footerTotal={PLAN_TOTALS.rwSection}
           ariaLabel="Reading and writing skills ranked by points on the diagnostic"
+          interactive={false}
         />
       </section>
 
@@ -61,6 +63,7 @@ export function SkyePlanSkillContent() {
           footerLeft="Section subtotal"
           footerTotal={PLAN_TOTALS.mathSection}
           ariaLabel="Math skills ranked by points on the diagnostic"
+          interactive={false}
         />
       </section>
 
@@ -70,17 +73,30 @@ export function SkyePlanSkillContent() {
           weeks={skyeMilestoneWeeks()}
           pins={skyeMilestonePins()}
           ariaLabel="Fifteen week SAT improvement schedule"
+          interactive={false}
         />
         <ol className="skye-plan__topic-list skye-plan__topic-list--schedule">
-          {SKYE_WEEKLY_PLAN.map((week) => (
-            <li
-              key={week.week}
-              className={activeWeek === week.week ? "is-current" : undefined}
-            >
-              <span className="skye-plan__topic-week">Week {week.week}</span>
-              <span className="skye-plan__topic-name">{weekTopicLabel(week.skillLabel)}</span>
-            </li>
-          ))}
+          {SKYE_WEEKLY_PLAN.map((week) => {
+            const bullets = approachForWeek(week);
+            return (
+              <li
+                key={week.week}
+                className={activeWeek === week.week ? "is-current" : undefined}
+              >
+                <div className="skye-plan__topic-head">
+                  <span className="skye-plan__topic-week">Week {week.week}</span>
+                  <span className="skye-plan__topic-name">{weekTopicLabel(week.skillLabel)}</span>
+                </div>
+                {bullets ? (
+                  <ul className="skye-plan__topic-bullets">
+                    {bullets.map((bullet) => (
+                      <li key={bullet}>{bullet}</li>
+                    ))}
+                  </ul>
+                ) : null}
+              </li>
+            );
+          })}
         </ol>
       </section>
 

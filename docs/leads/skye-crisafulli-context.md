@@ -46,6 +46,7 @@ Login: enter allowed email at `/skye/login` (no password).
 | Page | URL |
 |------|-----|
 | Login | https://illuminairy.com/skye/login |
+| Profile | https://illuminairy.com/skye/profile |
 | Diagnostic analysis | https://illuminairy.com/skye/diagnostic |
 | Improvement plan | https://illuminairy.com/skye/plan |
 | Full PDF | https://illuminairy.com/skye/diagnostic/full |

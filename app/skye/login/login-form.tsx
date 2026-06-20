@@ -13,7 +13,7 @@ type LoginResponse = {
 export default function SkyeLoginForm() {
   const router = useRouter();
   const params = useSearchParams();
-  const next = params.get("next") ?? "/skye/pre-diagnostic";
+  const next = params.get("next") ?? "/skye/diagnostic";
   const showStaffField = params.get("staff") === "1";
   const [email, setEmail] = useState("");
   const [staffCode, setStaffCode] = useState("");
@@ -59,7 +59,7 @@ export default function SkyeLoginForm() {
         <p className="aurora-eyebrow">Illuminairy</p>
         <h1 className="aurora-portal__title">Skye&apos;s SAT Portal</h1>
         <p className="aurora-portal__lede">
-          Enter the email we shared with you to open the pre-diagnostic lesson and Skill Diagnostic link.
+          Enter the email we shared with you to open Skye&apos;s diagnostic analysis and improvement plan.
         </p>
         <form onSubmit={submit}>
           <label className="aurora-portal__field">

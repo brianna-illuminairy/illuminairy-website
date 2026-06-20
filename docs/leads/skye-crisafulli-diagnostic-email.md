@@ -2,31 +2,31 @@
 
 **To:** sara_crisafulli@hotmail.com, skyelacrosse13@gmail.com  
 **From:** brianna@illuminairy.com (or support@illuminairy.com)  
-**Subject:** Skye's SAT Skill Diagnostic results are ready
+**Subject:** Skye's SAT diagnostic analysis is ready to review
 
 ---
 
 Hi Sara and Skye,
 
-Thank you again for completing the full-length Skill Diagnostic on June 18. Your personalized report is ready.
+Thank you again for completing the full-length Skill Diagnostic on June 18. I've finished analyzing Skye's results and the write-up is ready for you to review.
 
-**What you'll see**
+**What's in the portal**
 
-1. **Diagnostic Analysis** — Skye's scores (1090–1140 range), question-by-question map, and a walkthrough of what drove the misses in Reading & Writing and Math, including how adaptive routing affected Module 2.
+1. **Diagnostic Analysis** — Skye's scores, a question-by-question map, and a walkthrough of what drove the misses in Reading and Writing and Math, including how adaptive routing affected Module 2.
 
-2. **Improvement Plan** — The skills ranked by where the most recoverable points are, plus a sixteen-week schedule through the October 3 SAT. Week 1 reviews the diagnostic question types; skill weeks follow, with full-length practice tests on weeks 5, 9, and 13.
+2. **Improvement Plan** — A high-level weekly schedule of the skills we'll work through. I'm still building this out, so that page may continue to change over the next few days. The diagnostic analysis is the main read for now.
 
-**Open the portal**
+**Log in to review**
 
 Go to: https://illuminairy.com/skye/login
 
 Enter either **sara_crisafulli@hotmail.com** or **skyelacrosse13@gmail.com** (whichever you prefer), then click Continue.
 
-From there, open **Diagnostic Analysis** and **Improvement Plan** in the top navigation.
+From there, open **Diagnostic Analysis** in the top navigation. **Improvement Plan** is there too when you want a first look at the schedule.
 
 I'd love to walk through the results with you both and answer questions on timing, sessions, and how the weekly plan fits Skye's schedule. Reply with a few times that work, or book a 15-minute Strategy Call here: https://calendly.com/satprep-illuminairy/sat-planning-session
 
-Results vary by student and effort. The plan shows where focus pays off; it is not a score guarantee.
+Results vary by student and effort. The analysis shows where focus pays off; it is not a score guarantee.
 
 Talk soon,
 

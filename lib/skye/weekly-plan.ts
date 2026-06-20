@@ -15,6 +15,7 @@ export type SkyePlanWeek = {
   skillLabel: string;
   points?: number;
   phase: "diagnostic" | "topic" | "review";
+  skillId?: string;
   hasPracticeTest?: boolean;
   sessions?: PlanSession[];
   volume?: string;
@@ -158,6 +159,7 @@ export function buildSkyeWeeklyPlan(): SkyePlanWeek[] {
       dateLabel: range.label,
       section: isRw ? "rw" : "math",
       skillLabel: skill.topic,
+      skillId: skill.id,
       points: skill.points,
       phase: "topic",
       hasPracticeTest,
