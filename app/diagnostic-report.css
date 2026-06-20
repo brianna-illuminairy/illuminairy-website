@@ -879,6 +879,22 @@
   font-size: 14px;
 }
 
+.diag-report__worked-problem {
+  margin-bottom: 12px !important;
+  color: var(--sr-ink) !important;
+}
+
+.diag-report__worked-figure {
+  margin-top: 16px;
+}
+
+.diag-report__worked-img {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+  border: 1px solid var(--sr-line-soft);
+}
+
 .diag-report__mathline {
   font-family: var(--sr-mono);
   font-size: 14px;
@@ -1144,6 +1160,7 @@
   margin: 6px 0 0;
   font-size: 14px;
   color: var(--sr-muted);
+  white-space: pre-line;
 }
 
 .diag-report__formula-grid {

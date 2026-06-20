@@ -5,18 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Soha Naveed SAT Improvement Plan</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&display=swap');
 :root{
-  --cream:#F5ECD9; --paper:#FFFDF8; --navy:#121A2B; --ink:#1F2733; --muted:#7C7666;
-  --line:#E7DFCD; --green:#2F8B55; --forest:#234F37; --sage:#E8F0E9; --sage-line:#CDDFD1;
+  --cream:var(--aurora-white,#F5F8FA); --paper:#FFFFFF; --navy:#121A2B; --ink:#121A2B; --muted:rgba(18,26,43,0.66);
+  --line:#E6E3DA; --green:#2F6E47; --forest:#1A4D2F; --sage:rgba(119,200,154,0.12); --sage-line:rgba(119,200,154,0.22);
   --tomato:#F24822; --blue:#379BD0; --amber:#C98A2B;
-  --display:"Fraunces", Georgia, "Times New Roman", serif;
-  --body:-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, sans-serif;
+  --display:var(--font-display,"Source Serif 4"), Georgia, serif;
+  --body:"Hanken Grotesk", system-ui, sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{font-family:var(--body);background:var(--cream);color:var(--ink);line-height:1.55;-webkit-font-smoothing:antialiased;padding:0 0 80px}
-.wrap{max-width:780px;margin:0 auto;padding:0 22px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px}
 .topbar{background:var(--navy);color:#fff;padding:26px 0 30px;position:relative;overflow:hidden}
 .topbar::after{content:"";position:absolute;top:-60px;right:-40px;width:240px;height:240px;background:radial-gradient(circle, rgba(47,139,85,.45), transparent 70%);filter:blur(10px)}
 .brand{display:flex;align-items:center;gap:9px;font-family:var(--display);font-weight:500;font-size:22px;letter-spacing:.5px}
@@ -189,22 +188,25 @@ section:nth-of-type(4){animation-delay:.15s}
     </div>
 
     <div class="chart">
-      <svg viewBox="0 0 720 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Projected score from 1400 to 1525 by August 22">
+      <svg viewBox="0 0 720 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Projected score from 1400 to 1525 with practice tests at weeks 3, 6, and 8">
         <line x1="60" y1="56" x2="680" y2="56" stroke="#C9C0AC" stroke-width="1" stroke-dasharray="5 5"/>
         <text x="680" y="48" text-anchor="end" font-size="12" fill="#9a927e" letter-spacing="1">GOAL 1525</text>
-        <path d="M60,271 L336,156 L611,113 L680,92 L680,300 L60,300 Z" fill="#2F8B5530"/>
-        <polyline points="60,271 336,156 611,113 680,92" fill="none" stroke="#234F37" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+        <path d="M60,271 L267,156 L473,121 L611,106 L680,92 L680,300 L60,300 Z" fill="#2F8B5530"/>
+        <polyline points="60,271 267,156 473,121 611,106 680,92" fill="none" stroke="#234F37" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
         <circle cx="60" cy="271" r="5" fill="#234F37"/>
-        <circle cx="336" cy="156" r="6" fill="#2F8B55"/>
-        <circle cx="611" cy="113" r="6" fill="#2F8B55"/>
+        <circle cx="267" cy="156" r="6" fill="#2F8B55"/>
+        <circle cx="473" cy="121" r="6" fill="#2F8B55"/>
+        <circle cx="611" cy="106" r="6" fill="#2F8B55"/>
         <circle cx="680" cy="92" r="7" fill="#234F37"/>
-        <text x="58" y="291" font-family="Fraunces, Georgia, serif" font-size="20" font-weight="600" fill="#1F2733">1400</text>
-        <text x="336" y="142" text-anchor="middle" font-size="14" font-weight="700" fill="#234F37">1480</text>
-        <text x="611" y="99" text-anchor="middle" font-size="14" font-weight="700" fill="#234F37">1510</text>
-        <text x="690" y="76" text-anchor="end" font-family="Fraunces, Georgia, serif" font-size="22" font-weight="600" fill="#234F37">1525</text>
+        <text x="58" y="291" font-family="Source Serif 4, Georgia, serif" font-size="20" font-weight="600" fill="#121A2B">1400</text>
+        <text x="267" y="142" text-anchor="middle" font-size="14" font-weight="700" fill="#234F37">1480</text>
+        <text x="473" y="107" text-anchor="middle" font-size="14" font-weight="700" fill="#234F37">1505</text>
+        <text x="611" y="92" text-anchor="middle" font-size="14" font-weight="700" fill="#234F37">1515</text>
+        <text x="690" y="76" text-anchor="end" font-family="Source Serif 4, Georgia, serif" font-size="22" font-weight="600" fill="#1A4D2F">1525</text>
         <g font-size="10" fill="#9a927e" letter-spacing="1" text-anchor="middle">
           <text x="60" y="320">START</text>
-          <text x="336" y="320">WK 4 · PT</text>
+          <text x="267" y="320">WK 3 · PT</text>
+          <text x="473" y="320">WK 6 · PT</text>
           <text x="611" y="320">WK 8 · PT</text>
           <text x="680" y="320">AUG 22</text>
         </g>
@@ -226,7 +228,7 @@ section:nth-of-type(4){animation-delay:.15s}
       <div class="pill"><b>Extreme</b><span>+20/wk</span><span class="sc">1580</span></div>
     </div>
     <div class="honest"><b>What is realistic:</b> Soha is already at the upper 1300s to lower 1400s. Her gaps are concentrated, not spread across the whole SAT. With 3 tutoring sessions per week and consistent practice, we estimate she should be able to improve her score to somewhere between 1480 and 1550, with ~1525 being a good goal to aim for. We could push for a stretch goal of 1550; however, that requires near-perfect performance on test day.</div>
-    <div class="honest" style="border-left-color:var(--green);background:var(--sage);color:#2c5740"><b>First-month checkpoint:</b> At the end of Week 4, I'd administer a full-length practice test to rescore her. If she achieves 1480 or higher, we'll know she is on track. If she is short, we will find out why and adjust our plan.</div>
+    <div class="honest" style="border-left-color:var(--green);background:var(--sage);color:#2c5740"><b>First-month checkpoint:</b> After the Week 3 full-length practice test, I'd rescore her. If she achieves 1480 or higher, we'll know she is on track. If she is short, we will find out why and adjust our plan.</div>
 
     <div class="skills-title">The Skills Most Harming Her Score - Ranked by Impact</div>
     <div class="srow"><div class="chip">01</div><div class="sname">Transitions<small>Reading and Writing. Easy miss she changed from right to wrong on review.</small></div><div class="pts">+52</div></div>
@@ -243,88 +245,7 @@ section:nth-of-type(4){animation-delay:.15s}
   </div>
 </section>
 
-<!-- THE SCHEDULE -->
-<section>
-  <div class="eyebrow">The Schedule</div>
-  <h2>Nine-Week SAT Improvement Plan</h2>
-
-  <div class="schedule-viz" id="schedule-viz">
-    <div class="schedule-gantt-wrap">
-      <div class="sg-week-header">
-        <span>Wk 1</span><span>Wk 2</span><span>Wk 3</span><span>Wk 4</span><span>Wk 5</span><span>Wk 6</span><span>Wk 7</span><span>Wk 8</span><span>Wk 9</span>
-      </div>
-      <div class="sg-rows">
-        <div class="sg-row" style="--sg-pts:52"><div class="sg-bar sg-bar--rw" style="grid-column:1/2">Transitions<span class="sg-bar-pts">+52</span></div></div>
-        <div class="sg-row" style="--sg-pts:48"><div class="sg-bar sg-bar--math" style="grid-column:2/3">Factoring<span class="sg-bar-pts">+48</span></div></div>
-        <div class="sg-row" style="--sg-pts:33"><div class="sg-bar sg-bar--rw-soft" style="grid-column:3/4">Boundaries<span class="sg-bar-pts">+33</span></div></div>
-        <div class="sg-row" style="--sg-pts:22"><div class="sg-bar sg-bar--rw-soft" style="grid-column:4/5">Command of Evidence<span class="sg-bar-pts">+22</span></div></div>
-        <div class="sg-row" style="--sg-pts:16"><div class="sg-bar sg-bar--math-soft" style="grid-column:5/6">Geometry<span class="sg-bar-pts">+16</span></div></div>
-        <div class="sg-row" style="--sg-pts:27"><div class="sg-bar sg-bar--math-soft" style="grid-column:6/7">Advanced Math<span class="sg-bar-pts">+27</span></div></div>
-        <div class="sg-row" style="--sg-pts:16"><div class="sg-bar sg-bar--rw-soft" style="grid-column:7/8">Subject-Verb<span class="sg-bar-pts">+16</span></div></div>
-      </div>
-      <div class="sg-milestone-label">Built-in milestones</div>
-      <div class="sg-milestone-row">
-        <div class="sg-milestone" style="grid-column:4/5">PT 1</div>
-        <div class="sg-milestone sg-milestone--test" style="grid-column:8/9">PT 2</div>
-        <div class="sg-milestone sg-milestone--test" style="grid-column:9/10">Aug 22</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="week-item">
-    <p class="week-title">Week 1: Transitions</p>
-    <p>Focus on transition questions across all difficulty levels. Each session should include a short lesson, diagnostic reteaching, and hard-only transition practice. Emphasis should be placed on identifying the exact relationship between sentences before reviewing the answer choices.</p>
-    <p class="week-vol">Estimated volume: 110 questions.</p>
-  </div>
-
-  <div class="week-item">
-    <p class="week-title">Week 2: Factoring, Factor Theorem, and Zero-Product Form</p>
-    <p>Focus on factoring and symbolic equation setup. Sessions should cover greatest common factor, grouping, the ac-method, factor theorem, zero-product form, and calculator-by-hand decision rules. Reteach the diagnostic miss in this area, with emphasis on moving all terms to one side before factoring.</p>
-    <p class="week-vol">Estimated volume: 110 questions.</p>
-  </div>
-
-  <div class="week-item">
-    <p class="week-title">Week 3: Boundaries and Punctuation</p>
-    <p>Focus on sentence boundaries, independent clauses, dependent clauses, commas, semicolons, colons, and conjunctions. Each session should require a complete-clause check before selecting any punctuation answer. Reteach the diagnostic misses in this area until the clause-check process is automatic.</p>
-    <p class="week-vol">Estimated volume: 110 questions.</p>
-  </div>
-
-  <div class="week-item">
-    <p class="week-title">Week 4: Command of Evidence</p>
-    <p>Focus on evidence questions in both text and data formats. Each session should begin by restating the claim in simple terms before evaluating the answer choices. Emphasis should be placed on rejecting answers that are true but do not directly support the claim. Reteach the diagnostic misses in this area. Session 3 should include the first full-length practice test.</p>
-    <p class="week-vol">Estimated volume: full practice test plus approximately 120 questions.</p>
-  </div>
-
-  <div class="week-item">
-    <p class="week-title">Week 5: Geometry</p>
-    <p>Focus on geometry setup, especially area, volume, surface area, and formula-sheet gaps. Circles should remain in light maintenance only, since she answered every circle question correctly on the diagnostic.</p>
-    <p class="week-vol">Estimated volume: 110 questions.</p>
-  </div>
-
-  <div class="week-item">
-    <p class="week-title">Week 6: Nonlinear Systems and Advanced Math</p>
-    <p>Focus on nonlinear equations, equivalent expressions, collinear slopes, and multi-step proportional reasoning. Sessions should emphasize setup, structure, and deciding when a problem should be solved by hand rather than with the calculator.</p>
-    <p class="week-vol">Estimated volume: 110 questions.</p>
-  </div>
-
-  <div class="week-item">
-    <p class="week-title">Week 7: Subject-Verb Agreement</p>
-    <p>Focus on identifying the true subject of the sentence and matching it to the correct verb. Each session should require crossing out interrupting phrases before choosing an answer. Reteach the diagnostic miss in this area until the process is automatic.</p>
-    <p class="week-vol">Estimated volume: 110 questions.</p>
-  </div>
-
-  <div class="week-item">
-    <p class="week-title">Week 8: Practice Test and Missed-Question Review</p>
-    <p>Complete a second full-length practice test. Afterward, review every missed question from the diagnostic, the Week 4 practice test, and the Week 8 practice test. Any skill area still below target should receive additional focused practice.</p>
-    <p class="week-vol">Estimated volume: full practice test plus approximately 120 questions.</p>
-  </div>
-
-  <div class="week-item">
-    <p class="week-title">Week 9: Final Review and Test-Day Preparation</p>
-    <p>Complete mixed review across all targeted Reading and Writing and Math skills. Prioritize hard problem sets, recurring error types, and test-day execution. The week should end with a clear plan for pacing, calculator use, question triage, and final review before the August 22 test date.</p>
-    <p class="week-vol">Estimated volume: 100 questions.</p>
-  </div>
-</section>
+<!-- SOHA_PLAN_SCHEDULE -->
 
 <!-- THE PLAN -->
 <section>
@@ -344,8 +265,9 @@ section:nth-of-type(4){animation-delay:.15s}
 
   <p class="subh">Check-ins:</p>
   <ul class="checks">
-    <li><b>Week 4.</b> First full practice test. Target: 1480 or higher.</li>
-    <li><b>Week 8.</b> Second full practice test, then review every miss from the diagnostic and both tests.</li>
+    <li><b>Week 3.</b> First full practice test. Target: 1480 or higher.</li>
+    <li><b>Week 6.</b> Second full practice test.</li>
+    <li><b>Week 8.</b> Third full practice test, then review every miss from the diagnostic and all three tests.</li>
     <li><b>Week 9.</b> Final review and practice problems. Test-day pacing and rest going into August 22.</li>
   </ul>
 </section>

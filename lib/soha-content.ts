@@ -23,8 +23,23 @@ export function readSohaFile(slug: SohaFileSlug) {
   return { buffer, contentType: entry.contentType, filename: entry.filename };
 }
 
+const SOHA_PLAN_SCHEDULE_MARKER = "<!-- SOHA_PLAN_SCHEDULE -->";
+
 export function readSohaPlanHtml() {
   return readSohaHtmlDocument("plan.html");
+}
+
+export function readSohaPlanHtmlParts() {
+  const { styles, bodyHtml } = readSohaPlanHtml();
+  const markerIndex = bodyHtml.indexOf(SOHA_PLAN_SCHEDULE_MARKER);
+  if (markerIndex === -1) {
+    return { styles, overviewHtml: bodyHtml, tailHtml: "" };
+  }
+  return {
+    styles,
+    overviewHtml: bodyHtml.slice(0, markerIndex).trim(),
+    tailHtml: bodyHtml.slice(markerIndex + SOHA_PLAN_SCHEDULE_MARKER.length).trim(),
+  };
 }
 
 function readSohaHtmlDocument(filename: string) {

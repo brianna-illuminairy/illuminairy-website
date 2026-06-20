@@ -1,4 +1,12 @@
-export function WorkedExample() {
+import Image from "next/image";
+import {
+  SOHA_MATH_Q13_WORKED,
+  SOHA_MATH_Q9_STEPS,
+} from "@/lib/soha/diagnostic-analysis-copy";
+import { TeachingStepsList } from "@/components/diagnostic/report-visuals";
+
+export function WorkedExampleQ13() {
+  const ex = SOHA_MATH_Q13_WORKED;
   return (
     <div className="diag-report__worked">
       <div className="diag-report__worked-head">
@@ -6,28 +14,54 @@ export function WorkedExample() {
         <span className="diag-report__worked-badge">Hard · Equivalent expressions</span>
       </div>
       <div className="diag-report__worked-body">
-        <p>
-          The question gives 9x³ - 6x² - 24x and says 3x + k is a factor, then asks for k. The path
-          is to factor:
-        </p>
-        <div className="diag-report__mathline">
-          9x³ - 6x² - 24x = 3x(3x² - 2x - 8) = 3x(x - 2)(3x + 4), so 3x + k matches 3x + 4 and{" "}
-          <span className="k">k = 4</span>
-        </div>
-        <p>
-          Instead of factoring, she tried to graph her way to the answer and entered 13.15, which was
-          a point where two curves crossed on the graphing calculator. There is no graphing path to k
-          here. The question is built to reward factoring, and the calculator pulled her away from it.
-        </p>
+        <p>{ex.setup}</p>
+        <div className="diag-report__mathline">{ex.factorLine}</div>
+        <p>{ex.after}</p>
         <div className="diag-report__answers">
           <div className="diag-report__ans-block right">
             <small>Correct</small>
-            <b>4</b>
+            <b>{ex.correct}</b>
           </div>
           <div className="diag-report__ans-block wrong">
             <small>Marked</small>
-            <b>13.15</b>
+            <b>{ex.marked}</b>
           </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/** @deprecated use WorkedExampleQ13 */
+export function WorkedExample() {
+  return <WorkedExampleQ13 />;
+}
+
+export function WorkedExampleQ9() {
+  return (
+    <div className="diag-report__worked">
+      <div className="diag-report__worked-head">
+        <span>Worked example · Module 1, Q9</span>
+        <span className="diag-report__worked-badge">Medium · Nonlinear equations</span>
+      </div>
+      <div className="diag-report__worked-body">
+        <p className="diag-report__worked-problem">
+          <strong>Problem:</strong> y - 42 = (y - c)(y - 42)
+        </p>
+        <TeachingStepsList
+          steps={SOHA_MATH_Q9_STEPS.map((step) => ({
+            title: step.title,
+            body: step.note ? `${step.body}\n\n${step.note}` : step.body,
+          }))}
+        />
+        <div className="diag-report__worked-figure">
+          <Image
+            src="/diagnostic/soha-m1-q9-worked.png"
+            alt="Step-by-step factoring walkthrough for Module 1 Question 9"
+            width={624}
+            height={185}
+            className="diag-report__worked-img"
+          />
         </div>
       </div>
     </div>

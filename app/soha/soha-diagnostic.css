@@ -1,1 +1,51 @@
 @import "../diagnostic-report.css";
+
+.soha-plan-schedule {
+  margin: 0 0 48px;
+}
+
+.soha-plan-schedule__title {
+  font-family: var(--aurora-display, var(--aurora-body));
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin: 0 0 24px;
+  color: var(--aurora-ink);
+}
+
+.soha-plan-schedule__section h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0 0 12px;
+}
+
+.soha-plan-schedule__section p {
+  margin: 0 0 12px;
+  line-height: 1.55;
+  color: var(--aurora-ink-soft, #3d4a57);
+}
+
+.soha-plan-schedule__subhead {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 24px 0 12px;
+}
+
+.soha-plan-schedule__columns {
+  margin: 0 0 16px;
+  padding-left: 1.25rem;
+  line-height: 1.55;
+}
+
+.soha-plan-schedule__columns li {
+  margin-bottom: 10px;
+}
+
+.soha-plan-schedule__columns li:last-child {
+  margin-bottom: 0;
+}
+
+.aurora-portal__plan-root .soha-plan-schedule .skye-plan__section {
+  margin-bottom: 40px;
+}
+

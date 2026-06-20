@@ -9,15 +9,20 @@ export const SOHA_BOOTCAMP_ENROLL_PATH = "/enroll/nada-soha-aug22-bootcamp";
 
 const NAV = [
   {
+    href: "/soha/profile",
+    label: "Profile",
+    match: (path: string) => path.startsWith("/soha/profile"),
+  },
+  {
     href: "/soha/diagnostic",
     label: "Diagnostic",
-    match: (path: string) => path.startsWith("/soha/diagnostic")
+    match: (path: string) => path.startsWith("/soha/diagnostic"),
   },
   {
     href: "/soha/plan",
     label: "SAT Improvement Plan",
-    match: (path: string) => path === "/soha/plan"
-  }
+    match: (path: string) => path === "/soha/plan",
+  },
 ] as const;
 
 function SohaEnrollCta() {
@@ -74,7 +79,7 @@ export function SohaPortalShell({ children }: { children: React.ReactNode }) {
       <header className="aurora-header">
         <div className="aurora-header__inner" style={{ flexDirection: "column", alignItems: "stretch" }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px", width: "100%" }}>
-            <Link href="/soha/diagnostic" aria-label="Illuminairy">
+            <Link href="/soha/profile" aria-label="Illuminairy">
               <IlluminairyLogoV7 tone="on-dark" height={34} />
             </Link>
             <SohaEnrollCta />

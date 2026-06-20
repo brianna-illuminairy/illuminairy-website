@@ -44,5 +44,5 @@ export function DifficultyReadout() {
   return <SharedDifficultyReadout rows={DIFFICULTY_READOUT as readonly DifficultyRow[]} />;
 }
 
-export { WorkedExample } from "./diagnostic-visuals-soha-extras";
+export { WorkedExample, WorkedExampleQ13, WorkedExampleQ9 } from "./diagnostic-visuals-soha-extras";
 export { HabitsGrid } from "./diagnostic-visuals-soha-extras";

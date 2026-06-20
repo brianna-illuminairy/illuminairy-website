@@ -1,6 +1,6 @@
 # Nada Naveed — lead context + August 22 bootcamp
 
-*Last updated: 2026-06-17*
+*Last updated: 2026-06-20*
 
 ## Contact
 
@@ -8,7 +8,7 @@
 |-------|--------|
 | Parent | **Nada Naveed** |
 | Student | **Soha** |
-| Email | nj00@hotmail.com |
+| Email | nj00@hotmail.com · nadanaveed@gmail.com |
 | Phone | 818-391-0906 |
 | CRM lead ID | `8bf26223-7e80-4497-9eaa-e6596cee7e47` |
 | Strategy Call | Missed Jun 15, 2026 (phone tag). Free diagnostic comp'd in follow-up email. |
@@ -62,6 +62,25 @@ Setup script: `node --env-file=.env.local scripts/setup-nada-stripe.mjs`
 ## Related docs
 
 - As-sent follow-up: [`nada-naveed-followup-email.md`](./nada-naveed-followup-email.md)
+
+## Portal access
+
+**Env (Production + local):** `SOHA_ACCESS_ALLOWLIST`
+
+```
+nj00@hotmail.com,nadanaveed@gmail.com,brianna@illuminairy.com
+```
+
+Login: enter an allowed email at `/soha/login` (no password).
+
+| Page | URL |
+|------|-----|
+| Login | https://illuminairy.com/soha/login |
+| Profile | https://illuminairy.com/soha/profile |
+| Diagnostic analysis | https://illuminairy.com/soha/diagnostic |
+| SAT Improvement Plan | https://illuminairy.com/soha/plan |
+| Full PDF | https://illuminairy.com/soha/diagnostic/full |
+| Tabular PDF | https://illuminairy.com/soha/diagnostic/tabular |
 
 ## Owner next steps
 
