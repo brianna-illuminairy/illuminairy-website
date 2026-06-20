@@ -12,11 +12,12 @@ import {
   SKYE_ADAPTIVE_RW,
   SKYE_MATH_AFTER_TABLE,
   SKYE_MATH_FORMULAS,
-  SKYE_MATH_FORMULAS_FOOT,
+  SKYE_MATH_FORMULAS_HEAD,
   SKYE_MATH_FORMULAS_INTRO,
   SKYE_MATH_INTRO,
   SKYE_MATH_QUESTION_TYPES,
   SKYE_MATH_SKILLS,
+  SKYE_MATH_SKILLS_HEAD,
   SKYE_MATH_SKILLS_INTRO,
   SKYE_OVERVIEW_INTRO,
   SKYE_OVERVIEW_INTRO_FOOTNOTE,
@@ -98,7 +99,8 @@ function MathWalkthroughTable() {
             <th>Question</th>
             <th>How to solve it</th>
             <th>Desmos once set up?</th>
-            <th>Off-sheet formula</th>
+            <th>Memorized formula needed?</th>
+            <th>Which formula?</th>
             <th>Marked answer vs correct</th>
           </tr>
         </thead>
@@ -108,7 +110,8 @@ function MathWalkthroughTable() {
               <td className="diag-report__tq">{row.question}</td>
               <td>{row.how}</td>
               <td>{row.desmos}</td>
-              <td>{row.formula}</td>
+              <td>{row.formulaNeeded}</td>
+              <td>{row.formulaName || "—"}</td>
               <td>{row.marked}</td>
             </tr>
           ))}
@@ -197,15 +200,16 @@ export function SkyeDiagnosticAnalysisContent() {
 
           <p>
             The table below walks through each missed math question: how to solve it, whether
-            Desmos can finish the problem once it is set up, which off-sheet formula applies, and
-            how the marked answer compares to the correct approach.
+            Desmos can finish it after the problem is set up, whether a memorized formula is
+            required (yes or no, and which one if yes), and how the marked answer compares to the
+            correct approach. Full formulas are listed in the section below the table.
           </p>
           <MathWalkthroughTable />
 
           <ProseParagraphs lines={SKYE_MATH_AFTER_TABLE} />
 
-          <h3 className="diag-report__gap-title">Skills and question types to build</h3>
-          <p>{SKYE_MATH_SKILLS_INTRO}</p>
+          <h3 className="diag-report__gap-title">{SKYE_MATH_SKILLS_HEAD}</h3>
+          <ProseParagraphs lines={SKYE_MATH_SKILLS_INTRO} />
           <ul className="diag-report__skill-ul">
             {SKYE_MATH_SKILLS.map((item) => (
               <RwSkillListItemView
@@ -216,7 +220,7 @@ export function SkyeDiagnosticAnalysisContent() {
           </ul>
           <p>{SKYE_MATH_QUESTION_TYPES}</p>
 
-          <h3 className="diag-report__gap-title">Formulas to know by heart</h3>
+          <h3 className="diag-report__gap-title">{SKYE_MATH_FORMULAS_HEAD}</h3>
           <p>{SKYE_MATH_FORMULAS_INTRO}</p>
           <ul className="diag-report__skill-ul">
             {SKYE_MATH_FORMULAS.map((item) => (
@@ -226,7 +230,6 @@ export function SkyeDiagnosticAnalysisContent() {
               />
             ))}
           </ul>
-          <p>{SKYE_MATH_FORMULAS_FOOT}</p>
 
           <MissTable rows={MATH_MISS_TABLE} />
           <p className="diag-report__tnote">
@@ -235,7 +238,7 @@ export function SkyeDiagnosticAnalysisContent() {
         </section>
 
         <section className="diag-report__section diag-report__prose" id="skye-focus">
-          <SectionHead num="05" title="Where not to spend session time" />
+          <SectionHead num="05" title="Sections she does not need to practice" />
           <p>
             <strong>Reading:</strong> {SKYE_SKIP_TIME.reading}
           </p>

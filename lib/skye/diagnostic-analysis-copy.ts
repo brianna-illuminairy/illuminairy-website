@@ -21,16 +21,14 @@ export type MathWalkthroughRow = {
   question: string;
   how: string;
   desmos: string;
-  formula: string;
+  formulaNeeded: "Yes" | "No";
+  formulaName: string;
   marked: string;
 };
 
 export const SKYE_OVERVIEW_INTRO = [
-  "For someone just starting out, a diagnostic score around 1115 before any focused SAT work is a solid baseline. The national average total score is 1029 among the College Board class of 2025 (graduating seniors who took the SAT, using each student's most recent score if they tested more than once). She is already scoring slightly above that average.",
-  "She has not put real time into SAT practice yet. With her 4.0+ GPA, the gap is about learning how the test works, not about ability in school. I am confident she can learn the SAT. It will take time, clear methods, and practice to improve accuracy.",
-  "On math, the pattern I saw during the proctored test was usually not calculation. It was figuring out what the question was actually asking for and which method or formula to use.",
-  "On Reading and Writing, a similar pattern showed up: choosing an answer the passage supports instead of the answer that matches what the question asked for.",
-  "She has time before her target test date, and these are learnable skills. Below I break down her performance by section, then walk through each topic where she missed questions and what we will teach her to do differently.",
+  "For someone just starting out, a diagnostic score around 1115 before she starts preparing for the SAT is not bad. The national average total score is 1029 among the College Board class of 2025 (graduating seniors who took the SAT, using each student's most recent score if they tested more than once), and she is already scoring slightly above that average. She achieved that score before starting to study, which shows me she has the capability to score much higher on the SAT with preparation and practice.",
+  "On math, the pattern I saw during the proctored test was usually not calculation but figuring out what the question was actually asking for and which method or formula to use. On Reading and Writing, a similar pattern showed up: choosing an answer the passage supports instead of the answer that matches what the question asked for. She has time before her target test date, and these are learnable skills. Below I break down her performance by section, then walk through each topic where she missed questions and what we will teach her to do differently.",
 ];
 
 export const SKYE_OVERVIEW_INTRO_FOOTNOTE =
@@ -327,118 +325,137 @@ export const MATH_WALKTHROUGH_ROWS: MathWalkthroughRow[] = [
     question: "Q5 (M1, easy) systems, # of solutions",
     how: "Graph both lines in Desmos and count where they cross (once)",
     desmos: "Yes",
-    formula: "none",
+    formulaNeeded: "No",
+    formulaName: "",
     marked: "Marked 2; two lines cross once, so the answer is 1",
   },
   {
     question: "Q7 (M1, easy) nonlinear + linear",
     how: "Graph y=64 and y=x²+8 in Desmos and read x, or set the expressions equal and solve x²=56",
     desmos: "Yes",
-    formula: "none",
+    formulaNeeded: "No",
+    formulaName: "",
     marked: "Marked 4√14; correct is 2√14",
   },
   {
     question: "Q9 (M1, med) nonlinear with a constant",
     how: "Substitute each option (42, c, 1+c) and check both sides by hand",
     desmos: "No, by hand",
-    formula: "none",
+    formulaNeeded: "No",
+    formulaName: "",
     marked: "Marked III only; correct is I and III because 42 is also a solution",
   },
   {
     question: "Q11 (M1, med) exponential growth",
     how: "By hand: 1000=500·2^(3k), so 3k=1 and k=1/3; or test each value of k",
     desmos: "No, by hand",
-    formula: "exponential form a·b^x",
+    formulaNeeded: "Yes",
+    formulaName: "Exponential form (a·b^x)",
     marked: "Marked k=3 (the doubling period from the story); correct is k=1/3",
   },
   {
     question: "Q13 (M1, med) circle, radians",
     how: "By hand: add π/4 + π/6 = 5π/12, then convert to degrees (×180/π = 75°)",
     desmos: "Arithmetic only",
-    formula: "radians to degrees",
+    formulaNeeded: "Yes",
+    formulaName: "Radians to degrees",
     marked: "Marked 45 (angle U); the question asks for angle V, which is 75",
   },
   {
     question: "Q14 (M1, med) linear, intercepts",
     how: "Graph y=5x−20 in Desmos, read both intercepts (4 and −20), then add them",
     desmos: "Yes",
-    formula: "none",
+    formulaNeeded: "No",
+    formulaName: "",
     marked: "Marked 4 (the value of h); the question asks for h+k, which is −16",
   },
   {
     question: "Q16 (M1, hard) radical equation",
     how: "Graph both sides in Desmos and read the smaller x, or square both sides and use the quadratic formula",
     desmos: "Yes",
-    formula: "quadratic formula",
+    formulaNeeded: "Yes",
+    formulaName: "Quadratic formula",
     marked: "Marked 2−4√2; correct is 4−4√2",
   },
   {
     question: "Q17 (M1, med) line from two points",
     how: "Plot both points in Desmos and test which answer line passes through both, or compute slope = 3/2 and build the equation",
     desmos: "Yes",
-    formula: "slope formula",
+    formulaNeeded: "Yes",
+    formulaName: "Slope from two points",
     marked: "Used slope 3; correct slope is 3/2 (the line with slope 3 passes through only one of the two points)",
   },
   {
     question: "Q18 (M1, hard) perpendicular lines",
     how: "Find the perpendicular slope (−4/3), graph both lines in Desmos, or test which answer point lies on the given line",
     desmos: "Yes",
-    formula: "perpendicular slope (negative reciprocal)",
+    formulaNeeded: "Yes",
+    formulaName: "Perpendicular slope (negative reciprocal)",
     marked: "Marked (32/25, −41/25), which is not on the given line; correct is (68/25, −49/25)",
   },
   {
     question: "Q21 (M1, hard) circle, arc length",
     how: "By hand: arc length ÷ circumference = central angle ÷ 360, then solve for the angle; or test each choice",
     desmos: "Arithmetic only",
-    formula: "arc length",
+    formulaNeeded: "Yes",
+    formulaName: "Arc length",
     marked: "Marked 40 in 19 seconds; the answer must fall in the range 34 to 38",
   },
   {
     question: "Q22 (M1, hard) tangent line and parabola",
     how: "Graph both expressions in Desmos with a slider for c, slide until they touch once, read x=3; or set discriminant=0 and solve",
     desmos: "Yes (slider)",
-    formula: "discriminant",
+    formulaNeeded: "Yes",
+    formulaName: "Discriminant (b² − 4ac)",
     marked: "Marked −3; correct is 3",
   },
   {
     question: "Q2 (M2, easy) rearrange an equation",
     how: "By hand: divide every term by 10, or test with sample values for q and n",
     desmos: "No, by hand",
-    formula: "none",
+    formulaNeeded: "No",
+    formulaName: "",
     marked: "Marked q/10 − 4n; correct is (q−4n)/10",
   },
   {
     question: "Q11 (M2, med) line from two points",
     how: "Plot both points in Desmos and test which equation fits, or compute slope = 2 and build the line",
     desmos: "Yes",
-    formula: "slope formula",
+    formulaNeeded: "Yes",
+    formulaName: "Slope from two points",
     marked: "Used slope 3; correct slope is 2 (the line with slope 3 passes through only one of the two points)",
   },
   {
     question: "Q18 (M2, med) exponential decay",
     how: "By hand write 20·(0.6)^x, or graph each choice in Desmos and check x=0 and x=1",
     desmos: "Yes",
-    formula: "exponential form a·b^x",
+    formulaNeeded: "Yes",
+    formulaName: "Exponential form (a·b^x)",
     marked: "Marked 0.6(20)^x; correct is 20(0.6)^x",
   },
   {
     question: "Q22 (M2, hard) function composition",
     how: "Define h, then j(x)=h(x+2), graph y=j in Desmos and read the intercepts, or substitute x+2 by hand",
     desmos: "Yes",
-    formula: "none",
+    formulaNeeded: "No",
+    formulaName: "",
     marked: "Marked 5 (sum of the original roots); correct is −1 after the shift",
   },
 ];
 
 export const SKYE_MATH_AFTER_TABLE = [
-  "Here is how the fifteen math misses break down by what it takes to solve them.",
-  "Ten of the fifteen can be finished in Desmos once the problem is set up correctly. That still requires knowing which SAT question types Desmos can solve, how to enter the equation or graph, and which number on the screen answers the question. That takes training and repetition.",
-  "Five need to be done by hand: Q9, Q11, Q2, and the unit conversions in Q13 and Q21.",
-  "Nine of the fifteen required a formula that is not on the SAT reference sheet. The seven formulas listed below cover those misses.",
+  "Out of the 15 missed math questions, 10 can be solved with the built-in Desmos calculator once the problem is set up correctly. That still assumes you recognize the question type, enter the right equation or graph, and know which value on the screen is the answer.",
+  "Nine of the 15 require a formula memorized that is not on the SAT reference sheet (six of those nine are in the Desmos group; three are solved by hand). The five that must be done entirely by hand are Q9, Q11 in Module 1, Q2 in Module 2, and the unit conversions in Q13 and Q21.",
+  "The seven formulas listed below cover all nine questions that need one.",
 ];
 
-export const SKYE_MATH_SKILLS_INTRO =
-  "The highest priorities from this diagnostic are systems of equations and nonlinear equations (0 of 2 and 0 of 4 correct in Module 1). Both topic types appear often on the SAT.";
+export const SKYE_MATH_SKILLS_HEAD = "Math topics to work on from her misses";
+
+export const SKYE_MATH_SKILLS_INTRO = [
+  "The two clearest priorities are systems of equations and nonlinear equations. In Module 1 she missed every question in both: 0 of 2 on systems and 0 of 4 on nonlinear equations.",
+  "If she had to focus on just two math skills right now, these are the two. Both show up often on the SAT and both showed up on her diagnostic.",
+  "Both topics sit in Advanced Math on the SAT. That domain is about 35% of the Math section, roughly 15 of the 44 math questions. Systems and nonlinear equations together account for a large share of that block, which is why fixing them moves the score quickly.",
+];
 
 export const SKYE_MATH_SKILLS: RwSkillListItem[] = [
   {
@@ -478,6 +495,8 @@ export const SKYE_MATH_SKILLS: RwSkillListItem[] = [
 export const SKYE_MATH_QUESTION_TYPES =
   "A large part of SAT math is recognizing what the question is asking before you calculate. The SAT reuses the same question types, and the same topic can look different depending on the wording. Once you know the type, the formula or method usually follows. Until then, students often guess or plug in answer choices. In tutoring we learn what each type looks like. For example, two points and \"find the equation\" means write a line equation; \"how many solutions\" means find where lines cross; reading carefully for exactly what is asked (angle V and not U, h + k and not h alone) prevents stopping one step early.";
 
+export const SKYE_MATH_FORMULAS_HEAD = "Formulas to memorize & practice";
+
 export const SKYE_MATH_FORMULAS_INTRO =
   "These formulas are worth memorizing. Nine of the fifteen math misses on this diagnostic needed one of them, and none of them appear on the SAT reference sheet:";
 
@@ -511,9 +530,6 @@ export const SKYE_MATH_FORMULAS: RwSkillListItem[] = [
     text: "flip the slope and change the sign (negative reciprocal)",
   },
 ];
-
-export const SKYE_MATH_FORMULAS_FOOT =
-  "The SAT reference sheet already includes area and circumference of a circle and common volume formulas. Those are not repeated here.";
 
 export const SKYE_SKIP_TIME = {
   reading:
