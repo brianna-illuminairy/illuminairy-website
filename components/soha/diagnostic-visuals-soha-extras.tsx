@@ -1,9 +1,8 @@
 import Image from "next/image";
 import {
   SOHA_MATH_Q13_WORKED,
-  SOHA_MATH_Q9_STEPS,
+  SOHA_MATH_Q9_WORKED_PANELS,
 } from "@/lib/soha/diagnostic-analysis-copy";
-import { TeachingStepsList } from "@/components/diagnostic/report-visuals";
 
 export function WorkedExampleQ13() {
   const ex = SOHA_MATH_Q13_WORKED;
@@ -45,23 +44,18 @@ export function WorkedExampleQ9() {
         <span className="diag-report__worked-badge">Medium · Nonlinear equations</span>
       </div>
       <div className="diag-report__worked-body">
-        <p className="diag-report__worked-problem">
-          <strong>Problem:</strong> y - 42 = (y - c)(y - 42)
-        </p>
-        <TeachingStepsList
-          steps={SOHA_MATH_Q9_STEPS.map((step) => ({
-            title: step.title,
-            body: step.note ? `${step.body}\n\n${step.note}` : step.body,
-          }))}
-        />
-        <div className="diag-report__worked-figure">
-          <Image
-            src="/diagnostic/soha-m1-q9-worked.png"
-            alt="Step-by-step factoring walkthrough for Module 1 Question 9"
-            width={624}
-            height={185}
-            className="diag-report__worked-img"
-          />
+        <div className="diag-report__worked-gallery">
+          {SOHA_MATH_Q9_WORKED_PANELS.map((panel) => (
+            <figure key={panel.src} className="diag-report__worked-figure">
+              <Image
+                src={panel.src}
+                alt={panel.alt}
+                width={panel.width}
+                height={panel.height}
+                className="diag-report__worked-img"
+              />
+            </figure>
+          ))}
         </div>
       </div>
     </div>

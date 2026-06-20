@@ -68,6 +68,27 @@ export const SOHA_MATH_GAP1_AFTER =
 export const SOHA_MATH_Q9_CONTEXT =
   "Going back and reviewing her Module 1 Q9 miss, it was a quadratic equation. However, the way to solve is to combine factoring with the zero product property. Going back, she failed to set this problem up correctly. It's another problem that requires some math by hand. She never once moved everything to one side (so that she could set it up to equal zero). If she would've setup the question properly, moving everything to one side it may have been easier for her to identify that the problem had a \"shared chunk\" that could be factored out. Again I think her approach of starting with the calculator really harmed her here, since this question needed to be solved by hand using scratch paper. For Math Module 1 Q9, the issue was not \"she doesn't understand quadratics.\" It was more specifically a setup and strategy issue: she did not recognize the equation needed to be rearranged into zero-product form, then she did not factor it. The steps to solve this problem are simple: move everything to one side, set equal to zero, factor out anything common, solve for the variables present in each expression to identify all possible solutions. Sharing Q9's answer below to demonstrate:";
 
+export const SOHA_MATH_Q9_WORKED_PANELS = [
+  {
+    src: "/diagnostic/soha-m1-q9-worked-steps-1-3.png",
+    alt: "Module 1 Question 9 walkthrough: problem statement through identifying the shared term y minus 42",
+    width: 690,
+    height: 868,
+  },
+  {
+    src: "/diagnostic/soha-m1-q9-worked-step-4.png",
+    alt: "Module 1 Question 9 walkthrough: factoring out y minus 42 from both components",
+    width: 690,
+    height: 932,
+  },
+  {
+    src: "/diagnostic/soha-m1-q9-worked-steps-5-7.png",
+    alt: "Module 1 Question 9 walkthrough: simplified expression through final solutions y equals 42 and y equals 1 plus c",
+    width: 756,
+    height: 1024,
+  },
+] as const;
+
 export const SOHA_MATH_Q9_STEPS: { title: string; body: string; note?: string }[] = [
   {
     title: "Move everything to one side and set equal to zero",

@@ -885,12 +885,26 @@
 }
 
 .diag-report__worked-figure {
-  margin-top: 16px;
+  margin: 0;
+}
+
+.diag-report__worked-gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 4px;
+}
+
+.diag-report__worked-gallery .diag-report__worked-figure + .diag-report__worked-figure {
+  margin-top: 0;
 }
 
 .diag-report__worked-img {
+  display: block;
   width: 100%;
+  max-width: 690px;
   height: auto;
+  margin: 0 auto;
   border-radius: 4px;
   border: 1px solid var(--sr-line-soft);
 }
