@@ -43,10 +43,6 @@ export function SkyeProfileContent() {
       <header className="aurora-portal__page-head">
         <p className="aurora-eyebrow">Illuminairy · Student profile</p>
         <h1 className="aurora-portal__title">Skye&apos;s profile</h1>
-        <p className="aurora-portal__lede">
-          Context from your Strategy Call and diagnostic intake. This is what we keep in mind when we
-          build sessions, homework, and the improvement plan.
-        </p>
       </header>
 
       <section className="skye-profile__section">

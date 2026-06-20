@@ -51,7 +51,8 @@ export const SKYE_PROFILE = {
   ],
   testingNotes: [
     "Took the PSAT before the June 18 Skill Diagnostic.",
-    "Did not know enough about how the SAT works: pacing, when to guess, and how adaptive modules affect difficulty.",
+    "Did not know enough about how the SAT works: pacing, when to guess, and how adaptive modules affect difficulty. When she took the PSAT she was not aware of how it worked.",
+    "We went over the very high level basics before her diagnostic.",
     "Left questions blank when she was unsure instead of making a best guess.",
     "Struggled with running out of time, especially when she got stuck on a question type she had not seen before.",
   ],
@@ -63,7 +64,6 @@ export const SKYE_PROFILE = {
   workingOn: [
     "Reading and Writing: question-type method (transitions, reading logic, boundaries, words in context, rhetorical synthesis).",
     "Math: recognizing question types, formulas not on the reference sheet, and when Desmos can finish a problem once it is set up.",
-    "Pacing and guessing strategy so she uses the full section time and does not leave easy points blank.",
   ],
 } satisfies {
   student: ProfilePerson;

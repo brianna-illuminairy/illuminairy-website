@@ -24,18 +24,18 @@ export function SkyePlanSkillContent() {
         <p className="aurora-eyebrow">Illuminairy · Improvement Plan</p>
         <h1 className="aurora-portal__title">Skye&apos;s SAT plan</h1>
         <div className="skye-plan__intro">
-          <p className="aurora-portal__lede">
+          <p>
             Skye scored {PLAN_TOTALS.baselineScore} on her June 18 diagnostic and missed{" "}
             {PLAN_TOTALS.missCount} questions. The skills below are what she needs to learn to improve her
             SAT score, sorted so the highest-impact skills are taught first.
           </p>
-          <p className="aurora-portal__lede">
+          <p>
             In Week 1, we review each question she got wrong on the June 18 diagnostic. The first session
             covers math: question type, how to solve it, and whether the calculator can finish it once the
             problem is set up. The second session covers Reading and Writing: question type and how to answer
             it. She gets homework between the two sessions. New skill lessons start in Week 2.
           </p>
-          <p className="aurora-portal__lede">
+          <p>
             Starting Week 2 on June 30, we cover one topic each week, alternating Reading and Writing with
             math. Each week has two sessions and homework on what we covered. Full practice tests are on weeks
             5, 9, and 13. Week 15 is a review week on the skills from the plan.
@@ -44,8 +44,9 @@ export function SkyePlanSkillContent() {
       </header>
 
       <section className="skye-plan__section">
-        <h2>Reading &amp; Writing · about {PLAN_TOTALS.rwSection} points</h2>
-        <p className="skye-plan__section-lede">Highest-impact skills in this section, taught first.</p>
+        <h2>
+          Highest Priority Reading &amp; Writing Skills +{PLAN_TOTALS.rwSection} pts
+        </h2>
         <LedgerRank
           rows={skyeRwLedgerRows()}
           footerLeft="Section subtotal"
@@ -56,8 +57,7 @@ export function SkyePlanSkillContent() {
       </section>
 
       <section className="skye-plan__section">
-        <h2>Math · about {PLAN_TOTALS.mathSection} points</h2>
-        <p className="skye-plan__section-lede">Highest-impact skills in this section, taught first.</p>
+        <h2>Highest Priority Math Skills +{PLAN_TOTALS.mathSection} pts</h2>
         <LedgerRank
           rows={skyeMathLedgerRows()}
           footerLeft="Section subtotal"

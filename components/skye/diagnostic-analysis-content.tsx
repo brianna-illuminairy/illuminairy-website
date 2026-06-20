@@ -16,12 +16,10 @@ import {
   SKYE_MATH_FORMULAS_INTRO,
   SKYE_MATH_INTRO,
   SKYE_MATH_QUESTION_TYPES,
-  SKYE_MATH_SKILLS,
   SKYE_MATH_SKILLS_HEAD,
   SKYE_MATH_SKILLS_INTRO,
   SKYE_OVERVIEW_INTRO,
   SKYE_OVERVIEW_INTRO_FOOTNOTE,
-  SKYE_RW_INTRO_BULLETS,
   SKYE_RW_INTRO_LEAD,
   SKYE_RW_SKILLS,
   SKYE_RW_SKILLS_RANK_HEAD,
@@ -163,11 +161,6 @@ export function SkyeDiagnosticAnalysisContent() {
         <section className="diag-report__section diag-report__prose" id="skye-rw">
           <SectionHead num="03" title="Reading and Writing Analysis" />
           <p>{SKYE_RW_INTRO_LEAD}</p>
-          <ul>
-            {SKYE_RW_INTRO_BULLETS.map((item) => (
-              <li key={item.slice(0, 40)}>{item}</li>
-            ))}
-          </ul>
 
           <MissTable rows={RW_MISS_TABLE} />
           <p className="diag-report__tnote">
@@ -195,7 +188,7 @@ export function SkyeDiagnosticAnalysisContent() {
         </section>
 
         <section className="diag-report__section diag-report__prose" id="skye-math">
-          <SectionHead num="04" title="Math: a deep look at all 15 misses" />
+          <SectionHead num="04" title="Math Performance" />
           <ProseParagraphs lines={SKYE_MATH_INTRO} />
 
           <p>
@@ -210,14 +203,6 @@ export function SkyeDiagnosticAnalysisContent() {
 
           <h3 className="diag-report__gap-title">{SKYE_MATH_SKILLS_HEAD}</h3>
           <ProseParagraphs lines={SKYE_MATH_SKILLS_INTRO} />
-          <ul className="diag-report__skill-ul">
-            {SKYE_MATH_SKILLS.map((item) => (
-              <RwSkillListItemView
-                key={typeof item === "string" ? item.slice(0, 32) : item.label}
-                item={item}
-              />
-            ))}
-          </ul>
           <p>{SKYE_MATH_QUESTION_TYPES}</p>
 
           <h3 className="diag-report__gap-title">{SKYE_MATH_FORMULAS_HEAD}</h3>

@@ -45,13 +45,7 @@ export const SKYE_ADAPTIVE_MATH =
   "On Math, she got 11 of 22 correct in Module 1 (50.0%), missing the cutoff for the harder Module 2 by two or three questions. So her Math Module 2 included only one hard question. As a result, her score ceiling on Math was lower than it would have been if she had unlocked the harder module. Getting a few more Module 1 questions right on the next test would unlock a harder Module 2 and raise that ceiling.";
 
 export const SKYE_RW_INTRO_LEAD =
-  'While she has several skill areas where mistakes are costing her points, I believe the miss behind them is shared. She is unsure what the question is asking, so she looks for answers that "sound right" or that repeat something from the passage. That is common for students new to the SAT. You have to know the question types the SAT uses and what each type is looking for, or you get pulled toward answers that are logical but do not answer the question. It shows up three ways:';
-
-export const SKYE_RW_INTRO_BULLETS = [
-  "Transitions: first decide how the two sentences relate (contrast, cause and effect, addition, and so on), then pick the transition word that matches that relationship. On passage questions, the correct answer matches what the question asks for (main idea, structure, detail, and so on), not a phrase that simply appears in the text.",
-  "Words in Context: use the sentence around the blank to predict the word before you read the answer choices. Check that the word fits the tone of the sentence and the grammar of the blank (including tense and what comes before it).",
-  "Boundaries and modifiers: these questions follow standard punctuation rules. You decide whether you have two complete sentences, an interrupting phrase, or a phrase that must attach to a specific noun, then apply the comma, semicolon, or period rule that fits.",
-];
+  'While she has several skill areas where mistakes are costing her points, I believe the miss behind them is shared. She is unsure what the question is asking, so she looks for answers that "sound right" or that repeat something from the passage. That is common for students new to the SAT. You have to know the question types the SAT uses and what each type is looking for, or you get pulled toward answers that are logical but do not answer the question.';
 
 export const SKYE_RW_SKILLS: RwSkillBlock[] = [
   {
@@ -444,52 +438,15 @@ export const MATH_WALKTHROUGH_ROWS: MathWalkthroughRow[] = [
 ];
 
 export const SKYE_MATH_AFTER_TABLE = [
-  "Out of the 15 missed math questions, 10 can be solved with the built-in Desmos calculator once the problem is set up correctly. That still assumes you recognize the question type, enter the right equation or graph, and know which value on the screen is the answer.",
+  "Out of the 15 missed math questions, 10 can be solved with the built-in Desmos calculator once the problem is set up correctly. That still assumes you recognize the question type, enter the right equation or graph, and know which value on the screen is the answer. It also requires that you can identify the question and pull the formula from memory, or the correct calculator steps from memory, in a matter of seconds. That requires repetition.",
+  "The SAT has about 100 questions total. To get familiar with the question types, you need to practice many more than that. A common target is at least 10 times as many, roughly 1,000 questions. That is how you increase speed and solve problems accurately under time pressure.",
   "Nine of the 15 require a formula memorized that is not on the SAT reference sheet (six of those nine are in the Desmos group; three are solved by hand). The five that must be done entirely by hand are Q9, Q11 in Module 1, Q2 in Module 2, and the unit conversions in Q13 and Q21.",
-  "The seven formulas listed below cover all nine questions that need one.",
 ];
 
 export const SKYE_MATH_SKILLS_HEAD = "Math topics to work on from her misses";
 
 export const SKYE_MATH_SKILLS_INTRO = [
-  "The two clearest priorities are systems of equations and nonlinear equations. In Module 1 she missed every question in both: 0 of 2 on systems and 0 of 4 on nonlinear equations.",
-  "If she had to focus on just two math skills right now, these are the two. Both show up often on the SAT and both showed up on her diagnostic.",
-  "Both topics sit in Advanced Math on the SAT. That domain is about 35% of the Math section, roughly 15 of the 44 math questions. Systems and nonlinear equations together account for a large share of that block, which is why fixing them moves the score quickly.",
-];
-
-export const SKYE_MATH_SKILLS: RwSkillListItem[] = [
-  {
-    label: "Systems of equations",
-    text: "Find where two lines cross, count how many solutions a system has, and write the equations correctly. (Q5, Q18)",
-  },
-  {
-    label: "Factoring",
-    text: "Use factoring and the zero-product property to solve equations like the one in Q9.",
-  },
-  {
-    label: "Slope from two points",
-    text: "Compute slope from two points and write the equation of the line. (Q17, M2 Q11)",
-  },
-  {
-    label: "Exponential functions",
-    text: 'Build an equation in the form a·b^x from a word problem (for example, "doubles every 3 days" or "decreases 40%"). (Q11, M2 Q18)',
-  },
-  {
-    label: "Circle measures",
-    text: "Convert radians to degrees and solve arc-length problems. (Q13, Q21)",
-  },
-  {
-    label: "Perpendicular lines",
-    text: "Use the negative reciprocal to find the slope of a perpendicular line. (Q18)",
-  },
-  {
-    label: "Function transformations",
-    text: "Understand how h(x+2) shifts a graph compared to h(x). (Q22 in Module 2)",
-  },
-  {
-    label: "Equation manipulation",
-    text: "Rearrange an equation by dividing every term or isolating a variable. (M2 Q2)",
-  },
+  "The two clearest priorities are systems of equations and nonlinear equations. In Module 1 she missed every question in both: 0 of 2 on systems and 0 of 4 on nonlinear equations. If she had to focus on just two math skills right now, these are the two. Both show up often on the SAT and both showed up on her diagnostic. Both topics sit in Advanced Math on the SAT, which is about 35% of the Math section (roughly 15 of the 44 math questions). Systems and nonlinear equations together account for a large share of that block, which is why fixing them moves the score quickly.",
 ];
 
 export const SKYE_MATH_QUESTION_TYPES =
