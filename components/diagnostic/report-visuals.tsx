@@ -85,7 +85,7 @@ export function QuestionPerformanceMap({
   return (
     <div className="diag-report__card">
       <div className="diag-report__qmap-head">
-        <p className="diag-report__card-lab">Question Performance Map</p>
+        <p className="diag-report__card-lab">Every question: right or wrong</p>
         <div className="diag-report__qmap-legend">
           <span>
             <i className="lg-ok" /> Correct
@@ -119,7 +119,7 @@ export function QuestionPerformanceMap({
       ))}
 
       <p className="diag-report__qmap-foot">
-        Letters on missed cells mark difficulty · E easy, M medium, H hard.
+        Missed questions show a difficulty letter. E means easy, M means medium, H means hard.
       </p>
     </div>
   );

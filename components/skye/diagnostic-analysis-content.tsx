@@ -10,7 +10,6 @@ import {
   SKYE_ADAPTIVE_INTRO,
   SKYE_ADAPTIVE_MATH,
   SKYE_ADAPTIVE_RW,
-  SKYE_DIAG_LEDE,
   SKYE_MATH_AFTER_TABLE,
   SKYE_MATH_FORMULAS,
   SKYE_MATH_FORMULAS_FOOT,
@@ -24,6 +23,8 @@ import {
   SKYE_RW_SKILLS,
   SKYE_RW_SKILLS_RANK_HEAD,
   SKYE_SKIP_TIME,
+  type RwSkillBodyBlock,
+  type RwSkillListItem,
 } from "@/lib/skye/diagnostic-analysis-copy";
 import {
   DiagnosticHero,
@@ -41,6 +42,47 @@ function ProseParagraphs({ lines }: { lines: string[] }) {
       {lines.map((line) => (
         <p key={line.slice(0, 48)}>{line}</p>
       ))}
+    </>
+  );
+}
+
+function RwSkillListItemView({ item }: { item: RwSkillListItem }) {
+  if (typeof item === "string") {
+    return <li>{item}</li>;
+  }
+  return (
+    <li>
+      <strong>{item.label}:</strong> {item.text}
+    </li>
+  );
+}
+
+function RwSkillBody({ blocks }: { blocks: RwSkillBodyBlock[] }) {
+  return (
+    <>
+      {blocks.map((block, idx) => {
+        if (block.kind === "p") {
+          return <p key={`p-${idx}`}>{block.text}</p>;
+        }
+
+        const ListTag = block.kind === "ol" ? "ol" : "ul";
+        const listClass =
+          block.kind === "ol" ? "diag-report__skill-ol" : "diag-report__skill-ul";
+
+        return (
+          <div key={`list-${idx}`} className="diag-report__skill-body-list">
+            {block.intro ? <p>{block.intro}</p> : null}
+            <ListTag className={listClass}>
+              {block.items.map((item, itemIdx) => (
+                <RwSkillListItemView
+                  key={typeof item === "string" ? `${idx}-${itemIdx}` : item.label}
+                  item={item}
+                />
+              ))}
+            </ListTag>
+          </div>
+        );
+      })}
     </>
   );
 }
@@ -97,8 +139,6 @@ export function SkyeDiagnosticAnalysisContent() {
 
         <DiagnosticHero {...SKYE_HERO} />
 
-        <p className="diag-report__lede diag-report__lede--intro">{SKYE_DIAG_LEDE}</p>
-
         <section className="diag-report__section" id="skye-overall">
           <SectionHead num="01" title="Performance Overview" />
           <QuestionPerformanceMap sections={QUESTION_MAP} totalCorrect={63} totalQuestions={98} />
@@ -142,7 +182,7 @@ export function SkyeDiagnosticAnalysisContent() {
                   </li>
                 ))}
               </ul>
-              <ProseParagraphs lines={skill.body} />
+              <RwSkillBody blocks={skill.body} />
             </div>
           ))}
         </section>
@@ -162,20 +202,26 @@ export function SkyeDiagnosticAnalysisContent() {
           <h3 className="diag-report__gap-title">The skills and question types to build</h3>
           <p>{SKYE_MATH_SKILLS_INTRO}</p>
           <p>The skills to build:</p>
-          <ol>
+          <ul className="diag-report__skill-ul">
             {SKYE_MATH_SKILLS.map((item) => (
-              <li key={item.slice(0, 32)}>{item}</li>
+              <RwSkillListItemView
+                key={typeof item === "string" ? item.slice(0, 32) : item.label}
+                item={item}
+              />
             ))}
-          </ol>
+          </ul>
           <p>{SKYE_MATH_QUESTION_TYPES}</p>
 
           <h3 className="diag-report__gap-title">Formulas she needs to know by heart</h3>
           <p>{SKYE_MATH_FORMULAS_INTRO}</p>
-          <ol>
+          <ul className="diag-report__skill-ul">
             {SKYE_MATH_FORMULAS.map((item) => (
-              <li key={item.slice(0, 32)}>{item}</li>
+              <RwSkillListItemView
+                key={typeof item === "string" ? item.slice(0, 32) : item.label}
+                item={item}
+              />
             ))}
-          </ol>
+          </ul>
           <p>{SKYE_MATH_FORMULAS_FOOT}</p>
 
           <MissTable rows={MATH_MISS_TABLE} />
@@ -193,7 +239,7 @@ export function SkyeDiagnosticAnalysisContent() {
             <strong>Math:</strong> {SKYE_SKIP_TIME.math}
           </p>
           <p className="diag-report__plan-link">
-            For skill priority, recoverable points, and the week-by-week schedule, see the{" "}
+            For skill priority, points by skill, and the week-by-week schedule, see the{" "}
             <Link href="/skye/plan">Improvement Plan</Link> tab.
           </p>
         </section>

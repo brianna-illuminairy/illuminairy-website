@@ -2,12 +2,19 @@
 
 export type MissBullet = { q: string; text: string };
 
+export type RwSkillListItem = string | { label: string; text: string };
+
+export type RwSkillBodyBlock =
+  | { kind: "p"; text: string }
+  | { kind: "ul"; intro?: string; items: RwSkillListItem[] }
+  | { kind: "ol"; intro?: string; items: string[] };
+
 export type RwSkillBlock = {
   rank: number;
   title: string;
   lead: string;
   misses: MissBullet[];
-  body: string[];
+  body: RwSkillBodyBlock[];
 };
 
 export type MathWalkthroughRow = {
@@ -18,8 +25,6 @@ export type MathWalkthroughRow = {
   marked: string;
 };
 
-export const SKYE_DIAG_LEDE =
-  "Full-length diagnostic, June 18, 2026. All four modules complete. This report works through every question she missed, what it shows, and what she needs to focus on.";
 
 export const SKYE_ADAPTIVE_INTRO = [
   "The Digital SAT is adaptive, which means the second module either becomes easier or harder based on your performance in the first module for each section. The goal is to ensure you get enough correct during the first module that you get the harder version of the second module. If you do not meet the cutoff, and end up with the easy module, you have effectively capped the max score you can achieve on the SAT, since easy questions are worth less points than hard questions. The cutoff is about 18 correct out of 27 questions in Reading and Writing Module 1, and for math it is 13 or 14 out of 22. There is some nuance here, in that it also matters if the questions you got incorrect were easy, medium or hard.",
@@ -64,11 +69,20 @@ export const SKYE_RW_SKILLS: RwSkillBlock[] = [
       },
     ],
     body: [
-      "Transitions follow a framework and can be taught and learned with time. First you have to understand the categories of transitions that exist. Then you have to understand which ones do and do not appear on the SAT. Then you have to memorize all SAT transition words assigned to each category. Then finally practice it repeatedly until you are at the desired accuracy (100% on easy, 95% on medium, and 90% on hard).",
-      "Teach it in three steps:",
-      "1. Learn the transition types. Five cover almost every question: addition (the second sentence adds a similar point), contrast (it pushes against the first), cause and effect (the first leads to the second), example (the second is a specific case of the first), and emphasis or restatement (the second drives home or rewords the first).",
-      '2. Memorize which words go with each type. Addition: furthermore, moreover, in addition, also, similarly, likewise. Contrast: however, nonetheless, nevertheless, in contrast, on the other hand, conversely, still, yet. Cause and effect: therefore, thus, consequently, as a result, hence, so. Example: for example, for instance, namely, specifically. Emphasis or restatement: indeed, in fact, in other words, that is. Her errors are all words filed in the wrong type, so she should drill sorting these words into the five groups until it is automatic.',
-      "3. On each question, decide the relationship between the two sentences first, then pick a word from that group. Never start from the word or answer options. If any two answers are from the same category (i.e. two contrasting transition words), then they are both incorrect.",
+      {
+        kind: "p",
+        text:
+          "Transitions follow a framework and can be taught and learned with time. First you have to understand the categories of transitions that exist. Then you have to understand which ones do and do not appear on the SAT. Then you have to memorize all SAT transition words assigned to each category. Then finally practice it repeatedly until you are at the desired accuracy (100% on easy, 95% on medium, and 90% on hard).",
+      },
+      {
+        kind: "ol",
+        intro: "Teach it in three steps:",
+        items: [
+          "Learn the transition types. Five cover almost every question: addition (the second sentence adds a similar point), contrast (it pushes against the first), cause and effect (the first leads to the second), example (the second is a specific case of the first), and emphasis or restatement (the second drives home or rewords the first).",
+          'Memorize which words go with each type. Addition: furthermore, moreover, in addition, also, similarly, likewise. Contrast: however, nonetheless, nevertheless, in contrast, on the other hand, conversely, still, yet. Cause and effect: therefore, thus, consequently, as a result, hence, so. Example: for example, for instance, namely, specifically. Emphasis or restatement: indeed, in fact, in other words, that is. Her errors are all words filed in the wrong type, so she should drill sorting these words into the five groups until it is automatic.',
+          "On each question, decide the relationship between the two sentences first, then pick a word from that group. Never start from the word or answer options. If any two answers are from the same category (i.e. two contrasting transition words), then they are both incorrect.",
+        ],
+      },
     ],
   },
   {
@@ -98,15 +112,37 @@ export const SKYE_RW_SKILLS: RwSkillBlock[] = [
       },
     ],
     body: [
-      "To fix this the first thing we teach is the set of jobs a reading question can ask for, because she keeps answering the wrong job.",
-      "The primary questions asked on the SAT from passages:",
-      "Main idea: the point of the whole text.",
-      "Detail: a specific stated fact, and which person or source said it.",
-      "Function or purpose: the job a sentence does in the text, not what it says.",
-      "Structure: how the text is organized, for example a claim followed by a counterpoint.",
-      "Command of evidence: the choice that supports or weakens the exact claim stated.",
-      "Inference: what the text leads to, used to fill a blank.",
-      "Step one is to read the question and name which of these it is. Her misses are each the wrong job: on Q6 she answered what the sentence says instead of what it does, on the Module 2 main-idea question she picked one detail, on the structure question she described the content instead of the organization. Step two is to answer that job and reject any choice that does a different one, even if it repeats more words from the passage.",
+      {
+        kind: "p",
+        text:
+          "To fix this the first thing we teach is the set of jobs a reading question can ask for, because she keeps answering the wrong job.",
+      },
+      {
+        kind: "ul",
+        intro: "The primary questions asked on the SAT from passages:",
+        items: [
+          { label: "Main idea", text: "the point of the whole text." },
+          { label: "Detail", text: "a specific stated fact, and which person or source said it." },
+          {
+            label: "Function or purpose",
+            text: "the job a sentence does in the text, not what it says.",
+          },
+          {
+            label: "Structure",
+            text: "how the text is organized, for example a claim followed by a counterpoint.",
+          },
+          {
+            label: "Command of evidence",
+            text: "the choice that supports or weakens the exact claim stated.",
+          },
+          { label: "Inference", text: "what the text leads to, used to fill a blank." },
+        ],
+      },
+      {
+        kind: "p",
+        text:
+          "Step one is to read the question and name which of these it is. Her misses are each the wrong job: on Q6 she answered what the sentence says instead of what it does, on the Module 2 main-idea question she picked one detail, on the structure question she described the content instead of the organization. Step two is to answer that job and reject any choice that does a different one, even if it repeats more words from the passage.",
+      },
     ],
   },
   {
@@ -128,14 +164,43 @@ export const SKYE_RW_SKILLS: RwSkillBlock[] = [
       },
     ],
     body: [
-      "She needs to learn how to identify independent and dependent clauses. An independent clause is a complete sentence. A dependent clause is not. Once she can label each side of the boundary, she can choose the correct punctuation.",
-      "She should learn these rules:",
-      "Identify if the two phrases are independent clauses or dependent clauses.",
-      "Two complete sentences need a period, a semicolon, or a comma plus a conjunction. They should not be joined by a comma alone or by nothing.",
-      "A complete sentence followed by an incomplete phrase may need a comma, no punctuation, or a colon if the first part introduces what follows.",
-      "An interruption in the middle of a sentence needs a comma on both sides.",
-      "She should also memorize common words that often create dependent clauses: because, although, while, since, when, if, after, and before. These words help show when a sentence part cannot stand alone.",
-      "The teaching order should be: identify subjects and verbs, identify complete versus incomplete sentence parts, decide whether the two parts move in the same direction or opposite directions, then apply the punctuation rule.",
+      {
+        kind: "p",
+        text:
+          "She needs to learn how to identify independent and dependent clauses. An independent clause is a complete sentence. A dependent clause is not. Once she can label each side of the boundary, she can choose the correct punctuation.",
+      },
+      {
+        kind: "ul",
+        intro: "She should learn these rules:",
+        items: [
+          {
+            label: "Clause type first",
+            text: "identify if the two phrases are independent clauses or dependent clauses.",
+          },
+          {
+            label: "Two complete sentences",
+            text: "need a period, a semicolon, or a comma plus a conjunction. They should not be joined by a comma alone or by nothing.",
+          },
+          {
+            label: "Complete sentence + incomplete phrase",
+            text: "may need a comma, no punctuation, or a colon if the first part introduces what follows.",
+          },
+          {
+            label: "Mid-sentence interruption",
+            text: "needs a comma on both sides.",
+          },
+        ],
+      },
+      {
+        kind: "p",
+        text:
+          "She should also memorize common words that often create dependent clauses: because, although, while, since, when, if, after, and before. These words help show when a sentence part cannot stand alone.",
+      },
+      {
+        kind: "p",
+        text:
+          "The teaching order should be: identify subjects and verbs, identify complete versus incomplete sentence parts, decide whether the two parts move in the same direction or opposite directions, then apply the punctuation rule.",
+      },
     ],
   },
   {
@@ -161,11 +226,27 @@ export const SKYE_RW_SKILLS: RwSkillBlock[] = [
       },
     ],
     body: [
-      "She does not mainly need more vocabulary. Two of the misses were method errors. In Q1, the words \"exemplifies\" and \"impedes\" are not hard, but she missed that the sentence was positive and chose a negative word. In Q1 from Module 2, the issue was grammar because \"to\" needs a plain verb.",
-      "Only \"imminent\" and \"precursor\" were mainly vocabulary misses. Even there, the sentence gave her the clue. The storm was approaching, which points to \"imminent.\" The device came before computers, which points to \"precursor.\"",
-      "The order should be method first and vocabulary second.",
-      "She should use this method: cover the answer choices; decide whether the blank should be positive, negative, or neutral; predict the rough meaning of the missing word; check whether the answer fits the grammar of the sentence; then choose the word that fits both meaning and grammar.",
-      "For vocabulary, she should not do a large memorization push. She should learn a focused list of mid-level academic words that appear often on the SAT. She should also study words whose academic meaning differs from everyday meaning, such as criticize, qualify, sound, novel, and arrest.",
+      {
+        kind: "p",
+        text:
+          'She does not mainly need more vocabulary. Two of the misses were method errors. In Q1, the words "exemplifies" and "impedes" are not hard, but she missed that the sentence was positive and chose a negative word. In Q1 from Module 2, the issue was grammar because "to" needs a plain verb.',
+      },
+      {
+        kind: "p",
+        text:
+          'Only "imminent" and "precursor" were mainly vocabulary misses. Even there, the sentence gave her the clue. The storm was approaching, which points to "imminent." The device came before computers, which points to "precursor."',
+      },
+      { kind: "p", text: "The order should be method first and vocabulary second." },
+      {
+        kind: "p",
+        text:
+          "She should use this method: cover the answer choices; decide whether the blank should be positive, negative, or neutral; predict the rough meaning of the missing word; check whether the answer fits the grammar of the sentence; then choose the word that fits both meaning and grammar.",
+      },
+      {
+        kind: "p",
+        text:
+          "For vocabulary, she should not do a large memorization push. She should learn a focused list of mid-level academic words that appear often on the SAT. She should also study words whose academic meaning differs from everyday meaning, such as criticize, qualify, sound, novel, and arrest.",
+      },
     ],
   },
   {
@@ -187,9 +268,27 @@ export const SKYE_RW_SKILLS: RwSkillBlock[] = [
       },
     ],
     body: [
-      "She should read the goal before reading the notes. The goal tells her what the correct answer must do.",
-      "She should use this method: read the goal first; name the task in plain words, such as \"find an advantage\" or \"show a difference\"; read only for the notes that match that goal; eliminate any answer that does not do exactly what the goal asks; eliminate any answer that contradicts the notes; choose the answer that both matches the goal and matches the notes.",
-      "She needs to learn that these questions are not mainly asking for the most interesting or detailed answer. They are asking for the answer that does the assigned job.",
+      {
+        kind: "p",
+        text: "She should read the goal before reading the notes. The goal tells her what the correct answer must do.",
+      },
+      {
+        kind: "ul",
+        intro: "She should use this method:",
+        items: [
+          "Read the goal first.",
+          'Name the task in plain words, such as "find an advantage" or "show a difference".',
+          "Read only for the notes that match that goal.",
+          "Eliminate any answer that does not do exactly what the goal asks.",
+          "Eliminate any answer that contradicts the notes.",
+          "Choose the answer that both matches the goal and matches the notes.",
+        ],
+      },
+      {
+        kind: "p",
+        text:
+          "She needs to learn that these questions are not mainly asking for the most interesting or detailed answer. They are asking for the answer that does the assigned job.",
+      },
     ],
   },
 ];
@@ -322,15 +421,39 @@ export const SKYE_MATH_AFTER_TABLE = [
 export const SKYE_MATH_SKILLS_INTRO =
   "The two clearest priorities are systems of equations and nonlinear equations. In Module 1 she missed every question in both, 0 of 2 and 0 of 4, and both are high-frequency on the SAT.";
 
-export const SKYE_MATH_SKILLS = [
-  "Systems of equations: that the solution is where the lines cross, how many solutions a system has, and how to find that point. (Q5, Q18)",
-  "Factoring and the zero-product rule. (Q9)",
-  "Slope from two points, and writing the equation of a line from it. (Q17, M2 Q11)",
-  'Exponential functions: the form a·b^x, and turning a phrase like "doubles every 3 days" or "decreases 40%" into it. (Q11, M2 Q18)',
-  "Circle measures: radians to degrees, and arc length. (Q13, Q21)",
-  "Perpendicular lines: the negative-reciprocal slope. (Q18)",
-  "Function transformations: what h(x+2) does to a graph. (Q22 in Module 2)",
-  "Equation manipulation: dividing every term, isolating a variable. (M2 Q2)",
+export const SKYE_MATH_SKILLS: RwSkillListItem[] = [
+  {
+    label: "Systems of equations",
+    text: "that the solution is where the lines cross, how many solutions a system has, and how to find that point. (Q5, Q18)",
+  },
+  {
+    label: "Factoring",
+    text: "the zero-product rule. (Q9)",
+  },
+  {
+    label: "Slope from two points",
+    text: "and writing the equation of a line from it. (Q17, M2 Q11)",
+  },
+  {
+    label: "Exponential functions",
+    text: 'the form a·b^x, and turning a phrase like "doubles every 3 days" or "decreases 40%" into it. (Q11, M2 Q18)',
+  },
+  {
+    label: "Circle measures",
+    text: "radians to degrees, and arc length. (Q13, Q21)",
+  },
+  {
+    label: "Perpendicular lines",
+    text: "the negative-reciprocal slope. (Q18)",
+  },
+  {
+    label: "Function transformations",
+    text: "what h(x+2) does to a graph. (Q22 in Module 2)",
+  },
+  {
+    label: "Equation manipulation",
+    text: "dividing every term, isolating a variable. (M2 Q2)",
+  },
 ];
 
 export const SKYE_MATH_QUESTION_TYPES =
@@ -339,14 +462,35 @@ export const SKYE_MATH_QUESTION_TYPES =
 export const SKYE_MATH_FORMULAS_INTRO =
   "These are the formulas she needs to know by heart and be able to apply. They accounted for 9 of her 15 misses, and none of them are on the SAT reference sheet:";
 
-export const SKYE_MATH_FORMULAS = [
-  "Slope from two points: m = (y₂ − y₁) / (x₂ − x₁)",
-  "The quadratic formula: x = (−b ± √(b² − 4ac)) / (2a)",
-  "The discriminant, b² − 4ac, and that a value of zero means the equation has exactly one solution",
-  "Radians to degrees: degrees = radians × 180 / π",
-  "Arc length: the arc is (central angle ÷ 360) of the full circumference",
-  "Exponential form: f(x) = a·b^x, where a is the starting value and b is the growth or decay factor (1 plus the rate for growth, 1 minus the rate for decay)",
-  "Perpendicular slope: the negative reciprocal of the other line's slope",
+export const SKYE_MATH_FORMULAS: RwSkillListItem[] = [
+  {
+    label: "Slope from two points",
+    text: "m = (y₂ − y₁) / (x₂ − x₁)",
+  },
+  {
+    label: "The quadratic formula",
+    text: "x = (−b ± √(b² − 4ac)) / (2a)",
+  },
+  {
+    label: "The discriminant",
+    text: "b² − 4ac, and that a value of zero means the equation has exactly one solution",
+  },
+  {
+    label: "Radians to degrees",
+    text: "degrees = radians × 180 / π",
+  },
+  {
+    label: "Arc length",
+    text: "the arc is (central angle ÷ 360) of the full circumference",
+  },
+  {
+    label: "Exponential form",
+    text: "f(x) = a·b^x, where a is the starting value and b is the growth or decay factor (1 plus the rate for growth, 1 minus the rate for decay)",
+  },
+  {
+    label: "Perpendicular slope",
+    text: "the negative reciprocal of the other line's slope",
+  },
 ];
 
 export const SKYE_MATH_FORMULAS_FOOT =

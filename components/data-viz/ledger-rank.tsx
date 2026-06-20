@@ -76,7 +76,7 @@ export function LedgerRank({
           title={activeRow?.name}
           body={
             activeRow
-              ? `${activeRow.note ? `${activeRow.note} · ` : ""}+${activeRow.points} modeled recoverable`
+              ? `${activeRow.note ? `${activeRow.note} · ` : ""}+${activeRow.points} points`
               : undefined
           }
           idle={detailIdle}

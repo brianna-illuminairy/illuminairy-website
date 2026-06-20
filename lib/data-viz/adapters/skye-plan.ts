@@ -1,7 +1,7 @@
 import { RW_SKILLS, MATH_SKILLS, type PlanSkill } from "@/lib/skye/plan-skill-data";
 import type { LedgerRow } from "@/components/data-viz/ledger-rank";
 import type { MilestonePin, MilestoneWeek } from "@/components/data-viz/milestone-ribbon";
-import { SKYE_WEEKLY_PLAN, SKYE_TARGET_TEST } from "@/lib/skye/weekly-plan";
+import { SKYE_WEEKLY_PLAN } from "@/lib/skye/weekly-plan";
 
 function skillToLedgerRow(skill: PlanSkill, rank: number): LedgerRow {
   return {
@@ -30,10 +30,8 @@ export function skyeMilestoneWeeks(): MilestoneWeek[] {
 }
 
 export function skyeMilestonePins(): MilestonePin[] {
-  const pins: MilestonePin[] = SKYE_WEEKLY_PLAN.filter((w) => w.hasPracticeTest).map((w) => ({
+  return SKYE_WEEKLY_PLAN.filter((w) => w.hasPracticeTest).map((w) => ({
     week: w.week,
     label: "Practice test",
   }));
-  pins.push({ week: 16, label: SKYE_TARGET_TEST.label, test: true });
-  return pins;
 }

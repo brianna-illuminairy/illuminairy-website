@@ -1,6 +1,3 @@
-"use client";
-
-import { useState } from "react";
 import Link from "next/link";
 import { LedgerRank } from "@/components/data-viz/ledger-rank";
 import { MilestoneRibbon } from "@/components/data-viz/milestone-ribbon";
@@ -11,68 +8,10 @@ import {
   skyeRwLedgerRows,
 } from "@/lib/data-viz/adapters/skye-plan";
 import { PLAN_TOTALS } from "@/lib/skye/plan-skill-data";
-import { currentPlanWeek, SKYE_TARGET_TEST, SKYE_WEEKLY_PLAN } from "@/lib/skye/weekly-plan";
+import { currentPlanWeek, SKYE_WEEKLY_PLAN } from "@/lib/skye/weekly-plan";
 
-function WeekPlanCard({ week, isCurrent }: { week: (typeof SKYE_WEEKLY_PLAN)[number]; isCurrent: boolean }) {
-  const [open, setOpen] = useState(isCurrent);
-  const sectionTag =
-    week.section === "rw"
-      ? "Reading & Writing"
-      : week.section === "math"
-        ? "Math"
-        : week.section === "diagnostic"
-          ? "Diagnostic review"
-          : "Review";
-
-  return (
-    <div
-      className={`skye-plan__week-card${isCurrent ? " is-current" : ""}${week.phase === "review" ? " is-review" : ""}${week.phase === "diagnostic" ? " is-diagnostic" : ""}`}
-    >
-      <button
-        type="button"
-        className="skye-plan__week-head"
-        aria-expanded={open}
-        onClick={() => setOpen((v) => !v)}
-      >
-        <div>
-          <p className="skye-plan__week-title">
-            Week {week.week}: {week.skillLabel}
-          </p>
-          <p className="diag-report__lede" style={{ margin: "4px 0 0", fontSize: 13 }}>
-            {week.dateLabel}
-          </p>
-        </div>
-        <div className="skye-plan__week-meta">
-          <span
-            className={`skye-plan__week-tag skye-plan__week-tag--${week.section === "review" ? "review" : week.section}`}
-          >
-            {sectionTag}
-          </span>
-          {week.hasPracticeTest ? (
-            <span className="skye-plan__week-tag skye-plan__week-tag--test">+ Practice test</span>
-          ) : null}
-        </div>
-      </button>
-      {open ? (
-        <div className="skye-plan__week-body">
-          {week.reviewFocus ? <p>{week.reviewFocus}</p> : null}
-          {week.sessions?.map((session) => (
-            <div key={session.n} className="skye-plan__session">
-              <p className="skye-plan__session-label">Session {session.n}</p>
-              <p className="skye-plan__session-focus">{session.focus}</p>
-              <p className="skye-plan__session-hw">Homework: {session.homework}</p>
-            </div>
-          ))}
-          {week.hasPracticeTest ? (
-            <p className="skye-plan__week-addon">
-              Also this week: full-length practice test (2 hr 14 min) after Session 2 homework.
-            </p>
-          ) : null}
-          {week.volume ? <p className="diag-report__lede">{week.volume}</p> : null}
-        </div>
-      ) : null}
-    </div>
-  );
+function weekTopicLabel(skillLabel: string) {
+  return skillLabel.split("(")[0]?.trim() ?? skillLabel;
 }
 
 export function SkyePlanSkillContent() {
@@ -83,58 +22,71 @@ export function SkyePlanSkillContent() {
       <header className="aurora-portal__page-head">
         <p className="aurora-eyebrow">Illuminairy · Improvement Plan</p>
         <h1 className="aurora-portal__title">Skye&apos;s SAT plan</h1>
-        <p className="aurora-portal__lede">
-          {PLAN_TOTALS.missCount} missed questions map to about {PLAN_TOTALS.recoverable} recoverable
-          points from a {PLAN_TOTALS.baselineScore} baseline. Week 1 reviews the diagnostic: question
-          types and what each item is asking for. Thirteen skill weeks follow (starting June 30), with a
-          full-length practice test every fourth skill week, then two weeks of practice and mistake review
-          before the {SKYE_TARGET_TEST.label}.
-        </p>
+        <div className="skye-plan__intro">
+          <p className="aurora-portal__lede">
+            Skye scored {PLAN_TOTALS.baselineScore} on her June 18 diagnostic and missed{" "}
+            {PLAN_TOTALS.missCount} questions. The skills below are what she needs to learn to improve her
+            SAT score, sorted so the highest-impact skills are taught first.
+          </p>
+          <p className="aurora-portal__lede">
+            In Week 1, we review each question she got wrong on the June 18 diagnostic. The first session
+            covers math: question type, how to solve it, and whether the calculator can finish it once the
+            problem is set up. The second session covers Reading and Writing: question type and how to answer
+            it. She gets homework between the two sessions. New skill lessons start in Week 2.
+          </p>
+          <p className="aurora-portal__lede">
+            Starting Week 2 on June 30, we cover one topic each week, alternating Reading and Writing with
+            math. Each week has two sessions and homework on what we covered. Full practice tests are on weeks
+            5, 9, and 13. Week 15 is a review week on the skills from the plan.
+          </p>
+        </div>
       </header>
 
       <section className="skye-plan__section">
-        <h2>Reading & Writing · ~{PLAN_TOTALS.rwSection} recoverable</h2>
-        <p className="skye-plan__section-lede">Ranked by where the most movement is in this section.</p>
+        <h2>Reading &amp; Writing · about {PLAN_TOTALS.rwSection} points</h2>
+        <p className="skye-plan__section-lede">Highest-impact skills in this section, taught first.</p>
         <LedgerRank
           rows={skyeRwLedgerRows()}
           footerLeft="Section subtotal"
           footerTotal={PLAN_TOTALS.rwSection}
-          ariaLabel="Reading and writing skills ranked by recoverable points"
+          ariaLabel="Reading and writing skills ranked by points on the diagnostic"
         />
       </section>
 
       <section className="skye-plan__section">
-        <h2>Math · ~{PLAN_TOTALS.mathSection} recoverable</h2>
-        <p className="skye-plan__section-lede">Ranked by where the most movement is in this section.</p>
+        <h2>Math · about {PLAN_TOTALS.mathSection} points</h2>
+        <p className="skye-plan__section-lede">Highest-impact skills in this section, taught first.</p>
         <LedgerRank
           rows={skyeMathLedgerRows()}
           footerLeft="Section subtotal"
           footerTotal={PLAN_TOTALS.mathSection}
-          ariaLabel="Math skills ranked by recoverable points"
+          ariaLabel="Math skills ranked by points on the diagnostic"
         />
       </section>
 
       <section className="skye-plan__section">
-        <h2>Sixteen-week schedule</h2>
-        <p className="skye-plan__section-lede">
-          Week 1 maps diagnostic misses to question types. Then one skill per week, alternating Reading
-          &amp; Writing and Math, with two sessions and homework on each topic week.
-        </p>
+        <h2>Fifteen-week schedule</h2>
         <MilestoneRibbon
           weeks={skyeMilestoneWeeks()}
           pins={skyeMilestonePins()}
-          ariaLabel="Sixteen week SAT improvement schedule"
+          ariaLabel="Fifteen week SAT improvement schedule"
         />
-        <div className="skye-plan__week-list">
+        <ol className="skye-plan__topic-list skye-plan__topic-list--schedule">
           {SKYE_WEEKLY_PLAN.map((week) => (
-            <WeekPlanCard key={week.week} week={week} isCurrent={activeWeek === week.week} />
+            <li
+              key={week.week}
+              className={activeWeek === week.week ? "is-current" : undefined}
+            >
+              <span className="skye-plan__topic-week">Week {week.week}</span>
+              <span className="skye-plan__topic-name">{weekTopicLabel(week.skillLabel)}</span>
+            </li>
           ))}
-        </div>
+        </ol>
       </section>
 
       <p className="skye-plan__foot-link">
         For question-level misses and teaching notes, see the{" "}
-        <Link href="/skye/diagnostic">Diagnostic Analysis</Link> tab.
+        <Link href="/skye/diagnostic">diagnostic analysis</Link> page.
       </p>
     </div>
   );

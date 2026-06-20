@@ -96,16 +96,16 @@ const DIAGNOSTIC_REVIEW_SESSIONS: PlanSession[] = [
   {
     n: 1,
     focus:
-      "Reading & Writing misses: walk the diagnostic question map and tabular report. For each RW miss, name the question type (reading logic, transitions, words in context, boundaries, rhetorical synthesis, modifiers) and state what the question is asking before any answer choice.",
+      "We review each math question she got incorrect on the June 18 diagnostic. For each question, we go over the question type, the method for solving it, and whether it can or cannot be solved with the calculator.",
     homework:
-      "RW miss worksheet: all 19 RW misses labeled by type plus one sentence per question on what it wants (due before Session 2). Use the Diagnostic Analysis tab and tabular PDF.",
+      "Before Session 2, she completes a math homework set. For each question she missed, she writes the question type, the method for solving it, and whether the calculator can finish it once the problem is set up.",
   },
   {
     n: 2,
     focus:
-      "Math misses: same method on all 15 math misses. Label the problem type (nonlinear/quadratic, slope, systems, circle measures, exponential, transformations, equation manipulation) and identify what is given, what is asked, and where she hesitated on approach.",
+      "We review each Reading and Writing question she got incorrect on the June 18 diagnostic. For each question, we go over the question type and the method for answering it.",
     homework:
-      "Math miss worksheet: type label + what is it asking for every math miss (due before Week 2 skill work). Flag any question where the type was unclear on first read.",
+      "Before Week 2 begins, she completes a Reading and Writing homework set. For each question she missed, she writes the question type and the method for answering it.",
   },
 ];
 
@@ -137,13 +137,11 @@ export function buildSkyeWeeklyPlan(): SkyePlanWeek[] {
     endDate: w1.end,
     dateLabel: w1.label,
     section: "diagnostic",
-    skillLabel: "Diagnostic review: question types",
+    skillLabel: "Go back through the June 18 diagnostic",
     phase: "diagnostic",
     sessions: DIAGNOSTIC_REVIEW_SESSIONS,
     reviewFocus:
-      "Before skill drills, map every June 18 miss to its SAT question type and practice reading what each item is asking for. Session 1 is Reading & Writing; Session 2 is Math.",
-    volume:
-      "No new topic drills this week. Use the portal Diagnostic Analysis tab, miss tables, and marked PDFs as the source.",
+      "Both sessions this week review the questions she got wrong on the June 18 diagnostic. The first session covers math. For each missed math question, we go over the question type, how to solve it, and whether the calculator can finish it once the problem is set up. The second session covers Reading and Writing. For each missed question there, we go over the question type and how to answer it.",
   });
 
   for (let i = 0; i < skills.length; i++) {
@@ -180,29 +178,15 @@ export function buildSkyeWeeklyPlan(): SkyePlanWeek[] {
     skillLabel: "Practice problems + mistake review",
     phase: "review",
     reviewFocus:
-      "Mixed practice on the top skills from the diagnostic and prior practice tests. Re-work missed question types until the method is automatic.",
-    volume: "Targeted problem sets from diagnostic misses and practice test errors.",
-  });
-
-  const w16 = weekRange(16);
-  weeks.push({
-    week: 16,
-    startDate: w16.start,
-    endDate: w16.end,
-    dateLabel: w16.label,
-    section: "review",
-    skillLabel: "Practice problems + mistake review",
-    phase: "review",
-    reviewFocus:
-      "Light mixed review before October 3. Focus on timing, adaptive Module 1 targets, and one pass per question.",
-    volume: "Short review sets only. Test day: October 3, 2026 SAT.",
+      "This week is mixed practice on the skills from the diagnostic and from her earlier practice tests. She keeps working questions she missed until she can do them the same way every time.",
+    volume:
+      "Homework is targeted practice sets built from diagnostic misses and mistakes on practice tests.",
   });
 
   return weeks;
 }
 
 export const SKYE_WEEKLY_PLAN = buildSkyeWeeklyPlan();
-export const SKYE_TARGET_TEST = { label: "October 3, 2026 SAT", date: "2026-10-03" };
 
 export function currentPlanWeek(today = new Date()): number | null {
   const iso = today.toISOString().slice(0, 10);

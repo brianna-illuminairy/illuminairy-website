@@ -25,7 +25,6 @@ export const MATH_SKILLS: PlanSkill[] = [
 ];
 
 export const PLAN_TOTALS = {
-  recoverable: 485,
   rwSection: 265,
   mathSection: 210,
   missCount: 35,
