@@ -71,7 +71,7 @@ export function attributionFromLeadFbclid(
 }
 
 export async function sendMetaCapiEvent(
-  eventName: "Lead" | "Schedule",
+  eventName: "Lead" | "Schedule" | "Purchase",
   eventId: string,
   user: MetaCapiUser,
   customData?: Record<string, string | number>,

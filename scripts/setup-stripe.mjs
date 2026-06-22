@@ -62,8 +62,17 @@ async function main() {
   try {
     const webhook = await stripe.webhookEndpoints.create({
       url: webhookUrl,
-      enabled_events: ["checkout.session.completed", "checkout.session.expired"],
-      description: "Illuminairy enrollment (SAT Accelerator)"
+      enabled_events: [
+        "checkout.session.completed",
+        "checkout.session.expired",
+        "payment_intent.succeeded",
+        "invoice.paid",
+        "invoice.payment_failed",
+        "customer.subscription.created",
+        "customer.subscription.updated",
+        "customer.subscription.deleted"
+      ],
+      description: "Illuminairy enrollment (SAT Accelerator + post-call enroll)"
     });
 
     console.log(`STRIPE_WEBHOOK_SECRET=${webhook.secret}`);

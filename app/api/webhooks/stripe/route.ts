@@ -1,10 +1,14 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
 import { createAdminAlert } from "@/lib/admin/alerts";
-import { recordClientPayment } from "@/lib/crm/economics";
+import {
+  handleInvoicePaid,
+  handleInvoicePaymentFailed,
+  handlePaymentIntentSucceeded,
+  handleSubscriptionUpdated
+} from "@/lib/crm/stripe-webhook-billing";
 import { recordEnrollmentFromStripe } from "@/lib/crm/enrollment";
 import { onEnrollmentCompleted } from "@/lib/klaviyo-server";
-import { getSupabaseAdmin } from "@/lib/supabase/server";
 import { getStripe } from "@/lib/stripe";
 import { satProgram, site } from "@/lib/site";
 
@@ -94,62 +98,32 @@ export async function POST(request: Request) {
   }
 
   if (event.type === "payment_intent.succeeded") {
-    const paymentIntent = event.data.object;
-    const amountCents = paymentIntent.amount ?? 0;
-    const parentEmail = (
-      paymentIntent.metadata?.parentEmail ??
-      paymentIntent.receipt_email ??
-      ""
-    )
-      .trim()
-      .toLowerCase();
+    await handlePaymentIntentSucceeded(event.data.object);
+  }
 
-    let enrollmentId: string | null = null;
-    let clientId: string | null = null;
+  if (
+    event.type === "invoice.paid" ||
+    event.type === "invoice.payment_succeeded"
+  ) {
+    await handleInvoicePaid(event.data.object);
+  }
 
-    if (parentEmail) {
-      const supabase = getSupabaseAdmin();
-      if (supabase) {
-        const { data: client } = await supabase
-          .from("clients")
-          .select("id")
-          .eq("parent_email", parentEmail)
-          .maybeSingle();
+  if (event.type === "invoice.payment_failed") {
+    await handleInvoicePaymentFailed(event.data.object);
+  }
 
-        if (client) {
-          clientId = client.id;
-          const { data: enrollment } = await supabase
-            .from("enrollments")
-            .select("id")
-            .eq("client_id", client.id)
-            .order("created_at", { ascending: false })
-            .limit(1)
-            .maybeSingle();
-          enrollmentId = enrollment?.id ?? null;
-        }
-      }
-    }
+  if (
+    event.type === "customer.subscription.updated" ||
+    event.type === "customer.subscription.created"
+  ) {
+    await handleSubscriptionUpdated(event.data.object);
+  }
 
-    const paymentResult = await recordClientPayment({
-      enrollmentId,
-      clientId,
-      stripePaymentIntentId: paymentIntent.id,
-      amountCents,
-      paidAt: new Date(paymentIntent.created * 1000).toISOString(),
-      notes: parentEmail || undefined
+  if (event.type === "customer.subscription.deleted") {
+    await handleSubscriptionUpdated({
+      ...event.data.object,
+      status: "canceled"
     });
-
-    if (paymentResult.ok && !paymentResult.duplicate) {
-      void createAdminAlert({
-        alertType: "stripe_payment",
-        severity: "info",
-        title: `Stripe payment: $${(amountCents / 100).toFixed(2)}`,
-        body: parentEmail || paymentIntent.id,
-        source: "stripe",
-        linkUrl: "/admin/finance",
-        dedupeKey: `pi:${paymentIntent.id}`
-      });
-    }
   }
 
   return NextResponse.json({ received: true });

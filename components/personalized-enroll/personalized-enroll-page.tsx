@@ -21,6 +21,7 @@ import {
   useStripe
 } from "@stripe/react-stripe-js";
 import {
+  enrollFinalizeRequestBody,
   trackEnrollCheckoutViewed,
   trackEnrollPaymentClicked,
   trackEnrollPaymentCompleted,
@@ -490,7 +491,9 @@ function PayCardInner({
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ paymentIntentId: paymentIntent.id })
+          body: JSON.stringify(
+            enrollFinalizeRequestBody({ paymentIntentId: paymentIntent.id })
+          )
         }
       );
       const finalizeData = (await finalizeRes
@@ -499,6 +502,7 @@ function PayCardInner({
         subscriptionId?: string;
         status?: string;
         error?: string;
+        metaPurchaseEventId?: string;
       };
 
       if (!finalizeRes.ok) {
@@ -521,7 +525,8 @@ function PayCardInner({
       trackEnrollPaymentCompleted({
         ...personalizedEnrollAnalyticsProps(lead),
         paymentIntentId: paymentIntent.id,
-        subscriptionStatus: finalizeData.status ?? "trialing"
+        subscriptionStatus: finalizeData.status ?? "trialing",
+        metaPurchaseEventId: finalizeData.metaPurchaseEventId
       });
       setSucceeded({
         paymentIntentId: paymentIntent.id,

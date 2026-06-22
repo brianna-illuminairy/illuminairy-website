@@ -4,6 +4,8 @@ import posthog from "posthog-js";
 import { analyticsAttributionProps } from "@/lib/analytics-attribution";
 import { AnalyticsEvents } from "@/lib/analytics-events";
 import { Ga4Events, MetaEvents } from "@/lib/analytics-registry";
+import { enrollPurchaseValueCents } from "@/lib/enroll-meta-purchase";
+import { resolveMetaClickIds } from "@/lib/meta-click-ids";
 import { getPostHogKey } from "@/lib/posthog";
 
 export type EnrollCheckoutProgram = "standard_enroll" | "personalized_enroll";
@@ -45,9 +47,14 @@ function trackGa4(
 
 function trackMetaStandard(
   eventName: string,
-  params: Record<string, string | number | boolean | undefined>
+  params: Record<string, string | number | boolean | undefined>,
+  options?: { eventID?: string }
 ) {
   if (typeof window === "undefined" || !window.fbq) return;
+  if (options?.eventID) {
+    window.fbq("track", eventName, params, { eventID: options.eventID });
+    return;
+  }
   window.fbq("track", eventName, params);
 }
 
@@ -130,26 +137,55 @@ export function trackEnrollPaymentCompleted(
   props: EnrollBaseProps & {
     paymentIntentId: string;
     subscriptionStatus?: string;
+    metaPurchaseEventId?: string;
+    diagnosticWaived?: boolean;
   }
 ) {
+  const purchaseValue =
+    enrollPurchaseValueCents({
+      diagnosticCents: Math.round(props.diagPrice * 100),
+      weeklyCents: Math.round(props.weeklyPrice * 100),
+      diagnosticWaived: Boolean(props.diagnosticWaived)
+    }) / 100;
+
   const payload = {
     ...baseProps(props),
     payment_intent_id: props.paymentIntentId,
-    subscription_status: props.subscriptionStatus ?? "unknown"
+    subscription_status: props.subscriptionStatus ?? "unknown",
+    purchase_value: purchaseValue
   };
   capturePostHog(posthogEventForProgram(props.program, "completed"), payload);
   trackGa4(Ga4Events.purchase, {
     ...payload,
     transaction_id: props.paymentIntentId,
-    value: props.diagPrice,
+    value: purchaseValue,
     currency: "USD"
   });
-  trackMetaStandard(MetaEvents.purchase, {
-    content_name: props.slug,
-    content_category: props.program,
-    value: props.diagPrice,
-    currency: "USD"
-  });
+  trackMetaStandard(
+    MetaEvents.purchase,
+    {
+      content_name: props.slug,
+      content_category: props.program,
+      value: purchaseValue,
+      currency: "USD"
+    },
+    props.metaPurchaseEventId
+      ? { eventID: props.metaPurchaseEventId }
+      : undefined
+  );
+}
+
+/** Meta match keys + Stripe reference for post-call enroll finalize API. */
+export function enrollFinalizeRequestBody(input: {
+  paymentIntentId?: string;
+  setupIntentId?: string;
+}) {
+  const ids = resolveMetaClickIds();
+  return {
+    ...input,
+    ...(ids.fbp ? { fbp: ids.fbp } : {}),
+    ...(ids.fbc ? { fbc: ids.fbc } : {})
+  };
 }
 
 export function trackEnrollPaymentFailed(

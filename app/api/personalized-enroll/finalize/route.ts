@@ -10,23 +10,20 @@
 import { NextResponse } from "next/server";
 import { getStripe } from "@/lib/stripe";
 import { site } from "@/lib/site";
+import {
+  completePostCallEnrollAfterSubscription,
+  finalizeRequestMeta
+} from "@/lib/post-call-enroll-finalize";
 
 type FinalizePayload = {
   paymentIntentId?: string;
+  fbp?: string;
+  fbc?: string;
 };
 
 /**
  * Step 2 of the on-page checkout, called by the client after the diagnostic
  * PaymentIntent succeeds.
- *
- * Reads the customer + payment method off the succeeded PaymentIntent and
- * creates the weekly tutoring Subscription with a 7-day trial. The
- * subscription's first invoice generates at trial end (day 7), at which
- * point Stripe will charge the saved payment method automatically.
- *
- * Idempotent: if a subscription already exists for this customer with the
- * matching `payment_intent_id` metadata, we return that one instead of
- * creating a duplicate.
  */
 export async function POST(request: Request) {
   if (!process.env.STRIPE_SECRET_KEY) {
@@ -97,7 +94,11 @@ export async function POST(request: Request) {
 
   const trialDays = Number.parseInt(trialDaysRaw ?? "7", 10) || 7;
 
-  // Idempotency: if we already created a subscription against this PI, return it.
+  let alreadyExisted = false;
+  let subscriptionId: string;
+  let status: string;
+  let trialEndsAt: number | null | undefined;
+
   try {
     const existing = await stripe.subscriptions.list({
       customer: customerId,
@@ -108,54 +109,42 @@ export async function POST(request: Request) {
       (s) => s.metadata?.diagnostic_payment_intent_id === paymentIntentId
     );
     if (matched) {
-      return NextResponse.json({
-        subscriptionId: matched.id,
-        status: matched.status,
-        already_existed: true
+      subscriptionId = matched.id;
+      status = matched.status;
+      trialEndsAt = matched.trial_end;
+      alreadyExisted = true;
+    } else {
+      await stripe.customers.update(customerId, {
+        invoice_settings: { default_payment_method: paymentMethodId }
       });
+
+      const subscription = await stripe.subscriptions.create({
+        customer: customerId,
+        items: [{ price: weeklyPriceId, quantity: 1 }],
+        trial_period_days: trialDays,
+        default_payment_method: paymentMethodId,
+        payment_behavior: "default_incomplete",
+        payment_settings: {
+          save_default_payment_method: "on_subscription"
+        },
+        metadata: {
+          program: "personalized-enroll",
+          flow_step: "weekly_subscription",
+          diagnostic_payment_intent_id: paymentIntentId,
+          enrollment_idempotency_key: paymentIntentId,
+          lead_slug: leadSlug ?? "",
+          parent_first: meta.parent_first ?? "",
+          parent_last: meta.parent_last ?? "",
+          parent_email: meta.parent_email ?? "",
+          student_first: meta.student_first ?? "",
+          advisor_full: meta.advisor_full ?? ""
+        }
+      });
+
+      subscriptionId = subscription.id;
+      status = subscription.status;
+      trialEndsAt = subscription.trial_end;
     }
-  } catch (err) {
-    // Idempotency check failure is non-fatal; we'll attempt creation below.
-    console.warn("personalized-enroll finalize: idempotency check failed", err);
-  }
-
-  try {
-    // Make sure the saved payment method is attached as the customer's
-    // default for the upcoming weekly invoice. The PaymentIntent already
-    // attached it via setup_future_usage, but we set it as the default
-    // explicitly so the subscription invoice picks it up.
-    await stripe.customers.update(customerId, {
-      invoice_settings: { default_payment_method: paymentMethodId }
-    });
-
-    const subscription = await stripe.subscriptions.create({
-      customer: customerId,
-      items: [{ price: weeklyPriceId, quantity: 1 }],
-      trial_period_days: trialDays,
-      default_payment_method: paymentMethodId,
-      payment_behavior: "default_incomplete",
-      payment_settings: {
-        save_default_payment_method: "on_subscription"
-      },
-      metadata: {
-        program: "personalized-enroll",
-        flow_step: "weekly_subscription",
-        diagnostic_payment_intent_id: paymentIntentId,
-        lead_slug: leadSlug ?? "",
-        parent_first: meta.parent_first ?? "",
-        parent_last: meta.parent_last ?? "",
-        parent_email: meta.parent_email ?? "",
-        student_first: meta.student_first ?? "",
-        advisor_full: meta.advisor_full ?? ""
-      }
-    });
-
-    return NextResponse.json({
-      subscriptionId: subscription.id,
-      status: subscription.status,
-      trial_ends_at: subscription.trial_end,
-      already_existed: false
-    });
   } catch (err) {
     console.error(
       "personalized-enroll finalize: subscription create failed",
@@ -171,4 +160,42 @@ export async function POST(request: Request) {
       { status: 502 }
     );
   }
+
+  const reqMeta = finalizeRequestMeta(request);
+  const { crm } = await completePostCallEnrollAfterSubscription({
+    stripe,
+    enrollFlow: "personalized-enroll",
+    stripeCustomerId: customerId,
+    stripeSubscriptionId: subscriptionId,
+    subscriptionStatus: status,
+    referenceId: paymentIntentId,
+    paymentIntentId,
+    meta: {
+      lead_slug: leadSlug ?? "",
+      parent_first: meta.parent_first ?? "",
+      parent_last: meta.parent_last ?? "",
+      parent_email: meta.parent_email ?? "",
+      student_first: meta.student_first ?? ""
+    },
+    alreadyExisted,
+    clientIp: reqMeta.clientIp,
+    clientUserAgent: reqMeta.clientUserAgent,
+    tracking: { fbp: body.fbp, fbc: body.fbc }
+  });
+
+  if (!crm.ok) {
+    console.error("personalized-enroll finalize: CRM write failed", crm);
+  }
+
+  return NextResponse.json({
+    subscriptionId,
+    status,
+    trial_ends_at: trialEndsAt,
+    already_existed: alreadyExisted,
+    metaPurchaseEventId:
+      crm.ok && "metaPurchaseEventId" in crm
+        ? crm.metaPurchaseEventId
+        : undefined,
+    crmOk: crm.ok
+  });
 }

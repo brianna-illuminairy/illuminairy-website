@@ -8,10 +8,16 @@
 import { NextResponse } from "next/server";
 import { getStripe } from "@/lib/stripe";
 import { site } from "@/lib/site";
+import {
+  completePostCallEnrollAfterSubscription,
+  finalizeRequestMeta
+} from "@/lib/post-call-enroll-finalize";
 
 type FinalizePayload = {
   paymentIntentId?: string;
   setupIntentId?: string;
+  fbp?: string;
+  fbc?: string;
 };
 
 async function createWeeklySubscription(opts: {
@@ -38,6 +44,7 @@ async function createWeeklySubscription(opts: {
       return {
         subscriptionId: matched.id,
         status: matched.status,
+        trial_ends_at: matched.trial_end,
         already_existed: true as const
       };
     }
@@ -73,6 +80,60 @@ async function createWeeklySubscription(opts: {
     trial_ends_at: subscription.trial_end,
     already_existed: false as const
   };
+}
+
+async function respondWithCrm(
+  request: Request,
+  body: FinalizePayload,
+  result: {
+    subscriptionId: string;
+    status: string;
+    trial_ends_at?: number | null;
+    already_existed: boolean;
+  },
+  context: {
+    customerId: string;
+    referenceId: string;
+    setupIntentId?: string;
+    paymentIntentId?: string;
+    meta: Record<string, string>;
+    diagnosticWaived?: boolean;
+  }
+) {
+  const stripe = getStripe();
+  const reqMeta = finalizeRequestMeta(request);
+  const { crm } = await completePostCallEnrollAfterSubscription({
+    stripe,
+    enrollFlow: "standard-enroll",
+    stripeCustomerId: context.customerId,
+    stripeSubscriptionId: result.subscriptionId,
+    subscriptionStatus: result.status,
+    referenceId: context.referenceId,
+    setupIntentId: context.setupIntentId,
+    paymentIntentId: context.paymentIntentId,
+    meta: context.meta,
+    diagnosticWaived: context.diagnosticWaived,
+    alreadyExisted: result.already_existed,
+    clientIp: reqMeta.clientIp,
+    clientUserAgent: reqMeta.clientUserAgent,
+    tracking: { fbp: body.fbp, fbc: body.fbc }
+  });
+
+  if (!crm.ok) {
+    console.error("standard-enroll finalize: CRM write failed", crm);
+  }
+
+  return NextResponse.json({
+    subscriptionId: result.subscriptionId,
+    status: result.status,
+    trial_ends_at: result.trial_ends_at,
+    already_existed: result.already_existed,
+    metaPurchaseEventId:
+      crm.ok && "metaPurchaseEventId" in crm
+        ? crm.metaPurchaseEventId
+        : undefined,
+    crmOk: crm.ok
+  });
 }
 
 export async function POST(request: Request) {
@@ -167,7 +228,19 @@ export async function POST(request: Request) {
         idempotencyKey: setupIntentId
       });
 
-      return NextResponse.json(result);
+      return respondWithCrm(request, body, result, {
+        customerId,
+        referenceId: setupIntentId,
+        setupIntentId,
+        meta: {
+          lead_slug: leadSlug,
+          parent_first: meta.parent_first ?? "",
+          parent_last: meta.parent_last ?? "",
+          parent_email: meta.parent_email ?? "",
+          student_first: meta.student_first ?? ""
+        },
+        diagnosticWaived: true
+      });
     } catch (err) {
       console.error(
         "standard-enroll finalize: subscription create failed (setup)",
@@ -245,7 +318,18 @@ export async function POST(request: Request) {
       idempotencyKey: paymentIntentId
     });
 
-    return NextResponse.json(result);
+    return respondWithCrm(request, body, result, {
+      customerId,
+      referenceId: paymentIntentId,
+      paymentIntentId,
+      meta: {
+        lead_slug: leadSlug,
+        parent_first: meta.parent_first ?? "",
+        parent_last: meta.parent_last ?? "",
+        parent_email: meta.parent_email ?? "",
+        student_first: meta.student_first ?? ""
+      }
+    });
   } catch (err) {
     console.error(
       "standard-enroll finalize: subscription create failed",

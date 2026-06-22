@@ -33,7 +33,8 @@ const migrationFiles = [
   "supabase/migrations/20260611120000_business_platform.sql",
   "supabase/migrations/20260612000000_clients_weekly_report.sql",
   "supabase/migrations/20260612120000_crm_v1_followups.sql",
-  "supabase/migrations/20260612121000_crm_v1_lead_calls.sql"
+  "supabase/migrations/20260612121000_crm_v1_lead_calls.sql",
+  "supabase/migrations/20260621120000_enrollment_stripe_subscription.sql"
 ];
 
 function splitStatements(sql) {

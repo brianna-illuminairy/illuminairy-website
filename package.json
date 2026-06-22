@@ -50,6 +50,7 @@
     "crm:backfill-danielle-economics": "node scripts/backfill-danielle-economics.mjs",
     "crm:backfill-scores": "node --env-file=.env.local scripts/crm-backfill-scores.mjs",
     "crm:backfill-scores:extract": "node --env-file=.env.local scripts/crm-backfill-scores.mjs --extract",
+    "crm:backfill-post-call-enroll": "node --env-file=.env.local scripts/backfill-post-call-enrollments.mjs",
     "crm:gemini-extract-local": "node --env-file=.env.local scripts/crm-gemini-extract-local.mjs",
     "danielle:notify-updates": "node scripts/danielle-notify-updates.mjs",
     "danielle:send-weekly-report": "node scripts/danielle-send-weekly-report.mjs"

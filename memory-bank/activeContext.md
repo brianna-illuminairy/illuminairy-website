@@ -1,14 +1,17 @@
 # Active context
 
-*Last updated: 2026-06-17 (Nada Naveed bootcamp page)*
+*Last updated: 2026-06-21 (Stripe → CRM → Meta Purchase pipeline)*
 
 ## Resume here (start next chat with this)
 
-**Nada Naveed / Soha bootcamp — built, ready for owner review + send.**
+**Post-call enroll now writes CRM + Meta Purchase CAPI on finalize.** See [`docs/stripe-crm-meta-audit-results.md`](../docs/stripe-crm-meta-audit-results.md).
 
-- **Handoff:** [`docs/leads/nada-naveed-context.md`](../docs/leads/nada-naveed-context.md)
-- **Page:** `/enroll/nada-soha-aug22-bootcamp` ($249→$0 diagnostic already done + $198→$149/wk, 3×45-min, 27 sessions)
-- **Owner before send:** CRM enrollment URL on lead `8bf26223-7e80-4497-9eaa-e6596cee7e47`; send link to Nada; push `main` for prod URL
+**Owner before prod:**
+1. Apply migration `20260621120000_enrollment_stripe_subscription.sql` (Supabase SQL or `crm:migrate:api`)
+2. Add Stripe webhook events in Dashboard: `invoice.paid`, `invoice.payment_failed`, `customer.subscription.*`
+3. Push `main` so finalize routes ship; re-run `npm run crm:backfill-post-call-enroll` on prod if Meta CAPI backfill needed (local run skipped CAPI — no token in `.env.local`)
+
+**CRM backfilled (2026-06-21):** Sohail, Skye, Nada → `won` + enrollments (Stripe ids in `intake_details` until migration).
 
 ---
 

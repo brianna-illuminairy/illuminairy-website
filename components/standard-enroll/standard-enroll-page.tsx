@@ -21,6 +21,7 @@ import {
   useStripe
 } from "@stripe/react-stripe-js";
 import {
+  enrollFinalizeRequestBody,
   trackEnrollCheckoutViewed,
   trackEnrollPaymentClicked,
   trackEnrollPaymentCompleted,
@@ -434,12 +435,15 @@ function PayCardInner({
         const finalizeRes = await fetch("/api/standard-enroll/finalize", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ setupIntentId: setupIntent.id })
+          body: JSON.stringify(
+            enrollFinalizeRequestBody({ setupIntentId: setupIntent.id })
+          )
         });
         const finalizeData = (await finalizeRes.json().catch(() => ({}))) as {
           subscriptionId?: string;
           status?: string;
           error?: string;
+          metaPurchaseEventId?: string;
         };
 
         if (!finalizeRes.ok) {
@@ -462,7 +466,9 @@ function PayCardInner({
         trackEnrollPaymentCompleted({
           ...standardEnrollAnalyticsProps(lead),
           paymentIntentId: setupIntent.id,
-          subscriptionStatus: finalizeData.status ?? "trialing"
+          subscriptionStatus: finalizeData.status ?? "trialing",
+          metaPurchaseEventId: finalizeData.metaPurchaseEventId,
+          diagnosticWaived: true
         });
         setSucceeded({
           referenceId: setupIntent.id,
@@ -510,12 +516,15 @@ function PayCardInner({
       const finalizeRes = await fetch("/api/standard-enroll/finalize", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ paymentIntentId: paymentIntent.id })
+        body: JSON.stringify(
+          enrollFinalizeRequestBody({ paymentIntentId: paymentIntent.id })
+        )
       });
       const finalizeData = (await finalizeRes.json().catch(() => ({}))) as {
         subscriptionId?: string;
         status?: string;
         error?: string;
+        metaPurchaseEventId?: string;
       };
 
       if (!finalizeRes.ok) {
@@ -538,7 +547,8 @@ function PayCardInner({
       trackEnrollPaymentCompleted({
         ...standardEnrollAnalyticsProps(lead),
         paymentIntentId: paymentIntent.id,
-        subscriptionStatus: finalizeData.status ?? "trialing"
+        subscriptionStatus: finalizeData.status ?? "trialing",
+        metaPurchaseEventId: finalizeData.metaPurchaseEventId
       });
       setSucceeded({
         referenceId: paymentIntent.id,
