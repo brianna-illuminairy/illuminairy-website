@@ -41,7 +41,7 @@ export const PUBLIC_SCORE_REVIEW_CALENDLY_URL =
 /** SSOT — public free SAT lesson (Plan Builder B). Must match Vercel `NEXT_PUBLIC_FREE_LESSON_CALENDLY_URL`. */
 export const PUBLIC_FREE_LESSON_CALENDLY_URL =
   process.env.NEXT_PUBLIC_FREE_LESSON_CALENDLY_URL ||
-  "https://calendly.com/satprep-illuminairy/free-sat-lesson";
+  "https://calendly.com/satprep-illuminairy/tutoring-session";
 
 /** Standard membership weekly price (Plan Builder B portal checkout). */
 export const standardMembershipWeeklyPrice = 99;

@@ -31,25 +31,35 @@ function formatMonthDay(iso: string): string {
   return `${month}, ${day}`;
 }
 
-/** Relative card title for the first two future days (Tomorrow / weekday). */
+/** Relative card title — Today, Tomorrow, or weekday. */
 export function labBookingDayCardLabel(
   slotIso: string,
   weekdayShort: string,
-  dayIndex: number
+  _dayIndex: number,
+  dateKey?: string
 ): { heading: string; sub: string } {
   const sub = formatMonthDay(slotIso);
+  const today = dateKeyInEt(new Date());
+  const key = dateKey ?? dateKeyInEt(slotIso);
 
-  if (dayIndex === 0) {
-    return { heading: 'Tomorrow', sub };
+  if (key === today) {
+    return { heading: "Today", sub };
   }
+
+  const tomorrowDate = new Date();
+  tomorrowDate.setDate(tomorrowDate.getDate() + 1);
+  if (key === dateKeyInEt(tomorrowDate)) {
+    return { heading: "Tomorrow", sub };
+  }
+
   return { heading: weekdayShort, sub };
 }
 
-/** Drop today; keep at most two future days with three slots each. */
+/** Keep at most two days (today onward) with three slots each. */
 export function limitLabBookingDays(days: LabBookingDay[]): LabBookingDay[] {
   const today = dateKeyInEt(new Date());
   return days
-    .filter((day) => day.dateKey > today && day.slots.length > 0)
+    .filter((day) => day.dateKey >= today && day.slots.length > 0)
     .slice(0, LAB_BOOKING_MAX_DAYS)
     .map((day) => ({
       ...day,

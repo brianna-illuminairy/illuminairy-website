@@ -186,6 +186,39 @@ async function main() {
     failedSurfaces.add("plan-builder");
   }
 
+  const {
+    EXPECTED_FREE_LESSON_CALENDLY_EVENT_PATH,
+    PUBLIC_FREE_LESSON_CALENDLY_URL_DEFAULT,
+  } = await import("./calendly-url-ssot.mjs");
+
+  const planBCalendlyOk = await check(
+    `Calendly availability (${EXPECTED_FREE_LESSON_CALENDLY_EVENT_PATH}) [plan-builder-b]`,
+    async () => {
+      const res = await fetch(`${BASE}/api/funnel-b/calendly-availability?fresh=1`);
+      if (!res.ok) throw new Error(`${res.status}`);
+      const data = await res.json();
+      if (!data.ok || !Array.isArray(data.days) || data.days.length === 0) {
+        throw new Error("availability response missing days");
+      }
+      const firstSlot = data.days.flatMap((d) => d.slots ?? []).find((s) => s.schedulingUrl);
+      if (!firstSlot?.schedulingUrl) {
+        throw new Error("no schedulingUrl in availability");
+      }
+      const u = new URL(firstSlot.schedulingUrl);
+      const path = u.pathname.split("/").filter(Boolean).slice(0, 2).join("/");
+      if (path !== EXPECTED_FREE_LESSON_CALENDLY_EVENT_PATH) {
+        throw new Error(
+          `prod uses ${path}, git SSOT is ${EXPECTED_FREE_LESSON_CALENDLY_EVENT_PATH} (${PUBLIC_FREE_LESSON_CALENDLY_URL_DEFAULT})`
+        );
+      }
+    }
+  );
+  if (planBCalendlyOk) pass++;
+  else {
+    fail++;
+    failedSurfaces.add("plan-builder-b");
+  }
+
   console.log(`\n${pass} passed, ${fail} failed`);
   if (failedSurfaces.size) {
     console.log(`Failed surfaces: ${[...failedSurfaces].join(", ")}`);

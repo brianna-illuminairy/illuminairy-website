@@ -21,6 +21,16 @@ if (!match) {
 
 export const PUBLIC_SAT_STRATEGY_CALL_CALENDLY_URL = match[1];
 
+const freeLessonMatch = siteTs.match(
+  /export const PUBLIC_FREE_LESSON_CALENDLY_URL\s*=\s*\n?\s*process\.env\.NEXT_PUBLIC_FREE_LESSON_CALENDLY_URL\s*\|\|\s*\n?\s*"([^"]+)"/
+);
+
+if (!freeLessonMatch) {
+  throw new Error("PUBLIC_FREE_LESSON_CALENDLY_URL default not found in lib/site.ts");
+}
+
+export const PUBLIC_FREE_LESSON_CALENDLY_URL_DEFAULT = freeLessonMatch[1];
+
 /** calendly.com/{user}/{event} path for availability URL checks */
 export function calendlyEventPath(url) {
   const u = new URL(url);
@@ -33,4 +43,10 @@ export function calendlyEventPath(url) {
 
 export const EXPECTED_CALENDLY_EVENT_PATH = calendlyEventPath(
   PUBLIC_SAT_STRATEGY_CALL_CALENDLY_URL
+);
+
+export const EXPECTED_FREE_LESSON_CALENDLY_EVENT_PATH = calendlyEventPath(
+  PUBLIC_FREE_LESSON_CALENDLY_URL_DEFAULT.startsWith("http")
+    ? PUBLIC_FREE_LESSON_CALENDLY_URL_DEFAULT
+    : `https://calendly.com/${PUBLIC_FREE_LESSON_CALENDLY_URL_DEFAULT}`
 );

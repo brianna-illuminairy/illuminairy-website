@@ -99,6 +99,7 @@ export function BPhoneVerify({
   const [enterpriseRecaptchaEnabled, setEnterpriseRecaptchaEnabled] = useState(false);
   const [phoneTouched, setPhoneTouched] = useState(false);
   const confirmationRef = useRef<ConfirmationResult | null>(null);
+  const advancingRef = useRef(false);
 
   const phoneValid = isValidBookingPhone(phone);
   const showPhoneError = showBookingPhoneInlineError(phone, { touched: phoneTouched });
@@ -107,6 +108,17 @@ export function BPhoneVerify({
   const configured = clientConfigured && serverReady !== false;
   const displayPhone = formatUsPhoneDisplay(phone);
   const e164Phone = phoneToCalendlyE164(phone);
+
+  useEffect(() => {
+    if (!verifiedAt || advancingRef.current) return;
+    advancingRef.current = true;
+    const timer = window.setTimeout(() => {
+      onContinue();
+    }, 400);
+    return () => {
+      window.clearTimeout(timer);
+    };
+  }, [verifiedAt, onContinue]);
 
   useEffect(() => {
     let cancelled = false;
@@ -220,10 +232,6 @@ export function BPhoneVerify({
   }
 
   function handleContinueClick() {
-    if (verified) {
-      onContinue();
-      return;
-    }
     setPhoneTouched(true);
     if (!phoneValid) return;
     void sendCode();
@@ -257,7 +265,7 @@ export function BPhoneVerify({
               autoComplete="tel-national"
               placeholder="(201) 555-0123"
               value={displayPhone}
-              disabled={verified}
+              disabled={verified || sending}
               aria-invalid={showPhoneError}
               aria-describedby={showPhoneError ? 'qfb-phone-error' : 'qfb-phone-consent'}
               onBlur={() => setPhoneTouched(true)}
@@ -270,8 +278,6 @@ export function BPhoneVerify({
             </p>
           ) : null}
         </div>
-
-        {verified ? <p className="qfb-verified-badge">Number verified</p> : null}
 
         {!configured && serverReady !== null ? (
           <p className="qf-field-error" role="alert">
@@ -290,15 +296,13 @@ export function BPhoneVerify({
             type="button"
             className="qfb-phone-continue"
             onClick={handleContinueClick}
-            disabled={verified ? false : sending || !configured || !phoneValid}
+            disabled={verified || sending || !configured || !phoneValid}
           >
-            {verified ? 'Continue' : sending ? 'Sending…' : 'Continue'}
+            {sending ? 'Sending…' : 'Continue'}
           </button>
-          {!verified ? (
-            <p className="qfb-phone-legal" id="qfb-phone-consent">
-              {PHONE_SMS_CONSENT}
-            </p>
-          ) : null}
+          <p className="qfb-phone-legal" id="qfb-phone-consent">
+            {PHONE_SMS_CONSENT}
+          </p>
         </div>
       </div>
 

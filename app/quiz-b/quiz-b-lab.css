@@ -631,44 +631,89 @@
   white-space: nowrap;
 }
 
+.qfb-claim-hero {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 20px 18px 18px;
+  border-radius: 16px;
+  background: linear-gradient(
+    165deg,
+    rgba(119, 200, 154, 0.14) 0%,
+    rgba(229, 239, 232, 0.95) 45%,
+    rgba(0, 87, 168, 0.06) 100%
+  );
+  border: 1px solid rgba(47, 110, 71, 0.14);
+}
+
+.qfb-claim-hero__intro {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
 .qfb-claim__eyebrow {
-  margin: 0 0 8px;
+  margin: 0;
   color: var(--qf-forest);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 12px;
 }
 
 .qfb-claim__headline {
   margin: 0;
-  font-family: var(--qf-body, 'Plus Jakarta Sans', system-ui, sans-serif);
-  font-size: clamp(24px, 5.6vw, 30px);
-  font-weight: 700;
-  line-height: 1.25;
+  font-family: var(--qf-display, 'Source Serif 4', Georgia, serif);
+  font-size: clamp(26px, 6vw, 32px);
+  font-weight: 600;
+  line-height: 1.2;
   color: var(--qf-ink);
 }
 
-.qfb-claim-card {
-  padding: 18px;
-  border-color: rgba(47, 110, 71, 0.22);
-  background: rgba(47, 110, 71, 0.03);
+.qfb-claim-snapshot {
+  padding: 16px;
+  border-radius: 12px;
+  background: var(--qf-paper, #fff);
+  border: 1px solid rgba(18, 26, 43, 0.08);
+  box-shadow: 0 1px 2px rgba(18, 26, 43, 0.04);
 }
 
-.qfb-claim-card__label {
-  margin: 0 0 12px;
-  font-size: 13px;
+.qfb-claim-snapshot__label {
+  margin: 0 0 14px;
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--qf-forest-2);
+  line-height: 1.3;
+  color: var(--qf-ink);
 }
 
-.qfb-claim-card__list {
+.qfb-claim-snapshot__list {
   margin: 0;
-  padding: 0 0 0 18px;
+  padding: 0;
+  list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
+}
+
+.qfb-claim-snapshot__item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   font-size: 14px;
-  line-height: 1.45;
+  line-height: 1.4;
   color: var(--qf-ink-2);
+}
+
+.qfb-claim-snapshot__icon {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(47, 110, 71, 0.1);
+  color: var(--qf-forest);
 }
 
 .qfb-claim-check {
@@ -676,9 +721,14 @@
   gap: 10px;
   align-items: flex-start;
   font-size: 14px;
-  line-height: 1.45;
+  line-height: 1.5;
   color: var(--qf-ink-2);
   cursor: pointer;
+}
+
+.qfb-claim-check strong {
+  font-weight: 700;
+  color: var(--qf-ink);
 }
 
 .qfb-claim-check input {
@@ -1295,23 +1345,48 @@
   gap: 14px;
 }
 
-/* Native free-lesson scheduler (Plan B b-book) */
+/* Native free-lesson scheduler (Plan B b-book) — Brighterly-style inline picker */
+
+.qfb-book {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
 
 .qfb-book__title {
   margin: 0;
   text-align: center;
-  font-size: clamp(22px, 5vw, 28px);
+  font-family: var(--qf-display, 'Source Serif 4', Georgia, serif);
+  font-size: clamp(22px, 5.4vw, 28px);
+  font-weight: 600;
   line-height: 1.25;
+  color: var(--qf-ink);
+}
+
+.qfb-book__name {
+  width: 100%;
+  min-height: 48px;
+  border-radius: 12px;
+  font-size: 15px;
 }
 
 .qfb-book__name:focus {
   border-color: var(--qf-forest);
 }
 
+.qfb-book__name-error {
+  margin: -10px 0 0;
+}
+
 .qfb-book-schedule {
   padding: 16px;
-  border-color: rgba(47, 110, 71, 0.22);
-  background: var(--qf-forest-soft);
+  border-radius: 14px;
+  border: 1px solid rgba(0, 87, 168, 0.12);
+  background: linear-gradient(
+    180deg,
+    rgba(119, 200, 154, 0.12) 0%,
+    rgba(229, 239, 232, 0.65) 100%
+  );
 }
 
 .qfb-book-schedule__label {
@@ -1325,13 +1400,38 @@
 }
 
 .qfb-book-schedule__icon {
-  font-size: 16px;
-  line-height: 1;
+  flex-shrink: 0;
+  color: var(--qf-forest);
+}
+
+.qfb-book-schedule__loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  min-height: 160px;
+  padding: 24px 12px;
+}
+
+.qfb-book-schedule__spinner {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 3px solid rgba(47, 110, 71, 0.18);
+  border-top-color: var(--qf-forest);
+  animation: qfb-book-spin 0.75s linear infinite;
+}
+
+.qfb-book-schedule__loading-text {
+  margin: 0;
+  font-size: 14px;
+  color: var(--qf-ink-mid);
 }
 
 .qfb-book-dates {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
   margin-bottom: 12px;
 }
@@ -1342,13 +1442,14 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 2px;
-  padding: 12px 14px;
-  border-radius: 10px;
+  padding: 14px 16px;
+  min-height: 72px;
+  border-radius: 12px;
   border: 1px solid rgba(0, 0, 0, 0.1);
   background: #fff;
   text-align: left;
   cursor: pointer;
-  transition: border-color 0.15s ease, background 0.15s ease;
+  transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
 }
 
 .qfb-book-date:hover {
@@ -1357,11 +1458,12 @@
 
 .qfb-book-date--active {
   border-color: var(--qf-forest);
-  background: var(--qf-forest-soft);
+  background: rgba(119, 200, 154, 0.14);
+  box-shadow: 0 0 0 1px rgba(47, 110, 71, 0.08);
 }
 
 .qfb-book-date__heading {
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 700;
   color: var(--qf-ink);
 }
@@ -1373,8 +1475,8 @@
 
 .qfb-book-date__check {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  bottom: 10px;
+  right: 12px;
   font-size: 14px;
   font-weight: 700;
   color: var(--qf-forest);
@@ -1384,17 +1486,16 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 0 12px;
-  min-height: 48px;
-  border-radius: 10px;
+  padding: 0 14px;
+  min-height: 52px;
+  border-radius: 12px;
   border: 1px solid rgba(0, 0, 0, 0.1);
   background: #fff;
 }
 
 .qfb-book-time__icon {
   flex-shrink: 0;
-  font-size: 16px;
-  line-height: 1;
+  color: var(--qf-forest);
 }
 
 .qfb-book-time__select {
@@ -1406,7 +1507,7 @@
   font-weight: 600;
   color: var(--qf-ink);
   appearance: none;
-  padding: 12px 0;
+  padding: 14px 0;
   cursor: pointer;
 }
 
@@ -1416,7 +1517,6 @@
 
 .qfb-book-time__chevron {
   flex-shrink: 0;
-  font-size: 12px;
   color: var(--qf-ink-mid);
   pointer-events: none;
 }

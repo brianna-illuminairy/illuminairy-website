@@ -1,6 +1,6 @@
 import { site, PUBLIC_FREE_LESSON_CALENDLY_URL } from "@/lib/site";
 
-/** Event slug from a public Calendly URL (e.g. `free-sat-lesson`). */
+/** Event slug from a public Calendly URL (e.g. `tutoring-session`). */
 export function calendlyEventSlugFromPublicUrl(url: string): string | null {
   try {
     const parts = new URL(url).pathname.split("/").filter(Boolean);
@@ -11,7 +11,7 @@ export function calendlyEventSlugFromPublicUrl(url: string): string | null {
 }
 
 export function freeLessonCalendlyEventSlug(): string {
-  return calendlyEventSlugFromPublicUrl(site.freeLessonCalendlyUrl) ?? "free-sat-lesson";
+  return calendlyEventSlugFromPublicUrl(site.freeLessonCalendlyUrl) ?? "tutoring-session";
 }
 
 /** True when a Calendly scheduled event URI or invitee payload refers to the free lesson event. */

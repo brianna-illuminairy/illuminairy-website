@@ -1,8 +1,10 @@
 'use client';
 
+import { BadgeCheck, Clock, FileText, Users } from 'lucide-react';
 import { QFScreen, QFButton } from '@/app/quiz/components/QFShell';
 import {
-  PLAN_B_CLAIM_CHECKBOX,
+  PLAN_B_CLAIM_CHECKBOX_COMMITMENT,
+  PLAN_B_CLAIM_CHECKBOX_PREFIX,
   PLAN_B_CLAIM_CTA,
   PLAN_B_CLAIM_EYEBROW,
   PLAN_B_CLAIM_HEADLINE,
@@ -17,6 +19,13 @@ type Props = {
   onBack: () => void;
 };
 
+const SNAPSHOT_ICONS = {
+  users: Users,
+  clock: Clock,
+  file: FileText,
+  badge: BadgeCheck,
+} as const;
+
 export function BClaimLesson({ checked, onCheckChange, onContinue, onBack }: Props) {
   return (
     <QFScreen
@@ -29,18 +38,28 @@ export function BClaimLesson({ checked, onCheckChange, onContinue, onBack }: Pro
       }
     >
       <div className="qfb-claim gap-22">
-        <div className="qfb-claim__intro">
-          <p className="qf-meta qfb-claim__eyebrow">{PLAN_B_CLAIM_EYEBROW}</p>
-          <h1 className="qfb-claim__headline">{PLAN_B_CLAIM_HEADLINE}</h1>
-        </div>
+        <div className="qfb-claim-hero">
+          <div className="qfb-claim-hero__intro">
+            <p className="qf-meta qfb-claim__eyebrow">{PLAN_B_CLAIM_EYEBROW}</p>
+            <h1 className="qfb-claim__headline">{PLAN_B_CLAIM_HEADLINE}</h1>
+          </div>
 
-        <div className="qfb-claim-card qf-card">
-          <p className="qfb-claim-card__label">{PLAN_B_CLAIM_SNAPSHOT_LABEL}</p>
-          <ul className="qfb-claim-card__list">
-            {PLAN_B_CLAIM_SNAPSHOT_ITEMS.map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-          </ul>
+          <div className="qfb-claim-snapshot">
+            <p className="qfb-claim-snapshot__label">{PLAN_B_CLAIM_SNAPSHOT_LABEL}</p>
+            <ul className="qfb-claim-snapshot__list">
+              {PLAN_B_CLAIM_SNAPSHOT_ITEMS.map((item) => {
+                const Icon = SNAPSHOT_ICONS[item.icon];
+                return (
+                  <li key={item.label} className="qfb-claim-snapshot__item">
+                    <span className="qfb-claim-snapshot__icon" aria-hidden="true">
+                      <Icon size={18} strokeWidth={2} />
+                    </span>
+                    <span>{item.label}</span>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
         </div>
 
         <label className="qfb-claim-check">
@@ -49,7 +68,10 @@ export function BClaimLesson({ checked, onCheckChange, onContinue, onBack }: Pro
             checked={checked}
             onChange={(e) => onCheckChange(e.target.checked)}
           />
-          <span>{PLAN_B_CLAIM_CHECKBOX}</span>
+          <span>
+            {PLAN_B_CLAIM_CHECKBOX_PREFIX}{' '}
+            <strong>{PLAN_B_CLAIM_CHECKBOX_COMMITMENT}</strong>
+          </span>
         </label>
       </div>
     </QFScreen>

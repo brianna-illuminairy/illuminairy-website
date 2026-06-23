@@ -1,6 +1,7 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { CalendarDays, ChevronDown, Clock } from 'lucide-react';
 import { QFScreen, QFButton } from '@/app/quiz/components/QFShell';
 import { QFBookingAlert } from '@/app/quiz/components/QFBookingAlert';
 import type { QuizAnswers } from '@/app/quiz-b/state';
@@ -16,6 +17,15 @@ import {
   limitLabBookingDays,
   type LabBookingDay,
 } from '@/lib/quiz-funnel-b/booking-slots';
+import {
+  PLAN_B_BOOK_CTA,
+  PLAN_B_BOOK_HEADLINE,
+  PLAN_B_BOOK_LOADING,
+  PLAN_B_BOOK_NAME_PLACEHOLDER,
+  PLAN_B_BOOK_SCHEDULE_LABEL,
+  PLAN_B_BOOK_SUBMITTING,
+  PLAN_B_BOOK_TIME_PLACEHOLDER,
+} from '@/lib/quiz-funnel-b/book-lesson-copy';
 import {
   captureQuizBookingConfirmed,
   captureQuizBookingError,
@@ -300,45 +310,42 @@ export function BBookLesson({ answers, dispatch, onBooked, onBack }: Props) {
       onBack={onBack}
       actions={
         <QFButton kind="forest" onClick={handleConfirm} disabled={!canSubmit}>
-          {submitting ? 'Booking your session…' : 'Book my free SAT session'}
+          {submitting ? PLAN_B_BOOK_SUBMITTING : PLAN_B_BOOK_CTA}
         </QFButton>
       }
     >
       <div className="gap-22 qfb-book">
-        <h1 className="qf-h1 qfb-book__title">
-          Choose a date and time for your free SAT tutoring session
-        </h1>
+        <h1 className="qf-h1 qfb-book__title">{PLAN_B_BOOK_HEADLINE}</h1>
 
-        <div className="qf-field">
-          <span className="qf-label">Student&apos;s first name</span>
-          <input
-            className={
-              submitAttempted && validation.errors.kidName
-                ? 'qf-input qf-input--invalid qfb-book__name'
-                : 'qf-input qfb-book__name'
-            }
-            placeholder="First name"
-            value={kidName}
-            autoComplete="given-name"
-            onChange={(e) => setField('kidName', e.target.value)}
-          />
-          {submitAttempted && validation.errors.kidName ? (
-            <p className="qf-field-error" role="alert">
-              {validation.errors.kidName}
-            </p>
-          ) : null}
-        </div>
+        <input
+          className={
+            submitAttempted && validation.errors.kidName
+              ? 'qf-input qf-input--invalid qfb-book__name'
+              : 'qf-input qfb-book__name'
+          }
+          placeholder={PLAN_B_BOOK_NAME_PLACEHOLDER}
+          value={kidName}
+          autoComplete="given-name"
+          aria-label="Student's first name"
+          onChange={(e) => setField('kidName', e.target.value)}
+        />
+        {submitAttempted && validation.errors.kidName ? (
+          <p className="qf-field-error qfb-book__name-error" role="alert">
+            {validation.errors.kidName}
+          </p>
+        ) : null}
 
-        <div className="qfb-book-schedule qf-card">
+        <div className="qfb-book-schedule">
           <p className="qfb-book-schedule__label">
-            <span className="qfb-book-schedule__icon" aria-hidden="true">
-              📅
-            </span>
-            Free SAT session date &amp; time
+            <CalendarDays className="qfb-book-schedule__icon" size={18} strokeWidth={2} aria-hidden />
+            {PLAN_B_BOOK_SCHEDULE_LABEL}
           </p>
 
           {loading ? (
-            <p className="qf-lead muted">Loading open times…</p>
+            <div className="qfb-book-schedule__loading" role="status" aria-live="polite">
+              <div className="qfb-book-schedule__spinner" aria-hidden="true" />
+              <p className="qfb-book-schedule__loading-text">{PLAN_B_BOOK_LOADING}</p>
+            </div>
           ) : availabilityAlert ? (
             <QFBookingAlert
               title={availabilityAlert.title}
@@ -353,7 +360,8 @@ export function BBookLesson({ answers, dispatch, onBooked, onBack }: Props) {
                   const card = labBookingDayCardLabel(
                     day.slots[0]?.startTime ?? `${day.dateKey}T12:00:00.000Z`,
                     day.weekdayShort,
-                    index
+                    index,
+                    day.dateKey
                   );
                   const selected = day.dateKey === activeDayKey;
                   return (
@@ -361,9 +369,7 @@ export function BBookLesson({ answers, dispatch, onBooked, onBack }: Props) {
                       key={day.dateKey}
                       type="button"
                       className={
-                        selected
-                          ? 'qfb-book-date qfb-book-date--active'
-                          : 'qfb-book-date'
+                        selected ? 'qfb-book-date qfb-book-date--active' : 'qfb-book-date'
                       }
                       onClick={() => {
                         setActiveDayKey(day.dateKey);
@@ -385,23 +391,23 @@ export function BBookLesson({ answers, dispatch, onBooked, onBack }: Props) {
 
               {activeDay && activeDay.slots.length > 0 ? (
                 <label className="qfb-book-time">
-                  <span className="qfb-book-time__icon" aria-hidden="true">
-                    🕐
-                  </span>
+                  <Clock className="qfb-book-time__icon" size={18} strokeWidth={2} aria-hidden />
                   <select
                     className="qfb-book-time__select"
                     value={effectiveStartTime}
+                    aria-label="Select time"
                     onChange={(e) => setSelectedStartTime(e.target.value)}
                   >
+                    {!effectiveStartTime ? (
+                      <option value="">{PLAN_B_BOOK_TIME_PLACEHOLDER}</option>
+                    ) : null}
                     {activeDay.slots.map((slot) => (
                       <option key={slot.startTime} value={slot.startTime}>
                         {slot.label}
                       </option>
                     ))}
                   </select>
-                  <span className="qfb-book-time__chevron" aria-hidden="true">
-                    ▾
-                  </span>
+                  <ChevronDown className="qfb-book-time__chevron" size={18} aria-hidden />
                 </label>
               ) : null}
 
@@ -434,7 +440,7 @@ export function BBookLesson({ answers, dispatch, onBooked, onBack }: Props) {
       {submitting ? (
         <div className="qfb-book-loading" role="status" aria-live="polite" aria-busy="true">
           <div className="qfb-book-loading__spinner" aria-hidden="true" />
-          <p className="qfb-book-loading__text">Booking your free session…</p>
+          <p className="qfb-book-loading__text">{PLAN_B_BOOK_SUBMITTING}</p>
         </div>
       ) : null}
     </QFScreen>

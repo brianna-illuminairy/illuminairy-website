@@ -248,11 +248,19 @@ export function parseAvailabilityApiResponse(
   }
   if (!data?.ok) {
     const parsed = parseFunnelApiError(data, httpStatus);
+    const apiError = typeof data?.error === "string" ? data.error : "";
+    let message = parsed.message;
+    if (parsed.error_code === "availability_load" && apiError) {
+      message = apiError.length < 160 ? apiError : BOOKING_FEEDBACK.availabilityEmpty;
+    } else if (parsed.error_code === "calendly_api" || (httpStatus >= 500 && httpStatus !== 503)) {
+      message = BOOKING_FEEDBACK.availabilityFailed;
+    }
     return {
       ok: false,
       days: [],
-      error_code: parsed.error_code,
-      message: parsed.message,
+      error_code:
+        parsed.error_code === "calendly_api" ? "availability_load" : parsed.error_code,
+      message,
       retryable: parsed.retryable,
     };
   }
