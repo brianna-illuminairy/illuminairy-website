@@ -1,8 +1,10 @@
+@import "./aurora-brand.css";
+
 /* ════════════════════════════════════════════════════════════════
    illuminairy · SAT Quiz Funnel — V3b Aurora system (LOCKED)
 
    Palette: navy ink, aurora forest green, aurora glow, polar white.
-   Type: Source Serif 4 500 (display) + Schibsted Grotesk (body).
+   Type: Source Serif 4 600 (display) + Hanken Grotesk (body).
    Chrome: dark navy band at top with glowing star mark.
    Em: same font as headline, just aurora green (NO italic).
    ════════════════════════════════════════════════════════════════ */
@@ -12,26 +14,26 @@
 .qf-page i  { font-style: normal; }
 
 .qf-page {
-  /* Color tokens ─────────────────────────────────────── */
-  --qf-bg:        #F5F8FA;
-  --qf-bg-2:      #ECF1ED;      /* alt sage-tinted content bg */
-  --qf-paper:     #FFFFFF;
-  --qf-paper-2:   #FFFFFF;
-  --qf-card:      #FFFFFF;
+  /* Color tokens — aliased to aurora-brand.css SSOT */
+  --qf-bg:        var(--aurora-white, #F5F8FA);
+  --qf-bg-2:      #ECF1ED;
+  --qf-paper:     var(--aurora-paper, #FFFFFF);
+  --qf-paper-2:   var(--aurora-paper, #FFFFFF);
+  --qf-card:      var(--aurora-paper, #FFFFFF);
 
-  --qf-ink:       #121A2B;
+  --qf-ink:       var(--aurora-navy, #121A2B);
   --qf-ink-2:     #2A3142;
   --qf-ink-mid:   #4D5566;
   --qf-ink-mute:  #8A8E97;
-  --qf-line:      rgba(18, 26, 43, 0.08);
+  --qf-line:      var(--aurora-line, rgba(18, 26, 43, 0.08));
   --qf-line-2:    rgba(18, 26, 43, 0.18);
 
-  --qf-forest:    #2F6E47;      /* primary accent, readable */
-  --qf-forest-2:  #1A4D2F;      /* hover / pressed */
+  --qf-forest:    var(--aurora-forest, #2F6E47);
+  --qf-forest-2:  var(--aurora-forest-2, #1A4D2F);
   --qf-forest-mid:#3E8B5A;
-  --qf-glow:      #77C89A;
-  --qf-forest-soft:#E5EFE8;     /* selected wash */
-  --qf-celestial: #0057A8;
+  --qf-glow:      var(--aurora-green, #77C89A);
+  --qf-forest-soft: #E5EFE8;
+  --qf-celestial: var(--aurora-celestial, #0057A8);
 
   /* Legacy aliases (so existing components keep working) */
   --qf-cream:     #ECF1ED;
@@ -44,7 +46,7 @@
 
   /* Type ─────────────────────────────────────────────── */
   --qf-display:   var(--font-display), 'Source Serif 4', Georgia, serif;
-  --qf-body:      'Schibsted Grotesk', system-ui, sans-serif;
+  --qf-body:      var(--font-hanken), 'Hanken Grotesk', system-ui, sans-serif;
   --qf-mono:      'DM Mono', ui-monospace, monospace;
 
   font-family: var(--qf-body);

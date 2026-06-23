@@ -164,6 +164,28 @@ export function trackLandingCtaClick(
   }
 }
 
+export function trackLandingSmsClick(
+  variant: LpVariant,
+  layout: LpLayout,
+  landingPath: string,
+  extra?: Partial<LandingEventProps>
+) {
+  const props = baseProps(variant, layout, landingPath, {
+    section_id: "nav",
+    cta_label: "Text us",
+    ...extra
+  });
+  const analyticsProps = analyticsEventProps(props);
+  if (getPostHogKey()) {
+    posthog.capture(AnalyticsEvents.funnelLpSmsClick, props);
+  }
+  recordClientTouch(TouchEvents.funnelLpSmsClick, analyticsProps);
+  trackQuizGaEvent(AnalyticsEvents.funnelLpSmsClick, {
+    ...analyticsProps,
+    funnel: "sat_quiz"
+  });
+}
+
 /** Read Meta browser cookies for CAPI enrichment on lead/schedule. */
 export function readMetaCookies(): { fbp?: string; fbc?: string } {
   if (typeof document === "undefined") return {};

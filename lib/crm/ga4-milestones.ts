@@ -11,6 +11,8 @@ import { requireSupabaseAdmin } from "@/lib/supabase/server";
 export type LeadMilestone =
   | "lead_qualified"
   | "lead_call_booked"
+  | "free_lesson_booked"
+  | "score_review_booked"
   | "lead_call_attended"
   | "lead_call_no_show"
   | "lead_lost"

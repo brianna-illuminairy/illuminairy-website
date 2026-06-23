@@ -1,10 +1,12 @@
+@import "../../app/aurora-brand.css";
+
 /* Standard enrollment page styles.
    Adapted directly from `~/Downloads/illuminairy-checkout (4).html` and
    `SAT Checkout (standalone).html`. All classes are namespaced under
    `.std-*` so they cannot collide with Sohail's `.co-*` / `.lp-*` stack. */
 
-@import url("https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800;900&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:wght@400;500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&display=swap");
 
 .std,
 .std *,
@@ -12,22 +14,22 @@
 .std *::after { box-sizing: border-box; }
 
 .std {
-  --bg: #f4f3ef;
-  --navy: #0e1a23;
-  --navy-2: #0b141c;
-  --ink: #11212b;
-  --green: #2f7d46;
-  --green-bright: #5aa873;
-  --mint: #a7e3a1;
-  --mint-hover: #9adc93;
-  --white: #ffffff;
-  --muted: #697078;
-  --muted-d: #9fb0a6;
-  --line: #e6e3da;
-  --line-d: rgba(255, 255, 255, 0.12);
-  --shadow: 0 20px 60px -32px rgba(14, 26, 35, 0.5);
+  --bg: var(--aurora-white, #f5f8fa);
+  --navy: var(--aurora-navy, #121a2b);
+  --navy-2: var(--aurora-navy-mid, #1c2a42);
+  --ink: var(--aurora-ink, #121a2b);
+  --green: var(--aurora-forest, #2f6e47);
+  --green-bright: var(--aurora-green, #77c89a);
+  --mint: var(--aurora-glow, #b8f5d1);
+  --mint-hover: var(--aurora-mint-hover, #a7e3a1);
+  --white: var(--aurora-paper, #ffffff);
+  --muted: var(--aurora-muted, rgba(18, 26, 43, 0.66));
+  --muted-d: var(--aurora-muted-dark, #9fb0a6);
+  --line: var(--aurora-line-solid, #e6e3da);
+  --line-d: var(--aurora-line-dark, rgba(255, 255, 255, 0.12));
+  --shadow: var(--aurora-shadow-soft, 0 8px 40px -20px rgba(18, 26, 43, 0.12));
 
-  font-family: "Hanken Grotesk", system-ui, -apple-system, sans-serif;
+  font-family: "Hanken Grotesk", var(--font-hanken), system-ui, -apple-system, sans-serif;
   background: var(--bg);
   color: var(--ink);
   line-height: 1.55;
@@ -175,21 +177,46 @@
   .std-progress-step.active .lbl { display: inline; }
 }
 
-/* ===== left: dark "What's included" plan card ===== */
+/* ===== left: light "What's included" plan card ===== */
 .std-summary {
-  background: radial-gradient(130% 80% at 88% -8%, #1a2c38 0%, var(--navy) 46%, var(--navy-2) 100%);
-  color: var(--white);
+  background: var(--white);
+  color: var(--ink);
   padding: 38px 36px;
   border-radius: 20px;
   box-shadow: var(--shadow);
+  border: 1px solid var(--line);
   position: relative;
   overflow: hidden;
   min-width: 0;
   max-width: 100%;
+  transition: border-color 0.35s ease, transform 0.35s ease;
+}
+
+.std-summary::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--aurora-celestial, #0057a8), var(--aurora-green, #77c89a));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.35s ease;
+}
+
+.std-summary:hover {
+  border-color: rgba(119, 200, 154, 0.35);
+  transform: translateY(-2px);
+}
+
+.std-summary:hover::before {
+  transform: scaleX(1);
 }
 @media (max-width: 480px) { .std-summary { padding: 30px 22px; } }
 .std-summary h2 {
-  font-weight: 800;
+  font-family: var(--font-display, "Source Serif 4"), Georgia, serif;
+  font-weight: 600;
   font-size: 1.6rem;
   line-height: 1.18;
   letter-spacing: -0.01em;
@@ -197,10 +224,10 @@
 }
 .std-incl-label {
   font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--green-bright);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: none;
+  color: var(--green);
   border-top: 1px solid var(--line-d);
   /* The h2 above provides natural breathing room before the line.
      The padding-top below is what creates space between the line and
@@ -230,14 +257,14 @@
 .std-incl .check svg { width: 13px; height: 13px; stroke: var(--green-bright); }
 .std-incl b {
   display: block;
-  font-weight: 700;
+  font-weight: 600;
   font-size: 0.96rem;
-  color: var(--white);
+  color: var(--ink);
 }
 .std-incl span {
   display: block;
   font-size: 0.84rem;
-  color: var(--muted-d);
+  color: var(--muted);
   margin-top: 1px;
   line-height: 1.45;
 }
@@ -454,9 +481,9 @@
   justify-content: center;
   gap: 10px;
   font-family: inherit;
-  font-weight: 800;
+  font-weight: 600;
   font-size: 1.08rem;
-  color: var(--ink);
+  color: var(--navy);
   background: var(--mint);
   border: none;
   border-radius: 999px;
@@ -464,9 +491,9 @@
   cursor: pointer;
   transition: background 0.18s ease, transform 0.12s ease, box-shadow 0.18s ease;
   letter-spacing: -0.01em;
-  box-shadow: 0 12px 30px -8px rgba(167, 227, 161, 0.95);
+  box-shadow: 0 8px 24px -8px rgba(119, 200, 154, 0.55);
 }
-.std-paybtn:hover { background: var(--mint-hover); transform: translateY(-1px); box-shadow: 0 16px 40px -8px rgba(167, 227, 161, 1); }
+.std-paybtn:hover { background: var(--mint-hover); transform: translateY(-1px); box-shadow: 0 12px 32px -8px rgba(119, 200, 154, 0.65); }
 .std-paybtn:hover .arrow { transform: translateX(3px); }
 .std-paybtn:active { transform: translateY(0); }
 .std-paybtn:focus-visible { outline: 2px solid var(--green); outline-offset: 3px; }
@@ -556,22 +583,23 @@
 }
 .std-session-shot img { display: block; width: 100%; height: auto; }
 
-/* ===== Reviews marquee (aurora dark) ===== */
+/* ===== Reviews marquee (light aurora) ===== */
 .std-reviews {
   position: relative;
   overflow: hidden;
   border-radius: 22px;
   margin: 0 auto 48px;
   padding: 46px 0 50px;
-  background: radial-gradient(120% 80% at 50% -10%, #1c2a42 0%, #121a2b 55%, #0d1422 100%);
-  border: 1px solid rgba(119, 200, 154, 0.14);
+  background: var(--white);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
   max-width: 1080px;
 }
 @media (max-width: 1128px) { .std-reviews { margin-left: 24px; margin-right: 24px; } }
 .std-rv-stars { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
 .std-rv-stars i {
   position: absolute;
-  background: #fff;
+  background: var(--aurora-green, #77c89a);
   border-radius: 50%;
   animation: std-rv-tw var(--d, 4s) ease-in-out infinite;
 }
@@ -582,26 +610,26 @@
 .std-rv-head { position: relative; z-index: 1; text-align: center; padding: 0 24px; margin-bottom: 34px; }
 .std-rv-label {
   font-family: "DM Mono", monospace;
-  font-size: 0.62rem;
-  letter-spacing: 0.34em;
-  text-transform: uppercase;
-  color: #77c89a;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: none;
+  color: var(--green);
   margin-bottom: 14px;
 }
 .std-rv-title {
-  font-family: "Cormorant Garamond", serif;
-  font-weight: 300;
+  font-family: var(--font-display, "Source Serif 4"), Georgia, serif;
+  font-weight: 600;
   font-size: clamp(2rem, 4vw, 2.8rem);
   line-height: 1.05;
-  color: #f5f8fa;
+  color: var(--ink);
   margin-bottom: 12px;
 }
-.std-rv-title em { font-style: italic; color: #b8f5d1; }
+.std-rv-title em { font-style: normal; color: var(--green); }
 .std-rv-sub {
   font-family: "DM Mono", monospace;
   font-size: 0.72rem;
-  letter-spacing: 0.12em;
-  color: #bcc3cc;
+  letter-spacing: 0.08em;
+  color: var(--muted);
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -647,21 +675,21 @@
   font-weight: 400;
   font-size: 1.05rem;
   line-height: 1.55;
-  color: #f5f8fa;
+  color: var(--ink);
   margin-bottom: 20px;
   flex: 1;
 }
 .std-rv-by { font-family: "DM Mono", monospace; }
-.std-rv-by b { display: block; font-weight: 500; font-size: 0.78rem; letter-spacing: 0.04em; color: #fff; }
-.std-rv-by span { display: block; font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: #bcc3cc; margin-top: 4px; }
+.std-rv-by b { display: block; font-weight: 500; font-size: 0.78rem; letter-spacing: 0.04em; color: var(--ink); }
+.std-rv-by span { display: block; font-size: 0.68rem; letter-spacing: 0.06em; text-transform: none; color: var(--muted); margin-top: 4px; }
 .std-rv-gain {
   align-self: flex-start;
   margin-top: 16px;
   font-family: "DM Mono", monospace;
   font-size: 0.72rem;
   letter-spacing: 0.06em;
-  color: #b8f5d1;
-  background: rgba(119, 200, 154, 0.14);
+  color: var(--green);
+  background: rgba(119, 200, 154, 0.12);
   border: 1px solid rgba(119, 200, 154, 0.26);
   border-radius: 999px;
   padding: 5px 12px;

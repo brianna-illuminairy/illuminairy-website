@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>01 · Brand board · Palette</title>
+  <link rel="stylesheet" href="_shared.css">
+  <style>
+    .page { padding: 40px 24px 80px; max-width: var(--max); margin: 0 auto; }
+    .swatch-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 12px;
+      margin: 24px 0 40px;
+    }
+    .swatch {
+      border-radius: 12px;
+      padding: 16px 14px;
+      min-height: 100px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      border: 1px solid var(--line);
+    }
+    .swatch b { font-size: 12px; display: block; margin-bottom: 4px; }
+    .swatch code { font-family: var(--mono); font-size: 11px; opacity: 0.85; }
+    .grad-bar {
+      height: 48px;
+      border-radius: 10px;
+      margin: 16px 0 40px;
+      background: linear-gradient(135deg, var(--celestial) 0%, var(--aurora) 50%, var(--glow) 100%);
+    }
+    .type-block { margin: 32px 0; padding: 24px; background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); }
+    .type-display { font-family: var(--display); font-weight: 600; font-size: 36px; line-height: 1.1; margin-bottom: 12px; }
+    .type-body { font-family: var(--body); font-size: 16px; color: var(--muted); max-width: 55ch; }
+    .type-mono { font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--forest); margin-top: 16px; }
+    .voice { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+    .voice span {
+      padding: 8px 18px;
+      border-radius: 999px;
+      border: 1px solid rgba(119, 200, 154, 0.3);
+      color: var(--forest);
+      font-size: 15px;
+    }
+    .dos-donts { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 32px; }
+    @media (max-width: 640px) { .dos-donts { grid-template-columns: 1fr; } }
+    .dos, .donts { padding: 20px; border-radius: var(--radius); font-size: 14px; line-height: 1.6; }
+    .dos { background: rgba(119, 200, 154, 0.08); border: 1px solid rgba(119, 200, 154, 0.2); }
+    .donts { background: rgba(242, 72, 34, 0.06); border: 1px solid rgba(242, 72, 34, 0.15); }
+    .dos h3, .donts h3 { font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 12px; }
+    .dos ul, .donts ul { padding-left: 18px; color: var(--muted); }
+  </style>
+</head>
+<body>
+  <nav class="mock-nav">
+    <a href="index.html">← Hub</a>
+    <a href="07-logo-lockups.html">Logo lockups</a>
+    <a href="08-wordmark-type.html">Wordmark fonts</a>
+    <a href="09-data-viz-directions.html">Data viz</a>
+    <span style="font-size:13px;color:var(--muted);">01 · Brand board</span>
+  </nav>
+
+  <div class="page">
+    <p class="mock-eyebrow">Brand guide v3 · Locked palette</p>
+    <h1 class="mock-h1">Color & type system</h1>
+    <p class="mock-lede">Feminine, editorial, modern education — light polar white base, aurora accents, slim navy chrome only.</p>
+
+    <h2 style="font-family:var(--display);font-size:22px;margin-bottom:8px;">Core swatches</h2>
+    <div class="swatch-grid">
+      <div class="swatch" style="background:#0057A8;color:#fff;"><b>Celestial</b><code>#0057A8</code></div>
+      <div class="swatch" style="background:#77C89A;color:#121A2B;"><b>Aurora</b><code>#77C89A</code></div>
+      <div class="swatch" style="background:#B8F5D1;color:#121A2B;"><b>Glow</b><code>#B8F5D1</code></div>
+      <div class="swatch" style="background:#121A2B;color:#F5F8FA;"><b>Navy</b><code>#121A2B</code></div>
+      <div class="swatch" style="background:#1C2A42;color:#F5F8FA;"><b>Navy mid</b><code>#1C2A42</code></div>
+      <div class="swatch" style="background:#F5F8FA;color:#121A2B;border:1px solid var(--line);"><b>Polar white</b><code>#F5F8FA</code></div>
+      <div class="swatch" style="background:#FFFFFF;color:#121A2B;"><b>Paper</b><code>#FFFFFF</code></div>
+      <div class="swatch" style="background:#BCC3CC;color:#121A2B;"><b>Silver</b><code>#BCC3CC</code></div>
+      <div class="swatch" style="background:#2F6E47;color:#fff;"><b>Forest</b><code>#2F6E47</code></div>
+    </div>
+
+    <p class="mock-eyebrow">Hero gradient</p>
+    <div class="grad-bar" aria-hidden="true"></div>
+
+    <h2 style="font-family:var(--display);font-size:22px;margin:32px 0 8px;">Typography (2 + 1)</h2>
+    <div class="type-block">
+      <div class="type-display">Your student's SAT plan, mapped in minutes</div>
+      <div class="type-body">Hanken Grotesk body — calm, readable for parents. Source Serif 4 at 600 for headlines only. No italic display, no Hanken 800.</div>
+      <div class="type-mono">Parent plan · About 2 minutes</div>
+    </div>
+
+    <h2 style="font-family:var(--display);font-size:22px;margin-bottom:8px;">Brand voice</h2>
+    <div class="voice">
+      <span>Calm</span>
+      <span>Intelligent</span>
+      <span>Encouraging</span>
+      <span>Editorial</span>
+      <span>Modern</span>
+      <span>Wonder-driven</span>
+    </div>
+
+    <div class="dos-donts">
+      <div class="dos">
+        <h3>Do</h3>
+        <ul>
+          <li>Light #F5F8FA page backgrounds</li>
+          <li>Soft glow CTA pills on light cards</li>
+          <li>Aurora hover lines on cards and rows</li>
+          <li>Slim navy header + footer only</li>
+          <li>One company feel across LP → funnel → enroll</li>
+        </ul>
+      </div>
+      <div class="donts">
+        <h3>Don't</h3>
+        <ul>
+          <li>Beige / warm-gray portal backgrounds (use polar white)</li>
+          <li>Navy CTA boxes above the fold</li>
+          <li>Full-page dark mode / coder aesthetic</li>
+          <li>Hanken 800 + all-caps mono labels</li>
+          <li>Fraunces / Cormorant on product UI</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

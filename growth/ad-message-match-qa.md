@@ -7,7 +7,7 @@ Run **before turning on spend**. Parent must see ad headline echoed on LP hero w
 | `lp_variant` | Headline | Meta `utm_content` | `hook` param | Ad destination |
 |---|---|---|---|---|
 | `variant-goodgrades-lowSAT` | Your child has good grades. / **So why a low SAT score?** | **`script_5`** (legacy: `concerned_mom_good_grades_low_sat`) | `gap` | `/sat-plan-builder` |
-| `variant-beforetutoringmoney-realistic-score` | Before SAT tutoring. / **Find out what's realistic first.** | `ad3_before_tutoring` | `tutor` | `/sat-plan-builder` |
+| `variant-beforetutoringmoney-realistic-score` | Before you pay for SAT tutoring. / **See if 150–200+ points is realistic.** | `ad3_before_tutoring`, `ad3_before_tutoring_hd1080` | `tutor` | `/sat-plan-builder` |
 | `variant-highgpa-ap-lowsat` | High GPA, hard AP/IB/honors classes. / **But low SAT?** | `ad4_mom_first_story`, `ad5_high_gpa_student_story` | `student_story` | `/sat-plan-builder` |
 | `variant-enough-time` | Fall deadlines / enough time angle | `ad2_enough_time` | `fall` | `/sat-plan-builder` |
 
@@ -24,6 +24,7 @@ Print copy-paste URLs: `npm run marketing:ad-urls`
 | ad1_concerned_mom | `https://illuminairy.com/sat-plan-builder?utm_source=meta&utm_medium=paid_social&utm_campaign=c1_concerned_mom_cold_test&utm_content=script_5&utm_term=broad_moms_35_58&hook=gap` |
 | ad2_enough_time | `https://illuminairy.com/sat-plan-builder?utm_source=meta&utm_medium=paid_social&utm_campaign=c1_sat_plan_builder_cold_creative_test&utm_content=ad2_enough_time&utm_term=broad_moms_35_58&hook=fall` |
 | ad3_before_tutoring | `https://illuminairy.com/sat-plan-builder?utm_source=meta&utm_medium=paid_social&utm_campaign=c1_sat_plan_builder_cold_creative_test&utm_content=ad3_before_tutoring&utm_term=broad_moms_35_58&hook=tutor` |
+| ad3_before_tutoring_hd1080 | `https://illuminairy.com/sat-plan-builder?utm_source=meta&utm_medium=paid_social&utm_campaign=c1_sat_plan_builder_cold_creative_test&utm_content=ad3_before_tutoring_hd1080&utm_term=broad_moms_35_58&hook=tutor&version=hd1080` |
 | ad4_mom_first_story | `https://illuminairy.com/sat-plan-builder?utm_source=meta&utm_medium=paid_social&utm_campaign=c1_sat_plan_builder_cold_creative_test&utm_content=ad4_mom_first_story&utm_term=broad_moms_35_58&hook=student_story` |
 | ad5_high_gpa_student_story | `https://illuminairy.com/sat-plan-builder?utm_source=meta&utm_medium=paid_social&utm_campaign=c1_sat_plan_builder_cold_creative_test&utm_content=ad5_high_gpa_student_story&utm_term=broad_moms_35_58&hook=student_story` |
 

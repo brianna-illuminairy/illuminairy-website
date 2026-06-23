@@ -48,7 +48,7 @@
   --brand-display-weight: 700;
   --brand-display-italic-weight: 600;
   --brand-display-letter: -0.025em;
-  --brand-em-font: 'Fraunces', Georgia, serif;
+  --brand-em-font: 'Source Serif 4', Georgia, serif;
   --brand-em-weight: 500;
 }
 .il-page.il-brand[data-display="schibsted"] {
@@ -59,21 +59,21 @@
   --brand-em-font: 'Schibsted Grotesk', system-ui, sans-serif;
   --brand-em-weight: 600;
 }
-.il-page.il-brand[data-display="fraunces"] {
-  --brand-display: 'Fraunces', Georgia, serif;
+.il-page.il-brand[data-display="source-serif"] {
+  --brand-display: 'Source Serif 4', Georgia, serif;
   --brand-display-weight: 600;
-  --brand-display-italic-weight: 500;
+  --brand-display-italic-weight: 600;
   --brand-display-letter: -0.022em;
-  --brand-em-font: 'Fraunces', Georgia, serif;
-  --brand-em-weight: 500;
+  --brand-em-font: 'Source Serif 4', Georgia, serif;
+  --brand-em-weight: 600;
 }
-.il-page.il-brand[data-display="cormorant"] {
-  --brand-display: 'Cormorant Garamond', Georgia, serif;
-  --brand-display-weight: 500;
-  --brand-display-italic-weight: 400;
+.il-page.il-brand[data-display="source-serif-alt"] {
+  --brand-display: 'Source Serif 4', Georgia, serif;
+  --brand-display-weight: 600;
+  --brand-display-italic-weight: 600;
   --brand-display-letter: -0.005em;
-  --brand-em-font: 'Cormorant Garamond', Georgia, serif;
-  --brand-em-weight: 400;
+  --brand-em-font: 'Source Serif 4', Georgia, serif;
+  --brand-em-weight: 600;
 }
 
 /* Chrome */

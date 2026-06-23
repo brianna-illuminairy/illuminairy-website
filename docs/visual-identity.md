@@ -90,14 +90,65 @@ SAT/parent-ed workshop rules below remain in repo for when those routes return f
 
 ---
 
-## Aurora SAT funnel (May 2026 — live on illuminairy.com)
+## Aurora Product System (Jun 2026)
 
-**Status:** Primary public brand for `/` and `/quiz`. Tokens live in `app/quiz-funnel.css`.
+**Status:** Supersedes Fraunces/cream/Schibsted defaults for **product surfaces**: homepage LP v4, Plan Builder `/plan`, standard enroll/checkout, SOHA student portal.
+
+**SSOT in code:** `app/aurora-brand.css` (tokens) · `app/aurora-components.css` (chrome, buttons, cards) · `lib/funnel-fonts.ts` (Hanken Grotesk + Source Serif 4 + DM Mono).
+
+| Element | Rule |
+|---------|------|
+| Page bg | Polar white `#F5F8FA` (~85% of viewport) |
+| Paper cards | `#FFFFFF` with soft shadow + aurora top-line hover |
+| Navy chrome | `#121A2B` header/footer strips only — not hero CTA boxes |
+| Palette | Celestial `#0057A8` · Aurora `#77C89A` · Glow `#B8F5D1` · Forest `#2F6E47` |
+| Display | **Source Serif 4** 600, no italic on product UI |
+| Body | **Hanken Grotesk** 400–600 (never 800 on enroll/LP/portal) |
+| Labels | **DM Mono**, sentence case preferred |
+| Max width | 1080px content (portal, plan HTML) |
+| Dark usage | One optional diagnostic score inset — not full-page dark on enroll/LP |
+
+### CTA stack (locked Jun 2026 — mock `design/mockups/06-cta-options.html`)
+
+| Context | Primary | Secondary | Motion / wrapper |
+|---------|---------|-----------|------------------|
+| **Dark** (header, hero strip, footer band) | Mint glow fill `#B8F5D1`, navy label · `.aurora-btn-primary-on-dark` | Mint outline ghost · `.aurora-btn-ghost-mint` | Glow lift + arrow on hover; **pulse ring** on one hero CTA per page · `.aurora-btn-pulse` |
+| **Light** (enroll body, LP card) | TBD — forest or celestial fill (not mint at rest) | Forest or navy outline | Same glow-lift + arrow; button inside **CTA card** · `.aurora-hover-card` (top-line sweep on card hover) |
+
+**Mint glow fill on light pages:** avoid as primary (low contrast vs `#F5F8FA`). Mint stays dark-surface primary + accents.
+
+**Code:** `app/aurora-components.css` — `aurora-btn-primary-on-dark`, `aurora-btn-ghost-mint`, `aurora-btn-pulse`, `aurora-hover-card`.
+
+### Logo lockups (explore Jun 2026 — mock `design/mockups/07-logo-lockups.html`)
+
+| Surface | Direction |
+|---------|-----------|
+| **Header (dark chrome)** | **v8 soft stars + arc** (explore) or raster PNG — not v7 line stars |
+| **Header (light)** | `logo-v8-soft-stars-on-light.svg` |
+| **Hero** | Source Serif at display scale; optional stars left |
+| **Icon / OG** | `logo-square.png` — never shrink full lockup below ~24px wordmark height |
+| **Avoid on product** | Split-color wordmark, gold “ai”, v2 path mark, mechanical line-cross stars, Cormorant chrome |
+
+**Production files:** `logo-v8-soft-stars-on-dark.svg`, `logo-horizontal.png`, `components/brand/illuminairy-logo-v7.tsx`.
+
+**Deprecated on product UI:** cream `#F5ECD9`, `--danielle-cream`, `--sr-cream`, Fraunces, Cormorant, Space Grotesk, dark navy plan/CTA cards above the fold.
+
+**Enforced:** `npm run aurora:brand-guard` (in `agent:verify`). Rule: `.cursor/rules/aurora-brand.mdc`.
+
+**Data viz (exploratory Jun 2026):** New chart/infographic system — not an extension of current funnel or diagnostic charts. Spec: [data-visualization.md](data-visualization.md) · mock: `design/mockups/09-data-viz-directions.html`.
+
+**Legacy (unchanged until migrated):** `/danielle/*`, `content/danielle/*`, Sohail locked enroll stack, ivory/gold v2 tokens below (archived reference).
+
+---
+
+## Aurora SAT funnel (May 2026 — superseded for fonts/tokens)
+
+**Note:** Step layout and mobile shell unchanged. Colors/fonts now alias `aurora-brand.css` via `app/quiz-funnel.css`.
 
 | Element | Aurora rule |
 |---------|-------------|
-| Surfaces | Paper `#F4F0E8`, ink `#14202E`, forest `#2F6E47`, celestial `#0057A8` |
-| Type | **Fraunces** display · **Schibsted Grotesk** body · **DM Mono** labels |
+| Surfaces | `#F5F8FA` bg, `#121A2B` ink, forest `#2F6E47`, celestial `#0057A8` |
+| Type | **Source Serif 4** display · **Hanken Grotesk** body · **DM Mono** labels |
 | Logo | `public/brand/logo-horizontal.png` (header) · `logo-square.png` (OG/social) |
 | Clear space | Height of the star cluster above the wordmark on all sides |
 | Layout | Mobile-first 420px column; `100dvh` with `100vh` fallback for Safari |

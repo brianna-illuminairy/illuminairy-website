@@ -1,0 +1,1306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>09 · Data viz directions · Observatory data language</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Hanken+Grotesk:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,600&display=swap" rel="stylesheet">
+  <style>
+    /* ── Fresh data-viz system (not production CSS) ── */
+    :root {
+      --data-ink: #121a2b;
+      --data-muted: rgba(18, 26, 43, 0.55);
+      --data-line: rgba(18, 26, 43, 0.08);
+      --data-surface: #ffffff;
+      --data-field: #f5f8fa;
+      --data-em: #2f6e47;
+      --data-accent: #0057a8;
+      --data-glow: rgba(184, 245, 209, 0.35);
+      --data-aurora: #77c89a;
+      --data-dim: rgba(18, 26, 43, 0.12);
+      --data-silver: #bcc3cc;
+      --data-grad: linear-gradient(90deg, #0057a8 0%, #77c89a 55%, #b8f5d1 100%);
+      --data-grad-soft: linear-gradient(135deg, rgba(0, 87, 168, 0.12) 0%, rgba(119, 200, 154, 0.18) 50%, rgba(184, 245, 209, 0.22) 100%);
+      --serif: "Source Serif 4", Georgia, serif;
+      --sans: "Hanken Grotesk", system-ui, sans-serif;
+      --mono: "DM Mono", ui-monospace, monospace;
+      --max: 1080px;
+      --radius: 16px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--sans);
+      background: var(--data-field);
+      color: var(--data-ink);
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: rgba(245, 248, 250, 0.94);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--data-line);
+      padding: 12px 24px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav a {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--data-ink);
+      text-decoration: none;
+    }
+
+    .nav a:hover { color: var(--data-em); }
+
+    .nav-note { font-size: 12px; color: var(--data-muted); }
+
+    .hero {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 48px 24px 32px;
+    }
+
+    .eyebrow {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--data-aurora);
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      font-family: var(--serif);
+      font-weight: 600;
+      font-size: clamp(28px, 4vw, 42px);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin-bottom: 14px;
+    }
+
+    .lede {
+      color: var(--data-muted);
+      max-width: 58ch;
+      font-size: 16px;
+      margin-bottom: 8px;
+    }
+
+    .banner {
+      margin-top: 24px;
+      padding: 16px 20px;
+      border-radius: 12px;
+      border: 1px solid rgba(119, 200, 154, 0.25);
+      background: rgba(119, 200, 154, 0.06);
+      font-size: 14px;
+      color: var(--data-muted);
+      max-width: 72ch;
+    }
+
+    .banner strong { color: var(--data-ink); font-weight: 600; }
+
+    main {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0 24px 100px;
+    }
+
+    .section {
+      margin-top: 56px;
+    }
+
+    .section-head {
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--data-line);
+    }
+
+    .section-head h2 {
+      font-family: var(--serif);
+      font-weight: 600;
+      font-size: 24px;
+      margin-bottom: 6px;
+    }
+
+    .section-head p {
+      font-size: 14px;
+      color: var(--data-muted);
+      max-width: 60ch;
+    }
+
+    .card {
+      background: var(--data-surface);
+      border: 1px solid var(--data-line);
+      border-radius: var(--radius);
+      padding: 28px 24px 24px;
+      box-shadow: 0 8px 40px -24px rgba(18, 26, 43, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--data-grad);
+      opacity: 0.85;
+    }
+
+    .card-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--data-accent);
+      margin-bottom: 4px;
+    }
+
+    .card-title {
+      font-family: var(--serif);
+      font-weight: 600;
+      font-size: 18px;
+      margin-bottom: 20px;
+    }
+
+    .footnote {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--data-muted);
+      margin-top: 16px;
+      letter-spacing: 0.04em;
+    }
+
+    /* ── 1 Horizon path ── */
+    .horizon {
+      position: relative;
+      height: 200px;
+      margin-top: 8px;
+    }
+
+    .horizon svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+
+    .horizon .axis-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      fill: var(--data-muted);
+      letter-spacing: 0.12em;
+    }
+
+    .horizon .score-label {
+      font-family: var(--serif);
+      font-weight: 600;
+      fill: var(--data-ink);
+    }
+
+    .horizon .score-label.em { fill: var(--data-em); font-size: 20px; }
+
+    .horizon .milestone {
+      font-family: var(--sans);
+      font-weight: 600;
+      font-size: 13px;
+      fill: var(--data-em);
+    }
+
+    /* ── 2 Ledger rank ── */
+    .ledger { list-style: none; }
+
+    .ledger li {
+      display: grid;
+      grid-template-columns: 36px 1fr auto;
+      gap: 12px;
+      align-items: baseline;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--data-line);
+    }
+
+    .ledger li:last-child { border-bottom: none; }
+
+    .ledger .idx {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--data-muted);
+    }
+
+    .ledger .name {
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    .ledger .note {
+      font-size: 13px;
+      color: var(--data-muted);
+      margin-top: 2px;
+      font-weight: 400;
+    }
+
+    .ledger .pts {
+      font-family: var(--serif);
+      font-weight: 600;
+      font-size: 22px;
+      color: var(--data-em);
+      white-space: nowrap;
+    }
+
+    .ledger-footer {
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px dashed var(--data-line);
+      font-size: 13px;
+      color: var(--data-muted);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    /* ── 3 Constellation ── */
+    .constellation-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 12px;
+      color: var(--data-muted);
+      margin-bottom: 16px;
+    }
+
+    .constellation-legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .dot-ok, .dot-miss {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .dot-ok {
+      background: var(--data-surface);
+      border: 1.5px solid var(--data-aurora);
+    }
+
+    .dot-miss {
+      background: rgba(0, 87, 168, 0.35);
+      border: 1px solid rgba(0, 87, 168, 0.5);
+    }
+
+    .constellation-mod {
+      margin-bottom: 14px;
+    }
+
+    .constellation-mod-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--data-em);
+      margin-bottom: 8px;
+    }
+
+    .constellation-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .star {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--mono);
+      font-size: 8px;
+      position: relative;
+    }
+
+    .star.ok {
+      background: var(--data-surface);
+      border: 1.5px solid var(--data-aurora);
+      color: transparent;
+    }
+
+    .star.miss {
+      background: rgba(0, 87, 168, 0.2);
+      border: 1px solid rgba(0, 87, 168, 0.45);
+      color: var(--data-accent);
+      font-size: 7px;
+      letter-spacing: 0;
+    }
+
+    /* ── 4 Tide readout ── */
+    .tide-section {
+      margin-bottom: 24px;
+    }
+
+    .tide-section:last-child { margin-bottom: 0; }
+
+    .tide-head {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--data-muted);
+      margin-bottom: 12px;
+    }
+
+    .tide-cols {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .tide-cell {
+      text-align: center;
+      padding: 12px 8px 0;
+    }
+
+    .tide-pct {
+      font-family: var(--serif);
+      font-weight: 600;
+      font-size: 32px;
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+
+    .tide-bar {
+      height: 3px;
+      border-radius: 99px;
+      background: var(--data-dim);
+      margin: 0 auto 10px;
+      max-width: 80px;
+      overflow: hidden;
+    }
+
+    .tide-bar i {
+      display: block;
+      height: 100%;
+      border-radius: 99px;
+      background: var(--data-grad);
+    }
+
+    .tide-lbl {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--data-muted);
+    }
+
+    /* ── 5 Spectrum band ── */
+    .stat-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 24px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--data-line);
+    }
+
+    .stat-strip div { text-align: center; }
+
+    .stat-strip .val {
+      font-family: var(--serif);
+      font-weight: 600;
+      font-size: 26px;
+      line-height: 1.1;
+    }
+
+    .stat-strip .val.em { color: var(--data-em); }
+
+    .stat-strip .lbl {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--data-muted);
+      margin-top: 4px;
+    }
+
+    .spectrum-wrap {
+      position: relative;
+      padding: 28px 0 36px;
+    }
+
+    .spectrum-band {
+      height: 12px;
+      border-radius: 99px;
+      background: var(--data-grad-soft);
+      border: 1px solid rgba(119, 200, 154, 0.2);
+      position: relative;
+    }
+
+    .spectrum-marker {
+      position: absolute;
+      top: 50%;
+      left: 52%;
+      transform: translate(-50%, -50%);
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--data-em);
+      border: 3px solid var(--data-surface);
+      box-shadow: 0 0 0 1px var(--data-em);
+    }
+
+    .spectrum-tiers {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .tier {
+      text-align: center;
+      font-size: 12px;
+      color: var(--data-muted);
+    }
+
+    .tier b {
+      display: block;
+      font-family: var(--sans);
+      font-weight: 600;
+      font-size: 13px;
+      color: var(--data-muted);
+      margin-bottom: 2px;
+    }
+
+    .tier.on b {
+      color: var(--data-em);
+      text-decoration: underline;
+      text-decoration-color: var(--data-aurora);
+      text-underline-offset: 4px;
+    }
+
+    .tier .sc {
+      font-family: var(--serif);
+      font-weight: 600;
+      font-size: 18px;
+      color: var(--data-ink);
+      margin-top: 4px;
+    }
+
+    .tier.on .sc { color: var(--data-em); }
+
+    /* ── 6 Milestone ribbon ── */
+    .ribbon-weeks {
+      display: grid;
+      grid-template-columns: repeat(9, 1fr);
+      gap: 4px;
+      margin-bottom: 8px;
+    }
+
+    .ribbon-weeks span {
+      font-family: var(--mono);
+      font-size: 8px;
+      letter-spacing: 0.06em;
+      text-align: center;
+      color: var(--data-muted);
+    }
+
+    .ribbon-track {
+      height: 4px;
+      border-radius: 99px;
+      background: var(--data-dim);
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .ribbon-track::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 100%;
+      border-radius: 99px;
+      background: var(--data-grad);
+      opacity: 0.5;
+    }
+
+    .ribbon-cards {
+      display: grid;
+      grid-template-columns: repeat(9, 1fr);
+      gap: 6px;
+      align-items: start;
+    }
+
+    .week-card {
+      background: var(--data-field);
+      border: 1px solid var(--data-line);
+      border-radius: 10px;
+      padding: 10px 6px;
+      text-align: center;
+      min-height: 72px;
+    }
+
+    .week-card.highlight {
+      background: rgba(184, 245, 209, 0.25);
+      border-color: rgba(119, 200, 154, 0.35);
+    }
+
+    .week-card .skill {
+      font-size: 10px;
+      font-weight: 600;
+      line-height: 1.25;
+      margin-bottom: 6px;
+    }
+
+    .week-card .pts {
+      font-family: var(--serif);
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--data-em);
+    }
+
+    .ribbon-pins {
+      display: grid;
+      grid-template-columns: repeat(9, 1fr);
+      gap: 4px;
+      margin-top: 12px;
+    }
+
+    .pin {
+      text-align: center;
+      font-family: var(--mono);
+      font-size: 8px;
+      color: var(--data-accent);
+      letter-spacing: 0.06em;
+    }
+
+    .pin::before {
+      content: "";
+      display: block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--data-accent);
+      margin: 0 auto 4px;
+    }
+
+    /* ── Inset hero sample ── */
+    .inset-hero {
+      background: linear-gradient(180deg, #1c2a42, #121a2b);
+      border-radius: var(--radius);
+      padding: 32px 28px;
+      color: #f5f8fa;
+      text-align: center;
+      margin-top: 56px;
+    }
+
+    .inset-hero .eyebrow { color: var(--data-aurora); }
+
+    .inset-hero .score-range {
+      font-family: var(--serif);
+      font-weight: 600;
+      font-size: clamp(44px, 8vw, 64px);
+      line-height: 1;
+      margin: 12px 0 16px;
+      background: linear-gradient(120deg, #fff 0%, #b8f5d1 55%, #77c89a 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .inset-hero .subscores {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      flex-wrap: wrap;
+      font-size: 14px;
+      color: var(--data-silver);
+    }
+
+    .inset-hero .subscores b {
+      display: block;
+      font-family: var(--serif);
+      font-size: 22px;
+      color: #f5f8fa;
+      margin-top: 4px;
+    }
+
+    /* ── Anti-patterns ── */
+    .reject-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .reject {
+      border-radius: 12px;
+      padding: 16px;
+      border: 1px solid rgba(242, 72, 34, 0.15);
+      background: rgba(242, 72, 34, 0.04);
+    }
+
+    .reject h3 {
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #b54a32;
+      margin-bottom: 10px;
+    }
+
+    .reject-demo {
+      height: 80px;
+      border-radius: 8px;
+      background: #fff;
+      border: 1px solid var(--data-line);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 12px;
+      padding: 12px;
+      margin-bottom: 8px;
+    }
+
+    .reject-bar {
+      width: 28px;
+      border-radius: 4px 4px 0 0;
+    }
+
+    .reject p {
+      font-size: 12px;
+      color: var(--data-muted);
+      line-height: 1.45;
+    }
+
+    .ring-demo {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      border: 8px solid #e8e8e8;
+      border-top-color: #e05252;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    /* ── 7 Compare: dumbbell vs horizon (2-point) ── */
+    .compare-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .compare-panel {
+      background: var(--data-surface);
+      border: 1px solid var(--data-line);
+      border-radius: var(--radius);
+      padding: 24px 20px 20px;
+      box-shadow: 0 8px 40px -24px rgba(18, 26, 43, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .compare-panel::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--data-grad);
+      opacity: 0.85;
+    }
+
+    .compare-panel h3 {
+      font-family: var(--serif);
+      font-weight: 600;
+      font-size: 17px;
+      margin-bottom: 4px;
+    }
+
+    .compare-panel .compare-tag {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--data-accent);
+      margin-bottom: 16px;
+    }
+
+    .compare-panel .compare-note {
+      font-size: 13px;
+      color: var(--data-muted);
+      line-height: 1.5;
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid var(--data-line);
+    }
+
+    .compare-panel .compare-note strong {
+      color: var(--data-ink);
+      font-weight: 600;
+    }
+
+    /* Dumbbell */
+    .dumbbell {
+      padding: 20px 4px 8px;
+    }
+
+    .dumbbell-axis {
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--mono);
+      font-size: 9px;
+      color: var(--data-muted);
+      letter-spacing: 0.08em;
+      margin-top: 12px;
+    }
+
+    .dumbbell-track {
+      position: relative;
+      height: 48px;
+      margin: 8px 0;
+    }
+
+    .dumbbell-rail {
+      position: absolute;
+      left: 8%;
+      right: 12%;
+      top: 50%;
+      height: 1px;
+      background: var(--data-line);
+      transform: translateY(-50%);
+    }
+
+    .dumbbell-connector {
+      position: absolute;
+      left: 18%;
+      right: 22%;
+      top: 50%;
+      height: 2px;
+      background: var(--data-grad);
+      transform: translateY(-50%);
+      opacity: 0.75;
+    }
+
+    .dumbbell-gap {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      font-family: var(--serif);
+      font-weight: 600;
+      font-size: 20px;
+      color: var(--data-em);
+      background: var(--data-surface);
+      padding: 0 10px;
+    }
+
+    .dumbbell-dot {
+      position: absolute;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 3px solid var(--data-surface);
+      box-shadow: 0 0 0 1px rgba(18, 26, 43, 0.12);
+    }
+
+    .dumbbell-dot.now {
+      left: 18%;
+      background: var(--data-accent);
+      box-shadow: 0 0 0 1px var(--data-accent);
+    }
+
+    .dumbbell-dot.goal {
+      left: 78%;
+      background: var(--data-em);
+      box-shadow: 0 0 0 1px var(--data-em);
+    }
+
+    .dumbbell-labels {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-top: 4px;
+    }
+
+    .dumbbell-labels div {
+      flex: 1;
+    }
+
+    .dumbbell-labels div:last-child {
+      text-align: right;
+    }
+
+    .dumbbell-labels .mono {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--data-muted);
+      margin-bottom: 4px;
+    }
+
+    .dumbbell-labels .score {
+      font-family: var(--serif);
+      font-weight: 600;
+      font-size: 28px;
+      line-height: 1;
+    }
+
+    .dumbbell-labels .score.goal { color: var(--data-em); }
+
+    /* Horizon two-point */
+    .horizon-mini {
+      height: 160px;
+      margin-top: 4px;
+    }
+
+    .horizon-mini svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+
+    .horizon-mini .hm-score {
+      font-family: var(--serif);
+      font-weight: 600;
+      fill: var(--data-ink);
+    }
+
+    .horizon-mini .hm-score.goal { fill: var(--data-em); }
+
+    .horizon-mini .hm-mono {
+      font-family: var(--mono);
+      font-size: 10px;
+      fill: var(--data-muted);
+      letter-spacing: 0.12em;
+    }
+
+    .compare-verdict {
+      margin-top: 20px;
+      padding: 18px 20px;
+      border-radius: 12px;
+      background: rgba(0, 87, 168, 0.04);
+      border: 1px solid rgba(0, 87, 168, 0.12);
+      font-size: 14px;
+      color: var(--data-muted);
+      line-height: 1.55;
+    }
+
+    .compare-verdict strong { color: var(--data-ink); }
+
+    @media (max-width: 720px) {
+      .compare-grid { grid-template-columns: 1fr; }
+      .stat-strip { grid-template-columns: repeat(2, 1fr); }
+      .spectrum-tiers { grid-template-columns: repeat(2, 1fr); }
+      .ribbon-cards, .ribbon-weeks, .ribbon-pins {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      .ribbon-cards .week-card:nth-child(n+4) { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <a href="01-brand-board-palette.html">← Palette</a>
+    <a href="index.html">Hub</a>
+    <span class="nav-note">09 · Observatory data language · designed from scratch</span>
+  </nav>
+
+  <header class="hero">
+    <p class="eyebrow">Data visualization · new system</p>
+    <h1>SAT numbers as editorial infographics</h1>
+    <p class="lede">Six chart families plus a dumbbell vs horizon comparison for current → target. Built from the brand guide observatory metaphor — not from current funnel, plan, or diagnostic CSS.</p>
+    <div class="banner">
+      <strong>Pick directions here.</strong> Static mockups below. Live Visx components: <a href="/design/data-viz" style="color:var(--forest);font-weight:600;">/design/data-viz</a> (run <code>npm run dev</code>). Spec: <code>docs/data-visualization.md</code>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- 1 -->
+    <section class="section">
+      <div class="section-head">
+        <h2>1 · Horizon path</h2>
+        <p>Score journey as a curved aurora line toward a goal — logo arc energy, not a stock chart.</p>
+      </div>
+      <div class="card">
+        <div class="card-label">Family 01</div>
+        <div class="card-title">Projected path · Soha · Aug 22</div>
+        <div class="horizon">
+          <svg viewBox="0 0 640 180" aria-label="Score path from 1400 to about 1525 by August 22">
+            <line x1="48" y1="42" x2="592" y2="42" stroke="#bcc3cc" stroke-width="1" stroke-dasharray="4 4"/>
+            <text x="592" y="34" text-anchor="end" class="axis-label">STRETCH 1550</text>
+            <path d="M48,128 Q200,118 320,78 T592,48" fill="none" stroke="url(#pathGrad)" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M48,128 Q200,118 320,78 T592,48 L592,150 L48,150 Z" fill="url(#areaGrad)" opacity="0.35"/>
+            <circle cx="48" cy="128" r="5" fill="#2f6e47"/>
+            <circle cx="320" cy="78" r="5" fill="#77c89a"/>
+            <circle cx="592" cy="48" r="6" fill="#2f6e47"/>
+            <text x="44" y="148" class="score-label" font-size="18">1400</text>
+            <text x="316" y="68" text-anchor="middle" class="milestone">1480</text>
+            <text x="588" y="38" text-anchor="end" class="score-label em">~1525</text>
+            <text x="48" y="168" class="axis-label">START</text>
+            <text x="320" y="168" text-anchor="middle" class="axis-label">WK 4 · PT</text>
+            <text x="592" y="168" text-anchor="end" class="axis-label">AUG 22</text>
+            <defs>
+              <linearGradient id="pathGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#0057a8"/>
+                <stop offset="55%" stop-color="#77c89a"/>
+                <stop offset="100%" stop-color="#2f6e47"/>
+              </linearGradient>
+              <linearGradient id="areaGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#77c89a"/>
+                <stop offset="100%" stop-color="#f5f8fa"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <p class="footnote">Illustrative projection · Results vary</p>
+      </div>
+    </section>
+
+    <!-- 2 -->
+    <section class="section">
+      <div class="section-head">
+        <h2>2 · Ledger rank</h2>
+        <p>Skills ranked like a table of contents — serif point totals, no horizontal bar race.</p>
+      </div>
+      <div class="card">
+        <div class="card-label">Family 02</div>
+        <div class="card-title">Highest-impact skills · ranked</div>
+        <ol class="ledger">
+          <li>
+            <span class="idx">01</span>
+            <div><div class="name">Transitions</div><div class="note">Reading and Writing · relationship-before-choices habit</div></div>
+            <span class="pts">+52</span>
+          </li>
+          <li>
+            <span class="idx">02</span>
+            <div><div class="name">Factoring & factor theorem</div><div class="note">Math · calculator vs by-hand setup</div></div>
+            <span class="pts">+48</span>
+          </li>
+          <li>
+            <span class="idx">03</span>
+            <div><div class="name">Boundaries</div><div class="note">Reading and Writing · complete-clause check</div></div>
+            <span class="pts">+33</span>
+          </li>
+          <li>
+            <span class="idx">04</span>
+            <div><div class="name">Command of Evidence</div><div class="note">Reading and Writing · true but off-claim</div></div>
+            <span class="pts">+22</span>
+          </li>
+          <li>
+            <span class="idx">05</span>
+            <div><div class="name">Subject-verb agreement</div><div class="note">Reading and Writing · interrupting phrases</div></div>
+            <span class="pts">+16</span>
+          </li>
+        </ol>
+        <div class="ledger-footer">
+          <span>Already strong · Circles, linear equations</span>
+          <span style="font-family:var(--serif);font-weight:600;color:var(--data-em);">+214 total</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3 -->
+    <section class="section">
+      <div class="section-head">
+        <h2>3 · Constellation field</h2>
+        <p>Each question is a star. Misses stay visible but soft — no red alarm cells.</p>
+      </div>
+      <div class="card">
+        <div class="card-label">Family 03</div>
+        <div class="card-title">Question map · excerpt</div>
+        <div class="constellation-legend">
+          <span><i class="dot-ok"></i> Correct</span>
+          <span><i class="dot-miss"></i> Missed · letter = difficulty</span>
+        </div>
+        <div class="constellation-mod">
+          <div class="constellation-mod-label">Reading & Writing · Module 1</div>
+          <div class="constellation-row">
+            <div class="star ok"></div><div class="star ok"></div><div class="star miss">M</div>
+            <div class="star ok"></div><div class="star ok"></div><div class="star ok"></div>
+            <div class="star miss">E</div><div class="star ok"></div><div class="star ok"></div>
+            <div class="star ok"></div><div class="star ok"></div><div class="star ok"></div>
+          </div>
+        </div>
+        <div class="constellation-mod">
+          <div class="constellation-mod-label">Math · Module 2</div>
+          <div class="constellation-row">
+            <div class="star ok"></div><div class="star ok"></div><div class="star ok"></div>
+            <div class="star miss">H</div><div class="star ok"></div><div class="star miss">M</div>
+            <div class="star ok"></div><div class="star ok"></div><div class="star ok"></div>
+            <div class="star ok"></div><div class="star miss">M</div><div class="star ok"></div>
+          </div>
+        </div>
+        <p class="footnote">85 / 98 correct · 13 missed · full map in diagnostic report</p>
+      </div>
+    </section>
+
+    <!-- 4 -->
+    <section class="section">
+      <div class="section-head">
+        <h2>4 · Tide readout</h2>
+        <p>Accuracy by difficulty — serif percentage with a thin aurora underline, not traffic lights.</p>
+      </div>
+      <div class="card">
+        <div class="card-label">Family 04</div>
+        <div class="card-title">Accuracy by difficulty</div>
+        <div class="tide-section">
+          <div class="tide-head">Reading & Writing</div>
+          <div class="tide-cols">
+            <div class="tide-cell">
+              <div class="tide-pct">96%</div>
+              <div class="tide-bar"><i style="width:96%"></i></div>
+              <div class="tide-lbl">Easy</div>
+            </div>
+            <div class="tide-cell">
+              <div class="tide-pct">82%</div>
+              <div class="tide-bar"><i style="width:82%"></i></div>
+              <div class="tide-lbl">Medium</div>
+            </div>
+            <div class="tide-cell">
+              <div class="tide-pct">71%</div>
+              <div class="tide-bar"><i style="width:71%"></i></div>
+              <div class="tide-lbl">Hard</div>
+            </div>
+          </div>
+        </div>
+        <div class="tide-section">
+          <div class="tide-head">Math</div>
+          <div class="tide-cols">
+            <div class="tide-cell">
+              <div class="tide-pct">100%</div>
+              <div class="tide-bar"><i style="width:100%"></i></div>
+              <div class="tide-lbl">Easy</div>
+            </div>
+            <div class="tide-cell">
+              <div class="tide-pct">88%</div>
+              <div class="tide-bar"><i style="width:88%"></i></div>
+              <div class="tide-lbl">Medium</div>
+            </div>
+            <div class="tide-cell">
+              <div class="tide-pct">75%</div>
+              <div class="tide-bar"><i style="width:75%"></i></div>
+              <div class="tide-lbl">Hard</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5 -->
+    <section class="section">
+      <div class="section-head">
+        <h2>5 · Spectrum band</h2>
+        <p>Goal achievability as a marker on an aurora band — not pill toggles.</p>
+      </div>
+      <div class="card">
+        <div class="card-label">Family 05</div>
+        <div class="card-title">How hard is this goal?</div>
+        <div class="stat-strip">
+          <div><div class="val em">+125</div><div class="lbl">Score gap</div></div>
+          <div><div class="val">66</div><div class="lbl">Days to test</div></div>
+          <div><div class="val em">~14</div><div class="lbl">Pts / wk</div></div>
+          <div><div class="val">Aug 22</div><div class="lbl">Test date</div></div>
+        </div>
+        <div class="spectrum-wrap">
+          <div class="spectrum-band"><div class="spectrum-marker"></div></div>
+          <div class="spectrum-tiers">
+            <div class="tier"><b>Conservative</b>+10/wk<span class="sc">1490</span></div>
+            <div class="tier on"><b>This plan</b>~14/wk<span class="sc">1525</span></div>
+            <div class="tier"><b>Stretch</b>+18/wk<span class="sc">1562</span></div>
+            <div class="tier"><b>Max effort</b>+20/wk<span class="sc">1580</span></div>
+          </div>
+        </div>
+        <p class="footnote">Modeled tiers · not a guarantee · Results vary</p>
+      </div>
+    </section>
+
+    <!-- 6 -->
+    <section class="section">
+      <div class="section-head">
+        <h2>6 · Milestone ribbon</h2>
+        <p>Week-by-week plan as cards on a ribbon — practice tests pinned below. Exploratory alternative to the multi-row Gantt in current plan HTML.</p>
+      </div>
+      <div class="card">
+        <div class="card-label">Family 06</div>
+        <div class="card-title">Nine-week schedule</div>
+        <div class="ribbon-weeks">
+          <span>Wk 1</span><span>Wk 2</span><span>Wk 3</span><span>Wk 4</span>
+          <span>Wk 5</span><span>Wk 6</span><span>Wk 7</span><span>Wk 8</span><span>Wk 9</span>
+        </div>
+        <div class="ribbon-track"></div>
+        <div class="ribbon-cards">
+          <div class="week-card highlight"><div class="skill">Transitions</div><div class="pts">+52</div></div>
+          <div class="week-card"><div class="skill">Factoring</div><div class="pts">+48</div></div>
+          <div class="week-card"><div class="skill">Boundaries</div><div class="pts">+33</div></div>
+          <div class="week-card highlight"><div class="skill">Command of Evidence</div><div class="pts">+22</div></div>
+          <div class="week-card"><div class="skill">Geometry</div><div class="pts">+16</div></div>
+          <div class="week-card"><div class="skill">Advanced Math</div><div class="pts">+27</div></div>
+          <div class="week-card"><div class="skill">Subject-Verb</div><div class="pts">+16</div></div>
+          <div class="week-card highlight"><div class="skill">Mixed review</div><div class="pts">—</div></div>
+          <div class="week-card highlight"><div class="skill">Test week</div><div class="pts">—</div></div>
+        </div>
+        <div class="ribbon-pins">
+          <span></span><span></span><span></span>
+          <span>PT 1</span><span></span><span></span><span></span>
+          <span>PT 2</span><span>Aug 22</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7 -->
+    <section class="section">
+      <div class="section-head">
+        <h2>7 · Current → target · dumbbell vs horizon</h2>
+        <p>Same data, two ways to show the gap: a horizontal dumbbell (gap size) vs a two-point horizon path (forward momentum). Pick one for plan reveal / LP hero; use full horizon (§1) when milestones matter.</p>
+      </div>
+
+      <div class="compare-grid">
+        <div class="compare-panel">
+          <div class="compare-tag">Option A · Dumbbell</div>
+          <h3>The gap is the story</h3>
+          <div class="dumbbell" role="img" aria-label="Current score 1400, goal about 1525, gap 125 points">
+            <div class="dumbbell-labels">
+              <div>
+                <div class="mono">Today</div>
+                <div class="score">1400</div>
+              </div>
+              <div>
+                <div class="mono">Goal · Aug 22</div>
+                <div class="score goal">~1525</div>
+              </div>
+            </div>
+            <div class="dumbbell-track">
+              <div class="dumbbell-rail"></div>
+              <div class="dumbbell-connector"></div>
+              <span class="dumbbell-gap">+125</span>
+              <span class="dumbbell-dot now" aria-hidden="true"></span>
+              <span class="dumbbell-dot goal" aria-hidden="true"></span>
+            </div>
+            <div class="dumbbell-axis">
+              <span>1100</span>
+              <span>1600</span>
+            </div>
+          </div>
+          <p class="compare-note">
+            <strong>Best when:</strong> parent needs to see exactly how far today is from the goal in one glance. Works in narrow funnel column. Feels like a measured distance, not a stock chart.
+          </p>
+        </div>
+
+        <div class="compare-panel">
+          <div class="compare-tag">Option B · Horizon (2-point)</div>
+          <h3>The path is the story</h3>
+          <div class="horizon-mini">
+            <svg viewBox="0 0 400 150" aria-label="Score path from 1400 today to about 1525 on August 22">
+              <defs>
+                <linearGradient id="hmPath" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#0057a8"/>
+                  <stop offset="60%" stop-color="#77c89a"/>
+                  <stop offset="100%" stop-color="#2f6e47"/>
+                </linearGradient>
+                <linearGradient id="hmArea" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stop-color="#77c89a" stop-opacity="0.35"/>
+                  <stop offset="100%" stop-color="#f5f8fa" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+              <line x1="32" y1="28" x2="368" y2="28" stroke="#bcc3cc" stroke-width="1" stroke-dasharray="4 3"/>
+              <text x="368" y="20" text-anchor="end" class="hm-mono">STRETCH 1550</text>
+              <path d="M40,108 Q180,96 260,62 T368,38" fill="url(#hmArea)"/>
+              <path d="M40,108 Q180,96 260,62 T368,38" fill="none" stroke="url(#hmPath)" stroke-width="2.5" stroke-linecap="round"/>
+              <circle cx="40" cy="108" r="5" fill="#0057a8"/>
+              <circle cx="368" cy="38" r="6" fill="#2f6e47"/>
+              <text x="36" y="128" class="hm-score" font-size="22">1400</text>
+              <text x="364" y="32" text-anchor="end" class="hm-score goal" font-size="24">~1525</text>
+              <text x="40" y="142" class="hm-mono">TODAY</text>
+              <text x="368" y="142" text-anchor="end" class="hm-mono">AUG 22</text>
+              <text x="200" y="78" text-anchor="middle" class="hm-score" font-size="16" fill="#2f6e47">+125</text>
+            </svg>
+          </div>
+          <p class="compare-note">
+            <strong>Best when:</strong> you want aurora brand energy and forward motion. Same two endpoints as the dumbbell, but reads as a journey. Add milestones (§1) when the plan has PT weeks.
+          </p>
+        </div>
+      </div>
+
+      <div class="compare-verdict">
+        <strong>How to choose:</strong> Dumbbell for interstitials and tight mobile (gap clarity). Two-point horizon for LP hero and plan card header (brand warmth). Never use side-by-side vertical bars. If the view includes week 4 / week 8 checkpoints, use the full horizon path from §1 instead of either option here.
+      </div>
+      <p class="footnote" style="margin-top:14px;">Sample: Soha · 1400 today · ~1525 goal · illustrative · Results vary</p>
+    </section>
+
+    <!-- Inset hero -->
+    <div class="inset-hero">
+      <p class="eyebrow">Optional inset · one per view</p>
+      <div class="score-range">1380–1430</div>
+      <div class="subscores">
+        <span>Reading & Writing<b>670–690</b></span>
+        <span>Math<b>710–740</b></span>
+      </div>
+      <p class="footnote" style="color:var(--data-silver);margin-top:20px;">Diagnostic total range · navy inset for hero readout only</p>
+    </div>
+
+    <!-- Reject -->
+    <section class="section">
+      <div class="section-head">
+        <h2>What we are not doing</h2>
+        <p>Current production patterns to retire — shown here only as contrast.</p>
+      </div>
+      <div class="reject-grid">
+        <div class="reject">
+          <h3>Tomato vs green bars</h3>
+          <div class="reject-demo">
+            <div class="reject-bar" style="height:45%;background:#e05252"></div>
+            <div class="reject-bar" style="height:85%;background:#2f8b55"></div>
+          </div>
+          <p>Tutor-ad comparison trope. Parents don't need a bar fight.</p>
+        </div>
+        <div class="reject">
+          <h3>Donut / ring %</h3>
+          <div class="reject-demo" style="align-items:center">
+            <div class="ring-demo">78%</div>
+          </div>
+          <p>Gamified. Fights editorial serif tone.</p>
+        </div>
+        <div class="reject">
+          <h3>Traffic-light cells</h3>
+          <div class="reject-demo" style="gap:6px;align-items:center;padding:16px">
+            <span style="width:24px;height:24px;background:#c4623e;border-radius:4px"></span>
+            <span style="width:24px;height:24px;background:#e09318;border-radius:4px"></span>
+            <span style="width:24px;height:24px;background:#5f9e82;border-radius:4px"></span>
+          </div>
+          <p>Alarm dashboard energy on a calm brand.</p>
+        </div>
+        <div class="reject">
+          <h3>Horizontal bar race</h3>
+          <div class="reject-demo" style="flex-direction:column;align-items:stretch;justify-content:center;gap:6px">
+            <div style="height:10px;width:90%;background:#77c89a;border-radius:4px"></div>
+            <div style="height:10px;width:60%;background:#77c89a;border-radius:4px"></div>
+            <div style="height:10px;width:40%;background:#77c89a;border-radius:4px"></div>
+          </div>
+          <p>Generic SaaS analytics. Use ledger rank instead.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</body>
+</html>

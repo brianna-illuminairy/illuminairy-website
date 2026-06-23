@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>04 · Wireframes · Journey</title>
+  <link rel="stylesheet" href="_shared.css">
+  <style>
+    body { background: #e8eaed; }
+    .page { padding: 32px 24px 80px; max-width: 1200px; margin: 0 auto; }
+    .wf {
+      background: #f4f5f7;
+      border: 2px dashed #b0b5bd;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 32px;
+    }
+    .wf-title {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #5c6370;
+      margin-bottom: 16px;
+    }
+    .wf-box {
+      background: #fff;
+      border: 1px solid #c5cad1;
+      border-radius: 4px;
+      padding: 12px 14px;
+      font-size: 12px;
+      color: #4a515c;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+    .wf-box.dark { background: #3d4654; color: #e2e5ea; border-color: #3d4654; }
+    .wf-box.ghost { background: transparent; border-style: dashed; }
+    .wf-row { display: grid; gap: 8px; }
+    .wf-2col { grid-template-columns: 1fr 1fr; }
+    .wf-phone { max-width: 390px; margin: 0 auto; }
+    .wf-wide { max-width: 1080px; margin: 0 auto; }
+    .wf-label { font-size: 10px; color: #888; margin-top: 4px; }
+  </style>
+</head>
+<body>
+  <nav class="mock-nav" style="background:#fff;">
+    <a href="index.html">← Hub</a>
+    <span style="font-size:13px;color:#666;">04 · Wireframes</span>
+  </nav>
+
+  <div class="page">
+    <p class="mock-eyebrow" style="color:#5a7a65;">Low-fi structure only</p>
+    <h1 class="mock-h1" style="color:#2a3140;">Parent journey wireframes</h1>
+    <p class="mock-lede" style="color:#5c6370;">Layout flow — not final color. One brand, different widths.</p>
+
+    <div class="wf wf-wide">
+      <div class="wf-title">1 · Homepage / (1080px marketing)</div>
+      <div class="wf-row">
+        <div class="wf-box dark">Header · logo · slim navy strip</div>
+        <div class="wf-box">Hero headline (Source Serif)</div>
+        <div class="wf-box">Light CTA card · bullets · glow button</div>
+        <div class="wf-row wf-2col">
+          <div class="wf-box">Trust stat</div>
+          <div class="wf-box">Trust stat</div>
+          <div class="wf-box">Trust stat</div>
+        </div>
+        <div class="wf-box dark">Footer · navy strip</div>
+      </div>
+    </div>
+
+    <div class="wf">
+      <div class="wf-title">2 · Plan Builder /plan (phone column ~390px)</div>
+      <div class="wf-phone">
+        <div class="wf-row">
+          <div class="wf-box dark">Top chrome · logo · back · progress</div>
+          <div class="wf-box" style="min-height:200px;">Step content · scroll</div>
+          <div class="wf-box">Pinned step CTA (mint pill)</div>
+          <div class="wf-box ghost">Legal strip</div>
+        </div>
+      </div>
+      <p class="wf-label">Funnel stays mobile column — same header/CTA language as LP.</p>
+    </div>
+
+    <div class="wf wf-wide">
+      <div class="wf-title">3 · Enroll /enroll/* (1080px split)</div>
+      <div class="wf-row">
+        <div class="wf-box dark">Header + progress strip</div>
+        <div class="wf-row wf-2col">
+          <div class="wf-box">What's included · light hover card</div>
+          <div class="wf-box">Pay card · sticky · Stripe</div>
+        </div>
+        <div class="wf-box">Reviews · light glass cards</div>
+        <div class="wf-box">FAQ accordion</div>
+        <div class="wf-box dark">Footer</div>
+      </div>
+    </div>
+
+    <div class="wf wf-wide">
+      <div class="wf-title">4 · SOHA portal /soha/diagnostic</div>
+      <div class="wf-row">
+        <div class="wf-box dark">Header · tabs Diagnostic | Plan · enroll CTA</div>
+        <div class="wf-box dark" style="opacity:0.9;">Score hero · soft dark inset (optional)</div>
+        <div class="wf-box">Section · skills · light paper cards</div>
+        <div class="wf-box">Section · charts · hover rows</div>
+        <div class="wf-box dark">Footer · bootcamp link</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,8 +1,33 @@
 # Active context
 
-*Last updated: 2026-06-21 (Stripe → CRM → Meta Purchase pipeline)*
+*Last updated: 2026-06-22 (Plan Builder B lab funnel)*
 
 ## Resume here (start next chat with this)
+
+**June SAT Score Review funnel shipped in code** — dedicated LP + short funnel for cold Meta ad.
+
+- **LP:** `/june-score-review` (mom story + offer from ad script)
+- **Funnel:** `/score-review` → `app/quiz-c/` (13 steps: 6 intake → email/name/phone → book → CB prep → share → thank-you)
+- **Meta ad URL:** `npm run marketing:ad-urls` → `ad6_june_score_review`
+- **Owner before prod:** create Calendly event `june-sat-score-review`; set `NEXT_PUBLIC_SCORE_REVIEW_CALENDLY_URL`; Klaviyo **Score Review Booked** flow
+- **QA:** `npm run dev` → LP + funnel · `npm run funnel:score-review-analytics-smoke`
+- **Docs:** `growth/score-review-analytics-playbook.md`
+
+---
+
+## Previous: Plan Builder B lab funnel (2026-06-22)
+
+- **Live entry:** ad3 tutor HD (`utm_content=ad3_before_tutoring_hd1080` or `hook=tutor&version=hd1080`) on `/sat-plan-builder` → tutor LP → **`/plan-b`**
+- **Route:** `/plan-b` → `app/quiz-b/` + `lib/quiz-funnel-b/` (separate `qfb_*` storage)
+- **Offer:** free 45-min lesson → portal → $99/wk membership upsell (not Strategy Call)
+- **Dev override:** `?pb=b` on any LP also routes CTA to `/plan-b`; `/sat-free-lesson` is internal QA only
+- **Owner before prod:** apply migration `20260622120000_plan_b_lead_fields.sql`; set `NEXT_PUBLIC_FREE_LESSON_CALENDLY_URL`, `TWILIO_VERIFY_SERVICE_SID`, `PORTAL_SESSION_SECRET`, OAuth env; HPHS permission per `docs/leads/hphs-endorsement-gate.md`
+- **QA:** `npm run dev` → `/plan-b` · analytics checklist `npm run funnel:b-analytics-smoke`
+- **Docs:** `growth/plan-b-analytics-playbook.md`
+
+---
+
+## Previous: Stripe → CRM → Meta Purchase (2026-06-21)
 
 **Post-call enroll now writes CRM + Meta Purchase CAPI on finalize.** See [`docs/stripe-crm-meta-audit-results.md`](../docs/stripe-crm-meta-audit-results.md).
 

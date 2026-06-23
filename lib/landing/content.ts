@@ -3,6 +3,7 @@ import { satBreadthVsFocusLine } from "@/lib/sat-skills-copy";
 
 export type LandingSectionId =
   | "hero"
+  | "nav"
   | "science"
   | "great_news"
   | "included"

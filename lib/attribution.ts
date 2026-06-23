@@ -7,6 +7,9 @@ export const VISITOR_COOKIE = "illuminairy_vid";
 export const VISITOR_STORAGE_KEY = "illuminairy_vid";
 export const ATTRIBUTION_SESSION_KEY = "illuminairy_attribution";
 
+/** Ad creative revision — e.g. `hd1080` on Meta LP URLs (`?version=`). */
+export const ATTRIBUTION_VERSION_PARAM = "version" as const;
+
 /** Works on HTTP LAN dev (crypto.randomUUID needs a secure context). */
 export function createVisitorId(): string {
   const c = globalThis.crypto;
@@ -43,6 +46,8 @@ export type AttributionSnapshot = {
   landing_page?: string;
   /** Resolved on LP load — used to infer ad when utm_content is stripped. */
   hero_hook?: string;
+  /** Creative revision from ad URL — e.g. HD video relaunch (`hd1080`). */
+  version?: string;
   referrer?: string;
 };
 
@@ -62,6 +67,7 @@ const ATTRIBUTION_KEYS = [
   "fbc",
   "landing_page",
   "hero_hook",
+  "version",
   "referrer"
 ] as const satisfies readonly (keyof AttributionSnapshot)[];
 
@@ -78,6 +84,7 @@ const ATTRIBUTION_MAX_LEN: Record<keyof AttributionSnapshot, number> = {
   fbc: 220,
   landing_page: 300,
   hero_hook: 80,
+  version: 80,
   referrer: 300
 };
 
@@ -121,6 +128,12 @@ export function parseAttributionFromSearch(
     }
   }
 
+  const version = params.get(ATTRIBUTION_VERSION_PARAM);
+  if (version) {
+    const cleaned = sanitizeAttributionValue("version", version);
+    if (cleaned) snap.version = cleaned;
+  }
+
   return snap;
 }
 
@@ -151,7 +164,7 @@ export function deriveLeadSource(snap: AttributionSnapshot): string {
   return "unknown";
 }
 
-const CONTEXT_KEYS = ["hero_hook", "landing_page"] as const;
+const CONTEXT_KEYS = ["hero_hook", "landing_page", "version"] as const;
 
 export function mergeAttribution(
   base: AttributionSnapshot,
@@ -260,6 +273,7 @@ export function attributionUtmProps(
   | "gclid"
   | "landing_page"
   | "hero_hook"
+  | "version"
 > {
   return {
     utm_source: snap.utm_source,
@@ -270,6 +284,7 @@ export function attributionUtmProps(
     fbclid: snap.fbclid,
     gclid: snap.gclid,
     landing_page: snap.landing_page,
-    hero_hook: snap.hero_hook
+    hero_hook: snap.hero_hook,
+    version: snap.version
   };
 }

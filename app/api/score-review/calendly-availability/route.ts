@@ -1,0 +1,59 @@
+import { NextResponse } from "next/server";
+import { fetchFunnelSchedulerDays } from "@/lib/calendly/funnel-availability";
+import { funnelApiError } from "@/lib/calendly/funnel-api-errors";
+import { classifyBookingError } from "@/lib/calendly/booking-errors";
+import { site } from "@/lib/site";
+
+const AVAILABILITY_EMPTY =
+  "No review times are open right now. Check back tomorrow or email support@illuminairy.com.";
+
+const AVAILABILITY_FAILED =
+  "We could not load open times. Refresh the page or try again in a minute.";
+
+export async function GET(request: Request) {
+  const fresh =
+    new URL(request.url).searchParams.get("fresh") === "1" ||
+    request.headers.get("cache-control")?.includes("no-cache");
+  const token = process.env.CALENDLY_API_TOKEN?.trim();
+  if (!token) {
+    return funnelApiError(503, "calendly_api", {
+      retryable: false,
+      message: AVAILABILITY_FAILED,
+      extra: { days: [] },
+    });
+  }
+
+  try {
+    const days = await fetchFunnelSchedulerDays(token, site.scoreReviewCalendlyUrl, { fresh });
+    if (days.length === 0) {
+      return NextResponse.json({
+        ok: false,
+        error: AVAILABILITY_EMPTY,
+        error_code: "availability_load",
+        retryable: false,
+        days: [],
+      });
+    }
+    const cacheHeaders = fresh
+      ? { "Cache-Control": "no-store, max-age=0" }
+      : {
+          "Cache-Control":
+            "public, s-maxage=45, stale-while-revalidate=120, max-age=30",
+        };
+    return NextResponse.json({ ok: true, days }, { headers: cacheHeaders });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Calendly fetch failed";
+    const code = classifyBookingError(message, { httpStatus: 502 });
+    console.error("[score-review/calendly-availability]", message);
+    return NextResponse.json(
+      {
+        ok: false,
+        error: AVAILABILITY_FAILED,
+        error_code: code,
+        retryable: true,
+        days: [],
+      },
+      { status: 502 }
+    );
+  }
+}

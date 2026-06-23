@@ -13,6 +13,7 @@ export const TouchEvents = {
   intakeStarted: "intake_started",
   scheduleViewed: "schedule_viewed",
   funnelCtaClick: "funnel_cta_click",
+  funnelLpSmsClick: "funnel_lp_sms_click",
   parentConfirmed: "parent_confirmed",
   quizStarted: "quiz_started",
   quizStepView: "quiz_step_view",
@@ -21,7 +22,15 @@ export const TouchEvents = {
   callBooked: "call_booked",
   bookingError: "booking_error",
   attributionReturn: "attribution_return",
-  quizScheduleView: "quiz_schedule_view"
+  quizScheduleView: "quiz_schedule_view",
+  labPhoneVerified: "lab_phone_verified",
+  labLeadSubmitted: "lab_lead_submitted",
+  labLessonBooked: "lab_lesson_booked",
+  labLessonAttended: "lab_lesson_attended",
+  scoreReviewPhoneVerified: "score_review_phone_verified",
+  scoreReviewLeadSubmitted: "score_review_lead_submitted",
+  scoreReviewBooked: "score_review_booked",
+  scoreReviewLinkShared: "score_review_link_shared"
 } as const;
 
 export type TouchEventName = (typeof TouchEvents)[keyof typeof TouchEvents];
@@ -34,6 +43,7 @@ export const CLIENT_TOUCH_EVENTS = new Set<TouchEventName>([
   TouchEvents.intakeStarted,
   TouchEvents.scheduleViewed,
   TouchEvents.funnelCtaClick,
+  TouchEvents.funnelLpSmsClick,
   TouchEvents.parentConfirmed,
   TouchEvents.quizStarted,
   TouchEvents.quizStepView,
@@ -96,7 +106,54 @@ export const KlaviyoEvents = {
   quizCallBooked: "Quiz Call Booked",
   quizCallCanceled: "Quiz Call Canceled",
   quizStepReached: "Quiz Step Reached",
-  quizAbandoned: "Quiz Abandoned"
+  quizAbandoned: "Quiz Abandoned",
+  labLeadSubmitted: "Lab Lead Submitted",
+  freeLessonBooked: "Free Lesson Booked",
+  freeLessonAttended: "Free Lesson Attended",
+  freeLessonCanceled: "Free Lesson Canceled",
+  scoreReviewLeadSubmitted: "Score Review Lead Submitted",
+  scoreReviewBooked: "Score Review Booked",
+  scoreReviewCanceled: "Score Review Canceled"
+} as const;
+
+/** Plan Builder B (lab) — PostHog event names. */
+export const LabPostHogEvents = {
+  labPhoneVerified: "lab_phone_verified",
+  labLeadSubmitted: "lab_lead_submitted",
+  labLessonBooked: "lab_lesson_booked",
+  labLessonAttended: "lab_lesson_attended",
+  labPortalLogin: "lab_portal_login",
+  labPortalPageView: "lab_portal_page_view",
+  labMembershipOfferViewed: "lab_membership_offer_viewed",
+  labMembershipOfferClicked: "lab_membership_offer_clicked",
+  labLessonLinkShared: "lab_lesson_link_shared"
+} as const;
+
+/** Plan Builder B (lab) — GA4 event names. */
+export const LabGa4Events = {
+  labPhoneVerified: "lab_phone_verified",
+  labLeadSubmitted: "lab_lead_submitted",
+  labLessonBooked: "lab_lesson_booked",
+  labLessonAttended: "lab_lesson_attended",
+  labPortalLogin: "lab_portal_login",
+  labPortalPageView: "lab_portal_page_view"
+} as const;
+
+/** June SAT Score Review funnel — PostHog event names. */
+export const ScoreReviewPostHogEvents = {
+  stepViewed: "score_review_step_viewed",
+  phoneVerified: "score_review_phone_verified",
+  leadSubmitted: "score_review_lead_submitted",
+  booked: "score_review_booked",
+  linkShared: "score_review_link_shared",
+} as const;
+
+/** June SAT Score Review funnel — GA4 event names. */
+export const ScoreReviewGa4Events = {
+  stepView: "score_review_step_view",
+  phoneVerified: "score_review_phone_verified",
+  leadSubmitted: "score_review_lead_submitted",
+  booked: "score_review_booked",
 } as const;
 
 /** Milestone steps that trigger Klaviyo "Quiz Step Reached" when profile exists. */

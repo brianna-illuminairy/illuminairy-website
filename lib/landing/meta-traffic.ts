@@ -1,3 +1,4 @@
+import { landingSearchParams } from "@/lib/landing/landing-search";
 import {
   heroHookForMetro,
   metroFromSearch,
@@ -19,8 +20,7 @@ export type MetaLandingContext = {
 };
 
 function parseParams(search: string): URLSearchParams {
-  const normalized = search.startsWith("?") ? search.slice(1) : search;
-  return new URLSearchParams(normalized);
+  return landingSearchParams(search);
 }
 
 /** Meta Ads Manager, Instagram, or Advantage+ traffic. */
@@ -110,6 +110,7 @@ export function metaSatPlanBuilderLandingUrl(input: {
   content: string;
   term?: string;
   source?: "facebook" | "meta";
+  version?: string;
 }): string {
   const params = new URLSearchParams({
     utm_source: input.source ?? "meta",
@@ -119,7 +120,29 @@ export function metaSatPlanBuilderLandingUrl(input: {
   });
   if (input.term) params.set("utm_term", input.term);
   if (input.hook) params.set("hook", input.hook);
+  if (input.version) params.set("version", input.version);
   return `https://illuminairy.com/sat-plan-builder?${params.toString()}`;
+}
+
+/** June SAT Score Review Meta ads — `/june-score-review`. */
+export function metaScoreReviewLandingUrl(input: {
+  hook?: LandingHeroHook;
+  campaign?: string;
+  content: string;
+  term?: string;
+  source?: "facebook" | "meta";
+  version?: string;
+}): string {
+  const params = new URLSearchParams({
+    utm_source: input.source ?? "meta",
+    utm_medium: "paid_social",
+    utm_campaign: input.campaign ?? "c1_june_score_review",
+    utm_content: input.content,
+  });
+  if (input.term) params.set("utm_term", input.term);
+  if (input.hook) params.set("hook", input.hook);
+  if (input.version) params.set("version", input.version);
+  return `https://illuminairy.com/june-score-review?${params.toString()}`;
 }
 
 export { metroFromSearch, normalizeMetroParam };

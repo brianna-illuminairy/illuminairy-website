@@ -131,7 +131,11 @@ const nextConfig = {
   async rewrites() {
     const planBuilderRewrites = [
       { source: "/plan", destination: "/quiz" },
-      { source: "/plan/:path*", destination: "/quiz/:path*" }
+      { source: "/plan/:path*", destination: "/quiz/:path*" },
+      { source: "/plan-b", destination: "/quiz-b" },
+      { source: "/plan-b/:path*", destination: "/quiz-b/:path*" },
+      { source: "/score-review", destination: "/quiz-c" },
+      { source: "/score-review/:path*", destination: "/quiz-c/:path*" }
     ];
 
     const host = process.env.NEXT_PUBLIC_POSTHOG_HOST ?? "";

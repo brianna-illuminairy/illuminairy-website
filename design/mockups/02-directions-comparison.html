@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>02 · Directions comparison</title>
+  <link rel="stylesheet" href="_shared.css">
+  <style>
+    .page { padding: 32px 24px 80px; max-width: 1400px; margin: 0 auto; }
+    .cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; align-items: start; }
+    @media (max-width: 1000px) { .cols { grid-template-columns: 1fr; } }
+    .dir {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: var(--paper);
+    }
+    .dir-label {
+      padding: 14px 16px;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--line);
+    }
+    .dir-label.rec { background: rgba(119, 200, 154, 0.1); color: var(--forest); }
+    .dir-label.harsh { background: rgba(242, 72, 34, 0.08); color: #9a2b2b; }
+    .dir-body { padding: 16px; font-size: 14px; }
+    .mini-header {
+      background: var(--navy);
+      color: white;
+      text-align: center;
+      padding: 10px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+    }
+    .mini-hero { padding: 16px 14px; }
+    .mini-hero h3 {
+      font-family: var(--display);
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 1.15;
+      margin-bottom: 12px;
+    }
+    .mini-hero.harsh-h3 h3 { font-family: var(--body); font-weight: 800; }
+    .mini-enroll { margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--line); }
+    .mini-enroll h4 { font-size: 11px; font-family: var(--mono); color: var(--muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.1em; }
+    .dir-b .mini-hero { position: relative; }
+    .dir-b .aurora-stars i:nth-child(1) { left: 8%; top: 12%; }
+    .dir-b .aurora-stars i:nth-child(2) { left: 78%; top: 20%; animation-delay: 1s; }
+    .dir-b .aurora-stars i:nth-child(3) { left: 45%; top: 8%; animation-delay: 2s; }
+    .dir-c .mini-hero { background: #e8e0d4; }
+  </style>
+</head>
+<body>
+  <nav class="mock-nav">
+    <a href="index.html">← Hub</a>
+    <span style="font-size:13px;color:var(--muted);">02 · Directions</span>
+  </nav>
+
+  <div class="page">
+    <p class="mock-eyebrow">Pick a direction</p>
+    <h1 class="mock-h1">Same content, three moods</h1>
+    <p class="mock-lede">LP hero snippet + enroll “what’s included” block. Hover cards in direction A/B.</p>
+
+    <div class="cols">
+      <!-- A Soft Editorial -->
+      <div class="dir">
+        <div class="dir-label rec">A · Soft editorial (recommended)</div>
+        <div class="dir-body" style="background:var(--white);">
+          <div class="mini-header">ILLUMINAIRY</div>
+          <div class="mini-hero">
+            <h3>See what's holding their SAT score back</h3>
+            <div class="aurora-hover-card">
+              <p style="font-size:13px;color:var(--muted);margin-bottom:12px;">Free parent plan · about 2 min</p>
+              <button type="button" class="aurora-btn-primary" style="font-size:14px;padding:12px;">Start the plan →</button>
+            </div>
+            <div class="mini-enroll">
+              <h4>Enroll snippet</h4>
+              <div class="aurora-hover-card" style="padding:16px;">
+                <p style="font-weight:600;margin-bottom:6px;">What's included</p>
+                <p style="font-size:13px;color:var(--muted);">3× weekly sessions · Skill Diagnostic done</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- B Aurora Light -->
+      <div class="dir dir-b">
+        <div class="dir-label rec">B · Aurora light</div>
+        <div class="dir-body aurora-wash-light" style="background:var(--white);">
+          <div class="aurora-stars" aria-hidden="true"><i></i><i></i><i></i></div>
+          <div class="mini-header">ILLUMINAIRY</div>
+          <div class="mini-hero">
+            <h3>See what's holding their SAT score back</h3>
+            <div class="aurora-border-glow">
+              <div class="aurora-border-glow__inner aurora-hover-card" style="box-shadow:none;border:none;">
+                <p style="font-size:13px;color:var(--muted);margin-bottom:12px;">Free parent plan · about 2 min</p>
+                <button type="button" class="aurora-btn-primary" style="font-size:14px;padding:12px;">Start the plan →</button>
+              </div>
+            </div>
+            <div class="mini-enroll">
+              <h4>Enroll snippet</h4>
+              <div class="aurora-border-glow">
+                <div class="aurora-border-glow__inner" style="padding:16px;">
+                  <p style="font-weight:600;margin-bottom:6px;">What's included</p>
+                  <p style="font-size:13px;color:var(--muted);">3× weekly sessions · Skill Diagnostic done</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- C Harsh baseline -->
+      <div class="dir dir-c">
+        <div class="dir-label harsh">C · Current (harsh baseline)</div>
+        <div class="dir-body">
+          <div class="mini-header">ILLUMINAIRY</div>
+          <div class="mini-hero harsh-h3">
+            <h3>See what's holding their SAT score back</h3>
+            <div class="harsh-cta-card">
+              <p style="font-family:var(--mono);font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--aurora);margin-bottom:10px;">FREE PARENT PLAN</p>
+              <button type="button" style="width:100%;padding:12px;border:none;border-radius:999px;background:var(--aurora);color:var(--navy);font-weight:700;">Start the plan →</button>
+            </div>
+            <div class="mini-enroll">
+              <h4>Enroll snippet</h4>
+              <div class="harsh-summary">
+                <p style="font-weight:800;margin-bottom:8px;">What's included</p>
+                <p style="font-size:13px;opacity:0.8;">Dark card · Hanken 800 · heavy contrast</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -53,6 +53,7 @@ export async function upsertLeadFromQuizFunnel(
     visitorId?: string;
     attribution?: AttributionSnapshot;
     metaMatch?: LeadMetaMatchInput;
+    funnel?: string;
   }
 ) {
   const supabase = getSupabaseAdmin();
@@ -110,7 +111,7 @@ export async function upsertLeadFromQuizFunnel(
     score_range: answers.q4 ?? null,
     main_goal: answers.q8 ?? null,
     target_score: answers.q8 ?? null,
-    funnel: "sat_quiz",
+    funnel: options.funnel ?? "sat_quiz",
     intake_submitted_at: now,
     quiz_who: answers.qWho ?? null,
     quiz_score_lower: answers.qScoreLower ?? null,
@@ -128,11 +129,12 @@ export async function upsertLeadFromQuizFunnel(
     tcpa_consent_at: answers.confirmTcpa ? now : null,
     quiz_answers: quizSnapshot,
     additional_context: JSON.stringify({
-      funnel: "sat_quiz",
+      funnel: options.funnel ?? "sat_quiz",
       ...quizSnapshot,
       promised_gain_pts: promisedGain,
       showed_gpa_gap: gpaGap,
-      weeks_until_test: weeksUntilQ5Test(answers.q5)
+      weeks_until_test: weeksUntilQ5Test(answers.q5),
+      creative_version: attribution.version ?? null
     }),
     stage: "intake_submitted" as const,
     lost_reason: null,
@@ -250,7 +252,7 @@ export async function upsertLeadFromQuizFunnel(
     source: "server",
     payload: {
       parent_email: email,
-      funnel: "sat_quiz",
+      funnel: options.funnel ?? "sat_quiz",
       qWho: answers.qWho,
       qScoreLower: answers.qScoreLower,
       q1: answers.q1,

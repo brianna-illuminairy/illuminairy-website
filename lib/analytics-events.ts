@@ -16,6 +16,7 @@ export const AnalyticsEvents = {
   getStartedScheduleViewed: "get_started_schedule_viewed",
   funnelLandingView: "funnel_landing_view",
   funnelCtaClick: "funnel_cta_click",
+  funnelLpSmsClick: "funnel_lp_sms_click",
   assessmentStart: "assessment_start",
   intakeStepView: "intake_step_view",
   intakeStepBack: "intake_step_back",

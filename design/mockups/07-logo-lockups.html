@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>07 · Logo & typography lockups</title>
+  <link rel="stylesheet" href="_shared.css">
+  <style>
+    .page { padding: 32px 24px 100px; max-width: 1100px; margin: 0 auto; }
+
+    .section { margin-bottom: 56px; }
+    .section > h2 {
+      font-family: var(--display);
+      font-size: clamp(22px, 3vw, 28px);
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .section > .lede {
+      color: var(--muted);
+      max-width: 65ch;
+      margin-bottom: 24px;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .lockup-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 16px;
+    }
+
+    .lockup-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: var(--paper);
+    }
+
+    .lockup-card__meta {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(245, 248, 250, 0.7);
+    }
+
+    .lockup-card__meta h3 {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .lockup-card__meta p {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .lockup-card__meta .tag {
+      display: inline-block;
+      margin-top: 8px;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 999px;
+    }
+
+    .tag.prod { background: rgba(0, 87, 168, 0.1); color: var(--celestial); }
+    .tag.rec { background: rgba(47, 110, 71, 0.12); color: var(--forest); }
+    .tag.ref { background: rgba(18, 26, 43, 0.08); color: var(--muted); }
+    .tag.legacy { background: rgba(242, 72, 34, 0.08); color: #9a2b2b; }
+
+    .lockup-stage {
+      padding: 28px 24px;
+      min-height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .lockup-stage.dark { background: var(--navy); }
+    .lockup-stage.light { background: var(--white); border-top: 1px solid var(--line); }
+    .lockup-stage.paper { background: var(--paper); }
+
+    .lockup-stage__label {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-align: center;
+      padding: 8px;
+      border-top: 1px solid var(--line);
+      background: rgba(245, 248, 250, 0.5);
+    }
+
+    .lockup-stage.dark + .lockup-stage__label,
+    .lockup-stage.dark ~ .lockup-stage__label { border-color: rgba(255,255,255,0.08); background: rgba(0,0,0,0.2); color: rgba(188,195,204,0.8); }
+
+    /* ── Lockup variants ── */
+
+    /* A · Raster v7 (production) */
+    .logo-raster { height: 32px; width: auto; max-width: 100%; display: block; }
+    .logo-raster--sm { height: 26px; }
+    .logo-raster--lg { height: 44px; }
+
+    /* B · SVG v7 inline scale */
+    .logo-svg-v7 { width: min(240px, 100%); height: auto; display: block; }
+
+    /* C · Hanken uppercase chrome */
+    .logo-hanken-upper {
+      font-family: var(--body);
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--white);
+      white-space: nowrap;
+    }
+
+    .logo-hanken-upper.on-light { color: var(--ink); }
+
+    /* D · Stars + Hanken (horizontal lockup) */
+    .logo-stars-lockup {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-stars-cluster {
+      position: relative;
+      width: 28px;
+      height: 28px;
+      flex-shrink: 0;
+    }
+
+    .logo-stars-cluster svg {
+      position: absolute;
+      overflow: visible;
+    }
+
+    .logo-stars-word {
+      font-family: var(--body);
+      font-weight: 600;
+      font-size: 15px;
+      letter-spacing: 0.06em;
+      color: var(--white);
+    }
+
+    .logo-stars-word.on-light { color: var(--ink); }
+
+    .logo-stars-word.serif {
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: 17px;
+      letter-spacing: -0.01em;
+    }
+
+    /* E · Glow dot + uppercase (funnel text) */
+    .logo-dot-lockup {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-dot-lockup::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--aurora);
+      box-shadow: 0 0 16px rgba(119, 200, 154, 0.9), 0 0 32px rgba(119, 200, 154, 0.45);
+      flex-shrink: 0;
+    }
+
+    /* F · Source Serif editorial */
+    .logo-serif {
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: 22px;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+    }
+
+    .logo-serif.on-dark { color: var(--white); }
+    .logo-serif--hero { font-size: clamp(28px, 5vw, 40px); }
+
+    /* G · Brand guide Cormorant (reference) */
+    .logo-cormorant {
+      font-family: "Cormorant Garamond", Georgia, serif;
+      font-weight: 600;
+      font-size: 15px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--white);
+    }
+
+    /* H · Legacy v2 mark + wordmark */
+    .logo-legacy-lockup {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-legacy-lockup .wm {
+      font-family: system-ui, sans-serif;
+      font-weight: 600;
+      font-size: 16px;
+      color: var(--ink);
+    }
+
+    .logo-legacy-lockup .wm .ai { color: #c49a18; }
+
+    /* Header strip demo */
+    .header-demo {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    .header-demo__bar {
+      background: var(--navy);
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      position: relative;
+    }
+
+    .header-demo__bar::before {
+      content: "";
+      position: absolute;
+      top: -80px;
+      right: -40px;
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(119, 200, 154, 0.25), transparent 65%);
+      pointer-events: none;
+    }
+
+    .header-demo__bar > * { position: relative; z-index: 1; }
+
+    .header-demo__ghost {
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.25);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 600;
+      background: transparent;
+    }
+
+    .header-demo__caption {
+      padding: 10px 16px;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      background: rgba(245, 248, 250, 0.8);
+      border-top: 1px solid var(--line);
+    }
+
+    .scale-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      gap: 24px;
+      padding: 24px;
+      background: var(--navy);
+      border-radius: var(--radius);
+      margin-top: 16px;
+    }
+
+    .scale-item { text-align: center; }
+    .scale-item span {
+      display: block;
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(188, 195, 204, 0.75);
+      margin-top: 8px;
+    }
+
+    .pair-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      margin-top: 16px;
+    }
+
+    .pair-table th,
+    .pair-table td {
+      border: 1px solid var(--line);
+      padding: 12px 14px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .pair-table th {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      background: rgba(245, 248, 250, 0.8);
+    }
+
+    .icon-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .icon-chip {
+      text-align: center;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      min-width: 88px;
+    }
+
+    .icon-chip img,
+    .icon-chip svg { display: block; margin: 0 auto 8px; }
+
+    .icon-chip code {
+      font-family: var(--mono);
+      font-size: 9px;
+      color: var(--muted);
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <nav class="mock-nav">
+    <a href="index.html">← Hub</a>
+    <a href="01-brand-board-palette.html">Palette</a>
+    <a href="06-cta-options.html">CTAs</a>
+    <a href="08-wordmark-type.html">Wordmark fonts</a>
+    <span style="font-size:13px;color:var(--muted);">07 · Logo lockups</span>
+  </nav>
+
+  <div class="page">
+    <p class="mock-eyebrow">Icon · wordmark · type pairing</p>
+    <h1 class="mock-h1">Logo & typography combos</h1>
+    <p class="mock-lede">Same company across funnel, enroll, portal, and LP. Each card shows the lockup on <strong>dark chrome</strong> and <strong>light page</strong>. Pick favorites — we’ll lock one header recipe + one hero scale.</p>
+
+    <p class="mock-lede">Same company across funnel, enroll, portal, and LP. Each card shows the lockup on <strong>dark chrome</strong> and <strong>light page</strong>. Pick favorites — we’ll lock one header recipe + one hero scale.</p>
+
+    <div class="locked-picks" style="margin-bottom:40px;padding:28px 24px;border:2px solid rgba(47,110,71,0.35);border-radius:var(--radius);background:linear-gradient(135deg,rgba(184,245,209,0.12),rgba(245,248,250,0.95));">
+      <p style="font-family:var(--mono);font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--forest);margin-bottom:8px;">Direction · Jun 2026</p>
+      <h2 style="font-family:var(--display);font-size:22px;font-weight:600;margin-bottom:10px;">Keep the arc · swap the stars</h2>
+      <p style="font-size:14px;color:var(--muted);line-height:1.65;max-width:62ch;margin-bottom:20px;">
+        <strong style="color:var(--ink);">Yes:</strong> v7 aurora arc under the wordmark.<br>
+        <strong style="color:var(--ink);">No:</strong> mechanical line-cross stars (v7 SVG) · legacy v2 path + gold “ai”.<br>
+        <strong style="color:var(--ink);">Yes:</strong> soft filled 4-point stars — same family as enroll <code>std-star6</code> and <code>logo-horizontal.png</code>.
+      </p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div style="background:var(--navy);border-radius:12px;padding:20px;text-align:center;">
+          <p style="font-family:var(--mono);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(188,195,204,0.7);margin-bottom:12px;">B · mechanical (reject)</p>
+          <img src="../../public/brand/logo-v7-on-dark.svg" alt="" style="width:min(220px,100%);height:auto;opacity:0.85;">
+        </div>
+        <div style="background:var(--navy);border-radius:12px;padding:20px;text-align:center;border:2px solid rgba(119,200,154,0.45);">
+          <p style="font-family:var(--mono);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--glow);margin-bottom:12px;">F · soft stars + arc (explore)</p>
+          <img src="../../public/brand/logo-v8-soft-stars-on-dark.svg" alt="" style="width:min(220px,100%);height:auto;">
+        </div>
+      </div>
+    </div>
+
+    <!-- Reference assets -->
+    <section class="section">
+      <h2>Assets in repo today</h2>
+      <div class="icon-row">
+        <div class="icon-chip">
+          <img src="../../public/brand/logo-horizontal.png" alt="" width="120" height="46" style="height:40px;width:auto;">
+          <code>logo-horizontal.png</code>
+        </div>
+        <div class="icon-chip">
+          <img src="../../public/brand/logo-square.png" alt="" width="48" height="48" style="width:48px;height:48px;border-radius:10px;">
+          <code>logo-square.png</code>
+        </div>
+        <div class="icon-chip">
+          <img src="../../public/logo-mark.svg" alt="" width="48" height="48">
+          <code>logo-mark.svg (v2 path)</code>
+        </div>
+        <div class="icon-chip" style="background:var(--navy);">
+          <img src="../../public/brand/logo-v8-soft-stars-on-dark.svg" alt="" class="logo-svg-v7" style="width:140px;">
+          <code style="color:rgba(188,195,204,0.7);">logo-v8-soft-stars-on-dark.svg</code>
+        </div>
+        <div class="icon-chip" style="background:var(--white);border:1px solid var(--line);">
+          <img src="../../public/brand/logo-v8-soft-stars-on-light.svg" alt="" class="logo-svg-v7" style="width:140px;">
+          <code>logo-v8-soft-stars-on-light.svg</code>
+        </div>
+      </div>
+    </section>
+
+    <!-- Header context -->
+    <section class="section">
+      <h2>In header context (navy bar)</h2>
+      <p class="lede">This is the most common placement — slim chrome, optional ghost CTA on the right.</p>
+
+      <div class="header-demo">
+        <div class="header-demo__bar">
+          <img src="../../public/brand/logo-v8-soft-stars-on-dark.svg" alt="Illuminairy" class="logo-svg-v7" style="width:min(210px,58vw);">
+          <span class="header-demo__ghost">Bootcamp enrollment</span>
+        </div>
+        <div class="header-demo__caption">F · Soft stars + arc + Source Serif — recommended explore</div>
+      </div>
+
+      <div class="header-demo">
+        <div class="header-demo__bar">
+          <img src="../../public/brand/logo-v7-on-dark.svg" alt="Illuminairy" class="logo-svg-v7" style="width:min(200px,55vw);">
+          <span class="header-demo__ghost">Bootcamp enrollment</span>
+        </div>
+        <div class="header-demo__caption">B · SVG v7 — line stars (reject mechanical crosses)</div>
+      </div>
+
+      <div class="header-demo">
+        <div class="header-demo__bar">
+          <img src="../../public/brand/logo-horizontal.png" alt="Illuminairy" class="logo-raster">
+          <span class="header-demo__ghost">Bootcamp enrollment</span>
+        </div>
+        <div class="header-demo__caption">A · Raster horizontal — likely the hand-drawn stars you remember</div>
+      </div>
+
+      <div class="header-demo">
+        <div class="header-demo__bar">
+          <div class="logo-stars-lockup">
+            <div class="logo-stars-cluster" aria-hidden="true">
+              <svg width="18" height="18" style="top:0;left:4px;" viewBox="0 0 24 24"><g stroke="#B8F5D1" stroke-width="2" stroke-linecap="round"><line x1="12" y1="2" x2="12" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="19.1" y2="19.1"/><line x1="19.1" y1="4.9" x2="4.9" y2="19.1"/></g></svg>
+              <svg width="11" height="11" style="bottom:0;left:0;opacity:0.85;" viewBox="0 0 24 24"><g stroke="#77C89A" stroke-width="2" stroke-linecap="round"><line x1="12" y1="3" x2="12" y2="21"/><line x1="3" y1="12" x2="21" y2="12"/></g></svg>
+              <svg width="8" height="8" style="bottom:2px;right:0;opacity:0.65;" viewBox="0 0 24 24"><g stroke="#0057A8" stroke-width="2" stroke-linecap="round"><line x1="12" y1="4" x2="12" y2="20"/><line x1="4" y1="12" x2="20" y2="12"/></g></svg>
+            </div>
+            <span class="logo-stars-word serif">Illuminairy</span>
+          </div>
+          <span class="header-demo__ghost">Bootcamp enrollment</span>
+        </div>
+        <div class="header-demo__caption">C · Star cluster + Source Serif — editorial product chrome</div>
+      </div>
+
+      <div class="header-demo">
+        <div class="header-demo__bar">
+          <span class="logo-hanken-upper">Illuminairy</span>
+          <span class="header-demo__ghost">Bootcamp enrollment</span>
+        </div>
+        <div class="header-demo__caption">D · Hanken uppercase tracked — mockups / light observatory</div>
+      </div>
+
+      <div class="header-demo">
+        <div class="header-demo__bar">
+          <div class="logo-dot-lockup">
+            <span class="logo-hanken-upper" style="letter-spacing:0.22em;">Illuminairy</span>
+          </div>
+          <span class="header-demo__ghost">Bootcamp enrollment</span>
+        </div>
+        <div class="header-demo__caption">E · Aurora glow dot + uppercase — quiz funnel wordmark cousin</div>
+      </div>
+    </section>
+
+    <!-- Full comparison grid -->
+    <section class="section">
+      <h2>All lockups · dark & light</h2>
+      <div class="lockup-grid">
+
+        <div class="lockup-card">
+          <div class="lockup-card__meta">
+            <h3>Raster horizontal v7</h3>
+            <p>Serif wordmark baked in PNG. Pixel-perfect on dark. Funnel + enroll SSOT.</p>
+            <span class="tag prod">Production today</span>
+          </div>
+          <div class="lockup-stage dark">
+            <img src="../../public/brand/logo-horizontal.png" alt="" class="logo-raster logo-raster--lg">
+          </div>
+          <div class="lockup-stage__label">On navy · header ~32–36px tall</div>
+          <div class="lockup-stage light">
+            <img src="../../public/brand/logo-horizontal.png" alt="" class="logo-raster" style="filter: brightness(0.15);">
+          </div>
+          <div class="lockup-stage__label">On light — PNG is on-dark only (needs light variant)</div>
+        </div>
+
+        <div class="lockup-card">
+          <div class="lockup-card__meta">
+            <h3>Soft stars + arc (v8)</h3>
+            <p>Same aurora arch as v7. Filled organic 4-point stars (std-star6 family). Source Serif wordmark. Scalable SVG.</p>
+            <span class="tag rec">Recommended · explore</span>
+          </div>
+          <div class="lockup-stage dark">
+            <img src="../../public/brand/logo-v8-soft-stars-on-dark.svg" alt="" class="logo-svg-v7">
+          </div>
+          <div class="lockup-stage__label">On navy</div>
+          <div class="lockup-stage light">
+            <img src="../../public/brand/logo-v8-soft-stars-on-light.svg" alt="" class="logo-svg-v7">
+          </div>
+          <div class="lockup-stage__label">On polar white · on-light variant</div>
+        </div>
+
+        <div class="lockup-card">
+          <div class="lockup-card__meta">
+            <h3>SVG v7 · line stars</h3>
+            <p>Scalable arc — but mechanical cross strokes. Reject for product; keep arc recipe only.</p>
+            <span class="tag legacy">Reject stars · keep arc</span>
+          </div>
+          <div class="lockup-stage dark">
+            <img src="../../public/brand/logo-v7-on-dark.svg" alt="" class="logo-svg-v7">
+          </div>
+          <div class="lockup-stage__label">On navy</div>
+          <div class="lockup-stage light">
+            <p style="font-size:13px;color:var(--muted);text-align:center;">Needs <code>logo-v7-on-light.svg</code> — invert wordmark to ink, keep aurora stars</p>
+          </div>
+        </div>
+
+        <div class="lockup-card">
+          <div class="lockup-card__meta">
+            <h3>Enroll std-star6 cluster</h3>
+            <p>Hand-drawn filled stars in code — same shape family as v8. Was used beside Hanken wordmark before PNG.</p>
+            <span class="tag ref">Star shape source</span>
+          </div>
+          <div class="lockup-stage dark">
+            <div class="logo-stars-lockup">
+              <div class="logo-stars-cluster" aria-hidden="true" style="width:32px;height:32px;">
+                <svg width="18" height="18" style="top:0;left:6px;" viewBox="0 0 24 24"><path fill="#B8F5D1" d="M12,0 L14.1,8.36 L22.39,6 L16.2,12 L22.39,18 L14.1,15.64 L12,24 L9.9,15.64 L1.61,18 L7.8,12 L1.61,6 L9.9,8.36 Z"/></svg>
+                <svg width="11" height="11" style="bottom:0;left:0;opacity:0.85;" viewBox="0 0 24 24"><path fill="#77C89A" d="M12,0 L14.1,8.36 L22.39,6 L16.2,12 L22.39,18 L14.1,15.64 L12,24 L9.9,15.64 L1.61,18 L7.8,12 L1.61,6 L9.9,8.36 Z"/></svg>
+                <svg width="8" height="8" style="bottom:2px;right:0;opacity:0.65;" viewBox="0 0 24 24"><path fill="#0057A8" d="M12,0 L14.1,8.36 L22.39,6 L16.2,12 L22.39,18 L14.1,15.64 L12,24 L9.9,15.64 L1.61,18 L7.8,12 L1.61,6 L9.9,8.36 Z"/></svg>
+              </div>
+              <span class="logo-stars-word serif">Illuminairy</span>
+            </div>
+          </div>
+          <div class="lockup-stage light">
+            <div class="logo-stars-lockup">
+              <div class="logo-stars-cluster" aria-hidden="true" style="width:32px;height:32px;">
+                <svg width="18" height="18" style="top:0;left:6px;" viewBox="0 0 24 24"><path fill="#2F6E47" d="M12,0 L14.1,8.36 L22.39,6 L16.2,12 L22.39,18 L14.1,15.64 L12,24 L9.9,15.64 L1.61,18 L7.8,12 L1.61,6 L9.9,8.36 Z"/></svg>
+                <svg width="11" height="11" style="bottom:0;left:0;opacity:0.85;" viewBox="0 0 24 24"><path fill="#77C89A" d="M12,0 L14.1,8.36 L22.39,6 L16.2,12 L22.39,18 L14.1,15.64 L12,24 L9.9,15.64 L1.61,18 L7.8,12 L1.61,6 L9.9,8.36 Z"/></svg>
+              </div>
+              <span class="logo-stars-word serif on-light">Illuminairy</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="lockup-card">
+          <div class="lockup-card__meta">
+            <h3>Star cluster + Source Serif</h3>
+            <p>Build in CSS/SVG. Editorial, feminine, matches headline font. Single-color wordmark.</p>
+            <span class="tag rec">Top pick · product</span>
+          </div>
+          <div class="lockup-stage dark">
+            <div class="logo-stars-lockup">
+              <div class="logo-stars-cluster" aria-hidden="true">
+                <svg width="18" height="18" style="top:0;left:4px;" viewBox="0 0 24 24"><g stroke="#B8F5D1" stroke-width="2" stroke-linecap="round"><line x1="12" y1="2" x2="12" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="19.1" y2="19.1"/><line x1="19.1" y1="4.9" x2="4.9" y2="19.1"/></g></svg>
+                <svg width="11" height="11" style="bottom:0;left:0;opacity:0.85;" viewBox="0 0 24 24"><g stroke="#77C89A" stroke-width="2" stroke-linecap="round"><line x1="12" y1="3" x2="12" y2="21"/><line x1="3" y1="12" x2="21" y2="12"/></g></svg>
+              </div>
+              <span class="logo-stars-word serif">Illuminairy</span>
+            </div>
+          </div>
+          <div class="lockup-stage light">
+            <div class="logo-stars-lockup">
+              <div class="logo-stars-cluster" aria-hidden="true">
+                <svg width="18" height="18" style="top:0;left:4px;" viewBox="0 0 24 24"><g stroke="#2F6E47" stroke-width="2" stroke-linecap="round"><line x1="12" y1="2" x2="12" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/></g></svg>
+                <svg width="11" height="11" style="bottom:0;left:0;opacity:0.7;" viewBox="0 0 24 24"><g stroke="#77C89A" stroke-width="2" stroke-linecap="round"><line x1="12" y1="3" x2="12" y2="21"/><line x1="3" y1="12" x2="21" y2="12"/></g></svg>
+              </div>
+              <span class="logo-stars-word serif on-light">Illuminairy</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="lockup-card">
+          <div class="lockup-card__meta">
+            <h3>Star cluster + Hanken</h3>
+            <p>Slightly more SaaS, less editorial. Good if headers stay small and utilitarian.</p>
+            <span class="tag rec">Alternate · product</span>
+          </div>
+          <div class="lockup-stage dark">
+            <div class="logo-stars-lockup">
+              <div class="logo-stars-cluster" aria-hidden="true">
+                <svg width="16" height="16" style="top:2px;left:5px;" viewBox="0 0 24 24"><g stroke="#B8F5D1" stroke-width="2.2" stroke-linecap="round"><line x1="12" y1="2" x2="12" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/></g></svg>
+              </div>
+              <span class="logo-stars-word">Illuminairy</span>
+            </div>
+          </div>
+          <div class="lockup-stage light">
+            <div class="logo-stars-lockup">
+              <div class="logo-stars-cluster" aria-hidden="true">
+                <svg width="16" height="16" style="top:2px;left:5px;" viewBox="0 0 24 24"><g stroke="#2F6E47" stroke-width="2.2" stroke-linecap="round"><line x1="12" y1="2" x2="12" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/></g></svg>
+              </div>
+              <span class="logo-stars-word on-light">Illuminairy</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="lockup-card">
+          <div class="lockup-card__meta">
+            <h3>Hanken uppercase only</h3>
+            <p>No icon. Cleanest header. Used in mockups today. Loses aurora story unless dot added.</p>
+            <span class="tag ref">Mockup default</span>
+          </div>
+          <div class="lockup-stage dark"><span class="logo-hanken-upper">Illuminairy</span></div>
+          <div class="lockup-stage light"><span class="logo-hanken-upper on-light">Illuminairy</span></div>
+        </div>
+
+        <div class="lockup-card">
+          <div class="lockup-card__meta">
+            <h3>Glow dot + uppercase</h3>
+            <p>Quiz funnel chrome cousin. Tiny aurora mark without full star cluster.</p>
+            <span class="tag ref">Funnel accent</span>
+          </div>
+          <div class="lockup-stage dark">
+            <div class="logo-dot-lockup"><span class="logo-hanken-upper" style="letter-spacing:0.2em;">Illuminairy</span></div>
+          </div>
+          <div class="lockup-stage light">
+            <div class="logo-dot-lockup"><span class="logo-hanken-upper on-light" style="letter-spacing:0.2em;">Illuminairy</span></div>
+          </div>
+        </div>
+
+        <div class="lockup-card">
+          <div class="lockup-card__meta">
+            <h3>Source Serif wordmark only</h3>
+            <p>Editorial hero scale. Pair with star cluster in header, or alone on light LP hero.</p>
+            <span class="tag rec">Hero / editorial</span>
+          </div>
+          <div class="lockup-stage dark"><span class="logo-serif on-dark logo-serif--hero">Illuminairy</span></div>
+          <div class="lockup-stage light"><span class="logo-serif logo-serif--hero">Illuminairy</span></div>
+        </div>
+
+        <div class="lockup-card">
+          <div class="lockup-card__meta">
+            <h3>Cormorant uppercase</h3>
+            <p>Brand guide v3 nav. Luxury magazine — keep for decks, not product UI.</p>
+            <span class="tag ref">Brand guide only</span>
+          </div>
+          <div class="lockup-stage dark"><span class="logo-cormorant">Illuminairy</span></div>
+          <div class="lockup-stage light"><span class="logo-cormorant" style="color:var(--ink);">Illuminairy</span></div>
+        </div>
+
+        <div class="lockup-card">
+          <div class="lockup-card__meta">
+            <h3>Legacy v2 path + gold “ai”</h3>
+            <p>YC indigo path mark. Retired for Aurora product — do not mix with v7 stars.</p>
+            <span class="tag legacy">Deprecated</span>
+          </div>
+          <div class="lockup-stage paper">
+            <div class="logo-legacy-lockup">
+              <img src="../../public/logo-mark.svg" alt="" width="32" height="32">
+              <span class="wm">illumin<span class="ai">ai</span>ry</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="lockup-card">
+          <div class="lockup-card__meta">
+            <h3>Mark only · app icon</h3>
+            <p>Square PNG for OG / favicon. Full lockup never scaled below ~24px wordmark height.</p>
+            <span class="tag prod">Social / icon</span>
+          </div>
+          <div class="lockup-stage dark">
+            <img src="../../public/brand/logo-square.png" alt="" width="56" height="56" style="border-radius:12px;">
+          </div>
+          <div class="lockup-stage light">
+            <img src="../../public/brand/logo-square-icon.png" alt="" width="48" height="48" onerror="this.style.display='none'">
+            <img src="../../public/brand/logo-square.png" alt="" width="48" height="48" style="border-radius:10px;">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Scale -->
+    <section class="section">
+      <h2>Size scale (pick one header height)</h2>
+      <p class="lede">Raster v7 at common heights — wordmark legibility vs chrome weight.</p>
+      <div class="scale-row">
+        <div class="scale-item">
+          <img src="../../public/brand/logo-horizontal.png" alt="" class="logo-raster logo-raster--sm">
+          <span>26px · mobile</span>
+        </div>
+        <div class="scale-item">
+          <img src="../../public/brand/logo-horizontal.png" alt="" class="logo-raster">
+          <span>32px · default</span>
+        </div>
+        <div class="scale-item">
+          <img src="../../public/brand/logo-horizontal.png" alt="" class="logo-raster logo-raster--lg">
+          <span>44px · hero band</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Typography pairing -->
+    <section class="section">
+      <h2>Logo + typography pairing</h2>
+      <p class="lede">What goes with each lockup for eyebrows, headlines, and nav — the “2 + 1” system.</p>
+      <table class="pair-table">
+        <thead>
+          <tr>
+            <th>Lockup</th>
+            <th>Header / chrome</th>
+            <th>Headlines on page</th>
+            <th>Labels / meta</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Star cluster + Source Serif</strong></td>
+            <td>Serif wordmark 15–17px beside stars</td>
+            <td>Source Serif 4 · 600</td>
+            <td>DM Mono · sentence case</td>
+          </tr>
+          <tr>
+            <td><strong>Raster / SVG v7</strong></td>
+            <td>PNG/SVG as-is · 32px tall</td>
+            <td>Source Serif 4 · 600 (match baked serif)</td>
+            <td>DM Mono</td>
+          </tr>
+          <tr>
+            <td><strong>Hanken uppercase</strong></td>
+            <td>13px · 0.14em tracking · uppercase</td>
+            <td>Source Serif 4 · 600 (contrast)</td>
+            <td>DM Mono</td>
+          </tr>
+          <tr>
+            <td><strong>Editorial hero only</strong></td>
+            <td>Small uppercase or stars in nav</td>
+            <td>Large Source Serif “Illuminairy” optional</td>
+            <td>DM Mono</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="section">
+      <h2>Rules (from your feedback)</h2>
+      <div class="dos-donts" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div style="padding:20px;border-radius:var(--radius);background:rgba(119,200,154,0.08);border:1px solid rgba(119,200,154,0.2);font-size:14px;line-height:1.6;">
+          <h3 style="font-size:13px;margin-bottom:10px;">Do</h3>
+          <ul style="padding-left:18px;color:var(--muted);">
+            <li>Single-color “Illuminairy” wordmark</li>
+            <li>Stars / arc as the icon story (v7)</li>
+            <li>Source Serif headlines + Hanken body</li>
+            <li>On-dark + on-light SVG variants</li>
+          </ul>
+        </div>
+        <div style="padding:20px;border-radius:var(--radius);background:rgba(242,72,34,0.06);border:1px solid rgba(242,72,34,0.15);font-size:14px;line-height:1.6;">
+          <h3 style="font-size:13px;margin-bottom:10px;">Don't</h3>
+          <ul style="padding-left:18px;color:var(--muted);">
+            <li>Split illumin / airy colors</li>
+            <li>v2 path + gold “ai”</li>
+            <li>Mechanical line-cross stars (v7 SVG)</li>
+            <li>Cormorant in funnel / enroll / portal</li>
+            <li>Mix v2 path mark with aurora stars</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </div>
+</body>
+</html>

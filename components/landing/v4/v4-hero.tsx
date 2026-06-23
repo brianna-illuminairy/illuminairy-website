@@ -4,12 +4,19 @@ import {
   resolveLandingHeroHeadlineV4,
   type LandingHeroHook
 } from "@/lib/landing/hero-hooks";
-import { v4Authority, v4Cta, v4Headline } from "./v4-content";
+import {
+  v4Authority,
+  v4Cta,
+  v4Headline,
+  v4PlanBCta,
+  v4TutorCta
+} from "./v4-content";
 
 type V4HeroProps = {
   onStart: () => void;
   hook?: LandingHeroHook;
   search?: string;
+  planBuilderB?: boolean;
 };
 
 /** Ad hook headlines are two lines only — same fold layout as the owner v4 default. */
@@ -24,8 +31,10 @@ function useHeadlineLines(hook: LandingHeroHook | undefined, search?: string): {
   return { lines: v4Headline.lines, accentLine: v4Headline.accentLine };
 }
 
-export function V4Hero({ onStart, hook, search }: V4HeroProps) {
+export function V4Hero({ onStart, hook, search, planBuilderB }: V4HeroProps) {
   const { lines, accentLine } = useHeadlineLines(hook, search);
+  const isTutor = hook === "tutor";
+  const cta = isTutor ? v4TutorCta : planBuilderB ? v4PlanBCta : v4Cta;
 
   return (
     <section className="lp-hero">
@@ -46,9 +55,9 @@ export function V4Hero({ onStart, hook, search }: V4HeroProps) {
           {v4Authority}
         </p>
         <div className="lp-cta-card">
-          <p className="lp-cta-intro">{v4Cta.intro}</p>
+          <p className="lp-cta-intro">{cta.intro}</p>
           <ul className="lp-cta-value">
-            {v4Cta.bullets.map((b) => (
+            {cta.bullets.map((b) => (
               <li key={b}>
                 <span className="check" aria-hidden="true">
                   ✓
@@ -58,9 +67,9 @@ export function V4Hero({ onStart, hook, search }: V4HeroProps) {
             ))}
           </ul>
           <button type="button" className="lp-btn" onClick={onStart}>
-            {v4Cta.button} <span className="arrow">→</span>
+            {cta.button} <span className="arrow">→</span>
           </button>
-          <p className="lp-cta-sub">{v4Cta.finePrint}</p>
+          <p className="lp-cta-sub">{cta.finePrint}</p>
         </div>
       </div>
     </section>

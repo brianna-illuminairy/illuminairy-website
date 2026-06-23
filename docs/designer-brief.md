@@ -12,6 +12,7 @@
 |-----|-------------------|
 | **[brand-voice-and-positioning.md](brand-voice-and-positioning.md)** | Positioning frames, who we're for, voice rules, do/don't copy, proof & commitments, messaging hierarchy, why we win vs in-person |
 | **[visual-identity.md](visual-identity.md)** | Colors, typography, wordmark, North Star, layout principles, personality mood board, designer checklist, HTML brand books |
+| **[data-visualization.md](data-visualization.md)** | SAT charts & infographics — observatory data language; mock `design/mockups/09-data-viz-directions.html`; research `data-visualization-research.md` |
 | **[sat-messaging-positioning.md](sat-messaging-positioning.md)** | SAT messaging pillars, objection handlers, paste-ready copy |
 | **[sat-competitor-analysis.md](sat-competitor-analysis.md)** | SAT prep competitor profiles, market map, when to recommend us vs. alternatives |
 | **[sat-us-vs-competitors.md](sat-us-vs-competitors.md)** | Us vs. them tables — site-ready differentiation + internal feature matrix |

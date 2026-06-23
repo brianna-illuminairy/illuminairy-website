@@ -628,7 +628,7 @@ const nadaSohaAug22Bootcamp: StandardEnrollLead = {
     first: "Nada",
     last: "Naveed",
     full: "Nada Naveed",
-    email: "nj00@hotmail.com"
+    email: "nadanaveed@gmail.com"
   },
   student: {
     first: "Soha",

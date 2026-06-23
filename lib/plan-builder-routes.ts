@@ -11,6 +11,7 @@ import {
 } from "@/lib/quiz-funnel/funnel-steps";
 import { getQuizRouteSteps } from "@/lib/quiz-funnel/quiz-route";
 import { readQuizSnapshotClient } from "@/lib/quiz-funnel/quiz-storage";
+import { SCORE_REVIEW_LP_PATH } from "@/lib/score-review-routes";
 
 export { QUIZ_ENTRY_STEP };
 export const PLAN_BUILDER_PATH = "/plan";
@@ -19,7 +20,7 @@ export const PLAN_BUILDER_PATH = "/plan";
 export const SAT_PLAN_BUILDER_LP_PATH = "/sat-plan-builder";
 
 /** Paths that render the SAT parent landing page (hero + trust bar). */
-export const SAT_PARENT_LP_PATHS = ["/", SAT_PLAN_BUILDER_LP_PATH] as const;
+export const SAT_PARENT_LP_PATHS = ["/", SAT_PLAN_BUILDER_LP_PATH, SCORE_REVIEW_LP_PATH] as const;
 
 export function isSatParentLandingPath(pathname: string | null | undefined): boolean {
   if (!pathname) return false;

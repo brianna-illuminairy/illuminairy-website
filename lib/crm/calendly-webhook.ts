@@ -6,6 +6,13 @@ import {
   strategyCallEndFromCalendlyWebhook,
   strategyCallStartFromCalendlyWebhook
 } from "@/lib/crm/calendly-payload";
+import { isFreeLessonCalendlyEvent } from "@/lib/calendly/free-lesson-event";
+import { isScoreReviewCalendlyEvent } from "@/lib/calendly/score-review-event";
+import { KlaviyoEvents } from "@/lib/analytics-registry";
+import { notifyLabFreeLessonBooked } from "@/lib/crm/lab-free-lesson-notify";
+import { site } from "@/lib/site";
+import { PLAN_BUILDER_FUNNEL_ID } from "@/lib/quiz-funnel-b/constants";
+import { SCORE_REVIEW_FUNNEL_ID } from "@/lib/score-review-funnel/constants";
 import { appendTouchEvent } from "@/lib/crm/touch";
 import { meetLinkFromCalendlyPayload } from "@/lib/integrations/google/meet";
 import { trackKlaviyoEvent, upsertKlaviyoProfile } from "@/lib/klaviyo-server";
@@ -43,7 +50,7 @@ export async function handleCalendlyInviteeCreated(body: CalendlyWebhookBody) {
   const { data: lead } = await supabase
     .from("leads")
     .select(
-      "id, visitor_id, parent_first, parent_last, parent_phone, fbclid, meta_fbp, meta_fbc, meta_fbc_ts, meta_client_ip, meta_client_user_agent"
+      "id, visitor_id, parent_first, parent_last, parent_phone, student_first, fbclid, meta_fbp, meta_fbc, meta_fbc_ts, meta_client_ip, meta_client_user_agent"
     )
     .eq("parent_email", email)
     .maybeSingle();
@@ -53,6 +60,24 @@ export async function handleCalendlyInviteeCreated(body: CalendlyWebhookBody) {
 
   const strategyCallEnd = strategyCallEndFromCalendlyWebhook(invitee);
   const scheduledEventUri = scheduledEventUriFromCalendlyWebhook(invitee);
+  const scheduled = invitee?.scheduled_event as Record<string, unknown> | undefined;
+  const eventName =
+    typeof scheduled?.name === "string"
+      ? scheduled.name
+      : typeof (scheduled?.event_type as Record<string, unknown> | undefined)?.name ===
+          "string"
+        ? ((scheduled?.event_type as Record<string, unknown>).name as string)
+        : null;
+  const scoreReview = isScoreReviewCalendlyEvent({
+    scheduledEventUri,
+    eventName,
+  });
+  const freeLesson =
+    !scoreReview &&
+    isFreeLessonCalendlyEvent({
+      scheduledEventUri,
+      eventName,
+    });
   const { meetLink, meetCode } = meetLinkFromCalendlyPayload(invitee);
 
   if (lead) {
@@ -84,7 +109,12 @@ export async function handleCalendlyInviteeCreated(body: CalendlyWebhookBody) {
         meet_space_code: meetCode,
         calendly_event_uri: scheduledEventUri ?? null,
         calendly_invitee_uri: calendlyUri,
-        call_status: "booked" as const
+        call_status: "booked" as const,
+        call_type: scoreReview
+          ? ("score_review" as const)
+          : freeLesson
+            ? ("free_lesson" as const)
+            : ("strategy_call" as const),
       };
 
       if (existing) {
@@ -124,7 +154,11 @@ export async function handleCalendlyInviteeCreated(body: CalendlyWebhookBody) {
     void createAdminAlert({
       alertType: "call_booked",
       severity: "info",
-      title: `Strategy Call booked: ${email}`,
+      title: scoreReview
+        ? `Score review booked: ${email}`
+        : freeLesson
+          ? `Free lesson booked: ${email}`
+          : `Strategy Call booked: ${email}`,
       body: `Scheduled for ${new Date(strategyCallAt).toLocaleString("en-US", { timeZone: "America/New_York" })} ET.`,
       source: "calendly",
       linkUrl: "/admin/crm",
@@ -133,7 +167,11 @@ export async function handleCalendlyInviteeCreated(body: CalendlyWebhookBody) {
 
     void fireLeadMilestone({
       leadId: lead.id,
-      milestone: "lead_call_booked",
+      milestone: scoreReview
+        ? "score_review_booked"
+        : freeLesson
+          ? "free_lesson_booked"
+          : "lead_call_booked",
       extra: { calendly_uri: calendlyUri ?? "", strategy_call_at: strategyCallAt }
     });
   } else {
@@ -149,18 +187,57 @@ export async function handleCalendlyInviteeCreated(body: CalendlyWebhookBody) {
     });
   }
 
-  const klaviyoProps = {
-    calendly_uri: calendlyUri ?? "",
-    funnel: "sat_quiz",
-    strategy_call_at: strategyCallAt
-  };
+  const klaviyoProps = scoreReview
+    ? {
+        calendly_uri: calendlyUri ?? "",
+        funnel: SCORE_REVIEW_FUNNEL_ID,
+        score_review_at: strategyCallAt,
+      }
+    : freeLesson
+    ? {
+        calendly_uri: calendlyUri ?? "",
+        funnel: PLAN_BUILDER_FUNNEL_ID,
+        free_lesson_at: strategyCallAt,
+        portal_url: `${site.url}/portal/home`,
+        student_first: lead?.student_first ?? "",
+      }
+    : {
+        calendly_uri: calendlyUri ?? "",
+        funnel: "sat_quiz",
+        strategy_call_at: strategyCallAt,
+      };
 
-  void upsertKlaviyoProfile(email, { properties: klaviyoProps });
-  void trackKlaviyoEvent(email, "Quiz Call Booked", klaviyoProps);
-  void trackKlaviyoEvent(email, "Consultation Booked", {
-    calendly_uri: calendlyUri ?? "",
-    strategy_call_at: strategyCallAt
-  });
+  if (scoreReview) {
+    void upsertKlaviyoProfile(email, {
+      firstName: lead?.parent_first ?? undefined,
+      properties: klaviyoProps,
+    });
+    void trackKlaviyoEvent(email, KlaviyoEvents.scoreReviewBooked, klaviyoProps);
+  } else if (freeLesson) {
+    if (lead && calendlyUri) {
+      void notifyLabFreeLessonBooked({
+        parentEmail: email,
+        parentFirst: lead.parent_first ?? undefined,
+        studentFirst: lead.student_first ?? undefined,
+        lessonStartIso: strategyCallAt,
+        calendlyUri,
+        meetLink,
+        portalUrl: `${site.url}/portal/home`,
+        leadId: lead.id,
+        visitorId: lead.visitor_id ?? undefined,
+      });
+    } else {
+      void upsertKlaviyoProfile(email, { properties: klaviyoProps });
+      void trackKlaviyoEvent(email, KlaviyoEvents.freeLessonBooked, klaviyoProps);
+    }
+  } else {
+    void upsertKlaviyoProfile(email, { properties: klaviyoProps });
+    void trackKlaviyoEvent(email, KlaviyoEvents.quizCallBooked, klaviyoProps);
+    void trackKlaviyoEvent(email, "Consultation Booked", {
+      calendly_uri: calendlyUri ?? "",
+      strategy_call_at: strategyCallAt,
+    });
+  }
 
   // Deterministic event_id shared with the client pixel — Finale.tsx fires
   // `schedule_${inviteeUri.split('/').pop()}`, so deriving the same id from the
@@ -177,7 +254,11 @@ export async function handleCalendlyInviteeCreated(body: CalendlyWebhookBody) {
     "Schedule",
     eventId,
     capiUser,
-    { funnel: "sat_quiz" },
+    scoreReview
+      ? { funnel: SCORE_REVIEW_FUNNEL_ID, call_type: "score_review" }
+      : freeLesson
+      ? { funnel: PLAN_BUILDER_FUNNEL_ID, call_type: "free_lesson" }
+      : { funnel: "sat_quiz" },
     lead ? attributionFromLeadFbclid(lead.fbclid) : undefined,
     { eventTimeSec: bookedAtSec }
   );

@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Illuminairy — Light observatory (product direction)</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400&family=Hanken+Grotesk:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --celestial: #0057A8;
+    --aurora: #77C89A;
+    --glow: #B8F5D1;
+    --navy: #121A2B;
+    --navy-mid: #1C2A42;
+    --polar: #F5F8FA;
+    --paper: #FFFFFF;
+    --ink: #121A2B;
+    --muted: rgba(18, 26, 43, 0.66);
+    --line: rgba(18, 26, 43, 0.08);
+    --max: 1080px;
+    --radius: 16px;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: "Hanken Grotesk", system-ui, sans-serif;
+    font-weight: 400;
+    background: var(--polar);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Light aurora atmosphere (static — no full-page dark) ── */
+  .light-sky {
+    position: relative;
+    background:
+      radial-gradient(900px 520px at 12% -8%, rgba(0, 87, 168, 0.07), transparent 58%),
+      radial-gradient(820px 480px at 88% 4%, rgba(119, 200, 154, 0.09), transparent 56%),
+      radial-gradient(700px 420px at 50% 100%, rgba(184, 245, 209, 0.06), transparent 62%),
+      var(--polar);
+  }
+
+  .light-stars {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .light-stars i {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: var(--aurora);
+    opacity: 0.22;
+    animation: tw 5s ease-in-out infinite;
+  }
+
+  @keyframes tw {
+    0%, 100% { opacity: 0.12; }
+    50% { opacity: 0.38; }
+  }
+
+  /* ── Navy chrome strips only (header / footer) ── */
+  .chrome {
+    background: var(--navy);
+    color: var(--polar);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .chrome::before {
+    content: "";
+    position: absolute;
+    top: -100px;
+    right: -60px;
+    width: 280px;
+    height: 280px;
+    background: radial-gradient(circle, rgba(119, 200, 154, 0.32) 0%, rgba(0, 87, 168, 0.12) 40%, transparent 68%);
+    pointer-events: none;
+  }
+
+  .chrome__inner {
+    position: relative;
+    z-index: 1;
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .wordmark {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--polar);
+  }
+
+  .chrome-ghost {
+    padding: 9px 16px;
+    border-radius: 999px;
+    border: 1px solid rgba(245, 248, 250, 0.28);
+    background: transparent;
+    color: var(--polar);
+    font-size: 12px;
+    font-weight: 600;
+    font-family: inherit;
+  }
+
+  /* ── Brand-guide typography on LIGHT ── */
+  .label {
+    font-family: "DM Mono", monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--aurora);
+    margin-bottom: 12px;
+  }
+
+  .display {
+    font-family: "Source Serif 4", Georgia, serif;
+    font-weight: 600;
+    font-size: clamp(2.4rem, 5.5vw, 3.8rem);
+    line-height: 1.06;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+
+  .display em {
+    font-style: normal;
+    color: #2F6E47;
+  }
+
+  .lede {
+    font-size: 1.05rem;
+    line-height: 1.75;
+    color: var(--muted);
+    max-width: 52ch;
+    margin-top: 18px;
+  }
+
+  .quote {
+    font-family: "Source Serif 4", Georgia, serif;
+    font-size: clamp(1.25rem, 2.4vw, 1.65rem);
+    font-weight: 600;
+    line-height: 1.45;
+    color: var(--ink);
+    border-left: 2px solid var(--aurora);
+    padding-left: 24px;
+    margin: 36px 0;
+    max-width: 640px;
+  }
+
+  .section {
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: 72px 24px;
+  }
+
+  .section--tight { padding-top: 48px; padding-bottom: 48px; }
+
+  /* ── Brand-guide motion on light paper ── */
+  .hover-card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 24px 22px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 40px -24px rgba(18, 26, 43, 0.12);
+    transition: border-color 0.35s, transform 0.35s;
+  }
+
+  .hover-card::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--celestial), var(--aurora));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s;
+  }
+
+  .hover-card:hover {
+    border-color: rgba(119, 200, 154, 0.35);
+    transform: translateY(-2px);
+  }
+
+  .hover-card:hover::before { transform: scaleX(1); }
+
+  .hover-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--line);
+    color: var(--muted);
+    transition: color 0.35s, padding-left 0.35s;
+  }
+
+  .hover-row:first-child { border-top: 1px solid var(--line); }
+  .hover-row:hover { color: var(--ink); padding-left: 12px; }
+  .hover-row .arr { opacity: 0; color: var(--aurora); transition: opacity 0.35s; }
+  .hover-row:hover .arr { opacity: 1; }
+
+  .border-glow {
+    position: relative;
+    display: block;
+    border-radius: calc(var(--radius) + 2px);
+    padding: 2px;
+    overflow: hidden;
+    background: rgba(18, 26, 43, 0.07);
+    transition: background 0.35s;
+  }
+
+  .border-glow::before {
+    content: "";
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 220%;
+    aspect-ratio: 1;
+    background: conic-gradient(from 0deg, var(--celestial), var(--aurora), var(--glow), var(--celestial));
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.4s;
+    pointer-events: none;
+  }
+
+  .border-glow:hover { background: transparent; }
+  .border-glow:hover::before {
+    opacity: 1;
+    animation: spin 2.6s linear infinite;
+  }
+
+  @keyframes spin {
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+  }
+
+  .border-glow__in {
+    position: relative;
+    z-index: 1;
+    background: var(--paper);
+    border-radius: var(--radius);
+    padding: 22px 20px;
+  }
+
+  /* ── ONE dark inset per page (score only) ── */
+  .score-inset {
+    background: linear-gradient(155deg, var(--navy-mid), var(--navy));
+    border: 1px solid rgba(119, 200, 154, 0.16);
+    border-radius: var(--radius);
+    padding: 36px 32px;
+    color: var(--polar);
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+
+  .score-inset::before {
+    content: "";
+    position: absolute;
+    top: -50px; right: -30px;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(119, 200, 154, 0.2), transparent 70%);
+    pointer-events: none;
+  }
+
+  .score-inset .label { color: var(--glow); }
+
+  .score-num {
+    font-family: "Source Serif 4", Georgia, serif;
+    font-size: clamp(3.5rem, 10vw, 4.5rem);
+    font-weight: 600;
+    line-height: 1;
+    background: linear-gradient(120deg, #fff, var(--glow) 55%, #4fd1c5);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .glow-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 15px 22px;
+    border: none;
+    border-radius: 999px;
+    background: var(--forest);
+    color: #fff;
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 15px;
+    box-shadow: 0 8px 24px -8px rgba(47, 110, 71, 0.45);
+    cursor: pointer;
+  }
+
+  .glow-btn:hover {
+    background: #1A4D2F;
+  }
+
+  /* Mint glow = accent on DARK chrome only (see header secondary) */
+  .glow-btn--on-dark {
+    background: var(--glow);
+    color: var(--navy);
+    box-shadow: 0 8px 24px -8px rgba(119, 200, 154, 0.4);
+  }
+
+  .btn-note {
+    margin-top: 32px;
+    padding: 28px 24px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--muted);
+  }
+
+  .btn-note h3 {
+    font-family: "DM Mono", monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--forest);
+    margin-bottom: 14px;
+  }
+
+  .btn-swatch-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 16px;
+  }
+
+  .btn-swatch {
+    padding: 12px 20px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    border: 1px solid var(--line);
+  }
+
+  .btn-swatch.primary { background: var(--forest); color: #fff; border-color: var(--forest); }
+  .btn-swatch.secondary { background: transparent; color: var(--forest); border-color: rgba(47, 110, 71, 0.4); }
+  .btn-swatch.bad { background: var(--glow); color: var(--navy); border-color: var(--glow); opacity: 0.95; }
+  .btn-swatch.accent { background: transparent; color: var(--aurora); border: none; padding-left: 0; font-weight: 500; }
+
+  .frame {
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: 0 32px 80px -36px rgba(18, 26, 43, 0.2);
+  }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  .pill-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 28px;
+  }
+
+  .pill {
+    font-family: "Source Serif 4", Georgia, serif;
+    font-size: 1.15rem;
+    font-weight: 600;
+    font-style: normal;
+    color: #2F6E47;
+    padding: 10px 22px;
+    border: 1px solid rgba(119, 200, 154, 0.28);
+    border-radius: 999px;
+    background: rgba(119, 200, 154, 0.06);
+  }
+
+  .compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 32px;
+  }
+
+  .compare-box {
+    padding: 28px 24px;
+    border-radius: var(--radius);
+    font-size: 14px;
+    line-height: 1.65;
+  }
+
+  .compare-box.bad {
+    background: rgba(18, 26, 43, 0.04);
+    border: 1px solid var(--line);
+    color: var(--muted);
+  }
+
+  .compare-box.good {
+    background: rgba(119, 200, 154, 0.08);
+    border: 1px solid rgba(119, 200, 154, 0.22);
+    color: var(--ink);
+  }
+
+  .compare-box h3 {
+    font-family: "DM Mono", monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .compare-box.bad h3 { color: rgba(18, 26, 43, 0.45); }
+  .compare-box.good h3 { color: var(--aurora); }
+
+  @media (max-width: 720px) {
+    .grid-2, .compare { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════
+     LIGHT OBSERVATORY — how to get brand-guide vibe without dark mode
+     Open next to ~/Downloads/illuminairy_brand_guide.html
+     ═══════════════════════════════════════════════════════════ -->
+
+<div class="light-sky">
+  <div class="light-stars" aria-hidden="true">
+    <i style="left:8%;top:12%;"></i>
+    <i style="left:22%;top:28%;animation-delay:1s;"></i>
+    <i style="left:76%;top:8%;animation-delay:2s;"></i>
+    <i style="left:91%;top:35%;animation-delay:0.5s;"></i>
+    <i style="left:64%;top:52%;animation-delay:1.8s;"></i>
+    <i style="left:14%;top:62%;animation-delay:2.4s;"></i>
+  </div>
+
+  <header class="chrome">
+    <div class="chrome__inner">
+      <span class="wordmark">Illuminairy</span>
+      <button type="button" class="chrome-ghost">Bootcamp enrollment</button>
+    </div>
+  </header>
+
+  <section class="section section--tight" style="position:relative;z-index:1;">
+    <p class="label">Product direction · mockup only</p>
+    <h1 class="display">Observatory by day.<br><em>Not dark mode.</em></h1>
+    <p class="lede">Polar white for reading. Navy only on doorframes (header, footer). One telescope panel (diagnostic score). Aurora wash, green stars, editorial type, and brand-guide motion on paper.</p>
+
+    <div class="compare">
+      <div class="compare-box bad">
+        <h3>Not this</h3>
+        Full-page navy · cream portal · flat gray SaaS · tiny headlines · checklist hubs · split-color wordmark
+      </div>
+      <div class="compare-box good">
+        <h3>This</h3>
+        #F5F8FA + aurora wash · slim navy chrome · one dark inset · Source Serif at scale · hover cards · spinning border glow
+      </div>
+    </div>
+
+    <div class="pill-row">
+      <span class="pill">Calm</span>
+      <span class="pill">Elevated</span>
+      <span class="pill">Wonder-driven</span>
+    </div>
+
+    <div class="btn-note">
+      <h3>Contrast · buttons on light</h3>
+      <p><strong>Mint glow (#B8F5D1) on #F5F8FA</strong> barely separates from the page — it reads disabled, not premium. Parents ~52 need a clear primary action.</p>
+      <p style="margin-top:10px;"><strong>Use mint/aurora for:</strong> washes, stars, border-glow spin, hover top-lines — not filled CTAs on white.</p>
+      <p style="margin-top:10px;"><strong>Primary on light:</strong> forest or celestial fill, white label. Highest contrast element on the page.</p>
+      <div class="btn-swatch-row">
+        <span class="btn-swatch primary">Primary · forest</span>
+        <span class="btn-swatch secondary">Secondary · outline</span>
+        <span class="btn-swatch bad">Avoid on light</span>
+        <span class="btn-swatch accent">Mint = accent only</span>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- LOGIN (premium moment — light body) -->
+<section class="section">
+  <p class="label">02 · Sign in</p>
+  <h2 class="display" style="font-size:clamp(1.8rem,4vw,2.6rem);">The login you liked — on light sky</h2>
+  <div class="frame" style="max-width:480px;margin-top:28px;">
+    <header class="chrome"><div class="chrome__inner"><span class="wordmark">Illuminairy</span></div></header>
+    <div class="light-sky" style="padding:36px 24px 32px;">
+      <div class="hover-card">
+        <p class="label">Illuminairy</p>
+        <h3 class="display" style="font-size:1.75rem;margin-bottom:10px;">Soha's SAT Improvement Plan</h3>
+        <p class="lede" style="font-size:14px;margin-bottom:20px;">Enter the email we shared with you.</p>
+        <button type="button" class="glow-btn">Continue</button>
+      </div>
+    </div>
+    <footer class="chrome" style="text-align:center;padding:18px;font-size:12px;color:rgba(245,248,250,0.55);">Private student portal</footer>
+  </div>
+</section>
+
+<!-- DIAGNOSTIC -->
+<section class="section light-sky">
+  <p class="label">03 · Skill Diagnostic</p>
+  <h2 class="display" style="font-size:clamp(1.8rem,4vw,2.6rem);">One midnight panel. Rest is paper.</h2>
+  <blockquote class="quote">Score movement is usually five or six skills — not everything on the SAT.</blockquote>
+
+  <div class="frame">
+    <header class="chrome"><div class="chrome__inner"><span class="wordmark">Illuminairy</span><button type="button" class="chrome-ghost">Bootcamp enrollment</button></div></header>
+    <div style="padding:32px 24px 40px;background:var(--polar);">
+      <div class="score-inset">
+        <p class="label">Soha Naveed · composite</p>
+        <div class="score-num">1280</div>
+        <p style="font-size:13px;opacity:0.75;margin-top:8px;">Skill Diagnostic · 2 hr 14 min</p>
+      </div>
+      <div class="grid-2" style="margin-bottom:24px;">
+        <div class="border-glow"><div class="border-glow__in"><p class="label">Reading & Writing</p><p class="display" style="font-size:2rem;">640</p></div></div>
+        <div class="border-glow"><div class="border-glow__in"><p class="label">Math</p><p class="display" style="font-size:2rem;">640</p></div></div>
+      </div>
+      <p class="label">Weakest skills</p>
+      <div class="hover-row"><span>Linear equations in context</span><span class="arr">→</span></div>
+      <div class="hover-row"><span>Evidence and inference</span><span class="arr">→</span></div>
+      <div class="hover-row"><span>Quadratic structure</span><span class="arr">→</span></div>
+    </div>
+    <footer class="chrome" style="text-align:center;padding:18px;font-size:12px;color:rgba(245,248,250,0.55);">© Illuminairy</footer>
+  </div>
+</section>
+
+<!-- LP CTA -->
+<section class="section">
+  <p class="label">04 · Homepage CTA</p>
+  <h2 class="display" style="font-size:clamp(1.8rem,4vw,2.6rem);">Light card — never navy box</h2>
+  <div class="light-sky" style="padding:40px 24px;border-radius:var(--radius);">
+    <h3 class="display" style="font-size:clamp(1.5rem,3.5vw,2.2rem);max-width:16ch;">See what's holding their SAT score back</h3>
+    <div class="hover-card" style="max-width:420px;margin-top:20px;">
+      <p class="label">Free parent plan · about 2 min</p>
+      <button type="button" class="glow-btn" style="margin-top:14px;">Start the SAT Score Path</button>
+    </div>
+  </div>
+</section>
+
+<footer class="chrome">
+  <div class="chrome__inner" style="justify-content:center;flex-direction:column;gap:8px;padding:28px 24px;">
+    <span class="wordmark">Illuminairy</span>
+    <p style="font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(188,195,204,0.7);">Light observatory · design/mockups/light-observatory.html</p>
+  </div>
+</footer>
+
+</body>
+</html>

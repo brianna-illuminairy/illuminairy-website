@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>05 · Surface mocks</title>
+  <link rel="stylesheet" href="_shared.css">
+  <style>
+    .surface { border-bottom: 1px solid var(--line); padding: 48px 0; }
+    .surface:last-child { border-bottom: none; }
+    .surface-tag {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--aurora);
+      margin-bottom: 24px;
+      padding: 0 24px;
+      max-width: var(--max);
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .lp-mock { padding: 40px 24px; }
+    .lp-mock .hero-inner { max-width: 620px; margin: 0 auto; }
+    .lp-mock h1 {
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: clamp(26px, 5vw, 42px);
+      line-height: 1.08;
+      margin-bottom: 16px;
+    }
+    .lp-mock h1 em { font-style: normal; color: var(--forest); }
+    .enroll-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    @media (max-width: 820px) { .enroll-grid { grid-template-columns: 1fr; } }
+    .pay-card {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 28px;
+      box-shadow: var(--shadow-soft);
+    }
+    .diag-wrap { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
+    .diag-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 24px; }
+    @media (max-width: 640px) { .diag-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <nav class="mock-nav">
+    <a href="index.html">← Hub</a>
+    <span style="font-size:13px;color:var(--muted);">05 · Surface mocks</span>
+  </nav>
+
+  <!-- LP -->
+  <section class="surface aurora-wash-light">
+    <p class="surface-tag">Homepage · Direction A + B wash</p>
+    <header class="aurora-header">
+      <div class="aurora-header__inner" style="justify-content:center;">
+        <div class="aurora-logo">Illuminairy</div>
+      </div>
+    </header>
+    <div class="lp-mock">
+      <div class="hero-inner">
+        <h1><span class="line">See what's holding</span><span class="line"><em>their SAT score</em> back</span></h1>
+        <p style="color:var(--muted);font-size:15px;margin-bottom:20px;">Illuminairy · SAT Accelerator · Atlanta-led mentorship</p>
+        <div class="aurora-hover-card">
+          <p style="font-family:var(--mono);font-size:11px;letter-spacing:0.1em;color:var(--forest);margin-bottom:12px;">Free parent plan · about 2 min</p>
+          <ul style="list-style:none;font-size:15px;line-height:1.5;margin-bottom:16px;color:var(--ink);">
+            <li style="margin-bottom:8px;">✓ Realistic score range before their next test</li>
+            <li style="margin-bottom:8px;">✓ Weakest skills ranked by diagnostic</li>
+            <li>✓ What to focus on first</li>
+          </ul>
+          <button type="button" class="aurora-btn-primary">Start the SAT Score Path →</button>
+          <p style="text-align:center;font-size:12px;color:var(--muted);margin-top:12px;">For parents · Your student does not take a test yet</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Enroll -->
+  <section class="surface" style="background:var(--white);">
+    <p class="surface-tag">Enroll · softened checkout</p>
+    <header class="aurora-header">
+      <div class="aurora-header__inner">
+        <div class="aurora-logo">Illuminairy</div>
+        <span style="font-size:12px;color:var(--silver);">August 22 SAT Bootcamp</span>
+      </div>
+    </header>
+    <div class="enroll-grid" style="margin-top:28px;">
+      <div class="aurora-hover-card">
+        <h2 style="font-family:var(--display);font-size:22px;font-weight:600;margin-bottom:16px;">What's included</h2>
+        <ul style="list-style:none;font-size:14px;line-height:1.6;color:var(--muted);">
+          <li style="margin-bottom:10px;"><strong style="color:var(--ink);">Weekly tutoring 3×/wk</strong> · 45 min sessions</li>
+          <li style="margin-bottom:10px;"><strong style="color:var(--ink);">Skill Diagnostic</strong> · already complete</li>
+          <li><strong style="color:var(--ink);">Personalized weekly plan</strong> · mistake-driven</li>
+        </ul>
+      </div>
+      <div class="pay-card">
+        <p style="font-family:var(--display);font-size:20px;font-weight:600;margin-bottom:8px;">$149/week</p>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:20px;">Bootcamp rate · 27 sessions through August 22</p>
+        <button type="button" class="aurora-btn-primary">Enroll in August 22 Bootcamp</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Diagnostic -->
+  <section class="surface" style="background:var(--white);">
+    <p class="surface-tag">SOHA diagnostic · portal</p>
+    <header class="aurora-header">
+      <div class="aurora-header__inner">
+        <div class="aurora-logo">Illuminairy</div>
+        <button type="button" class="aurora-btn-ghost">Bootcamp enrollment</button>
+      </div>
+    </header>
+    <div style="max-width:var(--max);margin:12px auto 0;padding:0 24px;display:flex;gap:16px;border-bottom:1px solid var(--line);padding-bottom:12px;">
+      <span style="font-weight:600;border-bottom:2px solid var(--aurora);padding-bottom:8px;">Diagnostic</span>
+      <span style="color:var(--muted);padding-bottom:8px;">SAT Improvement Plan</span>
+    </div>
+    <div class="diag-wrap" style="padding-top:28px;">
+      <div class="aurora-inset-soft">
+        <p class="mock-eyebrow" style="color:var(--glow);">Soha Naveed · Skill Diagnostic</p>
+        <div class="score">1280</div>
+        <p style="font-size:14px;opacity:0.8;margin-top:8px;">Illuminairy proctored diagnostic · composite score</p>
+      </div>
+      <div class="diag-grid">
+        <div class="aurora-hover-card">
+          <p class="mock-eyebrow">Reading & Writing</p>
+          <p style="font-family:var(--display);font-size:28px;font-weight:600;">640</p>
+        </div>
+        <div class="aurora-hover-card">
+          <p class="mock-eyebrow">Math</p>
+          <p style="font-family:var(--display);font-size:28px;font-weight:600;">640</p>
+        </div>
+      </div>
+    </div>
+    <footer class="aurora-footer" style="margin-top:40px;">
+      <div class="aurora-footer__inner">
+        <a href="#">August 22 bootcamp enrollment</a>
+        <p style="font-size:11px;margin-top:10px;opacity:0.7;">Private student portal</p>
+      </div>
+    </footer>
+  </section>
+</body>
+</html>

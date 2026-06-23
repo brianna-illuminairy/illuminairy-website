@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ILLUMINAIRY — Product Surfaces</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@300;400&family=Hanken+Grotesk:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --celestial: #0057A8;
+    --aurora: #77C89A;
+    --glow: #B8F5D1;
+    --navy: #121A2B;
+    --silver: #BCC3CC;
+    --white: #F5F8FA;
+    --navy-mid: #1C2A42;
+    --ink: #121A2B;
+    --forest: #2F6E47;
+    --paper: #FFFFFF;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--navy);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  #aurora-canvas {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .page-wrap { position: relative; z-index: 1; }
+
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 22px 48px;
+    background: linear-gradient(to bottom, rgba(18,26,43,0.95) 0%, transparent 100%);
+  }
+
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: 1.1rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--white);
+    text-decoration: none;
+  }
+
+  .nav-links { display: flex; gap: 28px; list-style: none; flex-wrap: wrap; justify-content: flex-end; }
+
+  .nav-links a {
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--silver);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  .nav-links a:hover { color: var(--glow); }
+
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 120px 48px 80px;
+  }
+
+  .hero-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--aurora);
+    margin-bottom: 28px;
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: clamp(3.5rem, 11vw, 8rem);
+    line-height: 0.92;
+    letter-spacing: -0.01em;
+    color: var(--white);
+  }
+
+  .hero-title em {
+    font-style: italic;
+    background: linear-gradient(135deg, var(--celestial) 0%, var(--aurora) 50%, var(--glow) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-tagline {
+    margin-top: 28px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    font-style: italic;
+    color: var(--silver);
+    letter-spacing: 0.05em;
+    max-width: 42ch;
+  }
+
+  .hero-divider {
+    width: 1px;
+    height: 72px;
+    background: linear-gradient(to bottom, var(--aurora), transparent);
+    margin: 40px auto 0;
+  }
+
+  section {
+    padding: 100px 48px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--aurora);
+    margin-bottom: 16px;
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    line-height: 1.1;
+    margin-bottom: 28px;
+    color: var(--white);
+  }
+
+  .section-body {
+    font-size: 1rem;
+    line-height: 1.85;
+    color: var(--silver);
+    max-width: 680px;
+  }
+
+  .full-band {
+    background: rgba(255,255,255,0.015);
+    border-top: 1px solid rgba(188,195,204,0.06);
+    border-bottom: 1px solid rgba(188,195,204,0.06);
+  }
+
+  .narrative-quote {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.5rem, 2.8vw, 2.2rem);
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.45;
+    color: var(--white);
+    border-left: 2px solid var(--aurora);
+    padding-left: 28px;
+    max-width: 720px;
+    margin-top: 40px;
+  }
+
+  .visual-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 40px;
+  }
+
+  .visual-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(188,195,204,0.1);
+    border-radius: 16px;
+    padding: 32px 28px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s;
+  }
+
+  .visual-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--celestial), var(--aurora));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s;
+  }
+
+  .visual-card:hover {
+    border-color: rgba(119,200,154,0.3);
+    background: rgba(119,200,154,0.04);
+    transform: translateY(-4px);
+  }
+
+  .visual-card:hover::before { transform: scaleX(1); }
+
+  .visual-card-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    color: rgba(119,200,154,0.5);
+    margin-bottom: 14px;
+  }
+
+  .visual-card-text { font-size: 0.92rem; line-height: 1.7; color: var(--silver); }
+
+  /* ── Polar product bands (full bleed light) ── */
+  .polar-band {
+    background: var(--white);
+    color: var(--ink);
+    padding: 0;
+    border-top: 1px solid rgba(119,200,154,0.12);
+    border-bottom: 1px solid rgba(119,200,154,0.12);
+  }
+
+  .polar-band__intro {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 56px 48px 24px;
+  }
+
+  .polar-band__intro .section-label { color: var(--forest); }
+  .polar-band__intro .section-title { color: var(--ink); font-size: clamp(2rem, 4vw, 3rem); }
+
+  .polar-band__stage {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 24px 64px;
+  }
+
+  /* Product chrome (matches app/aurora-components.css) */
+  .p-header {
+    background: var(--navy);
+    color: var(--white);
+    position: relative;
+    overflow: hidden;
+    border-radius: 16px 16px 0 0;
+  }
+
+  .p-header::before {
+    content: '';
+    position: absolute;
+    top: -100px; right: -60px;
+    width: 280px; height: 280px;
+    background: radial-gradient(circle, rgba(119,200,154,0.35) 0%, rgba(0,87,168,0.15) 40%, transparent 65%);
+    pointer-events: none;
+  }
+
+  .p-header__inner {
+    position: relative;
+    z-index: 1;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .p-logo {
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--white);
+  }
+
+  .p-ghost {
+    padding: 9px 16px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.25);
+    color: var(--white);
+    font-family: 'Hanken Grotesk', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    background: transparent;
+  }
+
+  .p-body {
+    background:
+      radial-gradient(900px 480px at 10% -5%, rgba(0,87,168,0.06), transparent 58%),
+      radial-gradient(800px 440px at 90% 10%, rgba(119,200,154,0.08), transparent 55%),
+      var(--white);
+    padding: 40px 24px 48px;
+    border-left: 1px solid rgba(18,26,43,0.06);
+    border-right: 1px solid rgba(18,26,43,0.06);
+    font-family: 'Hanken Grotesk', sans-serif;
+  }
+
+  .p-footer {
+    background: var(--navy);
+    color: var(--silver);
+    text-align: center;
+    padding: 22px 24px;
+    font-size: 12px;
+    border-radius: 0 0 16px 16px;
+    border: 1px solid rgba(18,26,43,0.06);
+    border-top: none;
+  }
+
+  .p-card {
+    max-width: 420px;
+    margin: 0 auto;
+    background: var(--paper);
+    border: 1px solid rgba(18,26,43,0.08);
+    border-radius: 18px;
+    padding: 32px 28px;
+    box-shadow: 0 24px 64px -28px rgba(18,26,43,0.18);
+  }
+
+  .p-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--forest);
+    margin-bottom: 8px;
+  }
+
+  .p-title {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-weight: 600;
+    font-size: clamp(1.5rem, 3vw, 1.85rem);
+    line-height: 1.15;
+    margin-bottom: 10px;
+  }
+
+  .p-lede { font-size: 14px; color: rgba(18,26,43,0.66); line-height: 1.65; margin-bottom: 22px; }
+
+  .p-input {
+    width: 100%;
+    padding: 13px 14px;
+    border: 1px solid rgba(18,26,43,0.12);
+    border-radius: 10px;
+    font: inherit;
+    font-size: 15px;
+    margin-bottom: 16px;
+  }
+
+  .p-btn {
+    width: 100%;
+    padding: 15px 20px;
+    border: none;
+    border-radius: 999px;
+    background: var(--glow);
+    color: var(--navy);
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 15px;
+    box-shadow: 0 8px 24px -8px rgba(119,200,154,0.5);
+    cursor: pointer;
+  }
+
+  .p-inset {
+    background: linear-gradient(155deg, var(--navy-mid), var(--navy));
+    border: 1px solid rgba(119,200,154,0.16);
+    border-radius: 16px;
+    padding: 36px 32px;
+    position: relative;
+    overflow: hidden;
+    color: var(--white);
+    margin-bottom: 20px;
+  }
+
+  .p-inset::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -20px;
+    width: 220px; height: 220px;
+    background: radial-gradient(circle, rgba(119,200,154,0.2), transparent 70%);
+    pointer-events: none;
+  }
+
+  .p-score {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: clamp(3.5rem, 10vw, 4.5rem);
+    font-weight: 600;
+    line-height: 1;
+    background: linear-gradient(120deg, #fff, var(--glow) 55%, #4fd1c5);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .p-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+  .p-hover-card {
+    background: var(--paper);
+    border: 1px solid rgba(18,26,43,0.08);
+    border-radius: 14px;
+    padding: 20px 18px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.35s, transform 0.35s;
+  }
+
+  .p-hover-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--celestial), var(--aurora));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.35s;
+  }
+
+  .p-hover-card:hover { border-color: rgba(119,200,154,0.35); transform: translateY(-2px); }
+  .p-hover-card:hover::before { transform: scaleX(1); }
+
+  /* Border-glow squares — conic ring spins on hover */
+  .p-border-glow {
+    position: relative;
+    display: block;
+    border-radius: 18px;
+    padding: 2px;
+    overflow: hidden;
+    background: rgba(18, 26, 43, 0.08);
+    transition: background 0.35s ease;
+  }
+
+  .p-border-glow::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 220%;
+    aspect-ratio: 1;
+    background: conic-gradient(
+      from 0deg,
+      var(--celestial),
+      var(--aurora),
+      var(--glow),
+      var(--celestial)
+    );
+    transform: translate(-50%, -50%) rotate(0deg);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+  }
+
+  .p-border-glow:hover { background: transparent; }
+
+  .p-border-glow:hover::before {
+    opacity: 1;
+    animation: p-border-glow-spin 2.6s linear infinite;
+  }
+
+  @keyframes p-border-glow-spin {
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+  }
+
+  .p-border-glow__inner {
+    position: relative;
+    z-index: 1;
+    background: var(--paper);
+    border-radius: 16px;
+    padding: 20px 18px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .p-border-glow:hover::before {
+      animation: none;
+      opacity: 1;
+      transform: translate(-50%, -50%) rotate(135deg);
+    }
+  }
+
+  .p-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(18,26,43,0.08);
+    font-size: 15px;
+    transition: padding-left 0.35s;
+  }
+
+  .p-row:first-child { border-top: 1px solid rgba(18,26,43,0.08); }
+  .p-row:hover { padding-left: 10px; }
+
+  .p-row span { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--forest); }
+
+  .p-frame {
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 40px 100px -40px rgba(0,0,0,0.45);
+  }
+
+  .stars {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: white;
+    border-radius: 50%;
+    animation: twinkle var(--d) infinite;
+  }
+
+  @keyframes twinkle {
+    0%, 100% { opacity: var(--min); }
+    50% { opacity: var(--max); }
+  }
+
+  footer {
+    border-top: 1px solid rgba(188,195,204,0.08);
+    padding: 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-brand {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem;
+    font-weight: 300;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  .footer-note {
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    color: var(--silver);
+    text-transform: uppercase;
+    font-family: 'DM Mono', monospace;
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 20px 24px; }
+    .nav-links { display: none; }
+    section, .polar-band__intro { padding-left: 24px; padding-right: 24px; }
+    .visual-grid, .p-grid { grid-template-columns: 1fr; }
+    footer { flex-direction: column; gap: 16px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+<canvas id="aurora-canvas"></canvas>
+
+<div class="page-wrap">
+
+  <nav>
+    <a class="nav-logo" href="#">Illuminairy</a>
+    <ul class="nav-links">
+      <li><a href="#principle">Principle</a></li>
+      <li><a href="#login">Login</a></li>
+      <li><a href="#diagnostic">Diagnostic</a></li>
+      <li><a href="#plan">Plan</a></li>
+      <li><a href="#funnel">Funnel</a></li>
+    </ul>
+  </nav>
+
+  <header class="hero">
+    <p class="hero-eyebrow">Brand guide v3 · Product extension</p>
+    <h1 class="hero-title">Product<br><em>Surfaces</em></h1>
+    <p class="hero-tagline">Same observatory. Same aurora. Parent-facing pages that feel as expensive as the brand book — not a separate SaaS skin.</p>
+    <div class="hero-divider"></div>
+  </header>
+
+  <section id="principle">
+    <p class="section-label">01 — One brand</p>
+    <h2 class="section-title">The brand book<br>is the floor</h2>
+    <p class="section-body">Enrollment, the SAT Score Path, and Soha's portal are not a second design system. They inherit palette, motion, and editorial calm from the guide — with polar white for reading and navy only where the guide uses midnight (chrome, one score moment).</p>
+    <blockquote class="narrative-quote">Luxury observatory at night — then daylight on the pages parents actually read.</blockquote>
+  </section>
+
+  <!-- LOGIN -->
+  <div class="polar-band" id="login">
+    <div class="polar-band__intro">
+      <p class="section-label">02 — Soha portal · Sign in</p>
+      <h2 class="section-title">The premium moment<br>you already liked</h2>
+    </div>
+    <div class="polar-band__stage">
+      <div class="p-frame">
+        <div class="p-header">
+          <div class="p-header__inner">
+            <div class="p-logo">Illuminairy</div>
+            <button type="button" class="p-ghost">Bootcamp enrollment</button>
+          </div>
+        </div>
+        <div class="p-body">
+          <div class="p-card">
+            <p class="p-eyebrow">Illuminairy</p>
+            <h3 class="p-title">Soha's SAT Improvement Plan</h3>
+            <p class="p-lede">Enter the email we shared with you to view diagnostic results and the personalized weekly plan.</p>
+            <input class="p-input" type="email" value="parent@example.com" readonly>
+            <button type="button" class="p-btn">Continue</button>
+          </div>
+        </div>
+        <div class="p-footer">Private student portal · mockup for review</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIAGNOSTIC -->
+  <div class="polar-band" id="diagnostic">
+    <div class="polar-band__intro">
+      <p class="section-label">03 — Skill Diagnostic</p>
+      <h2 class="section-title">One dark inset.<br>Everything else paper.</h2>
+    </div>
+    <div class="polar-band__stage">
+      <div class="p-frame">
+        <div class="p-header">
+          <div class="p-header__inner">
+            <div class="p-logo">Illuminairy</div>
+            <button type="button" class="p-ghost">Bootcamp enrollment</button>
+          </div>
+        </div>
+        <div class="p-body">
+          <div class="p-inset">
+            <p class="p-eyebrow" style="color:var(--glow);">Soha Naveed · composite</p>
+            <div class="p-score">1280</div>
+            <p style="font-size:13px;opacity:0.75;margin-top:8px;">Illuminairy proctored Skill Diagnostic</p>
+          </div>
+          <div class="p-grid" style="margin-bottom:28px;">
+            <div class="p-border-glow">
+              <div class="p-border-glow__inner">
+                <p class="p-eyebrow">Reading & Writing</p>
+                <p class="p-title" style="font-size:2rem;margin:0;">640</p>
+              </div>
+            </div>
+            <div class="p-border-glow">
+              <div class="p-border-glow__inner">
+                <p class="p-eyebrow">Math</p>
+                <p class="p-title" style="font-size:2rem;margin:0;">640</p>
+              </div>
+            </div>
+          </div>
+          <p class="p-eyebrow">Weakest skills · ranked</p>
+          <div class="p-row"><strong>Linear equations in context</strong><span>−4 pts</span></div>
+          <div class="p-row"><strong>Evidence and inference</strong><span>−3 pts</span></div>
+          <div class="p-row"><strong>Quadratic structure</strong><span>−3 pts</span></div>
+        </div>
+        <div class="p-footer">© Illuminairy</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PLAN -->
+  <div class="polar-band" id="plan">
+    <div class="polar-band__intro">
+      <p class="section-label">04 — SAT Improvement Plan</p>
+      <h2 class="section-title">Editorial plan.<br>Not a report dump.</h2>
+    </div>
+    <div class="polar-band__stage">
+      <div class="p-frame">
+        <div class="p-header"><div class="p-header__inner"><div class="p-logo">Illuminairy</div><button type="button" class="p-ghost">Bootcamp enrollment</button></div></div>
+        <div class="p-body">
+          <p class="p-eyebrow">Week 3 · August bootcamp</p>
+          <h3 class="p-title" style="font-size:2rem;margin-bottom:12px;">Mistake-driven focus on linear equations</h3>
+          <p class="p-lede" style="max-width:62ch;">Three tutoring sessions on the problem types Soha missed. Mentor explains why each wrong answer happened.</p>
+          <div class="p-grid">
+            <div class="p-hover-card">
+              <p class="p-eyebrow">This week</p>
+              <ul style="list-style:none;font-size:14px;line-height:1.65;color:rgba(18,26,43,0.66);">
+                <li style="margin-bottom:6px;"><strong style="color:var(--ink);">Session 1</strong> · Word problems</li>
+                <li style="margin-bottom:6px;"><strong style="color:var(--ink);">Session 2</strong> · Graph interpretation</li>
+                <li><strong style="color:var(--ink);">Session 3</strong> · Timed review</li>
+              </ul>
+            </div>
+            <div class="p-hover-card">
+              <p class="p-eyebrow">Target · August 22</p>
+              <p class="p-title" style="color:var(--forest);font-size:2.5rem;">1380–1420</p>
+              <p style="font-size:12px;color:rgba(18,26,43,0.55);margin-top:8px;">Illustrative · Results vary</p>
+            </div>
+          </div>
+        </div>
+        <div class="p-footer">© Illuminairy</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FUNNEL + LP -->
+  <div class="polar-band" id="funnel">
+    <div class="polar-band__intro">
+      <p class="section-label">05 — Homepage & enroll</p>
+      <h2 class="section-title">Same chrome.<br>Same glow pill.</h2>
+    </div>
+    <div class="polar-band__stage">
+      <div class="p-grid" style="gap:20px;">
+        <div class="p-frame">
+          <div class="p-header" style="border-radius:16px 16px 0 0;"><div class="p-header__inner" style="justify-content:center;"><div class="p-logo">Illuminairy</div></div></div>
+          <div class="p-body">
+            <h3 class="p-title" style="font-size:1.65rem;">See what's holding <em style="font-style:normal;color:var(--forest);">their SAT score</em> back</h3>
+            <div class="p-hover-card" style="margin-top:16px;">
+              <p class="p-eyebrow">Free parent plan · about 2 min</p>
+              <button type="button" class="p-btn" style="margin-top:12px;">Start the SAT Score Path</button>
+            </div>
+          </div>
+        </div>
+        <div class="p-frame">
+          <div class="p-body" style="border-radius:16px;border:1px solid rgba(18,26,43,0.06);">
+            <p class="p-eyebrow">Bootcamp checkout</p>
+            <h3 class="p-title">What's included</h3>
+            <p class="p-lede">Weekly tutoring · Skill Diagnostic · Personalized weekly plan</p>
+            <button type="button" class="p-btn">Enroll in August 22 Bootcamp</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="full-band">
+    <section>
+      <p class="section-label">06 — What to push in production</p>
+      <h2 class="section-title">Brand guide motion<br>on product pages</h2>
+      <div class="visual-grid">
+        <div class="visual-card">
+          <div class="visual-card-num">Keep</div>
+          <div class="visual-card-text">Login framing: navy header glow, centered card, glow pill. This is the reference for every surface.</div>
+        </div>
+        <div class="visual-card">
+          <div class="visual-card-num">Add</div>
+          <div class="visual-card-text">Aurora wash on polar white, visual-card hover on every plan block, tagline-row motion on skill lists.</div>
+        </div>
+        <div class="visual-card">
+          <div class="visual-card-num">Drop</div>
+          <div class="visual-card-text">Checklist hubs, cream portal, navy CTA boxes, disconnected mockup files that don't share one scroll.</div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    <div class="footer-brand">Illuminairy</div>
+    <div class="footer-note">Product surfaces · Mockup · Open alongside brand guide v3</div>
+  </footer>
+
+</div>
+
+<script src="_aurora-canvas.js"></script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+---
+description: Aurora product brand system — tokens, fonts, and guardrails for customer-facing UI
+globs:
+  - app/soha/**
+  - components/soha/**
+  - components/standard-enroll/**
+  - app/landing/**
+  - components/landing/**
+  - app/quiz-funnel.css
+  - app/aurora-brand.css
+  - app/aurora-components.css
+---
+
+# Aurora brand (product surfaces)
+
+**SSOT:** `app/aurora-brand.css` (tokens) · `app/aurora-components.css` (chrome, buttons, cards)
+
+## Surfaces
+
+| Route / area | Import |
+|--------------|--------|
+| SOHA portal | `aurora-brand.css` + `aurora-components.css` in `app/soha/layout.tsx` |
+| Standard enroll | `@import aurora-brand.css` in `standard-enroll.css` |
+| LP v4 | Tokens inline in `landing-v4.css`; fonts via `lib/funnel-fonts.ts` |
+| Plan Builder `/plan` | `@import aurora-brand.css` in `quiz-funnel.css`; `--qf-*` aliases `--aurora-*` |
+
+## Palette (light-first)
+
+- Page bg: `#F5F8FA` (`--aurora-white`)
+- Paper: `#FFFFFF`
+- Navy chrome: `#121A2B` (header/footer strips only — not hero CTA boxes)
+- Celestial `#0057A8` · Aurora `#77C89A` · Glow `#B8F5D1` · Forest `#2F6E47`
+
+## Typography
+
+| Role | Font | Weight |
+|------|------|--------|
+| Display / H1 | Source Serif 4 | 600 max, no italic |
+| Body | Hanken Grotesk | 400–600 (never 800 on product UI) |
+| Labels | DM Mono | sentence case preferred |
+
+Load via `lib/funnel-fonts.ts` (`hankenGrotesk`, `displaySerif`, `dmMono`).
+
+## Components
+
+Use shared classes — do not invent parallel token stacks:
+
+- `.aurora-header` / `.aurora-footer` — slim navy chrome
+- `.aurora-btn-primary` / `.aurora-btn-secondary` / `.aurora-btn-ghost`
+- `.aurora-hover-card` — light card + aurora top-line on hover
+- `.aurora-hover-row` — list row slide
+- `.aurora-border-glow` — optional feature squares
+
+**Banned on product UI:** dark navy plan/CTA cards above the fold (use light hover cards).
+
+## Banned (enforced by `npm run aurora:brand-guard`)
+
+- Cream `#F5ECD9`, `--danielle-cream`, `--sr-cream`
+- Fonts: Fraunces, Cormorant Garamond, Space Grotesk
+- Full-page dark mode on enroll / LP / portal (one diagnostic score inset OK)
+
+## Out of scope (legacy until migrated)
+
+- `/danielle/*`, `content/danielle/*`, `/admin/*`
+- Sohail locked enroll (`components/personalized-enroll/*`)
+
+## Before claiming done
+
+1. `npm run aurora:brand-guard`
+2. `npm run agent:verify`
+3. Scan new strings against messaging guide (no em dashes, banned tutor-ad jargon)

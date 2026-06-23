@@ -1,0 +1,44 @@
+/* June SAT Score Review LP — extends v4 tokens */
+
+.sr-lp-mom-quote {
+  margin: 0 0 20px;
+  padding: 0;
+  border: none;
+}
+
+.sr-lp-mom-quote__lead {
+  font-family: var(--lp-display, "Source Serif 4", Georgia, serif);
+  font-size: clamp(1.35rem, 4.5vw, 1.75rem);
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--lp-ink, #121a2b);
+  margin: 0 0 12px;
+}
+
+.sr-lp-mom-quote__lead .line {
+  display: block;
+}
+
+.sr-lp-mom-quote__body {
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: var(--lp-ink-2, #4a5568);
+  margin: 0;
+}
+
+.sr-lp-offer__eyebrow {
+  color: var(--lp-forest, #2f6e47);
+  margin-bottom: 8px;
+}
+
+.sr-lp-offer__headline {
+  font-size: clamp(1.25rem, 4vw, 1.5rem);
+  margin-bottom: 12px;
+}
+
+.sr-lp-results-vary {
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--lp-ink-muted, #718096);
+  margin: 12px 0 0;
+}

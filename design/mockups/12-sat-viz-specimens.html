@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>12 · SAT viz specimens · Soha · ECharts</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Hanken+Grotesk:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.6.0/dist/echarts.min.js"></script>
+  <style>
+    :root {
+      --ink: #121a2b; --muted: rgba(18,26,43,.55); --line: rgba(18,26,43,.08);
+      --field: #f5f8fa; --surface: #fff; --em: #2f6e47; --accent: #0057a8;
+      --aurora: #77c89a; --glow: rgba(184,245,209,.35); --silver: #bcc3cc;
+      --serif: "Source Serif 4", Georgia, serif; --sans: "Hanken Grotesk", system-ui, sans-serif;
+      --mono: "DM Mono", monospace; --max: 1140px; --radius: 16px;
+      --grad: linear-gradient(90deg, #0057a8, #77c89a, #b8f5d1);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: var(--sans); background: var(--field); color: var(--ink); line-height: 1.5; overflow-x: hidden; }
+    .nav { position: sticky; top: 0; z-index: 50; background: rgba(245,248,250,.97); backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--line); padding: 12px 20px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; }
+    .nav a { font-size: 13px; font-weight: 600; color: var(--ink); text-decoration: none; }
+    .nav a:hover { color: var(--em); }
+    .hero { max-width: var(--max); margin: 0 auto; padding: 40px 20px 28px; }
+    .eyebrow { font-family: var(--mono); font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--aurora); margin-bottom: 8px; }
+    h1 { font-family: var(--serif); font-size: clamp(26px,4vw,36px); font-weight: 600; line-height: 1.12; margin-bottom: 10px; }
+    .lede { color: var(--muted); max-width: 62ch; font-size: 15px; }
+    main { max-width: var(--max); margin: 0 auto; padding: 0 20px 100px; }
+    .chapter { margin-top: 56px; }
+    .chapter-head { margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--line); }
+    .chapter-head h2 { font-family: var(--serif); font-size: 26px; font-weight: 600; margin-bottom: 6px; }
+    .chapter-head p { color: var(--muted); font-size: 14px; max-width: 58ch; }
+    .specimen-grid { display: grid; gap: 28px; }
+    @media (min-width: 960px) {
+      .specimen-grid--3 { grid-template-columns: 1fr; }
+      .specimen-grid--3 .specimen { max-width: 100%; }
+    }
+    .specimen {
+      background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+      overflow: hidden; box-shadow: 0 12px 48px -28px rgba(18,26,43,.12);
+    }
+    .specimen::before { content: ""; display: block; height: 2px; background: var(--grad); }
+    .specimen-cap { padding: 22px 24px 0; }
+    .specimen-label { font-family: var(--mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
+    .specimen-title { font-family: var(--serif); font-size: 20px; font-weight: 600; margin: 4px 0 6px; }
+    .specimen-note { font-size: 14px; color: var(--muted); max-width: 52ch; }
+    .specimen-body { padding: 20px 24px 24px; }
+    .inset-hero {
+      background: linear-gradient(180deg, #1c2a42, #121a2b); border-radius: 12px; padding: 28px 20px; text-align: center; color: #f5f8fa; margin-bottom: 20px;
+    }
+    .inset-hero .sub { font-family: var(--mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--aurora); }
+    .inset-hero .range {
+      font-family: var(--serif); font-weight: 600; font-size: clamp(36px,6vw,52px); line-height: 1;
+      margin: 10px 0; background: linear-gradient(120deg, #fff, #b8f5d1 55%, #77c89a);
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+    }
+    .inset-hero .subs { display: flex; justify-content: center; gap: 28px; flex-wrap: wrap; font-size: 13px; color: var(--silver); margin-top: 8px; }
+    .inset-hero .subs b { display: block; font-family: var(--serif); font-size: 20px; color: #f5f8fa; margin-top: 2px; }
+    .chart { width: 100%; min-height: 280px; height: 320px; }
+    .chart--sm { height: 220px; min-height: 200px; }
+    .tide-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
+    .tide-panel { padding: 16px; background: var(--field); border-radius: 10px; border: 1px solid var(--line); }
+    .tide-panel h4 { font-family: var(--mono); font-size: 9px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+    .tide-bands { display: flex; justify-content: space-around; text-align: center; }
+    .tide-bands .pct { font-family: var(--serif); font-weight: 600; font-size: 24px; }
+    .tide-bands .lbl { font-family: var(--mono); font-size: 8px; letter-spacing: .1em; color: var(--muted); margin-top: 4px; }
+    .tide-bar { height: 3px; background: var(--line); border-radius: 2px; margin-top: 8px; position: relative; overflow: hidden; }
+    .tide-bar i { position: absolute; left: 0; top: 0; height: 100%; background: var(--grad); border-radius: 2px; }
+    .ledger { list-style: none; margin-top: 16px; }
+    .ledger li { display: grid; grid-template-columns: 28px 1fr auto; gap: 10px; padding: 12px 0; border-bottom: 1px solid var(--line); align-items: baseline; }
+    .ledger li:last-child { border-bottom: none; }
+    .ledger .idx { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+    .ledger .name { font-weight: 600; font-size: 15px; }
+    .ledger .pts { font-family: var(--serif); font-weight: 600; font-size: 22px; color: var(--em); }
+    .constellation-mod { margin-top: 16px; }
+    .constellation-mod h4 { font-family: var(--mono); font-size: 9px; letter-spacing: .12em; text-transform: uppercase; color: var(--em); margin-bottom: 8px; }
+    .dot-row { display: flex; flex-wrap: wrap; gap: 6px; }
+    .dot { width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid var(--aurora); background: var(--surface); position: relative; flex-shrink: 0; }
+    .dot.miss { background: rgba(0,87,168,.18); border-color: var(--accent); }
+    .dot.miss::after { content: attr(data-d); position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 6px; color: var(--accent); }
+    .minimal-eq { font-family: var(--serif); font-size: clamp(18px,3vw,24px); text-align: center; padding: 24px 12px; line-height: 1.5; }
+    .minimal-eq em { font-style: normal; color: var(--em); font-weight: 600; }
+    .stat-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--line); }
+    .stat-strip div { text-align: center; }
+    .stat-strip .val { font-family: var(--serif); font-weight: 600; font-size: 24px; }
+    .stat-strip .val.em { color: var(--em); }
+    .stat-strip .lbl { font-family: var(--mono); font-size: 8px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-top: 4px; }
+    .footnote { font-family: var(--mono); font-size: 10px; color: var(--muted); margin-top: 16px; letter-spacing: .03em; }
+    .prose { font-size: 14px; color: var(--muted); margin: 12px 0 0; max-width: 58ch; }
+    .phase-ladder { display: flex; gap: 8px; align-items: flex-end; height: 64px; margin-top: 16px; }
+    .phase-ladder span { flex: 1; border-radius: 4px 4px 0 0; background: var(--aurora); opacity: .75; }
+    .phase-ladder span:nth-child(1) { height: 100%; }
+    .phase-ladder span:nth-child(2) { height: 62%; background: var(--accent); opacity: .45; }
+    .phase-ladder span:nth-child(3) { height: 35%; background: var(--line); opacity: 1; }
+    .phase-labels { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 9px; color: var(--muted); margin-top: 6px; }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <a href="11-data-viz-references.html">← References</a>
+    <a href="index.html">Mockups hub</a>
+    <span style="font-size:12px;color:var(--muted)">ECharts 5 · Soha sample data</span>
+  </nav>
+
+  <header class="hero">
+    <p class="eyebrow">Full fidelity · not thumbnails</p>
+    <h1>SAT visualization specimens</h1>
+    <p class="lede">Three competing diagnostic layouts and two plan reveals — real numbers, Apache ECharts, observatory styling. Pick a direction; then we port the winner to Next.js.</p>
+  </header>
+
+  <main>
+    <section class="chapter">
+      <div class="chapter-head">
+        <h2>Skill Diagnostic report · 3 layouts</h2>
+        <p>Same Soha data (1380–1430, 13 misses, ranked skills). Different story structure — not different colors on the same grid.</p>
+      </div>
+      <div class="specimen-grid specimen-grid--3">
+
+        <!-- A Sankey story -->
+        <article class="specimen" id="spec-a">
+          <div class="specimen-cap">
+            <p class="specimen-label">Layout A · Narrative</p>
+            <h3 class="specimen-title">Misses flow into ranked skills</h3>
+            <p class="specimen-note">Sankey earns the right to show +52 / +48. Prose handles routing (M1 easy miss).</p>
+          </div>
+          <div class="specimen-body">
+            <div class="inset-hero">
+              <p class="sub">Skill Diagnostic · Soha Naveed</p>
+              <p class="range">1380–1430</p>
+              <div class="subs">
+                <div>Reading & Writing<b>670–690</b></div>
+                <div>Math<b>710–740</b></div>
+              </div>
+            </div>
+            <div class="chart" id="chart-sankey"></div>
+            <p class="prose">Two easy/medium misses in RW Module 1 can cap Module 2 difficulty — called out in copy, not a second chart.</p>
+            <div class="tide-row">
+              <div class="tide-panel">
+                <h4>Reading & Writing accuracy</h4>
+                <div class="tide-bands">
+                  <div><div class="pct">88%</div><div class="lbl">Easy</div><div class="tide-bar"><i style="width:88%"></i></div></div>
+                  <div><div class="pct">87%</div><div class="lbl">Med</div><div class="tide-bar"><i style="width:87%"></i></div></div>
+                  <div><div class="pct">87%</div><div class="lbl">Hard</div><div class="tide-bar"><i style="width:87%"></i></div></div>
+                </div>
+              </div>
+              <div class="tide-panel">
+                <h4>Math accuracy</h4>
+                <div class="tide-bands">
+                  <div><div class="pct">100%</div><div class="lbl">Easy</div><div class="tide-bar"><i style="width:100%"></i></div></div>
+                  <div><div class="pct">88%</div><div class="lbl">Med</div><div class="tide-bar"><i style="width:88%"></i></div></div>
+                  <div><div class="pct">73%</div><div class="lbl">Hard</div><div class="tide-bar"><i style="width:73%"></i></div></div>
+                </div>
+              </div>
+            </div>
+            <p class="footnote">Diagnostic excerpt · Jun 2026 · Modeled recoverable · Results vary</p>
+          </div>
+        </article>
+
+        <!-- B Visual treemap + constellation -->
+        <article class="specimen" id="spec-b">
+          <div class="specimen-cap">
+            <p class="specimen-label">Layout B · Visual-first</p>
+            <h3 class="specimen-title">Where points concentrate · what the test looked like</h3>
+            <p class="specimen-note">Treemap shows top-heavy gap; constellation replaces spreadsheet grid.</p>
+          </div>
+          <div class="specimen-body">
+            <div class="chart chart--sm" id="chart-treemap"></div>
+            <div class="constellation-mod">
+              <h4>Reading & Writing · Module 1 · 25/27</h4>
+              <div class="dot-row" id="dots-rw-m1"></div>
+            </div>
+            <div class="constellation-mod">
+              <h4>Math · Module 2 · 17/22</h4>
+              <div class="dot-row" id="dots-m-m2"></div>
+            </div>
+            <ol class="ledger">
+              <li><span class="idx">01</span><span class="name">Transitions</span><span class="pts">+52</span></li>
+              <li><span class="idx">02</span><span class="name">Factoring & factor theorem</span><span class="pts">+48</span></li>
+              <li><span class="idx">03</span><span class="name">Boundaries</span><span class="pts">+33</span></li>
+            </ol>
+            <p class="footnote">85 of 98 correct · 13 missed · Illustrative rank · Results vary</p>
+          </div>
+        </article>
+
+        <!-- C Minimal -->
+        <article class="specimen" id="spec-c">
+          <div class="specimen-cap">
+            <p class="specimen-label">Layout C · Economist minimal</p>
+            <h3 class="specimen-title">Three numbers and a rank</h3>
+            <p class="specimen-note">Almost no chart chrome. Accuracy slope + equation for top skills.</p>
+          </div>
+          <div class="specimen-body">
+            <div class="inset-hero">
+              <p class="sub">Estimated performance</p>
+              <p class="range">1380–1430</p>
+            </div>
+            <div class="chart chart--sm" id="chart-slope"></div>
+            <p class="minimal-eq">Top movement: <em>Transitions +52</em> · <em>Factoring +48</em> · <em>Boundaries +33</em></p>
+            <p class="prose">Hard Math accuracy (73%) is where tutoring time goes after RW transitions stabilize.</p>
+            <p class="footnote">Slope: Easy → Med → Hard within Math section · Diagnostic only</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="chapter">
+      <div class="chapter-head">
+        <h2>Plan reveal · 2 layouts</h2>
+        <p>Illustrative until Skill Diagnostic · Soha · Aug 22 test · 1400 → ~1525</p>
+      </div>
+      <div class="specimen-grid">
+
+        <article class="specimen">
+          <div class="specimen-cap">
+            <p class="specimen-label">Plan A · Phased step path</p>
+            <h3 class="specimen-title">Honest to 25 → 15 → 5 pts/week</h3>
+            <p class="specimen-note">Step chart, not smooth stock curve. Stat strip carries gap and runway.</p>
+          </div>
+          <div class="specimen-body">
+            <div class="stat-strip">
+              <div><div class="val em">+125</div><div class="lbl">Gap</div></div>
+              <div><div class="val">66</div><div class="lbl">Days</div></div>
+              <div><div class="val em">~14</div><div class="lbl">Pts / wk</div></div>
+              <div><div class="val">Aug 22</div><div class="lbl">Test</div></div>
+            </div>
+            <div class="chart" id="chart-step"></div>
+            <div class="phase-ladder"><span></span><span></span><span></span></div>
+            <div class="phase-labels"><span>Wk 1–6 · top skills</span><span>Wk 7–12</span><span>Polish</span></div>
+            <p class="footnote">Illustrative projection · Results vary</p>
+          </div>
+        </article>
+
+        <article class="specimen">
+          <div class="specimen-cap">
+            <p class="specimen-label">Plan B · Gap + rank</p>
+            <h3 class="specimen-title">Dumbbell gap + treemap of effort</h3>
+            <p class="specimen-note">Two hero marks for today/goal; treemap for where weeks go.</p>
+          </div>
+          <div class="specimen-body">
+            <div class="chart chart--sm" id="chart-dumbbell"></div>
+            <div class="chart" id="chart-plan-treemap"></div>
+            <p class="footnote">Modeled recoverable · Aug 22 · Results vary</p>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const C = { ink: "#121a2b", em: "#2f6e47", accent: "#0057a8", aurora: "#77c89a", silver: "#bcc3cc", muted: "rgba(18,26,43,0.45)" };
+    const skills = [
+      { name: "Transitions", value: 52 },
+      { name: "Factoring", value: 48 },
+      { name: "Boundaries", value: 33 },
+      { name: "Command of Evidence", value: 22 },
+      { name: "Subject-Verb", value: 16 },
+      { name: "Other / polish", value: 24 },
+    ];
+
+    function baseText() {
+      return { color: C.ink, fontFamily: "Hanken Grotesk, sans-serif", fontSize: 12 };
+    }
+
+    function initSankey() {
+      const el = document.getElementById("chart-sankey");
+      if (!el) return;
+      const ch = echarts.init(el);
+      ch.setOption({
+        tooltip: { trigger: "item", triggerOn: "mousemove" },
+        series: [{
+          type: "sankey",
+          layout: "none",
+          emphasis: { focus: "adjacency" },
+          nodeAlign: "left",
+          lineStyle: { color: "gradient", curveness: 0.5, opacity: 0.35 },
+          itemStyle: { borderWidth: 0 },
+          label: { color: C.ink, fontFamily: "Hanken Grotesk", fontSize: 11 },
+          data: [
+            { name: "RW misses" }, { name: "Math misses" },
+            { name: "Transitions" }, { name: "Boundaries" }, { name: "Command of Evidence" },
+            { name: "Subject-Verb" }, { name: "Factoring" }, { name: "Other Math" },
+          ],
+          links: [
+            { source: "RW misses", target: "Transitions", value: 2 },
+            { source: "RW misses", target: "Boundaries", value: 2 },
+            { source: "RW misses", target: "Command of Evidence", value: 2 },
+            { source: "RW misses", target: "Subject-Verb", value: 1 },
+            { source: "Math misses", target: "Factoring", value: 2 },
+            { source: "Math misses", target: "Other Math", value: 4 },
+          ],
+          color: [C.accent, C.em, C.aurora, "#5a9e7a", "#3d8b62", C.silver, C.accent, C.muted],
+        }],
+      });
+      return ch;
+    }
+
+    function initTreemap(id) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const ch = echarts.init(el);
+      ch.setOption({
+        tooltip: { formatter: (p) => `${p.name}: +${p.value} modeled pts` },
+        series: [{
+          type: "treemap",
+          roam: false,
+          nodeClick: false,
+          breadcrumb: { show: false },
+          label: { show: true, formatter: "{b}\n+{c}", fontFamily: "Source Serif 4", fontSize: 13, color: C.ink },
+          itemStyle: { borderColor: "#fff", borderWidth: 2, gapWidth: 2 },
+          data: skills.map((s, i) => ({
+            name: s.name,
+            value: s.value,
+            itemStyle: {
+              color: [C.accent, C.aurora, C.em, "#5a9e7a", "#3d8b62", C.silver][i],
+              opacity: 0.85,
+            },
+          })),
+        }],
+      });
+      return ch;
+    }
+
+    function initSlope() {
+      const el = document.getElementById("chart-slope");
+      if (!el) return;
+      const ch = echarts.init(el);
+      ch.setOption({
+        grid: { left: 48, right: 24, top: 24, bottom: 36 },
+        xAxis: { type: "category", data: ["Easy", "Medium", "Hard"], axisLine: { lineStyle: { color: C.silver } }, axisLabel: baseText() },
+        yAxis: { type: "value", max: 100, splitLine: { lineStyle: { color: "rgba(18,26,43,0.06)" } }, axisLabel: { ...baseText(), formatter: "{value}%" } },
+        series: [
+          { name: "RW", type: "line", data: [88, 87, 87], symbolSize: 10, lineStyle: { width: 2, color: C.accent }, itemStyle: { color: C.accent } },
+          { name: "Math", type: "line", data: [100, 88, 73], symbolSize: 10, lineStyle: { width: 2, color: C.em }, itemStyle: { color: C.em } },
+        ],
+      });
+      return ch;
+    }
+
+    function initStep() {
+      const el = document.getElementById("chart-step");
+      if (!el) return;
+      const ch = echarts.init(el);
+      ch.setOption({
+        grid: { left: 52, right: 24, top: 32, bottom: 40 },
+        xAxis: { type: "category", data: ["Start", "Wk 4 · PT", "Wk 8 · PT", "Aug 22"], axisLabel: { ...baseText(), fontFamily: "DM Mono", fontSize: 10 } },
+        yAxis: { type: "value", min: 1350, max: 1560, splitLine: { lineStyle: { color: "rgba(18,26,43,0.06)" } }, axisLabel: baseText() },
+        series: [{
+          type: "line",
+          step: "middle",
+          data: [1400, 1480, 1510, 1525],
+          lineStyle: { width: 2.5, color: C.aurora },
+          areaStyle: { color: "rgba(119,200,154,0.15)" },
+          symbolSize: 10,
+          itemStyle: { color: C.em, borderColor: "#fff", borderWidth: 2 },
+          label: { show: true, position: "top", fontFamily: "Source Serif 4", fontWeight: 600, color: C.em, formatter: (p) => (p.dataIndex === 3 ? "~" : "") + p.value },
+        }],
+      });
+      return ch;
+    }
+
+    function initDumbbell() {
+      const el = document.getElementById("chart-dumbbell");
+      if (!el) return;
+      const ch = echarts.init(el);
+      const y = 0;
+      ch.setOption({
+        grid: { left: 40, right: 40, top: 48, bottom: 40 },
+        xAxis: { type: "value", min: 1300, max: 1580, show: false },
+        yAxis: { type: "category", data: [""], show: false },
+        series: [
+          { type: "line", data: [[1400, y], [1525, y]], lineStyle: { width: 3, color: C.aurora }, symbol: "none" },
+          { type: "scatter", data: [[1400, y]], symbolSize: 18, itemStyle: { color: C.accent, borderColor: "#fff", borderWidth: 2 },
+            label: { show: true, position: "top", formatter: "1400\nToday", fontFamily: "Source Serif 4", fontSize: 22, fontWeight: 600, color: C.ink } },
+          { type: "scatter", data: [[1525, y]], symbolSize: 18, itemStyle: { color: C.em, borderColor: "#fff", borderWidth: 2 },
+            label: { show: true, position: "top", formatter: "~1525\nGoal", fontFamily: "Source Serif 4", fontSize: 22, fontWeight: 600, color: C.em } },
+          { type: "scatter", data: [[1462, y]], symbolSize: 0,
+            label: { show: true, position: "bottom", formatter: "+125 gap", fontFamily: "Source Serif 4", fontSize: 16, fontWeight: 600, color: C.em } },
+        ],
+      });
+      return ch;
+    }
+
+    function buildDots(id, total, misses) {
+      const row = document.getElementById(id);
+      if (!row) return;
+      for (let i = 1; i <= total; i++) {
+        const d = document.createElement("span");
+        d.className = "dot" + (misses[i] ? " miss" : "");
+        if (misses[i]) d.dataset.d = misses[i];
+        row.appendChild(d);
+      }
+    }
+
+    buildDots("dots-rw-m1", 27, { 18: "M", 22: "E" });
+    buildDots("dots-m-m2", 22, { 12: "M", 13: "H", 16: "H", 20: "H", 22: "H" });
+
+    const charts = [
+      initSankey(),
+      initTreemap("chart-treemap"),
+      initTreemap("chart-plan-treemap"),
+      initSlope(),
+      initStep(),
+      initDumbbell(),
+    ].filter(Boolean);
+
+    window.addEventListener("resize", () => charts.forEach((c) => c.resize()));
+  </script>
+</body>
+</html>

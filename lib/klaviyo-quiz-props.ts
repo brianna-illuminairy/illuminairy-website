@@ -51,6 +51,7 @@ export function buildKlaviyoQuizProperties(ctx: KlaviyoQuizContext) {
     utm_campaign: attribution?.utm_campaign ?? "",
     utm_source: attribution?.utm_source ?? "",
     utm_content: attribution?.utm_content ?? "",
+    creative_version: attribution?.version ?? "",
     first_touch_utm_campaign: attribution?.utm_campaign ?? "",
     funnel: "sat_quiz"
   };

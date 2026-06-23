@@ -1,0 +1,200 @@
+import {
+  clearQuizSnapshotCookie,
+  readQuizSnapshotCookieClient,
+  writeQuizSnapshotCookie,
+  type LabQuizSnapshot,
+} from "@/lib/quiz-funnel-b/quiz-cookie";
+import { canonicalizeQuizStepId } from "@/lib/quiz-funnel-b/funnel-steps";
+
+/** localStorage keys for Plan Builder B in-progress state (client only). */
+export const QUIZ_ANSWERS_STORAGE_KEY = "qfb_answers";
+export const QUIZ_LAST_STEP_STORAGE_KEY = "qfb_last_step";
+export const QUIZ_UPDATED_AT_STORAGE_KEY = "qfb_updated_at";
+
+export type StoredLabQuizAnswers = Record<string, string | string[] | boolean | undefined>;
+
+function snapshotUpdatedAt(): number {
+  if (typeof window === "undefined") return 0;
+  try {
+    const raw = localStorage.getItem(QUIZ_UPDATED_AT_STORAGE_KEY);
+    if (!raw) return 0;
+    const n = Number(raw);
+    return Number.isFinite(n) && n > 0 ? n : 0;
+  } catch {
+    return 0;
+  }
+}
+
+export function readStoredQuizAnswers(): StoredLabQuizAnswers {
+  if (typeof window === "undefined") return {};
+  try {
+    const saved = localStorage.getItem(QUIZ_ANSWERS_STORAGE_KEY);
+    return saved ? (JSON.parse(saved) as StoredLabQuizAnswers) : {};
+  } catch {
+    return {};
+  }
+}
+
+export function readQuizLastStep(): string | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const step = localStorage.getItem(QUIZ_LAST_STEP_STORAGE_KEY);
+    return step ? canonicalizeQuizStepId(step) : null;
+  } catch {
+    return null;
+  }
+}
+
+function writeLocalAnswers(answers: StoredLabQuizAnswers): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    localStorage.setItem(QUIZ_ANSWERS_STORAGE_KEY, JSON.stringify(answers));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function writeLocalLastStep(step: string | null): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    if (step) {
+      localStorage.setItem(QUIZ_LAST_STEP_STORAGE_KEY, canonicalizeQuizStepId(step));
+    } else {
+      localStorage.removeItem(QUIZ_LAST_STEP_STORAGE_KEY);
+    }
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function writeLocalUpdatedAt(updatedAt: number): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    localStorage.setItem(QUIZ_UPDATED_AT_STORAGE_KEY, String(updatedAt));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function localClientSnapshot(): LabQuizSnapshot {
+  return {
+    answers: readStoredQuizAnswers(),
+    lastStep: readQuizLastStep(),
+    updatedAt: snapshotUpdatedAt(),
+  };
+}
+
+function localSnapshotHasData(snapshot: LabQuizSnapshot): boolean {
+  return Boolean(snapshot.lastStep) || Object.keys(snapshot.answers).length > 0;
+}
+
+export function mergeQuizSnapshots(
+  intake: LabQuizSnapshot | null | undefined,
+  local: LabQuizSnapshot | null | undefined
+): LabQuizSnapshot | null {
+  if (!intake && !local) return null;
+  if (!intake) return local ?? null;
+  if (!local || !localSnapshotHasData(local)) return intake;
+
+  const mergedAnswers: StoredLabQuizAnswers = { ...intake.answers };
+  for (const [key, val] of Object.entries(local.answers)) {
+    if (val === undefined || val === null) continue;
+    if (typeof val === "string" && val.length === 0) continue;
+    if (Array.isArray(val) && val.length === 0) continue;
+    mergedAnswers[key] = val;
+  }
+
+  const intakeTime = intake.updatedAt ?? 0;
+  const localTime = local.updatedAt ?? 0;
+  const mergedLastStep =
+    localTime >= intakeTime
+      ? local.lastStep ?? intake.lastStep
+      : intake.lastStep ?? local.lastStep;
+  const lastStep = mergedLastStep
+    ? canonicalizeQuizStepId(mergedLastStep)
+    : mergedLastStep;
+
+  return {
+    answers: mergedAnswers,
+    lastStep,
+    updatedAt: Math.max(intakeTime, localTime),
+  };
+}
+
+export function resolveHydratedQuizSnapshot(
+  serverSnapshot: LabQuizSnapshot | null | undefined
+): LabQuizSnapshot | null {
+  const local = localClientSnapshot();
+  const clientCookie = readQuizSnapshotCookieClient();
+  const intake =
+    serverSnapshot && (serverSnapshot.lastStep || Object.keys(serverSnapshot.answers).length > 0)
+      ? serverSnapshot
+      : clientCookie;
+  return mergeQuizSnapshots(intake, localSnapshotHasData(local) ? local : null);
+}
+
+function pickNewerSnapshot(a: LabQuizSnapshot, b: LabQuizSnapshot): LabQuizSnapshot {
+  const aTime = a.updatedAt ?? 0;
+  const bTime = b.updatedAt ?? 0;
+  if (aTime > bTime) return a;
+  if (bTime > aTime) return b;
+  return a;
+}
+
+export {
+  readQuizSnapshotCookieClient,
+  readQuizSnapshotFromRequestCookies,
+} from "@/lib/quiz-funnel-b/quiz-cookie";
+
+export function readQuizSnapshotClient(): LabQuizSnapshot | null {
+  const fromCookie = readQuizSnapshotCookieClient();
+  const fromLocal = localClientSnapshot();
+
+  const localHasData =
+    Boolean(fromLocal.lastStep) || Object.keys(fromLocal.answers).length > 0;
+
+  if (!fromCookie) {
+    return localHasData ? fromLocal : null;
+  }
+
+  if (!localHasData) {
+    return fromCookie;
+  }
+
+  return pickNewerSnapshot(fromCookie, fromLocal);
+}
+
+export function persistQuizSnapshot(snapshot: LabQuizSnapshot): void {
+  const updatedAt = snapshot.updatedAt > 0 ? snapshot.updatedAt : Date.now();
+  const withTime: LabQuizSnapshot = { ...snapshot, updatedAt };
+
+  const localAnswersOk = writeLocalAnswers(withTime.answers);
+  const localLastStepOk = writeLocalLastStep(withTime.lastStep);
+  const localUpdatedOk = writeLocalUpdatedAt(updatedAt);
+  if (!(localAnswersOk && localLastStepOk && localUpdatedOk)) {
+    writeQuizSnapshotCookie(withTime);
+  }
+}
+
+export function saveQuizLastStep(step: string): void {
+  persistQuizSnapshot({
+    answers: readStoredQuizAnswers(),
+    lastStep: canonicalizeQuizStepId(step),
+    updatedAt: Date.now(),
+  });
+}
+
+export function clearQuizProgress(): void {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.removeItem(QUIZ_ANSWERS_STORAGE_KEY);
+    localStorage.removeItem(QUIZ_LAST_STEP_STORAGE_KEY);
+    localStorage.removeItem(QUIZ_UPDATED_AT_STORAGE_KEY);
+  } catch {
+    /* ignore */
+  }
+  clearQuizSnapshotCookie();
+}

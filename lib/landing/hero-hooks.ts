@@ -1,4 +1,6 @@
 /** Optional ad message-match — `?hook=gpa|fall|khan|nov1|gap|june|tutor|student_story` (UTM passthrough). */
+import { landingSearchParams } from "@/lib/landing/landing-search";
+
 export const LANDING_HOOK_PARAM = "hook" as const;
 
 export type LandingHeroHook =
@@ -10,7 +12,8 @@ export type LandingHeroHook =
   | "gap"
   | "june"
   | "tutor"
-  | "student_story";
+  | "student_story"
+  | "june_score_review";
 
 const STUDENT_STORY_SLUG_MARKERS = [
   "high_gpa",
@@ -27,8 +30,9 @@ function slugMatchesStudentStory(lower: string): boolean {
 }
 
 export function landingHeroHookFromSearch(search: string): LandingHeroHook {
-  const normalized = search.startsWith("?") ? search.slice(1) : search;
-  const raw = new URLSearchParams(normalized).get(LANDING_HOOK_PARAM)?.toLowerCase();
+  const params = landingSearchParams(search);
+  if (params.get("ad3") === "1") return "tutor";
+  const raw = params.get(LANDING_HOOK_PARAM)?.toLowerCase();
   if (raw === "mom_story") return "student_story";
   if (
     raw === "gpa" ||
@@ -38,7 +42,8 @@ export function landingHeroHookFromSearch(search: string): LandingHeroHook {
     raw === "gap" ||
     raw === "june" ||
     raw === "tutor" ||
-    raw === "student_story"
+    raw === "student_story" ||
+    raw === "june_score_review"
   ) {
     return raw;
   }
@@ -78,8 +83,10 @@ const ICON_SCRIPT_HOOKS: Record<string, LandingHeroHook> = {
   /** Meta c1 cold creative slugs — ad4/ad5 share student_story LP variant. */
   ad2_enough_time: "fall",
   ad3_before_tutoring: "tutor",
+  ad3_before_tutoring_hd1080: "tutor",
   ad4_mom_first_story: "student_story",
-  ad5_high_gpa_student_story: "student_story"
+  ad5_high_gpa_student_story: "student_story",
+  june_score_review: "june_score_review"
 };
 
 function hookFromToken(token: string): LandingHeroHook | null {
@@ -223,7 +230,7 @@ export const landingHeroHeadlines: Record<LandingHeroHook, LandingHeroHeadline> 
   tutor: {
     lines: [
       "Before you pay for SAT tutoring.",
-      "Find out what score is realistic",
+      "See if 150 to 200+ points is realistic",
       "before their next test."
     ],
     accentLine: 1
@@ -235,6 +242,14 @@ export const landingHeroHeadlines: Record<LandingHeroHook, LandingHeroHeadline> 
       "See what's realistic before their fall test."
     ],
     accentLine: 1
+  },
+  june_score_review: {
+    lines: [
+      "Early application deadlines are approaching.",
+      "Free June SAT Score Review with an SAT expert.",
+      "Review the score report and map the fastest path before the next test."
+    ],
+    accentLine: 0
   }
 };
 
@@ -270,12 +285,16 @@ export const landingHeroHeadlinesV4: Record<
     accentLine: 1
   },
   tutor: {
-    lines: ["Before SAT tutoring.", "Find out what's realistic first."],
+    lines: ["Before paying for SAT tutoring.", "See what score is realistic."],
     accentLine: 1
   },
   student_story: {
     lines: ["High GPA, hard AP/IB/honors classes.", "But low SAT?"],
     accentLine: 1
+  },
+  june_score_review: {
+    lines: ["Early application deadlines are approaching.", "Free June SAT Score Review."],
+    accentLine: 0
   }
 };
 

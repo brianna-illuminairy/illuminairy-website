@@ -70,8 +70,16 @@ export function attributionFromLeadFbclid(
   return { fbclid };
 }
 
+export type MetaCapiEventName =
+  | "Lead"
+  | "Schedule"
+  | "Purchase"
+  | "InitiateCheckout"
+  | "FreeLessonAttended"
+  | (string & {});
+
 export async function sendMetaCapiEvent(
-  eventName: "Lead" | "Schedule" | "Purchase",
+  eventName: MetaCapiEventName,
   eventId: string,
   user: MetaCapiUser,
   customData?: Record<string, string | number>,

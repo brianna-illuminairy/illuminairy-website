@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>08 · Wordmark typography</title>
+  <link rel="stylesheet" href="_shared.css">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=Hanken+Grotesk:wght@500;600;700&family=Instrument+Serif:ital@0;1&family=Libre+Baskerville:wght@400;700&family=Literata:opsz,wght@7..72,400;7..72,600&family=Lora:wght@500;600&family=Plus+Jakarta+Sans:wght@500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+  <style>
+    .page { padding: 32px 24px 100px; max-width: 1100px; margin: 0 auto; }
+
+    .callout {
+      margin-bottom: 36px;
+      padding: 24px;
+      border-radius: var(--radius);
+      border: 1px solid rgba(47, 110, 71, 0.3);
+      background: linear-gradient(135deg, rgba(184, 245, 209, 0.14), rgba(245, 248, 250, 0.95));
+      font-size: 15px;
+      line-height: 1.65;
+      color: var(--muted);
+    }
+
+    .callout strong { color: var(--ink); }
+
+    .callout .say {
+      margin-top: 14px;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      color: var(--forest);
+    }
+
+    .section { margin-bottom: 48px; }
+    .section h2 {
+      font-family: var(--display);
+      font-size: clamp(22px, 3vw, 26px);
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .section .lede {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 20px;
+      max-width: 65ch;
+    }
+
+    .type-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 14px;
+    }
+
+    .type-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: var(--paper);
+    }
+
+    .type-card.rec { border-color: rgba(47, 110, 71, 0.45); box-shadow: 0 0 0 1px rgba(47, 110, 71, 0.12); }
+
+    .type-card__meta {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(245, 248, 250, 0.75);
+    }
+
+    .type-card__meta h3 { font-size: 13px; font-weight: 600; margin-bottom: 3px; }
+    .type-card__meta p { font-size: 11px; color: var(--muted); line-height: 1.45; }
+
+    .type-card__meta .tag {
+      display: inline-block;
+      margin-top: 6px;
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: rgba(47, 110, 71, 0.1);
+      color: var(--forest);
+    }
+
+    .type-card__meta .tag.warn { background: rgba(242, 72, 34, 0.08); color: #9a2b2b; }
+
+    .type-card__stage {
+      padding: 28px 20px 24px;
+      min-height: 88px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .type-card__stage.dark { background: var(--navy); }
+    .type-card__stage.light { background: var(--white); border-top: 1px solid var(--line); }
+
+    .type-card__pronounce {
+      padding: 10px 14px;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      text-align: center;
+      border-top: 1px solid var(--line);
+      background: rgba(245, 248, 250, 0.5);
+    }
+
+    /* Wordmark variants */
+    .wm {
+      color: var(--ink);
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .wm.on-dark { color: #F5F8FA; }
+
+    .wm-ss4 { font-family: "Source Serif 4", Georgia, serif; font-weight: 600; font-size: 28px; letter-spacing: 0.01em; }
+    .wm-hanken { font-family: "Hanken Grotesk", system-ui, sans-serif; font-weight: 600; font-size: 26px; letter-spacing: 0.04em; }
+    .wm-hanken-wide { font-family: "Hanken Grotesk", sans-serif; font-weight: 600; font-size: 24px; letter-spacing: 0.12em; text-transform: uppercase; }
+    .wm-dm { font-family: "DM Sans", sans-serif; font-weight: 400; font-size: 28px; letter-spacing: 0.14em; }
+    .wm-literata { font-family: Literata, Georgia, serif; font-weight: 600; font-size: 27px; letter-spacing: 0.02em; }
+    .wm-lora { font-family: Lora, Georgia, serif; font-weight: 600; font-size: 28px; }
+    .wm-baskerville { font-family: "Libre Baskerville", Georgia, serif; font-weight: 700; font-size: 26px; }
+    .wm-instrument { font-family: "Instrument Serif", Georgia, serif; font-weight: 400; font-size: 32px; letter-spacing: 0.02em; }
+    .wm-jakarta { font-family: "Plus Jakarta Sans", sans-serif; font-weight: 600; font-size: 26px; letter-spacing: -0.02em; }
+
+    /* Pronunciation helpers */
+    .wm-kern-ill { letter-spacing: 0.01em; }
+    .wm-kern-ill .ill { letter-spacing: 0.18em; margin-right: 0.02em; }
+
+    .wm-syllable .s1 { margin-right: 0.2em; }
+    .wm-syllable .s2 { margin-left: 0.08em; opacity: 0.92; }
+
+    .wm-weight-split .w1 { font-weight: 600; }
+    .wm-weight-split .w2 { font-weight: 400; opacity: 0.92; }
+
+    .wm-dot-hint .dot {
+      opacity: 0.35;
+      font-weight: 400;
+      margin: 0 0.06em;
+      font-size: 0.85em;
+    }
+
+    .wm-cap-i { font-variant: normal; }
+    .wm-cap-i .cap-i {
+      font-size: 1.08em;
+      text-decoration: underline;
+      text-decoration-color: rgba(119, 200, 154, 0.45);
+      text-decoration-thickness: 2px;
+      text-underline-offset: 4px;
+    }
+    .wm.on-dark.wm-cap-i .cap-i { text-decoration-color: rgba(184, 245, 209, 0.5); }
+
+    /* Mock underline is demo-only — not for production */
+
+    .zoom-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      align-items: flex-end;
+      padding: 24px;
+      background: var(--navy);
+      border-radius: var(--radius);
+      margin-bottom: 24px;
+    }
+
+    .zoom-item { text-align: center; }
+    .zoom-item .chars {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(188, 195, 204, 0.7);
+      margin-top: 8px;
+    }
+
+    .zoom-ss4 { font-family: "Source Serif 4", serif; font-weight: 600; font-size: 36px; color: #fff; letter-spacing: 0.02em; }
+    .zoom-hanken { font-family: "Hanken Grotesk", sans-serif; font-weight: 600; font-size: 34px; color: #fff; letter-spacing: 0.06em; }
+
+    .lockup-mini {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .lockup-mini img { height: 28px; width: auto; }
+
+    .lockup-mini .wm { font-size: 22px !important; }
+
+    .full-lockup-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    @media (max-width: 700px) { .full-lockup-row { grid-template-columns: 1fr; } }
+
+    .full-lockup {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .full-lockup__bar {
+      background: var(--navy);
+      padding: 18px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .full-lockup__bar img { width: min(240px, 100%); height: auto; }
+
+    .full-lockup__cap {
+      padding: 10px;
+      font-family: var(--mono);
+      font-size: 10px;
+      text-align: center;
+      color: var(--muted);
+      background: rgba(245, 248, 250, 0.8);
+    }
+  </style>
+</head>
+<body>
+  <nav class="mock-nav">
+    <a href="07-logo-lockups.html">← Logo lockups</a>
+    <a href="index.html">Hub</a>
+    <span style="font-size:13px;color:var(--muted);">08 · Wordmark type</span>
+  </nav>
+
+  <div class="page">
+    <p class="mock-eyebrow">Pronunciation · I vs ll</p>
+    <h1 class="mock-h1">Wordmark font options</h1>
+
+    <div class="callout">
+      <strong>The problem:</strong> In many serifs, capital <strong>I</strong> + lowercase <strong>ll</strong> read as three identical strokes — people stumble on <em>Ill</em>-u-min-AIR-y vs <em>I</em>-lumin-airy.
+      <div class="say">Say it out loud: Ill · u · mi · NAIR · y</div>
+    </div>
+
+    <!-- I vs ll zoom -->
+    <section class="section">
+      <h2>Why serif “Ill” trips people up</h2>
+      <p class="lede">Same word at header size — look at the first three letters only.</p>
+      <div class="zoom-row">
+        <div class="zoom-item">
+          <div class="zoom-ss4">Ill</div>
+          <div class="chars">Source Serif 4 · three bars</div>
+        </div>
+        <div class="zoom-item">
+          <div class="zoom-hanken">Ill</div>
+          <div class="chars">Hanken · I vs l clearer</div>
+        </div>
+        <div class="zoom-item">
+          <div class="zoom-ss4" style="letter-spacing:0.22em;">Ill</div>
+          <div class="chars">Serif + tracked Ill</div>
+        </div>
+        <div class="zoom-item">
+          <div class="zoom-ss4"><span style="margin-right:0.15em;">Ill</span>uminairy</div>
+          <div class="chars">Serif + break after Ill</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Font families -->
+    <section class="section">
+      <h2>Font families (full wordmark)</h2>
+      <p class="lede">Soft stars + arc stay the same — only the wordmark type changes. Hover mentally: “can a parent read this in 2 seconds?”</p>
+
+      <div class="type-grid">
+
+        <div class="type-card">
+          <div class="type-card__meta">
+            <h3>Source Serif 4 · 600</h3>
+            <p>Product headline font today. Editorial — but Ill problem at small sizes.</p>
+            <span class="tag warn">Ill clarity risk</span>
+          </div>
+          <div class="type-card__stage dark"><span class="wm wm-ss4 on-dark">Illuminairy</span></div>
+          <div class="type-card__stage light"><span class="wm wm-ss4">Illuminairy</span></div>
+          <div class="type-card__pronounce">ill · u · mi · NAIR · y</div>
+        </div>
+
+        <div class="type-card rec">
+          <div class="type-card__meta">
+            <h3>Hanken Grotesk · 600</h3>
+            <p>Body font already in system. I has cap form, l has hook — easier Ill.</p>
+            <span class="tag">Clearer Ill · product sans</span>
+          </div>
+          <div class="type-card__stage dark"><span class="wm wm-hanken on-dark">Illuminairy</span></div>
+          <div class="type-card__stage light"><span class="wm wm-hanken">Illuminairy</span></div>
+          <div class="type-card__pronounce">ill · u · mi · NAIR · y</div>
+        </div>
+
+        <div class="type-card">
+          <div class="type-card__meta">
+            <h3>Hanken uppercase · tracked</h3>
+            <p>Mockup chrome style. All caps removes Ill ambiguity entirely.</p>
+            <span class="tag">No Ill confusion</span>
+          </div>
+          <div class="type-card__stage dark"><span class="wm wm-hanken-wide on-dark">Illuminairy</span></div>
+          <div class="type-card__stage light"><span class="wm wm-hanken-wide">Illuminairy</span></div>
+          <div class="type-card__pronounce">ILL · u · mi · NAIR · y</div>
+        </div>
+
+        <div class="type-card">
+          <div class="type-card__meta">
+            <h3>DM Sans · light tracked</h3>
+            <p>Brand guide v7 SVG wordmark. Airy, luxury — lighter weight.</p>
+          </div>
+          <div class="type-card__stage dark"><span class="wm wm-dm on-dark">Illuminairy</span></div>
+          <div class="type-card__stage light"><span class="wm wm-dm" style="color:var(--ink);">Illuminairy</span></div>
+          <div class="type-card__pronounce">ill · u · mi · NAIR · y</div>
+        </div>
+
+        <div class="type-card">
+          <div class="type-card__meta">
+            <h3>Literata · 600</h3>
+            <p>Serif with slightly more distinct letterforms than Source Serif.</p>
+          </div>
+          <div class="type-card__stage dark"><span class="wm wm-literata on-dark">Illuminairy</span></div>
+          <div class="type-card__stage light"><span class="wm wm-literata">Illuminairy</span></div>
+          <div class="type-card__pronounce">ill · u · mi · NAIR · y</div>
+        </div>
+
+        <div class="type-card">
+          <div class="type-card__meta">
+            <h3>Lora · 600</h3>
+            <p>Warmer serif — rounder l tail, softer editorial.</p>
+          </div>
+          <div class="type-card__stage dark"><span class="wm wm-lora on-dark">Illuminairy</span></div>
+          <div class="type-card__stage light"><span class="wm wm-lora">Illuminairy</span></div>
+          <div class="type-card__pronounce">ill · u · mi · NAIR · y</div>
+        </div>
+
+        <div class="type-card">
+          <div class="type-card__meta">
+            <h3>Libre Baskerville · 700</h3>
+            <p>Classic book serif — strong l foot, cap I with serifs.</p>
+          </div>
+          <div class="type-card__stage dark"><span class="wm wm-baskerville on-dark">Illuminairy</span></div>
+          <div class="type-card__stage light"><span class="wm wm-baskerville">Illuminairy</span></div>
+          <div class="type-card__pronounce">ill · u · mi · NAIR · y</div>
+        </div>
+
+        <div class="type-card">
+          <div class="type-card__meta">
+            <h3>Instrument Serif</h3>
+            <p>Display serif — high contrast, magazine. Test at small header size.</p>
+          </div>
+          <div class="type-card__stage dark"><span class="wm wm-instrument on-dark">Illuminairy</span></div>
+          <div class="type-card__stage light"><span class="wm wm-instrument">Illuminairy</span></div>
+          <div class="type-card__pronounce">ill · u · mi · NAIR · y</div>
+        </div>
+
+        <div class="type-card">
+          <div class="type-card__meta">
+            <h3>Plus Jakarta Sans</h3>
+            <p>Legacy site wordmark font. Not aurora direction — baseline compare.</p>
+            <span class="tag warn">Legacy</span>
+          </div>
+          <div class="type-card__stage dark"><span class="wm wm-jakarta on-dark">Illuminairy</span></div>
+          <div class="type-card__stage light"><span class="wm wm-jakarta">Illuminairy</span></div>
+          <div class="type-card__pronounce">ill · u · mi · NAIR · y</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pronunciation treatments (same font) -->
+    <section class="section">
+      <h2>Pronunciation helpers (Source Serif 4)</h2>
+      <p class="lede">Keep editorial serif for headlines — fix the logo with spacing or syllable cues, not color splits.</p>
+
+      <div class="type-grid">
+        <div class="type-card">
+          <div class="type-card__meta"><h3>Default</h3><p>No adjustment — the problem case.</p></div>
+          <div class="type-card__stage dark"><span class="wm wm-ss4 on-dark">Illuminairy</span></div>
+        </div>
+
+        <div class="type-card rec">
+          <div class="type-card__meta"><h3>Space after “Ill”</h3><p>Extra track on first syllable only — separates I from ll visually.</p><span class="tag">Low-risk fix</span></div>
+          <div class="type-card__stage dark"><span class="wm wm-ss4 on-dark wm-kern-ill"><span class="ill">Ill</span>uminairy</span></div>
+        </div>
+
+        <div class="type-card">
+          <div class="type-card__meta"><h3>Syllable spacing</h3><p>Illumin · airy — two word shapes, same color.</p></div>
+          <div class="type-card__stage dark"><span class="wm wm-ss4 on-dark wm-syllable"><span class="s1">Illumin</span><span class="s2">airy</span></span></div>
+        </div>
+
+        <div class="type-card">
+          <div class="type-card__meta"><h3>Weight split</h3><p>Illumin semibold + airy regular — pronunciation hint without color.</p></div>
+          <div class="type-card__stage dark"><span class="wm wm-ss4 on-dark wm-weight-split"><span class="w1">Illumin</span><span class="w2">airy</span></span></div>
+        </div>
+
+        <div class="type-card">
+          <div class="type-card__meta"><h3>Mid dot (subtle)</h3><p>Illumin · airy — optional; can feel fussy in chrome.</p></div>
+          <div class="type-card__stage dark"><span class="wm wm-ss4 on-dark wm-dot-hint">Illumin<span class="dot">·</span>airy</span></div>
+        </div>
+
+        <div class="type-card">
+          <div class="type-card__meta"><h3>Sans wordmark + serif headlines</h3><p>Logo in Hanken; page H1 stays Source Serif — common split.</p><span class="tag">Recommended pair</span></div>
+          <div class="type-card__stage dark"><span class="wm wm-hanken on-dark" style="font-size:24px;letter-spacing:0.06em;">Illuminairy</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Full lockups with v8 SVG - we'd need SVG variants with different fonts OR show composite -->
+    <section class="section">
+      <h2>With soft stars + arc (full lockup)</h2>
+      <p class="lede">v8 SVG currently uses Source Serif — compare to raster PNG (baked type) side by side.</p>
+      <div class="full-lockup-row">
+        <div class="full-lockup">
+          <div class="full-lockup__bar">
+            <img src="../../public/brand/logo-v8-soft-stars-on-dark.svg" alt="v8 Source Serif">
+          </div>
+          <div class="full-lockup__cap">v8 SVG · Source Serif wordmark</div>
+        </div>
+        <div class="full-lockup">
+          <div class="full-lockup__bar">
+            <img src="../../public/brand/logo-horizontal.png" alt="Raster PNG">
+          </div>
+          <div class="full-lockup__cap">Raster PNG · baked serif (production today)</div>
+        </div>
+        <div class="full-lockup">
+          <div class="full-lockup__bar">
+            <div class="lockup-mini">
+              <img src="../../public/brand/logo-v8-soft-stars-on-dark.svg" alt="" style="width:36px;height:36px;object-fit:contain;object-position:left;">
+              <span class="wm wm-hanken on-dark">Illuminairy</span>
+            </div>
+          </div>
+          <div class="full-lockup__cap">Explore: stars from v8 + Hanken wordmark (composite mock)</div>
+        </div>
+        <div class="full-lockup">
+          <div class="full-lockup__bar">
+            <div class="lockup-mini">
+              <img src="../../public/brand/logo-v8-soft-stars-on-dark.svg" alt="" style="width:36px;height:36px;object-fit:contain;object-position:left;">
+              <span class="wm wm-hanken-wide on-dark" style="font-size:18px;">Illuminairy</span>
+            </div>
+          </div>
+          <div class="full-lockup__cap">Explore: stars + Hanken uppercase tracked</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Quick take</h2>
+      <p class="lede" style="color:var(--ink);font-size:15px;line-height:1.7;">
+        <strong>If you want serif in the logo:</strong> try space after “Ill” or Literata/Lora/Baskerville before giving up on serif.<br><br>
+        <strong>If pronunciation matters most in the header:</strong> Hanken wordmark (sans) + Source Serif headlines on the page — clearest Ill, still editorial below the fold.<br><br>
+        <strong>Uppercase tracked Hanken</strong> removes the Ill problem entirely but feels more SaaS chrome than magazine.
+      </p>
+    </section>
+  </div>
+</body>
+</html>

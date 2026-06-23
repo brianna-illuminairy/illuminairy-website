@@ -1,0 +1,30 @@
+<svg viewBox="0 0 340 100" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Illuminairy">
+  <title>Illuminairy</title>
+  <defs>
+    <linearGradient id="arc-light" x1="0" y1="0" x2="340" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0057A8" stop-opacity="0"/>
+      <stop offset="10%" stop-color="#0057A8" stop-opacity="0.55"/>
+      <stop offset="44%" stop-color="#3D9BBF" stop-opacity="0.7"/>
+      <stop offset="90%" stop-color="#77C89A" stop-opacity="0.65"/>
+      <stop offset="100%" stop-color="#77C89A" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="star-glow-light" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#77C89A"/>
+      <stop offset="100%" stop-color="#2F6E47"/>
+    </linearGradient>
+    <path id="star-a" d="M12,0.4 L14.25,8.15 L22.15,6.05 L16.35,12.05 L22.25,17.85 L14.05,15.55 L12,23.55 L9.85,15.65 L1.75,18.05 L7.9,11.85 L1.7,6.05 L9.9,8.35 Z"/>
+    <path id="star-b" d="M12,0.2 L13.95,8.45 L21.85,6.35 L16.15,12.15 L22.05,18.05 L13.95,15.75 L11.95,23.75 L10.05,15.85 L2.05,18.15 L7.95,12.05 L1.85,6.25 L10.05,8.55 Z"/>
+    <path id="star-c" d="M12,0.5 L14.05,8.25 L22.05,6.15 L16.25,12.25 L22.35,17.95 L14.15,15.65 L12.05,23.45 L9.95,15.55 L1.65,17.95 L7.75,11.95 L1.55,6.15 L9.75,8.45 Z"/>
+  </defs>
+  <text x="52" y="58" font-family="'Source Serif 4', Georgia, serif" font-weight="600" font-size="40" letter-spacing="0.02em" fill="#121A2B">Illuminairy</text>
+  <path d="M 0 74 Q 170 56 340 70" stroke="url(#arc-light)" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+  <g transform="translate(20, 22) rotate(10)">
+    <use href="#star-a" fill="url(#star-glow-light)" transform="translate(-12,-12) scale(0.92)"/>
+  </g>
+  <g transform="translate(34, 10) rotate(-8)">
+    <use href="#star-b" fill="#77C89A" opacity="0.85" transform="translate(-12,-12) scale(0.58)"/>
+  </g>
+  <g transform="translate(8, 36) rotate(14)">
+    <use href="#star-c" fill="#0057A8" opacity="0.62" transform="translate(-12,-12) scale(0.42)"/>
+  </g>
+</svg>

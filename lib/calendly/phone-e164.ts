@@ -14,6 +14,10 @@ export const BOOKING_PHONE_HINT =
 export const BOOKING_PHONE_INVALID_MSG =
   "Enter a valid US mobile with area code: 10 digits, or 11 digits starting with 1 (example: 404-555-1234 or 1-404-555-1234). International numbers are not supported on this form.";
 
+/** Short inline error under the field (no digit counts while typing). */
+export const BOOKING_PHONE_INLINE_INVALID_MSG =
+  "Enter a valid 10-digit US mobile number.";
+
 /** Count digits only (ignores spaces, dashes, parentheses). */
 export function countPhoneDigits(raw: string): number {
   return raw.replace(/\D/g, "").length;
@@ -22,6 +26,20 @@ export function countPhoneDigits(raw: string): number {
 /** True when we can build Calendly E.164 (US 10-digit or 1 + 10-digit). */
 export function isValidBookingPhone(raw: string | undefined): boolean {
   return phoneToCalendlyE164(raw) !== null;
+}
+
+/**
+ * Standard inline validation: do not nag while the parent is still typing.
+ * Show after blur, or once they have entered 10+ digits that still fail.
+ */
+export function showBookingPhoneInlineError(
+  raw: string,
+  options: { touched?: boolean } = {}
+): boolean {
+  const trimmed = raw.trim();
+  if (!trimmed || isValidBookingPhone(trimmed)) return false;
+  if (options.touched) return true;
+  return countPhoneDigits(trimmed) >= 10;
 }
 
 /** Normalize US (NANP) input for Calendly `text_reminder_number`. */

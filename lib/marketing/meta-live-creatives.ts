@@ -1,9 +1,11 @@
 import type { LandingHeroHook } from "@/lib/landing/hero-hooks";
 import {
   metaLandingUrl,
-  metaSatPlanBuilderLandingUrl
+  metaSatPlanBuilderLandingUrl,
+  metaScoreReviewLandingUrl,
 } from "@/lib/landing/meta-traffic";
 import { SAT_PLAN_BUILDER_LP_PATH } from "@/lib/plan-builder-routes";
+import { SCORE_REVIEW_LP_PATH } from "@/lib/score-review-routes";
 import { canonicalizeUtmContent } from "@/lib/marketing/utm-content-aliases";
 
 /** Live Meta cold ads — source of truth for utm_content → LP hook. */
@@ -12,9 +14,11 @@ export type MetaLiveCreative = {
   utmContent: string;
   utmCampaign: string;
   utmTerm: string;
-  landingPath: "/" | "/sat-plan-builder";
+  landingPath: "/" | "/sat-plan-builder" | "/june-score-review";
   heroHook: LandingHeroHook;
   angle: string;
+  /** Optional creative revision — appended as `?version=` on ad URL. */
+  version?: string;
 };
 
 /** All live cold ads land on the ad LP path (never `/plan?step=…`). */
@@ -49,6 +53,16 @@ export const META_LIVE_CREATIVES: readonly MetaLiveCreative[] = [
     angle: "Before paying for tutoring — what score is realistic?"
   },
   {
+    id: "ad3_before_tutoring_hd1080",
+    utmContent: "ad3_before_tutoring_hd1080",
+    utmCampaign: "c1_sat_plan_builder_cold_creative_test",
+    utmTerm: "broad_moms_35_58",
+    landingPath: META_LIVE_AD_LP_PATH,
+    heroHook: "tutor",
+    version: "hd1080",
+    angle: "HD relaunch — tutor LP → Plan Builder B (`/plan-b`) lab funnel"
+  },
+  {
     id: "ad4_mom_first_story",
     utmContent: "ad4_mom_first_story",
     utmCampaign: "c1_sat_plan_builder_cold_creative_test",
@@ -65,6 +79,15 @@ export const META_LIVE_CREATIVES: readonly MetaLiveCreative[] = [
     landingPath: META_LIVE_AD_LP_PATH,
     heroHook: "student_story",
     angle: "Student-led story — 3.9 GPA / 11 AP / 1160, mom asks why score low, 1430 outcome"
+  },
+  {
+    id: "ad6_june_score_review",
+    utmContent: "june_score_review",
+    utmCampaign: "c1_june_score_review",
+    utmTerm: "broad_moms_35_58",
+    landingPath: SCORE_REVIEW_LP_PATH,
+    heroHook: "june_score_review",
+    angle: "Mom story 1200s→1450 + free June score review before early apps"
   }
 ] as const;
 
@@ -73,10 +96,14 @@ export function metaLiveCreativeUrl(creative: MetaLiveCreative): string {
     campaign: creative.utmCampaign,
     content: creative.utmContent,
     term: creative.utmTerm,
-    hook: creative.heroHook
+    hook: creative.heroHook,
+    version: creative.version
   };
   if (creative.landingPath === "/") {
     return metaLandingUrl(input);
+  }
+  if (creative.landingPath === SCORE_REVIEW_LP_PATH) {
+    return metaScoreReviewLandingUrl(input);
   }
   return metaSatPlanBuilderLandingUrl(input);
 }

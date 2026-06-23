@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>10 · SAT viz ideation matrix · Illuminairy</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Hanken+Grotesk:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #121a2b;
+      --muted: rgba(18, 26, 43, 0.55);
+      --line: rgba(18, 26, 43, 0.08);
+      --field: #f5f8fa;
+      --surface: #fff;
+      --em: #2f6e47;
+      --accent: #0057a8;
+      --aurora: #77c89a;
+      --glow: rgba(184, 245, 209, 0.35);
+      --dim: rgba(18, 26, 43, 0.12);
+      --serif: "Source Serif 4", Georgia, serif;
+      --sans: "Hanken Grotesk", system-ui, sans-serif;
+      --mono: "DM Mono", ui-monospace, monospace;
+      --max: 1200px;
+      --radius: 14px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--sans);
+      background: var(--field);
+      color: var(--ink);
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(245, 248, 250, 0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--line);
+      padding: 12px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav a { font-size: 13px; font-weight: 600; color: var(--ink); text-decoration: none; }
+    .nav a:hover { color: var(--em); }
+    .nav-note { font-size: 12px; color: var(--muted); }
+    .hero {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 40px 20px 28px;
+    }
+    .eyebrow {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+    h1 {
+      font-family: var(--serif);
+      font-weight: 600;
+      font-size: clamp(26px, 4vw, 38px);
+      line-height: 1.12;
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+    }
+    .lede { color: var(--muted); max-width: 65ch; font-size: 15px; margin-bottom: 16px; }
+    .banner {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--accent);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      font-size: 14px;
+      max-width: 65ch;
+    }
+    .banner strong { color: var(--ink); }
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .tag {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+    }
+    .tag--live { border-color: rgba(47, 110, 71, 0.35); color: var(--em); }
+    .tag--proto { border-color: rgba(0, 87, 168, 0.3); color: var(--accent); }
+    .tag--explore { border-color: rgba(18, 26, 43, 0.15); color: var(--muted); }
+    .tag--no { border-color: rgba(18, 26, 43, 0.1); color: var(--muted); text-decoration: line-through; opacity: 0.7; }
+
+    main { max-width: var(--max); margin: 0 auto; padding: 0 20px 80px; }
+    .section {
+      margin-top: 40px;
+      padding-top: 28px;
+      border-top: 1px solid var(--line);
+    }
+    .section-head { margin-bottom: 18px; }
+    .section-head h2 {
+      font-family: var(--serif);
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .section-head p { font-size: 14px; color: var(--muted); max-width: 58ch; }
+    .parent-q {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--em);
+      margin-bottom: 6px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(min(100%, 168px), 1fr));
+      gap: 12px;
+    }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+    .card-sketch {
+      height: 88px;
+      background: var(--field);
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px;
+      overflow: hidden;
+    }
+    .card-body { padding: 10px 12px 12px; flex: 1; min-width: 0; }
+    .card-name { font-size: 13px; font-weight: 600; line-height: 1.25; margin-bottom: 4px; }
+    .card-note { font-size: 11px; color: var(--muted); line-height: 1.35; }
+    .card .tag { margin-top: 8px; display: inline-block; }
+
+    /* Mini sketch primitives */
+    .sk svg { width: 100%; max-width: 140px; height: 64px; display: block; }
+    .sk-ledger { width: 100%; max-width: 130px; font-size: 8px; }
+    .sk-ledger div { display: flex; justify-content: space-between; padding: 2px 0; border-bottom: 1px solid var(--line); }
+    .sk-ledger span:last-child { font-family: var(--serif); color: var(--em); font-weight: 600; }
+    .sk-eq { font-family: var(--serif); font-size: 11px; text-align: center; line-height: 1.4; }
+    .sk-eq em { font-style: normal; color: var(--em); }
+    .sk-phase { display: flex; gap: 3px; width: 100%; max-width: 130px; align-items: flex-end; height: 50px; }
+    .sk-phase span { flex: 1; background: var(--aurora); border-radius: 2px 2px 0 0; opacity: 0.7; }
+    .sk-phase span:nth-child(1) { height: 70%; }
+    .sk-phase span:nth-child(2) { height: 45%; background: var(--accent); opacity: 0.5; }
+    .sk-phase span:nth-child(3) { height: 25%; background: var(--dim); }
+    .sk-waffle { display: grid; grid-template-columns: repeat(10, 1fr); gap: 2px; width: 100%; max-width: 100px; }
+    .sk-waffle i { aspect-ratio: 1; background: var(--dim); border-radius: 1px; display: block; }
+    .sk-waffle i.on { background: var(--aurora); }
+    .sk-dots { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; max-width: 120px; }
+    .sk-dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--surface); border: 1px solid var(--aurora); display: block; }
+    .sk-dots i.m { background: rgba(0, 87, 168, 0.25); border-color: var(--accent); }
+    .sk-cards { display: flex; gap: 4px; width: 100%; max-width: 120px; }
+    .sk-cards span { flex: 1; font-size: 7px; text-align: center; padding: 6px 2px; background: var(--surface); border: 1px solid var(--line); border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <a href="index.html">← Mockups</a>
+    <span class="nav-note">Ideation · open locally · no dev server</span>
+  </nav>
+
+  <header class="hero">
+    <p class="eyebrow">Phase 0 · Encoding exploration</p>
+    <h1>SAT visualization ideation matrix</h1>
+    <p class="lede">
+      Catalog of chart <em>types</em> — superseded for design decisions.
+      Open <a href="11-data-viz-references.html" style="color:var(--accent);font-weight:600">references</a> or
+      <a href="12-sat-viz-specimens.html" style="color:var(--accent);font-weight:600">full specimens</a> instead.
+    </p>
+    <div class="banner">
+      <strong>This board is a wireframe matrix.</strong> It reads like edtech taxonomy, not parent-facing design.
+      Use <strong>12-sat-viz-specimens.html</strong> for real ECharts layouts with Soha data.
+    </div>
+    <div class="legend">
+      <span class="tag tag--live">In product today</span>
+      <span class="tag tag--proto">09 / Visx prototype</span>
+      <span class="tag tag--explore">Explore</span>
+      <span class="tag tag--no">Likely wrong</span>
+    </div>
+  </header>
+
+  <main>
+    <!-- A Score & range -->
+    <section class="section">
+      <div class="section-head">
+        <p class="parent-q">Where is she today? · Where is the gap?</p>
+        <h2>A · Total score & range</h2>
+        <p>1380–1430, RW vs Math bands, current ↔ goal.</p>
+      </div>
+      <div class="grid">
+        <article class="card"><div class="card-sketch"><div class="sk-eq">1380<span>–</span>1430</div></div><div class="card-body"><p class="card-name">Serif hero range</p><p class="card-note">No chart. Navy inset.</p><span class="tag tag--live">In product</span></div></article>
+        <article class="card"><div class="card-sketch"><div class="sk"><svg viewBox="0 0 140 64"><line x1="10" y1="32" x2="130" y2="32" stroke="#121a2b" stroke-opacity="0.12"/><rect x="40" y="26" width="60" height="12" rx="2" fill="rgba(119,200,154,0.35)"/><circle cx="70" cy="32" r="5" fill="#2f6e47"/></svg></div></div><div class="card-body"><p class="card-name">Interval band</p><p class="card-note">Range as shaded segment on a line.</p><span class="tag tag--explore">Explore</span></div></article>
+        <article class="card"><div class="card-sketch"><div class="sk"><svg viewBox="0 0 140 64"><rect x="20" y="28" width="100" height="8" rx="4" fill="rgba(18,26,43,0.12)"/><rect x="20" y="28" width="55" height="8" rx="4" fill="#77c89a"/><circle cx="75" cy="32" r="6" fill="#0057a8" stroke="#fff" stroke-width="2"/></svg></div></div><div class="card-body"><p class="card-name">Bullet chart</p><p class="card-note">Marker in competitive band.</p><span class="tag tag--explore">Explore</span></div></article>
+        <article class="card"><div class="card-sketch"><div class="sk"><svg viewBox="0 0 140 64"><line x1="25" y1="40" x2="115" y2="40" stroke="url(#g)" stroke-width="2"/><circle cx="25" cy="40" r="6" fill="#0057a8"/><circle cx="115" cy="40" r="6" fill="#2f6e47"/><defs><linearGradient id="g" x1="0" x2="1"><stop stop-color="#0057a8"/><stop offset="1" stop-color="#2f6e47"/></linearGradient></defs></svg></div></div><div class="card-body"><p class="card-name">Dumbbell</p><p class="card-note">Today ↔ goal, one connector.</p><span class="tag tag--proto">Prototype</span></div></article>
+        <article class="card"><div class="card-sketch"><div class="sk"><svg viewBox="0 0 140 64"><rect x="35" y="12" width="18" height="40" rx="2" fill="rgba(0,87,168,0.2)"/><rect x="87" y="20" width="18" height="32" rx="2" fill="rgba(47,110,71,0.25)"/></svg></div></div><div class="card-body"><p class="card-name">Twin vertical bars</p><p class="card-note">Funnel legacy.</p><span class="tag tag--live">In product</span></div></article>
+        <article class="card"><div class="card-sketch"><div class="sk"><svg viewBox="0 0 140 64"><path d="M20 48 Q70 8 120 48" fill="none" stroke="#77c89a" stroke-width="2"/><circle cx="20" cy="48" r="4" fill="#0057a8"/><circle cx="120" cy="48" r="4" fill="#2f6e47"/></svg></div></div><div class="card-body"><p class="card-name">Gap arc</p><p class="card-note">Logo arc metaphor, not bar.</p><span class="tag tag--explore">Explore</span></div></article>
+        <article class="card"><div class="card-sketch"><div class="sk"><svg viewBox="0 0 140 64"><line x1="20" y1="50" x2="120" y2="50" stroke="#121a2b" stroke-opacity="0.12"/><rect x="20" y="22" width="8" height="28" fill="#0057a8" opacity="0.6"/><rect x="32" y="30" width="8" height="20" fill="#2f6e47" opacity="0.6"/></svg></div></div><div class="card-body"><p class="card-name">Split florence</p><p class="card-note">RW + Math, shared baseline.</p><span class="tag tag--explore">Explore</span></div></article>
+        <article class="card"><div class="card-sketch"><div class="sk"><svg viewBox="0 0 140 64"><rect x="8" y="8" width="58" height="48" rx="6" fill="#fff" stroke="rgba(18,26,43,0.08)"/><rect x="74" y="8" width="58" height="48" rx="6" fill="#fff" stroke="rgba(18,26,43,0.08)"/><text x="37" y="38" text-anchor="middle" font-size="14" fill="#121a2b" font-family="serif">680</text><text x="103" y="38" text-anchor="middle" font-size="14" fill="#2f6e47" font-family="serif">740</text></svg></div></div><div class="card-body"><p class="card-name">Small multiples</p><p class="card-note">RW card + Math card, same scale.</p><span class="tag tag--explore">Explore</span></div></article>
+        <article class="card"><div class="card-sketch"><div class="sk"><svg viewBox="0 0 140 64"><path d="M70 10 A50 50 0 0 1 120 50" fill="none" stroke="#bcc3cc" stroke-width="6"/><line x1="70" y1="50" x2="95" y2="35" stroke="#2f6e47" stroke-width="2"/></svg></div></div><div class="card-body"><p class="card-name">Speedometer</p><p class="card-note">Implies false precision.</p><span class="tag tag--no">Reject</span></div></article>
+      </div>
+    </section>
+
+    <!-- B Trajectory -->
+    <section class="section">
+      <div class="section-head">
+        <p class="parent-q">Is the plan plausible? · What happens over time?</p>
+        <h2>B · Score trajectory</h2>
+        <p>Start → PT checkpoints → test day. Phased ~25 / ~15 / ~5 pts per week.</p>
+      </div>
+      <div class="grid">
+        <article class="card"><div class="card-sketch"><div class="sk"><svg viewBox="0 0 140 64"><path d="M15 50 C40 45 60 30 125 15" fill="rgba(119,200,154,0.2)" stroke="#77c89a" stroke-width="2"/><circle cx="15" cy="50" r="4" fill="#0057a8"/><circle cx="125" cy="15" r="5" fill="#2f6e47"/></svg></div></div><div class="card-body"><p class="card-name">Line + area</p><p class="card-note">Horizon path. Stock-chart risk.</p><span class="tag tag--proto">Prototype</span></div></article>
+        <article class="card"><div class="card-sketch"><div class="sk"><svg viewBox="0 0 140 64"><polyline points="15,50 45,35 75,28 105,22 125,18" fill="none" stroke="#77c89a" stroke-width="2"/><line x1="45" y1="10" x2="45" y2="55" stroke="#121a2b" stroke-opacity="0.08" stroke-dasharray="2 2"/></svg></div></div><div class="card-body"><p class="card-name">Step chart</p><p class="card-note">Honest to 25→15→5 gain model.</p><span class="tag tag--explore">Explore</span></div></article>
+        <article class="card"><div class="card-sketch"><div class="sk"><svg viewBox="0 0 140 64"><path d="M15 45 L125 20" stroke="#77c89a" stroke-width="1.5"/><path d="M15 52 L125 32" stroke="#121a2b" stroke-opacity="0.15" stroke-width="8" stroke-linecap="round"/><path d="M15 38 L125 12" stroke="#121a2b" stroke-opacity="0.15" stroke-width="8" stroke-linecap="round"/></svg></div></div><div class="card-body"><p class="card-name">Range band / cone</p><p class="card-note">Uncertainty widens toward test.</p><span class="tag tag--explore">Explore</span></div></article>
+        <article class="card"><div class="card-sketch"><div class="sk"><svg viewBox="0 0 140 64"><line x1="15" y1="40" x2="125" y2="40" stroke="#121a2b" stroke-opacity="0.12"/><circle cx="15" cy="40" r="5" fill="#0057a8"/><circle cx="55" cy="40" r="4" fill="#77c89a"/><circle cx="95" cy="40" r="4" fill="#77c89a"/><circle cx="125" cy="40" r="5" fill="#2f6e47"/></svg></div></div><div class="card-body"><p class="card-name">Milestone timeline</p><p class="card-note">Pins only, no connecting curve.</p><span class="tag tag--explore">Explore</span></div></article>
+        <article class="card"><div class="card-sketch"><div class="sk"><svg viewBox="0 0 140 64"><line x1="30" y1="15" x2="30" y2="55" stroke="#121a2b" stroke-opacity="0.1"/><line x1="110" y1="15" x2="110" y2="55" stroke="#121a2b" stroke-opacity="0.1"/><line x1="30" y1="45" x2="110" y2="22" stroke="#2f6e47" stroke-width="2"/><circle cx="30" cy="45" r="4" fill="#0057a8"/><circle cx="110" cy="22" r="4" fill="#2f6e47"/></svg></div></div><div class="card-body"><p class="card-name">Slopegraph</p><p class="card-note">Two dates, one line per student.</p><span class="tag tag--explore">Explore</span></div></article>
+        <article class="card"><div class="card-sketch"><div class="sk"><svg viewBox="0 0 140 64"><rect x="20" y="35" width="12" height="15" fill="#77c89a"/><rect x="36" y="28" width="12" height="22" fill="#77c89a"/><rect x="52" y="22" width="12" height="28" fill="#0057a8" opacity="0.5"/></svg></div></div><div class="card-body"><p class="card-name">Weekly waterfall</p><p class="card-note">Finance vibe — use sparingly.</p><span class="tag tag--explore">Explore</span></div></article>
+        <article class="card"><div class="card-sketch"><div class="sk"><svg viewBox="0 0 140 64"><text x="20" y="25" font-size="8" fill="#121a2b">Transitions</text><path d="M20 30 L50 20 L80 35 L110 15" fill="none" stroke="#77c89a"/><text x="20" y="50" font-size="8" fill="#121a2b">Factoring</text><path d="M20 55 L50 48 L80 52 L110 40" fill="none" stroke="#0057a8" opacity="0.5"/></svg></div></div><div class="card-body"><p class="card-name">Bump chart</p><p class="card-note">Skill rank across 3+ PTs.</p><span class="tag tag--explore">Explore</span></div></article>
+      </div>
+    </section>
+
+    <!-- C Ranked skills -->
+    <section class="section">
+      <div class="section-head">
+        <p class="parent-q">What is blocking the score?</p>
+        <h2>C · Ranked skills & recoverable points</h2>
+        <p>5–7 skills, modeled +N. This is where most edtech stops — push further.</p>
+      </div>
+      <div class="grid">
+        <article class="card"><div class="card-sketch"><div class="sk-ledger"><div><span>01 Transitions</span><span>+52</span></div><div><span>02 Factoring</span><span>+48</span></div><div><span>03 Boundaries</span><span>+33</span></div></div></div><div class="card-body"><p class="card-name">Ledger table</p><p class="card-note">SOHA priority list.</p><span class="tag tag--live">In product</span></div></article>
+        <article class="card"><div class="card-sketch"><div class="sk"><svg viewBox="0 0 140 64"><line x1="20" y1="18" x2="90" y2="18" stroke="#77c89a" stroke-width="2"/><circle cx="90" cy="18" r="4" fill="#2f6e47"/><line x1="20" y1="34" x2="75" y2="34" stroke="#77c89a" stroke-width="2"/><circle cx="75" cy="34" r="4" fill="#2f6e47"/><line x1="20" y1="50" x2="55" y2="50" stroke="#77c89a" stroke-width="2"/><circle cx="55" cy="50" r="4" fill="#2f6e47"/></svg></div></div><div class="card-body"><p class="card-name">Lollipop</p><p class="card-note">Visx prototype = reskin.</p><span class="tag tag--proto">Prototype</span></div></article>
+        <article class="card"><div class="card-sketch"><div class="sk"><svg viewBox="0 0 140 64"><rect x="15" y="10" width="70" height="44" rx="2" fill="#77c89a" opacity="0.5"/><rect x="15" y="10" width="45" height="44" rx="2" fill="#0057a8" opacity="0.4"/><rect x="60" y="22" width="55" height="32" rx="2" fill="#2f6e47" opacity="0.35"/></svg></div></div><div class="card-body"><p class="card-name">Treemap</p><p class="card-note">Area = points. Shows top-heavy gap.</p><span class="tag tag--explore">Explore</span></div></article>
+        <article class="card"><div class="card-sketch"><div class="sk"><svg viewBox="0 0 140 64"><circle cx="45" cy="32" r="22" fill="rgba(0,87,168,0.25)"/><circle cx="85" cy="38" r="14" fill="rgba(119,200,154,0.4)"/><circle cx="105" cy="28" r="8" fill="rgba(47,110,71,0.35)"/></svg></div></div><div class="card-body"><p class="card-name">Packed bubbles</p><p class="card-note">Radius ∝ points — area distorts.</p><span class="tag tag--explore">Explore</span></div></article>
+        <article class="card"><div class="card-sketch"><div class="sk"><svg viewBox="0 0 140 64"><path d="M20 50 Q50 10 80 40 T120 25" fill="none" stroke="#77c89a" stroke-width="1.5"/><circle cx="20" cy="50" r="3" fill="#0057a8"/><circle cx="80" cy="40" r="3" fill="#77c89a"/><circle cx="120" cy="25" r="3" fill="#2f6e47"/></svg></div></div><div class="card-body"><p class="card-name">Sankey</p><p class="card-note">Misses → skills → points recovered.</p><span class="tag tag--explore">Explore</span></div></article>
+        <article class="card"><div class="card-sketch"><div class="sk-waffle"><script>for(let i=0;i<100;i++)document.write(`<i class="${i<12?'on':''}"></i>`)</script></div></div><div class="card-body"><p class="card-name">Waffle / icon array</p><p class="card-note">“12 of 100 skills” metaphor.</p><span class="tag tag--explore">Explore</span></div></article>
+        <article class="card"><div class="card-sketch"><div class="sk"><svg viewBox="0 0 140 64"><rect x="55" y="8" width="30" height="48" rx="3" fill="#2f6e47" opacity="0.5"/><rect x="55" y="28" width="30" height="28" fill="#77c89a" opacity="0.6"/><rect x="55" y="44" width="30" height="12" fill="#0057a8" opacity="0.4"/></svg></div></div><div class="card-body"><p class="card-name">Stacked tower</p><p class="card-note">Blocks sum to gap.</p><span class="tag tag--explore">Explore</span></div></article>
+        <article class="card"><div class="card-sketch"><div class="sk"><svg viewBox="0 0 140 64"><rect x="20" y="15" width="50" height="34" rx="4" fill="#fff" stroke="#77c89a"/><text x="45" y="36" text-anchor="middle" font-size="9" fill="#121a2b">Rank 1</text></svg></div></div><div class="card-body"><p class="card-name">Card deck</p><p class="card-note">Mobile swipe stack.</p><span class="tag tag--explore">Explore</span></div></article>
+        <article class="card"><div class="card-sketch"><div class="sk"><svg viewBox="0 0 140 64"><rect x="15" y="20" width="110" height="12" rx="2" fill="rgba(18,26,43,0.12)"/><rect x="15" y="20" width="80" height="12" rx="2" fill="#e85d4a" opacity="0.5"/></svg></div></div><div class="card-body"><p class="card-name">Horizontal bar race</p><p class="card-note">Default edtech.</p><span class="tag tag--no">Reject</span></div></article>
+        <article class="card"><div class="card-sketch"><div class="sk"><svg viewBox="0 0 140 64"><circle cx="70" cy="32" r="24" fill="none" stroke="#121a2b" stroke-opacity="0.1"/><path d="M70 32 L70 10 A22 22 0 0 1 88 38 Z" fill="#77c89a" opacity="0.5"/></svg></div></div><div class="card-body"><p class="card-name">Pie / donut</p><p class="card-note">Angles lie.</p><span class="tag tag--no">Reject</span></div></article>
+      </div>
+    </section>
+
+    <!-- D 98 questions -->
+    <section class="section">
+      <div class="section-head">
+        <p class="parent-q">What did the test show?</p>
+        <h2>D · 98 questions & misses</h2>
+        <p>Item-level correct/miss, E/M/H, module breaks.</p>
+      </div>
+      <div class="grid">
+        <article class="card"><div class="card-sketch"><div class="sk"><svg viewBox="0 0 140 64"><g fill="#fff" stroke="#77c89a" stroke-width="1"><circle cx="22" cy="20" r="5"/><circle cx="36" cy="20" r="5"/><circle cx="50" cy="20" r="5" fill="rgba(0,87,168,0.2)"/></g><g fill="#fff" stroke="#77c89a" stroke-width="1"><circle cx="22" cy="40" r="5"/><circle cx="36" cy="40" r="5"/></g></svg></div></div><div class="card-body"><p class="card-name">Module grid</p><p class="card-note">SOHA question map.</p><span class="tag tag--live">In product</span></div></article>
+        <article class="card"><div class="card-sketch"><div class="sk-dots"><script>for(let i=0;i<24;i++)document.write(`<i class="${[3,7,11,15].includes(i)?'m':''}"></i>`)</script></div></div><div class="card-body"><p class="card-name">Constellation field</p><p class="card-note">Scattered dots, miss = glow.</p><span class="tag tag--proto">09 mockup</span></div></article>
+        <article class="card"><div class="card-sketch"><div class="sk-waffle"><script>for(let i=0;i<100;i++)document.write(`<i class="${[2,8,14,22,31,40,48,55,63,71,78,85,92].includes(i)?'on':''}"></i>`)</script></div></div><div class="card-body"><p class="card-name">10×10 icon array</p><p class="card-note">13 misses highlighted.</p><span class="tag tag--explore">Explore</span></div></article>
+        <article class="card"><div class="card-sketch"><div class="sk"><svg viewBox="0 0 140 64"><line x1="15" y1="25" x2="125" y2="25" stroke="#121a2b" stroke-opacity="0.12"/><line x1="40" y1="22" x2="40" y2="28" stroke="#0057a8" stroke-width="2"/><line x1="70" y1="22" x2="70" y2="28" stroke="#0057a8" stroke-width="2"/><line x1="15" y1="45" x2="125" y2="45" stroke="#121a2b" stroke-opacity="0.12"/><line x1="95" y1="42" x2="95" y2="48" stroke="#0057a8" stroke-width="2"/></svg></div></div><div class="card-body"><p class="card-name">Strip plot</p><p class="card-note">One row per module, tick = miss.</p><span class="tag tag--explore">Explore</span></div></article>
+        <article class="card"><div class="card-sketch"><div class="sk"><svg viewBox="0 0 140 64"><rect x="20" y="40" width="8" height="18" fill="#0057a8" opacity="0.4"/><rect x="32" y="35" width="8" height="23" fill="#0057a8" opacity="0.5"/><rect x="44" y="30" width="8" height="28" fill="#0057a8" opacity="0.6"/><rect x="56" y="45" width="8" height="13" fill="#77c89a"/></svg></div></div><div class="card-body"><p class="card-name">Miss histogram</p><p class="card-note">Where in module misses cluster.</p><span class="tag tag--explore">Explore</span></div></article>
+        <article class="card"><div class="card-sketch"><div class="sk"><svg viewBox="0 0 140 64"><rect x="10" y="10" width="55" height="22" rx="3" fill="#fff" stroke="#121a2b" stroke-opacity="0.08"/><rect x="75" y="10" width="55" height="22" rx="3" fill="#fff" stroke="#121a2b" stroke-opacity="0.08"/><rect x="10" y="38" width="55" height="22" rx="3" fill="#fff" stroke="#121a2b" stroke-opacity="0.08"/><rect x="75" y="38" width="55" height="22" rx="3" fill="#fff" stroke="#121a2b" stroke-opacity="0.08"/></svg></div></div><div class="card-body"><p class="card-name">4-panel small multiples</p><p class="card-note">One module per panel.</p><span class="tag tag--explore">Explore</span></div></article>
+        <article class="card"><div class="card-sketch"><div class="sk"><svg viewBox="0 0 140 64"><rect x="15" y="15" width="25" height="10" fill="rgba(0,87,168,0.15)"/><rect x="45" y="15" width="25" height="10" fill="rgba(119,200,154,0.2)"/><rect x="15" y="30" width="25" height="10" fill="rgba(47,110,71,0.15)"/></svg></div></div><div class="card-body"><p class="card-name">Skill × difficulty heat</p><p class="card-note">Aggregated, not item-level.</p><span class="tag tag--explore">Explore</span></div></article>
+        <article class="card"><div class="card-sketch"><div class="sk"><svg viewBox="0 0 140 64"><rect x="20" y="20" width="12" height="8" fill="#0057a8" opacity="0.3"/><path d="M32 24 C50 24 60 35 75 40" fill="none" stroke="#77c89a" stroke-width="3" opacity="0.5"/><rect x="75" y="36" width="40" height="12" rx="2" fill="#2f6e47" opacity="0.3"/></svg></div></div><div class="card-body"><p class="card-name">Alluvial flow</p><p class="card-note">Items → skill buckets.</p><span class="tag tag--explore">Explore</span></div></article>
+        <article class="card"><div class="card-sketch"><div class="sk"><svg viewBox="0 0 140 64"><rect x="15" y="18" width="12" height="12" fill="#e85d4a" opacity="0.6"/><rect x="30" y="18" width="12" height="12" fill="#2f6e47" opacity="0.5"/><rect x="45" y="18" width="12" height="12" fill="#f0c040" opacity="0.5"/></svg></div></div><div class="card-body"><p class="card-name">Traffic-light grid</p><p class="card-note">Legacy SOHA cells.</p><span class="tag tag--no">Retire</span></div></article>
+      </div>
+    </section>
+
+    <!-- E Accuracy -->
+    <section class="section">
+      <div class="section-head">
+        <p class="parent-q">What did the test show? · What changed?</p>
+        <h2>E · Accuracy by difficulty</h2>
+        <p>E / M / H % correct, RW vs Math.</p>
+      </div>
+      <div class="grid">
+        <article class="card"><div class="card-sketch"><div class="sk"><svg viewBox="0 0 140 64"><text x="25" y="28" font-size="16" font-family="serif" fill="#121a2b">82%</text><rect x="10" y="38" width="30" height="3" rx="1" fill="#77c89a"/><text x="70" y="28" font-size="16" font-family="serif" fill="#121a2b">71%</text><rect x="55" y="38" width="22" height="3" rx="1" fill="#77c89a"/></svg></div></div><div class="card-body"><p class="card-name">Tide readout</p><p class="card-note">Big % + underline.</p><span class="tag tag--proto">Prototype</span></div></article>
+        <article class="card"><div class="card-sketch"><div class="sk"><svg viewBox="0 0 140 64"><rect x="20" y="15" width="14" height="40" fill="#0057a8" opacity="0.3"/><rect x="38" y="22" width="14" height="33" fill="#0057a8" opacity="0.4"/><rect x="56" y="28" width="14" height="27" fill="#0057a8" opacity="0.5"/></svg></div></div><div class="card-body"><p class="card-name">Grouped bars</p><p class="card-note">Dashboard default.</p><span class="tag tag--live">Legacy</span></div></article>
+        <article class="card"><div class="card-sketch"><div class="sk"><svg viewBox="0 0 140 64"><line x1="15" y1="50" x2="125" y2="50" stroke="#121a2b" stroke-opacity="0.12"/><circle cx="35" cy="30" r="5" fill="#0057a8"/><circle cx="70" cy="38" r="5" fill="#77c89a"/><circle cx="105" cy="22" r="5" fill="#2f6e47"/></svg></div></div><div class="card-body"><p class="card-name">Dot plot</p><p class="card-note">E/M/H on shared axis.</p><span class="tag tag--explore">Explore</span></div></article>
+        <article class="card"><div class="card-sketch"><div class="sk"><svg viewBox="0 0 140 64"><circle cx="35" cy="35" r="4" fill="#0057a8"/><circle cx="105" cy="28" r="4" fill="#2f6e47"/><line x1="35" y1="35" x2="105" y2="28" stroke="#77c89a" stroke-width="2"/><text x="35" y="50" font-size="7" text-anchor="middle">Diag</text><text x="105" y="50" font-size="7" text-anchor="middle">PT</text></svg></div></div><div class="card-body"><p class="card-name">Dumbbell / slope</p><p class="card-note">Diagnostic → practice test.</p><span class="tag tag--explore">Explore</span></div></article>
+        <article class="card"><div class="card-sketch"><div class="sk"><svg viewBox="0 0 140 64"><polygon points="70,15 95,45 45,45" fill="none" stroke="#121a2b" stroke-opacity="0.15"/><line x1="70" y1="15" x2="70" y2="35" stroke="#2f6e47"/></svg></div></div><div class="card-body"><p class="card-name">Radar / spider</p><p class="card-note">Overstates shape.</p><span class="tag tag--no">Reject</span></div></article>
+      </div>
+    </section>
+
+    <!-- F Gap decomp -->
+    <section class="section">
+      <div class="section-head">
+        <p class="parent-q">Does the gap add up?</p>
+        <h2>F · Gap decomposition</h2>
+        <p>+52 + +48 + … = +125?</p>
+      </div>
+      <div class="grid">
+        <article class="card"><div class="card-sketch"><div class="sk"><svg viewBox="0 0 140 64"><rect x="20" y="28" width="100" height="10" rx="3" fill="rgba(18,26,43,0.12)"/><rect x="20" y="28" width="35" height="10" fill="#0057a8"/><rect x="55" y="28" width="28" height="10" fill="#77c89a"/><rect x="83" y="28" width="20" height="10" fill="#2f6e47"/></svg></div></div><div class="card-body"><p class="card-name">Stacked bridge</p><p class="card-note">Visx gap bridge.</p><span class="tag tag--proto">Prototype</span></div></article>
+        <article class="card"><div class="card-sketch"><div class="sk-eq">1400 <em>+52 +48 +33</em> ≈ 1525</div></div><div class="card-body"><p class="card-name">Equation typography</p><p class="card-note">No chart — serif math line.</p><span class="tag tag--explore">Explore</span></div></article>
+        <article class="card"><div class="card-sketch"><div class="sk-waffle"><script>for(let i=0;i<100;i++)document.write(`<i class="${i<62?'on':''}"></i>`)</script></div></div><div class="card-body"><p class="card-name">125-square waffle</p><p class="card-note">Each cell = 1 pt of gap.</p><span class="tag tag--explore">Explore</span></div></article>
+        <article class="card"><div class="card-sketch"><div class="sk"><svg viewBox="0 0 140 64"><rect x="20" y="20" width="15" height="30" fill="#77c89a"/><rect x="37" y="28" width="15" height="22" fill="#77c89a" opacity="0.8"/><rect x="54" y="32" width="15" height="18" fill="#77c89a" opacity="0.6"/></svg></div></div><div class="card-body"><p class="card-name">Waterfall</p><p class="card-note">Step columns — finance tone.</p><span class="tag tag--explore">Explore</span></div></article>
+      </div>
+    </section>
+
+    <!-- G Schedule -->
+    <section class="section">
+      <div class="section-head">
+        <p class="parent-q">Is the plan plausible?</p>
+        <h2>G · Schedule & effort</h2>
+        <p>Weeks, skills, PT pins, phased effort.</p>
+      </div>
+      <div class="grid">
+        <article class="card"><div class="card-sketch"><div class="sk"><svg viewBox="0 0 140 64"><rect x="15" y="18" width="110" height="8" fill="rgba(18,26,43,0.08)"/><rect x="15" y="32" width="45" height="6" rx="2" fill="#77c89a"/><rect x="15" y="42" width="70" height="6" rx="2" fill="#0057a8" opacity="0.5"/></svg></div></div><div class="card-body"><p class="card-name">Gantt</p><p class="card-note">plan.html today.</p><span class="tag tag--live">In product</span></div></article>
+        <article class="card"><div class="card-sketch"><div class="sk-cards"><span>W1</span><span>W2</span><span>W3</span><span>W4</span></div></div><div class="card-body"><p class="card-name">Milestone ribbon</p><p class="card-note">Week cards + PT pins.</p><span class="tag tag--proto">Exploring</span></div></article>
+        <article class="card"><div class="card-sketch"><div class="sk-phase"><span></span><span></span><span></span></div></div><div class="card-body"><p class="card-name">Phase ladder</p><p class="card-note">Wk 1–6 / 7–12 / 13+ effort.</p><span class="tag tag--explore">Explore</span></div></article>
+        <article class="card"><div class="card-sketch"><div class="sk"><svg viewBox="0 0 140 64"><line x1="15" y1="40" x2="125" y2="40" stroke="#77c89a" stroke-width="2"/><circle cx="45" cy="40" r="5" fill="#0057a8"/><circle cx="85" cy="40" r="5" fill="#0057a8"/><circle cx="125" cy="40" r="6" fill="#2f6e47"/></svg></div></div><div class="card-body"><p class="card-name">Timeline pins only</p><p class="card-note">PT + test day, no skill rows.</p><span class="tag tag--explore">Explore</span></div></article>
+      </div>
+    </section>
+
+    <!-- H Achievability -->
+    <section class="section">
+      <div class="section-head">
+        <p class="parent-q">Is this goal realistic?</p>
+        <h2>H · Achievability & effort tier</h2>
+      </div>
+      <div class="grid">
+        <article class="card"><div class="card-sketch"><div class="sk"><svg viewBox="0 0 140 64"><rect x="15" y="30" width="110" height="8" rx="4" fill="linear-gradient"/><defs><linearGradient id="sg"><stop stop-color="#0057a8" stop-opacity="0.2"/><stop offset="1" stop-color="#b8f5d1" stop-opacity="0.5"/></linearGradient></defs><rect x="15" y="30" width="110" height="8" rx="4" fill="url(#sg)"/><circle cx="75" cy="34" r="6" fill="#2f6e47"/></svg></div></div><div class="card-body"><p class="card-name">Spectrum band</p><p class="card-note">Conservative → stretch.</p><span class="tag tag--proto">Prototype</span></div></article>
+        <article class="card"><div class="card-sketch"><div class="sk"><svg viewBox="0 0 140 64"><rect x="12" y="12" width="36" height="40" rx="4" fill="#fff" stroke="#121a2b" stroke-opacity="0.08"/><rect x="52" y="12" width="36" height="40" rx="4" fill="rgba(184,245,209,0.3)" stroke="#2f6e47"/><rect x="92" y="12" width="36" height="40" rx="4" fill="#fff" stroke="#121a2b" stroke-opacity="0.08"/></svg></div></div><div class="card-body"><p class="card-name">Tier pick cards</p><p class="card-note">Three scenarios, no slider.</p><span class="tag tag--explore">Explore</span></div></article>
+        <article class="card"><div class="card-sketch"><div class="sk-eq" style="font-size:10px">+125 · 66 days · ~14/wk</div></div><div class="card-body"><p class="card-name">Stat strip only</p><p class="card-note">Chart optional.</p><span class="tag tag--explore">Explore</span></div></article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <h2>Next step</h2>
+        <p>Mark 1–2 favorites per section. We mock those at full fidelity before touching Visx or the Next gallery again.</p>
+      </div>
+      <p style="font-size:14px;color:var(--muted);max-width:58ch">Full matrix doc: <code>docs/data-visualization-ideation.md</code></p>
+    </section>
+  </main>
+</body>
+</html>

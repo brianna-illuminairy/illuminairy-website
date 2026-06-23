@@ -14,6 +14,7 @@ Until a file exists, that slot shows a dashed **“Photo needed”** placeholder
 | `tutor-student-session.png` | B3a hero — session |
 | `team-hero.jpg` | Good news — team (once) |
 | `ethan-uga-acceptance.jpg` | Plan s3 — Ethan UGA acceptance (verified case study) |
+| `gmail-welcome-sat-session-link.png` | Plan Builder B — post-book Gmail mock (`b-post-share`) |
 
 **Priority queue:** [`growth/b3-lp-image-production-checklist.md`](../../growth/b3-lp-image-production-checklist.md)
 

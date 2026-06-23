@@ -22,7 +22,7 @@ export const SOHA_PROFILE = {
     role: "Parent",
     firstName: "Nada",
     lastName: "Naveed",
-    email: "nj00@hotmail.com",
+    email: "nadanaveed@gmail.com",
     phone: "818-391-0906",
   },
   programPlan: [

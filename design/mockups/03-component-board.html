@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>03 · Component board</title>
+  <link rel="stylesheet" href="_shared.css">
+  <style>
+    .page { padding: 32px 24px 80px; max-width: var(--max); margin: 0 auto; }
+    section { margin-bottom: 48px; }
+    section h2 { font-family: var(--display); font-size: 22px; margin-bottom: 16px; }
+    .row { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 16px; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 640px) { .grid-2 { grid-template-columns: 1fr; } }
+    .demo-pad { padding: 24px; background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); }
+    .stars-demo { position: relative; min-height: 100px; }
+    .stars-demo .aurora-stars i:nth-child(1) { left: 10%; top: 20%; }
+    .stars-demo .aurora-stars i:nth-child(2) { left: 30%; top: 60%; animation-delay: 0.8s; }
+    .stars-demo .aurora-stars i:nth-child(3) { left: 70%; top: 30%; animation-delay: 1.6s; }
+    .stars-demo .aurora-stars i:nth-child(4) { left: 85%; top: 70%; animation-delay: 2.2s; }
+  </style>
+</head>
+<body>
+  <nav class="mock-nav">
+    <a href="index.html">← Hub</a>
+    <span style="font-size:13px;color:var(--muted);">03 · Components</span>
+  </nav>
+
+  <div class="page">
+    <p class="mock-eyebrow">Interact · hover everything</p>
+    <h1 class="mock-h1">Component library</h1>
+
+    <section>
+      <h2>Header & footer</h2>
+      <header class="aurora-header" style="border-radius:var(--radius);margin-bottom:12px;">
+        <div class="aurora-header__inner">
+          <div class="aurora-logo">Illuminairy</div>
+          <button type="button" class="aurora-btn-ghost">Bootcamp enrollment</button>
+        </div>
+      </header>
+      <footer class="aurora-footer" style="border-radius:var(--radius);">
+        <div class="aurora-footer__inner">
+          <a href="#">Privacy</a><a href="#">Terms</a>
+          <p style="font-size:11px;margin-top:12px;opacity:0.7;">© Illuminairy · Private student portal</p>
+        </div>
+      </footer>
+    </section>
+
+    <section>
+      <h2>Buttons</h2>
+      <p style="font-size:14px;color:var(--muted);margin:-8px 0 16px;">Full comparison board: <a href="06-cta-options.html">06 · CTA options (light & dark)</a></p>
+      <div class="row">
+        <button type="button" class="aurora-btn-primary" style="width:auto;min-width:200px;">Primary glow pill</button>
+        <button type="button" class="aurora-btn-secondary">Secondary forest</button>
+      </div>
+    </section>
+
+    <section>
+      <h2>Hover card (top-line)</h2>
+      <div class="aurora-hover-card" style="max-width:420px;">
+        <p class="mock-eyebrow" style="margin-bottom:8px;">Free parent plan</p>
+        <p style="font-family:var(--display);font-size:20px;font-weight:600;margin-bottom:12px;">Build their SAT improvement plan</p>
+        <p style="font-size:14px;color:var(--muted);">Hover to see celestial → aurora top line from brand guide.</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>Hover rows (tagline pattern)</h2>
+      <div style="max-width:520px;">
+        <div class="aurora-hover-row">Strategy Call first <span class="arrow">→</span></div>
+        <div class="aurora-hover-row">Skill Diagnostic after the call <span class="arrow">→</span></div>
+        <div class="aurora-hover-row">Personalized weekly plan <span class="arrow">→</span></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Border-glow squares</h2>
+      <p style="font-size:14px;color:var(--muted);margin:-8px 0 16px;">Hover — animated aurora ring spins around the border (conic gradient).</p>
+      <div class="grid-2">
+        <div class="aurora-border-glow">
+          <div class="aurora-border-glow__inner">
+            <p class="mock-eyebrow">Feature 01</p>
+            <p style="font-size:14px;color:var(--muted);">Aurora gradient ring on hover — brand guide visual language.</p>
+          </div>
+        </div>
+        <div class="aurora-border-glow">
+          <div class="aurora-border-glow__inner">
+            <p class="mock-eyebrow">Feature 02</p>
+            <p style="font-size:14px;color:var(--muted);">Use sparingly on homepage stats or plan highlights.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Soft stars + light wash</h2>
+      <div class="demo-pad aurora-wash-light stars-demo">
+        <div class="aurora-stars" aria-hidden="true">
+          <i></i><i></i><i></i><i></i>
+        </div>
+        <p style="font-size:14px;color:var(--muted);position:relative;z-index:1;">Sparse green dots on polar white — not a dark starfield.</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>Soft dark inset (diagnostic score only)</h2>
+      <div class="aurora-inset-soft" style="max-width:480px;">
+        <p class="mock-eyebrow" style="color:var(--glow);">Diagnostic score</p>
+        <div class="score">1280</div>
+        <p style="font-size:14px;opacity:0.75;margin-top:8px;">One optional dark block per page — not for enroll/LP CTAs.</p>
+      </div>
+    </section>
+  </div>
+</body>
+</html>

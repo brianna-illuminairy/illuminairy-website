@@ -19,6 +19,11 @@ export async function appendTouchEvent(input: TouchEventInput) {
     typeof input.payload?.hero_hook !== "string"
       ? { hero_hook: attr.hero_hook }
       : {}),
+    ...(typeof attr.version === "string" &&
+    attr.version &&
+    typeof input.payload?.version !== "string"
+      ? { version: attr.version }
+      : {}),
     ...(typeof attr.landing_page === "string" &&
     attr.landing_page &&
     typeof input.payload?.landing_page !== "string"

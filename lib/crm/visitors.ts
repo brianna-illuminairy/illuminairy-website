@@ -22,7 +22,8 @@ function touchJson(snap?: AttributionSnapshot) {
     cleaned.gclid ||
     cleaned.fbclid ||
     cleaned.landing_page ||
-    cleaned.hero_hook;
+    cleaned.hero_hook ||
+    cleaned.version;
   return has ? cleaned : null;
 }
 

@@ -33,6 +33,44 @@ export const PUBLIC_SKILL_DIAGNOSTIC_CALENDLY_URL =
   process.env.NEXT_PUBLIC_SKILL_DIAGNOSTIC_CALENDLY_URL ||
   "https://calendly.com/satprep-illuminairy/sat-diagnostic-proctored-full-length-adaptive-testing";
 
+/** SSOT — public June SAT Score Review Calendly event. */
+export const PUBLIC_SCORE_REVIEW_CALENDLY_URL =
+  process.env.NEXT_PUBLIC_SCORE_REVIEW_CALENDLY_URL ||
+  "https://calendly.com/satprep-illuminairy/june-sat-score-review";
+
+/** SSOT — public free SAT lesson (Plan Builder B). Must match Vercel `NEXT_PUBLIC_FREE_LESSON_CALENDLY_URL`. */
+export const PUBLIC_FREE_LESSON_CALENDLY_URL =
+  process.env.NEXT_PUBLIC_FREE_LESSON_CALENDLY_URL ||
+  "https://calendly.com/satprep-illuminairy/free-sat-lesson";
+
+/** Standard membership weekly price (Plan Builder B portal checkout). */
+export const standardMembershipWeeklyPrice = 99;
+
+/** Prefill for tutor LP nav SMS (`NEXT_PUBLIC_PARENT_SMS_PHONE`). */
+export const PARENT_SMS_PREFILL =
+  "Hi Illuminairy — rising senior, need to get started on the SAT plan ASAP.";
+
+/** US mobile for parent SMS nav — env `NEXT_PUBLIC_PARENT_SMS_PHONE` (10 digits or +1). */
+export function parentSmsPhoneE164(): string | null {
+  const raw = process.env.NEXT_PUBLIC_PARENT_SMS_PHONE?.replace(/\D/g, "") ?? "";
+  if (raw.length === 10) return `+1${raw}`;
+  if (raw.length === 11 && raw.startsWith("1")) return `+${raw}`;
+  return null;
+}
+
+export function parentSmsDisplayPhone(): string | null {
+  const raw = process.env.NEXT_PUBLIC_PARENT_SMS_PHONE?.replace(/\D/g, "") ?? "";
+  const ten = raw.length === 11 && raw.startsWith("1") ? raw.slice(1) : raw;
+  if (ten.length !== 10) return null;
+  return `(${ten.slice(0, 3)}) ${ten.slice(3, 6)}-${ten.slice(6)}`;
+}
+
+export function parentSmsHref(): string | null {
+  const e164 = parentSmsPhoneE164();
+  if (!e164) return null;
+  return `sms:${e164}?body=${encodeURIComponent(PARENT_SMS_PREFILL)}`;
+}
+
 export const site = {
   name: "Illuminairy",
   legalName: "Zytech Development LLC",
@@ -52,6 +90,14 @@ export const site = {
   /** Public SAT Strategy Call — one-on-one event (guests on same booking, not separate bookers). */
   calendlyUrl:
     process.env.NEXT_PUBLIC_CALENDLY_URL || PUBLIC_SAT_STRATEGY_CALL_CALENDLY_URL,
+  /** Plan Builder B — free lesson Calendly event. */
+  freeLessonCalendlyUrl:
+    process.env.NEXT_PUBLIC_FREE_LESSON_CALENDLY_URL || PUBLIC_FREE_LESSON_CALENDLY_URL,
+  /** June SAT Score Review Calendly event. */
+  scoreReviewCalendlyUrl:
+    process.env.NEXT_PUBLIC_SCORE_REVIEW_CALENDLY_URL || PUBLIC_SCORE_REVIEW_CALENDLY_URL,
+  /** Standard membership weekly price (USD). */
+  standardMembershipWeeklyPrice,
   typeformUrl: process.env.NEXT_PUBLIC_TYPEFORM_URL || "",
   /** Mentor / SAT instructor application — public embed on /apply/mentor */
   mentorTypeformUrl: process.env.NEXT_PUBLIC_MENTOR_TYPEFORM_URL || "",

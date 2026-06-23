@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { V4Page } from "@/components/landing/v4/v4-page";
+import { v4PlanBCta, v4TutorCta } from "@/components/landing/v4/v4-content";
 import { trackLandingCtaClick, trackLandingView } from "@/lib/landing/analytics";
 import { enrichSessionAttributionFromLanding } from "@/lib/attribution";
 import { persistLpLayout } from "@/lib/landing/layout-storage";
@@ -13,8 +14,10 @@ import {
 import type { LandingSectionId } from "@/lib/landing/content";
 import { landingShared } from "@/lib/landing/content";
 import { lpVariantFromHeroHook } from "@/lib/landing/lp-variant";
+import { landingSearchQuery } from "@/lib/landing/landing-search";
 import { resolveMetaLandingContext } from "@/lib/landing/meta-traffic";
 import { planBuilderEntryFromLanding } from "@/lib/plan-builder-routes";
+import { planBuilderBEntryFromLanding, shouldRouteLandingCtaToPlanBuilderB } from "@/lib/plan-builder-b-routes";
 import {
   devOverrideFromSearch,
   LP_VARIANT_FLAG,
@@ -34,15 +37,19 @@ const LP_LAYOUT: LpLayout = "compact";
 type LandingPageProps = {
   /** Pathname for analytics (`/` or `/sat-plan-builder`). */
   landingPath?: string;
+  /** Force Plan Builder B lab funnel (used by `/sat-free-lesson`). */
+  planBuilderB?: boolean;
 };
 
-export function LandingPage({ landingPath = "/" }: LandingPageProps) {
+export function LandingPage({ landingPath = "/", planBuilderB: planBuilderBForced }: LandingPageProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const trackedRef = useRef(false);
 
-  const search = searchParams.toString();
-  const query = search ? `?${search}` : "";
+  const query = landingSearchQuery(searchParams.toString());
+  const search = query.startsWith("?") ? query.slice(1) : query;
+  const planBuilderB =
+    planBuilderBForced === true || shouldRouteLandingCtaToPlanBuilderB(searchParams.toString());
   const layout = devLayoutOverrideFromSearch(query) ?? LP_LAYOUT;
   const variant = devOverrideFromSearch(query) ?? LP_VARIANT;
   const metaContext = useMemo(() => resolveMetaLandingContext(query), [query]);
@@ -74,18 +81,36 @@ export function LandingPage({ landingPath = "/" }: LandingPageProps) {
 
   const handleCta = useCallback(
     (sectionId: LandingSectionId, label?: string) => {
-      const ctaLabel = label ?? landingShared.heroCtaLabel;
+      const ctaLabel =
+        label ??
+        (metaContext.heroHook === "tutor"
+          ? v4TutorCta.button
+          : planBuilderB
+            ? v4PlanBCta.button
+            : landingShared.heroCtaLabel);
       trackLandingCtaClick(variant, layout, landingPath, sectionId, ctaLabel, {
         hero_hook: metaContext.heroHook,
         hero_hook_source: metaContext.heroHookSource,
         lp_variant: lpVariantFromHeroHook(metaContext.heroHook)
       });
-      router.push(planBuilderEntryFromLanding(search ? `?${search}` : undefined));
+      router.push(
+        planBuilderB
+          ? planBuilderBEntryFromLanding(search ? `?${search}` : undefined)
+          : planBuilderEntryFromLanding(search ? `?${search}` : undefined)
+      );
     },
-    [layout, landingPath, metaContext.heroHook, metaContext.heroHookSource, router, search, variant]
+    [layout, landingPath, metaContext.heroHook, metaContext.heroHookSource, planBuilderB, router, search, variant]
   );
 
-  return <V4Page search={query} heroHook={metaContext.heroHook} onCta={handleCta} />;
+  return (
+    <V4Page
+      search={query}
+      heroHook={metaContext.heroHook}
+      landingPath={landingPath}
+      planBuilderB={planBuilderB}
+      onCta={handleCta}
+    />
+  );
 }
 
 /** Exported for tests — flag key constants */

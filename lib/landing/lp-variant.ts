@@ -8,10 +8,12 @@ export const LP_VARIANT_HIGHGPA = "variant-highgpa-ap-lowsat" as const;
 export type LpVariantId =
   | typeof LP_VARIANT_GOODGRADES
   | typeof LP_VARIANT_TUTOR
-  | typeof LP_VARIANT_HIGHGPA;
+  | typeof LP_VARIANT_HIGHGPA
+  | "variant-june-score-review";
 
 /** Map resolved hero hook → owner `lp_variant` for analytics. */
 export function lpVariantFromHeroHook(hook: LandingHeroHook): LpVariantId {
+  if (hook === "june_score_review") return "variant-june-score-review";
   if (hook === "tutor") return LP_VARIANT_TUTOR;
   if (hook === "student_story") return LP_VARIANT_HIGHGPA;
   return LP_VARIANT_GOODGRADES;

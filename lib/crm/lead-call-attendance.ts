@@ -20,6 +20,15 @@
 import { logAudit, type AuditSource } from "@/lib/crm/audit-log";
 import { fireLeadMilestone } from "@/lib/crm/ga4-milestones";
 import { requireSupabaseAdmin } from "@/lib/supabase/server";
+import {
+  attributionFromLeadFbclid,
+  makeMetaEventId,
+  metaCapiUserFromLead,
+  sendMetaCapiEvent,
+} from "@/lib/meta-capi";
+import { PLAN_BUILDER_FUNNEL_ID } from "@/lib/quiz-funnel-b/constants";
+import { trackKlaviyoEvent } from "@/lib/klaviyo-server";
+import { KlaviyoEvents } from "@/lib/analytics-registry";
 
 const NO_SHOW_WINDOW_MIN = 10;
 
@@ -61,7 +70,7 @@ export async function applyCallAttendance(update: CallAttendanceUpdate): Promise
   const { data: before } = await supabase
     .from("lead_calls")
     .select(
-      "id, lead_id, call_status, attendance_source, confidence, identity_match, joined_at, left_at, participants, meet_conference_id, calendly_no_show_pending_until, no_show_risk, no_show_risk_reason, confirmed_at, confirmation_source"
+      "id, lead_id, call_status, call_type, attendance_source, confidence, identity_match, joined_at, left_at, participants, meet_conference_id, calendly_no_show_pending_until, no_show_risk, no_show_risk_reason, confirmed_at, confirmation_source"
     )
     .eq("id", update.callId)
     .maybeSingle();
@@ -116,6 +125,31 @@ export async function applyCallAttendance(update: CallAttendanceUpdate): Promise
         milestone: "lead_call_attended",
         extra: { call_id: update.callId, attendance_source: update.attendanceSource ?? "manual" }
       });
+
+      if (before.call_type === "free_lesson") {
+        const { data: lead } = await supabase
+          .from("leads")
+          .select(
+            "id, parent_email, parent_first, parent_last, parent_phone, fbclid, meta_fbp, meta_fbc, meta_fbc_ts, meta_client_ip, meta_client_user_agent"
+          )
+          .eq("id", before.lead_id)
+          .maybeSingle();
+
+        if (lead?.parent_email) {
+          const eventId = makeMetaEventId("free_lesson_attended", update.callId);
+          void sendMetaCapiEvent(
+            "FreeLessonAttended",
+            eventId,
+            metaCapiUserFromLead({ ...lead, parent_email: lead.parent_email }),
+            { funnel: PLAN_BUILDER_FUNNEL_ID, call_type: "free_lesson" },
+            attributionFromLeadFbclid(lead.fbclid)
+          );
+          void trackKlaviyoEvent(lead.parent_email, KlaviyoEvents.freeLessonAttended, {
+            call_id: update.callId,
+            funnel: PLAN_BUILDER_FUNNEL_ID,
+          });
+        }
+      }
     }
     return;
   }

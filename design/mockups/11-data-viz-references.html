@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>11 · Data viz references · Steal from the best</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Hanken+Grotesk:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #121a2b; --muted: rgba(18,26,43,.55); --line: rgba(18,26,43,.08);
+      --field: #f5f8fa; --surface: #fff; --em: #2f6e47; --accent: #0057a8; --aurora: #77c89a;
+      --serif: "Source Serif 4", Georgia, serif; --sans: "Hanken Grotesk", system-ui, sans-serif;
+      --mono: "DM Mono", monospace; --max: 880px; --radius: 16px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: var(--sans); background: var(--field); color: var(--ink); line-height: 1.55; }
+    .nav { position: sticky; top: 0; z-index: 10; background: rgba(245,248,250,.96); backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--line); padding: 12px 20px; display: flex; gap: 16px; flex-wrap: wrap; align-items: center; justify-content: space-between; }
+    .nav a { font-size: 13px; font-weight: 600; color: var(--ink); text-decoration: none; }
+    .nav a:hover { color: var(--em); }
+    .nav-note { font-size: 12px; color: var(--muted); }
+    .hero { max-width: var(--max); margin: 0 auto; padding: 48px 20px 24px; }
+    .eyebrow { font-family: var(--mono); font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--aurora); margin-bottom: 8px; }
+    h1 { font-family: var(--serif); font-size: clamp(28px,4vw,38px); font-weight: 600; line-height: 1.12; margin-bottom: 12px; }
+    .lede { color: var(--muted); max-width: 58ch; font-size: 16px; margin-bottom: 20px; }
+    .callout { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 20px; font-size: 14px; max-width: 58ch; }
+    main { max-width: var(--max); margin: 0 auto; padding: 0 20px 80px; }
+    .ref { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; margin-top: 20px; }
+    .ref::before { content: ""; display: block; height: 2px; margin: -24px -24px 20px; border-radius: var(--radius) var(--radius) 0 0;
+      background: linear-gradient(90deg, var(--accent), var(--aurora), #b8f5d1); }
+    .ref h2 { font-family: var(--serif); font-size: 20px; margin-bottom: 6px; }
+    .ref .url { font-family: var(--mono); font-size: 12px; margin-bottom: 12px; }
+    .ref .url a { color: var(--accent); }
+    .ref p { font-size: 14px; color: var(--muted); margin-bottom: 10px; }
+    .ref ul { margin: 0 0 0 1.1em; font-size: 14px; color: var(--ink); }
+    .ref li { margin-bottom: 6px; }
+    .ref li strong { color: var(--em); font-weight: 600; }
+    .sat-map { margin-top: 14px; padding-top: 14px; border-top: 1px dashed var(--line); font-size: 13px; }
+    .sat-map b { font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 6px; }
+    .next { margin-top: 40px; padding: 20px; background: rgba(184,245,209,.2); border-radius: var(--radius); font-size: 14px; }
+    .next a { color: var(--accent); font-weight: 600; }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <a href="index.html">← Mockups</a>
+    <a href="12-sat-viz-specimens.html">Full specimens →</a>
+    <span class="nav-note">Reference board · open links in browser</span>
+  </nav>
+  <header class="hero">
+    <p class="eyebrow">Before picking a library</p>
+    <h1>Steal from charts parents already trust</h1>
+    <p class="lede">Not a catalog of chart types. Real editorial products and what to borrow for SAT diagnostic, plan reveal, and parent updates.</p>
+    <div class="callout">Use this board to say “more like this, less like edtech dashboard.” Then open <strong>12-sat-viz-specimens.html</strong> for full-width mocks with real Soha data + ECharts.</div>
+  </header>
+  <main>
+    <article class="ref">
+      <h2>Datawrapper</h2>
+      <p class="url"><a href="https://www.datawrapper.de/" target="_blank" rel="noopener">datawrapper.de</a> · gallery: <a href="https://www.datawrapper.de/examples" target="_blank" rel="noopener">examples</a></p>
+      <p>Publication default for newsrooms. Clean type, responsive embeds, accessible tables and maps. Boring in a good way.</p>
+      <ul>
+        <li><strong>Steal:</strong> headline as chart title (“Transitions cost her the most points”)</li>
+        <li><strong>Steal:</strong> direct labels on the mark, no legend box</li>
+        <li><strong>Steal:</strong> source + “Results vary” strip in mono under every graphic</li>
+      </ul>
+      <div class="sat-map"><b>Illuminairy SAT</b>Accuracy by E/M/H · section dumbbell (diag → PT) · simple locator if geo ever matters</div>
+    </article>
+
+    <article class="ref">
+      <h2>Flourish</h2>
+      <p class="url"><a href="https://flourish.studio/" target="_blank" rel="noopener">flourish.studio</a> · template gallery</p>
+      <p>Story-first interactives: sankey, slope, bar chart race, scrollytelling. More motion than Datawrapper.</p>
+      <ul>
+        <li><strong>Steal:</strong> sankey for misses → skill tags → modeled points (one graphic tells the “why rank” story)</li>
+        <li><strong>Steal:</strong> slopegraph when comparing two test dates across 5 skills</li>
+        <li><strong>Skip:</strong> bar chart race (tutor-ad energy)</li>
+      </ul>
+      <div class="sat-map"><b>Illuminairy SAT</b>Sankey on diagnostic report · plan reveal slope (start vs goal skill accuracy)</div>
+    </article>
+
+    <article class="ref">
+      <h2>The Economist</h2>
+      <p class="url"><a href="https://www.economist.com/graphic-detail" target="_blank" rel="noopener">Graphic Detail</a> · <a href="https://github.com/Financial-Times/chart-doctor" target="_blank" rel="noopener">FT Chart Doctor / Visual Vocabulary</a></p>
+      <p>One message per chart. Minimal grid. One accent color. Serif numbers where it matters.</p>
+      <ul>
+        <li><strong>Steal:</strong> dumbbell for current ↔ goal (not twin bars)</li>
+        <li><strong>Steal:</strong> step line when weekly gain phases change (25 → 15 → 5 pts/wk)</li>
+        <li><strong>Steal:</strong> small multiples (RW panel + Math panel, same scale)</li>
+      </ul>
+      <div class="sat-map"><b>Illuminairy SAT</b>Plan reveal trajectory · achievability as tier labels, not a gauge</div>
+    </article>
+
+    <article class="ref">
+      <h2>NYT Graphics / The Upshot</h2>
+      <p class="url"><a href="https://www.nytimes.com/section/upshot" target="_blank" rel="noopener">The Upshot</a> · custom D3 (no npm chart defaults)</p>
+      <p>Gold standard for bespoke layout. They build custom — but the <em>patterns</em> are copyable: unit charts, small multiples, annotation.</p>
+      <ul>
+        <li><strong>Steal:</strong> unit dot matrix for “13 of 98 missed” without a red grid</li>
+        <li><strong>Steal:</strong> prose + one chart per scroll section (not six widgets)</li>
+        <li><strong>Don’t copy:</strong> their engineering stack — copy the hierarchy</li>
+      </ul>
+      <div class="sat-map"><b>Illuminairy SAT</b>Constellation / icon array for question map · narrative diagnostic scroll</div>
+    </article>
+
+    <article class="ref">
+      <h2>RAWGraphs</h2>
+      <p class="url"><a href="https://www.rawgraphs.io/" target="_blank" rel="noopener">rawgraphs.io</a></p>
+      <p>Fast sandbox for unusual encodings: alluvial, bump, treemap, circle packing. Export SVG for moodboards.</p>
+      <ul>
+        <li><strong>Use for:</strong> 30-minute “what if treemap for ranked skills?” experiments</li>
+        <li><strong>Not for:</strong> production embed in Next.js</li>
+      </ul>
+      <div class="sat-map"><b>Illuminairy SAT</b>Ideation only · paste SVG into Figma or specimen HTML</div>
+    </article>
+
+    <article class="ref">
+      <h2>Apache ECharts (production engine)</h2>
+      <p class="url"><a href="https://echarts.apache.org/examples/en/index.html" target="_blank" rel="noopener">echarts.apache.org/examples</a></p>
+      <p>What we use in <strong>12-sat-viz-specimens.html</strong> — real library, not wireframe thumbnails. Sankey, treemap, step line, theme registration.</p>
+      <ul>
+        <li><strong>Steal from examples:</strong> sankey-energy, treemap-disk, line-step, custom dumbbell via scatter + line</li>
+        <li><strong>Theme:</strong> register once with aurora palette; never use default rainbow</li>
+      </ul>
+      <div class="sat-map"><b>Illuminairy SAT</b>Ship in Next.js via echarts-for-react after you pick a specimen layout</div>
+    </article>
+
+    <div class="next">
+      <strong>Next:</strong> Open <a href="12-sat-viz-specimens.html">12-sat-viz-specimens.html</a> — three full diagnostic layouts + two plan reveal layouts, Soha data, ECharts at full width. Deprecates the thumbnail matrix in <code>10-sat-viz-ideation-matrix.html</code>.
+    </div>
+  </main>
+</body>
+</html>

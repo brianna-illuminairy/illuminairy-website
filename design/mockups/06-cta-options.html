@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>06 · CTA options · light & dark</title>
+  <link rel="stylesheet" href="_shared.css">
+  <style>
+    .page { padding: 32px 24px 100px; max-width: 1200px; margin: 0 auto; }
+
+    .cta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+
+    .cta-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: var(--paper);
+    }
+
+    .cta-card__meta {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(245, 248, 250, 0.6);
+    }
+
+    .cta-card__meta h3 {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .cta-card__meta p {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .cta-card__meta .tag {
+      display: inline-block;
+      margin-top: 8px;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 999px;
+    }
+
+    .tag.rec { background: rgba(47, 110, 71, 0.12); color: var(--forest); }
+    .tag.brand { background: rgba(0, 87, 168, 0.1); color: var(--celestial); }
+    .tag.caution { background: rgba(18, 26, 43, 0.08); color: var(--muted); }
+    .tag.dark-only { background: rgba(184, 245, 209, 0.25); color: #1a4d2f; }
+
+    .cta-card__surface {
+      padding: 28px 20px 24px;
+    }
+
+    .cta-card__surface.light { background: var(--white); }
+    .cta-card__surface.paper { background: var(--paper); }
+
+    .cta-card__surface.dark {
+      background: var(--navy);
+      color: var(--white);
+    }
+
+    .cta-card__surface.dark-mid {
+      background: var(--navy-mid);
+      color: var(--white);
+    }
+
+    .cta-card__surface.dark::before,
+    .cta-card__surface.dark-mid::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 85% 0%, rgba(119, 200, 154, 0.2), transparent 55%);
+      pointer-events: none;
+    }
+
+    .cta-card__surface.dark,
+    .cta-card__surface.dark-mid {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .context-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    .cta-card__surface.dark .context-label,
+    .cta-card__surface.dark-mid .context-label {
+      color: rgba(188, 195, 204, 0.85);
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Base pill */
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 15px 22px;
+      border-radius: 999px;
+      font-family: var(--body);
+      font-weight: 600;
+      font-size: 15px;
+      letter-spacing: -0.01em;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      position: relative;
+      z-index: 1;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+    }
+
+    .cta:hover { transform: translateY(-1px); }
+    .cta:active { transform: translateY(0); }
+
+    /* ── Light-surface fills ── */
+    .cta-l-forest {
+      background: var(--forest);
+      color: #fff;
+      box-shadow: 0 8px 24px -8px rgba(47, 110, 71, 0.45);
+    }
+    .cta-l-forest:hover { background: #1a4d2f; }
+
+    .cta-l-celestial {
+      background: var(--celestial);
+      color: #fff;
+      box-shadow: 0 8px 24px -8px rgba(0, 87, 168, 0.4);
+    }
+    .cta-l-celestial:hover { background: #004a8f; }
+
+    .cta-l-navy {
+      background: var(--navy);
+      color: #fff;
+      box-shadow: 0 8px 24px -8px rgba(18, 26, 43, 0.35);
+    }
+    .cta-l-navy:hover { background: #0d1420; }
+
+    .cta-l-glow {
+      background: var(--glow);
+      color: var(--navy);
+      box-shadow: 0 8px 24px -8px rgba(119, 200, 154, 0.45);
+    }
+    .cta-l-glow:hover { background: #a7e3a1; }
+
+    .cta-l-aurora {
+      background: var(--aurora);
+      color: var(--navy);
+      box-shadow: 0 8px 24px -8px rgba(119, 200, 154, 0.4);
+    }
+    .cta-l-aurora:hover { background: #5fb882; color: #fff; }
+
+    .cta-l-gradient {
+      background: linear-gradient(135deg, var(--celestial) 0%, var(--forest) 100%);
+      color: #fff;
+      box-shadow: 0 8px 24px -8px rgba(0, 87, 168, 0.35);
+    }
+    .cta-l-gradient:hover {
+      box-shadow: 0 12px 28px -6px rgba(47, 110, 71, 0.4);
+    }
+
+    /* ── Light-surface outlines ── */
+    .cta-l-outline-forest {
+      background: transparent;
+      color: var(--forest);
+      border: 1.5px solid rgba(47, 110, 71, 0.45);
+    }
+    .cta-l-outline-forest:hover {
+      background: rgba(47, 110, 71, 0.06);
+      border-color: var(--forest);
+    }
+
+    .cta-l-outline-navy {
+      background: transparent;
+      color: var(--navy);
+      border: 1.5px solid rgba(18, 26, 43, 0.2);
+    }
+    .cta-l-outline-navy:hover {
+      background: rgba(18, 26, 43, 0.04);
+      border-color: rgba(18, 26, 43, 0.35);
+    }
+
+    .cta-l-outline-celestial {
+      background: transparent;
+      color: var(--celestial);
+      border: 1.5px solid rgba(0, 87, 168, 0.35);
+    }
+    .cta-l-outline-celestial:hover {
+      background: rgba(0, 87, 168, 0.06);
+      border-color: var(--celestial);
+    }
+
+    .cta-l-ghost-glow {
+      background: var(--paper);
+      color: var(--forest);
+      border: 1.5px solid rgba(184, 245, 209, 0.9);
+      box-shadow: 0 0 0 1px rgba(119, 200, 154, 0.15);
+    }
+    .cta-l-ghost-glow:hover {
+      border-color: var(--aurora);
+      box-shadow: 0 4px 20px -6px rgba(119, 200, 154, 0.35);
+    }
+
+    /* ── Dark-surface fills ── */
+    .cta-d-celestial {
+      background: var(--celestial);
+      color: #fff;
+      box-shadow: 0 8px 24px -8px rgba(0, 87, 168, 0.55);
+    }
+    .cta-d-celestial:hover { background: #006bc4; }
+
+    .cta-d-glow {
+      background: var(--glow);
+      color: var(--navy);
+      box-shadow: 0 8px 24px -8px rgba(184, 245, 209, 0.35);
+    }
+    .cta-d-glow:hover { background: #d4fce6; }
+
+    .cta-d-forest {
+      background: var(--forest);
+      color: #fff;
+      box-shadow: 0 8px 24px -8px rgba(47, 110, 71, 0.5);
+    }
+    .cta-d-forest:hover { background: #3d8558; }
+
+    .cta-d-aurora {
+      background: var(--aurora);
+      color: var(--navy);
+      box-shadow: 0 8px 24px -8px rgba(119, 200, 154, 0.4);
+    }
+    .cta-d-aurora:hover { background: #8fd4ad; }
+
+    .cta-d-white {
+      background: #fff;
+      color: var(--navy);
+      box-shadow: 0 8px 24px -8px rgba(255, 255, 255, 0.15);
+    }
+    .cta-d-white:hover { background: var(--white); }
+
+    .cta-d-gradient {
+      background: linear-gradient(135deg, var(--celestial), var(--aurora));
+      color: #fff;
+      box-shadow: 0 8px 24px -8px rgba(0, 87, 168, 0.45);
+    }
+
+    /* ── Dark-surface outlines ── */
+    .cta-d-ghost-white {
+      background: transparent;
+      color: #fff;
+      border: 1.5px solid rgba(255, 255, 255, 0.28);
+    }
+    .cta-d-ghost-white:hover {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(255, 255, 255, 0.45);
+    }
+
+    .cta-d-ghost-glow {
+      background: transparent;
+      color: var(--glow);
+      border: 1.5px solid rgba(184, 245, 209, 0.45);
+    }
+    .cta-d-ghost-glow:hover {
+      background: rgba(184, 245, 209, 0.08);
+      border-color: var(--glow);
+    }
+
+    .section { margin-bottom: 56px; }
+    .section > h2 {
+      font-family: var(--display);
+      font-size: clamp(22px, 3vw, 28px);
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .section > .lede {
+      color: var(--muted);
+      max-width: 62ch;
+      margin-bottom: 24px;
+      font-size: 15px;
+    }
+
+    .in-context {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-top: 32px;
+    }
+
+    @media (max-width: 800px) {
+      .in-context { grid-template-columns: 1fr; }
+    }
+
+    .context-panel {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .context-panel__head {
+      padding: 10px 16px;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--line);
+      background: rgba(245, 248, 250, 0.8);
+    }
+
+    .context-enroll {
+      padding: 24px 20px;
+      background: var(--white);
+    }
+
+    .context-enroll h4 {
+      font-family: var(--display);
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      line-height: 1.2;
+    }
+
+    .context-enroll p {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+
+    .context-enroll .price {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    .context-header {
+      background: var(--navy);
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .context-header::before {
+      content: "";
+      position: absolute;
+      top: -60px;
+      right: -40px;
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(119, 200, 154, 0.3), transparent 65%);
+      pointer-events: none;
+    }
+
+    .context-header .logo {
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #fff;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .context-header .hero-line {
+      font-family: var(--display);
+      font-size: 22px;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 18px;
+      line-height: 1.2;
+      position: relative;
+      z-index: 1;
+    }
+
+    .pick-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .pick-chip {
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      border: 1px solid var(--line);
+      background: var(--paper);
+    }
+
+    .compare-bar {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 32px;
+    }
+
+    .compare-bar__half {
+      padding: 32px 24px;
+    }
+
+    .compare-bar__half.light { background: var(--white); }
+    .compare-bar__half.dark {
+      background: var(--navy);
+      color: #fff;
+      position: relative;
+    }
+
+    .compare-bar__half.dark::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 70% 20%, rgba(119, 200, 154, 0.15), transparent 50%);
+      pointer-events: none;
+    }
+
+    .compare-bar__half h3 {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      opacity: 0.7;
+      position: relative;
+      z-index: 1;
+    }
+
+    .compare-bar__half .stack {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .compare-bar__half .stack .cta { width: 100%; max-width: 280px; }
+
+    /* ── Hover motion patterns (separate from fill color) ── */
+    .cta .arrow {
+      transition: transform 0.18s ease;
+      font-size: 16px;
+      line-height: 1;
+    }
+
+    /* LP v4 + enroll: mint glow shadow expands on hover */
+    .cta--hover-glow-lift:hover {
+      transform: translateY(-1px);
+    }
+
+    .cta-l-forest.cta--hover-glow-lift:hover {
+      box-shadow: 0 12px 32px -8px rgba(47, 110, 71, 0.55);
+    }
+
+    .cta-l-celestial.cta--hover-glow-lift:hover {
+      box-shadow: 0 12px 32px -8px rgba(0, 87, 168, 0.5);
+    }
+
+    .cta-l-glow.cta--hover-glow-lift:hover {
+      box-shadow: 0 12px 32px -8px rgba(119, 200, 154, 0.65);
+    }
+
+    .cta-d-celestial.cta--hover-glow-lift:hover {
+      box-shadow: 0 12px 32px -8px rgba(0, 87, 168, 0.55);
+    }
+
+    .cta--hover-glow-lift:hover .arrow {
+      transform: translateX(3px);
+    }
+
+    /* Quiz funnel: flat — color darken only, no glow shadow */
+    .cta--hover-flat:hover {
+      transform: none;
+      box-shadow: none;
+    }
+
+    .cta-l-forest.cta--hover-flat:hover {
+      background: #1a4d2f;
+    }
+
+    /* Subtle pulse ring (optional hero CTA) */
+    .cta--hover-pulse {
+      position: relative;
+      z-index: 0;
+    }
+
+    .cta--hover-pulse::after {
+      content: "";
+      position: absolute;
+      inset: -3px;
+      border-radius: 999px;
+      background: transparent;
+      box-shadow: 0 0 0 0 rgba(119, 200, 154, 0.45);
+      opacity: 0;
+      z-index: -1;
+      transition: opacity 0.2s ease;
+    }
+
+    .cta--hover-pulse:hover::after {
+      opacity: 1;
+      animation: cta-pulse-ring 1.6s ease-out infinite;
+    }
+
+    @keyframes cta-pulse-ring {
+      0% { box-shadow: 0 0 0 0 rgba(119, 200, 154, 0.45); }
+      70% { box-shadow: 0 0 0 14px rgba(119, 200, 154, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(119, 200, 154, 0); }
+    }
+
+    /* Border-glow pill wrapper (brand guide squares, adapted for buttons) */
+    .cta-border-glow {
+      position: relative;
+      display: block;
+      border-radius: 999px;
+      padding: 2px;
+      overflow: hidden;
+      background: rgba(18, 26, 43, 0.06);
+      transition: background 0.35s ease;
+    }
+
+    .cta-border-glow::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 220%;
+      aspect-ratio: 1;
+      background: conic-gradient(from 0deg, var(--celestial), var(--aurora), var(--glow), var(--celestial));
+      transform: translate(-50%, -50%) rotate(0deg);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      pointer-events: none;
+    }
+
+    .cta-border-glow:hover { background: transparent; }
+
+    .cta-border-glow:hover::before {
+      opacity: 1;
+      animation: cta-border-spin 2.6s linear infinite;
+    }
+
+    @keyframes cta-border-spin {
+      to { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    .cta-border-glow .cta {
+      width: 100%;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta-border-glow .cta:hover {
+      transform: none;
+    }
+
+    .hover-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+    }
+
+    .hover-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .hover-card__meta {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--line);
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .hover-card__meta strong {
+      display: block;
+      color: var(--ink);
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+
+    .hover-card__meta .src {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--forest);
+      margin-top: 8px;
+    }
+
+    .hover-card__body {
+      padding: 24px 20px;
+      background: var(--white);
+    }
+
+    .hover-card__body.dark {
+      background: var(--navy);
+    }
+
+    .locked-picks {
+      margin-bottom: 40px;
+      padding: 28px 24px;
+      border: 2px solid rgba(47, 110, 71, 0.35);
+      border-radius: var(--radius);
+      background: linear-gradient(135deg, rgba(184, 245, 209, 0.12), rgba(245, 248, 250, 0.9));
+    }
+
+    .locked-picks__label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--forest);
+      margin-bottom: 8px;
+    }
+
+    .locked-picks__title {
+      font-family: var(--display);
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .locked-picks__list {
+      margin: 0 0 20px;
+      padding-left: 18px;
+      font-size: 14px;
+      line-height: 1.65;
+      color: var(--muted);
+    }
+
+    .locked-picks__list code {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--ink);
+    }
+
+    .locked-picks__demo.dark {
+      padding: 24px;
+      background: var(--navy);
+      border-radius: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .locked-picks__demo.dark::before {
+      content: "";
+      position: absolute;
+      top: -40px;
+      right: -20px;
+      width: 180px;
+      height: 180px;
+      background: radial-gradient(circle, rgba(119, 200, 154, 0.25), transparent 70%);
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <nav class="mock-nav">
+    <a href="index.html">← Hub</a>
+    <a href="03-component-board.html">Components</a>
+    <a href="light-observatory.html">Light observatory</a>
+    <span style="font-size:13px;color:var(--muted);">06 · CTA options</span>
+  </nav>
+
+  <div class="page">
+    <p class="mock-eyebrow">Pick a primary · hover each</p>
+    <h1 class="mock-h1">CTA options on light & dark</h1>
+    <p class="mock-lede">Same label (“Continue to checkout”), same pill shape. Compare contrast, hierarchy, and brand feel before we lock production CSS.</p>
+
+    <div class="locked-picks">
+      <p class="locked-picks__label">Locked · Jun 2026</p>
+      <h2 class="locked-picks__title">Brianna’s CTA stack</h2>
+      <ul class="locked-picks__list">
+        <li><strong>Dark primary:</strong> mint glow fill (<code>cta-d-glow</code>)</li>
+        <li><strong>Dark secondary:</strong> mint outline ghost (<code>cta-d-ghost-glow</code>)</li>
+        <li><strong>Hero (one/page):</strong> pulse ring halo on hover</li>
+        <li><strong>Wrapper:</strong> CTA card top-line (<code>aurora-hover-card</code>)</li>
+        <li><strong>Light primary:</strong> still TBD (forest/celestial — not mint fill at rest)</li>
+      </ul>
+      <div class="locked-picks__demo dark">
+        <div class="aurora-hover-card" style="background:rgba(255,255,255,0.04);border-color:rgba(184,245,209,0.2);color:#fff;max-width:360px;">
+          <p style="font-size:13px;opacity:0.75;margin-bottom:14px;">Example · dark hero strip</p>
+          <button type="button" class="cta cta-d-glow cta--hover-glow-lift cta--hover-pulse" style="margin-bottom:10px;">Start the SAT Score Path <span class="arrow">→</span></button>
+          <button type="button" class="cta cta-d-ghost-glow">How the program works</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick A/B: recommended vs glow on same surfaces -->
+    <div class="compare-bar">
+      <div class="compare-bar__half light">
+        <h3>Light page · recommended pair</h3>
+        <div class="stack">
+          <button type="button" class="cta cta-l-forest">Continue to checkout</button>
+          <button type="button" class="cta cta-l-outline-forest">Talk to us first</button>
+        </div>
+      </div>
+      <div class="compare-bar__half dark">
+        <h3>Dark chrome · recommended pair</h3>
+        <div class="stack">
+          <button type="button" class="cta cta-d-celestial">Continue to checkout</button>
+          <button type="button" class="cta cta-d-ghost-white">Talk to us first</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- LIGHT -->
+    <section class="section">
+      <h2>Light backgrounds</h2>
+      <p class="lede">Enroll, LP body, portal login card. Page is #F5F8FA or white — the button must read as the obvious primary.</p>
+
+      <div class="cta-grid">
+        <div class="cta-card">
+          <div class="cta-card__meta">
+            <h3>Forest fill</h3>
+            <p>Strongest figure/ground on white. Education + premium, not candy.</p>
+            <span class="tag rec">Top pick · light</span>
+          </div>
+          <div class="cta-card__surface light">
+            <p class="context-label">On polar white</p>
+            <button type="button" class="cta cta-l-forest">Continue to checkout</button>
+          </div>
+        </div>
+
+        <div class="cta-card">
+          <div class="cta-card__meta">
+            <h3>Celestial fill</h3>
+            <p>Brand guide primary on dark, translated to light. Trust / advisory tone.</p>
+            <span class="tag brand">Brand guide DNA</span>
+          </div>
+          <div class="cta-card__surface light">
+            <p class="context-label">On polar white</p>
+            <button type="button" class="cta cta-l-celestial">Continue to checkout</button>
+          </div>
+        </div>
+
+        <div class="cta-card">
+          <div class="cta-card__meta">
+            <h3>Navy fill</h3>
+            <p>Editorial, high contrast. Feels serious — good for enroll, less “aurora.”</p>
+            <span class="tag caution">Restrained</span>
+          </div>
+          <div class="cta-card__surface light">
+            <p class="context-label">On polar white</p>
+            <button type="button" class="cta cta-l-navy">Continue to checkout</button>
+          </div>
+        </div>
+
+        <div class="cta-card">
+          <div class="cta-card__meta">
+            <h3>Celestial → forest gradient</h3>
+            <p>Aurora energy in one pill. Use once per page max.</p>
+            <span class="tag brand">Accent primary</span>
+          </div>
+          <div class="cta-card__surface light">
+            <p class="context-label">On polar white</p>
+            <button type="button" class="cta cta-l-gradient">Continue to checkout</button>
+          </div>
+        </div>
+
+        <div class="cta-card">
+          <div class="cta-card__meta">
+            <h3>Mint glow fill</h3>
+            <p>Current product default. Low contrast vs page — can look disabled.</p>
+            <span class="tag caution">Probably skip on light</span>
+          </div>
+          <div class="cta-card__surface light">
+            <p class="context-label">On polar white</p>
+            <button type="button" class="cta cta-l-glow">Continue to checkout</button>
+          </div>
+        </div>
+
+        <div class="cta-card">
+          <div class="cta-card__meta">
+            <h3>Aurora green fill</h3>
+            <p>Mid green — better than glow on white, still softer than forest.</p>
+            <span class="tag caution">Softer alternative</span>
+          </div>
+          <div class="cta-card__surface light">
+            <p class="context-label">On polar white</p>
+            <button type="button" class="cta cta-l-aurora">Continue to checkout</button>
+          </div>
+        </div>
+
+        <div class="cta-card">
+          <div class="cta-card__meta">
+            <h3>Forest outline</h3>
+            <p>Secondary / tertiary. Pair with any solid primary above.</p>
+            <span class="tag rec">Secondary · light</span>
+          </div>
+          <div class="cta-card__surface paper">
+            <p class="context-label">On white card</p>
+            <button type="button" class="cta cta-l-outline-forest">Continue to checkout</button>
+          </div>
+        </div>
+
+        <div class="cta-card">
+          <div class="cta-card__meta">
+            <h3>Navy outline</h3>
+            <p>Quiet secondary. Works when forest primary is already on the page.</p>
+            <span class="tag caution">Secondary</span>
+          </div>
+          <div class="cta-card__surface paper">
+            <p class="context-label">On white card</p>
+            <button type="button" class="cta cta-l-outline-navy">Continue to checkout</button>
+          </div>
+        </div>
+
+        <div class="cta-card">
+          <div class="cta-card__meta">
+            <h3>Mint border ghost</h3>
+            <p>Keeps aurora without mint fill. Good for “learn more” tier.</p>
+            <span class="tag brand">Aurora without fill</span>
+          </div>
+          <div class="cta-card__surface paper">
+            <p class="context-label">On white card</p>
+            <button type="button" class="cta cta-l-ghost-glow">Continue to checkout</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DARK -->
+    <section class="section">
+      <h2>Dark backgrounds</h2>
+      <p class="lede">Header, footer, hero on navy. Mint and glow have room to breathe here — same as brand guide.</p>
+
+      <div class="cta-grid">
+        <div class="cta-card">
+          <div class="cta-card__meta">
+            <h3>Celestial fill</h3>
+            <p>Brand guide default on dark. White label, clear CTA.</p>
+            <span class="tag brand">Top pick · dark</span>
+          </div>
+          <div class="cta-card__surface dark">
+            <p class="context-label">On navy #121A2B</p>
+            <button type="button" class="cta cta-d-celestial">Book Strategy Call</button>
+          </div>
+        </div>
+
+        <div class="cta-card">
+          <div class="cta-card__meta">
+            <h3>Mint glow fill</h3>
+            <p>Works on dark — pops against navy. Navy label reads crisp.</p>
+            <span class="tag dark-only">Good on dark only</span>
+          </div>
+          <div class="cta-card__surface dark">
+            <p class="context-label">On navy #121A2B</p>
+            <button type="button" class="cta cta-d-glow">Book Strategy Call</button>
+          </div>
+        </div>
+
+        <div class="cta-card">
+          <div class="cta-card__meta">
+            <h3>Forest fill</h3>
+            <p>Grounded, SAT-program feel. Slightly less “brand guide hero” than celestial.</p>
+            <span class="tag rec">Alternate · dark</span>
+          </div>
+          <div class="cta-card__surface dark">
+            <p class="context-label">On navy #121A2B</p>
+            <button type="button" class="cta cta-d-forest">Book Strategy Call</button>
+          </div>
+        </div>
+
+        <div class="cta-card">
+          <div class="cta-card__meta">
+            <h3>White fill</h3>
+            <p>Maximum contrast inverse. Bold — can feel consumer-app if overused.</p>
+            <span class="tag caution">High contrast</span>
+          </div>
+          <div class="cta-card__surface dark-mid">
+            <p class="context-label">On navy-mid</p>
+            <button type="button" class="cta cta-d-white">Book Strategy Call</button>
+          </div>
+        </div>
+
+        <div class="cta-card">
+          <div class="cta-card__meta">
+            <h3>Celestial → aurora gradient</h3>
+            <p>Hero/marketing moment. One per dark section.</p>
+            <span class="tag brand">Hero accent</span>
+          </div>
+          <div class="cta-card__surface dark">
+            <p class="context-label">On navy</p>
+            <button type="button" class="cta cta-d-gradient">Book Strategy Call</button>
+          </div>
+        </div>
+
+        <div class="cta-card">
+          <div class="cta-card__meta">
+            <h3>Aurora green fill</h3>
+            <p>Between glow and forest saturation. Readable on navy.</p>
+            <span class="tag dark-only">Softer · dark</span>
+          </div>
+          <div class="cta-card__surface dark">
+            <p class="context-label">On navy</p>
+            <button type="button" class="cta cta-d-aurora">Book Strategy Call</button>
+          </div>
+        </div>
+
+        <div class="cta-card">
+          <div class="cta-card__meta">
+            <h3>White outline ghost</h3>
+            <p>Header secondary (e.g. “Bootcamp enrollment”). Standard on dark chrome.</p>
+            <span class="tag rec">Secondary · dark</span>
+          </div>
+          <div class="cta-card__surface dark">
+            <p class="context-label">On navy</p>
+            <button type="button" class="cta cta-d-ghost-white">Bootcamp enrollment</button>
+          </div>
+        </div>
+
+        <div class="cta-card">
+          <div class="cta-card__meta">
+            <h3>Mint outline ghost</h3>
+            <p>Aurora accent without filling the pill. Pairs with celestial primary.</p>
+            <span class="tag dark-only">Secondary · dark</span>
+          </div>
+          <div class="cta-card__surface dark">
+            <p class="context-label">On navy</p>
+            <button type="button" class="cta cta-d-ghost-glow">Bootcamp enrollment</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- In context -->
+    <section class="section">
+      <h2>In context</h2>
+      <p class="lede">Same real layouts — swap mentally between your two favorites from above.</p>
+
+      <div class="in-context">
+        <div class="context-panel">
+          <div class="context-panel__head">Enroll summary · light</div>
+          <div class="context-enroll">
+            <h4>SAT Accelerator · August 2026</h4>
+            <p class="price">$4,200 · personalized weekly plan</p>
+            <p>Strategy Call, Skill Diagnostic, and mistake-driven tutoring on their weakest skills.</p>
+            <button type="button" class="cta cta-l-forest" style="margin-bottom:10px;">Continue to checkout</button>
+            <button type="button" class="cta cta-l-outline-forest">Questions? Email support</button>
+          </div>
+        </div>
+
+        <div class="context-panel">
+          <div class="context-panel__head">LP hero strip · dark</div>
+          <div class="context-header">
+            <div class="logo">Illuminairy</div>
+            <p class="hero-line">See what's holding their SAT score back</p>
+            <button type="button" class="cta cta-d-celestial" style="margin-bottom:10px;">Start the SAT Score Path</button>
+            <button type="button" class="cta cta-d-ghost-white">How the program works</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="in-context" style="margin-top:20px;">
+        <div class="context-panel">
+          <div class="context-panel__head">Alt light · celestial primary</div>
+          <div class="context-enroll">
+            <h4>SAT Accelerator · August 2026</h4>
+            <p class="price">$4,200 · personalized weekly plan</p>
+            <p>Same content — celestial instead of forest for primary.</p>
+            <button type="button" class="cta cta-l-celestial" style="margin-bottom:10px;">Continue to checkout</button>
+            <button type="button" class="cta cta-l-ghost-glow">Questions? Email support</button>
+          </div>
+        </div>
+
+        <div class="context-panel">
+          <div class="context-panel__head">Alt dark · mint primary</div>
+          <div class="context-header">
+            <div class="logo">Illuminairy</div>
+            <p class="hero-line">See what's holding their SAT score back</p>
+            <button type="button" class="cta cta-d-glow" style="margin-bottom:10px;">Start the SAT Score Path</button>
+            <button type="button" class="cta cta-d-ghost-glow">How the program works</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOVER MOTION -->
+    <section class="section">
+      <h2>Hover motion (you probably remember this)</h2>
+      <p class="lede">Fill color and hover behavior are separate choices. The “glow on hover” you liked is <strong>not</strong> in the quiz funnel today — it lives on LP v4 and enroll checkout buttons.</p>
+
+      <div class="hover-grid">
+        <div class="hover-card">
+          <div class="hover-card__meta">
+            <strong>Glow lift + arrow</strong>
+            Button rises 1px, colored shadow blooms, arrow slides right. Mint/aurora shadow even when fill is forest or celestial.
+            <span class="src">LP v4 · enroll · aurora-btn-primary</span>
+          </div>
+          <div class="hover-card__body">
+            <button type="button" class="cta cta-l-forest cta--hover-glow-lift">Continue to checkout <span class="arrow">→</span></button>
+          </div>
+        </div>
+
+        <div class="hover-card">
+          <div class="hover-card__meta">
+            <strong>Glow lift on mint fill</strong>
+            Same motion on the old mint pill — feels good on hover but still weak at rest on light pages.
+            <span class="src">.std-paybtn · .lp-btn (current)</span>
+          </div>
+          <div class="hover-card__body">
+            <button type="button" class="cta cta-l-glow cta--hover-glow-lift">Continue to checkout <span class="arrow">→</span></button>
+          </div>
+        </div>
+
+        <div class="hover-card">
+          <div class="hover-card__meta">
+            <strong>Flat darken only</strong>
+            No shadow bloom — just background shift. What Plan Builder uses now.
+            <span class="src">Quiz funnel · .qf-btn</span>
+          </div>
+          <div class="hover-card__body">
+            <button type="button" class="cta cta-l-forest cta--hover-flat">Continue <span class="arrow">→</span></button>
+          </div>
+        </div>
+
+        <div class="hover-card">
+          <div class="hover-card__meta">
+            <strong>Border-glow ring</strong>
+            Conic aurora ring spins around the pill on hover — brand guide squares, adapted for CTAs.
+            <span class="src">Brand guide · .visual-card cousin</span>
+          </div>
+          <div class="hover-card__body">
+            <span class="cta-border-glow">
+              <button type="button" class="cta cta-l-forest">Continue to checkout</button>
+            </span>
+          </div>
+        </div>
+
+        <div class="hover-card">
+          <div class="hover-card__meta">
+            <strong>Pulse ring</strong>
+            Soft expanding halo on hover — use sparingly (hero / one CTA per page).
+            <span class="src">New option · optional</span>
+          </div>
+          <div class="hover-card__body">
+            <button type="button" class="cta cta-l-celestial cta--hover-glow-lift cta--hover-pulse">Start the SAT Score Path <span class="arrow">→</span></button>
+          </div>
+        </div>
+
+        <div class="hover-card">
+          <div class="hover-card__meta">
+            <strong>CTA card top-line</strong>
+            Often paired with the button above — whole card lifts, celestial→aurora line sweeps in. Hover the card.
+            <span class="src">LP v4 · .lp-cta-card</span>
+          </div>
+          <div class="hover-card__body">
+            <div class="aurora-hover-card">
+              <p style="font-size:13px;color:var(--muted);margin-bottom:14px;">Free parent plan · about 2 min</p>
+              <button type="button" class="cta cta-l-forest cta--hover-glow-lift" style="margin-top:4px;">Start the plan <span class="arrow">→</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Quick reference</h2>
+      <p class="lede">If you're unsure, start here — we can refine after you react to 2–3 favorites.</p>
+      <div class="pick-row">
+        <span class="pick-chip">Light primary: forest OR celestial</span>
+        <span class="pick-chip">Light secondary: forest outline</span>
+        <span class="pick-chip">Dark primary: celestial OR mint glow</span>
+        <span class="pick-chip">Dark secondary: white outline ghost</span>
+        <span class="pick-chip">Mint fill: dark only</span>
+        <span class="pick-chip">Gradient: hero moments only</span>
+        <span class="pick-chip">Hover: glow lift + arrow (LP/enroll)</span>
+        <span class="pick-chip">Not funnel flat hover alone</span>
+      </div>
+    </section>
+  </div>
+</body>
+</html>
