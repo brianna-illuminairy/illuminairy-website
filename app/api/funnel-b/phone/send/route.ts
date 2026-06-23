@@ -1,14 +1,24 @@
 import { NextResponse } from "next/server";
-import {
-  funnelBVerifyErrorMessage,
-  funnelBVerifyStatus,
-  isFunnelBVerifyConfigured,
-} from "@/lib/funnel-b-verify";
+import { isFirebaseClientConfigured } from "@/lib/firebase/public-config";
+import { isFirebaseAdminConfigured } from "@/lib/firebase/server-config";
+
+export const dynamic = "force-dynamic";
+
+function phoneVerifyStatus() {
+  const clientConfigured = isFirebaseClientConfigured();
+  const serverConfigured = isFirebaseAdminConfigured();
+  return {
+    ok: clientConfigured && serverConfigured,
+    channel: "firebase" as const,
+    clientConfigured,
+    serverConfigured,
+  };
+}
 
 export async function GET() {
-  const status = funnelBVerifyStatus();
+  const status = phoneVerifyStatus();
   return NextResponse.json({
-    ok: status.configured,
+    ok: status.ok,
     channel: status.channel,
     clientConfigured: status.clientConfigured,
     serverConfigured: status.serverConfigured,
@@ -16,12 +26,13 @@ export async function GET() {
 }
 
 export async function POST() {
-  if (!isFunnelBVerifyConfigured()) {
+  const status = phoneVerifyStatus();
+  if (!status.ok) {
     return NextResponse.json(
       {
         ok: false,
         error: "verify_not_configured",
-        message: funnelBVerifyErrorMessage("firebase_not_configured"),
+        message: "Verification is temporarily unavailable. Email support@illuminairy.com.",
       },
       { status: 503 }
     );
