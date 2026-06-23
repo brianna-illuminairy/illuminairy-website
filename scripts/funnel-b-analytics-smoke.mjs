@@ -9,8 +9,8 @@ Plan Builder B — analytics smoke checklist
 
 PostHog (filter plan_builder_funnel = b OR funnel_id = plan_builder_b, URL /plan-b):
   [ ] quiz_started + quiz_session_started on first step
-  [ ] parent_confirmed on My child
-  [ ] plan_builder_b_step_viewed on every step (including hit-q3-none, b-computing, b-post-*)
+  [ ] parent_confirmed on My child (q1-parent-child)
+  [ ] plan_builder_b_step_viewed on every step (q-grade step 2, hit-q3-none, b-computing, b-post-*)
   [ ] lab_computing_popup_answered on Khan + tutor popups
   [ ] lab_phone_verified after OTP (client + server touch)
   [ ] lab_lead_submitted after phone verify (NOT on b-book patch)
@@ -29,7 +29,11 @@ GA4 DebugView (all tagged funnel = plan_builder_b):
   [ ] lab_lesson_attended server milestone after lesson attended
 
 Klaviyo:
-  [ ] Lab Lead Submitted, Free Lesson Booked, Free Lesson Attended
+  [ ] Lab Lead Submitted (qGrade + student_grade on profile), Free Lesson Booked, Free Lesson Attended
+
+Supabase CRM (leads + visitors):
+  [ ] quiz_answers.qGrade + student_grade after phone verify
+  [ ] quiz_furthest_step_index advances through q-grade (step index 1)
 
 Docs: growth/plan-b-analytics-playbook.md
 `);

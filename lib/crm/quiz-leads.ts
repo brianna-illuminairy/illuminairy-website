@@ -81,8 +81,10 @@ export async function upsertLeadFromQuizFunnel(
   const visitorRow = options.visitorId
     ? await getVisitorById(options.visitorId)
     : null;
+  const defaultFurthestStep =
+    options.funnel === "sat_quiz_b" ? "b-phone" : "s5";
   const quizFurthestStep =
-    (visitorRow?.quiz_furthest_step as string | undefined) ?? "s5";
+    (visitorRow?.quiz_furthest_step as string | undefined) ?? defaultFurthestStep;
   const satLpVariantFromVisitor =
     (visitorRow?.sat_lp_variant as string | undefined) ??
     answers.sat_lp_variant ??
@@ -176,6 +178,7 @@ export async function upsertLeadFromQuizFunnel(
           parent_last: leadRow.parent_last,
           parent_phone: leadRow.parent_phone,
           student_first: leadRow.student_first,
+          student_grade: leadRow.student_grade,
           sat_baseline: leadRow.sat_baseline,
           score_range: leadRow.score_range,
           main_goal: leadRow.main_goal,
@@ -255,6 +258,8 @@ export async function upsertLeadFromQuizFunnel(
       parent_email: email,
       funnel: options.funnel ?? "sat_quiz",
       qWho: answers.qWho,
+      qGrade: answers.qGrade,
+      student_grade: leadRow.student_grade,
       qScoreLower: answers.qScoreLower,
       q1: answers.q1,
       q4: answers.q4,

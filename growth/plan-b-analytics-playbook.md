@@ -75,6 +75,8 @@ Sent via **Resend** when a free lesson is booked (`lib/crm/lab-lesson-welcome-em
 ## CRM
 
 - `leads.plan_builder_variant = 'b'`
+- `leads.student_grade` from `q-grade` answer (9th–12th grade label)
+- `quiz_answers.qGrade` on visitors + leads (synced on every step via `quiz_progress_sync`)
 - `lead_calls.call_type = 'free_lesson'` for Calendly free lesson event
 - Calendly webhook detects free lesson via `lib/calendly/free-lesson-event.ts`
 

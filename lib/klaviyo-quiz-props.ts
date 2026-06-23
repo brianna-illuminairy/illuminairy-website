@@ -6,16 +6,28 @@ import {
 } from "@/lib/quiz-funnel/gains";
 import type { AttributionSnapshot } from "@/lib/attribution";
 import { PLAN_BUILDER_PATH } from "@/lib/plan-builder-routes";
+import { studentGradeFromPlanBGradeId } from "@/lib/quiz-funnel-b/grade-copy";
 
 export type KlaviyoQuizContext = {
   answers: QuizAnswersPayload;
   attribution?: AttributionSnapshot;
   quizFurthestStep?: string;
   satLpVariant?: string;
+  /** CRM funnel slug — default Plan Builder A. */
+  funnel?: string;
+  /** Resume URL base path — default `/plan`. */
+  resumeBasePath?: string;
 };
 
 export function buildKlaviyoQuizProperties(ctx: KlaviyoQuizContext) {
-  const { answers, attribution, quizFurthestStep, satLpVariant } = ctx;
+  const {
+    answers,
+    attribution,
+    quizFurthestStep,
+    satLpVariant,
+    funnel = "sat_quiz",
+    resumeBasePath = PLAN_BUILDER_PATH,
+  } = ctx;
   const promisedGain = promisedGainFromQuizAnswers(
     answers.q4,
     answers.q5,
@@ -23,11 +35,13 @@ export function buildKlaviyoQuizProperties(ctx: KlaviyoQuizContext) {
   );
   const showedGpaGap = showedGpaGapScreen(answers.q4, answers.q9);
   const weeksUntil = weeksUntilQ5Test(answers.q5);
-  const step = quizFurthestStep ?? "s5";
-  const resumeUrl = `https://illuminairy.com${PLAN_BUILDER_PATH}?step=${encodeURIComponent(step)}`;
+  const step = quizFurthestStep ?? (funnel === "sat_quiz_b" ? "b-phone" : "s5");
+  const resumeUrl = `https://illuminairy.com${resumeBasePath}?step=${encodeURIComponent(step)}`;
 
   return {
     qWho: answers.qWho ?? "",
+    qGrade: answers.qGrade ?? "",
+    student_grade: studentGradeFromPlanBGradeId(answers.qGrade) ?? "",
     qScoreLower: answers.qScoreLower ?? "",
     q1: answers.q1 ?? "",
     quiz_urgency: answers.q1 ?? "",
@@ -53,6 +67,6 @@ export function buildKlaviyoQuizProperties(ctx: KlaviyoQuizContext) {
     utm_content: attribution?.utm_content ?? "",
     creative_version: attribution?.version ?? "",
     first_touch_utm_campaign: attribution?.utm_campaign ?? "",
-    funnel: "sat_quiz"
+    funnel,
   };
 }

@@ -7,6 +7,7 @@ import {
   Ga4Events,
   LabGa4Events,
   LabPostHogEvents,
+  MetaEvents,
   PostHogEvents,
   TouchEvents,
 } from "@/lib/analytics-registry";
@@ -17,17 +18,20 @@ import {
   readPersistedLpVariantId,
 } from "@/lib/landing/variant-storage";
 import { getPostHogKey } from "@/lib/posthog";
-import { LAB_ANALYTICS_PROPS, PLAN_BUILDER_FUNNEL_ID } from "@/lib/quiz-funnel-b/constants";
+import { LAB_ANALYTICS_PROPS, PLAN_BUILDER_FUNNEL_ID, PLAN_BUILDER_VARIANT } from "@/lib/quiz-funnel-b/constants";
 import {
   labFunnelScreenComponent,
   labFunnelScreenLabel,
   labFunnelScreenRole,
 } from "@/lib/quiz-funnel-b/funnel-screen-roles";
-import { canonicalizeQuizStepId } from "@/lib/quiz-funnel-b/funnel-steps";
+import {
+  canonicalizeQuizStepId,
+  QUIZ_ENTRY_STEP,
+} from "@/lib/quiz-funnel-b/funnel-steps";
+import { studentGradeFromPlanBGradeId } from "@/lib/quiz-funnel-b/grade-copy";
 import type { AchievabilityInputEditedProps } from "@/lib/quiz-funnel/analytics";
 import {
   captureAchievabilityInputEdited as controlAchievabilityInputEdited,
-  captureParentConfirmed as controlParentConfirmed,
   captureQuizBookingError as controlQuizBookingError,
   captureQuizBookingValidation as controlQuizBookingValidation,
   identifyQuizLead as controlIdentifyQuizLead,
@@ -71,8 +75,45 @@ if (typeof window !== "undefined" && getPostHogKey()) {
   posthog.register(LAB_ANALYTICS_PROPS);
 }
 
+const PARENT_CONFIRMED_KEY = "illuminairy_qfb_parent_confirmed";
+
 export function captureParentConfirmed(qWho: string) {
-  controlParentConfirmed(qWho);
+  if (qWho !== "child" || typeof window === "undefined") return;
+
+  try {
+    if (sessionStorage.getItem(PARENT_CONFIRMED_KEY)) return;
+    sessionStorage.setItem(PARENT_CONFIRMED_KEY, "1");
+  } catch {
+    // sessionStorage blocked — still fire once this page load
+  }
+
+  const lp = lpContext();
+  const attr = analyticsAttributionProps();
+  const props = labProps({
+    ...lp,
+    ...attr,
+    qWho: "child" as const,
+    step: QUIZ_ENTRY_STEP,
+  });
+
+  void recordClientTouch(TouchEvents.parentConfirmed, props);
+  trackLabGa(Ga4Events.parentConfirmed, props);
+  if (getPostHogKey()) {
+    posthog.capture(PostHogEvents.parentConfirmed, props);
+  }
+  if (window.fbq) {
+    window.fbq("trackCustom", MetaEvents.parentConfirmed, {
+      content_name: "sat_score_path",
+      content_category: lp.sat_lp_variant,
+      sat_lp_layout: lp.sat_lp_layout,
+      qWho: "child",
+      funnel: PLAN_BUILDER_FUNNEL_ID,
+      plan_builder_variant: PLAN_BUILDER_VARIANT,
+      utm_campaign: attr.utm_campaign,
+      utm_content: attr.utm_content,
+      utm_source: attr.utm_source,
+    });
+  }
 }
 
 export function captureQuizStarted(
@@ -209,7 +250,16 @@ export function captureQuizLeadSubmitted(
     posthog.capture(LabPostHogEvents.labLeadSubmitted, props);
     const email =
       typeof answers.parentEmail === "string" ? answers.parentEmail.trim() : "";
-    if (email) controlIdentifyQuizLead(email, answers);
+    if (email) {
+      controlIdentifyQuizLead(email, answers);
+      const snapshot = buildQuizAnswersSnapshot(answers);
+      posthog.setPersonProperties({
+        qGrade: snapshot.qGrade ?? undefined,
+        student_grade: studentGradeFromPlanBGradeId(snapshot.qGrade) ?? undefined,
+        plan_builder_variant: PLAN_BUILDER_VARIANT,
+        funnel_id: PLAN_BUILDER_FUNNEL_ID,
+      });
+    }
   }
   trackLabGa(LabGa4Events.labLeadSubmitted);
 

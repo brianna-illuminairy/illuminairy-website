@@ -9,6 +9,7 @@ const MAX_COOKIE_BYTES = 3800;
 /** Intake keys only — no PII (contact, phone verify, booking). */
 const COOKIE_ANSWER_KEYS = [
   "qWho",
+  "qGrade",
   "qScoreLower",
   "q1",
   "q2",

@@ -90,6 +90,7 @@ export function buildQuizAnswersSnapshot(
 export function hasQuizAnswersData(snapshot: QuizAnswersSnapshot): boolean {
   return Boolean(
     snapshot.qWho ||
+      snapshot.qGrade ||
       snapshot.qScoreLower ||
       snapshot.q1 ||
       snapshot.q2 ||

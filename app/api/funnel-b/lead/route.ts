@@ -20,6 +20,8 @@ import {
   type LabQuizAnswersPayload,
 } from "@/lib/crm/lab-quiz-leads";
 import { PLAN_BUILDER_FUNNEL_ID, PLAN_BUILDER_VARIANT } from "@/lib/quiz-funnel-b/constants";
+import { studentGradeFromPlanBGradeId } from "@/lib/quiz-funnel-b/grade-copy";
+import { PLAN_BUILDER_B_PATH } from "@/lib/plan-builder-b-routes";
 
 type Body = LabQuizAnswersPayload & {
   visitorId?: string;
@@ -258,6 +260,8 @@ export async function POST(request: Request) {
       quizFurthestStep:
         (visitorRow?.quiz_furthest_step as string | undefined) ?? "b-phone",
       satLpVariant: body.sat_lp_variant ?? undefined,
+      funnel: "sat_quiz_b",
+      resumeBasePath: PLAN_BUILDER_B_PATH,
     }),
     lead_source: result.leadSource,
     funnel: PLAN_BUILDER_FUNNEL_ID,
@@ -303,6 +307,8 @@ export async function POST(request: Request) {
       funnel: PLAN_BUILDER_FUNNEL_ID,
       plan_builder_variant: PLAN_BUILDER_VARIANT,
       qWho: body.qWho ?? "",
+      qGrade: body.qGrade ?? "",
+      student_grade: studentGradeFromPlanBGradeId(body.qGrade) ?? "",
       qScoreLower: body.qScoreLower ?? "",
       q1: body.q1 ?? "",
       q4: body.q4 ?? "",
@@ -323,6 +329,14 @@ export async function POST(request: Request) {
       parent_email: result.email,
       funnel: "sat_quiz_b",
       plan_builder_variant: PLAN_BUILDER_VARIANT,
+      qWho: body.qWho,
+      qGrade: body.qGrade,
+      student_grade: studentGradeFromPlanBGradeId(body.qGrade),
+      qScoreLower: body.qScoreLower,
+      q1: body.q1,
+      q4: body.q4,
+      q8: body.q8,
+      school_referral: body.qSchoolReferral,
     },
   });
 
