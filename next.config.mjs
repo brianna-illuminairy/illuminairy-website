@@ -29,6 +29,7 @@ const devAllowedOrigins = (
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  serverExternalPackages: ["firebase-admin"],
   productionBrowserSourceMaps: posthogSourcemapsEnabled,
   // Hide Next.js dev badge ("N" / "Rendering") during phone QA on LAN.
   devIndicators: false,

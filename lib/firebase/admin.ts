@@ -1,5 +1,8 @@
 import { cert, getApps, initializeApp, type App } from "firebase-admin/app";
 import { getAuth, type Auth } from "firebase-admin/auth";
+import { resolveFirebaseProjectId } from "@/lib/firebase/server-config";
+
+export { isFirebaseAdminConfigured } from "@/lib/firebase/server-config";
 
 type ServiceAccount = {
   projectId: string;
@@ -39,32 +42,14 @@ function readServiceAccount(): ServiceAccount | null {
   return { projectId, clientEmail, privateKey };
 }
 
-function resolveProjectId(): string | null {
-  return (
-    process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID?.trim() ||
-    process.env.FIREBASE_PROJECT_ID?.trim() ||
-    readServiceAccount()?.projectId ||
-    null
-  );
-}
-
 let adminApp: App | null = null;
 let adminAuth: Auth | null = null;
-
-/**
- * Phone OTP verification only needs to check Firebase ID tokens.
- * That uses Google's public keys + project ID — no service-account JSON required.
- * (Useful when org policy blocks "Generate new private key".)
- */
-export function isFirebaseAdminConfigured(): boolean {
-  return resolveProjectId() !== null;
-}
 
 export function getFirebaseAdminAuth(): Auth | null {
   if (adminAuth) return adminAuth;
 
   const serviceAccount = readServiceAccount();
-  const projectId = resolveProjectId();
+  const projectId = resolveFirebaseProjectId();
   if (!projectId) return null;
 
   if (!getApps().length) {

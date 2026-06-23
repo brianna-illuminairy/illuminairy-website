@@ -1,5 +1,5 @@
 import { phoneToCalendlyE164 } from "@/lib/calendly/phone-e164";
-import { getFirebaseAdminAuth, isFirebaseAdminConfigured } from "@/lib/firebase/admin";
+import { isFirebaseAdminConfigured } from "@/lib/firebase/server-config";
 import { isFirebaseClientConfigured } from "@/lib/firebase/public-config";
 
 export type FunnelBVerifyChannel = "firebase";
@@ -33,6 +33,7 @@ export async function verifyFunnelBPhoneIdToken(input: { phone: string; idToken:
     return { ok: false as const, error: "id_token_required" as const, channel };
   }
 
+  const { getFirebaseAdminAuth } = await import("@/lib/firebase/admin");
   const auth = getFirebaseAdminAuth();
   if (!auth) {
     return { ok: false as const, error: "firebase_not_configured" as const, channel };
