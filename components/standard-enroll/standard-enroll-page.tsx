@@ -83,6 +83,9 @@ function getDiagListPrice(lead: StandardEnrollLead): number {
 
 function initialSubmitLabel(lead: StandardEnrollLead): string {
   const charge = getDiagChargePrice(lead);
+  if (isPlanBPostLesson(lead)) {
+    return `Enroll · $${getWeeklyChargePrice(lead)}/week`;
+  }
   if (charge === 0) {
     if (isAug22Bootcamp(lead)) {
       return "Enroll in August 22 Bootcamp";
@@ -104,7 +107,15 @@ function isAug22Bootcamp(lead: StandardEnrollLead): boolean {
   return lead.programVariant === "aug22-bootcamp";
 }
 
+function isPlanBPostLesson(lead: StandardEnrollLead): boolean {
+  return lead.programVariant === "plan-b-post-lesson";
+}
+
 function weeklyTutoringLabel(lead: StandardEnrollLead): string {
+  if (isPlanBPostLesson(lead)) {
+    const n = lead.bootcamp?.sessionsPerWeek ?? 2;
+    return `Weekly tutoring ${n}×45 min/week`;
+  }
   if (isAug22Bootcamp(lead)) {
     const n = lead.bootcamp?.sessionsPerWeek ?? 4;
     return `Weekly Tutoring ${n}×/wk`;
@@ -113,6 +124,9 @@ function weeklyTutoringLabel(lead: StandardEnrollLead): string {
 }
 
 function diagnosticWaivedIntroLine(lead: StandardEnrollLead): string {
+  if (isPlanBPostLesson(lead)) {
+    return `$${getWeeklyChargePrice(lead)}/week tutoring starts when you enroll. No diagnostic fee after your free lesson.`;
+  }
   if (lead.bootcamp?.diagnosticComplete) {
     const label = lead.diagnosticWaivedLabel ?? "Complimentary diagnostic";
     return `${label} already complete. $${getWeeklyChargePrice(lead)}/week tutoring starts 7 days from enroll.`;
@@ -213,6 +227,7 @@ function ProgressStrip({ lead }: { lead: StandardEnrollLead }) {
 
 function MobileCheckoutIntro({ lead }: { lead: StandardEnrollLead }) {
   const isBootcamp = isAug22Bootcamp(lead);
+  const isPlanB = isPlanBPostLesson(lead);
   const weekly = getWeeklyChargePrice(lead);
   const diagCharge = getDiagChargePrice(lead);
   const diagLine =
@@ -223,11 +238,17 @@ function MobileCheckoutIntro({ lead }: { lead: StandardEnrollLead }) {
   return (
     <div className="std-mobile-intro">
       <h1>
-        {isBootcamp ? "August 22 SAT Bootcamp" : "SAT Diagnostic & Weekly Tutoring"}
+        {isPlanB
+          ? "Enroll in weekly SAT tutoring"
+          : isBootcamp
+            ? "August 22 SAT Bootcamp"
+            : "SAT Diagnostic & Weekly Tutoring"}
       </h1>
       <p>
         For {lead.parent.first}. {diagLine}
-        {!lead.bootcamp?.diagnosticComplete ? " Weekly billing starts 7 days from enroll." : null}
+        {!isPlanB && !lead.bootcamp?.diagnosticComplete
+          ? " Weekly billing starts 7 days from enroll."
+          : null}
       </p>
     </div>
   );
@@ -340,6 +361,8 @@ function PayCardInner({
   const promo = lead.diagnosticPromo;
   const weeklyPromo = lead.weeklyPromo;
   const weeklyCharge = getWeeklyChargePrice(lead);
+  const planB = isPlanBPostLesson(lead);
+  const regionalCode = lead.regionalDiscountCode;
   const derivedLast =
     lead.parent.last ?? lead.parent.full.replace(lead.parent.first, "").trim();
   const [first, setFirst] = useState(lead.parent.first ?? "");
@@ -629,41 +652,49 @@ function PayCardInner({
     );
   }
 
-  const tosChargeLine =
-    diagCharge === 0
+  const tosChargeLine = planB
+    ? `I authorize weekly billing of $${weeklyCharge} starting today.`
+    : diagCharge === 0
       ? `I authorize weekly billing of $${weeklyCharge} starting 7 days from now.`
       : `I authorize the $${diagCharge} charge today and weekly billing of $${weeklyCharge} starting 7 days from now.`;
 
   return (
     <section className="std-pay">
       <div className="std-pricing">
-        <div className="std-pricing-row">
-          <div className="std-pricing-desc">
-            Full Length Diagnostic &amp; Personalized Plan
-            {promo ? (
-              <span className="std-pricing-promo">
-                {promo.label} · code {promo.displayCode} applied
-              </span>
-            ) : null}
+        {!planB ? (
+          <div className="std-pricing-row">
+            <div className="std-pricing-desc">
+              Full Length Diagnostic &amp; Personalized Plan
+              {promo ? (
+                <span className="std-pricing-promo">
+                  {promo.label} · code {promo.displayCode} applied
+                </span>
+              ) : null}
+            </div>
+            <div className="std-pricing-amt">
+              {promo && promo.listPrice > promo.chargePrice ? (
+                <>
+                  <span className="std-pricing-struck">${promo.listPrice}</span>{" "}
+                  <span>${promo.chargePrice}</span>
+                </>
+              ) : (
+                <>${diagList}</>
+              )}
+            </div>
           </div>
-          <div className="std-pricing-amt">
-            {promo && promo.listPrice > promo.chargePrice ? (
-              <>
-                <span className="std-pricing-struck">${promo.listPrice}</span>{" "}
-                <span>${promo.chargePrice}</span>
-              </>
-            ) : (
-              <>${diagList}</>
-            )}
-          </div>
-        </div>
+        ) : null}
         <div className="std-pricing-row">
           <div className="std-pricing-desc">
             {weeklyTutoringLabel(lead)}
             {weeklyPromo ? (
               <span className="std-pricing-promo">{weeklyPromo.label} applied</span>
             ) : null}
-            <span className="sub">Billing starts 7 days from checkout.</span>
+            {regionalCode ? (
+              <span className="std-pricing-promo">Code {regionalCode} applied</span>
+            ) : null}
+            <span className="sub">
+              {planB ? "Billing starts when you enroll." : "Billing starts 7 days from checkout."}
+            </span>
           </div>
           <div className="std-pricing-amt">
             {weeklyPromo && weeklyPromo.listPrice > weeklyPromo.chargePrice ? (
@@ -992,17 +1023,21 @@ function PageFooter() {
   );
 }
 
-type Props = { lead: StandardEnrollLead; init: StandardEnrollInit };
+type Props = {
+  lead: StandardEnrollLead;
+  init: StandardEnrollInit;
+  embedded?: boolean;
+};
 
-export function StandardEnrollPage({ lead, init }: Props) {
+export function StandardEnrollPage({ lead, init, embedded = false }: Props) {
   useEffect(() => {
     trackEnrollCheckoutViewed(standardEnrollAnalyticsProps(lead));
   }, [lead]);
 
   return (
-    <div className="std">
-      <StarSymbol />
-      <TopBar />
+    <div className={`std${embedded ? " std--embedded" : ""}`}>
+      {!embedded ? <StarSymbol /> : null}
+      {!embedded ? <TopBar /> : null}
       <ProgressStrip lead={lead} />
       <div className="std-wrap">
         <MobileCheckoutIntro lead={lead} />
@@ -1015,7 +1050,7 @@ export function StandardEnrollPage({ lead, init }: Props) {
       <SessionShot />
       <ReviewsMarquee />
       <FaqSection lead={lead} />
-      <PageFooter />
+      {!embedded ? <PageFooter /> : null}
     </div>
   );
 }

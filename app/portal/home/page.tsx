@@ -8,7 +8,7 @@ export default async function PortalHomePage() {
   const dashboard = await loadPortalDashboard(session.leadId, session.email);
 
   return (
-    <PortalShell profile={dashboard.profile}>
+    <PortalShell profile={dashboard.profile} enrollTab={dashboard.enrollTab}>
       <PortalLessonCard lesson={dashboard.lesson} studentName={dashboard.profile.studentName} />
     </PortalShell>
   );

@@ -38,7 +38,6 @@ import {
   captureQuizBookingConfirmed,
   captureQuizBookingError,
   captureQuizBookingValidation,
-  captureQuizLeadSubmitted,
 } from '@/lib/quiz-funnel-b/analytics';
 import { readPersistedLpVariant, readPersistedLpVariantId } from '@/lib/landing/variant-storage';
 import { resolveMetaClickIds } from '@/lib/meta-click-ids';
@@ -120,7 +119,6 @@ export function BBookLesson({ answers, dispatch, onBooked, onBack }: Props) {
   } | null>(null);
 
   const leadPrefetchedRef = useRef(false);
-  const leadPrefetchInFlightRef = useRef(false);
 
   const parentName = String(answers.parentName ?? '');
   const parentEmail = String(answers.parentEmail ?? '');
@@ -255,35 +253,12 @@ export function BBookLesson({ answers, dispatch, onBooked, onBack }: Props) {
     };
   }, [loadAvailability]);
 
-  useEffect(() => {
-    if (leadPrefetchedRef.current || leadPrefetchInFlightRef.current) return;
-    if (!parentName.trim() || !parentEmail.trim() || !parentPhone.trim()) return;
-
-    leadPrefetchInFlightRef.current = true;
-    const payload = buildLeadPayload(answers, kidName.trim() || String(answers.kidName ?? ''));
-
-    void fetch('/api/funnel-b/lead', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload.body),
-    })
-      .then((res) => {
-        if (res.ok) leadPrefetchedRef.current = true;
-      })
-      .catch(() => {
-        /* confirm will retry */
-      })
-      .finally(() => {
-        leadPrefetchInFlightRef.current = false;
-      });
-  }, [answers, parentName, parentEmail, parentPhone, kidName]);
-
-  async function submitLead(): Promise<{ ok: true; eventId?: string } | { ok: false }> {
+  async function submitLead(): Promise<{ ok: true } | { ok: false }> {
     const payload = buildLeadPayload(answers, kidName);
     const leadRes = await fetch('/api/funnel-b/lead', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload.body),
+      body: JSON.stringify({ ...payload.body, conversion: false }),
     });
     const leadData = await leadRes.json().catch(() => ({}));
     if (!leadRes.ok) {
@@ -295,9 +270,8 @@ export function BBookLesson({ answers, dispatch, onBooked, onBack }: Props) {
       setBookingAlert(parsed);
       return { ok: false };
     }
-    captureQuizLeadSubmitted(answers as Record<string, unknown>, leadData.eventId);
     leadPrefetchedRef.current = true;
-    return { ok: true, eventId: leadData.eventId };
+    return { ok: true };
   }
 
   async function handleConfirm() {

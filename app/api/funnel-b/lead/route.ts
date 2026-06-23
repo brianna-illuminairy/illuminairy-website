@@ -7,7 +7,7 @@ import {
 import { buildKlaviyoQuizProperties } from "@/lib/klaviyo-quiz-props";
 import { KlaviyoEvents } from "@/lib/analytics-registry";
 import { upsertKlaviyoProfile, trackKlaviyoEvent } from "@/lib/klaviyo-server";
-import { makeMetaEventId, sendMetaCapiEvent } from "@/lib/meta-capi";
+import { makeMetaEventId, makeStableMetaEventId, sendMetaCapiEvent } from "@/lib/meta-capi";
 import { getVisitorById } from "@/lib/crm/visitors";
 import { funnelApiError } from "@/lib/calendly/funnel-api-errors";
 import {
@@ -29,6 +29,8 @@ type Body = LabQuizAnswersPayload & {
   fbc?: string;
   fbcTs?: number;
   lp_variant?: string;
+  /** When true (phone verified), fires Meta Lead + Klaviyo. When false, CRM patch only. */
+  conversion?: boolean;
 };
 
 function readQWhoFromVisitor(visitor: Record<string, unknown> | null): string | undefined {
@@ -143,7 +145,9 @@ export async function POST(request: Request) {
     qWho: resolved.qWho,
   };
 
-  if (!body.confirmTcpa) {
+  const isConversion = body.conversion !== false;
+
+  if (!isConversion && !body.confirmTcpa) {
     await recordLeadBookingError({
       body,
       errorCode: "tcpa_required",
@@ -157,6 +161,18 @@ export async function POST(request: Request) {
       retryable: false,
       message: "Please confirm you agree to receive texts about your SAT plan.",
     });
+  }
+
+  if (isConversion) {
+    const verifiedAt =
+      typeof body.phoneVerifiedAt === "string" ? body.phoneVerifiedAt.trim() : "";
+    if (!verifiedAt) {
+      return funnelApiError(400, "invalid_contact", {
+        field: "parentPhone",
+        retryable: false,
+        message: "Please verify your phone number before continuing.",
+      });
+    }
   }
 
   const email = body.parentEmail?.trim() ?? "";
@@ -185,7 +201,7 @@ export async function POST(request: Request) {
       message: "Please enter your phone number.",
     });
   }
-  if (!kid) {
+  if (!isConversion && !kid) {
     return funnelApiError(400, "invalid_contact", {
       field: "kidName",
       retryable: false,
@@ -230,12 +246,17 @@ export async function POST(request: Request) {
 
   const { first, last } = splitName(name);
   const visitorRow = body.visitorId ? await getVisitorById(body.visitorId) : null;
+
+  if (!isConversion) {
+    return NextResponse.json({ ok: true, leadId: result.leadId });
+  }
+
   const klaviyoProps = {
     ...buildKlaviyoQuizProperties({
       answers: body,
       attribution: result.attribution,
       quizFurthestStep:
-        (visitorRow?.quiz_furthest_step as string | undefined) ?? "b-book",
+        (visitorRow?.quiz_furthest_step as string | undefined) ?? "b-phone",
       satLpVariant: body.sat_lp_variant ?? undefined,
     }),
     lead_source: result.leadSource,
@@ -243,6 +264,8 @@ export async function POST(request: Request) {
     plan_builder_variant: PLAN_BUILDER_VARIANT,
     parent_zip: body.parentZip ?? "",
     school_referral: body.qSchoolReferral ?? "",
+    target_region: body.targetRegionId ?? "",
+    regional_discount_code: body.regionalDiscountCode ?? "",
     ...(body.lp_variant ? { lp_variant: body.lp_variant } : {}),
   };
 
@@ -254,7 +277,7 @@ export async function POST(request: Request) {
   });
   void trackKlaviyoEvent(result.email, KlaviyoEvents.labLeadSubmitted, klaviyoProps);
 
-  const eventId = makeMetaEventId("lab_lead", result.leadId);
+  const eventId = makeStableMetaEventId("lab_lead", result.leadId);
   const clientIp =
     request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
     request.headers.get("x-real-ip") ??

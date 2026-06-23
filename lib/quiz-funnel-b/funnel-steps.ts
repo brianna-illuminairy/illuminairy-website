@@ -68,6 +68,10 @@ const INTAKE_STEP_SATISFIED: Record<string, (a: LabIntakeAnswers) => boolean> = 
   "q-school-referral": (a) => Boolean(a.qSchoolReferral),
   "b-email": (a) => isValidEmail(a.parentEmail),
   "b-zip": (a) => Boolean(a.parentZip?.trim()),
+  "b-target-schools": (a) =>
+    Array.isArray((a as { targetSchoolIds?: string[] }).targetSchoolIds) &&
+    ((a as { targetSchoolIds?: string[] }).targetSchoolIds?.length ?? 0) > 0,
+  "b-regional-unlock": (a) => Boolean((a as { regionalDiscountCode?: string }).regionalDiscountCode?.trim()),
   "b-parent-name": (a) => Boolean(a.parentName?.trim()),
   "b-phone": (a) => Boolean(a.phoneVerifiedAt),
   "b-claim": (a) => a.claimCommitment === true,

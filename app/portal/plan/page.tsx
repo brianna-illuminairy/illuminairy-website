@@ -11,7 +11,7 @@ export default async function PortalPlanPage() {
   const dashboard = await loadPortalDashboard(session.leadId, session.email);
 
   return (
-    <PortalShell profile={dashboard.profile}>
+    <PortalShell profile={dashboard.profile} enrollTab={dashboard.enrollTab}>
       <div className="portal-page-card aurora-hover-card">
         <p>{PORTAL_PLANS_INTRO}</p>
         <p style={{ marginTop: 12 }}>{portalPlansOutcomeParagraph()}</p>

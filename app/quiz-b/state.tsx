@@ -40,13 +40,17 @@ export type QuizAnswers = {
   parentPhone: string;
   childEmail: string;
   kidName: string;
+  targetSchoolIds: string[];
+  targetRegionId: string;
+  regionalDiscountCode: string;
+  regionalDiscountPct: number;
   phoneVerifiedAt?: string;
   claimCommitment: boolean;
   lessonLinkShared: boolean;
   devicePreference?: string;
   confirmTcpa: boolean;
   strategyCallStart?: string;
-  [key: string]: string | string[] | boolean | undefined;
+  [key: string]: string | string[] | boolean | number | undefined;
 };
 
 const initialState: QuizAnswers = {
@@ -58,6 +62,10 @@ const initialState: QuizAnswers = {
   parentPhone: '',
   childEmail: '',
   kidName: '',
+  targetSchoolIds: [],
+  targetRegionId: '',
+  regionalDiscountCode: '',
+  regionalDiscountPct: 0,
   claimCommitment: false,
   lessonLinkShared: false,
   confirmTcpa: false,

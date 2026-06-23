@@ -28,6 +28,7 @@ async function createWeeklySubscription(opts: {
   leadSlug: string;
   meta: Record<string, string>;
   idempotencyKey: string;
+  couponId?: string;
 }) {
   const stripe = getStripe();
 
@@ -59,7 +60,8 @@ async function createWeeklySubscription(opts: {
   const subscription = await stripe.subscriptions.create({
     customer: opts.customerId,
     items: [{ price: opts.weeklyPriceId, quantity: 1 }],
-    trial_period_days: opts.trialDays,
+    trial_period_days: opts.trialDays > 0 ? opts.trialDays : undefined,
+    ...(opts.couponId ? { discounts: [{ coupon: opts.couponId }] } : {}),
     default_payment_method: opts.paymentMethodId,
     payment_behavior: "default_incomplete",
     payment_settings: {
@@ -207,6 +209,11 @@ export async function POST(request: Request) {
     }
 
     const trialDays = Number.parseInt(trialDaysRaw ?? "7", 10) || 7;
+    const couponId =
+      typeof meta.regional_discount_coupon === "string" &&
+      meta.regional_discount_coupon.trim()
+        ? meta.regional_discount_coupon.trim()
+        : undefined;
 
     try {
       const result = await createWeeklySubscription({
@@ -215,6 +222,7 @@ export async function POST(request: Request) {
         weeklyPriceId,
         trialDays,
         leadSlug,
+        couponId,
         meta: {
           setup_intent_id: setupIntentId,
           parent_first: meta.parent_first ?? "",
@@ -299,6 +307,11 @@ export async function POST(request: Request) {
   }
 
   const trialDays = Number.parseInt(trialDaysRaw ?? "7", 10) || 7;
+  const couponId =
+    typeof meta.regional_discount_coupon === "string" &&
+    meta.regional_discount_coupon.trim()
+      ? meta.regional_discount_coupon.trim()
+      : undefined;
 
   try {
     const result = await createWeeklySubscription({
@@ -307,6 +320,7 @@ export async function POST(request: Request) {
       weeklyPriceId,
       trialDays,
       leadSlug,
+      couponId,
       meta: {
         diagnostic_payment_intent_id: paymentIntentId,
         parent_first: meta.parent_first ?? "",

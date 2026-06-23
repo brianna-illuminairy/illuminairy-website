@@ -45,10 +45,9 @@ async function resolveDefaultPriceId(productId: string): Promise<string> {
 }
 
 function isWaivedDiagnostic(lead: StandardEnrollLead): boolean {
-  return (
-    lead.diagnosticPromo?.chargePrice === 0 ||
-    (lead.pricing.diagPrice === 0 && Boolean(lead.diagnosticPromo))
-  );
+  if (lead.programVariant === "plan-b-post-lesson") return true;
+  if (lead.pricing.diagPrice === 0) return true;
+  return lead.diagnosticPromo?.chargePrice === 0;
 }
 
 function buildCustomerMetadata(lead: StandardEnrollLead) {
@@ -84,6 +83,9 @@ function buildFlowMetadata(
     advisor_full: lead.advisor.full,
     weekly_price_id: weeklyPriceId,
     weekly_trial_days: String(lead.pricing.weeklyTrialDays),
+    ...(lead.regionalDiscountCode
+      ? { regional_discount_coupon: lead.regionalDiscountCode }
+      : {}),
     ...(lead.diagnosticPromo
       ? {
           diag_promo: lead.diagnosticPromo.displayCode,

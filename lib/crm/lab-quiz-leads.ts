@@ -13,6 +13,10 @@ export type LabQuizAnswersPayload = QuizAnswersPayload & {
   qSchoolReferral?: string;
   childEmail?: string;
   phoneVerifiedAt?: string;
+  targetSchoolIds?: string[];
+  targetRegionId?: string;
+  regionalDiscountCode?: string;
+  regionalDiscountPct?: number;
 };
 
 export async function upsertLeadFromLabFunnel(
@@ -43,6 +47,11 @@ export async function upsertLeadFromLabFunnel(
       ? answers.phoneVerifiedAt.trim()
       : null;
 
+  const targetSchools =
+    Array.isArray(answers.targetSchoolIds) && answers.targetSchoolIds.length
+      ? answers.targetSchoolIds
+      : null;
+
   await supabase
     .from("leads")
     .update({
@@ -52,6 +61,13 @@ export async function upsertLeadFromLabFunnel(
       school_referral: answers.qSchoolReferral?.trim() || null,
       child_email: answers.childEmail?.trim().toLowerCase() || null,
       phone_verified_at: phoneVerifiedAt,
+      target_schools: targetSchools,
+      target_region: answers.targetRegionId?.trim() || null,
+      regional_discount_code: answers.regionalDiscountCode?.trim() || null,
+      regional_discount_pct:
+        typeof answers.regionalDiscountPct === "number" && answers.regionalDiscountPct > 0
+          ? answers.regionalDiscountPct
+          : null,
       updated_at: now,
     })
     .eq("id", result.leadId);

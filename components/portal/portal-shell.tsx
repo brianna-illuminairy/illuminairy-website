@@ -10,7 +10,8 @@ import {
   PORTAL_TOP_NAV,
   portalNavActiveTab,
 } from "@/lib/portal/portal-nav";
-import type { PortalProfile } from "@/lib/portal/load-dashboard";
+import type { PortalProfile, PortalEnrollTabState } from "@/lib/portal/load-dashboard";
+import { usePortalEnrollUnlock } from "@/components/portal/use-portal-enroll-unlock";
 
 type Props = {
   profile: PortalProfile;
@@ -19,21 +20,27 @@ type Props = {
   staticChrome?: boolean;
   activeTabId?: string;
   activeSubjectId?: string;
+  enrollTab?: PortalEnrollTabState;
 };
 
 type PortalChromeProps = {
   profile: PortalProfile;
   staticChrome?: boolean;
   activeTabId?: string;
+  enrollTab?: PortalEnrollTabState;
 };
 
 export function PortalChromeHeader({
   profile,
   staticChrome = false,
   activeTabId,
+  enrollTab,
 }: PortalChromeProps) {
   const pathname = usePathname() ?? "";
   const resolvedActiveTab = activeTabId ?? portalNavActiveTab(pathname);
+  const enroll = usePortalEnrollUnlock(
+    enrollTab ?? { unlockAt: null, locked: true, href: "/portal/enroll", recommendedPackage: "standard" }
+  );
 
   return (
     <header className="aurora-header portal-app__header">
@@ -65,6 +72,41 @@ export function PortalChromeHeader({
         <nav className="aurora-nav portal-app__tabs" aria-label="Portal sections">
           {PORTAL_TOP_NAV.map((tab) => {
             const active = tab.id === resolvedActiveTab;
+
+            if (tab.id === "enroll") {
+              if (staticChrome) {
+                return (
+                  <span
+                    key={tab.id}
+                    className={`aurora-nav__link portal-app__tab${active ? " is-active" : ""} portal-app__tab--disabled`}
+                  >
+                    {tab.label}
+                  </span>
+                );
+              }
+              if (enroll.locked) {
+                return (
+                  <span
+                    key={tab.id}
+                    className={`aurora-nav__link portal-app__tab${active ? " is-active" : ""} portal-app__tab--disabled`}
+                    title="Opens 15 minutes before your lesson ends"
+                  >
+                    {tab.label}
+                  </span>
+                );
+              }
+              return (
+                <Link
+                  key={tab.id}
+                  href={enroll.href}
+                  className={`aurora-nav__link portal-app__tab${active ? " is-active" : ""}`}
+                  aria-current={active ? "page" : undefined}
+                >
+                  {tab.label}
+                </Link>
+              );
+            }
+
             if (staticChrome || tab.disabled || !tab.href) {
               return (
                 <span
@@ -125,6 +167,7 @@ export function PortalShell({
   staticChrome = false,
   activeTabId,
   activeSubjectId = "sat-math",
+  enrollTab,
 }: Props) {
   return (
     <div className={`portal-app aurora-portal${staticChrome ? " portal-app--static" : ""}`}>
@@ -132,6 +175,7 @@ export function PortalShell({
         profile={profile}
         staticChrome={staticChrome}
         activeTabId={activeTabId}
+        enrollTab={enrollTab}
       />
 
       <main className="aurora-body-wrap portal-app__main aurora-wash-light">{children}</main>

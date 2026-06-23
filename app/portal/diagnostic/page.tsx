@@ -12,7 +12,7 @@ export default async function PortalDiagnosticPage() {
   const dashboard = await loadPortalDashboard(session.leadId, session.email);
 
   return (
-    <PortalShell profile={dashboard.profile}>
+    <PortalShell profile={dashboard.profile} enrollTab={dashboard.enrollTab}>
       <div className="portal-page-card aurora-hover-card">
         <p>{PORTAL_DIAGNOSTIC_FREE_SESSION}</p>
         <p style={{ marginTop: 12 }}>{PORTAL_DIAGNOSTIC_ENROLLED}</p>

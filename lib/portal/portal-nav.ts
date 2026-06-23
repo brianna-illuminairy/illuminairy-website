@@ -40,6 +40,12 @@ export const PORTAL_TOP_NAV: PortalNavTab[] = [
     label: "Progress Reports",
     disabled: true,
   },
+  {
+    id: "enroll",
+    label: "Enroll",
+    href: "/portal/enroll",
+    match: (path) => path.startsWith("/portal/enroll"),
+  },
 ];
 
 export type PortalSubjectNavItem = {
@@ -53,6 +59,7 @@ export const PORTAL_SUBJECT_NAV: PortalSubjectNavItem[] = [
 ];
 
 export function portalNavActiveTab(pathname: string): string {
+  if (pathname.startsWith("/portal/enroll")) return "enroll";
   for (const tab of PORTAL_TOP_NAV) {
     if (tab.match?.(pathname)) return tab.id;
   }

@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from 'react';
 import type { ConfirmationResult } from 'firebase/auth';
 import { captureLabPhoneVerified } from '@/lib/quiz-funnel-b/analytics';
+import { submitVerifiedLabLead } from '@/lib/quiz-funnel-b/submit-verified-lead';
+import type { QuizAnswers } from '@/app/quiz-b/state';
 import { QFScreen } from '@/app/quiz/components/QFShell';
 import {
   BOOKING_PHONE_INLINE_INVALID_MSG,
@@ -29,6 +31,7 @@ const PHONE_SMS_CONSENT =
   'By pressing Continue I agree to receive text messages (SMS) from Illuminairy about your free lesson and booking reminders. Msg and data rates may apply. Reply STOP to end messages.';
 
 type Props = {
+  answers: QuizAnswers;
   phone: string;
   verifiedAt?: string;
   onPhoneChange: (value: string) => void;
@@ -83,6 +86,7 @@ function UsFlagIcon() {
 }
 
 export function BPhoneVerify({
+  answers,
   phone,
   verifiedAt,
   onPhoneChange,
@@ -220,6 +224,12 @@ export function BPhoneVerify({
       await cleanupFunnelPhoneSession();
       const stamp =
         typeof data.verifiedAt === 'string' ? data.verifiedAt : new Date().toISOString();
+      const leadAnswers = { ...answers, parentPhone: e164Phone ?? phone, phoneVerifiedAt: stamp };
+      const leadResult = await submitVerifiedLabLead(leadAnswers, stamp);
+      if (!leadResult.ok) {
+        setError(leadResult.message ?? 'Could not save your details. Please try again.');
+        return;
+      }
       onVerified(stamp);
       captureLabPhoneVerified();
       confirmationRef.current = null;

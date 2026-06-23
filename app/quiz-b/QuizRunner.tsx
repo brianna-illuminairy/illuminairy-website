@@ -15,6 +15,10 @@ import {
 } from '@/lib/quiz-funnel-b/funnel-steps';
 import { getLabQuizRouteSteps } from '@/lib/quiz-funnel-b/quiz-route';
 import {
+  regionIdFromZip,
+  regionalUnlockOffer,
+} from '@/lib/quiz-funnel-b/regional-schools';
+import {
   captureLabComputingPopupAnswered,
   captureParentConfirmed,
   captureQuizStepBack,
@@ -61,6 +65,14 @@ const BEmailCapture = dynamic(
 );
 const BZipCode = dynamic(
   () => import('./screens/lab/BZipCode').then((m) => ({ default: m.BZipCode })),
+  { ssr: false }
+);
+const BTargetSchools = dynamic(
+  () => import('./screens/lab/BTargetSchools').then((m) => ({ default: m.BTargetSchools })),
+  { ssr: false }
+);
+const BRegionalUnlock = dynamic(
+  () => import('./screens/lab/BRegionalUnlock').then((m) => ({ default: m.BRegionalUnlock })),
   { ssr: false }
 );
 const BParentName = dynamic(
@@ -339,6 +351,37 @@ export default function QuizRunner() {
         <BZipCode
           value={a.parentZip}
           onChange={(v) => dispatch({ type: 'SET_FIELD', key: 'parentZip', value: v })}
+          onContinue={() => {
+            dispatch({ type: 'SET_FIELD', key: 'targetRegionId', value: regionIdFromZip(a.parentZip) });
+            next();
+          }}
+          onBack={back}
+        />
+      );
+      break;
+    case 'b-target-schools':
+      stepContent = (
+        <BTargetSchools
+          zip={a.parentZip}
+          value={a.targetSchoolIds}
+          onChange={(ids) => dispatch({ type: 'SET_FIELD', key: 'targetSchoolIds', value: ids })}
+          onContinue={() => {
+            const offer = regionalUnlockOffer(a.targetRegionId || regionIdFromZip(a.parentZip));
+            dispatch({ type: 'SET_FIELD', key: 'targetRegionId', value: offer.regionId });
+            dispatch({ type: 'SET_FIELD', key: 'regionalDiscountCode', value: offer.discountCode });
+            dispatch({ type: 'SET_FIELD', key: 'regionalDiscountPct', value: offer.discountPct });
+            next();
+          }}
+          onBack={back}
+        />
+      );
+      break;
+    case 'b-regional-unlock':
+      stepContent = (
+        <BRegionalUnlock
+          regionId={a.targetRegionId || regionIdFromZip(a.parentZip)}
+          targetSchoolIds={a.targetSchoolIds}
+          q5={a.q5}
           onContinue={next}
           onBack={back}
         />
@@ -357,6 +400,7 @@ export default function QuizRunner() {
     case 'b-phone':
       stepContent = (
         <BPhoneVerify
+          answers={a}
           phone={a.parentPhone}
           verifiedAt={a.phoneVerifiedAt}
           onPhoneChange={(v) => dispatch({ type: 'SET_FIELD', key: 'parentPhone', value: v })}

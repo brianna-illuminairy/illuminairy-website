@@ -31,7 +31,7 @@ export function PortalMembershipCta({ showAfterAttended = false }: PortalMembers
     }
   }, [showAfterAttended]);
 
-  const href = "/enroll/michelle-michaela?source=portal_b";
+  const href = "/portal/enroll";
 
   function handleClick() {
     const props = {

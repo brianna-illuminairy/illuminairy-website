@@ -32,7 +32,8 @@ export type StandardFaqPreset =
   | "standard-full"
   | "shelly-standard"
   | "shelly-sprint"
-  | "nada-bootcamp";
+  | "nada-bootcamp"
+  | "plan-b-portal";
 
 export type StandardFaqPricing = {
   /** List or charge price shown on the pay card for the diagnostic line. */
@@ -343,6 +344,17 @@ const PRESET_IDS: Record<StandardFaqPreset, StandardFaqId[]> = {
     "same-tutor",
     "progress-reports",
     "session-length"
+  ],
+  "plan-b-portal": [
+    "paying-today",
+    "weekly-start",
+    "time-per-week",
+    "session-length",
+    "sessions-per-week",
+    "contract",
+    "tutor-credentials",
+    "scheduling",
+    "score-increase"
   ]
 };
 
@@ -386,6 +398,9 @@ export function resolveStandardFaq(
   const enriched: StandardFaqPricing = { ...pricing };
   if (preset === "shelly-sprint" || preset === "nada-bootcamp") {
     enriched.sprintExamLabel = "August 22, 2026";
+  }
+  if (preset === "plan-b-portal") {
+    enriched.sessionLengthMinutes = 45;
   }
   return buildGroupsFromIds(ids, enriched);
 }

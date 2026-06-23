@@ -17,6 +17,8 @@ export const BASE_LAB_ROUTE_STEPS = [
   "b-plan-ready",
   "b-email",
   "b-zip",
+  "b-target-schools",
+  "b-regional-unlock",
   "b-parent-name",
   "b-phone",
   "b-claim",

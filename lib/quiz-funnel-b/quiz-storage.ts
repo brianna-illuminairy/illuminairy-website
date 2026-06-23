@@ -11,7 +11,7 @@ export const QUIZ_ANSWERS_STORAGE_KEY = "qfb_answers";
 export const QUIZ_LAST_STEP_STORAGE_KEY = "qfb_last_step";
 export const QUIZ_UPDATED_AT_STORAGE_KEY = "qfb_updated_at";
 
-export type StoredLabQuizAnswers = Record<string, string | string[] | boolean | undefined>;
+export type StoredLabQuizAnswers = Record<string, string | string[] | boolean | number | undefined>;
 
 function snapshotUpdatedAt(): number {
   if (typeof window === "undefined") return 0;

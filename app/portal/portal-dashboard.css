@@ -376,3 +376,17 @@
     padding-top: 24px;
   }
 }
+
+.portal-enroll-wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 0 32px;
+}
+
+.portal-enroll-wrap .std--embedded {
+  padding-top: 8px;
+}
+
+.portal-enroll-wrap .std__hero {
+  display: none;
+}

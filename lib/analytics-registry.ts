@@ -134,6 +134,8 @@ export const LabPostHogEvents = {
   labLessonLinkShared: "lab_lesson_link_shared",
   planBuilderBStepViewed: "plan_builder_b_step_viewed",
   labComputingPopupAnswered: "lab_computing_popup_answered",
+  labPortalEnrollTabViewed: "lab_portal_enroll_tab_viewed",
+  labPortalEnrollUnlocked: "lab_portal_enroll_unlocked",
 } as const;
 
 /** Plan Builder B (lab) — GA4 event names. */
@@ -146,6 +148,8 @@ export const LabGa4Events = {
   labPortalPageView: "lab_portal_page_view",
   labLessonLinkShared: "lab_lesson_link_shared",
   labComputingPopupAnswered: "lab_computing_popup_answered",
+  labPortalEnrollTabViewed: "lab_portal_enroll_tab_viewed",
+  labPortalEnrollUnlocked: "lab_portal_enroll_unlocked",
 } as const;
 
 /** June SAT Score Review funnel — PostHog event names. */

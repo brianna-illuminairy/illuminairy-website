@@ -146,3 +146,8 @@ export async function sendMetaCapiEvent(
 export function makeMetaEventId(prefix: string, seed: string) {
   return `${prefix}_${seed}_${Date.now()}`;
 }
+
+/** Stable id for pixel ↔ CAPI dedupe on retried phone-verify lead saves. */
+export function makeStableMetaEventId(prefix: string, seed: string) {
+  return `${prefix}_${seed}`;
+}

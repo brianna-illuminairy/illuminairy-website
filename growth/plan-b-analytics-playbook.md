@@ -26,7 +26,7 @@ Hero CTA on that URL routes to **`/plan-b`** (not `/plan`). Other creatives stil
 | Step view | `plan_builder_b_step_viewed` | `quiz_step_view` (tagged `funnel=plan_builder_b`) | — | — |
 | Computing popups | `lab_computing_popup_answered` | `lab_computing_popup_answered` | — | — |
 | Phone verified | `lab_phone_verified` | `lab_phone_verified` | — | — |
-| Lead saved (b-book) | `lab_lead_submitted` | `lab_lead_submitted` | Lab Lead Submitted | Lead (`event_id` from API) |
+| Lead saved (phone verified) | `lab_lead_submitted` | `lab_lead_submitted` | Lab Lead Submitted | Lead (`event_id=lab_lead_{leadId}`) |
 | Free lesson booked | `lab_lesson_booked` + `quiz_booking_confirmed` | `lab_lesson_booked` | Free Lesson Booked | Schedule (`event_id=schedule_<inviteeId>`) |
 | Share link | `lab_lesson_link_shared` | `lab_lesson_link_shared` | — | — |
 | Lesson attended | `lab_lesson_attended` | `lab_lesson_attended` (server milestone) | Free Lesson Attended | FreeLessonAttended |
@@ -36,7 +36,7 @@ Touch events mirror client milestones: `quiz_step_view`, `lab_phone_verified`, `
 
 ## Meta dedupe
 
-- **Lead:** client pixel uses `event_id` returned from `POST /api/funnel-b/lead`; CAPI uses the same id.
+- **Lead:** client pixel + CAPI use stable `lab_lead_{leadId}` at phone verify (no timestamp suffix).
 - **Schedule:** client pixel + CAPI use `schedule_<calendly_invitee_id>` (no timestamp suffix).
 
 ## Smoke checklist

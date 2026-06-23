@@ -1,6 +1,11 @@
 import { getSupabaseAdmin } from "@/lib/supabase/server";
 import { q5DisplayLabel } from "@/lib/quiz-funnel/quiz-profile";
 import { FREE_LESSON_DURATION_MIN } from "@/lib/portal/lesson-join";
+import {
+  isPortalEnrollUnlocked,
+  portalEnrollUnlockAt,
+} from "@/lib/portal/enroll-unlock";
+import { planBRecommendedPackage } from "@/lib/plan-b/membership-pricing";
 
 export type PortalProfileField = {
   label: string;
@@ -22,9 +27,17 @@ export type PortalLesson = {
   durationMin: number;
 };
 
+export type PortalEnrollTabState = {
+  unlockAt: string | null;
+  locked: boolean;
+  href: string;
+  recommendedPackage: "standard" | "intensive";
+};
+
 export type PortalDashboardData = {
   profile: PortalProfile;
   lesson: PortalLesson;
+  enrollTab: PortalEnrollTabState;
 };
 
 const Q4_LABEL: Record<string, string> = {
@@ -66,6 +79,15 @@ function labelOrDash(map: Record<string, string>, key: string | null | undefined
   return map[key] ?? key;
 }
 
+function emptyEnrollTab(): PortalEnrollTabState {
+  return {
+    unlockAt: null,
+    locked: true,
+    href: "/portal/enroll",
+    recommendedPackage: "standard",
+  };
+}
+
 function emptyDashboard(email: string): PortalDashboardData {
   return {
     profile: {
@@ -81,6 +103,7 @@ function emptyDashboard(email: string): PortalDashboardData {
       meetLink: null,
       durationMin: FREE_LESSON_DURATION_MIN,
     },
+    enrollTab: emptyEnrollTab(),
   };
 }
 
@@ -96,7 +119,7 @@ export async function loadPortalDashboard(
   const { data: lead } = await supabase
     .from("leads")
     .select(
-      "parent_first, parent_last, parent_email, parent_phone, parent_zip, student_first, sat_baseline, main_goal, target_score, sat_next_test, gpa_band, quiz_blockers, quiz_prep_tried, quiz_answers, booked_call_at, school_referral"
+      "parent_first, parent_last, parent_email, parent_phone, parent_zip, student_first, sat_baseline, main_goal, target_score, sat_next_test, gpa_band, quiz_blockers, quiz_prep_tried, quiz_answers, booked_call_at, school_referral, plan_b_membership_package"
     )
     .eq("id", leadId)
     .maybeSingle();
@@ -188,6 +211,13 @@ export async function loadPortalDashboard(
     ).toISOString();
   }
 
+  const unlockAt = portalEnrollUnlockAt(scheduledStart);
+  const storedPkg = lead.plan_b_membership_package;
+  const recommendedPackage =
+    storedPkg === "intensive" || storedPkg === "standard"
+      ? storedPkg
+      : planBRecommendedPackage(q5);
+
   return {
     profile: {
       studentName,
@@ -201,6 +231,12 @@ export async function loadPortalDashboard(
       scheduledEnd,
       meetLink: call?.meet_link ?? null,
       durationMin: FREE_LESSON_DURATION_MIN,
+    },
+    enrollTab: {
+      unlockAt,
+      locked: !isPortalEnrollUnlocked(scheduledStart),
+      href: "/portal/enroll",
+      recommendedPackage,
     },
   };
 }

@@ -21,7 +21,7 @@ import {
 
 export type { StandardFaqPreset };
 
-export type StandardProgramVariant = "standard" | "aug22-bootcamp";
+export type StandardProgramVariant = "standard" | "aug22-bootcamp" | "plan-b-post-lesson";
 
 export type StandardDiagnosticPromo = {
   /** List price shown struck through on the pay card. */
@@ -119,6 +119,10 @@ export type StandardEnrollLead = {
   introParagraphs?: string[];
   /** Replaces "family bundle" on waived-diagnostic copy (e.g. complimentary diagnostic). */
   diagnosticWaivedLabel?: string;
+  /** Plan B portal — Stripe coupon id stored on lead. */
+  regionalDiscountCode?: string;
+  /** Plan B recommended package (standard 2x vs intensive 3x). */
+  membershipPackage?: "standard" | "intensive";
 };
 
 /**
@@ -137,6 +141,14 @@ export const STANDARD_POST_CALL_STEPS: StandardProgressStep[] = [
 export function standardEnrollProgressSteps(
   lead: StandardEnrollLead
 ): StandardProgressStep[] {
+  if (lead.programVariant === "plan-b-post-lesson") {
+    return [
+      { label: "Free SAT Plan", state: "done" },
+      { label: "Free lesson", state: "done" },
+      { label: "Enroll", state: "active" },
+      { label: "Tutoring", state: "next" },
+    ];
+  }
   if (lead.bootcamp?.diagnosticComplete) {
     return [
       { label: "Free SAT Plan", state: "done" },

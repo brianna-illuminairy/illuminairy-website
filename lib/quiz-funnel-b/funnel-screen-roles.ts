@@ -58,6 +58,18 @@ const LAB_SCREEN_META: Record<string, LabFunnelScreenMeta> = {
     label: "Zip code",
     postHogStep: "b-zip",
   },
+  "b-target-schools": {
+    role: "lab_lead_capture",
+    component: "BTargetSchools",
+    label: "Target schools",
+    postHogStep: "b-target-schools",
+  },
+  "b-regional-unlock": {
+    role: "lab_lead_capture",
+    component: "BRegionalUnlock",
+    label: "Regional unlock",
+    postHogStep: "b-regional-unlock",
+  },
   "b-parent-name": {
     role: "lab_lead_capture",
     component: "BParentName",

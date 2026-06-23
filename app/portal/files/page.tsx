@@ -7,7 +7,7 @@ export default async function PortalFilesPage() {
   const dashboard = await loadPortalDashboard(session.leadId, session.email);
 
   return (
-    <PortalShell profile={dashboard.profile}>
+    <PortalShell profile={dashboard.profile} enrollTab={dashboard.enrollTab}>
       <div className="portal-page-card">
         <p>
           Session notes, practice sets, and reports from your mentor will appear here after your
