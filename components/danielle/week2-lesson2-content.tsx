@@ -104,8 +104,7 @@ export function DanielleWeek2Lesson2Content() {
           </p>
           <p className="danielle-week1__focus">
             <strong>
-              {POST_SESSION_2_LESSON_2_HOMEWORK.problemCount} Transitions questions ·{" "}
-              {POST_SESSION_2_LESSON_2_HOMEWORK.durationMinutes}-minute timer.
+              {POST_SESSION_2_LESSON_2_HOMEWORK.problemCount} hard Transitions questions · timed.
             </strong>{" "}
             {POST_SESSION_2_LESSON_2_HOMEWORK.body}
           </p>

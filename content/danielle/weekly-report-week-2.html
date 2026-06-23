@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Danielle Danso - Weekly Progress Report - Week 2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,900&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#f5ecd9;
+    --paper:#fbf7ee;
+    --navy:#15203c;
+    --navy2:#1e2d52;
+    --ink:#1c2436;
+    --forest:#245741;
+    --forest-deep:#1b3f30;
+    --mint:#bfe3cc;
+    --mint-soft:#e4f1e8;
+    --tomato:#d8522e;
+    --muted:#73705f;
+    --line:#e3d8c1;
+    --line-soft:#ece2cd;
+  }
+
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;
+    background:var(--cream);
+    color:var(--ink);
+    font-family:'Space Grotesk',system-ui,sans-serif;
+    font-size:16px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .sheet{
+    max-width:860px;
+    margin:32px auto 64px;
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:22px;
+    overflow:hidden;
+    box-shadow:0 18px 50px -28px rgba(21,32,60,0.45);
+  }
+
+  /* ---------- Header ---------- */
+  .head{
+    position:relative;
+    background:var(--navy);
+    color:#f4efe2;
+    padding:38px 44px 34px;
+    overflow:hidden;
+  }
+  .constellation{position:absolute;inset:0;opacity:0.5;pointer-events:none;}
+  .head-inner{position:relative;z-index:1;}
+  .brandrow{
+    display:flex;align-items:center;gap:11px;
+    margin-bottom:30px;
+  }
+  .brandmark{color:var(--mint);font-size:18px;line-height:1;}
+  .brandname{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:700;letter-spacing:0.14em;text-transform:uppercase;
+    font-size:14px;color:#f4efe2;
+  }
+  .eyebrow{
+    font-family:'Space Mono',monospace;
+    text-transform:uppercase;letter-spacing:0.22em;
+    font-size:11px;color:var(--mint);
+    margin-bottom:10px;
+  }
+  .student{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:46px;line-height:1.02;
+    letter-spacing:-0.01em;
+    margin:0 0 14px;color:#fdfbf4;
+  }
+  .meta{
+    font-family:'Space Mono',monospace;
+    font-size:12.5px;color:#c7cedd;letter-spacing:0.02em;
+  }
+  .meta span{color:#7e8aa6;padding:0 8px;}
+
+  .status{
+    display:inline-flex;align-items:center;gap:9px;
+    margin-top:24px;
+    background:var(--mint-soft);
+    color:var(--forest-deep);
+    border-radius:999px;
+    padding:8px 16px 8px 12px;
+    font-weight:600;font-size:14px;
+  }
+  .status .dot{
+    width:9px;height:9px;border-radius:50%;
+    background:var(--forest);display:inline-block;
+  }
+
+  /* ---------- Stat band ---------- */
+  .stats{
+    display:grid;grid-template-columns:repeat(4,1fr);
+    border-bottom:1px solid var(--line);
+  }
+  .stat{
+    padding:26px 20px 24px;
+    text-align:center;
+    border-right:1px solid var(--line-soft);
+  }
+  .stat:last-child{border-right:none;}
+  .stat .num{
+    font-family:'Fraunces',serif;
+    font-weight:900;
+    font-size:38px;line-height:1;
+    color:var(--forest-deep);
+    letter-spacing:-0.02em;
+  }
+  .stat .lab{
+    font-family:'Space Mono',monospace;
+    text-transform:uppercase;letter-spacing:0.13em;
+    font-size:10.5px;color:var(--muted);
+    margin-top:10px;
+  }
+
+  /* ---------- Body ---------- */
+  .body{padding:14px 44px 8px;}
+
+  section{
+    padding:26px 0;
+    border-bottom:1px solid var(--line-soft);
+  }
+  section:last-of-type{border-bottom:none;}
+
+  .sec-label{
+    font-family:'Space Mono',monospace;
+    text-transform:uppercase;letter-spacing:0.18em;
+    font-size:11px;color:var(--forest);
+    margin-bottom:12px;
+    display:flex;align-items:center;gap:9px;
+  }
+  .sec-label::before{
+    content:"\2736";color:var(--mint);font-size:13px;
+  }
+  h2{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:700;font-size:22px;line-height:1.28;
+    margin:0 0 14px;color:var(--ink);letter-spacing:-0.005em;
+  }
+  p{margin:0 0 14px;}
+  p:last-child{margin-bottom:0;}
+  .lede{font-size:17px;}
+
+  ul{list-style:none;margin:6px 0 0;padding:0;}
+  li{
+    position:relative;
+    padding-left:26px;
+    margin-bottom:12px;
+    line-height:1.55;
+  }
+  li::before{
+    content:"\2736";
+    position:absolute;left:0;top:1px;
+    color:var(--forest);
+    font-size:13px;
+  }
+  li:last-child{margin-bottom:0;}
+  strong{font-weight:600;color:var(--ink);}
+
+  /* then vs now */
+  .compare{
+    display:grid;grid-template-columns:1fr auto 1fr;
+    align-items:center;gap:18px;
+    background:var(--mint-soft);
+    border:1px solid var(--mint);
+    border-radius:16px;
+    padding:22px 26px;
+    margin-top:4px;
+  }
+  .compare .cell{text-align:center;}
+  .compare .cnum{
+    font-family:'Fraunces',serif;font-weight:900;
+    font-size:40px;line-height:1;color:var(--forest-deep);
+  }
+  .compare .clab{
+    font-family:'Space Mono',monospace;font-size:10px;
+    text-transform:uppercase;letter-spacing:0.1em;
+    color:var(--muted);margin-top:8px;line-height:1.4;
+  }
+  .compare .arrow{
+    text-align:center;color:var(--tomato);
+    font-weight:700;font-size:15px;line-height:1.2;
+  }
+  .compare .arrow .delta{
+    display:block;font-family:'Space Mono',monospace;
+    font-size:11px;letter-spacing:0.04em;margin-top:4px;color:var(--forest);
+  }
+  .compare .arrow .glyph{font-size:22px;}
+
+  /* mastery / next chips */
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;}
+  .chip{
+    font-family:'Space Mono',monospace;font-size:11px;
+    letter-spacing:0.03em;
+    background:#fff;border:1px solid var(--line);
+    border-radius:999px;padding:6px 13px;color:var(--ink);
+  }
+  .chip.done{background:var(--mint-soft);border-color:var(--mint);color:var(--forest-deep);}
+  .chip.done::before{content:"\2713  ";color:var(--forest);font-weight:700;}
+
+  .plan-week{
+    border-left:2px solid var(--mint);
+    padding:2px 0 2px 18px;margin:16px 0;
+  }
+  .plan-when{
+    font-family:'Space Mono',monospace;font-size:11px;
+    text-transform:uppercase;letter-spacing:0.12em;color:var(--tomato);
+    margin-bottom:5px;
+  }
+  .plan-what{font-weight:600;margin-bottom:4px;}
+  .plan-note{color:var(--muted);font-size:14.5px;}
+
+  .callout{
+    background:var(--navy);color:#eef1f6;
+    border-radius:16px;padding:24px 28px;margin-top:4px;
+  }
+  .callout .sec-label{color:var(--mint);}
+  .callout .sec-label::before{color:var(--mint);}
+  .callout h2{color:#fdfbf4;}
+  .callout p{color:#d5dae6;margin-bottom:0;}
+
+  /* score trajectory line graph */
+  .traj{width:100%;height:auto;margin:20px 0 4px;display:block;}
+  .traj text{font-family:'Space Mono',monospace;}
+  .traj .t-yl{font-size:12px;fill:var(--muted);}
+  .traj .t-xl{font-size:12px;fill:var(--muted);letter-spacing:0.08em;}
+  .traj .t-today{font-size:10px;fill:var(--forest);letter-spacing:0.12em;}
+  .traj .t-pt{font-family:'Fraunces',serif;font-weight:600;font-size:15px;fill:var(--ink);}
+  .traj .t-pt.strong{font-size:18px;fill:var(--forest-deep);}
+  .traj .t-pt.goal{fill:var(--tomato);font-weight:700;}
+  .path-grid{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px;
+  }
+  .path-cell{
+    background:var(--mint-soft);border:1px solid var(--mint);border-radius:14px;
+    padding:16px 14px;text-align:center;
+  }
+  .path-cell .pnum{font-family:'Fraunces',serif;font-weight:900;font-size:28px;color:var(--forest-deep);line-height:1;}
+  .path-cell .plab{font-family:'Space Mono',monospace;font-size:10px;text-transform:uppercase;
+    letter-spacing:0.1em;color:var(--muted);margin-top:9px;line-height:1.4;}
+  .verdict{
+    margin-top:20px;border-left:3px solid var(--forest);padding:4px 0 4px 18px;
+  }
+  .verdict .vtag{
+    font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--forest-deep);
+  }
+  @media (max-width:680px){
+    .path-grid{grid-template-columns:1fr;}
+  }
+
+  footer{
+    padding:24px 44px 34px;
+    font-family:'Space Mono',monospace;
+    font-size:11px;color:var(--muted);letter-spacing:0.02em;
+    display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;
+    border-top:1px solid var(--line);
+  }
+  footer .star{color:var(--mint);}
+
+  .savebar{max-width:860px;margin:24px auto 0;text-align:right;padding:0 8px;}
+  .savebtn{
+    font-family:'Space Mono',monospace;font-size:12px;letter-spacing:0.05em;
+    background:var(--forest);color:#f4efe2;border:none;cursor:pointer;
+    padding:10px 18px;border-radius:999px;
+  }
+  .savebtn:hover{background:var(--forest-deep);}
+
+  @media (max-width:680px){
+    .sheet{margin:14px;border-radius:16px;}
+    .head{padding:30px 24px;}
+    .student{font-size:34px;}
+    .body{padding:6px 24px;}
+    .stats{grid-template-columns:repeat(2,1fr);}
+    .stat{border-bottom:1px solid var(--line-soft);}
+    .stat:nth-child(2){border-right:none;}
+    .compare{grid-template-columns:1fr;gap:14px;}
+    .compare .arrow .glyph{transform:rotate(90deg);display:inline-block;}
+    footer{padding:22px 24px;}
+  }
+
+  @media print{
+    body{background:#fff;}
+    .savebar{display:none;}
+    .sheet{box-shadow:none;border:none;margin:0;max-width:none;border-radius:0;}
+    section,.compare,.callout,.stat{break-inside:avoid;}
+    .head{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    .stat .num,.compare,.callout,.status,.chip.done{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  }
+</style>
+</head>
+<body>
+
+<div class="savebar">
+  <button class="savebtn" onclick="window.print()">Save as PDF</button>
+</div>
+
+<div class="sheet">
+
+  <!-- HEADER -->
+  <header class="head">
+    <svg class="constellation" viewBox="0 0 860 220" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <g>
+        <line x1="120" y1="48" x2="210" y2="92" stroke="#2c3a63" stroke-width="1"/>
+        <line x1="210" y1="92" x2="300" y2="60" stroke="#2c3a63" stroke-width="1"/>
+        <line x1="640" y1="150" x2="720" y2="110" stroke="#2c3a63" stroke-width="1"/>
+        <line x1="720" y1="110" x2="800" y2="158" stroke="#2c3a63" stroke-width="1"/>
+      </g>
+      <g fill="#a9c7b6">
+        <circle cx="120" cy="48" r="2.2"/>
+        <circle cx="210" cy="92" r="1.6"/>
+        <circle cx="300" cy="60" r="2.4"/>
+        <circle cx="640" cy="150" r="1.8"/>
+        <circle cx="720" cy="110" r="2.6"/>
+        <circle cx="800" cy="158" r="1.7"/>
+        <circle cx="430" cy="36" r="1.5"/>
+        <circle cx="520" cy="180" r="1.4"/>
+        <circle cx="70" cy="150" r="1.5"/>
+      </g>
+    </svg>
+    <div class="head-inner">
+      <div class="brandrow">
+        <span class="brandmark">&#10038;</span>
+        <span class="brandname">Illuminairy</span>
+      </div>
+      <div class="eyebrow">Weekly Progress Report</div>
+      <h1 class="student">Danielle Danso</h1>
+      <div class="meta">WEEK 2<span>/</span>JUNE 16 TO 23, 2026<span>/</span>GOAL: 1400 ON AUG 22, 2026</div>
+      <div class="status"><span class="dot"></span>On track for 1400 by the August 22 test date</div>
+    </div>
+  </header>
+
+  <!-- STAT BAND -->
+  <div class="stats">
+    <div class="stat"><div class="num">4</div><div class="lab">Total<br>sessions</div></div>
+    <div class="stat"><div class="num">2</div><div class="lab">Sessions<br>this week</div></div>
+    <div class="stat"><div class="num">93</div><div class="lab">Practice<br>questions</div></div>
+    <div class="stat"><div class="num">91%</div><div class="lab">Practice<br>accuracy</div></div>
+  </div>
+
+  <div class="body">
+
+    <!-- SUMMARY -->
+    <section>
+      <p class="lede">Week two was Reading and Writing. We ran two sessions on Transitions, the skill that
+      showed up on all three of her diagnostic misses in that topic. Danielle completed every assigned set,
+      hit 96 percent on Transitions 1, and after we reviewed her medium misses live she scored 96 percent on
+      portal flashcards. On her own she also started Command of Evidence and Right Triangles practice. She kept
+      working Equivalent Expressions: 95 percent on easy, 72 percent on medium. She is ready to move into
+      advanced algebra this week.</p>
+    </section>
+
+    <!-- ACCURACY THEN/NOW -->
+    <section>
+      <div class="sec-label">Accuracy, then and now</div>
+      <div class="compare">
+        <div class="cell">
+          <div class="cnum">67%</div>
+          <div class="clab">Diagnostic<br>all topics, timed</div>
+        </div>
+        <div class="arrow">
+          <span class="glyph">&#8594;</span>
+          <span class="delta">+24 pts</span>
+        </div>
+        <div class="cell">
+          <div class="cnum">91%</div>
+          <div class="clab">This week's practice<br>93 questions</div>
+        </div>
+      </div>
+      <p style="margin-top:16px;">Her accuracy went from 67 percent on the diagnostic to 91 percent across 93
+      practice questions in seven days. That is up two points from last week's 89 percent, even as the work
+      shifted to medium Transitions and medium Equivalent Expressions.</p>
+      <p style="margin-top:10px;"><strong>Week-over-week:</strong> Week 1 (Math) · 98 questions · 89%.
+      Week 2 (Reading and Writing + homework) · 93 questions · 91%.</p>
+    </section>
+
+    <!-- SCORE TRAJECTORY -->
+    <section>
+      <div class="sec-label">Score trajectory</div>
+      <h2>Estimated gain so far, and the path to 1400</h2>
+      <p>She has picked up <strong>about 50 to 75 points</strong> since the diagnostic. Week one moved her
+      into the 1150 to 1200 range on math. Week two adds Reading and Writing points from Transitions, which
+      was worth about 22 scaled points on her diagnostic. That puts her around <strong>1200 to 1225</strong>
+      today.</p>
+
+      <svg class="traj" viewBox="0 0 600 360" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Line graph projecting Danielle's score from 1100 to 1150 on June 6, through about 1175 after week 1 and about 1210 after week 2, along a curve to 1400 on August 22.">
+        <defs>
+          <linearGradient id="trajFill" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="var(--forest)" stop-opacity="0.16"/>
+            <stop offset="100%" stop-color="var(--forest)" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+
+        <!-- horizontal gridlines -->
+        <g stroke="var(--line)" stroke-width="1">
+          <line x1="64" y1="66.5" x2="576" y2="66.5"/>
+          <line x1="64" y1="143.5" x2="576" y2="143.5"/>
+          <line x1="64" y1="220.5" x2="576" y2="220.5"/>
+          <line x1="64" y1="297.5" x2="576" y2="297.5"/>
+        </g>
+        <line x1="64" y1="336" x2="576" y2="336" stroke="var(--muted)" stroke-width="1"/>
+
+        <!-- y axis score labels -->
+        <g class="t-yl">
+          <text x="56" y="70.5" text-anchor="end">1400</text>
+          <text x="56" y="147.5" text-anchor="end">1300</text>
+          <text x="56" y="224.5" text-anchor="end">1200</text>
+          <text x="56" y="301.5" text-anchor="end">1100</text>
+        </g>
+
+        <!-- x axis time labels -->
+        <g class="t-xl">
+          <text x="100" y="353" text-anchor="middle">JUN</text>
+          <text x="243" y="353" text-anchor="middle">JUL</text>
+          <text x="576" y="353" text-anchor="end">AUG 22</text>
+        </g>
+
+        <!-- today guide -->
+        <line x1="212" y1="42" x2="212" y2="336" stroke="var(--mint)" stroke-width="1.5" stroke-dasharray="3 4"/>
+        <text class="t-today" x="217" y="50" text-anchor="start">TODAY</text>
+
+        <!-- area under the line -->
+        <path d="M84,278.25 L148,239.75 L212,201.25 C270,110 450,74 576,66.5 L576,336 L84,336 Z" fill="url(#trajFill)"/>
+
+        <!-- actual progress (solid) -->
+        <path d="M84,278.25 L148,239.75 L212,201.25" fill="none" stroke="var(--forest)" stroke-width="3.5" stroke-linecap="round"/>
+        <!-- projection (dashed curve) -->
+        <path d="M212,201.25 C270,110 450,74 576,66.5" fill="none" stroke="var(--forest)" stroke-width="3" stroke-dasharray="2 7" stroke-linecap="round"/>
+
+        <!-- points -->
+        <circle cx="84" cy="278.25" r="6.5" fill="#fbf7ee" stroke="var(--forest)" stroke-width="3.5"/>
+        <circle cx="148" cy="239.75" r="6" fill="#fbf7ee" stroke="var(--forest)" stroke-width="2.5"/>
+        <circle cx="212" cy="201.25" r="7" fill="var(--forest)" stroke="#fbf7ee" stroke-width="2.5"/>
+        <circle cx="576" cy="66.5" r="7" fill="#fbf7ee" stroke="var(--tomato)" stroke-width="3.5"/>
+
+        <!-- point labels -->
+        <text class="t-pt" x="78" y="276" text-anchor="end">1100-1150</text>
+        <text class="t-pt" x="142" y="234" text-anchor="end">~1175</text>
+        <text class="t-pt strong" x="206" y="196" text-anchor="end">~1210</text>
+        <text class="t-pt goal" x="576" y="54" text-anchor="end">1400 GOAL</text>
+      </svg>
+
+      <div class="path-grid">
+        <div class="path-cell"><div class="pnum">~190</div><div class="plab">Points<br>to goal</div></div>
+        <div class="path-cell"><div class="pnum">~8.5</div><div class="plab">Weeks<br>until test</div></div>
+        <div class="path-cell"><div class="pnum">25-30</div><div class="plab">Points per week<br>to stay on pace</div></div>
+      </div>
+
+      <div class="verdict">
+        <p><span class="vtag">Verdict: on track.</span> From her 1100 to 1150 starting point, 1400 means gaining
+        about 275 points. We estimate she has gained 50 to 75 of those in two weeks. To hit her goal, she will
+        need to keep up about 25 points a week across the next eight to nine weeks. Transitions is largely
+        closed out; the next math block (perfect squares, exponentials, quadratic formula, discriminant) is where
+        her diagnostic nonlinear misses live.</p>
+      </div>
+    </section>
+
+    <!-- PRACTICE BY SET -->
+    <section>
+      <div class="sec-label">Homework and practice</div>
+      <h2>What she completed this week</h2>
+      <div class="chips" style="margin-bottom:14px;">
+        <span class="chip done">Transitions 1: 26/27 (96%)</span>
+        <span class="chip done">Equivalent Expressions easy: 19/20 (95%)</span>
+        <span class="chip">Equivalent Expressions medium: 18/25 (72%)</span>
+        <span class="chip">Transitions 2: 22/28 (79%)</span>
+        <span class="chip">Transitions 3 untimed hard: 14/16 (88%)</span>
+        <span class="chip">Transitions 3 timed: 30 hard · due Jun 28</span>
+        <span class="chip">Command of Evidence · independent</span>
+        <span class="chip">Right Triangles · independent</span>
+      </div>
+      <ul>
+        <li><strong>Transitions 1 (due June 17):</strong> 26 of 27 correct. She finished the full set. The one
+        miss was reviewed in session two.</li>
+        <li><strong>Equivalent Expressions, easy (due June 21):</strong> 19 of 20, 95 percent. Goal met.</li>
+        <li><strong>Equivalent Expressions, medium (due June 21):</strong> 18 of 25, 72 percent. Goal was 95
+        percent. She skipped questions 12 and 16 after long stalls (5+ minutes each). The other misses follow
+        clear patterns (see below).</li>
+        <li><strong>Transitions 2:</strong> 22 of 28. We walked every miss live in session two. After that
+        review she hit 96 percent on portal flashcards.</li>
+        <li><strong>Transitions 3 · Untimed (hard):</strong> 14 of 16, 87.5 percent. Completed before the timed set.</li>
+        <li><strong>Transitions 3 · Timed (hard):</strong> 30 questions, timed. Due June 28. Not yet started.</li>
+        <li><strong>Independent practice (self-assigned):</strong> Command of Evidence and Right Triangles and
+        Trigonometry. She started both on her own before we have formally taught them in session. Command of
+        Evidence is worth about 26 points on her diagnostic plan; triangles showed up on Module 2.</li>
+      </ul>
+    </section>
+
+    <!-- WHAT WE COVERED -->
+    <section>
+      <div class="sec-label">What we covered</div>
+      <h2>Two Reading and Writing sessions: Transitions</h2>
+      <p>Both sessions were interactive. We used the slide deck, sorting games, matching drills, and live
+      walk-throughs on her diagnostic and homework misses.</p>
+      <ul>
+        <li><strong>Session 1 (June 16):</strong> Cover the blank, name the relationship in plain words, then
+        match to contrast, causation, addition, or similarity. Category sort, copycat elimination, and
+        diagnostic revisits on Wallace Stevens (Module 1 Q24), Cosmic Canvas (Module 2 Q23), and the
+        rhythmicity concession (Module 2 Q24).</li>
+        <li><strong>Session 2 (June 18):</strong> Score recap on Transitions 1, then medium depth: the seven
+        jobs framework, the &quot;so&quot; test on cause-and-effect words, live reps on Billy Joel, Yeats,
+        Stoclet House, Bauhaus, baklava, BLS, and gamma-ray burst misses, plus a ten-word drill and trap
+        naming.</li>
+        <li><strong>Homework path:</strong> Slide deck review, flashcards to 95 percent, then Homework Portal
+        sets in order (Transitions 1, then 2, then 3).</li>
+      </ul>
+    </section>
+
+    <!-- AHA MOMENTS -->
+    <section>
+      <div class="sec-label">Aha moments</div>
+      <h2>Where it clicked</h2>
+      <ul>
+        <li><strong>She named the relationship before looking at choices.</strong> By session two she was
+        covering the blank and stating what sentence two does (contrast, cause, sequence, concession) before
+        reading any answer options.</li>
+        <li><strong>Copycat elimination landed.</strong> When two transition words do the same job, she crosses
+        both out first, then reads the passage. That cut down on trap answers on medium questions.</li>
+        <li><strong>Diagnostic misses came back.</strong> Wallace Stevens (Nonetheless / contrast), Cosmic Canvas
+        (sequence from first impression to final understanding), and the rhythmicity study (Granted / concession)
+        all clicked with the method, not memorization.</li>
+        <li><strong>Flashcards after review: 96 percent.</strong> After we walked her Transitions 2 misses live,
+        she ran the portal flashcard deck and scored 96 percent. That confirms the method stuck once she saw
+        where the medium traps were.</li>
+        <li><strong>Cause-and-effect trap:</strong> The &quot;so&quot; test (if you cannot say &quot;so ___&quot;
+        between the sentences, it is not cause-and-effect) fixed several medium misses from Transitions 2.</li>
+      </ul>
+    </section>
+
+    <!-- EFFORT -->
+    <section>
+      <div class="sec-label">Effort and engagement</div>
+      <h2>She finished what we assigned, and kept going</h2>
+      <ul>
+        <li><strong>Four tutoring sessions total,</strong> two this week, both Reading and Writing.</li>
+        <li><strong>93 assigned practice questions in seven days,</strong> including full completion of Transitions 1 and
+        both Equivalent Expressions sets.</li>
+        <li><strong>Independent work beyond homework:</strong> Command of Evidence (Reading and Writing) and Right
+        Triangles and Trigonometry (Math). Same pattern as week one, when she moved into medium Equivalent
+        Expressions before we formally assigned it.</li>
+        <li><strong>She stayed with hard medium math.</strong> Even when she skipped two Equivalent Expressions
+        questions, she spent 5+ minutes trying before moving on, which tells us where to drill next.</li>
+        <li><strong>Interactive format still works better.</strong> Sorting games, matching, and live reps held
+        her attention more than slide-only review.</li>
+      </ul>
+    </section>
+
+    <!-- IMPROVEMENT / EE ANALYSIS -->
+    <section>
+      <div class="sec-label">Equivalent Expressions: error patterns</div>
+      <h2>Where medium misses cluster (and what to do)</h2>
+      <p>Danielle largely understands factoring and equivalent expressions. Easy is at 95 percent. Medium is
+      at 72 percent. The misses are not random. They fall into four buckets:</p>
+      <ul>
+        <li><strong>Sign distribution through parentheses (Q3):</strong> Subtracting a trinomial and flipping
+        every sign inside. She answered 3 instead of 1 on a + b because the middle term came out wrong.</li>
+        <li><strong>Squared-binomial expansion, then combine x&sup2; terms (Q10):</strong> She got the linear
+        term (52x) and constant (25) right but left 3x&sup2; instead of x&sup2;. She expanded the first part
+        but did not subtract the 2x&sup2; from the second squared term.</li>
+        <li><strong>Multi-step expand-then-factor (Q12, skipped):</strong> Expand 12(x &minus; 3)&sup2;, distribute,
+        combine to a quadratic, then factor. She stalled here for 334 seconds. Same family as Q16 (skipped):
+        matching coefficients when one side has x/a.</li>
+        <li><strong>Identity / coefficient matching, wrong final answer (Q17, Q18, Q20):</strong> She often
+        finds a or b or d correctly but submits the wrong variable (Q18: answered d = 1/2 instead of c = 3/2)
+        or the reciprocal ratio (Q20: answered &minus;16 instead of &minus;1/16 for k/m).</li>
+      </ul>
+      <p><strong>Recommendation:</strong> Keep assigning factoring and simplifying quadratic and polynomial
+      expressions until she hits 95 percent at medium independently. The gaps are execution (signs, combining
+      like terms, reading what the question asks for), not concept. Perfect-square and discriminant work this
+      week should reinforce the same expansion and coefficient-matching muscles.</p>
+    </section>
+
+    <!-- PLAN -->
+    <section>
+      <div class="sec-label">The plan from here</div>
+      <h2>What is next</h2>
+      <div class="plan-week">
+        <div class="plan-when">This week, June 23 to 30</div>
+        <div class="plan-what">Advanced algebra: two Math sessions</div>
+        <div class="plan-note">Perfect squares, exponentials, the quadratic formula, and the discriminant. These
+        map directly to her diagnostic nonlinear-equation misses (Math Module 1 Q11 and Q21; Module 2 Q4, Q15,
+        and Q21) and to the medium Equivalent Expressions work she is still finishing. We will also revisit
+        diagnostic Module 2 Q11 (Equivalent Expressions hard) once the perfect-square patterns are solid.</div>
+      </div>
+      <div class="plan-week">
+        <div class="plan-when">End of this week, June 23 to 30</div>
+        <div class="plan-what">First full-length practice test under real test conditions</div>
+        <div class="plan-note">Danielle will take her first full-length practice test at the end of the week.
+        Her June 6 diagnostic is the starting baseline (~1100 to 1150). This retake shows how much her score
+        has moved after two weeks of tutoring and homework, and whether she is on track for 1400 on August 22.
+        The first-month checkpoint on her plan is about +100 points (roughly 1225 or higher).</div>
+      </div>
+      <div class="plan-week">
+        <div class="plan-when">Homework carryover</div>
+        <div class="plan-what">Transitions 3 · Timed; Equivalent Expressions medium until 95%</div>
+        <div class="plan-note">Transitions 3 · Timed: 30 hard questions in one sitting, due June 28. She finished
+        the untimed set at 14/16. She should keep running medium Equivalent Expressions sets until she hits 95
+        percent without skipping. Transitions 2 misses are closed out after session review and flashcards.</div>
+      </div>
+      <div class="plan-week">
+        <div class="plan-when">Diagnostic items to watch (not teaching this week)</div>
+        <div class="plan-what">Text structure, area/volume, words in context</div>
+        <div class="plan-note">Command of evidence is on her independent practice list this week; we will teach
+        it formally in a scheduled session soon. Triangles she is also chipping away at on her own. No need to
+        pull other topics forward unless a practice test shows regression.</div>
+      </div>
+      <p style="margin-top:16px;">We will keep the interactive session format: live problems, whiteboard work,
+      and short drills instead of long slide lectures.</p>
+    </section>
+
+    <!-- BOTTOM LINE -->
+    <section>
+      <div class="callout">
+        <div class="sec-label">Bottom line</div>
+        <h2>On track</h2>
+        <p>After two weeks Danielle is on pace for her August 22 goal. Transitions is largely fixed. Math medium
+        Equivalent Expressions needs more reps on signs, combining terms, and reading what the question asks for.
+        Her first full-length practice test at the end of this week will show how far she has come since the
+        diagnostic and whether she is on track for 1400.</p>
+      </div>
+    </section>
+
+  </div>
+
+  <footer>
+    <span><span class="star">&#10038;</span> Illuminairy SAT Tutoring</span>
+    <span>Prepared by Brianna Zajicek &middot; brianna@illuminairy.com</span>
+  </footer>
+
+</div>
+
+</body>
+</html>

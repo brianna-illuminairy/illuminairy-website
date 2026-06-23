@@ -23,7 +23,9 @@ export async function POST(request: Request) {
 
   let body: {
     parentEmail?: string;
+    studentEmail?: string;
     parentFirst?: string;
+    week?: "week-1" | "week-2";
     weekLabel?: string;
     reportPath?: string;
   } = {};
@@ -47,7 +49,9 @@ export async function POST(request: Request) {
 
   const result = await sendDanielleWeeklyReportEmail({
     parentEmail,
+    studentEmail: body.studentEmail?.trim() || process.env.DANIELLE_STUDENT_EMAIL?.trim(),
     parentFirst: body.parentFirst ?? process.env.DANIELLE_PARENT_FIRST?.trim(),
+    week: body.week,
     weekLabel: body.weekLabel,
     reportPath: body.reportPath
   });

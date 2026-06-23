@@ -9,7 +9,8 @@ const WEEK_GOALS = [
   "Memorize the four categories and the cheat sheet word list.",
   "Hit 95% on the category flashcard deck before starting Homework Portal sets.",
   "Complete Transitions 1 in the Homework Portal by Wednesday, June 17.",
-  "Complete Transitions 2 in the Homework Portal by Saturday, June 27."
+  "Complete Transitions 2 by Friday, June 27.",
+  "Complete Transitions 3 · Untimed (16 hard), then Transitions 3 · Timed (30 hard, due June 28)."
 ] as const;
 
 export function DanielleWeek2HubContent() {
@@ -20,8 +21,8 @@ export function DanielleWeek2HubContent() {
         <h1>Lesson schedule</h1>
         <p className="danielle-portal__lede">
           Week 2 focuses on Transitions. Lesson 1 (Tuesday, June 16) is complete. Homework:
-          slide deck review → flashcards at 95% → Transitions 1 due June 17 → Transitions 2 due
-          Saturday, June 27.
+          slide deck review → flashcards at 95% → Transitions 1 → Transitions 2 → Transitions 3 untimed →
+          Transitions 3 timed (30 hard, due June 28).
         </p>
       </div>
 
@@ -50,6 +51,18 @@ export function DanielleWeek2HubContent() {
       </section>
 
       <section className="danielle-week1__section">
+        <h2 className="danielle-week1__heading">Week 2 progress report</h2>
+        <p className="danielle-week1__focus">
+          Your Week 2 summary (June 16 to 23) is on the portal, including Transitions homework scores,
+          Equivalent Expressions error patterns, and the plan for advanced algebra.
+        </p>
+        <Link href="/danielle/week-2/report" className="danielle-portal__link-card">
+          <h2>Week 2 report · Jun 16 to 23</h2>
+          <p>91% practice accuracy, Transitions 1 at 96%, and what we are covering in Math this week.</p>
+        </Link>
+      </section>
+
+      <section className="danielle-week1__section">
         <h2 className="danielle-week1__heading">Week 2 lessons</h2>
         <div className="danielle-week1__lesson-links">
           <Link href="/danielle/week-2/lesson-1" className="danielle-portal__link-card">
@@ -59,7 +72,8 @@ export function DanielleWeek2HubContent() {
           <Link href="/danielle/week-2/lesson-2" className="danielle-portal__link-card">
             <h2>Lesson 2 · Thu Jun 18</h2>
             <p>
-              Medium transitions deck plus Homework Portal timed set: 30 questions, 37-minute timer.
+              Medium transitions deck plus Homework Portal · Transitions 3 · Timed: 30 hard questions, due
+              June 28.
             </p>
           </Link>
         </div>

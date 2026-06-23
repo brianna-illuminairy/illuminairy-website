@@ -26,9 +26,23 @@ export const WEEK2_HOMEWORK_PORTAL_SETS: Week2HomeworkPortalSet[] = [
   {
     id: "transitions-2",
     title: "Transitions 2",
-    startLabel: "Saturday, June 27",
-    dueLabel: "Saturday, June 27",
-    note: "Opens Saturday, June 27. Complete after Transitions 1."
+    startLabel: "Monday, June 16",
+    dueLabel: "Friday, June 27",
+    note: "Complete after Transitions 1. Review misses in session before moving on."
+  },
+  {
+    id: "transitions-3-untimed",
+    title: "Transitions 3 · Untimed",
+    startLabel: "Wednesday, June 18",
+    dueLabel: "Tuesday, June 24",
+    note: "16 hard questions, no timer. Finish before the timed Transitions 3 set."
+  },
+  {
+    id: "transitions-3-timed",
+    title: "Transitions 3 · Timed",
+    startLabel: "Wednesday, June 18",
+    dueLabel: "Saturday, June 28",
+    note: "30 hard questions, timed. Run in one sitting, test conditions. Due after the untimed set."
   }
 ];
 
@@ -60,25 +74,36 @@ export const WEEK2_HOMEWORK_WORKFLOW = [
   {
     step: 5,
     title: "Homework Portal · Transitions 2",
-    detail: "Opens Saturday, June 27. Due Saturday, June 27. Complete after Transitions 1."
+    detail: "Due Friday, June 27. Complete after Transitions 1."
+  },
+  {
+    step: 6,
+    title: "Homework Portal · Transitions 3 · Untimed",
+    detail: "16 hard questions, no timer. Due Tuesday, June 24. Complete before the timed set."
+  },
+  {
+    step: 7,
+    title: "Homework Portal · Transitions 3 · Timed",
+    detail:
+      "30 hard questions, timed. Due Saturday, June 28. One sitting, test conditions. Name the relationship before you read choices."
   }
 ] as const;
 
 export const POST_SESSION_2_HOMEWORK = {
   headline: "Homework Portal · Transitions practice sets",
   body:
-    "Two Transitions problem sets live in the Homework Portal (separate login). Follow the steps below on this portal first, then open the Homework Portal for Transitions 1 and 2."
+    "Four Transitions problem sets live in the Homework Portal (separate login). Follow the steps below on this portal first, then open the Homework Portal for Transitions 1 through 3 (untimed, then timed)."
 } as const;
 
-/** After Week 2 Lesson 2 (medium session). Assigned in my.illuminairy.com Homework Portal. */
+/** Transitions 3 timed set — Homework Portal. */
 export const POST_SESSION_2_LESSON_2_HOMEWORK = {
-  headline: "Homework Portal · Timed Transitions practice",
-  title: "Timed Transitions practice",
-  dueLabel: "Sunday, June 22",
+  headline: "Homework Portal · Transitions 3 · Timed",
+  title: "Transitions 3 · Timed",
+  dueLabel: "Saturday, June 28",
   problemCount: 30,
   durationMinutes: 37,
   body:
-    "Complete the timed set in the Homework Portal: 30 Transitions questions with a 37-minute timer. Run it in one sitting, test conditions. Use the three rules from tonight before you look at choices.",
+    "Complete the timed Transitions 3 set in the Homework Portal: 30 hard questions with a timer. Run it in one sitting, test conditions, after you finish Transitions 3 · Untimed. Use the three rules from session before you look at choices.",
   rules: [
     "Run the \"so\" test before any cause-and-effect word.",
     "Name the job sentence two is doing before you read the choices.",

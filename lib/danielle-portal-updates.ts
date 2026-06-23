@@ -9,6 +9,15 @@ export type DaniellePortalUpdate = {
 
 export const DANIELLE_PORTAL_UPDATES: DaniellePortalUpdate[] = [
   {
+    id: "2026-06-23-week-2-report",
+    publishedAt: "2026-06-23",
+    title: "Week 2 progress report",
+    summary:
+      "Your Week 2 summary is ready: Transitions homework, Equivalent Expressions patterns, score update, and advanced algebra plan.",
+    href: "/danielle/week-2/report",
+    cta: "Read Week 2 report"
+  },
+  {
     id: "2026-06-16-week-2-homework-portal",
     publishedAt: "2026-06-16",
     title: "Transitions homework sets assigned",

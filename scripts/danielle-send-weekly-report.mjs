@@ -1,12 +1,16 @@
 #!/usr/bin/env node
 /**
- * Send Danielle Week 1 weekly progress report email to parent.
+ * Send Danielle weekly progress report email to student + parent.
  *
- * Usage:
- *   ADMIN_SECRET=... PARENT_EMAIL=... npm run danielle:send-weekly-report
+ * Usage (Week 2 — default):
+ *   ADMIN_SECRET=... PARENT_EMAIL=... STUDENT_EMAIL=... npm run danielle:send-weekly-report
+ *
+ * Week 1:
+ *   REPORT_WEEK=1 ADMIN_SECRET=... PARENT_EMAIL=... npm run danielle:send-weekly-report
  *
  * Optional:
- *   PARENT_FIRST=...
+ *   PARENT_FIRST=Amma
+ *   WEEK_LABEL="June 16–23, 2026"
  *   DANIELLE_WEEKLY_REPORT_BASE_URL=https://illuminairy.com
  */
 import { readFileSync, existsSync } from "fs";
@@ -50,6 +54,12 @@ if (!parentEmail) {
   process.exit(1);
 }
 
+const studentEmail =
+  process.env.STUDENT_EMAIL?.trim() || process.env.DANIELLE_STUDENT_EMAIL?.trim();
+
+const reportWeek = process.env.REPORT_WEEK?.trim() || "2";
+const isWeek1 = reportWeek === "1";
+
 const baseUrl = (
   process.env.DANIELLE_WEEKLY_REPORT_BASE_URL ||
   process.env.DANIELLE_NOTIFY_BASE_URL ||
@@ -58,9 +68,13 @@ const baseUrl = (
 
 const body = {
   parentEmail,
+  studentEmail,
   parentFirst: process.env.PARENT_FIRST?.trim() || process.env.DANIELLE_PARENT_FIRST?.trim(),
-  weekLabel: process.env.WEEK_LABEL?.trim() || "Week 1 (June 9 to 16, 2026)",
-  reportPath: "/danielle/week-1/report"
+  week: isWeek1 ? "week-1" : "week-2",
+  weekLabel:
+    process.env.WEEK_LABEL?.trim() ||
+    (isWeek1 ? "June 9–16, 2026" : "June 16–23, 2026"),
+  reportPath: isWeek1 ? "/danielle/week-1/report" : "/danielle/week-2/report"
 };
 
 const response = await fetch(`${baseUrl}/api/danielle/weekly-report/send`, {
