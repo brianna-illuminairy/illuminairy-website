@@ -11,11 +11,10 @@ function phoneSendStatus() {
   const enterpriseRecaptchaEnabled = isFunnelPhoneEnterpriseRecaptchaEnabled();
 
   return {
-    ok: status.clientConfigured,
-    verifyReady: status.configured,
+    ok: status.configured,
     channel: status.channel,
     clientConfigured: status.clientConfigured,
-    serviceAccountConfigured: status.serviceAccountConfigured,
+    serverConfigured: status.serverConfigured,
     enterpriseRecaptchaEnabled,
   };
 }
@@ -24,10 +23,9 @@ export async function GET() {
   const status = phoneSendStatus();
   return NextResponse.json({
     ok: status.ok,
-    verifyReady: status.verifyReady,
     channel: status.channel,
     clientConfigured: status.clientConfigured,
-    serviceAccountConfigured: status.serviceAccountConfigured,
+    serverConfigured: status.serverConfigured,
     enterpriseRecaptchaEnabled: status.enterpriseRecaptchaEnabled,
   });
 }
@@ -35,12 +33,14 @@ export async function GET() {
 export async function POST(request: Request) {
   const status = phoneSendStatus();
 
-  if (!isFirebaseClientConfigured()) {
+  if (!status.ok) {
     return NextResponse.json(
       {
         ok: false,
-        error: "firebase_client_not_configured",
+        error: "verify_not_configured",
         message: "Verification is temporarily unavailable. Email support@illuminairy.com.",
+        clientConfigured: status.clientConfigured,
+        serverConfigured: status.serverConfigured,
       },
       { status: 503 }
     );
@@ -51,7 +51,6 @@ export async function POST(request: Request) {
       ok: true,
       channel: "firebase",
       clientSide: true,
-      verifyReady: status.verifyReady,
     });
   }
 
@@ -99,7 +98,6 @@ export async function POST(request: Request) {
       ok: true,
       channel: "firebase",
       clientSide: true,
-      verifyReady: status.verifyReady,
     });
   } catch {
     return NextResponse.json(

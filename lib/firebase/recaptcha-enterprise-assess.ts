@@ -1,15 +1,8 @@
-import { GoogleAuth } from "google-auth-library";
 import { resolveFirebaseProjectId } from "@/lib/firebase/server-config";
 import {
   FUNNEL_PHONE_RECAPTCHA_ACTION,
   getRecaptchaEnterpriseSiteKey,
 } from "@/lib/firebase/recaptcha-enterprise-public";
-
-type ServiceAccountCredentials = {
-  project_id?: string;
-  client_email?: string;
-  private_key?: string;
-};
 
 export type RecaptchaAssessmentResult = {
   ok: boolean;
@@ -20,37 +13,20 @@ export type RecaptchaAssessmentResult = {
   invalidReason: string | null;
 };
 
-function readServiceAccountCredentials(): ServiceAccountCredentials | null {
-  const rawJson = process.env.FIREBASE_SERVICE_ACCOUNT_JSON?.trim();
-  if (rawJson) {
-    try {
-      return JSON.parse(rawJson) as ServiceAccountCredentials;
-    } catch {
-      return null;
-    }
-  }
-
-  const projectId = process.env.FIREBASE_PROJECT_ID?.trim();
-  const clientEmail = process.env.FIREBASE_CLIENT_EMAIL?.trim();
-  const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n")?.trim();
-
-  if (!projectId || !clientEmail || !privateKey) {
-    return null;
-  }
-
-  return {
-    project_id: projectId,
-    client_email: clientEmail,
-    private_key: privateKey,
-  };
+/**
+ * Server API key allowed to call projects.assessments.create.
+ * Do NOT use the Firebase browser key — GCP blocks it (403 PERMISSION_DENIED).
+ * Create in GCP → APIs & Services → Credentials → API key → restrict to reCAPTCHA Enterprise API.
+ */
+function getRecaptchaEnterpriseApiKey(): string | null {
+  return process.env.RECAPTCHA_ENTERPRISE_API_KEY?.trim() || null;
 }
 
 export function isRecaptchaEnterpriseAssessmentConfigured(): boolean {
-  const credentials = readServiceAccountCredentials();
   return (
     Boolean(resolveFirebaseProjectId()) &&
     Boolean(getRecaptchaEnterpriseSiteKey()) &&
-    Boolean(credentials?.client_email && credentials.private_key)
+    Boolean(getRecaptchaEnterpriseApiKey())
   );
 }
 
@@ -60,45 +36,26 @@ export async function assessRecaptchaEnterpriseToken(input: {
 }): Promise<RecaptchaAssessmentResult> {
   const projectId = resolveFirebaseProjectId();
   const siteKey = getRecaptchaEnterpriseSiteKey();
-  const credentials = readServiceAccountCredentials();
+  const apiKey = getRecaptchaEnterpriseApiKey();
   const expectedAction = input.expectedAction?.trim() || FUNNEL_PHONE_RECAPTCHA_ACTION;
 
-  if (!projectId || !siteKey || !credentials?.client_email || !credentials.private_key) {
+  if (!projectId || !siteKey || !apiKey) {
     throw new Error("recaptcha_assessment_not_configured");
   }
 
-  const auth = new GoogleAuth({
-    credentials: {
-      client_email: credentials.client_email,
-      private_key: credentials.private_key,
-    },
-    scopes: ["https://www.googleapis.com/auth/cloud-platform"],
-  });
+  const url = `https://recaptchaenterprise.googleapis.com/v1/projects/${encodeURIComponent(projectId)}/assessments?key=${encodeURIComponent(apiKey)}`;
 
-  const client = await auth.getClient();
-  const accessToken = await client.getAccessToken();
-  const bearer = accessToken.token?.trim();
-  if (!bearer) {
-    throw new Error("recaptcha_assessment_auth_failed");
-  }
-
-  const response = await fetch(
-    `https://recaptchaenterprise.googleapis.com/v1/projects/${encodeURIComponent(projectId)}/assessments`,
-    {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${bearer}`,
-        "Content-Type": "application/json",
+  const response = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      event: {
+        token: input.token,
+        expectedAction,
+        siteKey,
       },
-      body: JSON.stringify({
-        event: {
-          token: input.token,
-          siteKey,
-          expectedAction,
-        },
-      }),
-    }
-  );
+    }),
+  });
 
   const payload = (await response.json().catch(() => ({}))) as {
     tokenProperties?: {

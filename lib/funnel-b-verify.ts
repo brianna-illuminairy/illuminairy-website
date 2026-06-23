@@ -1,9 +1,9 @@
 import { phoneToCalendlyE164 } from "@/lib/calendly/phone-e164";
-import {
-  hasFirebaseServiceAccountCredentials,
-  isFirebaseAdminConfigured,
-} from "@/lib/firebase/server-config";
 import { isFirebaseClientConfigured } from "@/lib/firebase/public-config";
+import {
+  isFirebasePhoneTokenVerifyConfigured,
+  verifyFirebasePhoneIdToken,
+} from "@/lib/firebase/verify-phone-id-token";
 
 export type FunnelBVerifyChannel = "firebase";
 
@@ -12,19 +12,19 @@ export function resolveFunnelBVerifyChannel(): FunnelBVerifyChannel {
 }
 
 export function isFunnelBVerifyConfigured(): boolean {
-  return isFirebaseClientConfigured() && isFirebaseAdminConfigured();
+  return isFirebaseClientConfigured() && isFirebasePhoneTokenVerifyConfigured();
 }
 
 export function funnelBVerifyStatus() {
-  const firebaseConfigured =
-    isFirebaseClientConfigured() && isFirebaseAdminConfigured();
+  const clientConfigured = isFirebaseClientConfigured();
+  const serverConfigured = isFirebasePhoneTokenVerifyConfigured();
+  const firebaseConfigured = clientConfigured && serverConfigured;
 
   return {
     channel: "firebase" as const,
     configured: firebaseConfigured,
-    clientConfigured: isFirebaseClientConfigured(),
-    serverConfigured: isFirebaseAdminConfigured(),
-    serviceAccountConfigured: hasFirebaseServiceAccountCredentials(),
+    clientConfigured,
+    serverConfigured,
     firebaseConfigured,
   };
 }
@@ -36,33 +36,24 @@ export async function verifyFunnelBPhoneIdToken(input: { phone: string; idToken:
     return { ok: false as const, error: "invalid_phone" as const, channel };
   }
 
-  const idToken = input.idToken.trim();
-  if (!idToken) {
-    return { ok: false as const, error: "id_token_required" as const, channel };
+  const result = await verifyFirebasePhoneIdToken(input.idToken);
+  if (!result.ok) {
+    const error =
+      result.error === "id_token_required"
+        ? ("id_token_required" as const)
+        : result.error === "invalid_token_provider"
+          ? ("invalid_token_provider" as const)
+          : result.error === "firebase_not_configured"
+            ? ("firebase_not_configured" as const)
+            : ("invalid_id_token" as const);
+    return { ok: false as const, error, channel };
   }
 
-  const { getFirebaseAdminAuth } = await import("@/lib/firebase/admin");
-  const auth = getFirebaseAdminAuth();
-  if (!auth) {
-    return { ok: false as const, error: "firebase_not_configured" as const, channel };
+  if (result.user.phoneNumber !== expectedPhone) {
+    return { ok: false as const, error: "phone_mismatch" as const, channel };
   }
 
-  try {
-    const decoded = await auth.verifyIdToken(idToken);
-    if (decoded.firebase?.sign_in_provider !== "phone") {
-      return { ok: false as const, error: "invalid_token_provider" as const, channel };
-    }
-
-    const tokenPhone =
-      typeof decoded.phone_number === "string" ? decoded.phone_number.trim() : "";
-    if (!tokenPhone || tokenPhone !== expectedPhone) {
-      return { ok: false as const, error: "phone_mismatch" as const, channel };
-    }
-
-    return { ok: true as const, verifiedAt: new Date().toISOString(), channel };
-  } catch {
-    return { ok: false as const, error: "invalid_id_token" as const, channel };
-  }
+  return { ok: true as const, verifiedAt: new Date().toISOString(), channel };
 }
 
 export function funnelBVerifyErrorMessage(error: string): string {

@@ -43,6 +43,7 @@ function readServiceAccountFromSplitEnv(): {
   return { projectId, clientEmail, privateKey };
 }
 
+/** Optional — only needed for Admin SDK features beyond phone token lookup. */
 export function hasFirebaseServiceAccountCredentials(): boolean {
   return readServiceAccountFromJson() !== null || readServiceAccountFromSplitEnv() !== null;
 }
@@ -57,6 +58,7 @@ export function resolveFirebaseProjectId(): string | null {
   );
 }
 
+/** Admin SDK (optional). Plan B phone verify uses accounts:lookup + Web API key instead. */
 export function isFirebaseAdminConfigured(): boolean {
   return hasFirebaseServiceAccountCredentials();
 }

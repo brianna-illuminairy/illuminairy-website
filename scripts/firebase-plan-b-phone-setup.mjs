@@ -47,19 +47,32 @@ const BROWSER_KEY_REFERRERS = [
 const root = process.cwd();
 const backupDir = join(root, ".env-backups");
 
+function gcpHeaders(token) {
+  return {
+    Authorization: `Bearer ${token}`,
+    "x-goog-user-project": PROJECT_ID,
+  };
+}
+
 async function getAccessToken() {
-  const auth = new GoogleAuth({
-    scopes: ["https://www.googleapis.com/auth/cloud-platform"],
-  });
-  const client = await auth.getClient();
-  const token = await client.getAccessToken();
-  if (!token.token) {
-    throw new Error(
-      "No GCP access token. Run:\n  gcloud auth login\n  gcloud auth application-default login\n  gcloud config set project " +
-        PROJECT_ID
-    );
+  try {
+    return gcloud("auth print-access-token");
+  } catch {
+    const auth = new GoogleAuth({
+      scopes: ["https://www.googleapis.com/auth/cloud-platform"],
+      projectId: PROJECT_ID,
+      quotaProjectId: PROJECT_ID,
+    });
+    const client = await auth.getClient();
+    const token = await client.getAccessToken();
+    if (!token.token) {
+      throw new Error(
+        "No GCP access token. Run:\n  gcloud auth login\n  gcloud auth application-default login\n  gcloud config set project " +
+          PROJECT_ID
+      );
+    }
+    return token.token;
   }
-  return token.token;
 }
 
 function gcloud(args) {
@@ -97,11 +110,22 @@ function createServiceAccountKey() {
   mkdirSync(backupDir, { recursive: true });
   const stamp = new Date().toISOString().replace(/[:.]/g, "-");
   const keyPath = join(backupDir, `firebase-plan-b-sa-${stamp}.json`);
-  gcloud(
-    `iam service-accounts keys create "${keyPath}" --iam-account=${SA_EMAIL} --project=${PROJECT_ID}`
-  );
-  console.log(`Service account key: ${keyPath}`);
-  return keyPath;
+  try {
+    gcloud(
+      `iam service-accounts keys create "${keyPath}" --iam-account=${SA_EMAIL} --project=${PROJECT_ID}`
+    );
+    console.log(`Service account key: ${keyPath}`);
+    return keyPath;
+  } catch (err) {
+    const msg = err.stderr?.toString() || err.message || String(err);
+    if (msg.includes("disableServiceAccountKeyCreation") || msg.includes("Key creation is not allowed")) {
+      console.log(
+        "Skipping SA key download (org policy blocks key creation). Phone verify uses Web API key + assessments API."
+      );
+      return null;
+    }
+    throw err;
+  }
 }
 
 async function enableService(token, serviceName) {
@@ -162,6 +186,118 @@ async function patchIdentityConfig(token) {
     `identity config (phone on, US SMS, domains): ${patchRes.status}`,
     patchResult.error?.message || "ok"
   );
+}
+
+const RECAPTCHA_SITE_KEY =
+  process.env.NEXT_PUBLIC_RECAPTCHA_ENTERPRISE_SITE_KEY?.trim() ||
+  "6LfY4y4tAAAAAJIIuRDs0cKXvxWoN4JgKuWmKPJ6";
+
+async function createServerRecaptchaApiKey(token) {
+  const listUrl = `https://apikeys.googleapis.com/v2/projects/${PROJECT_ID}/locations/global/keys`;
+  const listRes = await fetch(listUrl, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  const listBody = await listRes.json().catch(() => ({}));
+  if (!listRes.ok) {
+    console.error("list API keys failed:", listBody);
+    return null;
+  }
+
+  const existing = (listBody.keys || []).find(
+    (k) => k.displayName === "Plan B reCAPTCHA Enterprise assessments (server)"
+  );
+  if (existing?.name) {
+    const uid = existing.name.split("/").pop();
+    const keyStringRes = await fetch(
+      `https://apikeys.googleapis.com/v2/projects/${PROJECT_ID}/locations/global/keys/${uid}/keyString`,
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+    if (keyStringRes.ok) {
+      const { keyString } = await keyStringRes.json();
+      console.log("Server reCAPTCHA API key already exists (reusing).");
+      return keyString;
+    }
+  }
+
+  const createRes = await fetch(listUrl, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      displayName: "Plan B reCAPTCHA Enterprise assessments (server)",
+      restrictions: {
+        apiTargets: [{ service: "recaptchaenterprise.googleapis.com" }],
+      },
+    }),
+  });
+  const created = await createRes.json().catch(() => ({}));
+  if (!createRes.ok) {
+    console.error("create server reCAPTCHA API key failed:", created);
+    return null;
+  }
+
+  const opName = created.name;
+  if (!opName) {
+    console.error("create server key: missing operation name", created);
+    return null;
+  }
+
+  let keyResource = null;
+  for (let i = 0; i < 30; i += 1) {
+    await new Promise((r) => setTimeout(r, 2000));
+    const opRes = await fetch(`https://apikeys.googleapis.com/v2/${opName}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const opBody = await opRes.json().catch(() => ({}));
+    if (opBody.done && opBody.response?.name) {
+      keyResource = opBody.response.name;
+      break;
+    }
+  }
+
+  if (!keyResource) {
+    console.error("timed out waiting for server API key operation");
+    return null;
+  }
+
+  const uid = keyResource.split("/").pop();
+  const keyStringRes = await fetch(
+    `https://apikeys.googleapis.com/v2/projects/${PROJECT_ID}/locations/global/keys/${uid}/keyString`,
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
+  const keyBody = await keyStringRes.json().catch(() => ({}));
+  if (!keyStringRes.ok || !keyBody.keyString) {
+    console.error("fetch server key string failed:", keyBody);
+    return null;
+  }
+
+  console.log("Created server reCAPTCHA API key for assessments.create");
+  return keyBody.keyString;
+}
+
+async function smokeRecaptchaAssessment(apiKey, recaptchaToken) {
+  const url = `https://recaptchaenterprise.googleapis.com/v1/projects/${PROJECT_ID}/assessments?key=${encodeURIComponent(apiKey)}`;
+  const res = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      event: {
+        token: recaptchaToken,
+        expectedAction: "phone_verify",
+        siteKey: RECAPTCHA_SITE_KEY,
+      },
+    }),
+  });
+  const body = await res.json().catch(() => ({}));
+  console.log(`assessments smoke (HTTP ${res.status}):`, body.error?.message || "ok");
+  if (res.status === 403) {
+    console.log("403 = wrong key type or reCAPTCHA Enterprise API not enabled.");
+  } else if (res.status === 400 || body.tokenProperties?.valid === false) {
+    console.log("Invalid token is expected for dummy token — auth works.");
+  }
+  return { status: res.status, body };
 }
 
 async function patchBrowserApiKeyReferrers(token) {
@@ -248,9 +384,7 @@ async function patchBrowserApiKeyReferrers(token) {
   );
 }
 
-function mergeEnvLocal(keyPath) {
-  const raw = readFileSync(keyPath, "utf8");
-  const jsonOneLine = JSON.stringify(JSON.parse(raw));
+function printEnvLocalBlock(extraLines = []) {
   const lines = [
     "",
     "# Plan B Firebase — generated by npm run firebase:plan-b-setup",
@@ -259,10 +393,12 @@ function mergeEnvLocal(keyPath) {
     `NEXT_PUBLIC_FIREBASE_PROJECT_ID=${PROJECT_ID}`,
     "NEXT_PUBLIC_FIREBASE_APP_ID=1:331382853798:web:084df38ceff1d4a3806467",
     "NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=331382853798",
+    `NEXT_PUBLIC_RECAPTCHA_ENTERPRISE_SITE_KEY=${RECAPTCHA_SITE_KEY}`,
     `FIREBASE_PROJECT_ID=${PROJECT_ID}`,
-    `FIREBASE_SERVICE_ACCOUNT_JSON=${jsonOneLine}`,
+    "FIREBASE_ENTERPRISE_RECAPTCHA=1",
+    ...extraLines,
   ];
-  console.log("\nAdd to .env.local (merge manually or paste block):\n");
+  console.log("\nAdd to .env.local and Vercel Production:\n");
   console.log(lines.join("\n"));
 }
 
@@ -270,7 +406,7 @@ async function main() {
   console.log(`\n=== Plan B Firebase phone setup — ${PROJECT_ID} ===\n`);
 
   ensureServiceAccount();
-  const keyPath = createServiceAccountKey();
+  createServiceAccountKey();
 
   const token = await getAccessToken();
   await enableService(token, "identitytoolkit.googleapis.com");
@@ -279,10 +415,16 @@ async function main() {
   await patchIdentityConfig(token);
   await patchBrowserApiKeyReferrers(token);
 
-  mergeEnvLocal(keyPath);
+  const serverRecaptchaKey = await createServerRecaptchaApiKey(token);
+  const envExtras = [];
+  if (serverRecaptchaKey) {
+    await smokeRecaptchaAssessment(serverRecaptchaKey, "setup-smoke-token");
+    envExtras.push(`RECAPTCHA_ENTERPRISE_API_KEY=${serverRecaptchaKey}`);
+  }
 
-  console.log("\nNext: add FIREBASE_SERVICE_ACCOUNT_JSON to Vercel Production, then git push / redeploy.");
-  console.log("Test: https://illuminairy.com/plan-b?step=b-phone (incognito)\n");
+  printEnvLocalBlock(envExtras);
+
+  console.log("\nTest: https://illuminairy.com/plan-b?step=b-phone (incognito)\n");
 }
 
 main().catch((err) => {

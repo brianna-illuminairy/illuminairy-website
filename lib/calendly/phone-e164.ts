@@ -23,6 +23,15 @@ export function countPhoneDigits(raw: string): number {
   return raw.replace(/\D/g, "").length;
 }
 
+/** Display US phone as (404) 555-1234 while typing. */
+export function formatUsPhoneDisplay(raw: string): string {
+  const digits = raw.replace(/\D/g, "").slice(0, 10);
+  if (digits.length === 0) return "";
+  if (digits.length <= 3) return `(${digits}`;
+  if (digits.length <= 6) return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
+  return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
+}
+
 /** True when we can build Calendly E.164 (US 10-digit or 1 + 10-digit). */
 export function isValidBookingPhone(raw: string | undefined): boolean {
   return phoneToCalendlyE164(raw) !== null;

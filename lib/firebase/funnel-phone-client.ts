@@ -86,9 +86,42 @@ async function ensureRecaptchaEnterpriseConfig(auth: Auth): Promise<void> {
   await recaptchaConfigPromise;
 }
 
+async function fetchRecaptchaSiteKey(): Promise<string | null> {
+  const config = getFirebasePublicConfig();
+  if (!config?.apiKey) return null;
+
+  try {
+    const res = await fetch(
+      `https://identitytoolkit.googleapis.com/v1/recaptchaParams?key=${encodeURIComponent(config.apiKey)}`
+    );
+    const data = (await res.json()) as { recaptchaSiteKey?: string };
+    return data.recaptchaSiteKey?.trim() || null;
+  } catch {
+    return null;
+  }
+}
+
+async function preloadRecaptchaV2Script(): Promise<void> {
+  if (typeof window === "undefined") return;
+  if (document.getElementById("firebase-recaptcha-api")) return;
+
+  await new Promise<void>((resolve, reject) => {
+    const script = document.createElement("script");
+    script.id = "firebase-recaptcha-api";
+    script.src = "https://www.google.com/recaptcha/api.js?render=explicit";
+    script.async = true;
+    script.defer = true;
+    script.onload = () => resolve();
+    script.onerror = () => reject(new Error("recaptcha_script_failed"));
+    document.head.appendChild(script);
+  });
+}
+
 async function ensureRecaptchaVerifier(auth: Auth): Promise<RecaptchaVerifier> {
   await ensureRecaptchaEnterpriseConfig(auth);
   funnelPhoneRecaptchaContainerId();
+  await preloadRecaptchaV2Script();
+  await fetchRecaptchaSiteKey();
   await clearRecaptcha(auth);
 
   recaptchaVerifier = new RecaptchaVerifier(auth, RECAPTCHA_CONTAINER_ID, {
