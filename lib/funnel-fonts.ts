@@ -79,3 +79,6 @@ export const funnelPerfFontClassName = `${perfHanken.variable} ${perfDmSans.vari
 
 /** Ad landing pages — display, body, mono stats, Schibsted brand variant. */
 export const landingAdFontClassName = `${perfDisplaySerif.variable} ${perfHanken.variable} ${dmMono.variable} ${adSchibsted.variable}`;
+
+/** Tutor / Plan B ad LP — sans only (no display serif fetch). */
+export const landingAdTutorFontClassName = `${adSchibsted.variable} ${perfHanken.variable}`;

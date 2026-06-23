@@ -39,6 +39,9 @@ const nextConfig = {
     root: projectRoot
   },
   reactStrictMode: true,
+  experimental: {
+    cssChunking: "strict",
+  },
   skipTrailingSlashRedirect: true,
   outputFileTracingIncludes: {
     "/danielle/files/[slug]": ["./content/danielle/**/*"],

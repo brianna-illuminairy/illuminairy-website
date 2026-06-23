@@ -354,3 +354,9 @@
   .lp-btn { padding: 14px 18px; font-size: 16.5px; }
   .lp-cta-sub { margin-top: 10px; }
 }
+
+/* /sat-plan-builder tutor ad — skip display serif (2 fewer font files). */
+.lp-ad-tutor-fonts .lp-h1,
+.lp-ad-tutor-fonts .lp-h1 em {
+  font-family: var(--font-schibsted), "Schibsted Grotesk", system-ui, sans-serif;
+}
