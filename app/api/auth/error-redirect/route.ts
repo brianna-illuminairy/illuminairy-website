@@ -6,7 +6,11 @@ import { readOAuthReturnPathFromCookieHeader } from "@/lib/oauth-providers";
 export function GET(request: NextRequest) {
   const error = request.nextUrl.searchParams.get("error");
   const returnPath = readOAuthReturnPathFromCookieHeader(request.headers.get("cookie"));
-  const isPlanBReturn = Boolean(returnPath?.includes("/plan-b") || returnPath?.includes("b-email"));
+  const isPlanBReturn = Boolean(
+    returnPath?.includes("/plan-b") ||
+      returnPath?.includes("b-email") ||
+      returnPath?.includes("/api/funnel-b/oauth/complete")
+  );
 
   const params = new URLSearchParams();
   if (error) params.set("oauth_reason", error);

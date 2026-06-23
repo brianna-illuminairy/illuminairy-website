@@ -82,15 +82,20 @@ export function normalizeOAuthCallbackUrl(url: string): string {
 }
 
 function defaultPlanBuilderEmailCallback(): string {
-  return `${PLAN_BUILDER_B_PATH}?step=b-email&oauth_return=1`;
+  return "/api/funnel-b/oauth/complete";
 }
 
-/** Return path after Google/Facebook sign-in on Plan Builder B email step. */
+/** Auth.js redirect target after Google/Facebook on Plan Builder B email step. */
 export function planBuilderOAuthCallbackUrl(search: string): string {
   const params = new URLSearchParams(search.startsWith("?") ? search.slice(1) : search);
-  params.set("step", "b-email");
-  params.set("oauth_return", "1");
-  return normalizeOAuthCallbackUrl(`${PLAN_BUILDER_B_PATH}?${params.toString()}`);
+  params.delete("step");
+  params.delete("oauth_return");
+  params.delete("oauth_error");
+  params.delete("oauth_reason");
+  const qs = params.toString();
+  return normalizeOAuthCallbackUrl(
+    qs ? `/api/funnel-b/oauth/complete?${qs}` : "/api/funnel-b/oauth/complete"
+  );
 }
 
 export function oauthReturnPathCookieWrite(callbackPath: string): string {
