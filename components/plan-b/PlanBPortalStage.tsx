@@ -1,7 +1,9 @@
 import type { ReactNode } from "react";
-import { PortalShell } from "@/components/portal/portal-shell";
+import {
+  PortalChromeBottom,
+  PortalChromeHeader,
+} from "@/components/portal/portal-shell";
 import type { PortalProfile } from "@/lib/portal/load-dashboard";
-import { PORTAL_PLANS_INTRO } from "@/lib/portal/portal-product-copy";
 
 const MOCK_PROFILE: PortalProfile = {
   studentName: "Your student",
@@ -24,24 +26,6 @@ export function PlanBPortalStage({
 }: Props) {
   return (
     <div className="qfb-portal-stage">
-      <div className="qfb-portal-stage__backdrop" aria-hidden="true">
-        <PortalShell
-          profile={MOCK_PROFILE}
-          staticChrome
-          activeTabId={activeTabId}
-          activeSubjectId="sat-math"
-        >
-          <section className="portal-lesson aurora-hover-card portal-lesson--mock">
-            <p className="portal-lesson__date-meta">Upcoming lesson</p>
-            <p className="portal-lesson__date-main">Your free SAT lesson</p>
-            <span className="portal-lesson__join">Join Lesson</span>
-          </section>
-          <div className="portal-page-card aurora-hover-card portal-page-card--mock">
-            <p>{PORTAL_PLANS_INTRO}</p>
-          </div>
-        </PortalShell>
-      </div>
-      <div className="qfb-portal-stage__scrim" aria-hidden="true" />
       {showSuccessBanner ? (
         <div className="qfb-portal-stage__banner" role="status">
           <span className="qfb-portal-stage__banner-icon" aria-hidden="true">
@@ -52,7 +36,18 @@ export function PlanBPortalStage({
           </p>
         </div>
       ) : null}
-      <div className="qfb-portal-stage__modal">{children}</div>
+
+      <div className="qfb-portal-stage__top" aria-hidden="true">
+        <PortalChromeHeader profile={MOCK_PROFILE} staticChrome activeTabId={activeTabId} />
+      </div>
+
+      <div className="qfb-portal-stage__middle">
+        <div className="qfb-portal-stage__modal">{children}</div>
+      </div>
+
+      <div className="qfb-portal-stage__bottom" aria-hidden="true">
+        <PortalChromeBottom activeSubjectId="sat-math" />
+      </div>
     </div>
   );
 }

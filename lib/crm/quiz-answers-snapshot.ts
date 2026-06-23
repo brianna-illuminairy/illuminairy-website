@@ -5,6 +5,7 @@
 
 export type QuizAnswersSnapshotInput = {
   qWho?: string | null;
+  qGrade?: string | null;
   qScoreLower?: string | null;
   q1?: string | null;
   q2?: string | null;
@@ -27,6 +28,7 @@ export type QuizAnswersSnapshotInput = {
 
 export type QuizAnswersSnapshot = {
   qWho: string | null;
+  qGrade: string | null;
   qScoreLower: string | null;
   q1: string | null;
   q2: string | null;
@@ -63,6 +65,7 @@ export function buildQuizAnswersSnapshot(
 ): QuizAnswersSnapshot {
   return {
     qWho: answers.qWho ?? null,
+    qGrade: answers.qGrade ?? null,
     qScoreLower: answers.qScoreLower ?? null,
     q1: answers.q1 ?? null,
     q2: answers.q2 ?? null,

@@ -20,6 +20,7 @@ import {
 
 export type QuizAnswers = {
   qWho?: string;
+  qGrade?: string;
   qScoreLower?: string;
   q1?: string;
   q2?: string;

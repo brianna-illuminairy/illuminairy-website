@@ -2,6 +2,7 @@ import type { LabIntakeAnswers } from "@/lib/quiz-funnel-b/funnel-steps";
 
 export const BASE_LAB_ROUTE_STEPS = [
   "q1-parent-child",
+  "q-grade",
   "q-score-lower",
   "q1",
   "q2",

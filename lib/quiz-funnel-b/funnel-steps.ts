@@ -14,6 +14,7 @@ export const QUIZ_BOOKED_STEP = "booked";
 
 export type LabIntakeAnswers = {
   qWho?: string;
+  qGrade?: string;
   qScoreLower?: string;
   q1?: string;
   q2?: string;
@@ -54,6 +55,7 @@ function isValidEmail(raw: string | undefined): boolean {
 /** Steps that require a saved answer before the user may proceed past them. */
 const INTAKE_STEP_SATISFIED: Record<string, (a: LabIntakeAnswers) => boolean> = {
   "q1-parent-child": (a) => Boolean(a.qWho),
+  "q-grade": (a) => Boolean(a.qGrade),
   "q-score-lower": (a) => Boolean(a.qScoreLower),
   q1: (a) => Boolean(a.q1),
   q2: (a) => Boolean(a.q2),

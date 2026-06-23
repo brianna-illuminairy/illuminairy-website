@@ -16,6 +16,7 @@ import {
 import { appendTouchEvent, getFirstTouchForVisitor, linkVisitorTouches } from "@/lib/crm/touch";
 import { getVisitorById } from "@/lib/crm/visitors";
 import { recordIdentityLink } from "@/lib/crm/identity-stitching";
+import { studentGradeFromPlanBGradeId } from "@/lib/quiz-funnel-b/grade-copy";
 
 export type QuizAnswersPayload = QuizAnswersSnapshotInput;
 
@@ -104,7 +105,7 @@ export async function upsertLeadFromQuizFunnel(
     parent_last: last,
     parent_phone: answers.parentPhone?.trim() ?? "",
     student_first: answers.kidName?.trim() ?? "",
-    student_grade: null,
+    student_grade: studentGradeFromPlanBGradeId(answers.qGrade) ?? null,
     student_school: null,
     target_exam: "SAT",
     sat_baseline: answers.q4 ?? null,

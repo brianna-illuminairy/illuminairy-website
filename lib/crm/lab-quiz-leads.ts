@@ -3,6 +3,7 @@ import {
   type QuizAnswersPayload,
   type LeadMetaMatchInput,
 } from "@/lib/crm/quiz-leads";
+import { studentGradeFromPlanBGradeId } from "@/lib/quiz-funnel-b/grade-copy";
 import { getSupabaseAdmin } from "@/lib/supabase/server";
 import { PLAN_BUILDER_VARIANT } from "@/lib/quiz-funnel-b/constants";
 import type { AttributionSnapshot } from "@/lib/attribution";

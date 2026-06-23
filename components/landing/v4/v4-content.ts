@@ -53,7 +53,7 @@ export const v4TutorCta = {
   bullets: [
     "Why smart kids struggle on the SAT",
     "What score is achievable by test day",
-    "Which skills to focus on and their plan through test day"
+    "Which skills to focus on to maximize their score quickly"
   ],
   button: "Build my child\u2019s free SAT plan",
   finePrint: "Takes about 2 minutes. No student required."

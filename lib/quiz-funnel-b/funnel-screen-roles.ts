@@ -22,6 +22,12 @@ export type LabFunnelScreenMeta = {
 };
 
 const LAB_SCREEN_META: Record<string, LabFunnelScreenMeta> = {
+  "q-grade": {
+    role: "lab_intake",
+    component: "BStudentGrade",
+    label: "Student grade (2026–27)",
+    postHogStep: "q-grade",
+  },
   "q-school-referral": {
     role: "lab_intake",
     component: "BSchoolReferral",

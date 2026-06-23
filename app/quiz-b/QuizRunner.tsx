@@ -38,6 +38,7 @@ import {
 } from '@/lib/quiz-funnel/education-slides';
 import { QFProgressProvider } from '@/app/quiz/components/QFProgressContext';
 import { BSchoolReferral } from '@/app/quiz-b/screens/lab/BSchoolReferral';
+import { BStudentGrade } from '@/app/quiz-b/screens/lab/BStudentGrade';
 
 /** One frame so selected option state paints before route change. */
 const OPTION_TAP_ADVANCE_MS = 16;
@@ -200,6 +201,16 @@ export default function QuizRunner() {
     case 'q1-parent-child':
       stepContent = (
         <QFQWho value={a.qWho} onSelect={(v: string) => setQAndAdvance('qWho', v)} onBack={back} />
+      );
+      break;
+    case 'q-grade':
+      stepContent = (
+        <BStudentGrade
+          value={a.qGrade}
+          qWho={a.qWho}
+          onSelect={(v: string) => setQAndAdvance('qGrade', v)}
+          onBack={back}
+        />
       );
       break;
     case 'q-score-lower':
