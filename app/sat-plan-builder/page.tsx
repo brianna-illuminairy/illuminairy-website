@@ -2,11 +2,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { LandingPage } from "@/components/landing/landing-page";
 import { SAT_PLAN_BUILDER_LP_PATH } from "@/lib/plan-builder-routes";
-import "../landing/landing-base.css";
-import "../landing/landing-brand.css";
-import "../landing/landing-overrides.css";
-import "../landing/landing-premium.css";
-import "../landing/landing-v4.css";
+import "./landing-bundle.css";
 
 export const metadata: Metadata = {
   title: "Free SAT Improvement Plan · Illuminairy",

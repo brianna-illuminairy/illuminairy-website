@@ -60,7 +60,7 @@ const SEED = {
   parentPhone: "+14045551212",
   targetSchoolIds: ["ga-emory-university"],
   targetRegionId: "ga",
-  regionalDiscountCode: "GA10",
+  regionalDiscountCode: "partner-college2",
   q7: [],
   childEmail: "",
   kidName: "Lilianna",

@@ -14,6 +14,14 @@ export type PlanBMembershipTier = {
 
 export const PLAN_B_REGIONAL_DISCOUNT_PCT = 10 as const;
 
+/** Stripe coupon ids — 10% off weekly membership by cadence. */
+export const PLAN_B_PARTNER_COUPON_2X = "partner-college2" as const;
+export const PLAN_B_PARTNER_COUPON_3X = "partner-college3" as const;
+
+export function planBPartnerCouponId(pkg: PlanBMembershipPackage): string {
+  return pkg === "intensive" ? PLAN_B_PARTNER_COUPON_3X : PLAN_B_PARTNER_COUPON_2X;
+}
+
 export const PLAN_B_MEMBERSHIP_TIERS: Record<PlanBMembershipPackage, PlanBMembershipTier> = {
   standard: {
     id: "standard",
@@ -59,7 +67,6 @@ export function planBWeeklyPromoForPackage(pkg: PlanBMembershipPackage) {
   };
 }
 
-export function regionalStripeCouponId(regionId: string): string {
-  const slug = regionId.replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, "").toUpperCase();
-  return slug ? `SAT-${slug}-10` : "PLANB-REGIONAL-10";
+export function regionalStripeCouponId(_regionId: string): string {
+  return PLAN_B_PARTNER_COUPON_2X;
 }

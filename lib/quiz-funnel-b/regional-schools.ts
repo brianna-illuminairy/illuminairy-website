@@ -1,6 +1,7 @@
 import {
   PLAN_B_REGIONAL_DISCOUNT_PCT,
-  regionalStripeCouponId,
+  planBPartnerCouponId,
+  planBRecommendedPackage,
 } from "@/lib/plan-b/membership-pricing";
 import {
   buildRegionalMarket,
@@ -58,15 +59,16 @@ export function regionalMarketForZip(zip: string): RegionalMarket {
   return regionalMarketForState(code);
 }
 
-export function regionalUnlockOffer(regionId: string) {
+export function regionalUnlockOffer(regionId: string, q5?: string | null) {
   const slug = normalizeLegacyRegionId(regionId);
   const built = buildRegionalMarketFromRegionId(slug);
+  const pkg = planBRecommendedPackage(q5);
 
   return {
     regionId: built?.id ?? (slug === "unknown" ? "unknown" : slug),
     regionLabel: built?.label ?? (slug === "unknown" ? "your area" : slug),
     discountPct: PLAN_B_REGIONAL_DISCOUNT_PCT,
-    discountCode: regionalStripeCouponId(built?.id ?? slug),
+    discountCode: planBPartnerCouponId(pkg),
   };
 }
 

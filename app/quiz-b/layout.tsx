@@ -1,9 +1,5 @@
 import type { Metadata } from "next";
-import "../quiz-funnel.css";
-import "../aurora-components.css";
-import "../quiz-globals.css";
-import "../funnel-responsive.css";
-import "./quiz-b-lab.css";
+import "./quiz-b-bundle.css";
 
 export const metadata: Metadata = {
   title: "Free SAT Lesson · Illuminairy",

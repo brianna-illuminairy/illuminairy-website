@@ -41,21 +41,22 @@ Legacy CRM slugs map via `normalizeLegacyRegionId`: `dc-metro` → `dc`, `nation
 
 ## Stripe coupons
 
-Per-state coupon ids match `regionalStripeCouponId()` in `lib/plan-b/membership-pricing.ts`:
+Partner cadence coupons (10% off weekly membership at portal checkout):
 
-`SAT-{STATE-SLUG-UPPER}-10` (e.g. `SAT-GEORGIA-10`, `SAT-DC-10`).
+| Coupon id | Cadence | List → charge |
+|-----------|---------|----------------|
+| `partner-college2` | 2×45 min/week | $110/wk → $99/wk |
+| `partner-college3` | 3×45 min/week | $165/wk → $148/wk |
 
-Create/update all coupons:
+Create/update products, prices, and coupons:
 
 ```bash
 node --env-file=.env.local scripts/setup-plan-b-stripe.mjs
 ```
 
-Fallback coupon for unknown region: `PLANB-REGIONAL-10`.
+Coupon id is chosen from `planBRecommendedPackage(q5)` at regional unlock and remapped to the enrolled package at portal checkout (`planBPartnerCouponId()` in `lib/plan-b/membership-pricing.ts`).
 
-Legacy coupons (`SAT-DC-METRO-10`, `SAT-NATIONAL-10`, etc.) are still created for older leads.
-
-No new Vercel env vars beyond existing Stripe keys; coupons are referenced by id at checkout create time.
+Legacy per-state `SAT-*-10` ids on older leads are remapped at portal enroll when `regional_discount_pct` is set.
 
 ## Validation + export
 

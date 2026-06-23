@@ -1,6 +1,7 @@
 import type { StandardEnrollLead } from "@/lib/standard-enroll";
 import {
   planBMembershipTierForQ5,
+  planBPartnerCouponId,
   planBRecommendedPackage,
   planBWeeklyPromoForPackage,
   type PlanBMembershipPackage,
@@ -89,7 +90,10 @@ export function buildPlanBPortalEnrollLead(row: PlanBLeadRow): StandardEnrollLea
       examLabel: "Next SAT",
       diagnosticComplete: true,
     },
-    regionalDiscountCode: row.regional_discount_code?.trim() || undefined,
+    regionalDiscountCode:
+      typeof row.regional_discount_pct === "number" && row.regional_discount_pct > 0
+        ? planBPartnerCouponId(pkg)
+        : row.regional_discount_code?.trim() || undefined,
     membershipPackage: pkg,
   };
 }

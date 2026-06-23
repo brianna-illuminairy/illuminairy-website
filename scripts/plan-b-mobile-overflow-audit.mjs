@@ -30,7 +30,7 @@ const SEED = {
   parentName: "QA Parent",
   targetSchoolIds: ["ga-emory-university"],
   targetRegionId: "ga",
-  regionalDiscountCode: "GA10",
+  regionalDiscountCode: "partner-college2",
   q7: [],
   parentPhone: "",
   childEmail: "",

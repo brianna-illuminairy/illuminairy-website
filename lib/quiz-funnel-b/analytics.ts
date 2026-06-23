@@ -71,10 +71,6 @@ function trackLabGa(
   window.gtag?.("event", eventName, { ...labProps(), ...params });
 }
 
-if (typeof window !== "undefined" && getPostHogKey()) {
-  posthog.register(LAB_ANALYTICS_PROPS);
-}
-
 const PARENT_CONFIRMED_KEY = "illuminairy_qfb_parent_confirmed";
 
 export function captureParentConfirmed(qWho: string) {

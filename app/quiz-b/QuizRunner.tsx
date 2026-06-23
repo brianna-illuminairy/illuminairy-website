@@ -366,7 +366,10 @@ export default function QuizRunner() {
           value={a.targetSchoolIds}
           onChange={(ids) => dispatch({ type: 'SET_FIELD', key: 'targetSchoolIds', value: ids })}
           onContinue={() => {
-            const offer = regionalUnlockOffer(a.targetRegionId || regionIdFromZip(a.parentZip));
+            const offer = regionalUnlockOffer(
+              a.targetRegionId || regionIdFromZip(a.parentZip),
+              a.q5
+            );
             dispatch({ type: 'SET_FIELD', key: 'targetRegionId', value: offer.regionId });
             dispatch({ type: 'SET_FIELD', key: 'regionalDiscountCode', value: offer.discountCode });
             dispatch({ type: 'SET_FIELD', key: 'regionalDiscountPct', value: offer.discountPct });
