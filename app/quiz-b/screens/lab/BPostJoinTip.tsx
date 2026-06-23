@@ -1,6 +1,6 @@
 'use client';
 
-import { QFScreen } from '@/app/quiz/components/QFShell';
+import { PlanBPortalStage } from '@/components/plan-b/PlanBPortalStage';
 
 type Props = {
   onContinue: () => void;
@@ -9,7 +9,7 @@ type Props = {
 
 export function BPostJoinTip({ onContinue, onBack }: Props) {
   return (
-    <QFScreen stepIdx={23} showProgress={false} showBack={false}>
+    <PlanBPortalStage showSuccessBanner activeTabId="lessons">
       <div className="qfb-post-share">
         <article className="qfb-post-share__card qf-card qfb-post-join-tip">
           <div className="qfb-post-share__band">
@@ -51,6 +51,6 @@ export function BPostJoinTip({ onContinue, onBack }: Props) {
           </div>
         </article>
       </div>
-    </QFScreen>
+    </PlanBPortalStage>
   );
 }

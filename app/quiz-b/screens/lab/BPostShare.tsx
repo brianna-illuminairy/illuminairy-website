@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
+import { PlanBPortalStage } from '@/components/plan-b/PlanBPortalStage';
 import { captureLabLessonLinkShared } from '@/lib/quiz-funnel-b/analytics';
-import { QFScreen } from '@/app/quiz/components/QFShell';
 
 /** Gmail inbox mock — Plan B post-book share step. */
 export const PLAN_B_GMAIL_WELCOME_IMAGE = '/photos/gmail-welcome-sat-session-link.png';
@@ -75,7 +75,7 @@ export function BPostShare({ kidName, shared, onSharedChange, onContinue, onBack
   }
 
   return (
-    <QFScreen stepIdx={22} showProgress={false} showBack={false}>
+    <PlanBPortalStage showSuccessBanner activeTabId="lessons">
       <div className="qfb-post-share">
         <article className="qfb-post-share__card qf-card">
           <div className="qfb-post-share__band">
@@ -142,6 +142,6 @@ export function BPostShare({ kidName, shared, onSharedChange, onContinue, onBack
           </div>
         </article>
       </div>
-    </QFScreen>
+    </PlanBPortalStage>
   );
 }

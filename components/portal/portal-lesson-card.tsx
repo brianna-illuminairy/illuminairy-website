@@ -65,7 +65,7 @@ export function PortalLessonCard({ lesson, studentName }: Props) {
   }
 
   return (
-    <section className="portal-lesson" aria-label="Upcoming free SAT lesson">
+    <section className="portal-lesson aurora-hover-card" aria-label="Upcoming free SAT lesson">
       {formatted ? (
         <>
           <p className="portal-lesson__date-meta">{formatted.monthDayTz}</p>

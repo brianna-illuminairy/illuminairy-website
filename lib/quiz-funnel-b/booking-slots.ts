@@ -2,7 +2,10 @@
 
 const DISPLAY_TZ = "America/New_York";
 export const LAB_BOOKING_MAX_DAYS = 2;
+/** Expanded picker — matches Calendly MAX_DAY_TABS in funnel-availability. */
+export const LAB_BOOKING_EXTENDED_MAX_DAYS = 4;
 export const LAB_BOOKING_MAX_SLOTS_PER_DAY = 3;
+export const LAB_BOOKING_EXTENDED_MAX_SLOTS_PER_DAY = 6;
 
 export type LabBookingDay = {
   dateKey: string;
@@ -55,14 +58,24 @@ export function labBookingDayCardLabel(
   return { heading: weekdayShort, sub };
 }
 
-/** Keep at most two days (today onward) with three slots each. */
-export function limitLabBookingDays(days: LabBookingDay[]): LabBookingDay[] {
+export type LabBookingDayLimitOptions = {
+  maxDays?: number;
+  maxSlotsPerDay?: number;
+};
+
+/** Keep N days (today onward) with capped slots per day. */
+export function limitLabBookingDays(
+  days: LabBookingDay[],
+  options: LabBookingDayLimitOptions = {}
+): LabBookingDay[] {
+  const maxDays = options.maxDays ?? LAB_BOOKING_MAX_DAYS;
+  const maxSlotsPerDay = options.maxSlotsPerDay ?? LAB_BOOKING_MAX_SLOTS_PER_DAY;
   const today = dateKeyInEt(new Date());
   return days
     .filter((day) => day.dateKey >= today && day.slots.length > 0)
-    .slice(0, LAB_BOOKING_MAX_DAYS)
+    .slice(0, maxDays)
     .map((day) => ({
       ...day,
-      slots: day.slots.slice(0, LAB_BOOKING_MAX_SLOTS_PER_DAY),
+      slots: day.slots.slice(0, maxSlotsPerDay),
     }));
 }

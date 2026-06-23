@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { funnelFontClassName } from "@/lib/funnel-fonts";
 import "../quiz-funnel.css";
+import "../aurora-components.css";
 import "../quiz-globals.css";
 import "../funnel-responsive.css";
+import "../portal/portal-dashboard.css";
 import "./quiz-b-lab.css";
-import { QFFunnelLegal } from "../quiz/components/QFFunnelLegal";
 
 export const metadata: Metadata = {
   title: "Free SAT Lesson · Illuminairy",
@@ -18,7 +19,6 @@ export default function QuizBLayout({ children }: { children: React.ReactNode })
     <div className={`qf-funnel-root qfb-lab-root ${funnelFontClassName}`}>
       <div className="qf-funnel-column">
         <div className="qf-funnel-fill">{children}</div>
-        <QFFunnelLegal />
       </div>
     </div>
   );

@@ -1,8 +1,7 @@
 'use client';
 
-import { useState } from 'react';
 import Image from 'next/image';
-import { QFScreen } from '@/app/quiz/components/QFShell';
+import { PlanBPortalStage } from '@/components/plan-b/PlanBPortalStage';
 
 type Props = {
   value?: string;
@@ -11,29 +10,8 @@ type Props = {
 };
 
 export function BPostDevice({ value, onSelect, onBack }: Props) {
-  const [toastOpen, setToastOpen] = useState(true);
-
   return (
-    <QFScreen stepIdx={21} onBack={onBack} showProgress={false} showBack={false}>
-      {toastOpen ? (
-        <div className="qfb-booked-toast" role="status">
-          <span className="qfb-booked-toast__icon" aria-hidden="true">
-            ✓
-          </span>
-          <p className="qfb-booked-toast__text">
-            You&apos;ve successfully booked your free SAT lesson
-          </p>
-          <button
-            type="button"
-            className="qfb-booked-toast__close"
-            aria-label="Dismiss"
-            onClick={() => setToastOpen(false)}
-          >
-            ×
-          </button>
-        </div>
-      ) : null}
-
+    <PlanBPortalStage showSuccessBanner activeTabId="lessons">
       <div className="qfb-post-device">
         <article className="qfb-post-device__card qf-card">
           <figure className="qfb-post-device__figure">
@@ -49,7 +27,7 @@ export function BPostDevice({ value, onSelect, onBack }: Props) {
 
           <div className="qfb-post-device__copy">
             <h1 className="qfb-post-device__title">
-              For the best experience, use a computer or tablet ✨
+              <strong>For the best experience</strong>, use a computer or tablet
             </h1>
             <p className="qfb-post-device__lead">
               A larger screen helps your child fully engage with personalized, interactive tasks
@@ -83,6 +61,6 @@ export function BPostDevice({ value, onSelect, onBack }: Props) {
           </div>
         </article>
       </div>
-    </QFScreen>
+    </PlanBPortalStage>
   );
 }

@@ -9,6 +9,7 @@ globs:
   - app/quiz-funnel.css
   - app/aurora-brand.css
   - app/aurora-components.css
+  - app/portal/**
 ---
 
 # Aurora brand (product surfaces)
