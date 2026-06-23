@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
+import { captureLabLessonLinkShared } from '@/lib/quiz-funnel-b/analytics';
 import { QFScreen } from '@/app/quiz/components/QFShell';
 
 /** Gmail inbox mock — Plan B post-book share step. */
@@ -53,6 +54,7 @@ export function BPostShare({ kidName, shared, onSharedChange, onContinue, onBack
           url: `${url}/portal`,
         });
         onSharedChange(true);
+        captureLabLessonLinkShared();
         return;
       } catch {
         setShareError('Share cancelled or unavailable.');
@@ -62,6 +64,7 @@ export function BPostShare({ kidName, shared, onSharedChange, onContinue, onBack
     try {
       await navigator.clipboard.writeText(text);
       onSharedChange(true);
+      captureLabLessonLinkShared();
     } catch {
       setShareError('Could not copy link. You can share from email instead.');
     }

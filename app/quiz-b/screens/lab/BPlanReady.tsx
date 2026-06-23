@@ -45,14 +45,13 @@ export function BPlanReady({ answers, onContinue, onBack }: Props) {
         <div className="qfb-plan-ready-card__chart">
           <QFBarChart
             bars={[
-              { lbl: 'Month 1', val: month1, color: 'var(--qf-sage)', hot: false },
+              { lbl: 'Month 1', val: month1, color: 'var(--qf-glow)', hot: false },
               { lbl: 'Month 2', val: month2, color: 'var(--qf-forest-mid)', hot: false },
               { lbl: 'Month 3', val: month3, color: 'var(--qf-forest)', hot: true },
             ]}
             max={Math.max(month3 + 20, 160)}
             caption=""
           />
-          <p className="qfb-plan-ready-card__goal-tag">Goal</p>
         </div>
 
         <ul className="qfb-plan-ready-card__features">

@@ -33,7 +33,7 @@ export function QFQWho({ value, onSelect, onBack }) {
   return (
     <QFScreen stepIdx={1} onBack={onBack}>
       <QFQuestionHead title="Who needs SAT help?" />
-      <div className="qf-options">
+      <div className="qf-options qf-options--binary">
         {Q_WHO_OPTIONS.map(o => (
           <QFOption key={o.id} selected={value === o.id} onClick={() => onSelect(o.id)}>{o.label}</QFOption>
         ))}

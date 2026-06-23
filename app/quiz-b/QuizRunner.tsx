@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import dynamic from 'next/dynamic';
+import { useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useQuiz, type QuizAnswers } from './state';
 import { useQuizAnalytics } from './useQuizAnalytics';
@@ -13,7 +14,11 @@ import {
   resolveQuizResumeStep,
 } from '@/lib/quiz-funnel-b/funnel-steps';
 import { getLabQuizRouteSteps } from '@/lib/quiz-funnel-b/quiz-route';
-import { captureParentConfirmed, captureQuizStepBack } from '@/lib/quiz-funnel-b/analytics';
+import {
+  captureLabComputingPopupAnswered,
+  captureParentConfirmed,
+  captureQuizStepBack,
+} from '@/lib/quiz-funnel-b/analytics';
 import {
   QFQWho,
   QFQScoreLower,
@@ -26,26 +31,72 @@ import {
   QFQ8Goal,
   QFQ9GPA,
 } from '@/app/quiz/screens/Questions';
-import { QFInsightHit } from '@/app/quiz/components/QFInsightHit';
 import {
   educationHitQ3None,
   educationHitQ5Tbd,
   educationHitQ8Scores,
 } from '@/lib/quiz-funnel/education-slides';
 import { QFProgressProvider } from '@/app/quiz/components/QFProgressContext';
-import { BSchoolReferral } from './screens/lab/BSchoolReferral';
-import { BComputing } from './screens/lab/BComputing';
-import { BPlanReady } from './screens/lab/BPlanReady';
-import { BEmailCapture } from './screens/lab/BEmailCapture';
-import { BZipCode } from './screens/lab/BZipCode';
-import { BParentName } from './screens/lab/BParentName';
-import { BPhoneVerify } from './screens/lab/BPhoneVerify';
-import { BClaimLesson } from './screens/lab/BClaimLesson';
-import { BBookLesson } from './screens/lab/BBookLesson';
-import { BPostDevice } from './screens/lab/BPostDevice';
-import { BPostShare } from './screens/lab/BPostShare';
-import { BPostJoinTip } from './screens/lab/BPostJoinTip';
-import { BBookedRedirect } from './screens/lab/BBookedRedirect';
+
+/** One frame so selected option state paints before route change. */
+const OPTION_TAP_ADVANCE_MS = 16;
+
+const QFInsightHit = dynamic(
+  () => import('@/app/quiz/components/QFInsightHit').then((m) => ({ default: m.QFInsightHit })),
+  { ssr: false }
+);
+const BSchoolReferral = dynamic(
+  () => import('./screens/lab/BSchoolReferral').then((m) => ({ default: m.BSchoolReferral })),
+  { ssr: false }
+);
+const BComputing = dynamic(
+  () => import('./screens/lab/BComputing').then((m) => ({ default: m.BComputing })),
+  { ssr: false }
+);
+const BPlanReady = dynamic(
+  () => import('./screens/lab/BPlanReady').then((m) => ({ default: m.BPlanReady })),
+  { ssr: false }
+);
+const BEmailCapture = dynamic(
+  () => import('./screens/lab/BEmailCapture').then((m) => ({ default: m.BEmailCapture })),
+  { ssr: false }
+);
+const BZipCode = dynamic(
+  () => import('./screens/lab/BZipCode').then((m) => ({ default: m.BZipCode })),
+  { ssr: false }
+);
+const BParentName = dynamic(
+  () => import('./screens/lab/BParentName').then((m) => ({ default: m.BParentName })),
+  { ssr: false }
+);
+const BPhoneVerify = dynamic(
+  () => import('./screens/lab/BPhoneVerify').then((m) => ({ default: m.BPhoneVerify })),
+  { ssr: false }
+);
+const BClaimLesson = dynamic(
+  () => import('./screens/lab/BClaimLesson').then((m) => ({ default: m.BClaimLesson })),
+  { ssr: false }
+);
+const BBookLesson = dynamic(
+  () => import('./screens/lab/BBookLesson').then((m) => ({ default: m.BBookLesson })),
+  { ssr: false }
+);
+const BPostDevice = dynamic(
+  () => import('./screens/lab/BPostDevice').then((m) => ({ default: m.BPostDevice })),
+  { ssr: false }
+);
+const BPostShare = dynamic(
+  () => import('./screens/lab/BPostShare').then((m) => ({ default: m.BPostShare })),
+  { ssr: false }
+);
+const BPostJoinTip = dynamic(
+  () => import('./screens/lab/BPostJoinTip').then((m) => ({ default: m.BPostJoinTip })),
+  { ssr: false }
+);
+const BBookedRedirect = dynamic(
+  () => import('./screens/lab/BBookedRedirect').then((m) => ({ default: m.BBookedRedirect })),
+  { ssr: false }
+);
 
 function getSteps(answers: QuizAnswers) {
   return getLabQuizRouteSteps(answers);
@@ -72,70 +123,11 @@ export default function QuizRunner() {
   const requestedIdx = steps.indexOf(requestedStep);
   const guardedIdx = steps.indexOf(stepId);
   const stepsKey = steps.join('|');
-  const answersRef = useRef(answers);
-
-  useEffect(() => {
-    answersRef.current = answers;
-  }, [answers]);
 
   useEffect(() => {
     if (!hydrated) return;
     if (lastStep !== stepId) setLastStep(stepId);
   }, [hydrated, stepId, lastStep, setLastStep]);
-
-  useEffect(() => {
-    if (!hydrated || stepId !== 'b-email') return;
-    if (params.get('oauth_return') !== '1') return;
-
-    let cancelled = false;
-
-    async function finishOAuthReturn() {
-      const cleanedSearch = new URLSearchParams(
-        search.startsWith('?') ? search.slice(1) : search
-      );
-      cleanedSearch.delete('oauth_return');
-      cleanedSearch.delete('oauth_error');
-
-      let email = '';
-      for (let attempt = 0; attempt < 8 && !cancelled; attempt++) {
-        try {
-          const res = await fetch('/api/funnel-b/oauth', {
-            cache: 'no-store',
-            credentials: 'same-origin',
-          });
-          const data = await res.json().catch(() => ({}));
-          email = typeof data.email === 'string' ? data.email.trim().toLowerCase() : '';
-          if (email.includes('@')) break;
-        } catch {
-          /* retry */
-        }
-        await new Promise((resolve) => setTimeout(resolve, 200 * (attempt + 1)));
-      }
-
-      if (cancelled) return;
-
-      if (!email.includes('@')) {
-        cleanedSearch.set('oauth_error', '1');
-        router.replace(planBuilderBStepHref('b-email', cleanedSearch.toString()));
-        return;
-      }
-
-      dispatch({ type: 'SET_FIELD', key: 'parentEmail', value: email });
-
-      const merged = { ...answersRef.current, parentEmail: email };
-      const routeSteps = getSteps(merged);
-      const idx = routeSteps.indexOf('b-email');
-      const nextStep =
-        idx >= 0 && idx < routeSteps.length - 1 ? routeSteps[idx + 1] : 'b-zip';
-      router.replace(planBuilderBStepHref(nextStep, cleanedSearch.toString()));
-    }
-
-    void finishOAuthReturn();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [hydrated, stepId, params, search, router, dispatch]);
 
   useEffect(() => {
     if (!hydrated) return;
@@ -151,18 +143,6 @@ export default function QuizRunner() {
   }, [hydrated, stepId, requestedStep, resumeStep, router, search, requestedIdx, guardedIdx, stepsKey]);
 
   useQuizAnalytics(stepId, currentIdx, answers, hydrated);
-
-  if (!hydrated) {
-    return (
-      <div className="qf-page" style={{ color: 'var(--qf-ink)' }}>
-        <div className="qf-body">
-          <div className="qf-body-inner">
-            <p className="qf-lead muted">Loading your plan...</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   function goTo(id: string) {
     router.replace(planBuilderBStepHref(id, search));
@@ -212,7 +192,7 @@ export default function QuizRunner() {
       captureParentConfirmed(value);
     }
     const pending = { [key]: value, ...extra };
-    setTimeout(() => advanceAfterAnswer(pending), 120);
+    window.setTimeout(() => advanceAfterAnswer(pending), OPTION_TAP_ADVANCE_MS);
   }
 
   const a = answers;
@@ -320,9 +300,14 @@ export default function QuizRunner() {
     case 'b-computing':
       stepContent = (
         <BComputing
-          answers={a}
-          onKhanAnswer={(v) => dispatch({ type: 'SET_FIELD', key: 'bKhanStruggle', value: v })}
-          onTutorAnswer={(v) => dispatch({ type: 'SET_FIELD', key: 'bSatTutorBefore', value: v })}
+          onKhanAnswer={(v) => {
+            captureLabComputingPopupAnswered({ popup: 'khan', answer: v });
+            dispatch({ type: 'SET_FIELD', key: 'bKhanStruggle', value: v });
+          }}
+          onTutorAnswer={(v) => {
+            captureLabComputingPopupAnswered({ popup: 'tutor', answer: v });
+            dispatch({ type: 'SET_FIELD', key: 'bSatTutorBefore', value: v });
+          }}
           onContinue={next}
           onBack={back}
         />
@@ -404,7 +389,7 @@ export default function QuizRunner() {
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ devicePreference: v }),
             });
-            setTimeout(next, 120);
+            setTimeout(next, OPTION_TAP_ADVANCE_MS);
           }}
           onBack={back}
         />

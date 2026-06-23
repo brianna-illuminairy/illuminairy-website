@@ -13,5 +13,5 @@ export const PLAN_B_PLAN_READY_FEATURES = [
   "3500+ SAT Identical Practice Problems",
   "Aligned to Digital SAT",
   "Full Length Practice Tests",
-  "Weekly Progress reports on their score improvement",
+  "Weekly Score Progress Reports",
 ] as const;

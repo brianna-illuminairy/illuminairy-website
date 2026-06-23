@@ -20,15 +20,30 @@ Hero CTA on that URL routes to **`/plan-b`** (not `/plan`). Other creatives stil
 
 ## Canonical events
 
-| Stage | PostHog (`LabPostHogEvents`) | GA4 (`LabGa4Events`) | Klaviyo | Meta CAPI |
-|-------|------------------------------|----------------------|---------|-----------|
+| Stage | PostHog | GA4 | Klaviyo | Meta (pixel + CAPI) |
+|-------|---------|-----|---------|---------------------|
+| Funnel start | `quiz_started`, `quiz_session_started` | `quiz_started`, `quiz_session_started` | — | — |
+| Step view | `plan_builder_b_step_viewed` | `quiz_step_view` (tagged `funnel=plan_builder_b`) | — | — |
+| Computing popups | `lab_computing_popup_answered` | `lab_computing_popup_answered` | — | — |
 | Phone verified | `lab_phone_verified` | `lab_phone_verified` | — | — |
-| Lead saved (b-book) | `lab_lead_submitted` | `lab_lead_submitted` | Lab Lead Submitted | Lead |
-| Free lesson booked | `lab_lesson_booked` | `lab_lesson_booked` | Free Lesson Booked | Schedule |
-| Lesson attended | `lab_lesson_attended` | `lab_lesson_attended` | Free Lesson Attended | FreeLessonAttended |
+| Lead saved (b-book) | `lab_lead_submitted` | `lab_lead_submitted` | Lab Lead Submitted | Lead (`event_id` from API) |
+| Free lesson booked | `lab_lesson_booked` + `quiz_booking_confirmed` | `lab_lesson_booked` | Free Lesson Booked | Schedule (`event_id=schedule_<inviteeId>`) |
+| Share link | `lab_lesson_link_shared` | `lab_lesson_link_shared` | — | — |
+| Lesson attended | `lab_lesson_attended` | `lab_lesson_attended` (server milestone) | Free Lesson Attended | FreeLessonAttended |
 | Portal login | `lab_portal_login` | `lab_portal_login` | — | — |
 
-Touch events mirror: `lab_phone_verified`, `lab_lead_submitted`, `lab_lesson_booked`, `lab_lesson_attended`.
+Touch events mirror client milestones: `quiz_step_view`, `lab_phone_verified`, `lab_lead_submitted`, `lab_lesson_booked`, `lab_lesson_link_shared`, `lab_lesson_attended` (server).
+
+## Meta dedupe
+
+- **Lead:** client pixel uses `event_id` returned from `POST /api/funnel-b/lead`; CAPI uses the same id.
+- **Schedule:** client pixel + CAPI use `schedule_<calendly_invitee_id>` (no timestamp suffix).
+
+## Smoke checklist
+
+```bash
+node scripts/funnel-b-analytics-smoke.mjs
+```
 
 ## PostHog filters
 

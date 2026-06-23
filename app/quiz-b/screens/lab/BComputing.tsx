@@ -9,11 +9,8 @@ import {
   PLAN_B_COMPUTING_ROWS,
   PLAN_B_COMPUTING_TUTOR_QUESTION,
 } from '@/lib/quiz-funnel-b/computing-copy';
-import { planBTestimonialsHeadline } from '@/lib/quiz-funnel-b/testimonials-headline';
-import type { QuizAnswers } from '@/app/quiz-b/state';
 
 type Props = {
-  answers: Pick<QuizAnswers, 'q9'>;
   onKhanAnswer: (value: 'yes' | 'no') => void;
   onTutorAnswer: (value: 'yes' | 'no') => void;
   onContinue: () => void;
@@ -40,6 +37,13 @@ type ComputeAction =
   | { type: 'FINISH' };
 
 const ROW_COUNT = PLAN_B_COMPUTING_ROWS.length;
+
+/** Bar fill speed — tuned so reviews stay readable while rows advance. */
+const COMPUTE_STEP_PCT = 1;
+const COMPUTE_TICK_MS = 52;
+const COMPUTE_DWELL_MS = 2200;
+const COMPUTE_SEGMENT_PAUSE_MS = 1100;
+const COMPUTE_FINISH_DWELL_MS = 2800;
 
 function initialRows(): RowState[] {
   return Array.from({ length: ROW_COUNT }, () => ({ pct: 0, done: false }));
@@ -149,7 +153,7 @@ function animateRowPct(
         resolve();
         return;
       }
-      pct = Math.min(to, pct + 2);
+      pct = Math.min(to, pct + COMPUTE_STEP_PCT);
       dispatchCompute({ type: 'SET_ROW_PCT', row, pct });
       if (pct >= to) {
         window.clearInterval(inc);
@@ -159,7 +163,21 @@ function animateRowPct(
   });
 }
 
-export function BComputing({ answers, onKhanAnswer, onTutorAnswer, onContinue, onBack }: Props) {
+function pauseMs(ms: number, cancelled: () => boolean): Promise<void> {
+  return new Promise((resolve) => {
+    const started = Date.now();
+    const tick = () => {
+      if (cancelled() || Date.now() - started >= ms) {
+        resolve();
+        return;
+      }
+      window.setTimeout(tick, 80);
+    };
+    tick();
+  });
+}
+
+export function BComputing({ onKhanAnswer, onTutorAnswer, onContinue, onBack }: Props) {
   const [state, dispatchCompute] = useReducer(computeReducer, {
     rows: initialRows(),
     popup: null,
@@ -169,7 +187,6 @@ export function BComputing({ answers, onKhanAnswer, onTutorAnswer, onContinue, o
   const [motionReady, setMotionReady] = useState(false);
   const startedRef = useRef(false);
   const advancedRef = useRef(false);
-  const social = planBTestimonialsHeadline(answers);
 
   useEffect(() => {
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -194,7 +211,9 @@ export function BComputing({ answers, onKhanAnswer, onTutorAnswer, onContinue, o
         dispatchCompute({ type: 'SHOW_POPUP', popup: 'khan' });
         return;
       }
-      await animateRowPct(0, 0, 48, 28, dispatchCompute, isCancelled);
+      await animateRowPct(0, 0, 48, COMPUTE_TICK_MS, dispatchCompute, isCancelled);
+      if (cancelled) return;
+      await pauseMs(COMPUTE_DWELL_MS, isCancelled);
       if (cancelled) return;
       dispatchCompute({ type: 'SHOW_POPUP', popup: 'khan' });
     }
@@ -208,7 +227,7 @@ export function BComputing({ answers, onKhanAnswer, onTutorAnswer, onContinue, o
   useEffect(() => {
     if (!state.finished || advancedRef.current) return;
     advancedRef.current = true;
-    const timer = window.setTimeout(onContinue, reducedMotion ? 400 : 900);
+    const timer = window.setTimeout(onContinue, reducedMotion ? 500 : COMPUTE_FINISH_DWELL_MS);
     return () => window.clearTimeout(timer);
   }, [state.finished, onContinue, reducedMotion]);
 
@@ -221,9 +240,11 @@ export function BComputing({ answers, onKhanAnswer, onTutorAnswer, onContinue, o
       return;
     }
 
-    await animateRowPct(0, 48, 100, 22, dispatchCompute, () => false);
+    await animateRowPct(0, 48, 100, COMPUTE_TICK_MS, dispatchCompute, () => false);
     dispatchCompute({ type: 'COMPLETE_ROW', row: 0 });
-    await animateRowPct(1, 0, 48, 28, dispatchCompute, () => false);
+    await pauseMs(COMPUTE_SEGMENT_PAUSE_MS, () => false);
+    await animateRowPct(1, 0, 48, COMPUTE_TICK_MS, dispatchCompute, () => false);
+    await pauseMs(COMPUTE_DWELL_MS, () => false);
     dispatchCompute({ type: 'SHOW_POPUP', popup: 'tutor' });
   }
 
@@ -239,11 +260,13 @@ export function BComputing({ answers, onKhanAnswer, onTutorAnswer, onContinue, o
       return;
     }
 
-    await animateRowPct(1, 48, 100, 22, dispatchCompute, () => false);
+    await animateRowPct(1, 48, 100, COMPUTE_TICK_MS, dispatchCompute, () => false);
     dispatchCompute({ type: 'COMPLETE_ROW', row: 1 });
-    await animateRowPct(2, 0, 98, 24, dispatchCompute, () => false);
-    await animateRowPct(2, 98, 100, 40, dispatchCompute, () => false);
+    await pauseMs(COMPUTE_SEGMENT_PAUSE_MS, () => false);
+    await animateRowPct(2, 0, 98, COMPUTE_TICK_MS, dispatchCompute, () => false);
+    await animateRowPct(2, 98, 100, COMPUTE_TICK_MS + 10, dispatchCompute, () => false);
     dispatchCompute({ type: 'COMPLETE_ROW', row: 2 });
+    await pauseMs(COMPUTE_DWELL_MS, () => false);
     dispatchCompute({ type: 'FINISH' });
   }
 
@@ -286,8 +309,7 @@ export function BComputing({ answers, onKhanAnswer, onTutorAnswer, onContinue, o
         </div>
 
         <section className="qfb-computing__reviews" aria-label="Parent testimonials">
-          <p className="qfb-computing__reviews-headline">{social.headline}</p>
-          <p className="qfb-computing__reviews-note">{social.disclaimer}</p>
+          <p className="qfb-computing__reviews-eyebrow">Verified parent reviews</p>
           <BTestimonialMarquee />
         </section>
       </div>

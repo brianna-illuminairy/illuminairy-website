@@ -5,6 +5,7 @@ import {
   useContext,
   useReducer,
   useEffect,
+  useLayoutEffect,
   type ReactNode,
   type Dispatch,
 } from 'react';
@@ -16,6 +17,10 @@ import {
   resolveHydratedQuizSnapshot,
   type StoredLabQuizAnswers,
 } from '@/lib/quiz-funnel-b/quiz-storage';
+import {
+  clearOAuthEmailCookieClient,
+  readOAuthEmailCookieClient,
+} from '@/lib/quiz-funnel-b/oauth-email-client';
 
 export type QuizAnswers = {
   qWho?: string;
@@ -149,17 +154,47 @@ export function QuizProvider({
   const [store, dispatch] = useReducer(storeReducer, initialSnapshot, initStoreFromSnapshot);
   const { answers, lastStep, hydrated } = store;
 
-  useEffect(() => {
+  useLayoutEffect(() => {
+    const oauthEmail = readOAuthEmailCookieClient();
     const merged = resolveHydratedQuizSnapshot(initialSnapshot);
+    const baseAnswers = merged?.answers ?? {};
+    const withOAuthEmail =
+      oauthEmail != null
+        ? { ...baseAnswers, parentEmail: oauthEmail }
+        : baseAnswers;
+
+    if (oauthEmail) {
+      clearOAuthEmailCookieClient();
+    }
+
     if (merged && hasQuizProgress(merged)) {
       dispatch({
         type: 'HYDRATE',
-        data: merged.answers as Partial<QuizAnswers>,
+        data: withOAuthEmail as Partial<QuizAnswers>,
         lastStep: merged.lastStep,
       });
-      persistQuizSnapshot({ ...merged, updatedAt: Date.now() });
+      persistQuizSnapshot({
+        answers: withOAuthEmail as StoredLabQuizAnswers,
+        lastStep: merged.lastStep,
+        updatedAt: Date.now(),
+      });
       return;
     }
+
+    if (oauthEmail) {
+      dispatch({
+        type: 'HYDRATE',
+        data: { parentEmail: oauthEmail },
+        lastStep: initialSnapshot?.lastStep ?? null,
+      });
+      persistQuizSnapshot({
+        answers: { ...baseAnswers, parentEmail: oauthEmail },
+        lastStep: initialSnapshot?.lastStep ?? null,
+        updatedAt: Date.now(),
+      });
+      return;
+    }
+
     dispatch({ type: 'HYDRATE' });
   }, [initialSnapshot]);
 

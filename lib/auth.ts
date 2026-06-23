@@ -6,6 +6,14 @@ import {
   getGoogleOAuthCredentials,
 } from "@/lib/oauth-providers";
 
+function authSecret(): string | undefined {
+  return (
+    process.env.AUTH_SECRET?.trim() ||
+    process.env.NEXTAUTH_SECRET?.trim() ||
+    undefined
+  );
+}
+
 function buildProviders() {
   const providers = [];
 
@@ -36,6 +44,7 @@ function buildProviders() {
 export const isNextAuthConfigured = () => buildProviders().length > 0;
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
+  secret: authSecret(),
   providers: buildProviders(),
   pages: {
     signIn: "/portal/login",
@@ -45,7 +54,17 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     strategy: "jwt",
   },
   callbacks: {
-    async signIn({ user }) {
+    async signIn({ user, account, profile }) {
+      if (!user.email?.trim() && account?.provider === "facebook") {
+        const fbEmail =
+          typeof profile === "object" &&
+          profile !== null &&
+          "email" in profile &&
+          typeof profile.email === "string"
+            ? profile.email.trim()
+            : "";
+        if (fbEmail) user.email = fbEmail;
+      }
       return Boolean(user.email?.trim());
     },
     async jwt({ token, user }) {
@@ -61,9 +80,18 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return session;
     },
     async redirect({ url, baseUrl }) {
-      if (url.startsWith("/")) return `${baseUrl.replace(/\/$/, "")}${url}`;
-      if (url.startsWith(baseUrl)) return url;
-      return baseUrl;
+      const base = baseUrl.replace(/\/$/, "");
+      if (url.startsWith("/")) {
+        return `${base}${url}`;
+      }
+      try {
+        const target = new URL(url);
+        if (target.origin === new URL(base).origin) return url;
+      } catch {
+        /* fall through */
+      }
+      if (url.startsWith(base)) return url;
+      return base;
     },
   },
   trustHost: true,

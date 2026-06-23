@@ -27,6 +27,7 @@ export const TouchEvents = {
   labLeadSubmitted: "lab_lead_submitted",
   labLessonBooked: "lab_lesson_booked",
   labLessonAttended: "lab_lesson_attended",
+  labLessonLinkShared: "lab_lesson_link_shared",
   scoreReviewPhoneVerified: "score_review_phone_verified",
   scoreReviewLeadSubmitted: "score_review_lead_submitted",
   scoreReviewBooked: "score_review_booked",
@@ -49,7 +50,11 @@ export const CLIENT_TOUCH_EVENTS = new Set<TouchEventName>([
   TouchEvents.quizStepView,
   TouchEvents.quizProgressSync,
   TouchEvents.quizScheduleView,
-  TouchEvents.attributionReturn
+  TouchEvents.attributionReturn,
+  TouchEvents.labPhoneVerified,
+  TouchEvents.labLeadSubmitted,
+  TouchEvents.labLessonBooked,
+  TouchEvents.labLessonLinkShared,
 ]);
 
 export const PostHogEvents = {
@@ -126,7 +131,9 @@ export const LabPostHogEvents = {
   labPortalPageView: "lab_portal_page_view",
   labMembershipOfferViewed: "lab_membership_offer_viewed",
   labMembershipOfferClicked: "lab_membership_offer_clicked",
-  labLessonLinkShared: "lab_lesson_link_shared"
+  labLessonLinkShared: "lab_lesson_link_shared",
+  planBuilderBStepViewed: "plan_builder_b_step_viewed",
+  labComputingPopupAnswered: "lab_computing_popup_answered",
 } as const;
 
 /** Plan Builder B (lab) — GA4 event names. */
@@ -136,7 +143,9 @@ export const LabGa4Events = {
   labLessonBooked: "lab_lesson_booked",
   labLessonAttended: "lab_lesson_attended",
   labPortalLogin: "lab_portal_login",
-  labPortalPageView: "lab_portal_page_view"
+  labPortalPageView: "lab_portal_page_view",
+  labLessonLinkShared: "lab_lesson_link_shared",
+  labComputingPopupAnswered: "lab_computing_popup_answered",
 } as const;
 
 /** June SAT Score Review funnel — PostHog event names. */

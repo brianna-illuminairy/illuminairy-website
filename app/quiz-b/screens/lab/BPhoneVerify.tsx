@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import type { ConfirmationResult } from 'firebase/auth';
+import { captureLabPhoneVerified } from '@/lib/quiz-funnel-b/analytics';
 import { QFScreen, QFButton } from '@/app/quiz/components/QFShell';
 import {
   BOOKING_PHONE_INLINE_INVALID_MSG,
@@ -108,6 +109,7 @@ export function BPhoneVerify({
       const stamp =
         typeof data.verifiedAt === 'string' ? data.verifiedAt : new Date().toISOString();
       onVerified(stamp);
+      captureLabPhoneVerified();
       confirmationRef.current = null;
       setOtpOpen(false);
     } catch (err) {

@@ -14,6 +14,7 @@ export type LeadMilestone =
   | "free_lesson_booked"
   | "score_review_booked"
   | "lead_call_attended"
+  | "lab_lesson_attended"
   | "lead_call_no_show"
   | "lead_lost"
   | "lead_won"

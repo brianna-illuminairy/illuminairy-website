@@ -274,9 +274,12 @@ export function BBookLesson({ answers, dispatch, onBooked, onBack }: Props) {
         dispatch({ type: 'SET_FIELD', key: 'strategyCallStart', value: startTime });
       }
       const inviteeUri = typeof bookData.inviteeUri === 'string' ? bookData.inviteeUri : '';
-      const eventId = inviteeUri
-        ? `schedule_${inviteeUri.split('/').pop()}`
-        : `schedule_${Date.now()}`;
+      const eventId =
+        typeof bookData.eventId === 'string'
+          ? bookData.eventId
+          : inviteeUri
+            ? `schedule_${inviteeUri.split('/').pop()}`
+            : `schedule_${Date.now()}`;
       captureQuizBookingConfirmed(eventId, {
         booking_source: 'api',
         qWho: typeof answers.qWho === 'string' ? answers.qWho : undefined,

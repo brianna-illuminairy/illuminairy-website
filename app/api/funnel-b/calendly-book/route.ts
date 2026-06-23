@@ -23,6 +23,13 @@ import {
 import { getVisitorById } from "@/lib/crm/visitors";
 import { site } from "@/lib/site";
 import { setPortalSessionCookie } from "@/lib/portal-auth";
+import {
+  attributionFromLeadFbclid,
+  metaCapiUserFromLead,
+  sendMetaCapiEvent,
+} from "@/lib/meta-capi";
+import { trackKlaviyoEvent } from "@/lib/klaviyo-server";
+import { KlaviyoEvents } from "@/lib/analytics-registry";
 import { PLAN_BUILDER_FUNNEL_ID, PLAN_BUILDER_VARIANT } from "@/lib/quiz-funnel-b/constants";
 
 type CalendlyBookBody = {
@@ -244,7 +251,9 @@ export async function POST(request: Request) {
     if (supabase) {
       const { data: lead } = await supabase
         .from("leads")
-        .select("id, visitor_id")
+        .select(
+          "id, visitor_id, parent_email, parent_first, parent_last, parent_phone, fbclid, meta_fbp, meta_fbc, meta_fbc_ts, meta_client_ip, meta_client_user_agent"
+        )
         .eq("parent_email", email)
         .maybeSingle();
 
@@ -312,14 +321,47 @@ export async function POST(request: Request) {
           satLpVariant: body.sat_lp_variant,
           lpVariant: body.lp_variant,
         });
+
+        void trackKlaviyoEvent(email, KlaviyoEvents.freeLessonBooked, {
+          funnel: PLAN_BUILDER_FUNNEL_ID,
+          free_lesson_at: result.startTime,
+          calendly_uri: result.inviteeUri,
+          plan_builder_variant: PLAN_BUILDER_VARIANT,
+        });
+
+        const inviteeId = result.inviteeUri.split("/").pop();
+        const scheduleEventId = inviteeId
+          ? `schedule_${inviteeId}`
+          : `schedule_${lead.id}`;
+        void sendMetaCapiEvent(
+          "Schedule",
+          scheduleEventId,
+          metaCapiUserFromLead({ ...lead, parent_email: email }, email),
+          {
+            funnel: PLAN_BUILDER_FUNNEL_ID,
+            call_type: "free_lesson",
+            plan_builder_variant: PLAN_BUILDER_VARIANT,
+            qWho: qWho ?? "",
+            sat_lp_variant: body.sat_lp_variant ?? "",
+            lp_variant: body.lp_variant ?? "",
+          },
+          attributionFromLeadFbclid(lead.fbclid) ?? attribution,
+          { eventTimeSec: Math.floor(Date.now() / 1000) }
+        );
       }
     }
+
+    const inviteeIdForClient = result.inviteeUri.split("/").pop();
+    const scheduleEventIdForClient = inviteeIdForClient
+      ? `schedule_${inviteeIdForClient}`
+      : undefined;
 
     const response = NextResponse.json({
       ok: true,
       ...result,
       portalUrl: "/portal/home",
       funnel: PLAN_BUILDER_FUNNEL_ID,
+      eventId: scheduleEventIdForClient,
     });
 
     if (leadId) {

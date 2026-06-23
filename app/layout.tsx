@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { funnelFontClassName } from "@/lib/funnel-fonts";
+import { AuthSessionProvider } from "@/components/auth-session-provider";
 import { LayoutChrome } from "@/components/layout-chrome";
 import { ThemeProvider } from "@/components/theme-provider";
 import { GoogleAnalytics } from "@/components/google-analytics";
@@ -80,6 +81,7 @@ export default function RootLayout({
     >
       <body className="min-h-screen bg-surface text-primary antialiased" style={{ margin: 0 }}>
         <ThemeProvider>
+          <AuthSessionProvider>
           <PostHogProvider>
             <AttributionProvider>
               <LayoutChrome>{children}</LayoutChrome>
@@ -92,6 +94,7 @@ export default function RootLayout({
             <KlaviyoScript />
             </AttributionProvider>
           </PostHogProvider>
+          </AuthSessionProvider>
         </ThemeProvider>
       </body>
     </html>

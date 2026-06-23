@@ -1,9 +1,11 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { BSocialProofChipMarquee } from '@/app/quiz-b/screens/lab/BSocialProofChipMarquee';
+import { PlanBOAuthButtons } from '@/app/quiz-b/screens/lab/PlanBOAuthButtons';
+import { useQuiz } from '@/app/quiz-b/state';
 import { QFScreen, QFButton } from '@/app/quiz/components/QFShell';
-import { OAuthSignInButton } from '@/components/oauth-sign-in-button';
 import {
   PLAN_B_EMAIL_CTA,
   PLAN_B_EMAIL_HEADLINE,
@@ -12,6 +14,7 @@ import {
   planBEmailSocialProofHeadline,
 } from '@/lib/quiz-funnel-b/email-capture-copy';
 import { planBuilderOAuthCallbackUrl } from '@/lib/oauth-providers';
+import { persistQuizSnapshot } from '@/lib/quiz-funnel-b/quiz-storage';
 
 type Props = {
   value: string;
@@ -40,15 +43,14 @@ function isValidEmail(raw: string) {
 export function BEmailCapture({ value, onChange, onContinue, onBack }: Props) {
   const params = useSearchParams();
   const search = params.toString();
+  const { answers, lastStep } = useQuiz();
   const [touched, setTouched] = useState(false);
   const [providers, setProviders] = useState<OAuthProviders | null>(null);
   const [socialProof, setSocialProof] = useState<RecentSocialProof | null>(null);
   const oauthError = params.get('oauth_error') === '1';
-  const oauthReturn = params.get('oauth_return') === '1';
+  const oauthReason = params.get('oauth_reason');
 
   useEffect(() => {
-    if (oauthReturn) return;
-
     let cancelled = false;
 
     async function loadProviders() {
@@ -69,7 +71,7 @@ export function BEmailCapture({ value, onChange, onContinue, onBack }: Props) {
     return () => {
       cancelled = true;
     };
-  }, [oauthReturn]);
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -95,22 +97,16 @@ export function BEmailCapture({ value, onChange, onContinue, onBack }: Props) {
   }, []);
 
   const callbackUrl = useMemo(() => planBuilderOAuthCallbackUrl(search), [search]);
+  const flushProgressBeforeOAuth = useCallback(() => {
+    persistQuizSnapshot({
+      answers,
+      lastStep: lastStep ?? 'b-email',
+      updatedAt: Date.now(),
+    });
+  }, [answers, lastStep]);
 
   const valid = isValidEmail(value);
   const oauthReady = Boolean(providers?.google || providers?.facebook);
-
-  if (oauthReturn) {
-    return (
-      <QFScreen stepIdx={15} onBack={onBack}>
-        <div className="gap-22">
-          <h1 className="qfb-email-capture__headline">Finishing sign-in…</h1>
-          <p className="qfb-email-capture__subline">
-            Saving your email and moving you to the next step.
-          </p>
-        </div>
-      </QFScreen>
-    );
-  }
 
   return (
     <QFScreen
@@ -127,13 +123,7 @@ export function BEmailCapture({ value, onChange, onContinue, onBack }: Props) {
               <p className="qfb-email-capture__social-headline">
                 {planBEmailSocialProofHeadline(socialProof.parentCount)}
               </p>
-              <div className="qfb-email-capture__chips">
-                {socialProof.maskedEmails.map((masked) => (
-                  <span key={masked} className="qfb-email-capture__chip">
-                    {masked}
-                  </span>
-                ))}
-              </div>
+              <BSocialProofChipMarquee chips={socialProof.maskedEmails} />
             </section>
           ) : null}
         </div>
@@ -143,32 +133,20 @@ export function BEmailCapture({ value, onChange, onContinue, onBack }: Props) {
         <h1 className="qfb-email-capture__headline">{PLAN_B_EMAIL_HEADLINE}</h1>
 
         {providers === null ? (
-          <div className="gap-10" aria-busy="true" aria-label="Loading sign-in options">
-            <div className="qfb-oauth-btn qfb-oauth-btn--google qfb-oauth-btn--loading">
-              Continue with Google
-            </div>
-          </div>
+          <PlanBOAuthButtons
+            callbackUrl={callbackUrl}
+            onBeforeSignIn={flushProgressBeforeOAuth}
+            google={false}
+            facebook={false}
+            loading
+          />
         ) : oauthReady ? (
-          <div className="gap-10">
-            {providers?.google ? (
-              <OAuthSignInButton
-                provider="google"
-                callbackUrl={callbackUrl}
-                className="qfb-oauth-btn qfb-oauth-btn--google"
-              >
-                Continue with Google
-              </OAuthSignInButton>
-            ) : null}
-            {providers?.facebook ? (
-              <OAuthSignInButton
-                provider="facebook"
-                callbackUrl={callbackUrl}
-                className="qfb-oauth-btn qfb-oauth-btn--facebook"
-              >
-                Continue with Facebook
-              </OAuthSignInButton>
-            ) : null}
-          </div>
+          <PlanBOAuthButtons
+            callbackUrl={callbackUrl}
+            onBeforeSignIn={flushProgressBeforeOAuth}
+            google={providers.google}
+            facebook={providers.facebook}
+          />
         ) : (
           <p className="qfb-email-capture__subline" style={{ margin: 0 }}>
             Social sign-in is not configured in this environment. Use your email below.
@@ -178,6 +156,7 @@ export function BEmailCapture({ value, onChange, onContinue, onBack }: Props) {
         {oauthError ? (
           <p className="qf-field-error" role="alert">
             Social sign-in did not finish. Try again or enter your email below.
+            {oauthReason ? ` (${oauthReason})` : null}
           </p>
         ) : null}
 

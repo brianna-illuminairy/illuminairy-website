@@ -26,7 +26,8 @@ import {
   metaCapiUserFromLead,
   sendMetaCapiEvent,
 } from "@/lib/meta-capi";
-import { PLAN_BUILDER_FUNNEL_ID } from "@/lib/quiz-funnel-b/constants";
+import { appendTouchEvent } from "@/lib/crm/touch";
+import { PLAN_BUILDER_FUNNEL_ID, PLAN_BUILDER_VARIANT } from "@/lib/quiz-funnel-b/constants";
 import { trackKlaviyoEvent } from "@/lib/klaviyo-server";
 import { KlaviyoEvents } from "@/lib/analytics-registry";
 
@@ -147,6 +148,28 @@ export async function applyCallAttendance(update: CallAttendanceUpdate): Promise
           void trackKlaviyoEvent(lead.parent_email, KlaviyoEvents.freeLessonAttended, {
             call_id: update.callId,
             funnel: PLAN_BUILDER_FUNNEL_ID,
+          });
+
+          void appendTouchEvent({
+            lead_id: before.lead_id,
+            event_type: "lab_lesson_attended",
+            source: update.source === "webhook" ? "webhook" : "server",
+            payload: {
+              call_id: update.callId,
+              funnel: "sat_quiz_b",
+              plan_builder_variant: PLAN_BUILDER_VARIANT,
+              attendance_source: update.attendanceSource ?? "manual",
+            },
+          });
+
+          void fireLeadMilestone({
+            leadId: before.lead_id,
+            milestone: "lab_lesson_attended",
+            extra: {
+              call_id: update.callId,
+              call_type: "free_lesson",
+              funnel: PLAN_BUILDER_FUNNEL_ID,
+            },
           });
         }
       }

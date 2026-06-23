@@ -1,12 +1,30 @@
 import { NextRequest, NextResponse } from "next/server";
 import { planBuilderBStepHref } from "@/lib/plan-builder-b-routes";
+import { readOAuthReturnPathFromCookieHeader } from "@/lib/oauth-providers";
 
-/** Auth.js error page target — path only so Auth.js can append ?error= safely. */
+/** Auth.js error page — send users back to funnel or portal based on where sign-in started. */
 export function GET(request: NextRequest) {
   const error = request.nextUrl.searchParams.get("error");
-  const params = new URLSearchParams({ oauth_error: "1" });
+  const returnPath = readOAuthReturnPathFromCookieHeader(request.headers.get("cookie"));
+  const isPlanBReturn = Boolean(returnPath?.includes("/plan-b") || returnPath?.includes("b-email"));
+
+  const params = new URLSearchParams();
   if (error) params.set("oauth_reason", error);
 
-  const target = new URL(planBuilderBStepHref("b-email", params.toString()), request.url);
-  return NextResponse.redirect(target);
+  if (isPlanBReturn) {
+    params.set("oauth_error", "1");
+    const target = new URL(
+      planBuilderBStepHref("b-email", params.toString()),
+      request.url
+    );
+    const response = NextResponse.redirect(target);
+    response.cookies.set("oauth_return_path", "", { path: "/", maxAge: 0 });
+    return response;
+  }
+
+  if (error) params.set("error", error);
+  const target = new URL(`/portal/login?${params.toString()}`, request.url);
+  const response = NextResponse.redirect(target);
+  response.cookies.set("oauth_return_path", "", { path: "/", maxAge: 0 });
+  return response;
 }

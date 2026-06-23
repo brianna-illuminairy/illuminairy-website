@@ -171,12 +171,11 @@ export function persistQuizSnapshot(snapshot: LabQuizSnapshot): void {
   const updatedAt = snapshot.updatedAt > 0 ? snapshot.updatedAt : Date.now();
   const withTime: LabQuizSnapshot = { ...snapshot, updatedAt };
 
-  const localAnswersOk = writeLocalAnswers(withTime.answers);
-  const localLastStepOk = writeLocalLastStep(withTime.lastStep);
-  const localUpdatedOk = writeLocalUpdatedAt(updatedAt);
-  if (!(localAnswersOk && localLastStepOk && localUpdatedOk)) {
-    writeQuizSnapshotCookie(withTime);
-  }
+  writeLocalAnswers(withTime.answers);
+  writeLocalLastStep(withTime.lastStep);
+  writeLocalUpdatedAt(updatedAt);
+  // Mirror intake to cookie so SSR resume works after full-page OAuth return.
+  writeQuizSnapshotCookie(withTime);
 }
 
 export function saveQuizLastStep(step: string): void {
