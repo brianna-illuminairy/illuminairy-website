@@ -668,12 +668,12 @@
 }
 
 .qfb-recaptcha-anchor {
-  position: absolute;
-  width: 1px;
-  height: 1px;
+  position: fixed;
+  left: -9999px;
+  top: 0;
+  width: 304px;
+  min-height: 78px;
   overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
 }
 
 .qfb-modal-backdrop {

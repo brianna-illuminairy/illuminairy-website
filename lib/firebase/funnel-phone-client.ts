@@ -69,9 +69,8 @@ async function ensureRecaptchaEnterpriseConfig(auth: Auth): Promise<void> {
   if (!recaptchaConfigPromise) {
     recaptchaConfigPromise = initializeRecaptchaConfig(auth)
       .then(() => undefined)
-      .catch((error) => {
-        recaptchaConfigPromise = null;
-        throw error;
+      .catch(() => {
+        // Project has no Enterprise recaptchaKey yet — Firebase uses reCAPTCHA v2 for phone SMS.
       });
   }
   await recaptchaConfigPromise;
