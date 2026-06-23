@@ -51,10 +51,6 @@
   text-decoration: none;
 }
 
-.portal-app__eyebrow {
-  margin: 10px 0 0;
-}
-
 .portal-app__tabs {
   margin-top: 10px;
   overflow-x: auto;
@@ -139,6 +135,8 @@
   border-radius: 999px;
   border: 1px solid var(--aurora-line-dark);
   background: rgba(255, 255, 255, 0.06);
+  color: inherit;
+  text-decoration: none;
   cursor: pointer;
   transition: border-color 0.2s ease, background 0.2s ease;
 }
@@ -146,6 +144,11 @@
 .portal-profile__chip:hover {
   border-color: rgba(184, 245, 209, 0.35);
   background: rgba(255, 255, 255, 0.1);
+}
+
+.portal-profile__chip:focus-visible {
+  outline: 2px solid var(--aurora-glow);
+  outline-offset: 2px;
 }
 
 .portal-profile__chip--mock {
@@ -175,57 +178,182 @@
   color: var(--aurora-white);
 }
 
-.portal-profile__panel {
-  position: absolute;
-  top: calc(100% + 8px);
-  right: 0;
-  z-index: 50;
-  width: min(320px, calc(100vw - 32px));
-  max-height: min(70vh, 420px);
-  overflow: auto;
-  padding: 14px;
-  border-radius: 14px;
-  border: 1px solid var(--aurora-line-solid);
-  background: var(--aurora-paper);
-  box-shadow: var(--aurora-shadow);
+/* Profile page */
+
+.portal-profile-page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-bottom: 24px;
 }
 
-.portal-profile__panel-title {
-  margin: 0 0 4px;
-  font-size: 16px;
-  font-weight: 700;
+.portal-profile-page__head {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
-.portal-profile__panel-meta {
-  margin: 0 0 12px;
-  font-size: 13px;
+.portal-profile-page__eyebrow {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
   color: var(--portal-muted);
 }
 
-.portal-profile__list {
+.portal-profile-page__title {
   margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--portal-ink);
 }
 
-.portal-profile__row {
+.portal-profile-page__lede {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--portal-muted);
+}
+
+.portal-profile-page__section {
+  padding: 18px 16px;
+  border-radius: 14px;
+  background: var(--aurora-paper);
+  border: 1px solid var(--portal-line);
+}
+
+.portal-profile-page__section--readonly {
+  background: rgba(119, 200, 154, 0.06);
+  border-color: rgba(119, 200, 154, 0.18);
+}
+
+.portal-profile-page__section-title {
+  margin: 0 0 14px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--portal-ink);
+}
+
+.portal-profile-page__fields {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.portal-profile-page__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.portal-profile-page__label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--portal-ink);
+}
+
+.portal-profile-page__input {
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--aurora-line-solid);
+  background: #fff;
+  font-family: inherit;
+  font-size: 16px;
+  line-height: 1.4;
+  color: var(--portal-ink);
+}
+
+.portal-profile-page__input:focus {
+  outline: none;
+  border-color: var(--aurora-forest);
+  box-shadow: 0 0 0 3px rgba(47, 110, 71, 0.12);
+}
+
+.portal-profile-page__readonly {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.45;
+  color: var(--portal-ink);
+  word-break: break-word;
+}
+
+.portal-profile-page__hint {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--portal-muted);
+}
+
+.portal-profile-page__readonly-list {
+  margin: 12px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.portal-profile-page__readonly-list > div {
   display: grid;
-  grid-template-columns: 110px 1fr;
-  gap: 8px;
-  padding: 8px 0;
+  grid-template-columns: minmax(110px, 38%) 1fr;
+  gap: 12px;
+  padding: 12px 0;
   border-top: 1px solid var(--portal-line);
 }
 
-.portal-profile__row dt {
+.portal-profile-page__readonly-list > div:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+
+.portal-profile-page__readonly-list dt {
   margin: 0;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
   color: var(--portal-muted);
 }
 
-.portal-profile__row dd {
+.portal-profile-page__readonly-list dd {
   margin: 0;
-  font-size: 13px;
-  line-height: 1.35;
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--portal-ink);
   word-break: break-word;
+}
+
+.portal-profile-page__save {
+  margin-top: 18px;
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 999px;
+  background: var(--aurora-forest);
+  color: #fff;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.portal-profile-page__save:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+.portal-profile-page__error {
+  margin: 14px 0 0;
+  font-size: 14px;
+  color: #b42318;
+}
+
+.portal-profile-page__success {
+  margin: 14px 0 0;
+  font-size: 14px;
+  color: var(--aurora-forest);
+  font-weight: 600;
 }
 
 /* Lesson card */

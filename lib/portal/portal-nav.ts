@@ -21,7 +21,7 @@ export const PORTAL_TOP_NAV: PortalNavTab[] = [
   },
   {
     id: "plans",
-    label: "Plans",
+    label: "SAT Plan",
     href: "/portal/plan",
     match: (path) => path.startsWith("/portal/plan"),
   },

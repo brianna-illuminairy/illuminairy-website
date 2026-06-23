@@ -12,12 +12,23 @@ export type PortalProfileField = {
   value: string;
 };
 
+export type PortalProfileContact = {
+  studentFirst: string;
+  parentFirst: string;
+  parentLast: string;
+  parentEmail: string;
+  parentPhone: string;
+  parentZip: string;
+};
+
 export type PortalProfile = {
   studentName: string;
   studentInitials: string;
   parentName: string;
   parentEmail: string;
-  fields: PortalProfileField[];
+  contact: PortalProfileContact;
+  /** Read-only program / funnel answers */
+  programFields: PortalProfileField[];
 };
 
 export type PortalLesson = {
@@ -95,7 +106,15 @@ function emptyDashboard(email: string): PortalDashboardData {
       studentInitials: "ST",
       parentName: "",
       parentEmail: email,
-      fields: [],
+      contact: {
+        studentFirst: "",
+        parentFirst: "",
+        parentLast: "",
+        parentEmail: email,
+        parentPhone: "",
+        parentZip: "",
+      },
+      programFields: [],
     },
     lesson: {
       scheduledStart: null,
@@ -150,15 +169,9 @@ export async function loadPortalDashboard(
   const devicePref =
     typeof quizAnswers.devicePreference === "string" ? quizAnswers.devicePreference : null;
 
-  const fields: PortalProfileField[] = [
-    { label: "Student", value: studentName },
-  ];
-  if (parentName) fields.push({ label: "Parent", value: parentName });
-  if (lead.parent_email) fields.push({ label: "Email", value: lead.parent_email });
-  if (lead.parent_phone?.trim()) fields.push({ label: "Phone", value: lead.parent_phone.trim() });
-  if (lead.parent_zip?.trim()) fields.push({ label: "Zip code", value: lead.parent_zip.trim() });
-  fields.push({ label: "Current SAT", value: labelOrDash(Q4_LABEL, q4) });
-  fields.push({ label: "Goal score", value: labelOrDash(Q8_LABEL, q8) });
+  const programFields: PortalProfileField[] = [];
+  programFields.push({ label: "Current SAT", value: labelOrDash(Q4_LABEL, q4) });
+  programFields.push({ label: "Goal score", value: labelOrDash(Q8_LABEL, q8) });
   const testLabel = q5DisplayLabel(q5) ?? labelOrDash(
     {
       aug22: "Aug 22, 2026",
@@ -171,31 +184,31 @@ export async function loadPortalDashboard(
     },
     q5
   );
-  fields.push({ label: "Next SAT", value: testLabel });
-  if (q9) fields.push({ label: "GPA", value: labelOrDash(Q9_LABEL, q9) });
+  programFields.push({ label: "Next SAT", value: testLabel });
+  if (q9) programFields.push({ label: "GPA", value: labelOrDash(Q9_LABEL, q9) });
 
   const blockers = Array.isArray(lead.quiz_blockers)
     ? lead.quiz_blockers.filter((x): x is string => typeof x === "string")
     : [];
   if (blockers.length) {
-    fields.push({ label: "Biggest blockers", value: blockers.join(", ") });
+    programFields.push({ label: "Biggest blockers", value: blockers.join(", ") });
   }
 
   const tried = Array.isArray(lead.quiz_prep_tried)
     ? lead.quiz_prep_tried.filter((x): x is string => typeof x === "string")
     : [];
   if (tried.length) {
-    fields.push({ label: "Already tried", value: tried.join(", ") });
+    programFields.push({ label: "Already tried", value: tried.join(", ") });
   }
 
   if (devicePref === "computer-tablet") {
-    fields.push({ label: "Lesson device", value: "Computer or tablet" });
+    programFields.push({ label: "Lesson device", value: "Computer or tablet" });
   } else if (devicePref === "phone") {
-    fields.push({ label: "Lesson device", value: "Phone only" });
+    programFields.push({ label: "Lesson device", value: "Phone only" });
   }
 
   if (lead.school_referral?.trim()) {
-    fields.push({ label: "School referral", value: lead.school_referral.trim() });
+    programFields.push({ label: "School referral", value: lead.school_referral.trim() });
   }
 
   const scheduledStart =
@@ -224,7 +237,15 @@ export async function loadPortalDashboard(
       studentInitials: initials(studentName),
       parentName,
       parentEmail: lead.parent_email ?? fallbackEmail,
-      fields,
+      contact: {
+        studentFirst: lead.student_first?.trim() ?? "",
+        parentFirst: lead.parent_first?.trim() ?? "",
+        parentLast: lead.parent_last?.trim() ?? "",
+        parentEmail: lead.parent_email ?? fallbackEmail,
+        parentPhone: lead.parent_phone?.trim() ?? "",
+        parentZip: lead.parent_zip?.trim() ?? "",
+      },
+      programFields,
     },
     lesson: {
       scheduledStart,

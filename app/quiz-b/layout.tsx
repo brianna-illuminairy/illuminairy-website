@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
-import { funnelFontClassName } from "@/lib/funnel-fonts";
 import "../quiz-funnel.css";
 import "../aurora-components.css";
 import "../quiz-globals.css";
 import "../funnel-responsive.css";
-import "../portal/portal-dashboard.css";
 import "./quiz-b-lab.css";
 
 export const metadata: Metadata = {
@@ -16,7 +14,7 @@ export const metadata: Metadata = {
 
 export default function QuizBLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className={`qf-funnel-root qfb-lab-root ${funnelFontClassName}`}>
+    <div className="qf-funnel-root qfb-lab-root">
       <div className="qf-funnel-column">
         <div className="qf-funnel-fill">{children}</div>
       </div>

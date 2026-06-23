@@ -30,7 +30,7 @@ export function BPlanReady({ answers, onContinue, onBack }: Props) {
       onBack={onBack}
       actions={<QFButton kind="forest" onClick={onContinue}>Continue</QFButton>}
     >
-      <div className="qfb-plan-ready-card">
+      <div className="qfb-plan-ready-card qfb-plan-ready-card--compact">
         <div className="qfb-plan-ready-card__intro">
           <h1 className="qfb-plan-ready-card__headline">
             {PLAN_B_PLAN_READY_HEADLINE_BEFORE}
@@ -44,6 +44,7 @@ export function BPlanReady({ answers, onContinue, onBack }: Props) {
 
         <div className="qfb-plan-ready-card__chart">
           <QFBarChart
+            chartH={64}
             bars={[
               { lbl: 'Month 1', val: month1, color: 'var(--qf-glow)', hot: false },
               { lbl: 'Month 2', val: month2, color: 'var(--qf-forest-mid)', hot: false },

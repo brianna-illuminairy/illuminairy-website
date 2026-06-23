@@ -1,10 +1,20 @@
 # Active context
 
-*Last updated: 2026-06-22 (Plan Builder B lab funnel)*
+*Last updated: 2026-06-22 (50-state Plan B regional schools)*
 
 ## Resume here (start next chat with this)
 
-**June SAT Score Review funnel shipped in code** — dedicated LP + short funnel for cold Meta ad.
+**50-state Plan B target schools shipped in code** — zip → state, SAT ≥1200 picker with sparse-state exception.
+
+- **SSOT:** `lib/plan-b/school-catalog-data.ts`, `build-regional-market.ts`, `regional-schools.ts`
+- **Validate:** `npm run plan-b:validate-regional-schools` (in `agent:verify`)
+- **Owner review CSV:** `npm run plan-b:export-regional-schools` → `exports/plan-b-regional-schools.csv`
+- **Stripe coupons:** run `node --env-file=.env.local scripts/setup-plan-b-stripe.mjs` for 51 state + DC coupons before prod ad scale
+- **Docs:** `docs/plan-b-regional-schools.md`
+
+---
+
+## Previous: June SAT Score Review funnel (2026-06-22)
 
 - **LP:** `/june-score-review` (mom story + offer from ad script)
 - **Funnel:** `/score-review` → `app/quiz-c/` (13 steps: 6 intake → email/name/phone → book → CB prep → share → thank-you)

@@ -4,13 +4,22 @@ import {
   PortalChromeHeader,
 } from "@/components/portal/portal-shell";
 import type { PortalProfile } from "@/lib/portal/load-dashboard";
+import "@/app/portal/portal-dashboard.css";
 
 const MOCK_PROFILE: PortalProfile = {
   studentName: "Your student",
   studentInitials: "YS",
   parentName: "Parent",
   parentEmail: "parent@example.com",
-  fields: [],
+  contact: {
+    studentFirst: "Your student",
+    parentFirst: "Parent",
+    parentLast: "",
+    parentEmail: "parent@example.com",
+    parentPhone: "",
+    parentZip: "",
+  },
+  programFields: [],
 };
 
 type Props = {

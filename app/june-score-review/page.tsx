@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { ScoreReviewLandingPage } from "@/components/landing/score-review/score-review-landing-page";
+import { landingAdFontClassName } from "@/lib/funnel-fonts";
 import "../landing/landing-base.css";
 import "../landing/landing-brand.css";
 import "../landing/landing-overrides.css";
@@ -23,8 +24,10 @@ export const metadata: Metadata = {
 
 export default function JuneScoreReviewPage() {
   return (
-    <Suspense fallback={null}>
-      <ScoreReviewLandingPage />
-    </Suspense>
+    <div className={landingAdFontClassName}>
+      <Suspense fallback={null}>
+        <ScoreReviewLandingPage />
+      </Suspense>
+    </div>
   );
 }

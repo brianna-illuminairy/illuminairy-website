@@ -1,11 +1,10 @@
 /** Plan Builder B plan-ready screen — owner copy from Brighterly screen 5 spec. */
 
-export const PLAN_B_PLAN_READY_HEADLINE_BEFORE = "Personalized SAT plan is ";
+export const PLAN_B_PLAN_READY_HEADLINE_BEFORE = "Personal SAT Plan is ";
 export const PLAN_B_PLAN_READY_HEADLINE_ACCENT = "ready";
-export const PLAN_B_PLAN_READY_HEADLINE_AFTER = " for your child";
+export const PLAN_B_PLAN_READY_HEADLINE_AFTER = " for your child.";
 
-export const PLAN_B_PLAN_READY_SUBLINE =
-  "We'll work with your child to raise their SAT score";
+export const PLAN_B_PLAN_READY_SUBLINE = "We'll work on your SAT goals together.";
 
 export const PLAN_B_PLAN_READY_FEATURES = [
   "Engaging SAT lessons with SAT Expert",

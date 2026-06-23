@@ -3,16 +3,11 @@
 import { useEffect, useMemo, useRef } from 'react';
 import { QFScreen, QFButton } from '@/app/quiz/components/QFShell';
 import {
-  planBRegionalUnlockBody,
-  planBRegionalUnlockHeadline,
-  planBRegionalUnlockOfferLine,
-  planBRegionalUnlockPricingForQ5,
+  planBRegionalUnlockBenefits,
+  planBRegionalUnlockIntro,
+  planBRegionalUnlockPartnerHeadline,
 } from '@/lib/quiz-funnel-b/regional-unlock-copy';
-import {
-  regionalUnlockOffer,
-  schoolNamesFromIds,
-} from '@/lib/quiz-funnel-b/regional-schools';
-import { formatPlanBWeeklyPrice } from '@/lib/plan-b/membership-pricing';
+import { regionalUnlockOffer } from '@/lib/quiz-funnel-b/regional-schools';
 
 type Props = {
   regionId: string;
@@ -22,21 +17,75 @@ type Props = {
   onBack: () => void;
 };
 
+const CONFETTI_COLORS = ['#2f6e47', '#77c89a', '#3e8b5a', '#121a2b', '#d4af3a'];
+
+function fireRegionalConfetti() {
+  void import('canvas-confetti').then(({ default: confetti }) => {
+    const zIndex = 9999;
+    const originY = 0.32;
+
+    confetti({
+      particleCount: 90,
+      spread: 72,
+      startVelocity: 38,
+      gravity: 0.9,
+      ticks: 220,
+      origin: { y: originY },
+      colors: CONFETTI_COLORS,
+      zIndex,
+    });
+
+    window.setTimeout(() => {
+      confetti({
+        particleCount: 48,
+        angle: 58,
+        spread: 58,
+        origin: { x: 0.08, y: originY + 0.08 },
+        colors: CONFETTI_COLORS,
+        zIndex,
+      });
+      confetti({
+        particleCount: 48,
+        angle: 122,
+        spread: 58,
+        origin: { x: 0.92, y: originY + 0.08 },
+        colors: CONFETTI_COLORS,
+        zIndex,
+      });
+    }, 180);
+
+    const end = Date.now() + 2200;
+    const tick = () => {
+      confetti({
+        particleCount: 2,
+        startVelocity: 22,
+        spread: 360,
+        ticks: 80,
+        origin: {
+          x: Math.random() * 0.4 + 0.3,
+          y: Math.random() * 0.15 + 0.2,
+        },
+        colors: CONFETTI_COLORS,
+        zIndex,
+      });
+      if (Date.now() < end) {
+        window.requestAnimationFrame(tick);
+      }
+    };
+    window.requestAnimationFrame(tick);
+  });
+}
+
 export function BRegionalUnlock({
   regionId,
-  targetSchoolIds,
-  q5,
   onContinue,
   onBack,
 }: Props) {
   const offer = useMemo(() => regionalUnlockOffer(regionId), [regionId]);
-  const tier = useMemo(() => planBRegionalUnlockPricingForQ5(q5), [q5]);
-  const schoolNames = useMemo(
-    () =>
-      targetSchoolIds.includes('other')
-        ? []
-        : schoolNamesFromIds(regionId, targetSchoolIds),
-    [regionId, targetSchoolIds]
+  const headline = planBRegionalUnlockPartnerHeadline(offer.regionLabel);
+  const benefits = useMemo(
+    () => planBRegionalUnlockBenefits(offer.regionLabel),
+    [offer.regionLabel],
   );
   const firedRef = useRef(false);
 
@@ -44,10 +93,16 @@ export function BRegionalUnlock({
     if (firedRef.current) return;
     if (typeof window === 'undefined') return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
     firedRef.current = true;
-    void import('canvas-confetti').then(({ default: confetti }) => {
-      confetti({ particleCount: 80, spread: 70, origin: { y: 0.65 } });
-    });
+    const timer = window.setTimeout(() => {
+      fireRegionalConfetti();
+    }, 280);
+
+    return () => {
+      window.clearTimeout(timer);
+      firedRef.current = false;
+    };
   }, []);
 
   return (
@@ -61,18 +116,27 @@ export function BRegionalUnlock({
       }
     >
       <div className="qfb-regional-unlock">
-        <h1 className="qfb-regional-unlock__title">
-          {planBRegionalUnlockHeadline(offer.regionLabel, schoolNames)}
-        </h1>
-        <p className="qfb-regional-unlock__body">{planBRegionalUnlockBody()}</p>
-        <div className="qfb-regional-unlock__offer">
-          <p className="qfb-regional-unlock__price">
-            <span className="qfb-regional-unlock__list">{formatPlanBWeeklyPrice(tier.listWeeklyPrice)}</span>{' '}
-            <strong>{formatPlanBWeeklyPrice(tier.chargeWeeklyPrice)}</strong>
-          </p>
-          <p className="qfb-regional-unlock__code">
-            {planBRegionalUnlockOfferLine(offer.regionLabel, tier, offer.discountCode)}
-          </p>
+        <div className="qfb-regional-unlock__card">
+          <h1 className="qfb-regional-unlock__title">
+            {headline}
+            <span className="qfb-regional-unlock__title-emoji" aria-hidden="true">
+              {' '}
+              🎉
+            </span>
+          </h1>
+          <p className="qfb-regional-unlock__intro">{planBRegionalUnlockIntro()}</p>
+          <ul className="qfb-regional-unlock__benefits">
+            {benefits.map((item) => (
+              <li key={item.text}>
+                <span className="qfb-regional-unlock__benefit-check" aria-hidden="true">
+                  ✓
+                </span>
+                <span className={item.emphasize ? 'qfb-regional-unlock__benefit--lead' : undefined}>
+                  {item.text}
+                </span>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </QFScreen>

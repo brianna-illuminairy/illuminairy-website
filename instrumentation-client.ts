@@ -17,7 +17,7 @@ if (key) {
     capture_performance: {
       web_vitals: true
     },
-    disable_session_recording: false,
+    disable_session_recording: true,
     session_recording: {
       maskAllInputs: true,
       maskInputOptions: {

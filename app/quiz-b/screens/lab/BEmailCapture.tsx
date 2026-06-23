@@ -109,8 +109,18 @@ export function BEmailCapture({ value, onChange, onContinue, onBack }: Props) {
   const valid = isValidEmail(value);
   const oauthReady = Boolean(providers?.google || providers?.facebook);
 
+  const socialChips = socialProof?.maskedEmails.slice(0, 4) ?? [];
+
   return (
-    <QFScreen stepIdx={15} onBack={onBack}>
+    <QFScreen
+      stepIdx={15}
+      onBack={onBack}
+      actions={
+        <QFButton kind="forest" onClick={onContinue} disabled={!valid}>
+          {PLAN_B_EMAIL_CTA}
+        </QFButton>
+      }
+    >
       <div className="qfb-email-capture gap-22">
         <h1 className="qfb-email-capture__headline">
           {PLAN_B_EMAIL_HEADLINE_BEFORE_FREE}
@@ -185,18 +195,12 @@ export function BEmailCapture({ value, onChange, onContinue, onBack }: Props) {
           </p>
         </div>
 
-        <div className="qfb-email-capture__actions">
-          <QFButton kind="forest" onClick={onContinue} disabled={!valid}>
-            {PLAN_B_EMAIL_CTA}
-          </QFButton>
-        </div>
-
-        {socialProof && socialProof.maskedEmails.length > 0 ? (
+        {socialProof && socialChips.length > 0 ? (
           <section className="qfb-email-capture__social" aria-label="Recent parent sign-ups">
             <p className="qfb-email-capture__social-headline">
               {planBEmailSocialProofHeadline(socialProof.parentCount)}
             </p>
-            <BSocialProofChipMarquee chips={socialProof.maskedEmails} staticLayout />
+            <BSocialProofChipMarquee chips={socialChips} staticLayout />
           </section>
         ) : null}
       </div>

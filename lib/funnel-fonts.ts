@@ -45,3 +45,37 @@ export const dmSans = DM_Sans({
 });
 
 export const funnelFontClassName = `${displaySerif.variable} ${hankenGrotesk.variable} ${schibstedGrotesk.variable} ${dmMono.variable} ${dmSans.variable}`;
+
+const perfDisplaySerif = Source_Serif_4({
+  subsets: ["latin"],
+  variable: "--font-display",
+  display: "swap",
+  weight: ["400", "500"],
+});
+
+const perfHanken = Hanken_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-hanken",
+  display: "swap",
+  weight: ["400", "500", "600"],
+});
+
+const perfDmSans = DM_Sans({
+  subsets: ["latin"],
+  variable: "--font-dm-sans",
+  display: "swap",
+  weight: ["400", "500"],
+});
+
+const adSchibsted = Schibsted_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-schibsted",
+  display: "swap",
+  weight: ["400", "500", "600"],
+});
+
+/** Plan B funnel — body + logo wordmark only (no display serif). */
+export const funnelPerfFontClassName = `${perfHanken.variable} ${perfDmSans.variable}`;
+
+/** Ad landing pages — display, body, mono stats, Schibsted brand variant. */
+export const landingAdFontClassName = `${perfDisplaySerif.variable} ${perfHanken.variable} ${dmMono.variable} ${adSchibsted.variable}`;

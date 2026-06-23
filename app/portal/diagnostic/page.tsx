@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { PortalShell } from "@/components/portal/portal-shell";
 import { requirePortalAuth } from "@/lib/portal-guard";
 import { loadPortalDashboard } from "@/lib/portal/load-dashboard";
@@ -16,11 +15,6 @@ export default async function PortalDiagnosticPage() {
       <div className="portal-page-card aurora-hover-card">
         <p>{PORTAL_DIAGNOSTIC_FREE_SESSION}</p>
         <p style={{ marginTop: 12 }}>{PORTAL_DIAGNOSTIC_ENROLLED}</p>
-        <p style={{ marginTop: 16 }}>
-          <Link href="/portal/plan" className="portal-page-card__link">
-            View SAT improvement plan
-          </Link>
-        </p>
       </div>
     </PortalShell>
   );

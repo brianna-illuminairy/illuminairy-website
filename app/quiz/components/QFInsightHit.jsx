@@ -95,6 +95,7 @@ export function QFInsightHit({
   if (!hit) return null;
 
   const showAutoFooter = duration != null;
+  const showPinnedContinue = !showAutoFooter;
 
   return (
     <QFScreen
@@ -102,19 +103,21 @@ export function QFInsightHit({
       ornament="glow"
       onBack={onBack}
       actions={
-        showAutoFooter ? (
-          <div className="qf-insight-hit__auto-footer" aria-hidden="true">
-            <div
-              className="qf-insight-hit__auto-bar"
-              style={{ width: `${progress}%` }}
-            />
-          </div>
-        ) : (
-          <QFButton kind="forest" onClick={onContinue}>Continue</QFButton>
-        )
+        showPinnedContinue ? (
+          <QFButton kind="forest" onClick={onContinue}>
+            Continue
+          </QFButton>
+        ) : undefined
       }
     >
-      <div className={`qf-insight-hit${hit.image ? ' qf-insight-hit--visual' : ''}${hit.showScoreReports ? ' qf-insight-hit--outcome-proof' : ''}${manual ? ' qf-insight-hit--manual' : ''}`}>
+      <div
+        className={
+          `qf-insight-hit${hit.image ? ' qf-insight-hit--visual' : ''}` +
+          `${hit.showScoreReports ? ' qf-insight-hit--outcome-proof' : ''}` +
+          `${manual ? ' qf-insight-hit--manual' : ''}` +
+          `${showAutoFooter ? ' qf-insight-hit--auto' : ''}`
+        }
+      >
         <span className={`qf-insight-hit__eyebrow qf-insight-hit__eyebrow--${hit.type}`}>
           {INSIGHT_HIT_EYEBROW[hit.type]}
         </span>
@@ -161,6 +164,14 @@ export function QFInsightHit({
         ) : hit.followUp?.length ? (
           <div className="qf-insight-hit__follow-up">
             <InsightParts parts={hit.followUp} variant="body" />
+          </div>
+        ) : null}
+        {showAutoFooter ? (
+          <div className="qf-insight-hit__auto-footer" aria-hidden="true">
+            <div
+              className="qf-insight-hit__auto-bar"
+              style={{ width: `${progress}%` }}
+            />
           </div>
         ) : null}
       </div>

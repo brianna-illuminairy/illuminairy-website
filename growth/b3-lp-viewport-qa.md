@@ -117,6 +117,14 @@ After deploy, run [PageSpeed Insights](https://pagespeed.web.dev/) on:
 
 Record mobile + desktop scores in PR or experiment log.
 
+**Plan Builder B (Meta ad3 scale):** also run:
+
+```bash
+LIGHTHOUSE_BASE=https://illuminairy.com npm run lighthouse:ad-funnel
+```
+
+URLs: `/sat-plan-builder` (ad3 UTMs + `pb=b`) and `/plan-b?step=q1-parent-child&pb=b`. Same mobile targets as above.
+
 ### C. Quick network sanity (local)
 
 ```bash

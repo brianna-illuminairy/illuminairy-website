@@ -2898,6 +2898,15 @@
   padding: 0 0 8px;
   gap: 12px;
 }
+.qf-page .qf-insight-hit--auto {
+  min-height: 0;
+  justify-content: flex-start;
+  padding: 0 0 8px;
+  gap: 12px;
+}
+.qf-page .qf-insight-hit--auto .qf-insight-hit__auto-footer {
+  margin-top: 8px;
+}
 .qf-page .qf-insight-hit--visual {
   justify-content: flex-start;
   min-height: auto;

@@ -1,13 +1,11 @@
 import type { Metadata } from "next";
-import { funnelFontClassName } from "@/lib/funnel-fonts";
 import { AuthSessionProvider } from "@/components/auth-session-provider";
 import { LayoutChrome } from "@/components/layout-chrome";
 import { ThemeProvider } from "@/components/theme-provider";
-import { GoogleAnalytics } from "@/components/google-analytics";
-import { KlaviyoScript } from "@/components/klaviyo";
+import { MarketingScripts } from "@/components/marketing-scripts";
 import { AttributionProvider } from "@/components/attribution-provider";
 import { PostHogProvider } from "@/components/posthog-provider";
-import { MetaPixel } from "@/components/meta-pixel";
+import { PostHogLazySessionRecording } from "@/components/posthog-lazy-recording";
 import { site } from "@/lib/site";
 import "./globals.css";
 
@@ -75,7 +73,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`light ${funnelFontClassName}`}
+      className="light"
       style={{ colorScheme: "light" }}
       suppressHydrationWarning
     >
@@ -89,9 +87,8 @@ export default function RootLayout({
               type="application/ld+json"
               dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
             />
-            <GoogleAnalytics />
-            <MetaPixel />
-            <KlaviyoScript />
+            <MarketingScripts />
+            <PostHogLazySessionRecording />
             </AttributionProvider>
           </PostHogProvider>
           </AuthSessionProvider>

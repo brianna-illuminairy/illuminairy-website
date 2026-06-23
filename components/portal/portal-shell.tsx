@@ -3,8 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { IlluminairyLogoV7 } from "@/components/brand/illuminairy-logo-v7";
-import { PortalProfileChip } from "@/components/portal/portal-profile-chip";
-import { PORTAL_PROGRAM_EYEBROW } from "@/lib/portal/portal-product-copy";
+import { PortalProfileLink } from "@/components/portal/portal-profile-link";
 import {
   PORTAL_SUBJECT_NAV,
   PORTAL_TOP_NAV,
@@ -56,7 +55,7 @@ export function PortalChromeHeader({
             </Link>
           )}
           {!staticChrome ? (
-            <PortalProfileChip profile={profile} />
+            <PortalProfileLink profile={profile} />
           ) : (
             <span className="portal-profile__chip portal-profile__chip--mock" aria-hidden="true">
               <span className="portal-profile__avatar">{profile.studentInitials}</span>
@@ -64,10 +63,6 @@ export function PortalChromeHeader({
             </span>
           )}
         </div>
-
-        <p className="portal-app__eyebrow aurora-eyebrow aurora-eyebrow--on-dark">
-          {PORTAL_PROGRAM_EYEBROW}
-        </p>
 
         <nav className="aurora-nav portal-app__tabs" aria-label="Portal sections">
           {PORTAL_TOP_NAV.map((tab) => {

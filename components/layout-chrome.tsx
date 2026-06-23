@@ -7,6 +7,9 @@ export function LayoutChrome({ children }: { children: React.ReactNode }) {
   const isMinimalFunnel =
     pathname === "/" ||
     pathname === "/sat-plan-builder" ||
+    pathname === "/sat-free-lesson" ||
+    pathname === "/plan-b" ||
+    pathname?.startsWith("/plan-b/") ||
     pathname?.startsWith("/plan") ||
     pathname?.startsWith("/quiz") ||
     pathname?.startsWith("/danielle") ||

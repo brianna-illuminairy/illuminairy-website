@@ -2,7 +2,7 @@
 
 import { useEffect, useReducer, useRef, useState, type Dispatch } from 'react';
 import { QFScreen } from '@/app/quiz/components/QFShell';
-import { BTestimonialMarquee } from '@/app/quiz-b/screens/lab/BTestimonialMarquee';
+import { BComputingReviews } from '@/app/quiz-b/screens/lab/BTestimonialMarquee';
 import {
   PLAN_B_COMPUTING_HEADLINE,
   PLAN_B_COMPUTING_KHAN_QUESTION,
@@ -41,7 +41,8 @@ const ROW_COUNT = PLAN_B_COMPUTING_ROWS.length;
 /** Bar fill speed — tuned so reviews stay readable while rows advance. */
 const COMPUTE_STEP_PCT = 1;
 const COMPUTE_TICK_MS = 52;
-const COMPUTE_DWELL_MS = 2200;
+const COMPUTE_KHAN_POPUP_PCT = 48;
+const COMPUTE_TUTOR_POPUP_PCT = 72;
 const COMPUTE_SEGMENT_PAUSE_MS = 1100;
 const COMPUTE_FINISH_DWELL_MS = 2800;
 
@@ -114,10 +115,10 @@ function ComputePopup({
       aria-labelledby="qfb-compute-popup-title"
     >
       <div className="qfb-compute-popup__backdrop" aria-hidden="true" />
-      <div className="qfb-compute-popup__card qf-card">
-        <h2 id="qfb-compute-popup-title" className="qfb-compute-popup__title">
+      <div className="qfb-compute-popup__card">
+        <p id="qfb-compute-popup-title" className="qfb-compute-popup__title">
           {question}
-        </h2>
+        </p>
         <div className="qfb-compute-popup__actions">
           {noFirst ? (
             <>
@@ -136,28 +137,42 @@ function ComputePopup({
   );
 }
 
+type AnimateResult = 'completed' | 'stopped' | 'cancelled';
+
 function animateRowPct(
   row: number,
   from: number,
   to: number,
   stepMs: number,
   dispatchCompute: Dispatch<ComputeAction>,
-  cancelled: () => boolean
-) {
-  return new Promise<void>((resolve) => {
+  cancelled: () => boolean,
+  options?: { pauseAt?: number; onPause?: () => void }
+): Promise<AnimateResult> {
+  return new Promise((resolve) => {
     let pct = from;
     dispatchCompute({ type: 'SET_ROW_PCT', row, pct });
+    const pauseAt = options?.pauseAt;
+
     const inc = window.setInterval(() => {
       if (cancelled()) {
         window.clearInterval(inc);
-        resolve();
+        resolve('cancelled');
         return;
       }
+
       pct = Math.min(to, pct + COMPUTE_STEP_PCT);
       dispatchCompute({ type: 'SET_ROW_PCT', row, pct });
+
+      if (pauseAt != null && pct >= pauseAt && pauseAt <= to) {
+        window.clearInterval(inc);
+        options?.onPause?.();
+        resolve('stopped');
+        return;
+      }
+
       if (pct >= to) {
         window.clearInterval(inc);
-        resolve();
+        resolve('completed');
       }
     }, stepMs);
   });
@@ -185,8 +200,8 @@ export function BComputing({ onKhanAnswer, onTutorAnswer, onContinue, onBack }: 
   });
   const [reducedMotion, setReducedMotion] = useState(false);
   const [motionReady, setMotionReady] = useState(false);
-  const startedRef = useRef(false);
   const advancedRef = useRef(false);
+  const bootRunRef = useRef(false);
 
   useEffect(() => {
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -200,27 +215,31 @@ export function BComputing({ onKhanAnswer, onTutorAnswer, onContinue, onBack }: 
   }, []);
 
   useEffect(() => {
-    if (!motionReady || startedRef.current || state.finished || state.popup) return;
-    startedRef.current = true;
+    if (!motionReady || state.finished || state.popup) return;
 
     let cancelled = false;
     const isCancelled = () => cancelled;
 
     async function boot() {
+      if (bootRunRef.current) return;
+      bootRunRef.current = true;
+
       if (reducedMotion) {
+        dispatchCompute({ type: 'SET_ROW_PCT', row: 0, pct: COMPUTE_KHAN_POPUP_PCT });
         dispatchCompute({ type: 'SHOW_POPUP', popup: 'khan' });
         return;
       }
-      await animateRowPct(0, 0, 48, COMPUTE_TICK_MS, dispatchCompute, isCancelled);
-      if (cancelled) return;
-      await pauseMs(COMPUTE_DWELL_MS, isCancelled);
-      if (cancelled) return;
-      dispatchCompute({ type: 'SHOW_POPUP', popup: 'khan' });
+
+      await animateRowPct(0, 0, 100, COMPUTE_TICK_MS, dispatchCompute, isCancelled, {
+        pauseAt: COMPUTE_KHAN_POPUP_PCT,
+        onPause: () => dispatchCompute({ type: 'SHOW_POPUP', popup: 'khan' }),
+      });
     }
 
     void boot();
     return () => {
       cancelled = true;
+      bootRunRef.current = false;
     };
   }, [motionReady, state.finished, state.popup, reducedMotion]);
 
@@ -236,16 +255,19 @@ export function BComputing({ onKhanAnswer, onTutorAnswer, onContinue, onBack }: 
     dispatchCompute({ type: 'SHOW_POPUP', popup: null });
 
     if (reducedMotion) {
+      dispatchCompute({ type: 'COMPLETE_ROW', row: 0 });
+      dispatchCompute({ type: 'SET_ROW_PCT', row: 1, pct: COMPUTE_TUTOR_POPUP_PCT });
       dispatchCompute({ type: 'SHOW_POPUP', popup: 'tutor' });
       return;
     }
 
-    await animateRowPct(0, 48, 100, COMPUTE_TICK_MS, dispatchCompute, () => false);
+    await animateRowPct(0, COMPUTE_KHAN_POPUP_PCT, 100, COMPUTE_TICK_MS, dispatchCompute, () => false);
     dispatchCompute({ type: 'COMPLETE_ROW', row: 0 });
     await pauseMs(COMPUTE_SEGMENT_PAUSE_MS, () => false);
-    await animateRowPct(1, 0, 48, COMPUTE_TICK_MS, dispatchCompute, () => false);
-    await pauseMs(COMPUTE_DWELL_MS, () => false);
-    dispatchCompute({ type: 'SHOW_POPUP', popup: 'tutor' });
+    await animateRowPct(1, 0, 100, COMPUTE_TICK_MS, dispatchCompute, () => false, {
+      pauseAt: COMPUTE_TUTOR_POPUP_PCT,
+      onPause: () => dispatchCompute({ type: 'SHOW_POPUP', popup: 'tutor' }),
+    });
   }
 
   async function resumeAfterTutor(answer: 'yes' | 'no') {
@@ -253,20 +275,18 @@ export function BComputing({ onKhanAnswer, onTutorAnswer, onContinue, onBack }: 
     dispatchCompute({ type: 'SHOW_POPUP', popup: null });
 
     if (reducedMotion) {
-      for (let i = 0; i < ROW_COUNT; i++) {
-        dispatchCompute({ type: 'COMPLETE_ROW', row: i });
-      }
+      dispatchCompute({ type: 'COMPLETE_ROW', row: 1 });
+      dispatchCompute({ type: 'COMPLETE_ROW', row: 2 });
       dispatchCompute({ type: 'FINISH' });
       return;
     }
 
-    await animateRowPct(1, 48, 100, COMPUTE_TICK_MS, dispatchCompute, () => false);
+    await animateRowPct(1, COMPUTE_TUTOR_POPUP_PCT, 100, COMPUTE_TICK_MS, dispatchCompute, () => false);
     dispatchCompute({ type: 'COMPLETE_ROW', row: 1 });
     await pauseMs(COMPUTE_SEGMENT_PAUSE_MS, () => false);
-    await animateRowPct(2, 0, 98, COMPUTE_TICK_MS, dispatchCompute, () => false);
-    await animateRowPct(2, 98, 100, COMPUTE_TICK_MS + 10, dispatchCompute, () => false);
+    await animateRowPct(2, 0, 100, COMPUTE_TICK_MS, dispatchCompute, () => false);
     dispatchCompute({ type: 'COMPLETE_ROW', row: 2 });
-    await pauseMs(COMPUTE_DWELL_MS, () => false);
+    await pauseMs(COMPUTE_SEGMENT_PAUSE_MS, () => false);
     dispatchCompute({ type: 'FINISH' });
   }
 
@@ -308,10 +328,7 @@ export function BComputing({ onKhanAnswer, onTutorAnswer, onContinue, onBack }: 
           </ul>
         </div>
 
-        <section className="qfb-computing__reviews" aria-label="Parent testimonials">
-          <p className="qfb-computing__reviews-eyebrow">Verified parent reviews</p>
-          <BTestimonialMarquee />
-        </section>
+        <BComputingReviews />
       </div>
 
       {state.popup === 'khan' ? (

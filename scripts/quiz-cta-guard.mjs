@@ -135,7 +135,7 @@ const insightHitPath = join(ROOT, "app/quiz/components/QFInsightHit.jsx");
 try {
   const src = readFileSync(insightHitPath, "utf8");
   if (!src.includes("qf-insight-hit__auto-footer")) {
-    errors.push("QFInsightHit.jsx: auto-advance must use progress footer, not invented CTA");
+    errors.push("QFInsightHit.jsx: auto-advance must render in-body progress (qf-insight-hit__auto-footer)");
   }
   if (!src.includes("prefers-reduced-motion")) {
     errors.push("QFInsightHit.jsx: reduced motion must fall back to explicit Continue");

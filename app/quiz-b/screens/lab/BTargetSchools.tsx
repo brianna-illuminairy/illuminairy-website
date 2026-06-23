@@ -5,7 +5,6 @@ import { QFScreen, QFButton } from '@/app/quiz/components/QFShell';
 import {
   PLAN_B_TARGET_SCHOOLS_HEADLINE,
   PLAN_B_TARGET_SCHOOLS_OTHER,
-  PLAN_B_TARGET_SCHOOLS_SUBLINE,
 } from '@/lib/quiz-funnel-b/regional-unlock-copy';
 import {
   regionalMarketForZip,
@@ -49,18 +48,10 @@ export function BTargetSchools({ zip, value, onChange, onContinue, onBack }: Pro
         </QFButton>
       }
     >
-      <div className="gap-22">
-        <div>
-          <h1 className="qf-h1">{PLAN_B_TARGET_SCHOOLS_HEADLINE}</h1>
-          <p className="qf-lead" style={{ marginTop: 12 }}>
-            {PLAN_B_TARGET_SCHOOLS_SUBLINE}
-          </p>
-          <p className="qf-hint" style={{ marginTop: 8 }}>
-            {market.label} area
-          </p>
-        </div>
+      <div className="qfb-target-schools-screen">
+        <h1 className="qfb-target-schools-screen__headline">{PLAN_B_TARGET_SCHOOLS_HEADLINE}</h1>
 
-        <div className="qfb-target-schools">
+        <div className="qfb-target-schools" role="group" aria-label="Target schools">
           {market.schools.map((school) => {
             const selected = value.includes(school.id) && !otherSelected;
             return (
@@ -68,18 +59,26 @@ export function BTargetSchools({ zip, value, onChange, onContinue, onBack }: Pro
                 key={school.id}
                 type="button"
                 className={`qfb-target-schools__btn${selected ? ' is-selected' : ''}`}
+                aria-pressed={selected}
                 onClick={() => toggle(school.id)}
               >
-                {school.name}
+                <span className="qfb-target-schools__check" aria-hidden="true">
+                  {selected ? '✓' : ''}
+                </span>
+                <span>{school.name}</span>
               </button>
             );
           })}
           <button
             type="button"
             className={`qfb-target-schools__btn qfb-target-schools__btn--other${otherSelected ? ' is-selected' : ''}`}
+            aria-pressed={otherSelected}
             onClick={() => toggle(TARGET_SCHOOL_OTHER_ID)}
           >
-            {PLAN_B_TARGET_SCHOOLS_OTHER}
+            <span className="qfb-target-schools__check" aria-hidden="true">
+              {otherSelected ? '✓' : ''}
+            </span>
+            <span>{PLAN_B_TARGET_SCHOOLS_OTHER}</span>
           </button>
         </div>
       </div>

@@ -15,5 +15,3 @@ export const PORTAL_DIAGNOSTIC_FREE_SESSION =
 
 export const PORTAL_DIAGNOSTIC_ENROLLED =
   "For students who enroll, we schedule a full 2 hr 14 min adaptive Skill Diagnostic (same adaptive format as the real SAT) for deeper personalization.";
-
-export const PORTAL_PROGRAM_EYEBROW = "Illuminairy · SAT program";

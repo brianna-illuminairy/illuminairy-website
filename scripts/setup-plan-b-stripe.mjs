@@ -51,6 +51,46 @@ async function findOrCreateCoupon(id, name) {
   }
 }
 
+const US_STATE_CODES = [
+  "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "DC", "FL", "GA", "HI", "ID", "IL", "IN", "IA",
+  "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM",
+  "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA",
+  "WV", "WI", "WY",
+];
+
+const STATE_LABELS = {
+  AL: "Alabama", AK: "Alaska", AZ: "Arizona", AR: "Arkansas", CA: "California", CO: "Colorado",
+  CT: "Connecticut", DE: "Delaware", DC: "District of Columbia", FL: "Florida", GA: "Georgia",
+  HI: "Hawaii", ID: "Idaho", IL: "Illinois", IN: "Indiana", IA: "Iowa", KS: "Kansas", KY: "Kentucky",
+  LA: "Louisiana", ME: "Maine", MD: "Maryland", MA: "Massachusetts", MI: "Michigan", MN: "Minnesota",
+  MS: "Mississippi", MO: "Missouri", MT: "Montana", NE: "Nebraska", NV: "Nevada", NH: "New Hampshire",
+  NJ: "New Jersey", NM: "New Mexico", NY: "New York", NC: "North Carolina", ND: "North Dakota",
+  OH: "Ohio", OK: "Oklahoma", OR: "Oregon", PA: "Pennsylvania", RI: "Rhode Island", SC: "South Carolina",
+  SD: "South Dakota", TN: "Tennessee", TX: "Texas", UT: "Utah", VT: "Vermont", VA: "Virginia",
+  WA: "Washington", WV: "West Virginia", WI: "Wisconsin", WY: "Wyoming",
+};
+
+function stateSlugFromCode(code) {
+  if (code === "DC") return "dc";
+  return STATE_LABELS[code].toLowerCase().replace(/\s+/g, "-");
+}
+
+function regionalStripeCouponId(regionSlug) {
+  const slug = regionSlug.replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, "").toUpperCase();
+  return slug ? `SAT-${slug}-10` : "PLANB-REGIONAL-10";
+}
+
+function buildRegionalCoupons() {
+  const rows = US_STATE_CODES.map((code) => {
+    const slug = stateSlugFromCode(code);
+    return [regionalStripeCouponId(slug), `Plan B ${STATE_LABELS[code]} 10%`];
+  });
+  rows.push(["PLANB-REGIONAL-10", "Plan B Regional 10% fallback"]);
+  rows.push(["SAT-DC-METRO-10", "Plan B DC Metro 10% (legacy CRM)"]);
+  rows.push(["SAT-NATIONAL-10", "Plan B National 10% (legacy CRM)"]);
+  return rows;
+}
+
 async function main() {
   const product2x = await findOrCreateProduct(
     "Plan B SAT Tutoring · 2×45 min/week",
@@ -67,15 +107,7 @@ async function main() {
   await stripe.products.update(product2x.id, { default_price: price2x.id });
   await stripe.products.update(product3x.id, { default_price: price3x.id });
 
-  const coupons = [
-    ["SAT-GEORGIA-10", "Plan B Georgia 10%"],
-    ["SAT-TEXAS-10", "Plan B Texas 10%"],
-    ["SAT-FLORIDA-10", "Plan B Florida 10%"],
-    ["SAT-NORTH-CAROLINA-10", "Plan B North Carolina 10%"],
-    ["SAT-DC-METRO-10", "Plan B DC Metro 10%"],
-    ["SAT-NATIONAL-10", "Plan B National 10%"],
-    ["PLANB-REGIONAL-10", "Plan B Regional 10% fallback"],
-  ];
+  const coupons = buildRegionalCoupons();
 
   console.log("\n--- Add to .env.local and Vercel ---\n");
   console.log(`STRIPE_PLAN_B_WEEKLY_2X_PRODUCT_ID=${product2x.id}`);
@@ -89,6 +121,8 @@ async function main() {
   }
 
   console.log("\nList prices: $110/wk (2×) and $165/wk (3×). Apply 10% coupon at subscription create.");
+  console.log(`\nCreated/verified ${coupons.length} regional coupons (51 states + DC + fallbacks).`);
+  console.log("No new env vars — coupons are referenced by id at checkout. See docs/plan-b-regional-schools.md.");
 }
 
 main().catch((err) => {
