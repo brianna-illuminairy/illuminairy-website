@@ -3,6 +3,7 @@
 import { initializeApp, getApps, type FirebaseApp } from "firebase/app";
 import {
   getAuth,
+  initializeRecaptchaConfig,
   RecaptchaVerifier,
   signInWithPhoneNumber,
   signOut,
@@ -17,6 +18,7 @@ const RECAPTCHA_CONTAINER_ID = "qfb-recaptcha";
 let firebaseApp: FirebaseApp | null = null;
 let firebaseAuth: Auth | null = null;
 let recaptchaVerifier: RecaptchaVerifier | null = null;
+let recaptchaConfigPromise: Promise<void> | null = null;
 
 function getClientApp(): FirebaseApp {
   if (firebaseApp) return firebaseApp;
@@ -42,6 +44,12 @@ export function getFunnelFirebaseAuth(): Auth {
   return firebaseAuth;
 }
 
+/** Call on phone screen mount — required before Enterprise phone SMS. */
+export function preloadFunnelPhoneRecaptcha(): Promise<void> {
+  const auth = getFunnelFirebaseAuth();
+  return ensureRecaptchaEnterpriseConfig(auth);
+}
+
 export function funnelPhoneRecaptchaContainerId(): string {
   return RECAPTCHA_CONTAINER_ID;
 }
@@ -57,7 +65,20 @@ async function clearRecaptcha(auth: Auth) {
   auth.settings.appVerificationDisabledForTesting = false;
 }
 
+async function ensureRecaptchaEnterpriseConfig(auth: Auth): Promise<void> {
+  if (!recaptchaConfigPromise) {
+    recaptchaConfigPromise = initializeRecaptchaConfig(auth)
+      .then(() => undefined)
+      .catch((error) => {
+        recaptchaConfigPromise = null;
+        throw error;
+      });
+  }
+  await recaptchaConfigPromise;
+}
+
 async function ensureRecaptchaVerifier(auth: Auth): Promise<RecaptchaVerifier> {
+  await ensureRecaptchaEnterpriseConfig(auth);
   await clearRecaptcha(auth);
 
   recaptchaVerifier = new RecaptchaVerifier(auth, RECAPTCHA_CONTAINER_ID, {
@@ -126,6 +147,11 @@ export function funnelFirebaseClientErrorMessage(error: unknown): string {
       return "That code did not match. Try again.";
     case "auth/captcha-check-failed":
       return "Security check failed. Refresh the page and try again.";
+    case "auth/invalid-app-credential":
+    case "auth/missing-client-identifier":
+      return "Security check failed. Refresh the page and try again.";
+    case "auth/operation-not-allowed":
+      return "Verification is temporarily unavailable. Email support@illuminairy.com.";
     case "auth/quota-exceeded":
       return "Verification is temporarily unavailable. Email support@illuminairy.com.";
     default:

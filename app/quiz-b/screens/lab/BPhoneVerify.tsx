@@ -10,9 +10,14 @@ import {
   showBookingPhoneInlineError,
 } from '@/lib/calendly/phone-e164';
 import {
+  executeFunnelPhoneRecaptchaEnterprise,
+  funnelRecaptchaEnterpriseClientErrorMessage,
+} from '@/lib/firebase/recaptcha-enterprise-client';
+import {
   confirmFunnelPhoneVerificationCode,
   funnelFirebaseClientErrorMessage,
   funnelPhoneRecaptchaContainerId,
+  preloadFunnelPhoneRecaptcha,
   sendFunnelPhoneVerificationCode,
 } from '@/lib/firebase/funnel-phone-client';
 import { isFirebaseClientConfigured } from '@/lib/firebase/public-config';
@@ -40,6 +45,7 @@ export function BPhoneVerify({
   const [verifying, setVerifying] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [serverReady, setServerReady] = useState<boolean | null>(null);
+  const [enterpriseRecaptchaEnabled, setEnterpriseRecaptchaEnabled] = useState(false);
   const [phoneTouched, setPhoneTouched] = useState(false);
   const confirmationRef = useRef<ConfirmationResult | null>(null);
 
@@ -58,6 +64,7 @@ export function BPhoneVerify({
         const data = await res.json().catch(() => ({}));
         if (cancelled) return;
         setServerReady(res.ok && data.ok === true);
+        setEnterpriseRecaptchaEnabled(data.enterpriseRecaptchaEnabled === true);
       } catch {
         if (!cancelled) setServerReady(false);
       }
@@ -69,12 +76,31 @@ export function BPhoneVerify({
     };
   }, []);
 
+  useEffect(() => {
+    if (!clientConfigured) return;
+    void preloadFunnelPhoneRecaptcha().catch(() => {
+      // Firebase will retry when user taps Send.
+    });
+  }, [clientConfigured]);
+
   async function sendCode() {
     if (!phoneValid || sending || !configured) return;
     setSending(true);
     setError(null);
     try {
-      const res = await fetch('/api/funnel-b/phone/send', { method: 'POST' });
+      let postBody: { recaptchaToken?: string; recaptchaAction?: string } | undefined;
+
+      if (enterpriseRecaptchaEnabled) {
+        const { token: recaptchaToken, action: recaptchaAction } =
+          await executeFunnelPhoneRecaptchaEnterprise();
+        postBody = { recaptchaToken, recaptchaAction };
+      }
+
+      const res = await fetch('/api/funnel-b/phone/send', {
+        method: 'POST',
+        headers: postBody ? { 'Content-Type': 'application/json' } : undefined,
+        body: postBody ? JSON.stringify(postBody) : undefined,
+      });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
         setError(typeof data.message === 'string' ? data.message : 'Could not send code.');
@@ -84,6 +110,13 @@ export function BPhoneVerify({
       confirmationRef.current = await sendFunnelPhoneVerificationCode(phone);
       setOtpOpen(true);
     } catch (err) {
+      if (
+        err instanceof Error &&
+        (err.message.startsWith('recaptcha_') || err.message === 'recaptcha_browser_only')
+      ) {
+        setError(funnelRecaptchaEnterpriseClientErrorMessage(err));
+        return;
+      }
       setError(funnelFirebaseClientErrorMessage(err));
     } finally {
       setSending(false);
