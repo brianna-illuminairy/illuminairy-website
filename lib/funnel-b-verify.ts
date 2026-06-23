@@ -7,6 +7,13 @@ import {
 
 export type FunnelBVerifyChannel = "firebase";
 
+function normalizePhoneForCompare(raw: string | null | undefined): string | null {
+  const e164 = phoneToCalendlyE164(raw ?? undefined);
+  if (!e164) return null;
+  const digits = e164.replace(/\D/g, "");
+  return digits.length >= 10 ? digits.slice(-10) : digits;
+}
+
 export function resolveFunnelBVerifyChannel(): FunnelBVerifyChannel {
   return "firebase";
 }
@@ -50,7 +57,11 @@ export async function verifyFunnelBPhoneIdToken(input: { phone: string; idToken:
   }
 
   if (result.user.phoneNumber !== expectedPhone) {
-    return { ok: false as const, error: "phone_mismatch" as const, channel };
+    const expectedNorm = normalizePhoneForCompare(expectedPhone);
+    const tokenNorm = normalizePhoneForCompare(result.user.phoneNumber);
+    if (!expectedNorm || !tokenNorm || expectedNorm !== tokenNorm) {
+      return { ok: false as const, error: "phone_mismatch" as const, channel };
+    }
   }
 
   return { ok: true as const, verifiedAt: new Date().toISOString(), channel };

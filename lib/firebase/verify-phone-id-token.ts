@@ -22,8 +22,11 @@ type LookupResponse = {
 export async function verifyFirebasePhoneIdToken(
   idToken: string
 ): Promise<{ ok: true; user: VerifiedFirebasePhoneToken } | { ok: false; error: string }> {
-  const config = getFirebasePublicConfig();
-  if (!config?.apiKey) {
+  const apiKey =
+    process.env.FIREBASE_SERVER_API_KEY?.trim() ||
+    getFirebasePublicConfig()?.apiKey ||
+    null;
+  if (!apiKey) {
     return { ok: false, error: "firebase_not_configured" };
   }
 
@@ -32,7 +35,7 @@ export async function verifyFirebasePhoneIdToken(
     return { ok: false, error: "id_token_required" };
   }
 
-  const url = `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${encodeURIComponent(config.apiKey)}`;
+  const url = `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${encodeURIComponent(apiKey)}`;
   const response = await fetch(url, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -64,5 +67,7 @@ export async function verifyFirebasePhoneIdToken(
 }
 
 export function isFirebasePhoneTokenVerifyConfigured(): boolean {
-  return getFirebasePublicConfig()?.apiKey != null;
+  return Boolean(
+    process.env.FIREBASE_SERVER_API_KEY?.trim() || getFirebasePublicConfig()?.apiKey
+  );
 }

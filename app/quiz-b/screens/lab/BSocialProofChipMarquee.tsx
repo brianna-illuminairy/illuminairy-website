@@ -2,17 +2,8 @@
 
 type Props = {
   chips: string[];
+  staticLayout?: boolean;
 };
-
-function splitRows(items: string[]) {
-  const rowA: string[] = [];
-  const rowB: string[] = [];
-  items.forEach((item, i) => {
-    if (i % 2 === 0) rowA.push(item);
-    else rowB.push(item);
-  });
-  return { rowA, rowB };
-}
 
 function ChipRow({ chips, reverse }: { chips: string[]; reverse?: boolean }) {
   if (chips.length === 0) return null;
@@ -31,10 +22,32 @@ function ChipRow({ chips, reverse }: { chips: string[]; reverse?: boolean }) {
   );
 }
 
-/** Two-row masked-email strip — fixed height, ~4 chips visible per row. */
-export function BSocialProofChipMarquee({ chips }: Props) {
-  const { rowA, rowB } = splitRows(chips);
-  if (rowA.length === 0 && rowB.length === 0) return null;
+/** Static wrapped chips (Brighterly-style) or slow marquee rows. */
+export function BSocialProofChipMarquee({ chips, staticLayout = true }: Props) {
+  if (chips.length === 0) return null;
+
+  if (staticLayout) {
+    return (
+      <div className="qfb-chip-marquee qfb-chip-marquee--static" aria-hidden="true">
+        <div className="qfb-chip-marquee__row">
+          <div className="qfb-chip-marquee__track">
+            {chips.map((chip) => (
+              <span key={chip} className="qfb-email-capture__chip">
+                {chip}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const rowA: string[] = [];
+  const rowB: string[] = [];
+  chips.forEach((item, i) => {
+    if (i % 2 === 0) rowA.push(item);
+    else rowB.push(item);
+  });
 
   return (
     <div className="qfb-chip-marquee" aria-hidden="true">

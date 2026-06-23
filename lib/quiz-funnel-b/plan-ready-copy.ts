@@ -11,7 +11,6 @@ export const PLAN_B_PLAN_READY_FEATURES = [
   "Engaging SAT lessons with SAT Expert",
   "Full Length Timed Adaptive Diagnostic",
   "3500+ SAT Identical Practice Problems",
-  "Aligned to Digital SAT",
-  "Full Length Practice Tests",
+  "Full Length Digital SAT Practice Tests",
   "Weekly Score Progress Reports",
 ] as const;

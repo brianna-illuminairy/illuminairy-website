@@ -3,11 +3,12 @@
 import { useEffect, useRef, useState } from 'react';
 import type { ConfirmationResult } from 'firebase/auth';
 import { captureLabPhoneVerified } from '@/lib/quiz-funnel-b/analytics';
-import { QFScreen, QFButton } from '@/app/quiz/components/QFShell';
+import { QFScreen } from '@/app/quiz/components/QFShell';
 import {
   BOOKING_PHONE_INLINE_INVALID_MSG,
   formatUsPhoneDisplay,
   isValidBookingPhone,
+  phoneToCalendlyE164,
   showBookingPhoneInlineError,
 } from '@/lib/calendly/phone-e164';
 import {
@@ -15,6 +16,7 @@ import {
   funnelRecaptchaEnterpriseClientErrorMessage,
 } from '@/lib/firebase/recaptcha-enterprise-client';
 import {
+  cleanupFunnelPhoneSession,
   confirmFunnelPhoneVerificationCode,
   funnelFirebaseClientErrorMessage,
   funnelPhoneRecaptchaContainerId,
@@ -104,6 +106,7 @@ export function BPhoneVerify({
   const clientConfigured = isFirebaseClientConfigured();
   const configured = clientConfigured && serverReady !== false;
   const displayPhone = formatUsPhoneDisplay(phone);
+  const e164Phone = phoneToCalendlyE164(phone);
 
   useEffect(() => {
     let cancelled = false;
@@ -134,6 +137,14 @@ export function BPhoneVerify({
     });
   }, [clientConfigured]);
 
+  function resetOtpSession() {
+    confirmationRef.current = null;
+    setOtp('');
+    setOtpOpen(false);
+    setError(null);
+    void cleanupFunnelPhoneSession();
+  }
+
   async function sendCode() {
     if (!phoneValid || sending || !configured) return;
     setSending(true);
@@ -159,6 +170,7 @@ export function BPhoneVerify({
       }
 
       confirmationRef.current = await sendFunnelPhoneVerificationCode(phone);
+      setOtp('');
       setOtpOpen(true);
     } catch (err) {
       if (
@@ -175,21 +187,25 @@ export function BPhoneVerify({
   }
 
   async function verifyCode() {
-    if (verifying || otp.trim().length < 4 || !confirmationRef.current) return;
+    if (verifying || otp.trim().length < 4 || !confirmationRef.current || !e164Phone) return;
     setVerifying(true);
     setError(null);
     try {
-      const idToken = await confirmFunnelPhoneVerificationCode(confirmationRef.current, otp.trim());
+      const { idToken } = await confirmFunnelPhoneVerificationCode(
+        confirmationRef.current,
+        otp.trim()
+      );
       const res = await fetch('/api/funnel-b/phone/verify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone, idToken }),
+        body: JSON.stringify({ phone: e164Phone, idToken }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
         setError(typeof data.message === 'string' ? data.message : 'Invalid code.');
         return;
       }
+      await cleanupFunnelPhoneSession();
       const stamp =
         typeof data.verifiedAt === 'string' ? data.verifiedAt : new Date().toISOString();
       onVerified(stamp);
@@ -288,37 +304,61 @@ export function BPhoneVerify({
 
       {otpOpen ? (
         <div
-          className="qfb-modal-backdrop"
+          className="qfb-phone-otp-backdrop"
           role="dialog"
           aria-modal="true"
-          aria-label="Enter verification code"
+          aria-labelledby="qfb-phone-otp-title"
         >
-          <div className="qfb-modal qf-card gap-14">
-            <h2 className="qf-h1" style={{ fontSize: 22, margin: 0 }}>
-              Enter the code we texted you
+          <div className="qfb-phone-otp-modal">
+            <button
+              type="button"
+              className="qfb-phone-otp-close"
+              aria-label="Close"
+              onClick={resetOtpSession}
+            >
+              ×
+            </button>
+            <h2 id="qfb-phone-otp-title" className="qfb-phone-otp-title">
+              Verify your phone number
             </h2>
+            <p className="qfb-phone-otp-lead">
+              We have sent you an access code to{' '}
+              <strong>{e164Phone ?? displayPhone}</strong>
+            </p>
+            <label className="qfb-phone-otp-label" htmlFor="qfb-phone-otp-input">
+              Please enter the code here *
+            </label>
             <input
-              className="qf-input"
+              id="qfb-phone-otp-input"
+              className="qfb-phone-otp-input"
               inputMode="numeric"
               autoComplete="one-time-code"
-              placeholder="6-digit code"
+              placeholder="000000"
               maxLength={8}
               value={otp}
-              onChange={(e) => setOtp(e.target.value)}
+              onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
             />
             {error ? (
               <p className="qf-field-error" role="alert">
                 {error}
               </p>
             ) : null}
-            <div className="gap-10">
-              <QFButton kind="forest" onClick={verifyCode} disabled={verifying || otp.trim().length < 4}>
-                {verifying ? 'Verifying…' : 'Verify'}
-              </QFButton>
-              <QFButton kind="ghost" onClick={() => setOtpOpen(false)}>
-                Cancel
-              </QFButton>
-            </div>
+            <button
+              type="button"
+              className="qfb-phone-otp-proceed"
+              onClick={() => void verifyCode()}
+              disabled={verifying || otp.trim().length < 4}
+            >
+              {verifying ? 'Verifying…' : 'Proceed next'}
+            </button>
+            <button
+              type="button"
+              className="qfb-phone-otp-resend"
+              onClick={() => void sendCode()}
+              disabled={sending}
+            >
+              {sending ? 'Sending…' : 'Re-send code'}
+            </button>
           </div>
         </div>
       ) : null}

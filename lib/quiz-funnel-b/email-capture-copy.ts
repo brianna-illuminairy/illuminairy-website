@@ -1,7 +1,12 @@
 /** Plan Builder B email capture (Screen 6) — owner copy. */
 
+export const PLAN_B_EMAIL_HEADLINE_BEFORE_FREE =
+  "Enter your email to book a ";
+export const PLAN_B_EMAIL_HEADLINE_AFTER_FREE =
+  " SAT Diagnostic & Tutoring Session.";
+
 export const PLAN_B_EMAIL_HEADLINE =
-  "Enter your email to book a free SAT Diagnostic & Tutoring Session.";
+  "Enter your email to book a FREE SAT Diagnostic & Tutoring Session.";
 
 export const PLAN_B_EMAIL_LABEL = "Email address";
 

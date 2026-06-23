@@ -150,8 +150,7 @@ export async function sendFunnelPhoneVerificationCode(phone: string): Promise<Co
 export async function confirmFunnelPhoneVerificationCode(
   confirmation: ConfirmationResult,
   code: string
-): Promise<string> {
-  const auth = getFunnelFirebaseAuth();
+): Promise<{ idToken: string; phoneNumber: string }> {
   const trimmed = code.replace(/\D/g, "");
   if (trimmed.length < 4) {
     throw new Error("invalid_code");
@@ -159,15 +158,24 @@ export async function confirmFunnelPhoneVerificationCode(
 
   const credential = await confirmation.confirm(trimmed);
   const idToken = await credential.user.getIdToken();
+  const phoneNumber = credential.user.phoneNumber?.trim() || "";
 
+  if (!phoneNumber) {
+    throw new Error("invalid_code");
+  }
+
+  return { idToken, phoneNumber };
+}
+
+/** Call after server verify succeeds or when abandoning the OTP flow. */
+export async function cleanupFunnelPhoneSession(): Promise<void> {
+  const auth = getFunnelFirebaseAuth();
   try {
     await signOut(auth);
   } catch {
-    // verification token is already issued
+    // session may already be cleared
   }
-
   await clearRecaptcha(auth);
-  return idToken;
 }
 
 export function funnelFirebaseClientErrorMessage(error: unknown): string {

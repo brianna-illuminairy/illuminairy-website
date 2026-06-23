@@ -23,6 +23,13 @@ export function countPhoneDigits(raw: string): number {
   return raw.replace(/\D/g, "").length;
 }
 
+/** E.164 for SMS copy, e.g. +14043144872 */
+export function formatPhoneE164Display(raw: string | undefined): string | null {
+  const e164 = phoneToCalendlyE164(raw);
+  if (!e164) return null;
+  return e164;
+}
+
 /** Display US phone as (404) 555-1234 while typing. */
 export function formatUsPhoneDisplay(raw: string): string {
   const digits = raw.replace(/\D/g, "").slice(0, 10);

@@ -37,16 +37,13 @@ import {
   educationHitQ8Scores,
 } from '@/lib/quiz-funnel/education-slides';
 import { QFProgressProvider } from '@/app/quiz/components/QFProgressContext';
+import { BSchoolReferral } from '@/app/quiz-b/screens/lab/BSchoolReferral';
 
 /** One frame so selected option state paints before route change. */
 const OPTION_TAP_ADVANCE_MS = 16;
 
 const QFInsightHit = dynamic(
   () => import('@/app/quiz/components/QFInsightHit').then((m) => ({ default: m.QFInsightHit })),
-  { ssr: false }
-);
-const BSchoolReferral = dynamic(
-  () => import('./screens/lab/BSchoolReferral').then((m) => ({ default: m.BSchoolReferral })),
   { ssr: false }
 );
 const BComputing = dynamic(

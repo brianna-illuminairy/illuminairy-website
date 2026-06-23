@@ -8,7 +8,8 @@ import { useQuiz } from '@/app/quiz-b/state';
 import { QFScreen, QFButton } from '@/app/quiz/components/QFShell';
 import {
   PLAN_B_EMAIL_CTA,
-  PLAN_B_EMAIL_HEADLINE,
+  PLAN_B_EMAIL_HEADLINE_AFTER_FREE,
+  PLAN_B_EMAIL_HEADLINE_BEFORE_FREE,
   PLAN_B_EMAIL_LABEL,
   PLAN_B_EMAIL_PRIVACY,
   planBEmailSocialProofHeadline,
@@ -109,28 +110,13 @@ export function BEmailCapture({ value, onChange, onContinue, onBack }: Props) {
   const oauthReady = Boolean(providers?.google || providers?.facebook);
 
   return (
-    <QFScreen
-      stepIdx={15}
-      onBack={onBack}
-      actions={
-        <div className="qfb-email-capture__actions">
-          <QFButton kind="forest" onClick={onContinue} disabled={!valid}>
-            {PLAN_B_EMAIL_CTA}
-          </QFButton>
-
-          {socialProof && socialProof.maskedEmails.length > 0 ? (
-            <section className="qfb-email-capture__social" aria-label="Recent parent sign-ups">
-              <p className="qfb-email-capture__social-headline">
-                {planBEmailSocialProofHeadline(socialProof.parentCount)}
-              </p>
-              <BSocialProofChipMarquee chips={socialProof.maskedEmails} />
-            </section>
-          ) : null}
-        </div>
-      }
-    >
+    <QFScreen stepIdx={15} onBack={onBack}>
       <div className="qfb-email-capture gap-22">
-        <h1 className="qfb-email-capture__headline">{PLAN_B_EMAIL_HEADLINE}</h1>
+        <h1 className="qfb-email-capture__headline">
+          {PLAN_B_EMAIL_HEADLINE_BEFORE_FREE}
+          <span className="qfb-email-capture__headline-free">FREE</span>
+          {PLAN_B_EMAIL_HEADLINE_AFTER_FREE}
+        </h1>
 
         {providers === null ? (
           <PlanBOAuthButtons
@@ -198,6 +184,21 @@ export function BEmailCapture({ value, onChange, onContinue, onBack }: Props) {
             {PLAN_B_EMAIL_PRIVACY}
           </p>
         </div>
+
+        <div className="qfb-email-capture__actions">
+          <QFButton kind="forest" onClick={onContinue} disabled={!valid}>
+            {PLAN_B_EMAIL_CTA}
+          </QFButton>
+        </div>
+
+        {socialProof && socialProof.maskedEmails.length > 0 ? (
+          <section className="qfb-email-capture__social" aria-label="Recent parent sign-ups">
+            <p className="qfb-email-capture__social-headline">
+              {planBEmailSocialProofHeadline(socialProof.parentCount)}
+            </p>
+            <BSocialProofChipMarquee chips={socialProof.maskedEmails} staticLayout />
+          </section>
+        ) : null}
       </div>
     </QFScreen>
   );
