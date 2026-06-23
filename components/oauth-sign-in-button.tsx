@@ -7,6 +7,7 @@ import {
   oauthReturnPathCookieWrite,
   type OAuthProviderId,
 } from "@/lib/oauth-providers";
+import { markOAuthSignInPending } from "@/lib/quiz-funnel-b/oauth-email-sync";
 
 type Props = {
   provider: OAuthProviderId;
@@ -36,6 +37,7 @@ export function OAuthSignInButton({
         if (pending) return;
         const redirectTo = normalizeOAuthCallbackUrl(callbackUrl);
         onBeforeSignIn?.();
+        markOAuthSignInPending();
         if (typeof document !== "undefined") {
           document.cookie = oauthReturnPathCookieWrite(redirectTo);
         }

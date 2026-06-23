@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { planBuilderBStepHref } from "@/lib/plan-builder-b-routes";
+import { OAUTH_COMPLETE_PATH } from "@/lib/quiz-funnel-b/oauth-complete";
 import { readOAuthReturnPathFromCookieHeader } from "@/lib/oauth-providers";
 
 /** Auth.js error page — send users back to funnel or portal based on where sign-in started. */
@@ -9,7 +10,7 @@ export function GET(request: NextRequest) {
   const isPlanBReturn = Boolean(
     returnPath?.includes("/plan-b") ||
       returnPath?.includes("b-email") ||
-      returnPath?.includes("/api/funnel-b/oauth/complete")
+      returnPath?.includes(OAUTH_COMPLETE_PATH)
   );
 
   const params = new URLSearchParams();
