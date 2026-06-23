@@ -163,6 +163,7 @@
   margin-top: 22px; background: var(--navy);
   border: 1px solid rgba(119, 200, 154, 0.22); border-radius: var(--radius);
   padding: 22px 20px 18px; color: var(--white); position: relative; overflow: hidden;
+  display: flex; flex-direction: column;
   transition: border-color 0.35s ease, transform 0.35s ease, box-shadow 0.35s ease;
 }
 .lp-cta-card::before {
@@ -196,6 +197,8 @@
   background: rgba(119, 200, 154, 0.18); color: var(--aurora); font-size: 12px;
 }
 
+.lp-cta-card .lp-btn { align-self: center; }
+
 .lp-btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 9px; width: 100%;
   padding: 18px 22px; border: none; border-radius: 100px;
@@ -211,7 +214,8 @@
 .lp-btn:hover .arrow { transform: translateX(3px); }
 
 .lp-cta-sub {
-  margin: 14px 0 0; width: 100%; text-align: center; font-family: var(--body);
+  margin: 14px 0 0; width: 100%; max-width: 28ch; text-align: center; align-self: center;
+  font-family: var(--body);
   font-size: 13px; color: rgba(245, 248, 250, 0.75); font-weight: 500; line-height: 1.4;
 }
 

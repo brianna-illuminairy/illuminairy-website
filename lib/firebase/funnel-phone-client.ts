@@ -51,6 +51,16 @@ export function preloadFunnelPhoneRecaptcha(): Promise<void> {
 }
 
 export function funnelPhoneRecaptchaContainerId(): string {
+  if (typeof document !== "undefined") {
+    let container = document.getElementById(RECAPTCHA_CONTAINER_ID);
+    if (!container) {
+      container = document.createElement("div");
+      container.id = RECAPTCHA_CONTAINER_ID;
+      container.className = "qfb-recaptcha-anchor";
+      container.setAttribute("aria-hidden", "true");
+      document.body.appendChild(container);
+    }
+  }
   return RECAPTCHA_CONTAINER_ID;
 }
 
@@ -78,6 +88,7 @@ async function ensureRecaptchaEnterpriseConfig(auth: Auth): Promise<void> {
 
 async function ensureRecaptchaVerifier(auth: Auth): Promise<RecaptchaVerifier> {
   await ensureRecaptchaEnterpriseConfig(auth);
+  funnelPhoneRecaptchaContainerId();
   await clearRecaptcha(auth);
 
   recaptchaVerifier = new RecaptchaVerifier(auth, RECAPTCHA_CONTAINER_ID, {

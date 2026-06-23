@@ -1,46 +1,46 @@
 import { NextResponse } from "next/server";
+import { funnelBVerifyStatus } from "@/lib/funnel-b-verify";
 import { isFirebaseClientConfigured } from "@/lib/firebase/public-config";
-import { isFirebaseAdminConfigured } from "@/lib/firebase/server-config";
 import { assessRecaptchaEnterpriseToken } from "@/lib/firebase/recaptcha-enterprise-assess";
 import { isFunnelPhoneEnterpriseRecaptchaEnabled } from "@/lib/firebase/funnel-phone-recaptcha";
 
 export const dynamic = "force-dynamic";
 
-function phoneVerifyStatus() {
-  const clientConfigured = isFirebaseClientConfigured();
-  const serverConfigured = isFirebaseAdminConfigured();
+function phoneSendStatus() {
+  const status = funnelBVerifyStatus();
   const enterpriseRecaptchaEnabled = isFunnelPhoneEnterpriseRecaptchaEnabled();
 
   return {
-    ok: clientConfigured && serverConfigured,
-    channel: "firebase" as const,
-    clientConfigured,
-    serverConfigured,
+    ok: status.clientConfigured,
+    verifyReady: status.configured,
+    channel: status.channel,
+    clientConfigured: status.clientConfigured,
+    serviceAccountConfigured: status.serviceAccountConfigured,
     enterpriseRecaptchaEnabled,
   };
 }
 
 export async function GET() {
-  const status = phoneVerifyStatus();
+  const status = phoneSendStatus();
   return NextResponse.json({
     ok: status.ok,
+    verifyReady: status.verifyReady,
     channel: status.channel,
     clientConfigured: status.clientConfigured,
-    serverConfigured: status.serverConfigured,
+    serviceAccountConfigured: status.serviceAccountConfigured,
     enterpriseRecaptchaEnabled: status.enterpriseRecaptchaEnabled,
   });
 }
 
 export async function POST(request: Request) {
-  const status = phoneVerifyStatus();
-  if (!status.ok) {
+  const status = phoneSendStatus();
+
+  if (!isFirebaseClientConfigured()) {
     return NextResponse.json(
       {
         ok: false,
-        error: "verify_not_configured",
+        error: "firebase_client_not_configured",
         message: "Verification is temporarily unavailable. Email support@illuminairy.com.",
-        clientConfigured: status.clientConfigured,
-        serverConfigured: status.serverConfigured,
       },
       { status: 503 }
     );
@@ -51,6 +51,7 @@ export async function POST(request: Request) {
       ok: true,
       channel: "firebase",
       clientSide: true,
+      verifyReady: status.verifyReady,
     });
   }
 
@@ -98,6 +99,7 @@ export async function POST(request: Request) {
       ok: true,
       channel: "firebase",
       clientSide: true,
+      verifyReady: status.verifyReady,
     });
   } catch {
     return NextResponse.json(

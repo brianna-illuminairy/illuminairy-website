@@ -78,6 +78,7 @@ export function BPhoneVerify({
 
   useEffect(() => {
     if (!clientConfigured) return;
+    funnelPhoneRecaptchaContainerId();
     void preloadFunnelPhoneRecaptcha().catch(() => {
       // Firebase will retry when user taps Send.
     });
@@ -211,8 +212,6 @@ export function BPhoneVerify({
           </p>
         ) : null}
       </div>
-
-      <div id={funnelPhoneRecaptchaContainerId()} className="qfb-recaptcha-anchor" aria-hidden="true" />
 
       {otpOpen ? (
         <div

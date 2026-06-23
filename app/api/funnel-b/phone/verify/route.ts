@@ -41,6 +41,7 @@ export async function POST(request: Request) {
   }
 
   const result = await verifyFunnelBPhoneIdToken({ phone, idToken });
+
   if (!result.ok) {
     const status =
       result.error === "invalid_phone" ||

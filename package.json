@@ -35,6 +35,7 @@
     "funnel:booking-guard": "node scripts/funnel-booking-guard.mjs",
     "funnel:b-booking-guard": "node scripts/funnel-b-booking-guard.mjs",
     "funnel:b-oauth-guard": "node scripts/funnel-b-oauth-guard.mjs",
+    "firebase:plan-b-setup": "node --env-file=.env.local scripts/firebase-plan-b-phone-setup.mjs",
     "funnel:b-analytics-smoke": "node scripts/funnel-b-analytics-smoke.mjs",
     "funnel:score-review-analytics-smoke": "node scripts/funnel-score-review-analytics-smoke.mjs",
     "aurora:brand-guard": "node scripts/aurora-brand-guard.mjs",

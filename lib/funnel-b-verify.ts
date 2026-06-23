@@ -1,5 +1,8 @@
 import { phoneToCalendlyE164 } from "@/lib/calendly/phone-e164";
-import { isFirebaseAdminConfigured } from "@/lib/firebase/server-config";
+import {
+  hasFirebaseServiceAccountCredentials,
+  isFirebaseAdminConfigured,
+} from "@/lib/firebase/server-config";
 import { isFirebaseClientConfigured } from "@/lib/firebase/public-config";
 
 export type FunnelBVerifyChannel = "firebase";
@@ -13,16 +16,21 @@ export function isFunnelBVerifyConfigured(): boolean {
 }
 
 export function funnelBVerifyStatus() {
+  const firebaseConfigured =
+    isFirebaseClientConfigured() && isFirebaseAdminConfigured();
+
   return {
-    channel: resolveFunnelBVerifyChannel(),
-    configured: isFunnelBVerifyConfigured(),
+    channel: "firebase" as const,
+    configured: firebaseConfigured,
     clientConfigured: isFirebaseClientConfigured(),
     serverConfigured: isFirebaseAdminConfigured(),
+    serviceAccountConfigured: hasFirebaseServiceAccountCredentials(),
+    firebaseConfigured,
   };
 }
 
 export async function verifyFunnelBPhoneIdToken(input: { phone: string; idToken: string }) {
-  const channel = resolveFunnelBVerifyChannel();
+  const channel: FunnelBVerifyChannel = "firebase";
   const expectedPhone = phoneToCalendlyE164(input.phone);
   if (!expectedPhone) {
     return { ok: false as const, error: "invalid_phone" as const, channel };
