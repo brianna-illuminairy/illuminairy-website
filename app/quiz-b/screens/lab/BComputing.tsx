@@ -53,6 +53,9 @@ function initialRows(): RowState[] {
 function computeReducer(state: ComputeState, action: ComputeAction): ComputeState {
   switch (action.type) {
     case 'SET_ROW_PCT': {
+      if (action.row > 0 && !state.rows[action.row - 1]?.done) {
+        return state;
+      }
       const rows = state.rows.map((row, i) =>
         i === action.row ? { ...row, pct: action.pct } : row
       );
@@ -201,7 +204,9 @@ export function BComputing({ onKhanAnswer, onTutorAnswer, onContinue, onBack }: 
   const [reducedMotion, setReducedMotion] = useState(false);
   const [motionReady, setMotionReady] = useState(false);
   const advancedRef = useRef(false);
-  const bootRunRef = useRef(false);
+  /** Boot runs once per mount — never reset in effect cleanup (popup dismiss must not restart row 0). */
+  const bootStartedRef = useRef(false);
+  const resumeLockRef = useRef(false);
 
   useEffect(() => {
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -215,14 +220,13 @@ export function BComputing({ onKhanAnswer, onTutorAnswer, onContinue, onBack }: 
   }, []);
 
   useEffect(() => {
-    if (!motionReady || state.finished || state.popup) return;
+    if (!motionReady || bootStartedRef.current) return;
 
     let cancelled = false;
     const isCancelled = () => cancelled;
 
     async function boot() {
-      if (bootRunRef.current) return;
-      bootRunRef.current = true;
+      bootStartedRef.current = true;
 
       if (reducedMotion) {
         dispatchCompute({ type: 'SET_ROW_PCT', row: 0, pct: COMPUTE_KHAN_POPUP_PCT });
@@ -239,9 +243,8 @@ export function BComputing({ onKhanAnswer, onTutorAnswer, onContinue, onBack }: 
     void boot();
     return () => {
       cancelled = true;
-      bootRunRef.current = false;
     };
-  }, [motionReady, state.finished, state.popup, reducedMotion]);
+  }, [motionReady, reducedMotion]);
 
   useEffect(() => {
     if (!state.finished || advancedRef.current) return;
@@ -251,6 +254,8 @@ export function BComputing({ onKhanAnswer, onTutorAnswer, onContinue, onBack }: 
   }, [state.finished, onContinue, reducedMotion]);
 
   async function resumeAfterKhan(answer: 'yes' | 'no') {
+    if (resumeLockRef.current) return;
+    resumeLockRef.current = true;
     onKhanAnswer(answer);
     dispatchCompute({ type: 'SHOW_POPUP', popup: null });
 
@@ -258,6 +263,7 @@ export function BComputing({ onKhanAnswer, onTutorAnswer, onContinue, onBack }: 
       dispatchCompute({ type: 'COMPLETE_ROW', row: 0 });
       dispatchCompute({ type: 'SET_ROW_PCT', row: 1, pct: COMPUTE_TUTOR_POPUP_PCT });
       dispatchCompute({ type: 'SHOW_POPUP', popup: 'tutor' });
+      resumeLockRef.current = false;
       return;
     }
 
@@ -268,9 +274,12 @@ export function BComputing({ onKhanAnswer, onTutorAnswer, onContinue, onBack }: 
       pauseAt: COMPUTE_TUTOR_POPUP_PCT,
       onPause: () => dispatchCompute({ type: 'SHOW_POPUP', popup: 'tutor' }),
     });
+    resumeLockRef.current = false;
   }
 
   async function resumeAfterTutor(answer: 'yes' | 'no') {
+    if (resumeLockRef.current) return;
+    resumeLockRef.current = true;
     onTutorAnswer(answer);
     dispatchCompute({ type: 'SHOW_POPUP', popup: null });
 
@@ -278,6 +287,7 @@ export function BComputing({ onKhanAnswer, onTutorAnswer, onContinue, onBack }: 
       dispatchCompute({ type: 'COMPLETE_ROW', row: 1 });
       dispatchCompute({ type: 'COMPLETE_ROW', row: 2 });
       dispatchCompute({ type: 'FINISH' });
+      resumeLockRef.current = false;
       return;
     }
 
@@ -288,7 +298,11 @@ export function BComputing({ onKhanAnswer, onTutorAnswer, onContinue, onBack }: 
     dispatchCompute({ type: 'COMPLETE_ROW', row: 2 });
     await pauseMs(COMPUTE_SEGMENT_PAUSE_MS, () => false);
     dispatchCompute({ type: 'FINISH' });
+    resumeLockRef.current = false;
   }
+
+  const activeRowIndex = state.rows.findIndex((row) => !row.done);
+  const activeIdx = activeRowIndex === -1 ? ROW_COUNT - 1 : activeRowIndex;
 
   return (
     <QFScreen stepIdx={12} onBack={onBack} showProgress={false}>
@@ -299,13 +313,14 @@ export function BComputing({ onKhanAnswer, onTutorAnswer, onContinue, onBack }: 
           <ul className="qfb-computing__rows" aria-live="polite">
             {PLAN_B_COMPUTING_ROWS.map((label, i) => {
               const row = state.rows[i] ?? { pct: 0, done: false };
+              const isPending = !row.done && i > activeIdx;
+              const rowClass = row.done
+                ? 'qfb-computing__row qfb-computing__row--done'
+                : isPending
+                  ? 'qfb-computing__row qfb-computing__row--pending'
+                  : 'qfb-computing__row qfb-computing__row--active';
               return (
-                <li
-                  key={label}
-                  className={
-                    row.done ? 'qfb-computing__row qfb-computing__row--done' : 'qfb-computing__row'
-                  }
-                >
+                <li key={label} className={rowClass}>
                   <div className="qfb-computing__row-head">
                     <span className="qfb-computing__row-label">
                       {row.done ? (
@@ -315,13 +330,17 @@ export function BComputing({ onKhanAnswer, onTutorAnswer, onContinue, onBack }: 
                       ) : null}
                       {label}
                     </span>
-                    <span className="qfb-computing__row-pct">
-                      {row.done ? '100%' : `${row.pct}%`}
-                    </span>
+                    {!isPending ? (
+                      <span className="qfb-computing__row-pct">
+                        {row.done ? '100%' : `${row.pct}%`}
+                      </span>
+                    ) : null}
                   </div>
-                  <div className="qfb-computing__bar" aria-hidden="true">
-                    <div className="qfb-computing__bar-fill" style={{ width: `${row.pct}%` }} />
-                  </div>
+                  {!isPending ? (
+                    <div className="qfb-computing__bar" aria-hidden="true">
+                      <div className="qfb-computing__bar-fill" style={{ width: `${row.pct}%` }} />
+                    </div>
+                  ) : null}
                 </li>
               );
             })}

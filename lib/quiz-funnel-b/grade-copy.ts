@@ -1,6 +1,4 @@
-/** Plan Builder B — student grade for the upcoming 2026–27 school year. */
-
-export const PLAN_B_GRADE_SCHOOL_YEAR = "2026–27 school year";
+/** Plan Builder B — student grade (q-grade, step 2 after q1-parent-child). */
 
 export const PLAN_B_GRADE_OPTIONS = [
   { id: "9", label: "9th grade" },
@@ -20,8 +18,8 @@ const GRADE_LABEL_BY_ID: Record<PlanBGradeId, string> = {
 
 export function planBGradeQuestion(qWho?: string): string {
   return qWho === "self"
-    ? `What grade will you be in during the ${PLAN_B_GRADE_SCHOOL_YEAR}?`
-    : `What grade will your child be in during the ${PLAN_B_GRADE_SCHOOL_YEAR}?`;
+    ? "What grade will you be in for the upcoming school year?"
+    : "What grade will your child be in for the upcoming school year?";
 }
 
 /** CRM `student_grade` column — canonical label without school-year suffix. */

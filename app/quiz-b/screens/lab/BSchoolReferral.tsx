@@ -33,12 +33,12 @@ export function BSchoolReferral({ value, onSelect, onBack }: Props) {
           </QFOption>
         </div>
 
-        <div className="qfb-school-trust qf-card">
+        <div className="qfb-school-trust">
           <p className="qfb-school-trust__title">
             <span className="qfb-school-trust__icon" aria-hidden="true">
               💡
             </span>
-            {PLAN_B_SCHOOL_TRUST_TITLE}
+            <strong>{PLAN_B_SCHOOL_TRUST_TITLE}</strong>
           </p>
           <p className="qfb-school-trust__body">{PLAN_B_SCHOOL_TRUST_BODY}</p>
           <p className="qfb-school-trust__school">Highland Park High School</p>

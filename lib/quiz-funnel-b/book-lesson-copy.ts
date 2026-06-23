@@ -1,7 +1,8 @@
 /** Plan Builder B native scheduler (b-book) — owner copy. */
 
-export const PLAN_B_BOOK_HEADLINE =
-  "Choose a date and time for your free SAT tutoring session";
+export const PLAN_B_BOOK_HEADLINE_LINE1 = "Choose a date and time.";
+
+export const PLAN_B_BOOK_HEADLINE_LINE2 = "for your FREE SAT lesson.";
 
 export const PLAN_B_BOOK_NAME_PLACEHOLDER = "Type student's first name";
 

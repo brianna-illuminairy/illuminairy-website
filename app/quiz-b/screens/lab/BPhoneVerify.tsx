@@ -254,10 +254,12 @@ export function BPhoneVerify({
   return (
     <QFScreen stepIdx={18} onBack={onBack}>
       <div className="qfb-phone-screen">
-        <h1 className="qfb-phone-title">Enter your phone</h1>
-        <p className="qfb-phone-lead">
-          You&apos;ll receive a text message with a code to confirm your booking.
-        </p>
+        <div className="qfb-phone-intro">
+          <h1 className="qfb-phone-title">Enter your phone</h1>
+          <p className="qfb-phone-lead">
+            You&apos;ll receive a text message with a code to confirm your booking.
+          </p>
+        </div>
 
         <div className="qfb-phone-field">
           <label className="qfb-phone-label" htmlFor="qfb-phone-input">

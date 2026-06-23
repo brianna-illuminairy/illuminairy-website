@@ -1,11 +1,7 @@
 'use client';
 
 import { QFScreen, QFOption, QFQuestionHead } from '@/app/quiz/components/QFShell';
-import {
-  PLAN_B_GRADE_OPTIONS,
-  PLAN_B_GRADE_SCHOOL_YEAR,
-  planBGradeQuestion,
-} from '@/lib/quiz-funnel-b/grade-copy';
+import { PLAN_B_GRADE_OPTIONS, planBGradeQuestion } from '@/lib/quiz-funnel-b/grade-copy';
 
 type Props = {
   value?: string;
@@ -18,9 +14,6 @@ export function BStudentGrade({ value, qWho, onSelect, onBack }: Props) {
   return (
     <QFScreen stepIdx={2} onBack={onBack}>
       <QFQuestionHead title={planBGradeQuestion(qWho)} />
-      <p className="qf-meta" style={{ marginTop: -8, marginBottom: 16, color: 'var(--qf-ink-mid)' }}>
-        {PLAN_B_GRADE_SCHOOL_YEAR}
-      </p>
       <div className="qf-options">
         {PLAN_B_GRADE_OPTIONS.map((option) => (
           <QFOption

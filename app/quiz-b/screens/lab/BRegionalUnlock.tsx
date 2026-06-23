@@ -117,14 +117,16 @@ export function BRegionalUnlock({
     >
       <div className="qfb-regional-unlock">
         <div className="qfb-regional-unlock__card">
-          <h1 className="qfb-regional-unlock__title">
-            {headline}
-            <span className="qfb-regional-unlock__title-emoji" aria-hidden="true">
-              {' '}
-              🎉
-            </span>
-          </h1>
-          <p className="qfb-regional-unlock__intro">{planBRegionalUnlockIntro()}</p>
+          <div className="qfb-regional-unlock__header">
+            <h1 className="qfb-regional-unlock__title">
+              {headline}
+              <span className="qfb-regional-unlock__title-emoji" aria-hidden="true">
+                {' '}
+                🎉
+              </span>
+            </h1>
+            <p className="qfb-regional-unlock__intro">{planBRegionalUnlockIntro()}</p>
+          </div>
           <ul className="qfb-regional-unlock__benefits">
             {benefits.map((item) => (
               <li key={item.text}>

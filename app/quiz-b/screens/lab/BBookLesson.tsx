@@ -26,7 +26,8 @@ import {
   PLAN_B_BOOK_CONSENT_REQUIRED,
   PLAN_B_BOOK_CONSENT_SUFFIX,
   PLAN_B_BOOK_CTA,
-  PLAN_B_BOOK_HEADLINE,
+  PLAN_B_BOOK_HEADLINE_LINE1,
+  PLAN_B_BOOK_HEADLINE_LINE2,
   PLAN_B_BOOK_LOADING,
   PLAN_B_BOOK_MORE_DATES,
   PLAN_B_BOOK_NAME_PLACEHOLDER,
@@ -372,7 +373,12 @@ export function BBookLesson({ answers, dispatch, onBooked, onBack }: Props) {
       }
     >
       <div className="gap-22 qfb-book">
-        <h1 className="qf-h1 qfb-book__title">{PLAN_B_BOOK_HEADLINE}</h1>
+        <h1 className="qf-h1 qfb-book__title">
+          <span className="qfb-book__title-line">{PLAN_B_BOOK_HEADLINE_LINE1}</span>
+          <span className="qfb-book__title-line qfb-book__title-line--sub">
+            {PLAN_B_BOOK_HEADLINE_LINE2}
+          </span>
+        </h1>
 
         <input
           className={
@@ -392,103 +398,105 @@ export function BBookLesson({ answers, dispatch, onBooked, onBack }: Props) {
           </p>
         ) : null}
 
-        <div className="qfb-book-schedule">
-          <p className="qfb-book-schedule__label">
-            <CalendarDays className="qfb-book-schedule__icon" size={18} strokeWidth={2} aria-hidden />
-            {PLAN_B_BOOK_SCHEDULE_LABEL}
-          </p>
+        <div className="qfb-book-picker">
+          <div className="qfb-book-schedule">
+            <p className="qfb-book-schedule__label">
+              <CalendarDays className="qfb-book-schedule__icon" size={18} strokeWidth={2} aria-hidden />
+              {PLAN_B_BOOK_SCHEDULE_LABEL}
+            </p>
 
-          {loading ? (
-            <div className="qfb-book-schedule__loading" role="status" aria-live="polite">
-              <div className="qfb-book-schedule__spinner" aria-hidden="true" />
-              <p className="qfb-book-schedule__loading-text">{PLAN_B_BOOK_LOADING}</p>
-            </div>
-          ) : availabilityAlert ? (
-            <QFBookingAlert
-              title={availabilityAlert.title}
-              message={availabilityAlert.message}
-              retryable={availabilityAlert.retryable}
-              onRetry={availabilityAlert.retryable ? () => void loadAvailability() : undefined}
-            />
-          ) : (
-            <>
-              <div className="qfb-book-dates" role="group" aria-label="Pick a day">
-                {days.map((day, index) => {
-                  const card = labBookingDayCardLabel(
-                    day.slots[0]?.startTime ?? `${day.dateKey}T12:00:00.000Z`,
-                    day.weekdayShort,
-                    index,
-                    day.dateKey
-                  );
-                  const selected = day.dateKey === resolvedDayKey;
-                  return (
-                    <button
-                      key={day.dateKey}
-                      type="button"
-                      className={
-                        selected ? 'qfb-book-date qfb-book-date--active' : 'qfb-book-date'
-                      }
-                      onClick={() => {
-                        setActiveDayKey(day.dateKey);
-                        const firstSlot = day.slots[0];
-                        if (firstSlot) setSelectedStartTime(firstSlot.startTime);
-                      }}
-                    >
-                      <span className="qfb-book-date__heading">{card.heading}</span>
-                      <span className="qfb-book-date__sub">{card.sub}</span>
-                      {selected ? (
-                        <span className="qfb-book-date__check" aria-hidden="true">
-                          ✓
-                        </span>
-                      ) : null}
-                    </button>
-                  );
-                })}
+            {loading ? (
+              <div className="qfb-book-schedule__loading" role="status" aria-live="polite">
+                <div className="qfb-book-schedule__spinner" aria-hidden="true" />
+                <p className="qfb-book-schedule__loading-text">{PLAN_B_BOOK_LOADING}</p>
               </div>
+            ) : availabilityAlert ? (
+              <QFBookingAlert
+                title={availabilityAlert.title}
+                message={availabilityAlert.message}
+                retryable={availabilityAlert.retryable}
+                onRetry={availabilityAlert.retryable ? () => void loadAvailability() : undefined}
+              />
+            ) : (
+              <>
+                <div className="qfb-book-dates" role="group" aria-label="Pick a day">
+                  {days.map((day, index) => {
+                    const card = labBookingDayCardLabel(
+                      day.slots[0]?.startTime ?? `${day.dateKey}T12:00:00.000Z`,
+                      day.weekdayShort,
+                      index,
+                      day.dateKey
+                    );
+                    const selected = day.dateKey === resolvedDayKey;
+                    return (
+                      <button
+                        key={day.dateKey}
+                        type="button"
+                        className={
+                          selected ? 'qfb-book-date qfb-book-date--active' : 'qfb-book-date'
+                        }
+                        onClick={() => {
+                          setActiveDayKey(day.dateKey);
+                          const firstSlot = day.slots[0];
+                          if (firstSlot) setSelectedStartTime(firstSlot.startTime);
+                        }}
+                      >
+                        <span className="qfb-book-date__heading">{card.heading}</span>
+                        <span className="qfb-book-date__sub">{card.sub}</span>
+                        {selected ? (
+                          <span className="qfb-book-date__check" aria-hidden="true">
+                            ✓
+                          </span>
+                        ) : null}
+                      </button>
+                    );
+                  })}
+                </div>
 
-              {canExpandDates ? (
-                <button
-                  type="button"
-                  className="qfb-book-more-dates"
-                  onClick={() => setShowExtendedDates(true)}
-                >
-                  {PLAN_B_BOOK_MORE_DATES}
-                </button>
-              ) : null}
-
-              {activeDay && activeDay.slots.length > 0 ? (
-                <label className="qfb-book-time">
-                  <Clock className="qfb-book-time__icon" size={18} strokeWidth={2} aria-hidden />
-                  <select
-                    className="qfb-book-time__select"
-                    value={effectiveStartTime}
-                    aria-label="Select time"
-                    onChange={(e) => setSelectedStartTime(e.target.value)}
-                    disabled={submitting}
-                  >
-                    {!effectiveStartTime ? (
-                      <option value="">{PLAN_B_BOOK_TIME_PLACEHOLDER}</option>
+                {activeDay && activeDay.slots.length > 0 ? (
+                  <label className="qfb-book-time">
+                    <Clock className="qfb-book-time__icon" size={18} strokeWidth={2} aria-hidden />
+                    <select
+                      className="qfb-book-time__select"
+                      value={effectiveStartTime}
+                      aria-label="Select time"
+                      onChange={(e) => setSelectedStartTime(e.target.value)}
+                      disabled={submitting}
+                    >
+                      {!effectiveStartTime ? (
+                        <option value="">{PLAN_B_BOOK_TIME_PLACEHOLDER}</option>
+                      ) : null}
+                      {activeDay.slots.map((slot) => (
+                        <option key={slot.startTime} value={slot.startTime}>
+                          {slot.label}
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronDown className="qfb-book-time__chevron" size={18} aria-hidden />
+                    {submitting ? (
+                      <span className="qfb-book-time__inline-spinner" aria-hidden="true" />
                     ) : null}
-                    {activeDay.slots.map((slot) => (
-                      <option key={slot.startTime} value={slot.startTime}>
-                        {slot.label}
-                      </option>
-                    ))}
-                  </select>
-                  <ChevronDown className="qfb-book-time__chevron" size={18} aria-hidden />
-                  {submitting ? (
-                    <span className="qfb-book-time__inline-spinner" aria-hidden="true" />
-                  ) : null}
-                </label>
-              ) : null}
+                  </label>
+                ) : null}
 
-              {submitAttempted && validation.errors.slot ? (
-                <p className="qf-field-error" role="alert">
-                  {validation.errors.slot}
-                </p>
-              ) : null}
-            </>
-          )}
+                {submitAttempted && validation.errors.slot ? (
+                  <p className="qf-field-error" role="alert">
+                    {validation.errors.slot}
+                  </p>
+                ) : null}
+              </>
+            )}
+          </div>
+
+          {canExpandDates && !loading && !availabilityAlert ? (
+            <button
+              type="button"
+              className="qfb-book-more-dates"
+              onClick={() => setShowExtendedDates(true)}
+            >
+              {PLAN_B_BOOK_MORE_DATES}
+            </button>
+          ) : null}
         </div>
 
         <label className="qfb-book-consent">
