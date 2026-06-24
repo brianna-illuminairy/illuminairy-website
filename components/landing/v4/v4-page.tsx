@@ -65,8 +65,9 @@ export function V4Page({ search, heroHook, landingPath, planBuilderB, onCta, onH
         />
       </main>
 
-      <DeferredBelowFold force>
-        <V4TrustBar heroHook={heroHook} />
+      <V4TrustBar heroHook={heroHook} />
+
+      <DeferredBelowFold>
         <V4Footer />
       </DeferredBelowFold>
     </div>

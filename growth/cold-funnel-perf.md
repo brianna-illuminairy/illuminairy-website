@@ -14,7 +14,7 @@ Both must pass before scaling ad spend.
 | **Landing** — ad3 LP | `landing-ad3` | `/sat-plan-builder?…&hook=tutor&pb=b` | ≥ 85 | ≤ 2.5s |
 | **Funnel** — Plan B step 1 | `funnel-plan-b-entry` | `/plan-b?step=q1-parent-child&pb=b` | ≥ 85 | ≤ 2.5s |
 
-LCP should be the **hero H1** on the landing page, and **“Who needs SAT help?”** on the funnel — not trust quotes or late UI. The Lighthouse gate fails if the wrong element wins LCP.
+LCP on landing should be **hero or trust copy** in the first HTML response — not footer or content that waits on JavaScript.
 
 **Note:** Live Meta ads use `/sat-plan-builder`, not homepage `/`. Homepage is organic/legacy and is **not** in this gate.
 

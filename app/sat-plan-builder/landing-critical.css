@@ -215,6 +215,38 @@ main.funnel-main{display:flex;flex-direction:column;flex:1 1 auto;min-height:0;h
   font-family: var(--body);
   font-size: 13px; color: rgba(245, 248, 250, 0.75); font-weight: 500; line-height: 1.4;
 }
+
+/* ════════ Trust bar (tutor quotes — above fold on mobile) ════════ */
+.lp-trust--quotes { background: var(--surface-2); }
+.lp-trust-quotes--desktop { display: none; }
+.lp-trust-quotes--mobile { display: block; }
+.lp-trust-quote { margin: 0; padding: 20px 8px; text-align: center; }
+.lp-trust-quote blockquote {
+  margin: 0 0 10px;
+  font-family: var(--body);
+  font-size: clamp(14px, 3.8vw, 16px);
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+  color: var(--page-fg);
+  text-wrap: balance;
+}
+.lp-trust-quote blockquote::before { content: "\201C"; color: var(--em); }
+.lp-trust-quote blockquote::after { content: "\201D"; color: var(--em); }
+.lp-trust-quote figcaption {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: var(--fg-mute);
+  line-height: 1.45;
+}
+@media (max-height: 720px) {
+  .lp-trust-quote { padding: 14px 8px 16px; }
+  .lp-trust-quote blockquote { font-size: clamp(13px, 3.5vw, 15px); margin-bottom: 8px; }
+}
+
+/* ════════ Desktop (≥920px) ════════ */
+@media (min-width: 920px) {
   .lp-hero { padding: 56px 0 64px; }
   .lp-hero-single { margin-inline: auto; }
   .lp-cta-card .lp-btn {
@@ -279,6 +311,6 @@ main.funnel-main{display:flex;flex-direction:column;flex:1 1 auto;min-height:0;h
   display: flex;
   flex-direction: column;
 }
-.ad-lp-ssr .lp-btn { pointer-events: none; }
+.ad-lp-ssr .lp-btn { text-decoration: none; }
 .lp-cold-perf:has(.ad-lp-ssr) { position: relative; min-height: 100dvh; display: flex; flex-direction: column; }
 .lp-cold-perf:has(.ad-lp-ssr) > *:not(#ad-lp-ssr) { flex: 1 1 auto; min-height: 0; width: 100%; }

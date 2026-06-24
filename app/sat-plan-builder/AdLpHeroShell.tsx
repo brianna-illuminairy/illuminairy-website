@@ -1,9 +1,13 @@
 import Image from "next/image";
+import Link from "next/link";
 import {
   resolveLandingHeroHeadlineV4,
 } from "@/lib/landing/hero-hooks";
 import { resolveMetaLandingContext } from "@/lib/landing/meta-traffic";
-import { shouldRouteLandingCtaToPlanBuilderB } from "@/lib/plan-builder-b-routes";
+import {
+  planBuilderBEntryFromLanding,
+  shouldRouteLandingCtaToPlanBuilderB,
+} from "@/lib/plan-builder-b-routes";
 import {
   v4Authority,
   v4Cta,
@@ -11,6 +15,7 @@ import {
   v4PlanBCta,
   v4TutorCta,
 } from "@/components/landing/v4/v4-content";
+import { V4TrustBar } from "@/components/landing/v4/v4-trust-bar";
 
 type AdLpHeroShellProps = {
   searchQuery: string;
@@ -28,12 +33,14 @@ function resolveShellCopy(searchQuery: string) {
   return { headline, cta, heroHook: meta.heroHook };
 }
 
-/** SSR hero for ad LP — paints headline + CTA before client bundle loads. */
+/** SSR above-the-fold for ad LP — headline, trust, and CTA in first HTML (no client wait). */
 export function AdLpHeroShell({ searchQuery }: AdLpHeroShellProps) {
-  const { headline, cta } = resolveShellCopy(searchQuery);
+  const query = searchQuery.startsWith("?") ? searchQuery : searchQuery ? `?${searchQuery}` : "";
+  const { headline, cta, heroHook } = resolveShellCopy(searchQuery);
+  const ctaHref = planBuilderBEntryFromLanding(query || undefined);
 
   return (
-    <div id="ad-lp-ssr" className="ad-lp-ssr" aria-hidden="true">
+    <div id="ad-lp-ssr" className="ad-lp-ssr">
       <div className="lp" data-theme="light">
         <header className="lp-chrome">
           <div className="lp-container lp-topbar lp-topbar--split">
@@ -80,13 +87,14 @@ export function AdLpHeroShell({ searchQuery }: AdLpHeroShellProps) {
                     </li>
                   ))}
                 </ul>
-                <button type="button" className="lp-btn" tabIndex={-1}>
+                <Link href={ctaHref} className="lp-btn">
                   {cta.button} <span className="arrow">→</span>
-                </button>
+                </Link>
                 <p className="lp-cta-sub">{cta.finePrint}</p>
               </div>
             </div>
           </section>
+          <V4TrustBar heroHook={heroHook} />
         </main>
       </div>
     </div>

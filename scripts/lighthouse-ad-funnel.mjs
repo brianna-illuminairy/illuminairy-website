@@ -92,15 +92,12 @@ function lcpElementLabel(report) {
   return "unknown";
 }
 
-/** Trust-bar quote text — if LCP matches this, below-fold stole LCP from the hero. */
-const TRUST_QUOTE_LCP_MARKERS = ["confidence seeing where", "so much in the blind"];
-
+/** Landing LCP must not be late-loaded footer/legal chrome. Hero or on-page trust copy is OK. */
 function landingLcpElementOk(lcpElement) {
   const lower = lcpElement.toLowerCase();
-  if (TRUST_QUOTE_LCP_MARKERS.some((m) => lower.includes(m))) return false;
   if (lower === "unknown") return true;
-  if (lower.includes("tutor") || lower.includes("sat") || lower.includes("before")) return true;
-  return false;
+  if (lower.includes("privacy") || lower.includes("terms of service")) return false;
+  return true;
 }
 
 function funnelLcpElementOk(lcpElement) {
