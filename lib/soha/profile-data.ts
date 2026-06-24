@@ -16,7 +16,8 @@ export const SOHA_PROFILE = {
     role: "Student",
     firstName: "Soha",
     lastName: "Naveed",
-    email: "",
+    email: "soha.naveed.world@gmail.com",
+    phone: "469-990-0640",
   },
   parent: {
     role: "Parent",
@@ -28,7 +29,7 @@ export const SOHA_PROFILE = {
   programPlan: [
     {
       label: "Enrollment",
-      value: "Not enrolled. The August 22 bootcamp offer is open if the family chooses to move forward.",
+      value: "Enrolled in the August 22 SAT Accelerator (August 22 bootcamp).",
     },
     {
       label: "Proposed tutoring",

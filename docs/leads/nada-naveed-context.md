@@ -7,9 +7,10 @@
 | Field | Value |
 |-------|--------|
 | Parent | **Nada Naveed** |
-| Student | **Soha** |
-| Email | nadanaveed@gmail.com |
-| Phone | 818-391-0906 |
+| Student | **Soha Naveed** |
+| Student email | soha.naveed.world@gmail.com |
+| Student phone | 469-990-0640 |
+| Parent email | nadanaveed@gmail.com |
 | CRM lead ID | `8bf26223-7e80-4497-9eaa-e6596cee7e47` |
 | Strategy Call | Missed Jun 15, 2026 (phone tag). Free diagnostic comp'd in follow-up email. |
 
@@ -68,7 +69,7 @@ Setup script: `node --env-file=.env.local scripts/setup-nada-stripe.mjs`
 **Env (Production + local):** `SOHA_ACCESS_ALLOWLIST`
 
 ```
-nadanaveed@gmail.com,brianna@illuminairy.com
+nadanaveed@gmail.com,soha.naveed.world@gmail.com,brianna@illuminairy.com
 ```
 
 Login: enter an allowed email at `/soha/login` (no password).
