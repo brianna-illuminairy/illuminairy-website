@@ -2,15 +2,10 @@ import {
   readSessionAttribution,
   type AttributionSnapshot,
   VISITOR_COOKIE,
-  VISITOR_STORAGE_KEY
+  VISITOR_STORAGE_KEY,
 } from "@/lib/attribution";
 import { applyLandingAttributionInference } from "@/lib/marketing/landing-attribution-infer";
-
-function readCookie(name: string) {
-  if (typeof document === "undefined") return "";
-  const match = document.cookie.match(new RegExp(`(?:^|; )${name}=([^;]*)`));
-  return match ? decodeURIComponent(match[1]) : "";
-}
+import { readBrowserCookie } from "@/lib/browser-cookies";
 
 function readStoredVisitorId() {
   if (typeof window === "undefined") return "";
@@ -36,7 +31,7 @@ export function getClientAttributionPayload(): {
   };
   attribution = applyLandingAttributionInference(attribution);
   return {
-    visitorId: readStoredVisitorId() || readCookie(VISITOR_COOKIE) || undefined,
+    visitorId: readStoredVisitorId() || readBrowserCookie(VISITOR_COOKIE) || undefined,
     attribution
   };
 }

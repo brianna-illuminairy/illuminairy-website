@@ -1,7 +1,9 @@
+import "./sat-plan-builder.css";
+
 export default function SatPlanBuilderLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return children;
+  return <main className="funnel-main">{children}</main>;
 }

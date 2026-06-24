@@ -1,14 +1,22 @@
 import { cookies } from "next/headers";
 import { readQuizSnapshotFromRequestCookies } from "@/lib/quiz-funnel/quiz-cookie";
+import { isPlanAEntrySearchStep, PlanAEntryShell } from "./PlanAEntryShell";
 import { QuizClientRoot } from "./QuizClientRoot";
 
-export default async function QuizPage() {
-  // Cookie snapshot is fallback-only: localStorage/session + server visitors are primary.
+type QuizPageProps = {
+  searchParams: Promise<{ step?: string }>;
+};
+
+export default async function QuizPage({ searchParams }: QuizPageProps) {
   const cookieStore = await cookies();
   const initialSnapshot = readQuizSnapshotFromRequestCookies(cookieStore);
+  const { step } = await searchParams;
+  const showEntryShell = isPlanAEntrySearchStep(step);
+
   return (
     <div className="qf-funnel-stage">
-      <QuizClientRoot initialSnapshot={initialSnapshot} />
+      {showEntryShell ? <PlanAEntryShell /> : null}
+      <QuizClientRoot initialSnapshot={initialSnapshot} dismissEntryShell={showEntryShell} />
     </div>
   );
 }

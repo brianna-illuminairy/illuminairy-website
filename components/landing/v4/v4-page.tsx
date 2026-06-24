@@ -17,22 +17,20 @@ import { V4Hero } from "./v4-hero";
 import { V4TrustBar } from "./v4-trust-bar";
 import { V4Footer } from "./v4-footer";
 import { V4Topbar } from "./v4-topbar";
-import { DeferredBelowFold } from "@/components/cold-funnel/deferred-below-fold";
 
 type V4PageProps = {
   search: string;
   heroHook?: LandingHeroHook;
   landingPath: string;
+  ctaHref: string;
   planBuilderB?: boolean;
   onCta: (sectionId: LandingSectionId, label?: string) => void;
-  onHeroPainted?: () => void;
 };
 
 /**
- * Compact, single-screen LP — minimal/no scrolling. Trust quote renders immediately
- * (SSR on cold Plan B paths); footer defers until scroll on cold paths.
+ * Compact LP for Quiz 1 homepage (`/`). Ad3 HD uses `/sat-plan-builder` (separate SSR page).
  */
-export function V4Page({ search, heroHook, landingPath, planBuilderB, onCta, onHeroPainted }: V4PageProps) {
+export function V4Page({ search, heroHook, landingPath, ctaHref, planBuilderB, onCta }: V4PageProps) {
   const query = search.startsWith("?") ? search : search ? `?${search}` : "";
   const layout = devLayoutOverrideFromSearch(query) ?? ("compact" satisfies LpLayout);
   const variant = devOverrideFromSearch(query) ?? ("b3a-problem" satisfies LpVariant);
@@ -56,19 +54,17 @@ export function V4Page({ search, heroHook, landingPath, planBuilderB, onCta, onH
 
       <main className="lp-grow">
         <V4Hero
-          onStart={() => onCta("hero")}
+          ctaHref={ctaHref}
+          onCtaClick={() => onCta("hero")}
           hook={heroHook}
           search={query}
           planBuilderB={planBuilderB}
-          onPainted={onHeroPainted}
         />
       </main>
 
       <V4TrustBar heroHook={heroHook} />
 
-      <DeferredBelowFold>
-        <V4Footer />
-      </DeferredBelowFold>
+      <V4Footer />
     </div>
   );
 }

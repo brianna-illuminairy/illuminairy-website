@@ -1,75 +1,46 @@
-# Cold traffic perf — Plan Builder B (landing + funnel)
+# Cold funnel performance
 
-**Goal:** Parents on a cold Meta tap see headline, trust quote, and a working CTA fast — then step 1 of `/plan-b` without a blank flash. Lab scores are a regression guard, not the product target.
+Two separate funnels — do not mix Quiz 1 and Quiz 2 paths.
 
-**Live ad path:** `/sat-plan-builder` (ad3 tutor UTMs + `pb=b`) → `/plan-b?step=q1-parent-child`
+| Surface | LP | Funnel | CSS |
+|---------|-----|--------|-----|
+| Quiz 1 | `/` | `/plan` | Sync: `landing-v4.css` + funnel stack |
+| Quiz 2 (ad3 HD) | `/sat-plan-builder` | `/plan-b` | Sync: `landing-v4.css` + ad3 shell overrides + critical/deferred Plan B |
 
-**Not in this gate:** Homepage `/`, `/plan`, legacy B3 long-form LPs.
+## Targets (`npm run perf:cold-funnel`)
 
----
+| URL | Perf | LCP |
+|-----|------|-----|
+| `/sat-plan-builder?utm_content=ad3_before_tutoring_hd1080` | ≥ 85 | ≤ 2.5s |
+| `/plan-b?step=q1-parent-child&pb=b` | ≥ 85 | ≤ 2.5s |
 
-## What we ship (fixed contract — no runtime “defer trust” decisions)
+Artifacts: `exports/lighthouse-ad-funnel/`. See `growth/prod-deploy-checklist.md` for iPhone IG in-app QA.
 
-| Layer | `/sat-plan-builder` + `/sat-free-lesson` (QA) | `/plan-b` step 1 |
-|-------|-----------------------------------------------|------------------|
-| **First HTML** | Headline, authority line, trust quote, CTA `<Link>` → `/plan-b` | “Who needs SAT help?” + options |
-| **Critical CSS** | `landing-critical.css` inlined (hero + trust + CTA) | `quiz-b-critical.css` inlined |
-| **Full CSS** | `landing-deferred.css` on idle | `quiz-b-deferred.css` on idle |
-| **SSR shell** | `AdLpHeroShell` | `PlanBEntryShell` |
-| **Deferred** | Footer only (below fold) | Booking/post step CSS |
-| **Before first tap** | Skip auth, PostHog, attribution replay | Dynamic `QuizRunner`; entry analytics after engage/LCP |
+## Ad3 LP (`/sat-plan-builder`)
 
-Implementation: `ColdPlanBLanding` + `ColdFunnelProviders`. Shared paths: `COLD_PLAN_B_LANDING_PATHS` in `lib/plan-builder-b-routes.ts`.
+- **One server HTML response:** `Ad3HdLandingPage` (navbar, hero, trust, footer)
+- **CSS:** shared `landing-v4.css` + thin `sat-plan-builder.css` (scroll shell + system fonts)
+- **CTA:** `<Link href={ctaHref}>` to `/plan-b` (works without JS)
+- **Analytics:** `funnel_landing_view` via `lib/marketing/ad3-landing-analytics.ts` after defer gate
 
-**UX principle:** Trust copy is 2–3 sentences — it does not slow the page. Slowness was waiting on JavaScript to mount above-fold content. Trust belongs in the **first response**, same as the headline.
+## Quiz 1 LP (`/`)
 
----
+- **CTA:** `<Link>` with `planBuilderLandingCtaHref()` — prefetch + middle-click; funnel resumes after hydrate
+- **SSR entry shell on `/plan`:** `PlanAEntryShell` mirrors Plan B (no double “Loading your plan…”)
 
-## Lab gate (mobile, simulated)
+## Plan B funnel (`/plan-b`)
 
-```bash
-LIGHTHOUSE_BASE=https://illuminairy.com npm run perf:cold-funnel
-```
+| Layer | File |
+|-------|------|
+| Critical (inline) | Concat: `aurora-brand` + `quiz-globals` + `funnel-shell` + `quiz-b-core-chrome` + `quiz-b-entry-critical` |
+| Deferred (idle) | `quiz-b-deferred.css` → responsive overrides + `quiz-b-core-rest` + `quiz-b-entry-rest` |
+| Step chunks | `quiz-b-booking.css`, `quiz-b-post.css` via `usePlanBDeferredCss` |
+| SSR entry shell | `PlanBEntryShell` (step 1 only) |
 
-| Surface | ID | Targets |
-|---------|-----|---------|
-| Landing | `landing-ad3` | Perf ≥ 85 · LCP ≤ 2.5s |
-| Funnel | `funnel-plan-b-entry` | Perf ≥ 85 · LCP ≤ 2.5s |
+## Analytics deferral
 
-**Landing LCP:** Must be **hero or on-page trust** in first HTML — fail if footer/legal loads late via JS.
+Marketing paths (`/sat-plan-builder`, `/plan-b` entry) defer third-party scripts until LCP or first interaction.
 
-**Funnel LCP:** Must be **“Who needs SAT help?”**
+**SSOT:** `AnalyticsReadyProvider` + `useAnalyticsReady()` — one listener set for PostHog, Attribution, GA/Meta, and session replay.
 
-Scope one surface: `LIGHTHOUSE_SCOPE=landing` or `=funnel`.
-
-Output: `exports/lighthouse-ad-funnel/report.json`, `landing-ad3.json`, `funnel-plan-b-entry.json`.
-
----
-
-## Real acceptance test (do before scaling ad spend)
-
-On an **iPhone, Instagram in-app browser**, open the **exact ad URL**:
-
-1. **~2s:** Headline + trust quote + CTA visible (no pop-in of trust after headline).
-2. **Tap CTA before anything else loads** — must navigate to `/plan-b` (SSR link works without JS).
-3. **Funnel:** “Who needs SAT help?” visible; **My child** advances on first tap.
-4. No white flash between LP and funnel.
-
-If phone feels good but lab fails by &lt;100ms, trust the phone for conversion — but investigate regressions before scaling.
-
----
-
-## PostHog sanity (after deploy)
-
-On `/sat-plan-builder` and `/plan-b?step=q1-parent-child`:
-
-- `landing_viewed` / quiz events fire **after first scroll or tap** (analytics deferred, not above-fold content).
-- Funnel: LP → step 1 → first answer. Watch drop before first tap if speed regresses.
-
----
-
-## When lab fails
-
-1. Check prod returns **200** on both URLs (Vercel deploy + `outputFileTracingIncludes` for critical CSS).
-2. View source: trust quote + CTA `href` to `/plan-b` in HTML without executing JS.
-3. Re-run lab; if still failing, profile **TBT / JS weight**, not trust copy length.
+Measure: `npm run perf:cold-funnel`

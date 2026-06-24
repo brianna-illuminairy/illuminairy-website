@@ -15,19 +15,11 @@ import { readQuizSnapshotClient } from "@/lib/quiz-funnel-b/quiz-storage";
 export { QUIZ_ENTRY_STEP };
 export const PLAN_BUILDER_B_PATH = "/plan-b";
 
-/** Meta / QA entry for Plan Builder B lab — same hero hooks as `/sat-plan-builder`, routes CTA to `/plan-b`. */
+/** Ad3 HD dedicated LP — not a shared cold-path shell. */
+export const AD3_HD_LANDING_PATH = "/sat-plan-builder";
+
+/** @deprecated Redirect target only — use AD3_HD_LANDING_PATH. */
 export const SAT_FREE_LESSON_LP_PATH = "/sat-free-lesson";
-
-/** Cold Meta + QA LPs that share SSR shell + critical CSS (see `ColdPlanBLanding`). */
-export const COLD_PLAN_B_LANDING_PATHS = [
-  "/sat-plan-builder",
-  SAT_FREE_LESSON_LP_PATH,
-] as const;
-
-export function isColdPlanBLandingPath(pathname: string | null | undefined): boolean {
-  if (!pathname) return false;
-  return (COLD_PLAN_B_LANDING_PATHS as readonly string[]).includes(pathname);
-}
 
 export const PLAN_BUILDER_B_QUERY_PARAM = "pb";
 export const PLAN_BUILDER_B_QUERY_VALUE = "b";
@@ -57,9 +49,9 @@ export function isPlanBuilderBAd3TutorHdFromSearch(search: string): boolean {
   return params.get("hook") === "tutor" && params.get("version") === "hd1080";
 }
 
-/** LP handoff target: Plan Builder B lab vs original `/plan`. */
+/** LP handoff target: Plan Builder B lab vs original `/plan`. Only explicit `pb=b` on Quiz 1 LPs. */
 export function shouldRouteLandingCtaToPlanBuilderB(search: string): boolean {
-  return isPlanBuilderBLabFromSearch(search) || isPlanBuilderBAd3TutorHdFromSearch(search);
+  return isPlanBuilderBLabFromSearch(search);
 }
 
 /** Build `/plan-b?step=…&utm_*=…` for ads, email, and in-app navigation. */
@@ -127,6 +119,44 @@ export function planBuilderBEntryFromLanding(search?: string): string {
   if (!params.get(PLAN_BUILDER_B_QUERY_PARAM)) {
     params.set(PLAN_BUILDER_B_QUERY_PARAM, PLAN_BUILDER_B_QUERY_VALUE);
   }
+  return `${PLAN_BUILDER_B_PATH}?${params.toString()}`;
+}
+
+/** Server-safe LP CTA href — entry step + lab query keys. Funnel resumes after hydrate. */
+export function planBuilderBLandingCtaHref(search?: string): string {
+  const params = new URLSearchParams();
+  params.set("step", QUIZ_ENTRY_STEP);
+  if (search) {
+    const incoming = new URLSearchParams(
+      search.startsWith("?") ? search.slice(1) : search
+    );
+    for (const key of LAB_ENTRY_QUERY_KEYS) {
+      const value = incoming.get(key);
+      if (value) params.set(key, value);
+    }
+  }
+  if (!params.get(PLAN_BUILDER_B_QUERY_PARAM)) {
+    params.set(PLAN_BUILDER_B_QUERY_PARAM, PLAN_BUILDER_B_QUERY_VALUE);
+  }
+  return `${PLAN_BUILDER_B_PATH}?${params.toString()}`;
+}
+
+/** Server-safe Plan B entry URL from ad3 LP search params (no localStorage resume). */
+export function planBuilderBEntryFromSearchParams(
+  searchParams: Record<string, string | string[] | undefined>
+): string {
+  const params = new URLSearchParams();
+  params.set("step", QUIZ_ENTRY_STEP);
+  for (const [key, value] of Object.entries(searchParams)) {
+    if (value == null) continue;
+    const vals = Array.isArray(value) ? value : [value];
+    for (const v of vals) {
+      if ((LAB_ENTRY_QUERY_KEYS as readonly string[]).includes(key)) {
+        params.set(key, v);
+      }
+    }
+  }
+  params.set(PLAN_BUILDER_B_QUERY_PARAM, PLAN_BUILDER_B_QUERY_VALUE);
   return `${PLAN_BUILDER_B_PATH}?${params.toString()}`;
 }
 

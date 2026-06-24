@@ -47,8 +47,17 @@ const nextConfig = {
     "/danielle/files/[slug]": ["./content/danielle/**/*"],
     "/soha/files/[slug]": ["./content/soha/**/*"],
     "/skye/files/[slug]": ["./content/skye/**/*"],
-    "/quiz-b": ["./app/quiz-b/quiz-b-critical.css"],
-    "/sat-plan-builder": ["./app/sat-plan-builder/landing-critical.css"],
+    "/quiz-b": [
+      "./app/aurora-brand.css",
+      "./app/quiz-globals.css",
+      "./app/funnel-shell.css",
+      "./app/quiz-b/quiz-b-core-chrome.css",
+      "./app/quiz-b/quiz-b-entry-critical.css",
+    ],
+    "/sat-plan-builder": [
+      "./app/landing/landing-v4.css",
+      "./app/sat-plan-builder/sat-plan-builder.css",
+    ],
   },
   async redirects() {
     return [
@@ -131,6 +140,16 @@ const nextConfig = {
         source: "/enroll/shelly-aug22-sprint",
         destination: "/enroll/shelly-aug22-bootcamp",
         permanent: false
+      },
+      {
+        source: "/sat-free-lesson",
+        destination: "/sat-plan-builder",
+        permanent: true
+      },
+      {
+        source: "/sat-free-lesson/:path*",
+        destination: "/sat-plan-builder",
+        permanent: true
       }
     ];
   },

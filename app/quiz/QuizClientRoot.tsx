@@ -1,26 +1,26 @@
 'use client';
 
 import dynamic from 'next/dynamic';
+import { useCallback } from 'react';
 import { QuizProvider } from './state';
 import type { QuizSnapshot } from '@/lib/quiz-funnel/quiz-cookie';
 
-const QuizRunnerNoSSR = dynamic(() => import('./QuizRunner'), {
-  ssr: false,
-  loading: () => (
-    <div className="qf-page" style={{ color: 'var(--qf-ink)' }}>
-      <div className="qf-body">
-        <div className="qf-body-inner">
-          <p className="qf-lead muted">Loading your plan...</p>
-        </div>
-      </div>
-    </div>
-  ),
-});
+const QuizRunner = dynamic(() => import('./QuizRunner'), { ssr: false });
 
-export function QuizClientRoot({ initialSnapshot }: { initialSnapshot: QuizSnapshot | null }) {
+type QuizClientRootProps = {
+  initialSnapshot: QuizSnapshot | null;
+  dismissEntryShell?: boolean;
+};
+
+export function QuizClientRoot({ initialSnapshot, dismissEntryShell = false }: QuizClientRootProps) {
+  const onRunnerMounted = useCallback(() => {
+    if (!dismissEntryShell) return;
+    document.getElementById('plan-a-entry-ssr')?.remove();
+  }, [dismissEntryShell]);
+
   return (
     <QuizProvider initialSnapshot={initialSnapshot}>
-      <QuizRunnerNoSSR />
+      <QuizRunner onMounted={onRunnerMounted} />
     </QuizProvider>
   );
 }

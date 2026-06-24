@@ -16,11 +16,8 @@ import { SCORE_REVIEW_LP_PATH } from "@/lib/score-review-routes";
 export { QUIZ_ENTRY_STEP };
 export const PLAN_BUILDER_PATH = "/plan";
 
-/** Meta ad destination — same LP as `/`, distinct path for reporting. */
-export const SAT_PLAN_BUILDER_LP_PATH = "/sat-plan-builder";
-
-/** Paths that render the SAT parent landing page (hero + trust bar). */
-export const SAT_PARENT_LP_PATHS = ["/", SAT_PLAN_BUILDER_LP_PATH, SCORE_REVIEW_LP_PATH] as const;
+/** Paths that render the Quiz 1 parent landing (homepage + score review). Ad3 LP is separate. */
+export const SAT_PARENT_LP_PATHS = ["/", SCORE_REVIEW_LP_PATH] as const;
 
 export function isSatParentLandingPath(pathname: string | null | undefined): boolean {
   if (!pathname) return false;
@@ -74,6 +71,22 @@ export function planBuilderEntryFromLanding(search?: string): string {
     step = resolveQuizResumeStep(answers, routeSteps, snap?.lastStep ?? null);
   }
   params.set("step", step);
+  if (search) {
+    const incoming = new URLSearchParams(
+      search.startsWith("?") ? search.slice(1) : search
+    );
+    for (const key of UTM_KEYS) {
+      const value = incoming.get(key);
+      if (value) params.set(key, value);
+    }
+  }
+  return `${PLAN_BUILDER_PATH}?${params.toString()}`;
+}
+
+/** Server-safe LP CTA href — entry step + UTMs. Funnel resumes after hydrate. */
+export function planBuilderLandingCtaHref(search?: string): string {
+  const params = new URLSearchParams();
+  params.set("step", QUIZ_ENTRY_STEP);
   if (search) {
     const incoming = new URLSearchParams(
       search.startsWith("?") ? search.slice(1) : search

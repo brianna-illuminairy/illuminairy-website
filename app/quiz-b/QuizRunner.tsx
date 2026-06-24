@@ -3,7 +3,7 @@
 import dynamic from 'next/dynamic';
 import { useEffect } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useDeferUntilEngagedOrLcp } from '@/lib/defer-until-engaged-or-lcp';
+import { useAnalyticsReady } from '@/components/analytics-ready-provider';
 import { isPlanBuilderBEntryStep } from '@/lib/perf-defer-paths';
 import { usePlanBDeferredCss } from '@/lib/quiz-funnel-b/plan-b-deferred-css';
 import { useQuiz, type QuizAnswers } from './state';
@@ -159,8 +159,9 @@ export default function QuizRunner({ onMounted }: { onMounted?: () => void }) {
   usePlanBDeferredCss(stepId);
 
   const deferEntryAnalytics = isPlanBuilderBEntryStep(pathname, stepId);
-  const entryAnalyticsReady = useDeferUntilEngagedOrLcp(deferEntryAnalytics);
-  const analyticsEnabled = hydrated && (!deferEntryAnalytics || entryAnalyticsReady);
+  const { defer: marketingDefer, ready: marketingReady } = useAnalyticsReady();
+  const entryAnalyticsReady = !deferEntryAnalytics || !marketingDefer || marketingReady;
+  const analyticsEnabled = hydrated && entryAnalyticsReady;
 
   useEffect(() => {
     onMounted?.();

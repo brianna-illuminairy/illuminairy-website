@@ -68,6 +68,22 @@ export function scoreReviewEntryFromLanding(search?: string): string {
   return `${SCORE_REVIEW_PATH}?${params.toString()}`;
 }
 
+/** Server-safe LP CTA href — entry step + UTMs. Funnel resumes after hydrate. */
+export function scoreReviewLandingCtaHref(search?: string): string {
+  const params = new URLSearchParams();
+  params.set("step", QUIZ_ENTRY_STEP);
+  if (search) {
+    const incoming = new URLSearchParams(
+      search.startsWith("?") ? search.slice(1) : search
+    );
+    for (const key of UTM_KEYS) {
+      const value = incoming.get(key);
+      if (value) params.set(key, value);
+    }
+  }
+  return `${SCORE_REVIEW_PATH}?${params.toString()}`;
+}
+
 export function scoreReviewStepHref(
   step: string,
   currentSearch?: string

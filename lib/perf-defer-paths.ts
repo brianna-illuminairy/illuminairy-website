@@ -6,7 +6,7 @@ import { QUIZ_ENTRY_STEP } from "@/lib/quiz-funnel-b/funnel-steps";
 
 export { isPlanBuilderBPathname, PLAN_BUILDER_B_PATH, QUIZ_ENTRY_STEP };
 
-const AD_LANDING_PATHS = ["/sat-plan-builder", "/sat-free-lesson"] as const;
+const AD_LANDING_PATHS = ["/sat-plan-builder"] as const;
 
 /** Ad LP + Plan B funnel: defer third-party marketing scripts until engagement or LCP. */
 export function isMarketingDeferPath(pathname: string | null | undefined): boolean {

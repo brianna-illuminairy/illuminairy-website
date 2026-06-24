@@ -1,0 +1,412 @@
+/* Plan Builder B — first-paint funnel chrome (inlined via PlanBCriticalCss). */
+
+/* Italic catchall — hard ban on italic anywhere inside .qf-page. */
+.qf-page em { font-style: normal; }
+.qf-page i  { font-style: normal; }
+
+.qf-page {
+  /* Color tokens — aliased to aurora-brand.css SSOT */
+  --qf-bg:        var(--aurora-white, #F5F8FA);
+  --qf-bg-2:      #ECF1ED;
+  --qf-paper:     var(--aurora-paper, #FFFFFF);
+  --qf-paper-2:   var(--aurora-paper, #FFFFFF);
+  --qf-card:      var(--aurora-paper, #FFFFFF);
+
+  --qf-ink:       var(--aurora-navy, #121A2B);
+  --qf-ink-2:     #2A3142;
+  --qf-ink-mid:   #4D5566;
+  --qf-ink-mute:  #8A8E97;
+  --qf-line:      var(--aurora-line, rgba(18, 26, 43, 0.08));
+  --qf-line-2:    rgba(18, 26, 43, 0.18);
+
+  --qf-forest:    var(--aurora-forest, #2F6E47);
+  --qf-forest-2:  var(--aurora-forest-2, #1A4D2F);
+  --qf-forest-mid:#3E8B5A;
+  --qf-glow:      var(--aurora-green, #77C89A);
+  --qf-forest-soft: #E5EFE8;
+  --qf-celestial: var(--aurora-celestial, #0057A8);
+
+  /* Legacy aliases (so existing components keep working) */
+  --qf-cream:     #ECF1ED;
+  --qf-cream-2:   #F1F4EF;
+  --qf-highlight: #E5EFE8;
+  --qf-amber:     #B5743A;
+  --qf-amber-soft:#F0E4D4;
+  --qf-green:     #2F6E47;
+  --qf-green-soft:#E5EFE8;
+
+  /* Type ─────────────────────────────────────────────── */
+  --qf-display:   var(--font-display), 'Source Serif 4', Georgia, serif;
+  --qf-body:      var(--font-hanken), 'Hanken Grotesk', system-ui, sans-serif;
+  --qf-mono:      'DM Mono', ui-monospace, monospace;
+
+  font-family: var(--qf-body);
+  color: var(--qf-ink);
+  background: var(--qf-bg);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  line-height: 1.4;
+  font-size: 15px;
+  font-weight: 400;
+
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+  min-height: 0;
+}
+
+/*
+ * Step shell (locked) — see docs/funnel-mobile-shell.md
+ * .qf-top (shrink 0) · .qf-body (flex 1, scroll) · .qf-step-actions (shrink 0, actions= prop)
+ * Height chain: funnel-responsive.css — not per-step heights.
+ */
+
+.qf-page, .qf-page *, .qf-page *::before, .qf-page *::after {
+  box-sizing: border-box;
+}
+
+/* ────────────── Dark chrome band (top) ────────────────── */
+.qf-page .qf-top {
+  flex: 0 0 auto;
+  background: var(--qf-ink);
+  color: #F5F8FA;
+  padding: max(env(safe-area-inset-top, 0px), 14px) 20px 14px;
+  position: relative;
+  overflow: hidden;
+  z-index: 2;
+}
+.qf-page .qf-top::before {
+  content: '';
+  position: absolute;
+  top: -120px; right: -80px;
+  width: 320px; height: 320px;
+  background: radial-gradient(circle,
+    rgba(119, 200, 154, 0.40) 0%,
+    rgba(0, 87, 168, 0.20) 32%,
+    transparent 64%);
+  pointer-events: none;
+}
+.qf-page .qf-top > * { position: relative; z-index: 1; }
+
+.qf-page .qf-top-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.qf-page .qf-top-row-spacer {
+  width: 30px;
+  flex: 0 0 30px;
+}
+.qf-page .qf-logo-wrap {
+  flex: 1 1 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 0;
+}
+.qf-page .qf-back {
+  width: 30px; height: 30px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: transparent; border: none; cursor: pointer;
+  margin-left: -8px;
+  color: rgba(245, 248, 250, 0.65);
+  font-size: 20px;
+  padding: 0;
+}
+.qf-page .qf-back.hidden { visibility: hidden; }
+
+/* Logo v7b SVG lockup (illuminairy_logos_v7.html — on-dark) */
+.qf-page .qf-brand-lockup {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  max-width: min(260px, 76vw);
+}
+.qf-page .qf-brand-lockup svg,
+.qf-page .qf-brand-lockup img {
+  display: block;
+  height: 30px;
+  width: auto;
+}
+
+.qf-page .qf-wordmark {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--qf-body);
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: #F5F8FA;
+}
+.qf-page .qf-wordmark::before {
+  content: '';
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--qf-glow);
+  box-shadow:
+    0 0 16px rgba(119, 200, 154, 0.9),
+    0 0 32px rgba(119, 200, 154, 0.5);
+  flex: 0 0 auto;
+}
+
+.qf-page .qf-step {
+  font-family: var(--qf-mono);
+  font-size: 10px;
+  letter-spacing: 0.20em;
+  color: rgba(245, 248, 250, 0.55);
+  text-transform: uppercase;
+}
+
+/* Progress bar — thicker, glowing aurora */
+.qf-page .qf-progress {
+  height: 5px; width: 100%;
+  background: rgba(245, 248, 250, 0.10);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.qf-page .qf-progress .fill {
+  height: 100%;
+  background: var(--qf-glow);
+  border-radius: 999px;
+  box-shadow: 0 0 12px rgba(119, 200, 154, 0.6);
+  transition: width 0.35s ease;
+}
+
+/* Pinned step actions — flex footer row; not the legal site footer. */
+.qf-page .qf-step-actions {
+  flex: 0 0 auto;
+  flex-shrink: 0;
+  width: 100%;
+  padding: 12px 20px 12px;
+  background: var(--qf-bg);
+  border-top: 1px solid var(--qf-line);
+  box-shadow: 0 -8px 20px rgba(18, 26, 43, 0.06);
+  z-index: 4;
+}
+
+.qf-page .qf-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  padding: 22px 20px 20px;
+  background: var(--qf-bg);
+}
+/* Legal strip only — Privacy · Terms. Lives in quiz layout, below the step shell. */
+.qf-funnel-legal {
+  flex: 0 0 auto;
+  padding: 6px 16px calc(6px + env(safe-area-inset-bottom, 0px));
+  text-align: center;
+  font-family: var(--qf-body);
+  font-size: 10px;
+  line-height: 1.4;
+  color: var(--qf-ink-mute);
+  background: var(--qf-bg);
+  border-top: 1px solid var(--qf-line);
+}
+.qf-funnel-legal a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.qf-page .qf-h1 {
+  font-family: var(--qf-display);
+  font-weight: 500;
+  font-size: 26px;
+  line-height: 1.2;
+  letter-spacing: -0.014em;
+  color: var(--qf-ink);
+  margin: 0;
+  text-wrap: normal;
+}
+.qf-page .qf-h1 em { font-style: normal; color: var(--qf-forest); font-weight: 500; }
+
+.qf-page .qf-question-head {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 22px;
+}
+
+.qf-page .qf-question-head--multi {
+  gap: 0;
+  margin-bottom: 24px;
+}
+
+.qf-page .qf-question-head--multi .qf-h1 {
+  margin-bottom: 0;
+}
+
+.qf-page .qf-question-head--multi .qf-multi-hint {
+  margin-top: 16px;
+}
+
+.qf-page .qf-h2 {
+  font-family: var(--qf-display);
+  font-weight: 500;
+  font-size: 22px;
+  line-height: 1.22;
+  letter-spacing: -0.012em;
+  color: var(--qf-ink);
+  margin: 0;
+  text-wrap: normal;
+}
+.qf-page .qf-h2 em { font-style: normal; color: var(--qf-forest); font-weight: 500; }
+.qf-page .qf-lead {
+  font-family: var(--qf-body);
+  font-size: 15px; line-height: 1.55;
+  color: var(--qf-ink-2);
+  font-weight: 500;
+  margin: 0;
+}
+.qf-page .qf-meta {
+  font-family: var(--qf-body);
+  font-size: 12px; letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--qf-ink-mute);
+}
+.qf-page .qf-disclaimer {
+  font-family: var(--qf-body);
+  font-size: 12px;
+  line-height: 1.45;
+  letter-spacing: normal;
+  color: var(--qf-ink-mute);
+  font-weight: 400;
+  text-transform: none;
+}
+/* Small supporting copy — gauge labels, footnotes (same scale as .qf-disclaimer) */
+.qf-page .qf-caption {
+  font-family: var(--qf-body);
+  font-size: 12px;
+  line-height: 1.45;
+  letter-spacing: normal;
+  font-weight: 400;
+  text-transform: none;
+  color: var(--qf-ink-mute);
+  margin: 0;
+}
+.qf-page .qf-btn {
+  appearance: none; border: none; cursor: pointer;
+  font-family: var(--qf-body);
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: 0.02em;
+  padding: 18px 22px;
+  width: 100%;
+  border-radius: 999px;
+  background: var(--qf-ink);
+  color: var(--qf-paper);
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  transition: background 0.16s, transform 0.05s;
+  min-height: 56px;
+}
+.qf-page .qf-btn:active { transform: translateY(1px); }
+.qf-page .qf-btn:hover { background: var(--qf-forest-2); }
+.qf-page .qf-btn.forest { background: var(--qf-forest); }
+.qf-page .qf-btn.forest:hover { background: var(--qf-forest-2); }
+.qf-page .qf-btn.ghost {
+  background: transparent;
+  color: var(--qf-ink);
+  border: 1px solid var(--qf-line-2);
+}
+.qf-page .qf-btn[disabled] {
+  background: rgba(18, 26, 43, 0.12);
+  color: rgba(18, 26, 43, 0.3);
+  cursor: not-allowed;
+  transform: none;
+}
+.qf-page .qf-btn[disabled]:hover {
+  background: rgba(18, 26, 43, 0.12);
+}
+.qf-page .qf-btn.forest[disabled] {
+  background: rgba(119, 200, 154, 0.28);
+  color: rgba(255, 255, 255, 0.72);
+}
+.qf-page .qf-btn.forest[disabled]:hover {
+  background: rgba(119, 200, 154, 0.28);
+}
+/* i2 compute: Reveal CTA visible but locked until plan finishes building */
+.qf-page:has(.qf-body--ink) .qf-step-actions .qf-btn.forest[disabled] {
+  background: rgba(255, 255, 255, 0.16);
+  color: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+}
+.qf-page:has(.qf-body--ink) .qf-step-actions .qf-btn.forest[disabled]:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+.qf-page:has(.qf-body--ink) .qf-step-actions .qf-btn.forest:not([disabled]) {
+  border: 1px solid transparent;
+}
+.qf-page .qf-btn .arrow { font-size: 16px; line-height: 1; }
+
+/* Option card (full-width tap, no radio rings) */
+.qf-page .qf-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 0;
+}
+
+.qf-page .qf-question-head--multi + .qf-options {
+  margin-top: 4px;
+}
+
+/* Single-select intake — compact rows; 15px type unchanged */
+.qf-page .qf-question-head:not(.qf-question-head--multi) + .qf-options {
+  gap: 8px;
+}
+.qf-page .qf-question-head:not(.qf-question-head--multi) + .qf-options .qf-opt {
+  min-height: 52px;
+  padding: 14px 16px;
+}
+
+.qf-page .qf-opt {
+  appearance: none;
+  background: var(--qf-card);
+  border: 1px solid var(--qf-line);
+  border-radius: 14px;
+  padding: 18px 20px;
+  min-height: 64px;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  font-family: var(--qf-body);
+  font-size: 15px; font-weight: 500;
+  color: var(--qf-ink);
+  line-height: 1.35;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  transition: background 0.12s, border-color 0.12s, transform 0.05s;
+}
+.qf-page .qf-opt:active { transform: translateY(1px); }
+.qf-page .qf-opt:hover { border-color: var(--qf-forest); }
+.qf-page .qf-opt > .qf-opt-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.qf-page .qf-opt .lbl { display: block; }
+.qf-page .qf-opt .sub {
+  display: block;
+  font-family: var(--qf-mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--qf-ink-mute);
+  font-weight: 400;
+}
+.qf-page .qf-opt.selected {
+  background: var(--qf-forest-soft);
+  border-color: var(--qf-forest);
+  box-shadow:
+    0 1px 2px rgba(32, 110, 70, 0.06),
+    0 8px 20px -12px rgba(32, 110, 70, 0.28);
+}
+.qf-page .qf-opt.selected .sub { color: var(--qf-forest); }

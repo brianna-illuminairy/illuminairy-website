@@ -1,6 +1,6 @@
 "use client";
 
-import { useLayoutEffect } from "react";
+import Link from "next/link";
 import {
   resolveLandingHeroHeadlineV4,
   type LandingHeroHook
@@ -14,12 +14,11 @@ import {
 } from "./v4-content";
 
 type V4HeroProps = {
-  onStart: () => void;
+  ctaHref: string;
+  onCtaClick: () => void;
   hook?: LandingHeroHook;
   search?: string;
   planBuilderB?: boolean;
-  /** Fires after the hero paints — used to drop the SSR shell without an LCP gap. */
-  onPainted?: () => void;
 };
 
 /** Ad hook headlines are two lines only — same fold layout as the owner v4 default. */
@@ -34,14 +33,10 @@ function useHeadlineLines(hook: LandingHeroHook | undefined, search?: string): {
   return { lines: v4Headline.lines, accentLine: v4Headline.accentLine };
 }
 
-export function V4Hero({ onStart, hook, search, planBuilderB, onPainted }: V4HeroProps) {
+export function V4Hero({ ctaHref, onCtaClick, hook, search, planBuilderB }: V4HeroProps) {
   const { lines, accentLine } = useHeadlineLines(hook, search);
   const isTutor = hook === "tutor";
   const cta = isTutor ? v4TutorCta : planBuilderB ? v4PlanBCta : v4Cta;
-
-  useLayoutEffect(() => {
-    onPainted?.();
-  }, [onPainted]);
 
   return (
     <section className="lp-hero">
@@ -73,9 +68,9 @@ export function V4Hero({ onStart, hook, search, planBuilderB, onPainted }: V4Her
               </li>
             ))}
           </ul>
-          <button type="button" className="lp-btn" onClick={onStart}>
+          <Link href={ctaHref} className="lp-btn" onClick={onCtaClick}>
             {cta.button} <span className="arrow">→</span>
-          </button>
+          </Link>
           <p className="lp-cta-sub">{cta.finePrint}</p>
         </div>
       </div>

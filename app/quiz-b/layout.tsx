@@ -13,7 +13,7 @@ export default function QuizBLayout({ children }: { children: React.ReactNode })
   return (
     <div className="qf-funnel-root qfb-lab-root">
       <PlanBCriticalCss />
-      <DeferredStylesheet route="plan-b" />
+      <DeferredStylesheet />
       <div className="qf-funnel-column">
         <div className="qf-funnel-fill">{children}</div>
       </div>

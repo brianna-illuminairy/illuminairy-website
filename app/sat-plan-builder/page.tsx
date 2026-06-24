@@ -1,21 +1,22 @@
 import type { Metadata } from "next";
-import { ColdPlanBLanding } from "@/components/cold-funnel/cold-plan-b-landing";
+import { Ad3HdLandingPage } from "@/components/plan-b/ad3-hd-landing-page";
+import { planBuilderBEntryFromSearchParams } from "@/lib/plan-builder-b-routes";
 
 export const metadata: Metadata = {
-  title: "Free SAT Improvement Plan · Illuminairy",
+  title: "Before paying for SAT tutoring · Illuminairy",
   description:
-    "For parents: SAT in the 1100s or 1200s but colleges expect ~1400? Free 2-minute plan shows why their score is stuck, what's realistic before their fall SAT, and what to study first. No test for your child.",
+    "See what SAT score is realistic before you pay for tutoring. Free 2-minute plan for parents. No student required.",
   openGraph: {
-    title: "Free SAT Improvement Plan · Illuminairy",
+    title: "Before paying for SAT tutoring · Illuminairy",
     description:
-      "Why their score is stuck, a realistic fall SAT range, and what to focus on first. Free · parent only · about 2 minutes.",
+      "See what score is realistic by test day and which skills to focus on first. Free · parent only · about 2 minutes.",
     images: [{ url: "/brand/logo-square.png", width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Free SAT Improvement Plan · Illuminairy",
+    title: "Before paying for SAT tutoring · Illuminairy",
     description:
-      "Why stuck · realistic fall score · what to study first. Free · parent only · about 2 minutes.",
+      "Realistic score range and what to focus on first. Free · parent only · about 2 minutes.",
   },
   robots: { index: false, follow: true },
 };
@@ -24,8 +25,9 @@ type SatPlanBuilderPageProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
-/** Live Meta ad LP → `/plan-b`. Above-fold is fully SSR (headline, trust, CTA link). */
+/** Ad3 HD only — frozen copy, full SSR, CTA → `/plan-b`. */
 export default async function SatPlanBuilderLandingPage({ searchParams }: SatPlanBuilderPageProps) {
   const sp = await searchParams;
-  return <ColdPlanBLanding searchParams={sp} landingPath="/sat-plan-builder" />;
+  const ctaHref = planBuilderBEntryFromSearchParams(sp);
+  return <Ad3HdLandingPage ctaHref={ctaHref} />;
 }

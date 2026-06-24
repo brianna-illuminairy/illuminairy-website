@@ -1,7 +1,7 @@
 "use client";
 
 import type { AttributionSnapshot } from "@/lib/attribution";
-import { getAttributionPayload } from "@/components/attribution-provider";
+import { readAttributionPayloadForTouch } from "@/lib/attribution-visitor";
 import {
   CLIENT_TOUCH_EVENTS,
   type TouchEventName
@@ -62,7 +62,7 @@ export function recordClientTouch(
   let visitorId = "";
   let attribution: AttributionSnapshot = {};
   try {
-    const snap = getAttributionPayload();
+    const snap = readAttributionPayloadForTouch();
     visitorId = snap.visitorId;
     attribution = snap.attribution;
   } catch {

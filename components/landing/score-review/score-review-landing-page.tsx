@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { V4Topbar } from "@/components/landing/v4/v4-topbar";
 import { V4Footer } from "@/components/landing/v4/v4-footer";
 import { ScoreReviewHero } from "./score-review-hero";
@@ -11,13 +11,12 @@ import { enrichSessionAttributionFromLanding } from "@/lib/attribution";
 import { landingSearchQuery } from "@/lib/landing/landing-search";
 import { resolveMetaLandingContext } from "@/lib/landing/meta-traffic";
 import type { LandingHeroHook } from "@/lib/landing/hero-hooks";
-import { scoreReviewEntryFromLanding } from "@/lib/score-review-routes";
+import { scoreReviewLandingCtaHref } from "@/lib/score-review-routes";
 import { SCORE_REVIEW_LP_PATH } from "@/lib/score-review-routes";
 import { lpVariantFromHeroHook } from "@/lib/landing/lp-variant";
 import { persistLpVariantId } from "@/lib/landing/variant-storage";
 
 export function ScoreReviewLandingPage() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const trackedRef = useRef(false);
 
@@ -25,6 +24,10 @@ export function ScoreReviewLandingPage() {
   const search = query.startsWith("?") ? query.slice(1) : query;
   const metaContext = useMemo(() => resolveMetaLandingContext(query), [query]);
   const heroHook: LandingHeroHook = "june_score_review";
+  const ctaHref = useMemo(
+    () => scoreReviewLandingCtaHref(search ? `?${search}` : undefined),
+    [search]
+  );
 
   useEffect(() => {
     if (trackedRef.current) return;
@@ -47,8 +50,7 @@ export function ScoreReviewLandingPage() {
       hero_hook: heroHook,
       lp_variant: lpVariantFromHeroHook(heroHook),
     });
-    router.push(scoreReviewEntryFromLanding(search ? `?${search}` : undefined));
-  }, [heroHook, router, search]);
+  }, [heroHook]);
 
   return (
     <div className="lp sr-lp" data-theme="light">
@@ -56,7 +58,7 @@ export function ScoreReviewLandingPage() {
         <V4Topbar heroHook={heroHook} />
       </header>
       <main className="lp-grow">
-        <ScoreReviewHero onStart={handleCta} />
+        <ScoreReviewHero ctaHref={ctaHref} onCtaClick={handleCta} />
       </main>
       <ScoreReviewTrustBar />
       <V4Footer />

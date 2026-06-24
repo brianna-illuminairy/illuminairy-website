@@ -1,12 +1,14 @@
 "use client";
 
+import Link from "next/link";
 import { scoreReviewLpCopy } from "./score-review-content";
 
 type ScoreReviewHeroProps = {
-  onStart: () => void;
+  ctaHref: string;
+  onCtaClick: () => void;
 };
 
-export function ScoreReviewHero({ onStart }: ScoreReviewHeroProps) {
+export function ScoreReviewHero({ ctaHref, onCtaClick }: ScoreReviewHeroProps) {
   const { momQuote, offer } = scoreReviewLpCopy;
 
   return (
@@ -36,9 +38,9 @@ export function ScoreReviewHero({ onStart }: ScoreReviewHeroProps) {
               </li>
             ))}
           </ul>
-          <button type="button" className="lp-btn" onClick={onStart}>
+          <Link href={ctaHref} className="lp-btn" onClick={onCtaClick}>
             {offer.button} <span className="arrow">→</span>
-          </button>
+          </Link>
           <p className="lp-cta-sub">{offer.finePrint}</p>
         </div>
       </div>

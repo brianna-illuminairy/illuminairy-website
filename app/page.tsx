@@ -2,10 +2,6 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { LandingPage } from "@/components/landing/landing-page";
 import { landingAdFontClassName } from "@/lib/funnel-fonts";
-import "./landing/landing-base.css";
-import "./landing/landing-brand.css";
-import "./landing/landing-overrides.css";
-import "./landing/landing-premium.css";
 import "./landing/landing-v4.css";
 
 export const metadata: Metadata = {

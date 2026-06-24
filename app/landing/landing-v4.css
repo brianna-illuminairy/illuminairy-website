@@ -199,6 +199,11 @@
 
 .lp-cta-card .lp-btn { align-self: center; }
 
+a.lp-btn {
+  text-decoration: none;
+  color: inherit;
+}
+
 .lp-btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 9px; width: 100%;
   padding: 18px 22px; border: none; border-radius: 100px;

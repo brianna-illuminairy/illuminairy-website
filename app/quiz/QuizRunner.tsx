@@ -37,7 +37,7 @@ function getSteps(answers: QuizAnswers) {
   return getQuizRouteSteps(answers);
 }
 
-export default function QuizRunner() {
+export default function QuizRunner({ onMounted }: { onMounted?: () => void }) {
   const router = useRouter();
   const params = useSearchParams();
   const { answers, dispatch, lastStep, setLastStep, hydrated } = useQuiz();
@@ -81,17 +81,9 @@ export default function QuizRunner() {
   useQuizAnalytics(stepId, currentIdx, answers, gapScreen, hydrated);
   useQuizAvailabilityPrefetch(stepId, hydrated);
 
-  if (!hydrated) {
-    return (
-      <div className="qf-page" style={{ color: 'var(--qf-ink)' }}>
-        <div className="qf-body">
-          <div className="qf-body-inner">
-            <p className="qf-lead muted">Loading your plan...</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  useEffect(() => {
+    onMounted?.();
+  }, [onMounted]);
 
   function goTo(id: string) {
     router.replace(planBuilderStepHref(id, search));

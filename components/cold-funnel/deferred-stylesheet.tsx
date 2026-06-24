@@ -1,23 +1,15 @@
 "use client";
 
 import { useEffect } from "react";
-import { loadAdLpDeferredCss, loadPlanBDeferredCss } from "@/lib/cold-funnel/load-deferred-css";
+import { loadPlanBDeferredCss } from "@/lib/cold-funnel/load-deferred-css";
 
-type ColdFunnelCssRoute = "plan-b" | "ad-lp";
-
-const LOADERS: Record<ColdFunnelCssRoute, () => Promise<unknown>> = {
-  "plan-b": loadPlanBDeferredCss,
-  "ad-lp": loadAdLpDeferredCss,
-};
-
-/** Loads route CSS after idle — critical styles are inlined separately. */
-export function DeferredStylesheet({ route }: { route: ColdFunnelCssRoute }) {
+/** Loads Plan B funnel CSS after idle — critical styles are inlined separately. */
+export function DeferredStylesheet() {
   useEffect(() => {
     let cancelled = false;
-    const load = LOADERS[route];
 
     const run = () => {
-      if (!cancelled) void load();
+      if (!cancelled) void loadPlanBDeferredCss();
     };
 
     if (typeof requestIdleCallback !== "undefined") {
@@ -33,7 +25,7 @@ export function DeferredStylesheet({ route }: { route: ColdFunnelCssRoute }) {
       cancelled = true;
       window.clearTimeout(timeoutId);
     };
-  }, [route]);
+  }, []);
 
   return null;
 }

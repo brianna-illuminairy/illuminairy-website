@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef } from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { V4Page } from "@/components/landing/v4/v4-page";
 import { v4PlanBCta, v4TutorCta } from "@/components/landing/v4/v4-content";
 import { trackLandingCtaClick, trackLandingView } from "@/lib/landing/analytics";
@@ -16,9 +16,9 @@ import { landingShared } from "@/lib/landing/content";
 import { lpVariantFromHeroHook } from "@/lib/landing/lp-variant";
 import { landingSearchQuery } from "@/lib/landing/landing-search";
 import { resolveMetaLandingContext } from "@/lib/landing/meta-traffic";
-import { planBuilderEntryFromLanding } from "@/lib/plan-builder-routes";
-import { isColdPlanBLandingPath, planBuilderBEntryFromLanding, shouldRouteLandingCtaToPlanBuilderB } from "@/lib/plan-builder-b-routes";
-import { useDeferUntilEngagedOrLcp } from "@/lib/defer-until-engaged-or-lcp";
+import { planBuilderLandingCtaHref } from "@/lib/plan-builder-routes";
+import { planBuilderBLandingCtaHref, shouldRouteLandingCtaToPlanBuilderB } from "@/lib/plan-builder-b-routes";
+import { useAnalyticsReady } from "@/components/analytics-ready-provider";
 import { isMarketingDeferPath } from "@/lib/perf-defer-paths";
 import {
   devOverrideFromSearch,
@@ -39,12 +39,11 @@ const LP_LAYOUT: LpLayout = "compact";
 type LandingPageProps = {
   /** Pathname for analytics (`/` or `/sat-plan-builder`). */
   landingPath?: string;
-  /** Force Plan Builder B lab funnel (used by `/sat-free-lesson`). */
+  /** Force Plan Builder B lab funnel (dev `?pb=b` only on Quiz 1 LPs). */
   planBuilderB?: boolean;
 };
 
 export function LandingPage({ landingPath = "/", planBuilderB: planBuilderBForced }: LandingPageProps) {
-  const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const trackedRef = useRef(false);
@@ -57,7 +56,15 @@ export function LandingPage({ landingPath = "/", planBuilderB: planBuilderBForce
   const variant = devOverrideFromSearch(query) ?? LP_VARIANT;
   const metaContext = useMemo(() => resolveMetaLandingContext(query), [query]);
   const deferAnalytics = isMarketingDeferPath(pathname);
-  const analyticsReady = useDeferUntilEngagedOrLcp(deferAnalytics);
+  const { ready: analyticsReady } = useAnalyticsReady();
+
+  const ctaHref = useMemo(
+    () =>
+      planBuilderB
+        ? planBuilderBLandingCtaHref(search ? `?${search}` : undefined)
+        : planBuilderLandingCtaHref(search ? `?${search}` : undefined),
+    [planBuilderB, search]
+  );
 
   useEffect(() => {
     if (deferAnalytics && !analyticsReady) return;
@@ -99,28 +106,18 @@ export function LandingPage({ landingPath = "/", planBuilderB: planBuilderBForce
         hero_hook_source: metaContext.heroHookSource,
         lp_variant: lpVariantFromHeroHook(metaContext.heroHook)
       });
-      router.push(
-        planBuilderB
-          ? planBuilderBEntryFromLanding(search ? `?${search}` : undefined)
-          : planBuilderEntryFromLanding(search ? `?${search}` : undefined)
-      );
     },
-    [layout, landingPath, metaContext.heroHook, metaContext.heroHookSource, planBuilderB, router, search, variant]
+    [layout, landingPath, metaContext.heroHook, metaContext.heroHookSource, planBuilderB, variant]
   );
-
-  const handleHeroPainted = useCallback(() => {
-    if (!isColdPlanBLandingPath(landingPath)) return;
-    document.getElementById("ad-lp-ssr")?.remove();
-  }, [landingPath]);
 
   return (
     <V4Page
       search={query}
       heroHook={metaContext.heroHook}
       landingPath={landingPath}
+      ctaHref={ctaHref}
       planBuilderB={planBuilderB}
       onCta={handleCta}
-      onHeroPainted={handleHeroPainted}
     />
   );
 }

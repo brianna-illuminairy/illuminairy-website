@@ -1,10 +1,16 @@
 # Active context
 
-*Last updated: 2026-06-24 (Plan B cold LP perf)*
+*Last updated: 2026-06-22 (cold funnel consumer polish)*
 
 ## Resume here (start next chat with this)
 
-**Plan B cold LP perf (2026-06-24)** — `/sat-plan-builder` SSR ships headline + trust + CTA link in first HTML; `/plan-b` SSR step 1. See `growth/cold-funnel-perf.md`, `ColdPlanBLanding`, `npm run perf:cold-funnel`.
+**Two funnels — do not mix:**
+- **Quiz 1:** `/` LP + `/plan` funnel (high GPA / low SAT). Unchanged. Meta ads ad1–ad5 (except ad3 HD) land on `/`.
+- **Quiz 2 (ad3 HD only):** `/sat-plan-builder` → `/plan-b`. Frozen tutor copy in `lib/plan-b/ad3-hd-landing-copy.ts`. Full SSR page `Ad3HdLandingPage` + shared `landing-v4.css` + thin ad3 shell CSS.
+
+**2026-06-22 consumer polish:** Plan A SSR entry shell (`PlanAEntryShell`), LP CTAs are `<Link>` (homepage, score review, ad3), ad3 CSS deduped to shared v4 + overrides, Plan B deferred CSS slimmed (no critical re-import), session replay uses analytics defer gate, perf doc updated.
+
+**2026-06-22 Plan B CSS dedup:** Critical inline = concat of source files (no monolithic duplicate). Mobile shell SSOT: `app/funnel-shell.css`.
 
 ---
 
@@ -31,10 +37,10 @@
 
 ## Previous: Plan Builder B lab funnel (2026-06-22)
 
-- **Live entry:** ad3 tutor HD (`utm_content=ad3_before_tutoring_hd1080` or `hook=tutor&version=hd1080`) on `/sat-plan-builder` → tutor LP → **`/plan-b`**
+- **Live entry:** ad3 tutor HD only on `/sat-plan-builder` → **`/plan-b`** (other Meta ads use `/` → `/plan`)
 - **Route:** `/plan-b` → `app/quiz-b/` + `lib/quiz-funnel-b/` (separate `qfb_*` storage)
 - **Offer:** free 45-min lesson → portal → $99/wk membership upsell (not Strategy Call)
-- **Dev override:** `?pb=b` on any LP also routes CTA to `/plan-b`; `/sat-free-lesson` is internal QA only
+- **Dev override:** `?pb=b` on Quiz 1 LPs routes CTA to `/plan-b`; `/sat-free-lesson` redirects to `/sat-plan-builder`
 - **Owner before prod:** apply migration `20260622120000_plan_b_lead_fields.sql`; set `NEXT_PUBLIC_FREE_LESSON_CALENDLY_URL`, `TWILIO_VERIFY_SERVICE_SID`, `PORTAL_SESSION_SECRET`, OAuth env; HPHS permission per `docs/leads/hphs-endorsement-gate.md`
 - **QA:** `npm run dev` → `/plan-b` · analytics checklist `npm run funnel:b-analytics-smoke`
 - **Docs:** `growth/plan-b-analytics-playbook.md`
