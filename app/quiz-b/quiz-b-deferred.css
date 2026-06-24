@@ -1,0 +1,5 @@
+/* Plan Builder B — full styles loaded after first paint. */
+@import "../quiz-globals.css";
+@import "../funnel-responsive.css";
+@import "./quiz-b-core.css";
+@import "./quiz-b-entry.css";

@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
-import { LandingPage } from "@/components/landing/landing-page";
-import { SAT_PLAN_BUILDER_LP_PATH } from "@/lib/plan-builder-routes";
-import "./landing-bundle.css";
+import { AdLpCriticalCss } from "@/components/cold-funnel/critical-css";
+import { DeferredStylesheet } from "@/components/cold-funnel/deferred-stylesheet";
+import { AdLpHeroShell, buildAdLpSearchQuery } from "./AdLpHeroShell";
+import { SatPlanBuilderClient } from "./SatPlanBuilderClient";
 
 export const metadata: Metadata = {
   title: "Free SAT Improvement Plan · Illuminairy",
@@ -12,21 +12,31 @@ export const metadata: Metadata = {
     title: "Free SAT Improvement Plan · Illuminairy",
     description:
       "Why their score is stuck, a realistic fall SAT range, and what to focus on first. Free · parent only · about 2 minutes.",
-    images: [{ url: "/brand/logo-square.png", width: 1200, height: 630 }]
+    images: [{ url: "/brand/logo-square.png", width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Free SAT Improvement Plan · Illuminairy",
     description:
-      "Why stuck · realistic fall score · what to study first. Free · parent only · about 2 minutes."
+      "Why stuck · realistic fall score · what to study first. Free · parent only · about 2 minutes.",
   },
-  robots: { index: false, follow: true }
+  robots: { index: false, follow: true },
 };
 
-export default function SatPlanBuilderLandingPage() {
+type SatPlanBuilderPageProps = {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+};
+
+export default async function SatPlanBuilderLandingPage({ searchParams }: SatPlanBuilderPageProps) {
+  const sp = await searchParams;
+  const searchQuery = buildAdLpSearchQuery(sp);
+
   return (
-    <Suspense fallback={null}>
-      <LandingPage landingPath={SAT_PLAN_BUILDER_LP_PATH} />
-    </Suspense>
+    <div className="lp-cold-perf">
+      <AdLpCriticalCss />
+      <DeferredStylesheet route="ad-lp" />
+      <AdLpHeroShell searchQuery={searchQuery} />
+      <SatPlanBuilderClient />
+    </div>
   );
 }

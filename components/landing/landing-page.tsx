@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { V4Page } from "@/components/landing/v4/v4-page";
 import { v4PlanBCta, v4TutorCta } from "@/components/landing/v4/v4-content";
 import { trackLandingCtaClick, trackLandingView } from "@/lib/landing/analytics";
@@ -16,8 +16,10 @@ import { landingShared } from "@/lib/landing/content";
 import { lpVariantFromHeroHook } from "@/lib/landing/lp-variant";
 import { landingSearchQuery } from "@/lib/landing/landing-search";
 import { resolveMetaLandingContext } from "@/lib/landing/meta-traffic";
-import { planBuilderEntryFromLanding } from "@/lib/plan-builder-routes";
+import { planBuilderEntryFromLanding, SAT_PLAN_BUILDER_LP_PATH } from "@/lib/plan-builder-routes";
 import { planBuilderBEntryFromLanding, shouldRouteLandingCtaToPlanBuilderB } from "@/lib/plan-builder-b-routes";
+import { useDeferUntilEngagedOrLcp } from "@/lib/defer-until-engaged-or-lcp";
+import { isMarketingDeferPath } from "@/lib/perf-defer-paths";
 import {
   devOverrideFromSearch,
   LP_VARIANT_FLAG,
@@ -43,6 +45,7 @@ type LandingPageProps = {
 
 export function LandingPage({ landingPath = "/", planBuilderB: planBuilderBForced }: LandingPageProps) {
   const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
   const trackedRef = useRef(false);
 
@@ -53,8 +56,17 @@ export function LandingPage({ landingPath = "/", planBuilderB: planBuilderBForce
   const layout = devLayoutOverrideFromSearch(query) ?? LP_LAYOUT;
   const variant = devOverrideFromSearch(query) ?? LP_VARIANT;
   const metaContext = useMemo(() => resolveMetaLandingContext(query), [query]);
+  const deferAnalytics = isMarketingDeferPath(pathname);
+  const analyticsReady = useDeferUntilEngagedOrLcp(deferAnalytics);
 
   useEffect(() => {
+    if (landingPath === SAT_PLAN_BUILDER_LP_PATH) {
+      document.getElementById("ad-lp-ssr")?.remove();
+    }
+  }, [landingPath]);
+
+  useEffect(() => {
+    if (deferAnalytics && !analyticsReady) return;
     if (trackedRef.current) return;
     trackedRef.current = true;
     persistLpVariant(variant);
@@ -77,7 +89,7 @@ export function LandingPage({ landingPath = "/", planBuilderB: planBuilderBForce
     trackLpLayoutExperimentExposure(layout);
     enrichSessionAttributionFromLanding(landingPath, metaContext.heroHook);
     trackLandingView(variant, layout, landingPath, trackingExtra);
-  }, [layout, landingPath, metaContext, variant]);
+  }, [analyticsReady, deferAnalytics, layout, landingPath, metaContext, variant]);
 
   const handleCta = useCallback(
     (sectionId: LandingSectionId, label?: string) => {

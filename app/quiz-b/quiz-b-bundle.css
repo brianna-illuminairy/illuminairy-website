@@ -1,5 +1,1 @@
-/* Plan Builder B — initial CSS (core shell + intake). Booking/post load on step. */
-@import "../quiz-globals.css";
-@import "../funnel-responsive.css";
-@import "./quiz-b-core.css";
-@import "./quiz-b-entry.css";
+/* DEPRECATED: use quiz-b-critical.css (inline) + quiz-b-deferred.css (idle load). */

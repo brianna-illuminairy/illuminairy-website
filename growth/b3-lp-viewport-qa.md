@@ -117,13 +117,18 @@ After deploy, run [PageSpeed Insights](https://pagespeed.web.dev/) on:
 
 Record mobile + desktop scores in PR or experiment log.
 
-**Plan Builder B (Meta ad3 scale):** also run:
+**Plan Builder B (Meta ad3 scale):** run **landing + funnel** (not funnel alone):
 
 ```bash
-LIGHTHOUSE_BASE=https://illuminairy.com npm run lighthouse:ad-funnel
+LIGHTHOUSE_BASE=https://illuminairy.com npm run perf:cold-funnel
 ```
 
-URLs: `/sat-plan-builder` (ad3 UTMs + `pb=b`) and `/plan-b?step=q1-parent-child&pb=b`. Same mobile targets as above.
+| Surface | URL | LCP should be |
+|---------|-----|---------------|
+| Landing | `/sat-plan-builder` (ad3 UTMs + `pb=b`) | Hero H1 |
+| Funnel | `/plan-b?step=q1-parent-child&pb=b` | “Who needs SAT help?” |
+
+Same mobile targets: Performance ≥ 85, LCP ≤ 2.5s. Details: [cold-funnel-perf.md](./cold-funnel-perf.md).
 
 ### C. Quick network sanity (local)
 

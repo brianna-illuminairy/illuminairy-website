@@ -17,6 +17,7 @@ import { V4Hero } from "./v4-hero";
 import { V4TrustBar } from "./v4-trust-bar";
 import { V4Footer } from "./v4-footer";
 import { V4Topbar } from "./v4-topbar";
+import { DeferredBelowFold } from "@/components/cold-funnel/deferred-below-fold";
 
 type V4PageProps = {
   search: string;
@@ -62,8 +63,10 @@ export function V4Page({ search, heroHook, landingPath, planBuilderB, onCta }: V
         />
       </main>
 
-      <V4TrustBar heroHook={heroHook} />
-      <V4Footer />
+      <DeferredBelowFold force>
+        <V4TrustBar heroHook={heroHook} />
+        <V4Footer />
+      </DeferredBelowFold>
     </div>
   );
 }

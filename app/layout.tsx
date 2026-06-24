@@ -1,11 +1,5 @@
 import type { Metadata } from "next";
-import { AuthSessionProvider } from "@/components/auth-session-provider";
-import { LayoutChrome } from "@/components/layout-chrome";
-import { ThemeProvider } from "@/components/theme-provider";
-import { MarketingScripts } from "@/components/marketing-scripts";
-import { AttributionProvider } from "@/components/attribution-provider";
-import { PostHogProvider } from "@/components/posthog-provider";
-import { PostHogLazySessionRecording } from "@/components/posthog-lazy-recording";
+import { ColdFunnelProviders } from "@/components/cold-funnel/cold-funnel-providers";
 import { site } from "@/lib/site";
 import "./globals.css";
 
@@ -13,12 +7,12 @@ export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
     default: "Illuminairy — SAT Prep for Ambitious Families",
-    template: "%s · Illuminairy"
+    template: "%s · Illuminairy",
   },
   description:
     "Find out what's holding your kid's SAT score back and build a personalized plan before their next test.",
   alternates: {
-    canonical: "/"
+    canonical: "/",
   },
   openGraph: {
     title: "Illuminairy — SAT Prep for Ambitious Families",
@@ -31,45 +25,35 @@ export const metadata: Metadata = {
         url: "/brand/logo-square.png",
         width: 1200,
         height: 630,
-        alt: "Illuminairy"
-      }
+        alt: "Illuminairy",
+      },
     ],
     locale: "en_US",
-    type: "website"
+    type: "website",
   },
   twitter: {
     card: "summary_large_image",
     title: "Illuminairy",
-    description: "SAT prep for ambitious families."
+    description: "SAT prep for ambitious families.",
   },
   icons: {
     icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
-    apple: [{ url: "/apple-icon.svg", type: "image/svg+xml" }]
-  }
+    apple: [{ url: "/apple-icon.svg", type: "image/svg+xml" }],
+  },
 };
 
 export const viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  colorScheme: "light" as const
+  colorScheme: "light" as const,
 };
 
 export default function RootLayout({
-  children
+  children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const schema = {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    name: site.name,
-    legalName: site.legalName,
-    url: site.url,
-    email: site.supportEmail,
-    description: "SAT prep and personalized score improvement plans for ambitious families."
-  };
-
   return (
     <html
       lang="en"
@@ -78,21 +62,7 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-screen bg-surface text-primary antialiased" style={{ margin: 0 }}>
-        <ThemeProvider>
-          <AuthSessionProvider>
-          <PostHogProvider>
-            <AttributionProvider>
-              <LayoutChrome>{children}</LayoutChrome>
-            <script
-              type="application/ld+json"
-              dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-            />
-            <MarketingScripts />
-            <PostHogLazySessionRecording />
-            </AttributionProvider>
-          </PostHogProvider>
-          </AuthSessionProvider>
-        </ThemeProvider>
+        <ColdFunnelProviders>{children}</ColdFunnelProviders>
       </body>
     </html>
   );
