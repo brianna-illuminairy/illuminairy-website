@@ -46,7 +46,9 @@ const nextConfig = {
   outputFileTracingIncludes: {
     "/danielle/files/[slug]": ["./content/danielle/**/*"],
     "/soha/files/[slug]": ["./content/soha/**/*"],
-    "/skye/files/[slug]": ["./content/skye/**/*"]
+    "/skye/files/[slug]": ["./content/skye/**/*"],
+    "/quiz-b": ["./app/quiz-b/quiz-b-critical.css"],
+    "/sat-plan-builder": ["./app/sat-plan-builder/landing-critical.css"],
   },
   async redirects() {
     return [
