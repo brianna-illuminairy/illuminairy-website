@@ -404,6 +404,58 @@
   .compact-list{margin-top:8px;}
   .compact-list li{margin-bottom:10px;font-size:15px;}
 
+  .score-callout{
+    background:var(--mint-soft);border:1px solid var(--mint);border-radius:16px;
+    padding:20px 22px;margin-top:10px;
+  }
+  .score-callout p{font-size:15px;line-height:1.55;margin-bottom:12px;}
+  .score-callout p:last-child{margin-bottom:0;}
+  .route-grid{
+    display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:14px;
+  }
+  .route-cell{
+    background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;
+  }
+  .route-cell .rlab{
+    font-family:'Space Mono',monospace;font-size:10px;text-transform:uppercase;
+    letter-spacing:0.08em;color:var(--muted);margin-bottom:6px;
+  }
+  .route-cell .rnum{font-family:'Fraunces',serif;font-weight:900;font-size:26px;color:var(--forest-deep);}
+  .route-cell .rcap{font-size:13px;color:var(--muted);margin-top:6px;line-height:1.4;}
+
+  .plan-track{
+    background:#fff;border:1px solid var(--line);border-radius:16px;
+    overflow:hidden;margin-top:12px;
+  }
+  .plan-track-row{
+    display:grid;grid-template-columns:36px 1fr 52px 88px;
+    gap:10px;align-items:center;padding:12px 16px;
+    border-bottom:1px solid var(--line-soft);font-size:13.5px;line-height:1.35;
+  }
+  .plan-track-row:last-child{border-bottom:none;}
+  .plan-track-row.head{
+    background:var(--line-soft);font-family:'Space Mono',monospace;font-size:10px;
+    text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);
+    padding:10px 16px;
+  }
+  .plan-track-row.active{background:#fff9ec;}
+  .plan-track-row.strong{background:var(--mint-soft);}
+  .plan-rank{
+    font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:var(--muted);
+  }
+  .plan-track-row.active .plan-rank,.plan-track-row.strong .plan-rank{color:var(--forest);}
+  .plan-pts{
+    font-family:'Space Mono',monospace;font-size:12px;font-weight:700;
+    color:var(--tomato);text-align:right;
+  }
+  .plan-status{
+    font-family:'Space Mono',monospace;font-size:10px;text-align:right;
+    letter-spacing:0.03em;
+  }
+  .plan-status.done{color:var(--forest);}
+  .plan-status.now{color:#8a5a12;}
+  .plan-status.later{color:var(--muted);}
+
   @media (max-width:680px){
     .path-grid{grid-template-columns:1fr;}
     .score-bars{grid-template-columns:1fr;}
@@ -411,6 +463,9 @@
     .trend-row{grid-template-columns:1fr;gap:6px;}
     .trend-pct{text-align:left;}
     .bar-pair{grid-template-columns:56px 1fr 40px;}
+    .plan-track-row{grid-template-columns:32px 1fr;gap:6px;}
+    .plan-track-row .plan-pts,.plan-track-row .plan-status{grid-column:2;text-align:left;}
+    .route-grid{grid-template-columns:1fr;}
   }
 
   footer{
@@ -506,9 +561,138 @@
 
     <!-- SUMMARY -->
     <section>
-      <p class="viz-intro">Week two focused on <strong>Reading and Writing</strong> (linking-word questions). Danielle
-      had two tutoring sessions, finished her assigned homework, and kept working on Math from week one. She is
-      on track for her 1400 goal on August 22.</p>
+      <p class="viz-intro">Week two focused on <strong>#7 Transitions</strong> from Danielle's personalized study
+      plan (+22 modeled points). Week one focused on <strong>#5 Nonlinear equations</strong> (+24) and the
+      factoring work that supports it. Everything below ties back to her June 6 diagnostic and the plan at
+      <strong>/danielle/plan</strong>.</p>
+    </section>
+
+    <!-- HOW SAT SCORES -->
+    <section>
+      <div class="sec-label">How the SAT scored her diagnostic</div>
+      <h2>Not a classroom percent-correct test</h2>
+      <div class="score-callout">
+        <p>The SAT is <strong>adaptive</strong>. Each section (Reading and Writing, Math) has two modules.
+        Everyone gets the same Module 1. How she does on Module 1 decides whether Module 2 is the
+        <strong>harder</strong> version (needed for a top score) or an easier version that
+        <strong>caps</strong> how high she can score in that section.</p>
+        <p>The score is <strong>not</strong> a simple count of right answers divided by 98. The test uses a
+        statistical model (similar to what psychometricians call IRT) that weighs <strong>which</strong>
+        questions she got right: easy, medium, or hard. Getting hard Module 2 questions right moves the score
+        more than getting easy ones right. That is why we track each skill at easy, medium, and hard in
+        homework, not just overall percent correct.</p>
+        <p>On June 6 Danielle reached the <strong>harder Module 2 in both sections</strong>, but it was close.
+        She needs a buffer above the cutoff so one bad day does not drop her to the easier module.</p>
+      </div>
+      <div class="route-grid">
+        <div class="route-cell">
+          <div class="rlab">Reading and Writing · Module 1</div>
+          <div class="rnum">20 / 27</div>
+          <div class="rcap">Cutoff for harder Module 2 is about 18. She cleared it by 2 questions.</div>
+        </div>
+        <div class="route-cell">
+          <div class="rlab">Math · Module 1</div>
+          <div class="rnum">16 / 22</div>
+          <div class="rcap">Cutoff for harder Module 2 is about 15. She cleared it by 1 question.</div>
+        </div>
+      </div>
+      <p class="viz-note" style="margin-top:14px;">Overall on the diagnostic: 69 of 98 correct (70%). Section
+      scores landed around 1100–1150 combined. Goal: 1400 (+275 modeled points on her plan).</p>
+    </section>
+
+    <!-- STUDY PLAN TRACKER -->
+    <section>
+      <div class="sec-label">Her study plan (from the diagnostic)</div>
+      <h2>11 skills ranked by recoverable points</h2>
+      <p class="viz-note">Rank order and +point labels come from her plan (modeled estimates, not a College Board
+      guarantee). Miss counts come from her June 6 diagnostic question log. We teach in this order because fixing
+      high-frequency misses at the right difficulty moves score fastest.</p>
+      <div class="plan-track">
+        <div class="plan-track-row head">
+          <span>#</span><span>Skill (diagnostic misses)</span><span>Pts</span><span>Status</span>
+        </div>
+        <div class="plan-track-row"><span class="plan-rank">01</span><span>Math pacing</span><span class="plan-pts">+35</span><span class="plan-status later">Later</span></div>
+        <div class="plan-track-row"><span class="plan-rank">02</span><span>Area and volume · missed 2</span><span class="plan-pts">+30</span><span class="plan-status later">Week 3+</span></div>
+        <div class="plan-track-row"><span class="plan-rank">03</span><span>Command of evidence · missed 4</span><span class="plan-pts">+26</span><span class="plan-status now">Self-practice</span></div>
+        <div class="plan-track-row"><span class="plan-rank">04</span><span>Nonlinear functions · missed 1</span><span class="plan-pts">+24</span><span class="plan-status now">Starts wk 3</span></div>
+        <div class="plan-track-row active"><span class="plan-rank">05</span><span>Nonlinear equations · missed 5 (most common on her test)</span><span class="plan-pts">+24</span><span class="plan-status now">Wk 1 + 3</span></div>
+        <div class="plan-track-row"><span class="plan-rank">06</span><span>Text structure · missed 3</span><span class="plan-pts">+24</span><span class="plan-status later">Scheduled</span></div>
+        <div class="plan-track-row strong"><span class="plan-rank">07</span><span>Transitions · missed 3 (easy, medium, hard)</span><span class="plan-pts">+22</span><span class="plan-status done">Wk 2</span></div>
+        <div class="plan-track-row"><span class="plan-rank">08</span><span>Circles · missed 2</span><span class="plan-pts">+20</span><span class="plan-status later">Week 4</span></div>
+        <div class="plan-track-row"><span class="plan-rank">09</span><span>Words in context · missed 3</span><span class="plan-pts">+18</span><span class="plan-status later">Week 5+</span></div>
+        <div class="plan-track-row"><span class="plan-rank">10</span><span>Hard algebra · missed 1</span><span class="plan-pts">+18</span><span class="plan-status later">Scheduled</span></div>
+        <div class="plan-track-row"><span class="plan-rank">11</span><span>Sentence grammar · missed 1</span><span class="plan-pts">+16</span><span class="plan-status later">Week 6</span></div>
+      </div>
+      <p class="viz-note" style="margin-top:14px;"><strong>Also in progress:</strong> Equivalent expressions
+      (1 hard miss on diagnostic, Module 2 Q11). Not a top-11 row but week 1 focused here because it is the
+      algebra foundation under #5. Easy 95%, medium 72% (goal 95%).</p>
+    </section>
+
+    <!-- ADDRESSED SO FAR -->
+    <section>
+      <div class="sec-label">Addressed in tutoring so far</div>
+      <h2>Weeks 1–2 vs the plan</h2>
+      <p class="viz-note">Her plan calendar suggested different week-2 topics; we moved Transitions earlier because
+      all three diagnostic misses were teachable in two sessions and worth +22 modeled points.</p>
+      <div class="skill-panel">
+        <div class="skill-row">
+          <div class="skill-name">#7 Transitions · +22 · Week 2 (both sessions)</div>
+          <div class="skill-plain">Diagnostic: missed 3 (easy Module 1 Q24, medium Module 2 Q23, hard Module 2 Q24).
+          On the SAT, missing at every difficulty in one skill hurts both modules. We taught the full easy →
+          medium → hard ladder in homework.</div>
+          <div class="bar-pair">
+            <span class="bar-tag">Before</span>
+            <div class="bar-track"><div class="bar-fill before" style="width:0%;"><span class="bar-pct">0%</span></div></div>
+            <span class="bar-val">0/3</span>
+          </div>
+          <div class="bar-pair">
+            <span class="bar-tag">Now</span>
+            <div class="bar-track"><div class="bar-fill after" style="width:96%;"><span class="bar-pct">96%</span></div></div>
+            <span class="bar-val">26/27</span>
+          </div>
+          <div class="skill-foot">One timed set left (June 28). Diagnostic misses reviewed in both sessions.</div>
+        </div>
+        <div class="skill-row">
+          <div class="skill-name">#5 Nonlinear equations · +24 · Week 1 sessions, continues week 3</div>
+          <div class="skill-plain">Diagnostic: missed 5 (her most common miss tag; ~13 questions on the test).
+          Even a small accuracy gain here adds more points than fixing a skill that appears once. Week 1 covered
+          recognition, factoring, and quadratics. Week 3: quadratic formula, discriminant, and the five diagnostic
+          misses in this family.</div>
+          <div class="bar-pair">
+            <span class="bar-tag">Wk 1</span>
+            <div class="bar-track"><div class="bar-fill after" style="width:89%;"><span class="bar-pct">89%</span></div></div>
+            <span class="bar-val">98 Qs</span>
+          </div>
+          <div class="bar-pair">
+            <span class="bar-tag">Goal</span>
+            <div class="bar-track"><div class="bar-fill before" style="width:95%;opacity:0.35;"><span class="bar-pct">95%</span></div></div>
+            <span class="bar-val">Medium+</span>
+          </div>
+          <div class="skill-foot warn">Still building medium and hard reliability before we call this skill done.</div>
+        </div>
+        <div class="skill-row">
+          <div class="skill-name">Equivalent expressions · supports #5 · Week 1, homework ongoing</div>
+          <div class="skill-plain">Diagnostic: 1 hard miss (Module 2 Q11). Week 1 taught factoring and simplifying;
+          this is the algebra she needs before #4 nonlinear functions and harder #5 questions.</div>
+          <div class="bar-pair">
+            <span class="bar-tag">Easy</span>
+            <div class="bar-track"><div class="bar-fill after" style="width:95%;"><span class="bar-pct">95%</span></div></div>
+            <span class="bar-val">19/20</span>
+          </div>
+          <div class="bar-pair">
+            <span class="bar-tag">Medium</span>
+            <div class="bar-track"><div class="bar-fill after-warn" style="width:72%;"><span class="bar-pct">72%</span></div></div>
+            <span class="bar-val">18/25</span>
+          </div>
+          <div class="skill-foot warn">Medium still below 95% target. Keeps assigned until she hits it on her own.</div>
+        </div>
+        <div class="skill-row">
+          <div class="skill-name">#4 Nonlinear functions · +24 · Starts week 3</div>
+          <div class="skill-plain">Diagnostic: missed 1 (Module 2 Q14, medium). Parabolas and curves; often read from
+          the calculator graph. Not taught in sessions yet; scheduled as we continue advanced Math (~35% of the
+          Math section).</div>
+        </div>
+      </div>
     </section>
 
     <!-- ESTIMATED SCORE -->
@@ -539,130 +723,15 @@
       </div>
     </section>
 
-    <!-- SKILL PROGRESS -->
-    <section>
-      <div class="sec-label">Skill progress</div>
-      <h2>How each skill is moving</h2>
-      <p class="viz-note">Each bar shows where she started versus where she is now on practice. Our target is
-      95% before we move on.</p>
-
-      <div class="skill-panel">
-        <div class="skill-row">
-          <div class="skill-name">Transitions (linking words)</div>
-          <div class="skill-plain">Questions that ask for the right word to connect two sentences, like
-          &quot;however&quot; or &quot;therefore.&quot; Taught in sessions this week.</div>
-          <div class="bar-pair">
-            <span class="bar-tag">Before</span>
-            <div class="bar-track"><div class="bar-fill before" style="width:0%;"><span class="bar-pct">0%</span></div></div>
-            <span class="bar-val">0/3</span>
-          </div>
-          <div class="bar-pair">
-            <span class="bar-tag">Now</span>
-            <div class="bar-track"><div class="bar-fill after" style="width:96%;"><span class="bar-pct">96%</span></div></div>
-            <span class="bar-val">26/27</span>
-          </div>
-          <div class="skill-foot">Missed all 3 on the June 6 diagnostic. Now scoring 96% on practice set 1 and
-          96% on flashcards after we reviewed her misses together.</div>
-        </div>
-
-        <div class="skill-row">
-          <div class="skill-name">Equivalent Expressions, easy (Math)</div>
-          <div class="skill-plain">Simplifying and rewriting algebra expressions. Taught in week 1; she kept
-          practicing this week.</div>
-          <div class="bar-pair">
-            <span class="bar-tag">Before</span>
-            <div class="bar-track"><div class="bar-fill before" style="width:35%;"><span class="bar-pct">Low</span></div></div>
-            <span class="bar-val">Missed</span>
-          </div>
-          <div class="bar-pair">
-            <span class="bar-tag">Now</span>
-            <div class="bar-track"><div class="bar-fill after" style="width:95%;"><span class="bar-pct">95%</span></div></div>
-            <span class="bar-val">19/20</span>
-          </div>
-          <div class="skill-foot">Goal met. She is solid on easy-level problems in this skill.</div>
-        </div>
-
-        <div class="skill-row">
-          <div class="skill-name">Equivalent Expressions, medium (Math)</div>
-          <div class="skill-plain">Harder versions of the same algebra skill. Still in progress from week 1.</div>
-          <div class="bar-pair">
-            <span class="bar-tag">Before</span>
-            <div class="bar-track"><div class="bar-fill before" style="width:20%;"><span class="bar-pct">—</span></div></div>
-            <span class="bar-val">New</span>
-          </div>
-          <div class="bar-pair">
-            <span class="bar-tag">Now</span>
-            <div class="bar-track"><div class="bar-fill after-warn" style="width:72%;"><span class="bar-pct">72%</span></div></div>
-            <span class="bar-val">18/25</span>
-          </div>
-          <div class="skill-foot warn">Goal is 95%. She understands the concepts; the remaining misses are mostly
-          sign errors and misreading what the question asks for. We will keep assigning medium sets until she
-          hits 95% on her own.</div>
-        </div>
-
-        <div class="skill-row">
-          <div class="skill-name">Overall practice accuracy (all topics)</div>
-          <div class="skill-plain">Across all homework and practice questions this week and last.</div>
-          <div class="bar-pair">
-            <span class="bar-tag">Before</span>
-            <div class="bar-track"><div class="bar-fill before" style="width:67%;"><span class="bar-pct">67%</span></div></div>
-            <span class="bar-val">Diag.</span>
-          </div>
-          <div class="bar-pair">
-            <span class="bar-tag">Now</span>
-            <div class="bar-track"><div class="bar-fill after" style="width:91%;"><span class="bar-pct">91%</span></div></div>
-            <span class="bar-val">93 Qs</span>
-          </div>
-          <div class="skill-foot">Up from 89% in week 1. She is getting more right even as the questions get
-          harder.</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- STUDY PLAN PROGRESS -->
-    <section>
-      <div class="sec-label">Study plan progress</div>
-      <h2>2 of 11 priority skills started</h2>
-      <p class="viz-note">Her personalized plan lists 11 skills in order of how many SAT points each is worth.
-      We teach them one at a time until she hits 95% on practice.</p>
-      <div class="plan-meter">
-        <div class="plan-meter-top">
-          <span class="plan-meter-big">2 / 11</span>
-          <span class="plan-meter-sub">skills taught in sessions so far</span>
-        </div>
-        <div class="plan-meter-track" role="img" aria-label="Study plan progress: 2 of 11 skills">
-          <div class="plan-meter-fill">18%</div>
-        </div>
-      </div>
-      <div class="plan-skills">
-        <div class="plan-skill done">
-          <span class="ps-icon">&#10003;</span>
-          <div><strong>Equivalent expressions</strong> (Math, week 1)<br>Easy level done; medium still in progress</div>
-        </div>
-        <div class="plan-skill done">
-          <span class="ps-icon">&#10003;</span>
-          <div><strong>Transitions</strong> (Reading and Writing, week 2)<br>Strong on practice; one timed set left</div>
-        </div>
-        <div class="plan-skill active">
-          <span class="ps-icon">&#8594;</span>
-          <div><strong>Advanced Math</strong> (week 3, starting now)<br>Perfect squares, exponentials, quadratic formula</div>
-        </div>
-        <div class="plan-skill">
-          <span class="ps-icon ps-later">9</span>
-          <div class="ps-later">More skills coming next: command of evidence, area and volume, text structure, and others on her plan</div>
-        </div>
-      </div>
-    </section>
-
     <!-- WEEK OVER WEEK ACCURACY -->
     <section>
       <div class="sec-label">Week over week</div>
       <h2>Practice accuracy by week</h2>
       <div class="trend-chart">
         <div class="trend-row">
-          <div class="trend-label">June 6 diagnostic<br><span style="font-size:12px;color:var(--muted);">timed, all topics</span></div>
-          <div class="trend-bar"><div class="trend-fill dim" style="width:67%;"></div></div>
-          <div class="trend-pct">67%</div>
+          <div class="trend-label">June 6 diagnostic<br><span style="font-size:12px;color:var(--muted);">69/98 correct, timed</span></div>
+          <div class="trend-bar"><div class="trend-fill dim" style="width:70%;"></div></div>
+          <div class="trend-pct">70%</div>
         </div>
         <div class="trend-row">
           <div class="trend-label">Week 1 (June 9–16)<br><span style="font-size:12px;color:var(--muted);">98 questions, Math</span></div>
@@ -835,10 +904,10 @@
       <h2>This week, June 23 to 30</h2>
       <div class="plan-week">
         <div class="plan-when">Math sessions (2)</div>
-        <div class="plan-what">Continue in the advanced Math section (~35% of the SAT Math score)</div>
-        <div class="plan-note">Topics: perfect squares, exponentials, the quadratic formula, and the discriminant.
-        We will review five questions she missed on the diagnostic in this same topic area. She will also keep
-        working medium equivalent expressions homework until she hits 95%.</div>
+        <div class="plan-what">#4 Nonlinear functions + continue #5 Nonlinear equations</div>
+        <div class="plan-note">Advanced Math (~35% of SAT Math). Week 3 covers perfect squares, exponentials,
+        quadratic formula, and discriminant. We will revisit all five #5 diagnostic misses and the one #4 miss
+        (Module 2 Q14). Equivalent expressions homework continues until 95% at medium.</div>
       </div>
       <div class="plan-week">
         <div class="plan-when">End of week</div>
@@ -860,9 +929,10 @@
       <div class="callout">
         <div class="sec-label">Bottom line</div>
         <h2>On track for 1400</h2>
-        <p>After two weeks Danielle is on pace for her August 22 goal. Linking words went from 0 of 3 on the
-        diagnostic to 96% on practice. Medium math expressions still need more reps. Her practice test at the
-        end of this week will show her real score progress.</p>
+        <p>After two weeks Danielle is on pace for 1400. On the plan: <strong>#7 Transitions</strong> moved from
+        0/3 on the diagnostic to 96% on practice. <strong>#5 Nonlinear equations</strong> and equivalent
+        expressions are in progress. <strong>#4 Nonlinear functions</strong> starts week 3. Her practice test
+        at the end of this week will show real score movement against the June 6 baseline.</p>
       </div>
     </section>
 
