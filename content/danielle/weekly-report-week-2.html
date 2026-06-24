@@ -255,8 +255,162 @@
   .verdict .vtag{
     font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--forest-deep);
   }
+
+  /* parent-friendly progress charts */
+  .viz-intro{font-size:17px;margin-bottom:4px;}
+  .viz-note{font-size:14px;color:var(--muted);margin-bottom:16px;}
+
+  .score-bars{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:8px;
+  }
+  .score-col{
+    background:#fff;border:1px solid var(--line);border-radius:14px;
+    padding:16px 14px 14px;text-align:center;
+  }
+  .score-col.highlight{border-color:var(--forest);background:var(--mint-soft);}
+  .score-col.goal{border-color:var(--tomato);background:#fff8f5;}
+  .score-col .slab{
+    font-family:'Space Mono',monospace;font-size:10px;text-transform:uppercase;
+    letter-spacing:0.1em;color:var(--muted);margin-bottom:10px;line-height:1.4;
+  }
+  .score-col .snum{
+    font-family:'Fraunces',serif;font-weight:900;font-size:32px;line-height:1;
+    color:var(--forest-deep);margin-bottom:12px;
+  }
+  .score-col.goal .snum{color:var(--tomato);}
+  .score-vbar{
+    width:100%;max-width:72px;height:120px;margin:0 auto;
+    background:var(--line-soft);border-radius:10px;position:relative;overflow:hidden;
+  }
+  .score-vfill{
+    position:absolute;bottom:0;left:0;right:0;border-radius:0 0 10px 10px;
+    background:var(--forest);
+  }
+  .score-col.goal .score-vfill{background:var(--tomato);opacity:0.35;}
+  .score-col .scap{font-size:12px;color:var(--muted);margin-top:10px;line-height:1.35;}
+
+  .skill-panel{
+    background:#fff;border:1px solid var(--line);border-radius:16px;
+    padding:20px 22px;margin-top:10px;
+  }
+  .skill-row{padding:18px 0;border-bottom:1px solid var(--line-soft);}
+  .skill-row:first-child{padding-top:4px;}
+  .skill-row:last-child{border-bottom:none;padding-bottom:4px;}
+  .skill-name{font-weight:600;font-size:16px;margin-bottom:2px;}
+  .skill-plain{font-size:14px;color:var(--muted);margin-bottom:12px;line-height:1.45;}
+  .bar-pair{
+    display:grid;grid-template-columns:64px 1fr 44px;gap:10px;
+    align-items:center;margin-bottom:7px;
+  }
+  .bar-tag{
+    font-family:'Space Mono',monospace;font-size:10px;text-transform:uppercase;
+    letter-spacing:0.07em;color:var(--muted);
+  }
+  .bar-track{height:24px;background:var(--line-soft);border-radius:999px;overflow:hidden;}
+  .bar-fill{
+    height:100%;border-radius:999px;display:flex;align-items:center;
+    justify-content:flex-end;padding-right:8px;min-width:28px;
+  }
+  .bar-fill.before{background:#d4c4a8;}
+  .bar-fill.after{background:var(--forest);}
+  .bar-fill.after-warn{background:var(--tomato);}
+  .bar-fill .bar-pct{
+    font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:#fff;
+  }
+  .bar-val{
+    font-family:'Space Mono',monospace;font-size:12px;font-weight:600;
+    text-align:right;color:var(--ink);
+  }
+  .skill-foot{
+    margin-top:10px;font-size:13.5px;padding:10px 12px;border-radius:10px;
+    background:var(--mint-soft);color:var(--forest-deep);line-height:1.45;
+  }
+  .skill-foot.warn{background:#fceee8;color:#8a3b24;}
+
+  .plan-meter{margin-top:10px;}
+  .plan-meter-top{
+    display:flex;justify-content:space-between;align-items:baseline;
+    margin-bottom:10px;flex-wrap:wrap;gap:8px;
+  }
+  .plan-meter-big{
+    font-family:'Fraunces',serif;font-weight:900;font-size:28px;color:var(--forest-deep);
+  }
+  .plan-meter-sub{font-size:14px;color:var(--muted);}
+  .plan-meter-track{
+    height:32px;background:var(--line-soft);border-radius:999px;
+    overflow:hidden;border:1px solid var(--line);
+  }
+  .plan-meter-fill{
+    height:100%;width:18.2%;min-width:88px;
+    background:linear-gradient(90deg,var(--forest),#3a8f6a);
+    border-radius:999px;display:flex;align-items:center;justify-content:center;
+    font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:#fff;
+  }
+  .plan-skills{
+    display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:16px;
+  }
+  .plan-skill{
+    display:flex;align-items:flex-start;gap:10px;padding:12px 14px;
+    border-radius:12px;border:1px solid var(--line);background:#fff;font-size:13.5px;line-height:1.4;
+  }
+  .plan-skill.done{background:var(--mint-soft);border-color:var(--mint);}
+  .plan-skill.active{background:#fff9ec;border-color:#e8d4a8;}
+  .plan-skill .ps-icon{
+    font-family:'Space Mono',monospace;font-size:11px;font-weight:700;
+    min-width:22px;color:var(--forest);
+  }
+  .plan-skill.active .ps-icon{color:var(--tomato);}
+  .plan-skill .ps-later{color:var(--muted);font-size:13px;}
+
+  .trend-chart{margin-top:12px;}
+  .trend-row{
+    display:grid;grid-template-columns:120px 1fr 48px;gap:12px;
+    align-items:center;margin-bottom:12px;
+  }
+  .trend-row:last-child{margin-bottom:0;}
+  .trend-label{font-size:14px;font-weight:500;line-height:1.35;}
+  .trend-bar{height:28px;background:var(--line-soft);border-radius:999px;overflow:hidden;}
+  .trend-fill{height:100%;border-radius:999px;background:var(--forest);}
+  .trend-fill.dim{background:#9bb5a8;}
+  .trend-fill.current{background:var(--forest);box-shadow:inset 0 0 0 2px var(--mint);}
+  .trend-pct{
+    font-family:'Space Mono',monospace;font-size:13px;font-weight:700;
+    text-align:right;color:var(--forest-deep);
+  }
+
+  .hw-panel{
+    background:#fff;border:1px solid var(--line);border-radius:16px;
+    padding:18px 20px;margin-top:10px;
+  }
+  .hw-row{
+    display:grid;grid-template-columns:1fr auto;gap:8px 14px;
+    align-items:center;padding:12px 0;border-bottom:1px solid var(--line-soft);
+  }
+  .hw-row:last-child{border-bottom:none;padding-bottom:0;}
+  .hw-name{font-weight:600;font-size:14.5px;line-height:1.35;}
+  .hw-sub{font-size:13px;color:var(--muted);margin-top:2px;}
+  .hw-badge{
+    font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.04em;
+    padding:5px 10px;border-radius:999px;white-space:nowrap;
+  }
+  .hw-badge.done{background:var(--mint-soft);color:var(--forest-deep);}
+  .hw-badge.progress{background:#fff9ec;color:#8a5a12;}
+  .hw-badge.pending{background:var(--line-soft);color:var(--muted);}
+  .hw-bar{grid-column:1 / -1;height:10px;background:var(--line-soft);border-radius:999px;overflow:hidden;}
+  .hw-bar-fill{height:100%;border-radius:999px;background:var(--forest);}
+  .hw-bar-fill.warn{background:var(--tomato);}
+  .hw-bar-fill.pending{background:#c8bfb0;width:0!important;}
+
+  .compact-list{margin-top:8px;}
+  .compact-list li{margin-bottom:10px;font-size:15px;}
+
   @media (max-width:680px){
     .path-grid{grid-template-columns:1fr;}
+    .score-bars{grid-template-columns:1fr;}
+    .plan-skills{grid-template-columns:1fr;}
+    .trend-row{grid-template-columns:1fr;gap:6px;}
+    .trend-pct{text-align:left;}
+    .bar-pair{grid-template-columns:56px 1fr 40px;}
   }
 
   footer{
@@ -295,7 +449,7 @@
     .sheet{box-shadow:none;border:none;margin:0;max-width:none;border-radius:0;}
     section,.compare,.callout,.stat{break-inside:avoid;}
     .head{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
-    .stat .num,.compare,.callout,.status,.chip.done{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    .stat .num,.compare,.callout,.status,.chip.done,.skill-panel,.hw-panel,.score-bars,.plan-meter-fill{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
   }
 </style>
 </head>
@@ -352,56 +506,183 @@
 
     <!-- SUMMARY -->
     <section>
-      <p class="lede">Week two was Reading and Writing. We had two tutoring sessions on <strong>Transitions</strong>,
-      the linking-word questions (for example, "however" or "therefore"). Danielle missed all three transition
-      questions on her June 6 diagnostic. This week she scored <strong>96 percent</strong> on her first practice
-      set (26 of 27), <strong>96 percent</strong> on flashcards after we reviewed her misses together, and
-      <strong>88 percent</strong> on the harder untimed set (14 of 16).</p>
-      <p class="lede">She also kept working on <strong>Equivalent Expressions</strong> from week one:
-      <strong>95 percent</strong> on easy problems (goal met) and <strong>72 percent</strong> on medium (still
-      working toward our 95 percent target). On her own she started practice on Command of Evidence and Right
-      Triangles, which we have not taught in a session yet.</p>
-      <p class="lede"><strong>Overall accuracy:</strong> 67 percent on the diagnostic, 89 percent in week one,
-      <strong>91 percent</strong> this week across 93 practice questions.</p>
-      <p class="lede"><strong>Study plan progress:</strong> Her plan lists 11 skills ranked by point value. After
-      two weeks we have taught two in sessions: equivalent expressions (Math, week 1) and transitions (Reading
-      and Writing, week 2). She still needs more homework reps on both before we mark them complete. This week
-      we return to Math and continue in the advanced Math portion of the SAT, which makes up about 35 percent of
-      the Math score.</p>
+      <p class="viz-intro">Week two focused on <strong>Reading and Writing</strong> (linking-word questions). Danielle
+      had two tutoring sessions, finished her assigned homework, and kept working on Math from week one. She is
+      on track for her 1400 goal on August 22.</p>
     </section>
 
-    <!-- ACCURACY THEN/NOW -->
+    <!-- ESTIMATED SCORE -->
     <section>
-      <div class="sec-label">Accuracy, then and now</div>
-      <div class="compare">
-        <div class="cell">
-          <div class="cnum">67%</div>
-          <div class="clab">Diagnostic<br>all topics, timed</div>
+      <div class="sec-label">Estimated SAT score</div>
+      <h2>Before and after, so far</h2>
+      <p class="viz-note">These are estimates based on her diagnostic and two weeks of tutoring and practice.
+      Her first full-length practice test at the end of this week will give a real score.</p>
+      <div class="score-bars">
+        <div class="score-col">
+          <div class="slab">June 6<br>Diagnostic</div>
+          <div class="snum">1100–1150</div>
+          <div class="score-vbar" aria-hidden="true"><div class="score-vfill" style="height:18%;"></div></div>
+          <div class="scap">Starting point before tutoring</div>
         </div>
-        <div class="arrow">
-          <span class="glyph">&#8594;</span>
-          <span class="delta">+24 pts</span>
+        <div class="score-col highlight">
+          <div class="slab">Today<br>After 2 weeks</div>
+          <div class="snum">1200–1225</div>
+          <div class="score-vbar" aria-hidden="true"><div class="score-vfill" style="height:42%;"></div></div>
+          <div class="scap">About +50 to +75 points so far</div>
         </div>
-        <div class="cell">
-          <div class="cnum">91%</div>
-          <div class="clab">This week's practice<br>93 questions</div>
+        <div class="score-col goal">
+          <div class="slab">Aug 22<br>Goal</div>
+          <div class="snum">1400</div>
+          <div class="score-vbar" aria-hidden="true"><div class="score-vfill" style="height:100%;"></div></div>
+          <div class="scap">About 190 points still to go</div>
         </div>
       </div>
-      <p style="margin-top:16px;">Her accuracy went from 67 percent on the diagnostic to 91 percent across 93
-      practice questions in seven days. That is up two points from last week's 89 percent, even as the work
-      shifted to medium Transitions and medium Equivalent Expressions.</p>
-      <p style="margin-top:10px;"><strong>Week-over-week:</strong> Week 1 (Math) · 98 questions · 89%.
-      Week 2 (Reading and Writing + homework) · 93 questions · 91%.</p>
+    </section>
+
+    <!-- SKILL PROGRESS -->
+    <section>
+      <div class="sec-label">Skill progress</div>
+      <h2>How each skill is moving</h2>
+      <p class="viz-note">Each bar shows where she started versus where she is now on practice. Our target is
+      95% before we move on.</p>
+
+      <div class="skill-panel">
+        <div class="skill-row">
+          <div class="skill-name">Transitions (linking words)</div>
+          <div class="skill-plain">Questions that ask for the right word to connect two sentences, like
+          &quot;however&quot; or &quot;therefore.&quot; Taught in sessions this week.</div>
+          <div class="bar-pair">
+            <span class="bar-tag">Before</span>
+            <div class="bar-track"><div class="bar-fill before" style="width:0%;"><span class="bar-pct">0%</span></div></div>
+            <span class="bar-val">0/3</span>
+          </div>
+          <div class="bar-pair">
+            <span class="bar-tag">Now</span>
+            <div class="bar-track"><div class="bar-fill after" style="width:96%;"><span class="bar-pct">96%</span></div></div>
+            <span class="bar-val">26/27</span>
+          </div>
+          <div class="skill-foot">Missed all 3 on the June 6 diagnostic. Now scoring 96% on practice set 1 and
+          96% on flashcards after we reviewed her misses together.</div>
+        </div>
+
+        <div class="skill-row">
+          <div class="skill-name">Equivalent Expressions, easy (Math)</div>
+          <div class="skill-plain">Simplifying and rewriting algebra expressions. Taught in week 1; she kept
+          practicing this week.</div>
+          <div class="bar-pair">
+            <span class="bar-tag">Before</span>
+            <div class="bar-track"><div class="bar-fill before" style="width:35%;"><span class="bar-pct">Low</span></div></div>
+            <span class="bar-val">Missed</span>
+          </div>
+          <div class="bar-pair">
+            <span class="bar-tag">Now</span>
+            <div class="bar-track"><div class="bar-fill after" style="width:95%;"><span class="bar-pct">95%</span></div></div>
+            <span class="bar-val">19/20</span>
+          </div>
+          <div class="skill-foot">Goal met. She is solid on easy-level problems in this skill.</div>
+        </div>
+
+        <div class="skill-row">
+          <div class="skill-name">Equivalent Expressions, medium (Math)</div>
+          <div class="skill-plain">Harder versions of the same algebra skill. Still in progress from week 1.</div>
+          <div class="bar-pair">
+            <span class="bar-tag">Before</span>
+            <div class="bar-track"><div class="bar-fill before" style="width:20%;"><span class="bar-pct">—</span></div></div>
+            <span class="bar-val">New</span>
+          </div>
+          <div class="bar-pair">
+            <span class="bar-tag">Now</span>
+            <div class="bar-track"><div class="bar-fill after-warn" style="width:72%;"><span class="bar-pct">72%</span></div></div>
+            <span class="bar-val">18/25</span>
+          </div>
+          <div class="skill-foot warn">Goal is 95%. She understands the concepts; the remaining misses are mostly
+          sign errors and misreading what the question asks for. We will keep assigning medium sets until she
+          hits 95% on her own.</div>
+        </div>
+
+        <div class="skill-row">
+          <div class="skill-name">Overall practice accuracy (all topics)</div>
+          <div class="skill-plain">Across all homework and practice questions this week and last.</div>
+          <div class="bar-pair">
+            <span class="bar-tag">Before</span>
+            <div class="bar-track"><div class="bar-fill before" style="width:67%;"><span class="bar-pct">67%</span></div></div>
+            <span class="bar-val">Diag.</span>
+          </div>
+          <div class="bar-pair">
+            <span class="bar-tag">Now</span>
+            <div class="bar-track"><div class="bar-fill after" style="width:91%;"><span class="bar-pct">91%</span></div></div>
+            <span class="bar-val">93 Qs</span>
+          </div>
+          <div class="skill-foot">Up from 89% in week 1. She is getting more right even as the questions get
+          harder.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STUDY PLAN PROGRESS -->
+    <section>
+      <div class="sec-label">Study plan progress</div>
+      <h2>2 of 11 priority skills started</h2>
+      <p class="viz-note">Her personalized plan lists 11 skills in order of how many SAT points each is worth.
+      We teach them one at a time until she hits 95% on practice.</p>
+      <div class="plan-meter">
+        <div class="plan-meter-top">
+          <span class="plan-meter-big">2 / 11</span>
+          <span class="plan-meter-sub">skills taught in sessions so far</span>
+        </div>
+        <div class="plan-meter-track" role="img" aria-label="Study plan progress: 2 of 11 skills">
+          <div class="plan-meter-fill">18%</div>
+        </div>
+      </div>
+      <div class="plan-skills">
+        <div class="plan-skill done">
+          <span class="ps-icon">&#10003;</span>
+          <div><strong>Equivalent expressions</strong> (Math, week 1)<br>Easy level done; medium still in progress</div>
+        </div>
+        <div class="plan-skill done">
+          <span class="ps-icon">&#10003;</span>
+          <div><strong>Transitions</strong> (Reading and Writing, week 2)<br>Strong on practice; one timed set left</div>
+        </div>
+        <div class="plan-skill active">
+          <span class="ps-icon">&#8594;</span>
+          <div><strong>Advanced Math</strong> (week 3, starting now)<br>Perfect squares, exponentials, quadratic formula</div>
+        </div>
+        <div class="plan-skill">
+          <span class="ps-icon ps-later">9</span>
+          <div class="ps-later">More skills coming next: command of evidence, area and volume, text structure, and others on her plan</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WEEK OVER WEEK ACCURACY -->
+    <section>
+      <div class="sec-label">Week over week</div>
+      <h2>Practice accuracy by week</h2>
+      <div class="trend-chart">
+        <div class="trend-row">
+          <div class="trend-label">June 6 diagnostic<br><span style="font-size:12px;color:var(--muted);">timed, all topics</span></div>
+          <div class="trend-bar"><div class="trend-fill dim" style="width:67%;"></div></div>
+          <div class="trend-pct">67%</div>
+        </div>
+        <div class="trend-row">
+          <div class="trend-label">Week 1 (June 9–16)<br><span style="font-size:12px;color:var(--muted);">98 questions, Math</span></div>
+          <div class="trend-bar"><div class="trend-fill dim" style="width:89%;"></div></div>
+          <div class="trend-pct">89%</div>
+        </div>
+        <div class="trend-row">
+          <div class="trend-label">Week 2 (June 16–23)<br><span style="font-size:12px;color:var(--muted);">93 questions, R&amp;W + homework</span></div>
+          <div class="trend-bar"><div class="trend-fill current" style="width:91%;"></div></div>
+          <div class="trend-pct">91%</div>
+        </div>
+      </div>
     </section>
 
     <!-- SCORE TRAJECTORY -->
     <section>
-      <div class="sec-label">Score trajectory</div>
-      <h2>Estimated gain so far, and the path to 1400</h2>
-      <p>She has picked up <strong>about 50 to 75 points</strong> since the diagnostic. Week one moved her
-      into the 1150 to 1200 range on Math. Week two adds Reading and Writing points from transitions, where
-      she missed all three questions on the diagnostic and is now scoring in the mid-90s on practice. That puts
-      her around <strong>1200 to 1225</strong> today.</p>
+      <div class="sec-label">Path to 1400</div>
+      <h2>Estimated score over time</h2>
+      <p class="viz-note">Solid line = actual progress so far. Dashed line = projected path if she stays on pace
+      (~25 points per week).</p>
 
       <svg class="traj" viewBox="0 0 600 360" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Line graph projecting Danielle's score from 1100 to 1150 on June 6, through about 1175 after week 1 and about 1210 after week 2, along a curve to 1400 on August 22.">
         <defs>
@@ -467,174 +748,121 @@
       </div>
 
       <div class="verdict">
-        <p><span class="vtag">Verdict: on track.</span> From her 1100 to 1150 starting point, 1400 means gaining
-        about 275 points. We estimate she has gained 50 to 75 of those in two weeks. To hit her goal, she needs
-        to keep up about 25 points a week for the next eight to nine weeks. Transitions went from three misses on
-        the diagnostic to strong scores on practice this week. Medium equivalent expressions in Math still need
-        more reps before she hits our 95 percent target.</p>
+        <p><span class="vtag">On track.</span> She needs about 25 points per week for the next eight to nine weeks
+        to reach 1400. She has gained an estimated 50 to 75 points in the first two weeks.</p>
       </div>
     </section>
 
-    <!-- PRACTICE BY SET -->
+    <!-- HOMEWORK -->
     <section>
-      <div class="sec-label">Homework and practice</div>
-      <h2>What she completed this week</h2>
-      <div class="chips" style="margin-bottom:14px;">
-        <span class="chip done">Transitions 1: 26/27 (96%)</span>
-        <span class="chip done">Equivalent Expressions easy: 19/20 (95%)</span>
-        <span class="chip">Equivalent Expressions medium: 18/25 (72%)</span>
-        <span class="chip">Transitions 2: 22/28 (79%)</span>
-        <span class="chip">Transitions 3 untimed hard: 14/16 (88%)</span>
-        <span class="chip">Transitions 3 timed: 30 hard · due Jun 28</span>
-        <span class="chip">Command of Evidence · independent</span>
-        <span class="chip">Right Triangles · independent</span>
+      <div class="sec-label">Homework this week</div>
+      <h2>What she finished (and what is left)</h2>
+      <div class="hw-panel">
+        <div class="hw-row">
+          <div>
+            <div class="hw-name">Transitions practice set 1</div>
+            <div class="hw-sub">26 of 27 correct · due June 17</div>
+          </div>
+          <span class="hw-badge done">Done 96%</span>
+          <div class="hw-bar"><div class="hw-bar-fill" style="width:96%;"></div></div>
+        </div>
+        <div class="hw-row">
+          <div>
+            <div class="hw-name">Equivalent Expressions, easy</div>
+            <div class="hw-sub">19 of 20 correct · due June 21</div>
+          </div>
+          <span class="hw-badge done">Goal met 95%</span>
+          <div class="hw-bar"><div class="hw-bar-fill" style="width:95%;"></div></div>
+        </div>
+        <div class="hw-row">
+          <div>
+            <div class="hw-name">Equivalent Expressions, medium</div>
+            <div class="hw-sub">18 of 25 correct · goal 95%</div>
+          </div>
+          <span class="hw-badge progress">In progress 72%</span>
+          <div class="hw-bar"><div class="hw-bar-fill warn" style="width:72%;"></div></div>
+        </div>
+        <div class="hw-row">
+          <div>
+            <div class="hw-name">Transitions practice set 2</div>
+            <div class="hw-sub">22 of 28 · reviewed together in session 2</div>
+          </div>
+          <span class="hw-badge progress">Reviewed 79%</span>
+          <div class="hw-bar"><div class="hw-bar-fill warn" style="width:79%;"></div></div>
+        </div>
+        <div class="hw-row">
+          <div>
+            <div class="hw-name">Transitions practice set 3, untimed</div>
+            <div class="hw-sub">14 of 16 correct · harder level</div>
+          </div>
+          <span class="hw-badge done">Done 88%</span>
+          <div class="hw-bar"><div class="hw-bar-fill" style="width:88%;"></div></div>
+        </div>
+        <div class="hw-row">
+          <div>
+            <div class="hw-name">Transitions practice set 3, timed</div>
+            <div class="hw-sub">30 questions in one sitting · due June 28</div>
+          </div>
+          <span class="hw-badge pending">Not started</span>
+          <div class="hw-bar"><div class="hw-bar-fill pending"></div></div>
+        </div>
+        <div class="hw-row">
+          <div>
+            <div class="hw-name">Extra practice on her own</div>
+            <div class="hw-sub">Command of Evidence and Right Triangles (not assigned yet)</div>
+          </div>
+          <span class="hw-badge progress">Self-started</span>
+          <div class="hw-bar"><div class="hw-bar-fill" style="width:40%;opacity:0.5;"></div></div>
+        </div>
       </div>
-      <ul>
-        <li><strong>Transitions 1 (due June 17):</strong> 26 of 27 correct. She finished the full set. The one
-        miss was reviewed in session two.</li>
-        <li><strong>Equivalent Expressions, easy (due June 21):</strong> 19 of 20, 95 percent. Goal met.</li>
-        <li><strong>Equivalent Expressions, medium (due June 21):</strong> 18 of 25, 72 percent. Goal was 95
-        percent. She skipped questions 12 and 16 after long stalls (5+ minutes each). The other misses follow
-        clear patterns (see below).</li>
-        <li><strong>Transitions 2:</strong> 22 of 28. We walked every miss live in session two. After that
-        review she hit 96 percent on portal flashcards.</li>
-        <li><strong>Transitions 3 · Untimed (hard):</strong> 14 of 16, 87.5 percent. Completed before the timed set.</li>
-        <li><strong>Transitions 3 · Timed (hard):</strong> 30 questions, timed. Due June 28. Not yet started.</li>
-        <li><strong>Independent practice (self-assigned):</strong> Command of Evidence and Right Triangles. She
-        started both on her own before we have formally taught them in a session. Command of Evidence is one of
-        the highest-value skills on her plan (she missed 3 on the diagnostic). Triangles showed up on the harder
-        Math module.</li>
-      </ul>
     </section>
 
-    <!-- WHAT WE COVERED -->
+    <!-- SESSIONS -->
     <section>
-      <div class="sec-label">What we covered</div>
-      <h2>Two Reading and Writing sessions: Transitions</h2>
-      <p>Both sessions were hands-on. We used sorting activities, matching drills, and live walk-throughs on
-      the questions she missed on the diagnostic and on her homework.</p>
-      <ul>
-        <li><strong>Session 1 (June 16):</strong> We taught her to cover the blank, explain in plain words how
-        the two sentences connect (contrast, cause, addition, or similarity), then pick the linking word that
-        fits. We worked through all three transition questions she missed on the diagnostic.</li>
-        <li><strong>Session 2 (June 18):</strong> We reviewed her scores on Transitions homework set 1, then
-        worked through medium-level problems together, including several she missed on homework set 2. We also
-        practiced a simple check for cause-and-effect words: if you cannot say &quot;so&quot; between the
-        sentences, the word is not showing cause and effect.</li>
-        <li><strong>Homework path:</strong> Slide deck review, flashcards to 95 percent, then homework sets in
-        order (Transitions 1, then 2, then 3).</li>
+      <div class="sec-label">Sessions this week</div>
+      <h2>Two Reading and Writing sessions on linking words</h2>
+      <ul class="compact-list">
+        <li><strong>Session 1 (June 16):</strong> We taught a step-by-step method and worked through all three
+        linking-word questions she missed on the diagnostic.</li>
+        <li><strong>Session 2 (June 18):</strong> We reviewed her homework scores and walked through every question
+        she missed on the second practice set. After that she scored 96% on flashcards.</li>
       </ul>
-    </section>
-
-    <!-- AHA MOMENTS -->
-    <section>
-      <div class="sec-label">Aha moments</div>
-      <h2>Where it clicked</h2>
-      <ul>
-        <li><strong>She explains how the sentences connect before she reads the answer choices.</strong> By session
-        two she was covering the blank and saying whether the second sentence contrasts, adds, shows cause, or
-        makes a concession. Then she picks the word that matches.</li>
-        <li><strong>When two answer choices mean the same thing, she crosses both out first.</strong> That kept
-        her from picking words that sound right but do not fit the passage.</li>
-        <li><strong>The three transition questions she missed on the diagnostic all made sense on review.</strong>
-        Once she walked through how the sentences relate, she could see why each correct answer fit.</li>
-        <li><strong>After we reviewed her homework misses, she scored 96 percent on flashcards.</strong> That
-        shows the approach stuck once she saw where she went wrong on medium-level problems.</li>
-        <li><strong>The &quot;so&quot; check fixed several cause-and-effect misses.</strong> If she cannot insert
-        &quot;so&quot; between the two sentences, the linking word is not showing cause and effect.</li>
-      </ul>
-    </section>
-
-    <!-- EFFORT -->
-    <section>
-      <div class="sec-label">Effort and engagement</div>
-      <h2>She finished what we assigned, and kept going</h2>
-      <ul>
-        <li><strong>Four tutoring sessions total,</strong> two this week, both Reading and Writing.</li>
-        <li><strong>93 assigned practice questions in seven days,</strong> including full completion of Transitions 1 and
-        both Equivalent Expressions sets.</li>
-        <li><strong>Independent work beyond homework:</strong> Command of Evidence (Reading and Writing) and Right
-        Triangles (Math). She started both on her own before we assigned them in a session, same as week one when
-        she moved into medium equivalent expressions early.</li>
-        <li><strong>She stayed with hard medium math problems.</strong> Even when she skipped two questions, she
-        spent more than five minutes trying before moving on. That tells us exactly where to drill next.</li>
-        <li><strong>Hands-on sessions work best for her.</strong> Sorting activities, matching drills, and live
-        problem work held her attention better than slide-only review.</li>
-      </ul>
-    </section>
-
-    <!-- IMPROVEMENT / EE ANALYSIS -->
-    <section>
-      <div class="sec-label">Math homework: equivalent expressions</div>
-      <h2>Where she still loses points on medium problems</h2>
-      <p>Danielle understands the concepts. She scored <strong>95 percent</strong> on easy problems and
-      <strong>72 percent</strong> on medium. The misses are not random. They fall into four patterns:</p>
-      <ul>
-        <li><strong>Getting signs wrong when distributing through parentheses.</strong> On one problem she
-        flipped a sign inside a trinomial and got the wrong final answer for a + b.</li>
-        <li><strong>Forgetting to combine x&sup2; terms after expanding squared expressions.</strong> She got
-        the other parts of the problem right but left 3x&sup2; instead of x&sup2; because she did not subtract
-        the second squared term.</li>
-        <li><strong>Long multi-step problems where she ran out of steam.</strong> She skipped two questions after
-        trying for more than five minutes each. These required expanding, combining, and then factoring.</li>
-        <li><strong>Reading the question too fast and answering for the wrong variable.</strong> She often finds
-        the right value but submits the wrong letter, or gives a reciprocal when the question asks for a ratio.</li>
-      </ul>
-      <p><strong>What we will do:</strong> Keep assigning medium sets until she hits 95 percent on her own. The
-      gaps are execution (signs, combining like terms, reading what the question asks for), not concept. This
-      week's Math sessions on perfect squares and the quadratic formula build on the same algebra skills.</p>
     </section>
 
     <!-- PLAN -->
     <section>
-      <div class="sec-label">The plan from here</div>
-      <h2>What is next</h2>
+      <div class="sec-label">What's next</div>
+      <h2>This week, June 23 to 30</h2>
       <div class="plan-week">
-        <div class="plan-when">This week, June 23 to 30</div>
-        <div class="plan-what">Two Math sessions in the advanced Math section</div>
-        <div class="plan-note">We will continue in the advanced Math portion of the SAT, which covers about 35
-        percent of the Math score. Topics: perfect squares, exponentials, the quadratic formula, and the
-        discriminant. We will review five questions she missed on the diagnostic, all in the same skill area:
-        nonlinear equations and systems. We will also revisit one hard equivalent expressions question from the
-        diagnostic once the perfect-square patterns are solid. She is still finishing medium equivalent
-        expressions homework from week one.</div>
+        <div class="plan-when">Math sessions (2)</div>
+        <div class="plan-what">Continue in the advanced Math section (~35% of the SAT Math score)</div>
+        <div class="plan-note">Topics: perfect squares, exponentials, the quadratic formula, and the discriminant.
+        We will review five questions she missed on the diagnostic in this same topic area. She will also keep
+        working medium equivalent expressions homework until she hits 95%.</div>
       </div>
       <div class="plan-week">
-        <div class="plan-when">End of this week, June 23 to 30</div>
-        <div class="plan-what">First full-length practice test under real test conditions</div>
-        <div class="plan-note">Danielle will take her first full-length practice test at the end of the week.
-        Her June 6 diagnostic is the starting baseline (~1100 to 1150). This retake shows how much her score
-        has moved after two weeks of tutoring and homework, and whether she is on track for 1400 on August 22.
-        The first-month checkpoint on her plan is about +100 points (roughly 1225 or higher).</div>
+        <div class="plan-when">End of week</div>
+        <div class="plan-what">First full-length practice test</div>
+        <div class="plan-note">Danielle will take her first full SAT practice test under real test conditions.
+        This will show her actual score compared to the June 6 diagnostic and whether she is on track for 1400.
+        First-month checkpoint: about +100 points (roughly 1225 or higher).</div>
       </div>
       <div class="plan-week">
-        <div class="plan-when">Homework carryover</div>
-        <div class="plan-what">Finish Transitions 3 timed set; keep medium equivalent expressions until 95%</div>
-        <div class="plan-note">Transitions 3 timed: 30 hard questions in one sitting, due June 28. She finished
-        the untimed set at 14 of 16. She should keep running medium equivalent expressions sets until she hits
-        95 percent without skipping. Transitions homework sets 1 and 2 are in good shape after session review
-        and flashcards.</div>
+        <div class="plan-when">Homework due</div>
+        <div class="plan-what">Finish Transitions timed set (June 28) + medium math sets</div>
+        <div class="plan-note">One timed linking-word set left. Keep running medium equivalent expressions until
+        95% without skipping.</div>
       </div>
-      <div class="plan-week">
-        <div class="plan-when">Scheduled for later (not this week's sessions)</div>
-        <div class="plan-what">Text structure, area and volume, words in context</div>
-        <div class="plan-note">Danielle is practicing command of evidence and triangles on her own. We will
-        teach both formally in upcoming sessions. We will not pull other topics forward unless her practice test
-        shows she is slipping on something we already covered.</div>
-      </div>
-      <p style="margin-top:16px;">Sessions stay hands-on: live problems, whiteboard work, and short drills
-      instead of long lectures.</p>
     </section>
 
     <!-- BOTTOM LINE -->
     <section>
       <div class="callout">
         <div class="sec-label">Bottom line</div>
-        <h2>On track</h2>
-        <p>After two weeks Danielle is on pace for her August 22 goal of 1400. She improved sharply on transitions
-        (from missing all three on the diagnostic to 96 percent on practice). Medium equivalent expressions in
-        Math still need more reps. Her first full-length practice test at the end of this week will show her
-        actual score improvement since June 6 and whether she is on track.</p>
+        <h2>On track for 1400</h2>
+        <p>After two weeks Danielle is on pace for her August 22 goal. Linking words went from 0 of 3 on the
+        diagnostic to 96% on practice. Medium math expressions still need more reps. Her practice test at the
+        end of this week will show her real score progress.</p>
       </div>
     </section>
 
