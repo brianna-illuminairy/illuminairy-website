@@ -4,11 +4,11 @@ import { useEffect, useState } from "react";
 
 /**
  * Below-fold UI only — never keyed off LCP (mounting content on LCP steals LCP).
- * Shows after first engagement or a delay past the LCP window.
+ * Default: engagement only (scroll/tap). Optional delayMs for non-cold pages.
  */
 export function useDeferUntilEngagedOrDelayed(
   enabled: boolean,
-  delayMs = 8000
+  delayMs: number | null = null
 ): boolean {
   const [ready, setReady] = useState(!enabled);
 
@@ -33,7 +33,9 @@ export function useDeferUntilEngagedOrDelayed(
     window.addEventListener("touchstart", onEngage, eventOpts);
     window.addEventListener("scroll", onEngage, eventOpts);
 
-    timeoutId = window.setTimeout(fire, delayMs);
+    if (delayMs != null && delayMs > 0) {
+      timeoutId = window.setTimeout(fire, delayMs);
+    }
 
     function cleanup() {
       window.removeEventListener("pointerdown", onEngage, eventOpts);

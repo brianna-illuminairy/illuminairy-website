@@ -11,7 +11,7 @@ type DeferredBelowFoldProps = {
   force?: boolean;
 };
 
-/** Renders below-the-fold UI after engagement or delay — never on LCP (that would steal LCP). */
+/** Renders below-the-fold UI after scroll/tap — never on LCP or a timer (both steal LCP in lab). */
 export function DeferredBelowFold({ children, force = false }: DeferredBelowFoldProps) {
   const pathname = usePathname();
   const defer = force || isMarketingDeferPath(pathname);
