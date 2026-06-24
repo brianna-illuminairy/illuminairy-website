@@ -1,0 +1,27 @@
+---
+description: Plain parent voice for weekly progress reports (portal HTML + email)
+globs:
+  - content/**/weekly-report*.html
+  - lib/**/*weekly-report*.ts
+  - docs/leads/*weekly-report*.md
+---
+
+# Weekly progress report style
+
+**Full guide:** [`docs/weekly-progress-report-style.md`](../../docs/weekly-progress-report-style.md)
+
+## Formula (required order)
+
+1. **Overview** — six sentences: on/off track · score + pts since last week · sessions + practice count · topics · skill/accuracy gains · next week
+2. **Score Progression** — chart
+3. **Weekly Summary** — each session + topic
+4. **Aha Moments**
+5. **Practice & Homework** (complete ≠ accuracy)
+6. **Skills & Accuracy**
+7. **What's Next**
+
+## Voice
+
+Plain, direct, owner copy verbatim when provided. No passage codenames in aha bullets. No tutor jargon or defensive disclaimers.
+
+Also enforce [`messaging-guide.mdc`](messaging-guide.mdc) and [`banned-copy-phrases.mdc`](banned-copy-phrases.mdc).

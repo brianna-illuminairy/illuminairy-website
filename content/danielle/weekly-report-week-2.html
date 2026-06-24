@@ -151,6 +151,13 @@
   p{margin:0 0 14px;}
   p:last-child{margin-bottom:0;}
   .lede{font-size:17px;}
+  .overview p{font-size:16px;line-height:1.6;margin:0 0 12px;}
+  .overview p:last-child{margin-bottom:0;}
+  .session-label{
+    font-family:'Space Mono',monospace;font-size:11px;text-transform:uppercase;
+    letter-spacing:0.12em;color:var(--tomato);margin:20px 0 10px;
+  }
+  .session-label:first-of-type{margin-top:0;}
 
   ul{list-style:none;margin:6px 0 0;padding:0;}
   li{
@@ -239,6 +246,7 @@
   .traj .t-pt{font-family:'Fraunces',serif;font-weight:600;font-size:15px;fill:var(--ink);}
   .traj .t-pt.strong{font-size:18px;fill:var(--forest-deep);}
   .traj .t-pt.goal{fill:var(--tomato);font-weight:700;}
+  .traj .t-axis{font-size:11px;fill:var(--muted);letter-spacing:0.08em;}
   .path-grid{
     display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px;
   }
@@ -597,15 +605,29 @@
 
   <div class="body">
 
-    <!-- 1 · PROGRESS TOWARD GOAL -->
+    <!-- OVERVIEW -->
     <section>
-      <h2>How much progress has she made toward her goal?</h2>
-      <p class="score-headline">June 6 practice test: <strong>1100–1150</strong> (1125 midpoint)
-      <span class="arrow">→</span> <strong>~1210</strong> today (+85 points)</p>
-      <p>Her goal is <strong>1400</strong> on August 22. We estimate she has gained about <strong>85 points</strong>
-      so far (~190 left to goal). This is based on homework and sessions until she takes a full practice test this
-      week.</p>
-      <svg class="traj" viewBox="0 0 600 360" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Estimated score from 1100 to 1150 on June 6, through about 1175 after week 1 and about 1210 after week 2, toward 1400 on August 22.">
+      <h2>Overview</h2>
+      <div class="overview">
+        <p>Danielle is <strong>on track</strong> for her goal of <strong>1400</strong> on the August 22 test.</p>
+        <p>We estimate her score at about <strong>1210</strong> today, up about <strong>35 points</strong> from
+        about <strong>1175</strong> last week (<strong>85 points</strong> total since her June 6 practice test at
+        1125).</p>
+        <p>She completed <strong>2 tutoring sessions</strong> and <strong>116 practice problems</strong> this week
+        (71 on Transitions, 45 on equivalent expressions).</p>
+        <p>Both sessions were Reading and Writing on <strong>Transitions</strong>. She also kept working week-one
+        Math homework on nonlinear equations and equivalent expressions.</p>
+        <p>Transitions accuracy moved from missing all three on the June 6 test to 96% on flashcards and 87% across
+        transition problem sets; overall homework accuracy rose from 89% to 91%.</p>
+        <p>Next week: two Math sessions on nonlinear functions and nonlinear equations, her first full-length practice
+        test, and finishing the timed Transitions homework set.</p>
+      </div>
+    </section>
+
+    <!-- SCORE PROGRESSION -->
+    <section>
+      <h2>Score Progression</h2>
+      <svg class="traj" viewBox="0 0 600 360" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Estimated score from 1125 on June 6, through 1175 after week 1 and 1210 after week 2, toward 1400 on August 22.">
         <defs>
           <linearGradient id="trajFill" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stop-color="var(--forest)" stop-opacity="0.16"/>
@@ -639,64 +661,76 @@
         <circle cx="148" cy="239.75" r="6" fill="#fbf7ee" stroke="var(--forest)" stroke-width="2.5"/>
         <circle cx="212" cy="201.25" r="7" fill="var(--forest)" stroke="#fbf7ee" stroke-width="2.5"/>
         <circle cx="576" cy="66.5" r="7" fill="#fbf7ee" stroke="var(--tomato)" stroke-width="3.5"/>
-        <text class="t-pt" x="78" y="276" text-anchor="end">1100-1150</text>
-        <text class="t-pt" x="142" y="234" text-anchor="end">~1175 wk1</text>
-        <text class="t-pt strong" x="206" y="196" text-anchor="end">~1210 now</text>
+        <text class="t-pt" x="84" y="268" text-anchor="middle">1125</text>
+        <line x1="148" y1="246" x2="148" y2="336" stroke="var(--muted)" stroke-width="1" stroke-dasharray="3 4"/>
+        <text class="t-pt" x="148" y="228" text-anchor="middle">1175</text>
+        <text class="t-axis" x="148" y="353" text-anchor="middle">WK1</text>
+        <line x1="212" y1="209" x2="212" y2="336" stroke="var(--muted)" stroke-width="1" stroke-dasharray="3 4"/>
+        <text class="t-pt strong" x="212" y="188" text-anchor="middle">1210</text>
+        <text class="t-axis" x="212" y="353" text-anchor="middle">WK2</text>
         <text class="t-pt goal" x="576" y="54" text-anchor="end">1400 GOAL</text>
       </svg>
     </section>
 
-    <!-- 2 · SESSIONS -->
+    <!-- WEEKLY SUMMARY -->
     <section>
-      <h2>How many sessions did she have, and what did we cover?</h2>
-      <p><strong>2 sessions this week</strong> (4 total since tutoring started). Both were one-hour Reading and Writing
-      sessions on <strong>Transitions</strong>, June 16 and June 18.</p>
-      <p>On the test she reads two sentences with a blank between them and picks the transition
-      (&ldquo;Therefore,&rdquo; &ldquo;Furthermore,&rdquo; &ldquo;In contrast,&rdquo; and similar) that fits how the
-      second sentence relates to the first.</p>
-      <p>The method: read sentence 1, read sentence 2, say in plain words what sentence 2 is doing (adding on,
-      contrasting, cause and effect, and so on), then pick the transition that matches. Part of this is memorizing which
-      transitions go with which relationships. To help with that, we built a <strong>Transitions flashcard deck</strong> on
-      her portal. She ran it until she reached <strong>96% accuracy</strong>.</p>
-      <p>She missed all three transition questions on the June 6 practice test. While learning transitions, she also
-      kept up week-one Math homework on <strong>nonlinear equations</strong> and <strong>equivalent expressions</strong>
-      (factoring, expanding, difference of squares, squared binomials, and similar patterns). That algebra shows up across
-      most of the curved-graph and equation problems on the Math section.</p>
+      <h2>Weekly Summary</h2>
+      <p class="session-label">Session 1 · Tuesday, June 16</p>
+      <p>This week we focused on transitions. Transitions are a type of Reading and Writing question which provides
+      you with two clauses with a blank between them, and it asks you to pick the transition term or phrase
+      (&ldquo;Therefore,&rdquo; &ldquo;Furthermore,&rdquo; &ldquo;In contrast,&rdquo; and similar) that connects the
+      clauses.</p>
+      <p>We taught her how to solve these types of questions. First, you read both clauses, then you determine the
+      relationship between them. For instance, does sentence two add on to sentence one or is it in contrast or
+      disagreement with sentence one? We taught her the different categories of relationships that appear on the SAT.
+      Then we taught her the terms that appear on the SAT for each category. From there, she was given a flashcard deck
+      to memorize the terms for each relationship type and assigned practice problems to reinforce what she learned.</p>
+      <p class="session-label">Session 2 · Thursday, June 18</p>
+      <p>Session 2 focused on reviewing her <strong>7 mistakes</strong> from her practice problems and going even
+      deeper into transitions, so that we could improve her accuracy on medium and hard questions. She answered all
+      7 correctly when we walked through them together.</p>
+      <p>While she was learning this week&rsquo;s content on transitions, she was still practicing and completing
+      homework from last week&rsquo;s lessons on nonlinear equations and equivalent expressions. Equivalent expressions:
+      19 of 20 on easy (95%), 18 of 25 on medium (72%), both assignments complete. She kept her week 1 nonlinear
+      equation practice going as well.</p>
+      <p>Factoring, expanding, difference of squares, squared binomials, and similar patterns show up on most
+      curved-graph and equation problems in Math. We will keep building on this skill in the weeks ahead.</p>
     </section>
 
-    <!-- 3 · AHA MOMENTS -->
+    <!-- AHA MOMENTS -->
     <section>
-      <h2>What aha moments did she have?</h2>
-      <p>We built a flashcard deck on her portal. She practiced until she reached <strong>96% accuracy</strong>. Once
-      she could name how the second sentence relates to the first, she answered correctly a question she had gotten
-      wrong on the June 6 practice test.</p>
-      <p class="viz-note" style="margin-bottom:14px;"><strong>Tuesday, June 16</strong></p>
+      <h2>Aha Moments</h2>
+      <p>For transitions, she studied the transition terms flashcard deck and practiced until she reached 96%
+      accuracy. That is, she was able to see a term and name the relationship it represents accurately 96% of the
+      time.</p>
+      <p class="viz-note" style="margin-bottom:14px;"><strong>Session 1 · Tuesday, June 16</strong></p>
       <ul class="compact-list">
-        <li><strong>Wallace Stevens (from the June test).</strong> She said the second sentence disagrees with the
-        first, chose Nonetheless, and got it right.</li>
-        <li><strong>Cosmic Canvas.</strong> The passage starts with colorful nebulae, then the subtitle brings it back
-        to ordinary paint swatches. She named that as a shift over time, not just more detail on the same idea.</li>
-        <li><strong>Rhythmicity study.</strong> The second sentence softens what the first claims. Granted fit once
-        she said that out loud.</li>
-        <li><strong>Similar wrong answers.</strong> When two choices mean the same kind of link, she crosses both out
-        and rereads before picking.</li>
+        <li><strong>Name the relationship first.</strong> She reads both clauses, says in plain words how they connect,
+        then picks the transition — before looking at the answer choices.</li>
+        <li><strong>June 6 practice test.</strong> She reworked all three transition questions she missed on that test
+        using the method (disagreement, change in direction, and softening what the first sentence claimed).</li>
+        <li><strong>Look-alike answer choices.</strong> When two choices mean the same type of connection, she crosses
+        both out and rereads the sentences instead of guessing.</li>
       </ul>
-      <p class="viz-note" style="margin:18px 0 14px;"><strong>Thursday, June 18</strong></p>
+      <p class="viz-note" style="margin:18px 0 14px;"><strong>Session 2 · Thursday, June 18</strong></p>
+      <p>Session 2 focused on her <strong>7 homework mistakes</strong> (1 easy, 6 medium) and going deeper on
+      transitions to improve medium and hard accuracy. She answered all 7 correctly when we walked through them
+      together.</p>
       <ul class="compact-list">
-        <li><strong>Telling similar links apart.</strong> She practiced finer types: adding information, restating
-        more strongly, contrast, cause and effect, and sequence.</li>
-        <li><strong>Cause and effect.</strong> Before picking Therefore or Consequently, she checks whether sentence 2
-        truly follows from sentence 1.</li>
-        <li><strong>Billy Joel (homework).</strong> Twenty-five years later he went back for his degree, a turnaround
-        from saying he did not care. Nonetheless fit better than Inevitably.</li>
-        <li><strong>Bauhaus (homework).</strong> The second sentence strengthens the first; In fact fit better than a
-        cause-and-effect word.</li>
+        <li><strong>Cause vs. similar facts.</strong> When sentence 2 happens because of sentence 1, Therefore or
+        Consequently fit — not Likewise.</li>
+        <li><strong>Turnaround.</strong> When sentence 2 reverses an earlier attitude, Nonetheless fit better than a
+        word that made the outcome sound inevitable.</li>
+        <li><strong>Strengthening.</strong> When sentence 2 backs up sentence 1 more strongly, In fact fit — not
+        Therefore or another cause-and-effect word.</li>
+        <li><strong>The &ldquo;so&rdquo; test.</strong> Before picking a cause-and-effect word, she checks whether
+        &ldquo;sentence 1, so sentence 2&rdquo; reads naturally.</li>
       </ul>
     </section>
 
     <!-- 4 · PRACTICE PROBLEMS -->
     <section>
-      <h2>How many practice problems did she do on those topics?</h2>
+      <h2>Practice &amp; Homework</h2>
       <p class="viz-note"><strong>Complete</strong> = she finished the assignment. <strong>Accuracy</strong> = how many
       she got right.</p>
       <p class="hw-group-label">Reading and Writing · Transitions</p>
@@ -792,7 +826,7 @@
 
     <!-- 5 · SKILLS AND ACCURACY -->
     <section>
-      <h2>What improvement in her skills and accuracy did we see?</h2>
+      <h2>Skills &amp; Accuracy</h2>
       <p><strong>Transitions:</strong> She missed all three on the June 6 test. She reached 96% on the flashcard deck
       we built for memorizing transitions. On assigned problem sets she is at 96%, 79%, and 88% on the three
       finished sets (62 of 71 correct overall).</p>
@@ -832,7 +866,7 @@
 
     <!-- 6 · WHAT'S NEXT -->
     <section>
-      <h2>What&rsquo;s next?</h2>
+      <h2>What&rsquo;s Next</h2>
       <p><strong>Two Math sessions</strong> on nonlinear functions and nonlinear equations. We will focus on special
       cases of factoring, such as difference of squares, squared binomials, and similar patterns.</p>
       <p><strong>First full practice test</strong> at the end of the week (real score check vs June 6).</p>

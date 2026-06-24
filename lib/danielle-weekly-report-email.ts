@@ -1,6 +1,8 @@
 import { Resend } from "resend";
 import { site } from "@/lib/site";
 
+/** Parent email copy for weekly reports. Match tone + facts in docs/weekly-progress-report-style.md */
+
 export type DanielleWeeklyReportWeekKey = "week-1" | "week-2";
 
 export type DanielleWeeklyReportEmailInput = {

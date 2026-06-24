@@ -14,6 +14,7 @@ This is **not** a coursework or AIMA assignment repo. Do not apply academic “s
 |----------|------|
 | [`memory-bank/`](memory-bank/README.md) | Persistent context — update `activeContext.md` and `progress.md` when you finish meaningful work |
 | [`docs/leads/`](docs/leads/) | Per-lead Strategy Call context + follow-up plans (e.g. `shelly-sood-context.md`) |
+| [`docs/weekly-progress-report-style.md`](docs/weekly-progress-report-style.md) | **Weekly progress reports:** plain parent voice, six sections, session-by-session — exemplar `content/danielle/weekly-report-week-2.html` |
 | [`docs/architecture.md`](docs/architecture.md) | Routes, APIs, integrations, folder layout |
 | [`docs/decisions/`](docs/decisions/README.md) | Why we chose stacks and patterns — add an ADR for non-trivial choices |
 | [`docs/designer-brief.md`](docs/designer-brief.md) | Brand doc index |
