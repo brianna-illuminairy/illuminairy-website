@@ -25,7 +25,7 @@ Equivalent expressions homework: 95% easy, 72% medium — same algebra runs on m
 Overall practice: 67% on June 6 diagnostic (66/98) → 89% week 1 → 91% week 2.
 Module routing: harder Module 2 in both sections; RW 19/27 and Math 16/22 in Module 1 (1 question above cutoff each).
 On her own: started #3 Command of evidence practice (3 diagnostic misses; not taught in sessions yet).
-Estimated score ~1200–1225 today vs 1100–1150 diagnostic. Goal 1400 on August 22.
+Estimated score ~1210 today (1125 Jun 6 midpoint + ~85 points gained). Goal 1400 on August 22.
 
 This week:
 

@@ -47,20 +47,18 @@ const WEEKLY_REPORT_CONTENT: Record<DanielleWeeklyReportWeekKey, WeeklyReportEma
     reportPath: "/danielle/week-2/report",
     subjectDateRange: "June 16–23, 2026",
     highlights: [
-      "Completed 2 one-hour tutoring sessions on Reading and Writing — study plan #7 Transitions (+22 modeled pts)",
-      "Diagnostic: missed 3 transitions (easy, medium, hard). Practice now: 96% set 1, 96% flashcards, 88% hard untimed",
-      "Week 1: factoring and equivalent expressions (foundation for #4/#5 Advanced Math) plus #5 Nonlinear equations (+24): 2 diagnostic misses; 8 equation items on the test (13 with #4)",
-      "Equivalent expressions homework: 95% easy, 72% medium — same algebra runs on most quadratics and nonlinear items, not just the one EE question type",
-      "Overall practice: 67% on June 6 diagnostic (66/98) → 89% week 1 → 91% week 2",
-      "Module routing: harder Module 2 in both sections; RW 19/27 and Math 16/22 in Module 1 (1 question above cutoff each)",
-      "On her own: started #3 Command of evidence practice (3 diagnostic misses; not taught in sessions yet)",
-      "Estimated score ~1200–1225 today vs 1100–1150 diagnostic. Goal 1400 on August 22"
+      "Both sessions went in depth on Reading and Writing Transitions: read two clauses, name the relationship (addition, contrast, cause, and similar), then pick the transition that fits",
+      "She missed all three transition questions on the June 6 practice test. Homework is now 96% on set 1, 96% on flashcards, and 88% on hard untimed",
+      "While learning transitions she kept week-one Math going: nonlinear equations (her most common math topic) and equivalent expressions (factoring and simplifying)",
+      "Equivalent expressions homework: easy 19/20 (95%, complete), medium 18/25 (72%, complete)",
+      "Overall homework accuracy: 67% on June 6 → 89% week 1 → 91% week 2",
+      "Estimated score ~1210 today: 1125 starting midpoint + ~85 points gained. Goal 1400 on August 22"
     ],
     thisWeek: [
-      "Finish #7 Transitions timed homework (30 questions, due June 28)",
-      "Two Math sessions: #4 Nonlinear functions + continue #5 Nonlinear equations (quadratic formula, discriminant; review both diagnostic misses in #5)",
-      "Keep equivalent expressions medium sets until 95%",
-      "First full-length practice test at end of week — real score vs June 6 baseline (first-month checkpoint: about +100 pts, roughly 1225+)",
+      "Finish Transitions timed homework (30 questions, due June 28)",
+      "Two Math sessions on nonlinear functions and nonlinear equations, with special factoring cases (difference of squares, squared binomials, and similar patterns)",
+      "Keep reviewing medium equivalent expression miss types until 95% accuracy (assignment already complete)",
+      "First full-length practice test at end of week",
       "Sessions stay hands-on: live problems and drills"
     ]
   }
