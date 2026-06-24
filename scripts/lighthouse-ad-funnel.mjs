@@ -34,7 +34,7 @@ const TARGETS = [
     path: "/sat-plan-builder?utm_source=meta&utm_medium=paid_social&utm_campaign=c1_sat_plan_builder_cold_creative_test&utm_content=ad3_before_tutoring_hd1080&utm_term=broad_moms_35_58&hook=tutor&version=hd1080&pb=b",
     perfMin: 85,
     lcpMaxMs: 2500,
-    lcpHint: "Hero H1 (.lp-h1)",
+    lcpHint: "Hero or trust (first HTML)",
   },
   {
     id: "funnel-plan-b-entry",

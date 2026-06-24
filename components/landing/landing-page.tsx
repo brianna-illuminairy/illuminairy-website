@@ -16,8 +16,8 @@ import { landingShared } from "@/lib/landing/content";
 import { lpVariantFromHeroHook } from "@/lib/landing/lp-variant";
 import { landingSearchQuery } from "@/lib/landing/landing-search";
 import { resolveMetaLandingContext } from "@/lib/landing/meta-traffic";
-import { planBuilderEntryFromLanding, SAT_PLAN_BUILDER_LP_PATH } from "@/lib/plan-builder-routes";
-import { planBuilderBEntryFromLanding, shouldRouteLandingCtaToPlanBuilderB } from "@/lib/plan-builder-b-routes";
+import { planBuilderEntryFromLanding } from "@/lib/plan-builder-routes";
+import { isColdPlanBLandingPath, planBuilderBEntryFromLanding, shouldRouteLandingCtaToPlanBuilderB } from "@/lib/plan-builder-b-routes";
 import { useDeferUntilEngagedOrLcp } from "@/lib/defer-until-engaged-or-lcp";
 import { isMarketingDeferPath } from "@/lib/perf-defer-paths";
 import {
@@ -109,7 +109,7 @@ export function LandingPage({ landingPath = "/", planBuilderB: planBuilderBForce
   );
 
   const handleHeroPainted = useCallback(() => {
-    if (landingPath !== SAT_PLAN_BUILDER_LP_PATH) return;
+    if (!isColdPlanBLandingPath(landingPath)) return;
     document.getElementById("ad-lp-ssr")?.remove();
   }, [landingPath]);
 

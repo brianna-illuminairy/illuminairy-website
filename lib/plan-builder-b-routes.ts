@@ -18,6 +18,17 @@ export const PLAN_BUILDER_B_PATH = "/plan-b";
 /** Meta / QA entry for Plan Builder B lab — same hero hooks as `/sat-plan-builder`, routes CTA to `/plan-b`. */
 export const SAT_FREE_LESSON_LP_PATH = "/sat-free-lesson";
 
+/** Cold Meta + QA LPs that share SSR shell + critical CSS (see `ColdPlanBLanding`). */
+export const COLD_PLAN_B_LANDING_PATHS = [
+  "/sat-plan-builder",
+  SAT_FREE_LESSON_LP_PATH,
+] as const;
+
+export function isColdPlanBLandingPath(pathname: string | null | undefined): boolean {
+  if (!pathname) return false;
+  return (COLD_PLAN_B_LANDING_PATHS as readonly string[]).includes(pathname);
+}
+
 export const PLAN_BUILDER_B_QUERY_PARAM = "pb";
 export const PLAN_BUILDER_B_QUERY_VALUE = "b";
 

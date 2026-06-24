@@ -1,10 +1,14 @@
 # Active context
 
-*Last updated: 2026-06-22 (50-state Plan B regional schools)*
+*Last updated: 2026-06-24 (Plan B cold LP perf)*
 
 ## Resume here (start next chat with this)
 
-**50-state Plan B target schools shipped in code** — zip → state, SAT ≥1200 picker with sparse-state exception.
+**Plan B cold LP perf (2026-06-24)** — `/sat-plan-builder` SSR ships headline + trust + CTA link in first HTML; `/plan-b` SSR step 1. See `growth/cold-funnel-perf.md`, `ColdPlanBLanding`, `npm run perf:cold-funnel`.
+
+---
+
+## Previous: 50-state Plan B regional schools (2026-06-22)
 
 - **SSOT:** `lib/plan-b/school-catalog-data.ts`, `build-regional-market.ts`, `regional-schools.ts`
 - **Validate:** `npm run plan-b:validate-regional-schools` (in `agent:verify`)

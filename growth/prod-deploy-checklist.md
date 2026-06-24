@@ -40,14 +40,11 @@ Verify Vercel **Production** env matches `.env.local`:
 ## Sign-off
 
 - [ ] LP viewport + speed QA complete ([b3-lp-viewport-qa.md](./b3-lp-viewport-qa.md))
-- [ ] **Cold traffic Lighthouse (mobile)** — landing **and** funnel before Meta scale:
+- [ ] **Cold traffic QA** — lab + **iPhone IG browser** before Meta scale ([cold-funnel-perf.md](./cold-funnel-perf.md)):
   ```bash
   LIGHTHOUSE_BASE=https://illuminairy.com npm run perf:cold-funnel
   ```
-  Record scores in PR or experiment log. Targets: **Performance ≥ 85**, **LCP ≤ 2.5s** on both:
-  - **Landing:** `/sat-plan-builder` (ad3 UTMs + `pb=b`) — LCP should be hero H1
-  - **Funnel:** `/plan-b?step=q1-parent-child&pb=b` — LCP should be “Who needs SAT help?”
-  See [cold-funnel-perf.md](./cold-funnel-perf.md). Scope one surface: `LIGHTHOUSE_SCOPE=landing` or `=funnel`.
+  Lab: Perf ≥ 85, LCP ≤ 2.5s on landing + funnel. Phone: headline, trust quote, and CTA in ~2s; CTA navigates before JS; funnel step 1 without blank flash.
 - [ ] Prod homepage is B3 long-form (not short Variant A)
 - [ ] **`npm run funnel:analytics-smoke`** against prod/preview (or manual checklist below)
 - [ ] Meta Test Events: ViewContent + FunnelCTA on LP; ParentConfirmed on `q1-parent-child` **My child** only

@@ -1,8 +1,5 @@
 import type { Metadata } from "next";
-import { AdLpCriticalCss } from "@/components/cold-funnel/critical-css";
-import { DeferredStylesheet } from "@/components/cold-funnel/deferred-stylesheet";
-import { AdLpHeroShell, buildAdLpSearchQuery } from "./AdLpHeroShell";
-import { SatPlanBuilderClient } from "./SatPlanBuilderClient";
+import { ColdPlanBLanding } from "@/components/cold-funnel/cold-plan-b-landing";
 
 export const metadata: Metadata = {
   title: "Free SAT Improvement Plan · Illuminairy",
@@ -27,16 +24,8 @@ type SatPlanBuilderPageProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
+/** Live Meta ad LP → `/plan-b`. Above-fold is fully SSR (headline, trust, CTA link). */
 export default async function SatPlanBuilderLandingPage({ searchParams }: SatPlanBuilderPageProps) {
   const sp = await searchParams;
-  const searchQuery = buildAdLpSearchQuery(sp);
-
-  return (
-    <div className="lp-cold-perf">
-      <AdLpCriticalCss />
-      <DeferredStylesheet route="ad-lp" />
-      <AdLpHeroShell searchQuery={searchQuery} />
-      <SatPlanBuilderClient />
-    </div>
-  );
+  return <ColdPlanBLanding searchParams={sp} landingPath="/sat-plan-builder" />;
 }

@@ -29,9 +29,8 @@ type V4PageProps = {
 };
 
 /**
- * Compact, single-screen LP — minimal/no scrolling. The hero CTA stays above
- * the fold across the viewport matrix (incl. FB/IG in-app browsers via the
- * short-viewport CSS in landing-v4.css), so there is no sticky CTA bar.
+ * Compact, single-screen LP — minimal/no scrolling. Trust quote renders immediately
+ * (SSR on cold Plan B paths); footer defers until scroll on cold paths.
  */
 export function V4Page({ search, heroHook, landingPath, planBuilderB, onCta, onHeroPainted }: V4PageProps) {
   const query = search.startsWith("?") ? search : search ? `?${search}` : "";

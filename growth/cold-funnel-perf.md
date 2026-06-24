@@ -1,70 +1,75 @@
-# Cold traffic perf gate — landing + funnel
+# Cold traffic perf — Plan Builder B (landing + funnel)
 
-Mobile Lighthouse for **both** parts of the cold Meta path:
+**Goal:** Parents on a cold Meta tap see headline, trust quote, and a working CTA fast — then step 1 of `/plan-b` without a blank flash. Lab scores are a regression guard, not the product target.
 
-1. **Landing page** — parent sees the ad message and taps the CTA (`/sat-plan-builder`)
-2. **Quiz funnel** — first question after the tap (`/plan-b?step=q1-parent-child`)
+**Live ad path:** `/sat-plan-builder` (ad3 tutor UTMs + `pb=b`) → `/plan-b?step=q1-parent-child`
 
-Both must pass before scaling ad spend.
+**Not in this gate:** Homepage `/`, `/plan`, legacy B3 long-form LPs.
 
-## Targets (lab, simulated mobile)
+---
 
-| Surface | ID | URL | Perf | LCP |
-|---------|-----|-----|------|-----|
-| **Landing** — ad3 LP | `landing-ad3` | `/sat-plan-builder?…&hook=tutor&pb=b` | ≥ 85 | ≤ 2.5s |
-| **Funnel** — Plan B step 1 | `funnel-plan-b-entry` | `/plan-b?step=q1-parent-child&pb=b` | ≥ 85 | ≤ 2.5s |
+## What we ship (fixed contract — no runtime “defer trust” decisions)
 
-LCP on landing should be **hero or trust copy** in the first HTML response — not footer or content that waits on JavaScript.
+| Layer | `/sat-plan-builder` + `/sat-free-lesson` (QA) | `/plan-b` step 1 |
+|-------|-----------------------------------------------|------------------|
+| **First HTML** | Headline, authority line, trust quote, CTA `<Link>` → `/plan-b` | “Who needs SAT help?” + options |
+| **Critical CSS** | `landing-critical.css` inlined (hero + trust + CTA) | `quiz-b-critical.css` inlined |
+| **Full CSS** | `landing-deferred.css` on idle | `quiz-b-deferred.css` on idle |
+| **SSR shell** | `AdLpHeroShell` | `PlanBEntryShell` |
+| **Deferred** | Footer only (below fold) | Booking/post step CSS |
+| **Before first tap** | Skip auth, PostHog, attribution replay | Dynamic `QuizRunner`; entry analytics after engage/LCP |
 
-**Note:** Live Meta ads use `/sat-plan-builder`, not homepage `/`. Homepage is organic/legacy and is **not** in this gate.
+Implementation: `ColdPlanBLanding` + `ColdFunnelProviders`. Shared paths: `COLD_PLAN_B_LANDING_PATHS` in `lib/plan-builder-b-routes.ts`.
 
-## Automated lab run
+**UX principle:** Trust copy is 2–3 sentences — it does not slow the page. Slowness was waiting on JavaScript to mount above-fold content. Trust belongs in the **first response**, same as the headline.
+
+---
+
+## Lab gate (mobile, simulated)
 
 ```bash
-# Production — landing + funnel
 LIGHTHOUSE_BASE=https://illuminairy.com npm run perf:cold-funnel
-
-# Local (dev server on :3000)
-LIGHTHOUSE_BASE=http://localhost:3000 npm run perf:cold-funnel
-
-# Landing only
-LIGHTHOUSE_SCOPE=landing LIGHTHOUSE_BASE=https://illuminairy.com npm run perf:cold-funnel
-
-# Funnel only
-LIGHTHOUSE_SCOPE=funnel LIGHTHOUSE_BASE=https://illuminairy.com npm run perf:cold-funnel
 ```
 
-Output: `exports/lighthouse-ad-funnel/report.json` (includes `summary.landing` and `summary.funnel`) plus per-URL JSON:
+| Surface | ID | Targets |
+|---------|-----|---------|
+| Landing | `landing-ad3` | Perf ≥ 85 · LCP ≤ 2.5s |
+| Funnel | `funnel-plan-b-entry` | Perf ≥ 85 · LCP ≤ 2.5s |
 
-- `landing-ad3.json`
-- `funnel-plan-b-entry.json`
+**Landing LCP:** Must be **hero or on-page trust** in first HTML — fail if footer/legal loads late via JS.
 
-Legacy filenames `sat-plan-builder.json` / `plan-b-entry.json` are replaced on the next run.
+**Funnel LCP:** Must be **“Who needs SAT help?”**
 
-## Real device checklist (do before scaling ad spend)
+Scope one surface: `LIGHTHOUSE_SCOPE=landing` or `=funnel`.
 
-1. Open the **exact ad URL** in **Instagram in-app browser** on an iPhone.
-2. **Landing:** headline readable in ~2s; CTA tappable.
-3. Tap CTA → **Funnel:** “Who needs SAT help?” without a blank flash.
-4. Tap **My child** → advances on first try.
+Output: `exports/lighthouse-ad-funnel/report.json`, `landing-ad3.json`, `funnel-plan-b-entry.json`.
+
+---
+
+## Real acceptance test (do before scaling ad spend)
+
+On an **iPhone, Instagram in-app browser**, open the **exact ad URL**:
+
+1. **~2s:** Headline + trust quote + CTA visible (no pop-in of trust after headline).
+2. **Tap CTA before anything else loads** — must navigate to `/plan-b` (SSR link works without JS).
+3. **Funnel:** “Who needs SAT help?” visible; **My child** advances on first tap.
+4. No white flash between LP and funnel.
+
+If phone feels good but lab fails by &lt;100ms, trust the phone for conversion — but investigate regressions before scaling.
+
+---
 
 ## PostHog sanity (after deploy)
 
 On `/sat-plan-builder` and `/plan-b?step=q1-parent-child`:
 
-- `landing_viewed` / quiz step events fire **after first scroll or tap** (deferred analytics), not on raw HTML paint.
-- Funnel: LP view → Plan B step 1 → first answer. Watch drop before first tap if speed regresses.
+- `landing_viewed` / quiz events fire **after first scroll or tap** (analytics deferred, not above-fold content).
+- Funnel: LP → step 1 → first answer. Watch drop before first tap if speed regresses.
 
-## Architecture (what we ship)
+---
 
-| Fix | Landing (`/sat-plan-builder`) | Funnel (`/plan-b`) |
-|-----|------------------------------|---------------------|
-| Critical CSS | `landing-critical.css` inlined | `quiz-b-critical.css` inlined |
-| Deferred CSS | `landing-deferred.css` on idle | `quiz-b-deferred.css` on idle |
-| SSR shell | `AdLpHeroShell` | `PlanBEntryShell` |
-| Below-fold defer | Trust bar + footer | Booking/post CSS on later steps |
-| Minimal JS | `ColdFunnelProviders` + dynamic `LandingPage` | Dynamic `QuizRunner` |
+## When lab fails
 
-## When lab fails but phone feels fine
-
-Lighthouse uses throttled CPU/network. Still fix lab regressions before scaling — cold Meta traffic skews slower than your test phone.
+1. Check prod returns **200** on both URLs (Vercel deploy + `outputFileTracingIncludes` for critical CSS).
+2. View source: trust quote + CTA `href` to `/plan-b` in HTML without executing JS.
+3. Re-run lab; if still failing, profile **TBT / JS weight**, not trust copy length.

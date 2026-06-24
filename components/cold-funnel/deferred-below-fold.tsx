@@ -7,14 +7,12 @@ import { isMarketingDeferPath } from "@/lib/perf-defer-paths";
 
 type DeferredBelowFoldProps = {
   children: ReactNode;
-  /** When true, always defer until engagement or delay (e.g. trust bar on ad LP). */
-  force?: boolean;
 };
 
-/** Renders below-the-fold UI after scroll/tap — never on LCP or a timer (both steal LCP in lab). */
-export function DeferredBelowFold({ children, force = false }: DeferredBelowFoldProps) {
+/** Footer-only defer on cold paths — trust + hero are SSR in first HTML. */
+export function DeferredBelowFold({ children }: DeferredBelowFoldProps) {
   const pathname = usePathname();
-  const defer = force || isMarketingDeferPath(pathname);
+  const defer = isMarketingDeferPath(pathname);
   const ready = useDeferUntilEngagedOrDelayed(defer);
   if (defer && !ready) return null;
   return children;

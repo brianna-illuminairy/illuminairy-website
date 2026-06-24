@@ -117,18 +117,19 @@ After deploy, run [PageSpeed Insights](https://pagespeed.web.dev/) on:
 
 Record mobile + desktop scores in PR or experiment log.
 
-**Plan Builder B (Meta ad3 scale):** run **landing + funnel** (not funnel alone):
+**Plan Builder B (Meta ad3 scale):** run **landing + funnel** + **phone QA** (see [cold-funnel-perf.md](./cold-funnel-perf.md)):
 
 ```bash
 LIGHTHOUSE_BASE=https://illuminairy.com npm run perf:cold-funnel
 ```
 
-| Surface | URL | LCP should be |
-|---------|-----|---------------|
-| Landing | `/sat-plan-builder` (ad3 UTMs + `pb=b`) | Hero H1 |
-| Funnel | `/plan-b?step=q1-parent-child&pb=b` | “Who needs SAT help?” |
+| Check | URL / criterion |
+|-------|-----------------|
+| Lab landing | `/sat-plan-builder` (ad3 UTMs + `pb=b`) — Perf ≥ 85, LCP ≤ 2.5s |
+| Lab funnel | `/plan-b?step=q1-parent-child&pb=b` — LCP = “Who needs SAT help?” |
+| **Phone (required)** | IG browser: headline + **trust quote** + CTA visible ~2s; **CTA works before JS**; tap → funnel step 1 |
 
-Same mobile targets: Performance ≥ 85, LCP ≤ 2.5s. Details: [cold-funnel-perf.md](./cold-funnel-perf.md).
+Same mobile lab targets as B3 homepage QA above. Do **not** hide trust to improve LCP — it is part of first HTML.
 
 ### C. Quick network sanity (local)
 
