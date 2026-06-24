@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { IlluminairyLogoV7 } from "@/components/brand/illuminairy-logo-v7";
+import { Week1LessonNav } from "@/components/soha/week1-lesson-nav";
+import { homeworkPortalLoginUrl } from "@/lib/internal-links";
 
 /** Nada / Soha August 22 bootcamp — standard enroll page. */
 export const SOHA_BOOTCAMP_ENROLL_PATH = "/enroll/nada-soha-aug22-bootcamp";
@@ -23,7 +25,25 @@ const NAV = [
     label: "SAT Improvement Plan",
     match: (path: string) => path === "/soha/plan",
   },
+  {
+    href: "/soha/week-1",
+    label: "Week 1",
+    match: (path: string) => path.startsWith("/soha/week-1"),
+  },
 ] as const;
+
+function HomeworkPortalCta() {
+  return (
+    <a
+      href={homeworkPortalLoginUrl}
+      className="aurora-btn-secondary soha-portal__homework-cta"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Homework Portal
+    </a>
+  );
+}
 
 function SohaEnrollCta() {
   return (
@@ -82,9 +102,13 @@ export function SohaPortalShell({ children }: { children: React.ReactNode }) {
             <Link href="/soha/profile" aria-label="Illuminairy">
               <IlluminairyLogoV7 tone="on-dark" height={34} />
             </Link>
-            <SohaEnrollCta />
+            <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+              <HomeworkPortalCta />
+              <SohaEnrollCta />
+            </div>
           </div>
           <SohaHeaderNav pathname={pathname} />
+          <Week1LessonNav />
         </div>
       </header>
       <div className="aurora-body-wrap">{children}</div>

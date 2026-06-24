@@ -18,7 +18,7 @@ export const WEEK2_POST_SESSION_EXERCISES: DanielleWeek2Exercise[] = [
     dueLabel: "Wednesday, June 17 (before Transitions 1)",
     goal: `95% overall accuracy (after ${TRANSITION_COMMON_PHRASE_COUNT} cards)`,
     summary:
-      `${TRANSITION_COMMON_PHRASE_COUNT} most common Digital SAT transitions. Pick contrast & concession, causation, addition & exemplification, or similarity & emphasis.`,
+      `${TRANSITION_COMMON_PHRASE_COUNT} Digital SAT transitions. Pick contrast & concession, causation, addition & exemplification, similarity & emphasis, or sequence & time.`,
     instructions: [
       "Run after you have reviewed the slide deck and memorized the cheat sheet categories.",
       `Work in rounds. Each round shuffles all ${TRANSITION_COMMON_PHRASE_COUNT} phrases.`,

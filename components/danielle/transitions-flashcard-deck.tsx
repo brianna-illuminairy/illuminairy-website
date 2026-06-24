@@ -9,7 +9,9 @@ import {
   type FlashcardRoundRecord,
   getFlashcardExplain,
   getFlashcardExample,
+  hasMetConsecutiveRoundGoal,
   hasMetFlashcardGoal,
+  consecutiveRoundStreak,
   shuffleFlashcardIds,
   TRANSITION_CATEGORY_META,
   TRANSITION_FLASHCARD_GOAL_ACCURACY,
@@ -17,9 +19,15 @@ import {
   TRANSITION_FLASHCARDS
 } from "@/lib/danielle-transitions-flashcards";
 
-const STORAGE_KEY_V3 = "danielle-transitions-flashcard-stats-v3";
+const DEFAULT_STORAGE_KEY = "danielle-transitions-flashcard-stats-v3";
 const STORAGE_KEY_V2 = "danielle-transitions-flashcard-stats-v2";
 const STORAGE_KEY_V1 = "danielle-transitions-flashcard-stats-v1";
+
+export type TransitionsFlashcardDeckProps = {
+  storageKey?: string;
+  goalMode?: "overall" | "consecutive";
+  consecutiveRounds?: number;
+};
 
 type PersistedStats = {
   correct: number;
@@ -45,13 +53,17 @@ const EMPTY_STATS: PersistedStats = {
 
 const CATEGORY_ORDER = TRANSITION_CATEGORY_ORDER;
 
-function readStats(): PersistedStats {
+function readStats(storageKey: string): PersistedStats {
   if (typeof window === "undefined") return EMPTY_STATS;
   try {
-    const v3Raw = window.localStorage.getItem(STORAGE_KEY_V3);
-    if (v3Raw) {
-      const parsed = JSON.parse(v3Raw) as PersistedStats;
+    const raw = window.localStorage.getItem(storageKey);
+    if (raw) {
+      const parsed = JSON.parse(raw) as PersistedStats;
       return normalizeStats(parsed);
+    }
+
+    if (storageKey !== DEFAULT_STORAGE_KEY) {
+      return EMPTY_STATS;
     }
 
     const v2Raw = window.localStorage.getItem(STORAGE_KEY_V2);
@@ -97,8 +109,8 @@ function normalizeStats(parsed: Partial<PersistedStats>): PersistedStats {
   };
 }
 
-function writeStats(stats: PersistedStats) {
-  window.localStorage.setItem(STORAGE_KEY_V3, JSON.stringify(stats));
+function writeStats(storageKey: string, stats: PersistedStats) {
+  window.localStorage.setItem(storageKey, JSON.stringify(stats));
 }
 
 function formatPercent(ratio: number) {
@@ -119,8 +131,12 @@ function formatRoundDate(iso: string) {
   }
 }
 
-export function TransitionsFlashcardDeck() {
-  const [stats, setStats] = useState<PersistedStats>(() => readStats());
+export function TransitionsFlashcardDeck({
+  storageKey = DEFAULT_STORAGE_KEY,
+  goalMode = "overall",
+  consecutiveRounds = 3
+}: TransitionsFlashcardDeckProps = {}) {
+  const [stats, setStats] = useState<PersistedStats>(() => readStats(storageKey));
   const [deck, setDeck] = useState<string[]>(() => shuffleFlashcardIds(allFlashcardIds()));
   const [index, setIndex] = useState(0);
   const [roundCorrect, setRoundCorrect] = useState(0);
@@ -147,7 +163,12 @@ export function TransitionsFlashcardDeck() {
   }, []);
 
   const cumulativeAccuracy = flashcardAccuracy(stats.correct, stats.attempts);
-  const goalMet = hasMetFlashcardGoal(stats.correct, stats.attempts);
+  const goalMet =
+    goalMode === "consecutive"
+      ? hasMetConsecutiveRoundGoal(stats.roundHistory, consecutiveRounds)
+      : hasMetFlashcardGoal(stats.correct, stats.attempts);
+  const consecutiveStreak =
+    goalMode === "consecutive" ? consecutiveRoundStreak(stats.roundHistory) : 0;
   const roundTotal = deck.length;
   const roundProgress = roundTotal > 0 ? index + (feedback ? 1 : 0) : 0;
   const roundHistoryDisplay = [...stats.roundHistory].reverse();
@@ -159,7 +180,7 @@ export function TransitionsFlashcardDeck() {
         correct: prev.correct + (correct ? 1 : 0),
         attempts: prev.attempts + 1
       };
-      writeStats(next);
+      writeStats(storageKey, next);
       return next;
     });
     if (correct) setRoundCorrect((n) => n + 1);
@@ -182,7 +203,7 @@ export function TransitionsFlashcardDeck() {
         roundsCompleted: roundNumber,
         roundHistory: [...prev.roundHistory, record]
       };
-      writeStats(next);
+      writeStats(storageKey, next);
       return next;
     });
 
@@ -222,7 +243,7 @@ export function TransitionsFlashcardDeck() {
 
   function handleResetStats() {
     setStats(EMPTY_STATS);
-    writeStats(EMPTY_STATS);
+    writeStats(storageKey, EMPTY_STATS);
     startRound();
     setShowRoundLog(false);
   }
@@ -305,14 +326,39 @@ export function TransitionsFlashcardDeck() {
 
       {goalMet ? (
         <div className="danielle-flashcards__goal-banner" role="status">
-          You hit {formatPercent(TRANSITION_FLASHCARD_GOAL_ACCURACY)} accuracy across{" "}
-          {stats.attempts} cards. Keep a few rounds going if you want, or move on to Homework
-          Portal practice.
+          {goalMode === "consecutive" ? (
+            <>
+              You hit {formatPercent(TRANSITION_FLASHCARD_GOAL_ACCURACY)} or higher on your last{" "}
+              {consecutiveRounds} full rounds. Move on to Transitions 1 in the Homework Portal.
+            </>
+          ) : (
+            <>
+              You hit {formatPercent(TRANSITION_FLASHCARD_GOAL_ACCURACY)} accuracy across{" "}
+              {stats.attempts} cards. Keep a few rounds going if you want, or move on to Homework
+              Portal practice.
+            </>
+          )}
         </div>
       ) : (
         <p className="danielle-flashcards__goal-line">
-          Pick the category for each transition. Goal: {formatPercent(TRANSITION_FLASHCARD_GOAL_ACCURACY)}{" "}
-          overall accuracy after {TRANSITION_FLASHCARD_MIN_ATTEMPTS} attempts.
+          {goalMode === "consecutive" ? (
+            <>
+              Pick the category for each transition. Goal: {consecutiveRounds} full rounds in a row at{" "}
+              {formatPercent(TRANSITION_FLASHCARD_GOAL_ACCURACY)} or higher.
+              {stats.roundHistory.length > 0 && (
+                <>
+                  {" "}
+                  Current streak: {consecutiveStreak} of {consecutiveRounds}.
+                </>
+              )}
+            </>
+          ) : (
+            <>
+              Pick the category for each transition. Goal:{" "}
+              {formatPercent(TRANSITION_FLASHCARD_GOAL_ACCURACY)} overall accuracy after{" "}
+              {TRANSITION_FLASHCARD_MIN_ATTEMPTS} attempts.
+            </>
+          )}
         </p>
       )}
 

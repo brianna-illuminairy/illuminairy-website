@@ -3,7 +3,12 @@
  * Four relationship categories for flashcards, cheat sheet, and portal copy.
  */
 
-export type TransitionCategory = "contrast" | "cause" | "addition" | "similarity";
+export type TransitionCategory =
+  | "contrast"
+  | "cause"
+  | "addition"
+  | "similarity"
+  | "sequence";
 
 export type TransitionCheatSheetSection = {
   id: TransitionCategory;
@@ -28,7 +33,12 @@ export const TRANSITION_CHEAT_SHEET_SECTIONS: readonly TransitionCheatSheetSecti
       "Instead,",
       "Alternatively,",
       "Conversely,",
-      "In contrast,"
+      "In contrast,",
+      "On the other hand,",
+      "On one hand,",
+      "Though,",
+      "Despite this,",
+      "Regardless,"
     ],
     note: "However is the most frequently tested transition on the exam."
   },
@@ -60,7 +70,10 @@ export const TRANSITION_CHEAT_SHEET_SECTIONS: readonly TransitionCheatSheetSecti
       "In particular,",
       "Furthermore,",
       "Moreover,",
-      "Additionally,"
+      "Additionally,",
+      "In addition,",
+      "Also,",
+      "In other words,"
     ]
   },
   {
@@ -68,7 +81,14 @@ export const TRANSITION_CHEAT_SHEET_SECTIONS: readonly TransitionCheatSheetSecti
     title: "Similarity & Emphasis",
     description:
       "Reinforces or continues a train of thought in a similar direction, or stresses that the point holds.",
-    phrases: ["Similarly,", "Likewise,", "Indeed,", "In fact,"]
+    phrases: ["Similarly,", "Likewise,", "Indeed,", "In fact,", "By the same token,"]
+  },
+  {
+    id: "sequence",
+    title: "Sequence & Time",
+    description:
+      "Shows what happens next, later, or at the end of a process or line of thought.",
+    phrases: ["Subsequently,", "Then,", "Finally,"]
   }
 ];
 
@@ -91,6 +111,10 @@ export const TRANSITION_CATEGORY_META: Record<
   similarity: {
     label: "Similarity & Emphasis",
     hint: "Sentence B continues the same direction or stresses the point."
+  },
+  sequence: {
+    label: "Sequence & Time",
+    hint: "Sentence B is the next step, a later stage, or the final outcome after A."
   }
 };
 
@@ -98,7 +122,8 @@ export const TRANSITION_CATEGORY_ORDER: TransitionCategory[] = [
   "contrast",
   "cause",
   "addition",
-  "similarity"
+  "similarity",
+  "sequence"
 ];
 
 export function transitionPhraseId(phrase: string) {

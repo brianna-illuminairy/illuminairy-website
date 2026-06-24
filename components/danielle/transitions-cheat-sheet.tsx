@@ -17,8 +17,8 @@ export function TransitionsCheatSheet() {
         </ol>
         <p className="danielle-cheat-sheet__method-note">
           {TRANSITION_COMMON_PHRASE_COUNT} transitions below are the most common on recent Digital SAT
-          practice tests (Bluebook Tests 4–11). Memorize the four categories first, then the words in
-          each bucket.
+          practice tests (Bluebook Tests 4–11). Memorize the five categories first, then the words in
+          each bucket. Sequence and time words are the fifth category.
         </p>
       </div>
 

@@ -1360,6 +1360,10 @@
   border-top-color: #6b5b8c;
 }
 
+.danielle-cheat-sheet__section.is-sequence {
+  border-top-color: #8a6a10;
+}
+
 .danielle-cheat-sheet__section-head {
   margin-bottom: 12px;
 }

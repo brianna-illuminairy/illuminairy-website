@@ -79,7 +79,31 @@ const FLASHCARD_EXAMPLE_OVERRIDES: Partial<Record<string, string>> = {
   indeed:
     "The method looked fragile. Indeed, it held up under every stress test.",
   "in-fact":
-    "The method looked fragile. In fact, it held up under every stress test."
+    "The method looked fragile. In fact, it held up under every stress test.",
+  "on-the-other-hand":
+    "The portrait suggests deep space. On the other hand, the subtitle reveals it is only paint swatches.",
+  "on-one-hand":
+    "On one hand, the poem seems plain. On the other hand, critics find layers in every line.",
+  though:
+    "The sample was small. Though the trend was clear, the team reran the trial anyway.",
+  "despite-this":
+    "The first trial failed. Despite this, the lab kept refining the method.",
+  regardless:
+    "The evidence was mixed. Regardless, the committee approved the grant.",
+  "in-addition":
+    "The study tracked sleep. In addition, it measured memory the next morning.",
+  also:
+    "The lab tested soil pH. Also, it recorded moisture at each plot.",
+  "in-other-words":
+    "The effect was tiny. In other words, the team could not publish the findings.",
+  "by-the-same-token":
+    "The first treaty protected river access. By the same token, the second extended those rights inland.",
+  subsequently:
+    "The team finished the survey. Subsequently, they analyzed the results.",
+  then:
+    "The team coded the interviews. Then, they looked for patterns across schools.",
+  finally:
+    "Viewers imagine nebulae at first. Finally, the subtitle grounds each piece as ordinary paint swatches."
 };
 
 function categoryJobPhrase(category: TransitionCategory) {
@@ -92,6 +116,8 @@ function categoryJobPhrase(category: TransitionCategory) {
       return "adds evidence, detail, or a specific example for sentence A";
     case "similarity":
       return "continues the same direction or stresses that the point holds";
+    case "sequence":
+      return "is the next step, a later stage, or the final outcome after sentence A";
   }
 }
 
@@ -114,6 +140,8 @@ export function getFlashcardExample(card: TransitionFlashcard) {
       return `The program raised reading scores. ${phrase} one school saw gains in every grade level.`;
     case "similarity":
       return `The portrait uses bold color. ${phrase} it layers texture in the same style.`;
+    case "sequence":
+      return `The team finished the survey. ${phrase} they analyzed the results.`;
   }
 }
 
@@ -140,4 +168,26 @@ export function hasMetFlashcardGoal(correct: number, attempts: number) {
     attempts >= TRANSITION_FLASHCARD_MIN_ATTEMPTS &&
     flashcardAccuracy(correct, attempts) >= TRANSITION_FLASHCARD_GOAL_ACCURACY
   );
+}
+
+export function hasMetConsecutiveRoundGoal(
+  roundHistory: FlashcardRoundRecord[],
+  consecutiveRounds: number,
+  minAccuracy = TRANSITION_FLASHCARD_GOAL_ACCURACY
+) {
+  if (roundHistory.length < consecutiveRounds) return false;
+  const tail = roundHistory.slice(-consecutiveRounds);
+  return tail.every((row) => row.accuracy >= minAccuracy);
+}
+
+export function consecutiveRoundStreak(
+  roundHistory: FlashcardRoundRecord[],
+  minAccuracy = TRANSITION_FLASHCARD_GOAL_ACCURACY
+) {
+  let streak = 0;
+  for (let i = roundHistory.length - 1; i >= 0; i--) {
+    if (roundHistory[i].accuracy >= minAccuracy) streak++;
+    else break;
+  }
+  return streak;
 }

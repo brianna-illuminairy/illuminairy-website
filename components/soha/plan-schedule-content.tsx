@@ -70,7 +70,7 @@ export function SohaPlanScheduleContent() {
         ))}
       </section>
 
-      <section className="skye-plan__section soha-plan-schedule__section">
+      <section className="skye-plan__section soha-plan-schedule__section" id="error-log">
         <h2>Error log approach (1500+ target)</h2>
         {SOHA_ERROR_LOG_INTRO.map((paragraph) => (
           <p key={paragraph.slice(0, 40)}>{paragraph}</p>
