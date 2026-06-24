@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 import {
   createVisitorId,
   mergeAttribution,
@@ -13,6 +14,8 @@ import {
 } from "@/lib/attribution";
 import { applyLandingAttributionInference } from "@/lib/marketing/landing-attribution-infer";
 import { persistMetaClickIds } from "@/lib/meta-click-ids";
+import { useDeferUntilEngagedOrLcp } from "@/lib/defer-until-engaged-or-lcp";
+import { isMarketingDeferPath } from "@/lib/perf-defer-paths";
 
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 180;
 
@@ -87,46 +90,51 @@ async function sendTouch(
   });
 }
 
+function runAttributionCapture() {
+  const visitorId = ensureVisitorId();
+  const fromUrl = parseAttributionFromSearch(window.location.search);
+  let merged = mergeAttribution(loadSessionAttribution(), {
+    ...fromUrl,
+    landing_page: window.location.href,
+    referrer: document.referrer || undefined
+  });
+
+  // Capture Meta click IDs early + persist first-party (Safari/ITP resilience).
+  const metaIds = persistMetaClickIds(merged.fbclid);
+  if (metaIds.fbp && !merged.fbp) merged.fbp = metaIds.fbp;
+  if (metaIds.fbc && !merged.fbc) merged.fbc = metaIds.fbc;
+
+  merged = applyLandingAttributionInference(merged);
+
+  saveSessionAttribution(merged);
+
+  const hasTracking = Boolean(
+    merged.utm_source ||
+      merged.gclid ||
+      merged.fbclid ||
+      merged.utm_campaign
+  );
+
+  void (async () => {
+    if (hasTracking) {
+      await sendTouch(visitorId, "attribution_captured", merged);
+    }
+    await sendTouch(visitorId, "page_view", merged);
+  })();
+}
+
 export function AttributionProvider({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+  const defer = isMarketingDeferPath(pathname);
+  const ready = useDeferUntilEngagedOrLcp(defer);
   const ran = useRef(false);
 
   useEffect(() => {
-    if (ran.current) {
-      return;
-    }
+    if (ran.current) return;
+    if (defer && !ready) return;
     ran.current = true;
-
-    const visitorId = ensureVisitorId();
-    const fromUrl = parseAttributionFromSearch(window.location.search);
-    let merged = mergeAttribution(loadSessionAttribution(), {
-      ...fromUrl,
-      landing_page: window.location.href,
-      referrer: document.referrer || undefined
-    });
-
-    // Capture Meta click IDs early + persist first-party (Safari/ITP resilience).
-    const metaIds = persistMetaClickIds(merged.fbclid);
-    if (metaIds.fbp && !merged.fbp) merged.fbp = metaIds.fbp;
-    if (metaIds.fbc && !merged.fbc) merged.fbc = metaIds.fbc;
-
-    merged = applyLandingAttributionInference(merged);
-
-    saveSessionAttribution(merged);
-
-    const hasTracking = Boolean(
-      merged.utm_source ||
-        merged.gclid ||
-        merged.fbclid ||
-        merged.utm_campaign
-    );
-
-    void (async () => {
-      if (hasTracking) {
-        await sendTouch(visitorId, "attribution_captured", merged);
-      }
-      await sendTouch(visitorId, "page_view", merged);
-    })();
-  }, []);
+    runAttributionCapture();
+  }, [defer, ready]);
 
   return children;
 }

@@ -1,5 +1,5 @@
-/* Plan Builder B — single CSS entry (one network request on /plan-b). */
-@import "../quiz-funnel.css";
+/* Plan Builder B — initial CSS (core shell + intake). Booking/post load on step. */
 @import "../quiz-globals.css";
 @import "../funnel-responsive.css";
-@import "./quiz-b-lab.css";
+@import "./quiz-b-core.css";
+@import "./quiz-b-entry.css";

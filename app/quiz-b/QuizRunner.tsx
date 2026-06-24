@@ -2,7 +2,10 @@
 
 import dynamic from 'next/dynamic';
 import { useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useDeferUntilEngagedOrLcp } from '@/lib/defer-until-engaged-or-lcp';
+import { isPlanBuilderBEntryStep } from '@/lib/perf-defer-paths';
+import { usePlanBDeferredCss } from '@/lib/quiz-funnel-b/plan-b-deferred-css';
 import { useQuiz, type QuizAnswers } from './state';
 import { useQuizAnalytics } from './useQuizAnalytics';
 import { planBuilderBStepHref } from '@/lib/plan-builder-b-routes';
@@ -112,8 +115,9 @@ function getSteps(answers: QuizAnswers) {
   return getLabQuizRouteSteps(answers);
 }
 
-export default function QuizRunner() {
+export default function QuizRunner({ onMounted }: { onMounted?: () => void }) {
   const router = useRouter();
+  const pathname = usePathname();
   const params = useSearchParams();
   const { answers, dispatch, lastStep, setLastStep, hydrated } = useQuiz();
   const search = params.toString();
@@ -152,7 +156,17 @@ export default function QuizRunner() {
     }
   }, [hydrated, stepId, requestedStep, resumeStep, router, search, requestedIdx, guardedIdx, stepsKey]);
 
-  useQuizAnalytics(stepId, currentIdx, answers, hydrated);
+  usePlanBDeferredCss(stepId);
+
+  const deferEntryAnalytics = isPlanBuilderBEntryStep(pathname, stepId);
+  const entryAnalyticsReady = useDeferUntilEngagedOrLcp(deferEntryAnalytics);
+  const analyticsEnabled = hydrated && (!deferEntryAnalytics || entryAnalyticsReady);
+
+  useEffect(() => {
+    onMounted?.();
+  }, [onMounted]);
+
+  useQuizAnalytics(stepId, currentIdx, answers, analyticsEnabled);
 
   function goTo(id: string) {
     router.replace(planBuilderBStepHref(id, search));
