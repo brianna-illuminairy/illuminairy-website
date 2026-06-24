@@ -1,5 +1,6 @@
 "use client";
 
+import { useLayoutEffect } from "react";
 import {
   resolveLandingHeroHeadlineV4,
   type LandingHeroHook
@@ -17,6 +18,8 @@ type V4HeroProps = {
   hook?: LandingHeroHook;
   search?: string;
   planBuilderB?: boolean;
+  /** Fires after the hero paints — used to drop the SSR shell without an LCP gap. */
+  onPainted?: () => void;
 };
 
 /** Ad hook headlines are two lines only — same fold layout as the owner v4 default. */
@@ -31,10 +34,14 @@ function useHeadlineLines(hook: LandingHeroHook | undefined, search?: string): {
   return { lines: v4Headline.lines, accentLine: v4Headline.accentLine };
 }
 
-export function V4Hero({ onStart, hook, search, planBuilderB }: V4HeroProps) {
+export function V4Hero({ onStart, hook, search, planBuilderB, onPainted }: V4HeroProps) {
   const { lines, accentLine } = useHeadlineLines(hook, search);
   const isTutor = hook === "tutor";
   const cta = isTutor ? v4TutorCta : planBuilderB ? v4PlanBCta : v4Cta;
+
+  useLayoutEffect(() => {
+    onPainted?.();
+  }, [onPainted]);
 
   return (
     <section className="lp-hero">

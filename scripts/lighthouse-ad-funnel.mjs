@@ -92,6 +92,27 @@ function lcpElementLabel(report) {
   return "unknown";
 }
 
+/** Trust-bar quote text — if LCP matches this, below-fold stole LCP from the hero. */
+const TRUST_QUOTE_LCP_MARKERS = ["confidence seeing where", "so much in the blind"];
+
+function landingLcpElementOk(lcpElement) {
+  const lower = lcpElement.toLowerCase();
+  if (TRUST_QUOTE_LCP_MARKERS.some((m) => lower.includes(m))) return false;
+  if (lower === "unknown") return true;
+  if (lower.includes("tutor") || lower.includes("sat") || lower.includes("before")) return true;
+  return false;
+}
+
+function funnelLcpElementOk(lcpElement) {
+  return lcpElement.toLowerCase().includes("who needs sat help");
+}
+
+function lcpElementOk(target, lcpElement) {
+  if (target.surface === SURFACES.LANDING) return landingLcpElementOk(lcpElement);
+  if (target.surface === SURFACES.FUNNEL) return funnelLcpElementOk(lcpElement);
+  return true;
+}
+
 function parseReport(jsonPath) {
   const report = JSON.parse(readFileSync(jsonPath, "utf8"));
   const perf = Math.round((report.categories.performance?.score ?? 0) * 100);
@@ -113,7 +134,8 @@ function runTarget(target) {
   const metrics = parseReport(jsonPath);
   const perfOk = metrics.perf >= target.perfMin;
   const lcpOk = metrics.lcpMs <= target.lcpMaxMs;
-  const ok = perfOk && lcpOk;
+  const lcpElementOkPass = lcpElementOk(target, metrics.lcpElement);
+  const ok = perfOk && lcpOk && lcpElementOkPass;
 
   const lcpSec = (metrics.lcpMs / 1000).toFixed(2);
   const fcpSec = (metrics.fcpMs / 1000).toFixed(2);
@@ -121,7 +143,8 @@ function runTarget(target) {
     `  Performance ${metrics.perf} (min ${target.perfMin}) · LCP ${lcpSec}s (max ${(target.lcpMaxMs / 1000).toFixed(1)}s) · FCP ${fcpSec}s · TBT ${Math.round(metrics.tbtMs)}ms · BP ${metrics.bp}`
   );
   console.log(`  LCP element: ${metrics.lcpElement.slice(0, 72)}${metrics.lcpElement.length > 72 ? "…" : ""}`);
-  console.log(`  Expected: ${target.lcpHint} · ${ok ? "PASS" : "FAIL"}\n`);
+  const elementStatus = lcpElementOkPass ? "PASS" : "FAIL (wrong element)";
+  console.log(`  Expected: ${target.lcpHint} · element ${elementStatus} · overall ${ok ? "PASS" : "FAIL"}\n`);
 
   return {
     id: target.id,
@@ -130,6 +153,7 @@ function runTarget(target) {
     url,
     ...metrics,
     lcpExpected: target.lcpHint,
+    lcpElementOk: lcpElementOkPass,
     targets: { perfMin: target.perfMin, lcpMaxMs: target.lcpMaxMs },
     pass: ok,
   };

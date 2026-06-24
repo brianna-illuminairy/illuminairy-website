@@ -60,12 +60,6 @@ export function LandingPage({ landingPath = "/", planBuilderB: planBuilderBForce
   const analyticsReady = useDeferUntilEngagedOrLcp(deferAnalytics);
 
   useEffect(() => {
-    if (landingPath === SAT_PLAN_BUILDER_LP_PATH) {
-      document.getElementById("ad-lp-ssr")?.remove();
-    }
-  }, [landingPath]);
-
-  useEffect(() => {
     if (deferAnalytics && !analyticsReady) return;
     if (trackedRef.current) return;
     trackedRef.current = true;
@@ -114,6 +108,11 @@ export function LandingPage({ landingPath = "/", planBuilderB: planBuilderBForce
     [layout, landingPath, metaContext.heroHook, metaContext.heroHookSource, planBuilderB, router, search, variant]
   );
 
+  const handleHeroPainted = useCallback(() => {
+    if (landingPath !== SAT_PLAN_BUILDER_LP_PATH) return;
+    document.getElementById("ad-lp-ssr")?.remove();
+  }, [landingPath]);
+
   return (
     <V4Page
       search={query}
@@ -121,6 +120,7 @@ export function LandingPage({ landingPath = "/", planBuilderB: planBuilderBForce
       landingPath={landingPath}
       planBuilderB={planBuilderB}
       onCta={handleCta}
+      onHeroPainted={handleHeroPainted}
     />
   );
 }

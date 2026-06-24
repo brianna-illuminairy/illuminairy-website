@@ -2,20 +2,20 @@
 
 import type { ReactNode } from "react";
 import { usePathname } from "next/navigation";
-import { useDeferUntilEngagedOrLcp } from "@/lib/defer-until-engaged-or-lcp";
+import { useDeferUntilEngagedOrDelayed } from "@/lib/defer-until-engaged-or-delayed";
 import { isMarketingDeferPath } from "@/lib/perf-defer-paths";
 
 type DeferredBelowFoldProps = {
   children: ReactNode;
-  /** When true, always defer until engagement/LCP (e.g. trust bar on ad LP). */
+  /** When true, always defer until engagement or delay (e.g. trust bar on ad LP). */
   force?: boolean;
 };
 
-/** Renders below-the-fold UI after LCP or first interaction on cold funnel paths. */
+/** Renders below-the-fold UI after engagement or delay — never on LCP (that would steal LCP). */
 export function DeferredBelowFold({ children, force = false }: DeferredBelowFoldProps) {
   const pathname = usePathname();
   const defer = force || isMarketingDeferPath(pathname);
-  const ready = useDeferUntilEngagedOrLcp(defer);
+  const ready = useDeferUntilEngagedOrDelayed(defer);
   if (defer && !ready) return null;
   return children;
 }

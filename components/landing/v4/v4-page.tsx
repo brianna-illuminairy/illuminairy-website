@@ -25,6 +25,7 @@ type V4PageProps = {
   landingPath: string;
   planBuilderB?: boolean;
   onCta: (sectionId: LandingSectionId, label?: string) => void;
+  onHeroPainted?: () => void;
 };
 
 /**
@@ -32,7 +33,7 @@ type V4PageProps = {
  * the fold across the viewport matrix (incl. FB/IG in-app browsers via the
  * short-viewport CSS in landing-v4.css), so there is no sticky CTA bar.
  */
-export function V4Page({ search, heroHook, landingPath, planBuilderB, onCta }: V4PageProps) {
+export function V4Page({ search, heroHook, landingPath, planBuilderB, onCta, onHeroPainted }: V4PageProps) {
   const query = search.startsWith("?") ? search : search ? `?${search}` : "";
   const layout = devLayoutOverrideFromSearch(query) ?? ("compact" satisfies LpLayout);
   const variant = devOverrideFromSearch(query) ?? ("b3a-problem" satisfies LpVariant);
@@ -60,6 +61,7 @@ export function V4Page({ search, heroHook, landingPath, planBuilderB, onCta }: V
           hook={heroHook}
           search={query}
           planBuilderB={planBuilderB}
+          onPainted={onHeroPainted}
         />
       </main>
 

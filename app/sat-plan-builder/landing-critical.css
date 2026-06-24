@@ -269,10 +269,6 @@ main.funnel-main{display:flex;flex-direction:column;flex:1 1 auto;min-height:0;h
   .lp-cta-sub { margin-top: 10px; }
 }
 
-/* /sat-plan-builder tutor ad — skip display serif (2 fewer font files). */
-.lp-ad-tutor-fonts .lp-h1,
-.lp-ad-tutor-fonts .lp-h1 em {
-
 .ad-lp-ssr {
   position: absolute;
   inset: 0;
