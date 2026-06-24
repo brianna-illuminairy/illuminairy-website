@@ -18,21 +18,22 @@ Danielle's weekly SAT progress report for June 16–23, 2026 is ready on her pri
 
 Highlights from last week:
 
-Completed 2 one-hour tutoring sessions on Reading and Writing (4 total sessions so far), both focused on Transitions.
-Completed 93 practice questions at 91% accuracy, which is a 24-point increase versus her diagnostic baseline of 67% accuracy.
-Transitions 1: 26/27 correct (96%). After we reviewed her medium misses in session 2, she scored 96% on portal flashcards.
-Equivalent Expressions: 19/20 on easy (95%, goal met). Medium set: 18/25 (72%). She should keep running medium sets until she hits 95% on her own.
-Transitions 2: 22/28 (reviewed live in session 2). Transitions 3 untimed (hard): 14/16. Transitions 3 timed (30 hard) due June 28.
-On her own she has also been working through Command of Evidence and Right Triangles practice (not yet assigned in sessions).
+Completed 2 one-hour tutoring sessions on Reading and Writing (4 total sessions so far), both on transitions (linking-word questions).
+Overall practice accuracy: 67% on the diagnostic, 89% in week 1, 91% this week (93 questions).
+Transitions: missed all 3 on the diagnostic; this week scored 96% on practice set 1 (26/27), 96% on flashcards after review, and 88% on the harder untimed set (14/16).
+Equivalent Expressions (Math, from week 1): 95% on easy (goal met), 72% on medium (still working toward 95%).
+Homework still due: Transitions 3 timed set (30 questions, due June 28).
+On her own she started Command of Evidence and Right Triangles practice (not yet taught in sessions).
+Study plan: 2 of 11 priority skills taught in sessions so far (equivalent expressions and transitions).
 She remains on track for her 1400 goal on the August 22 test. We estimate she is around 1200–1225 today.
 
 This week:
 
-Finish Transitions 3 · Timed: 30 hard questions in one sitting, due June 28.
-Two Math sessions on advanced algebra: perfect squares, exponentials, the quadratic formula, and the discriminant.
-Continue medium Equivalent Expressions until she hits 95% independently.
+Finish Transitions 3 timed set: 30 hard questions in one sitting, due June 28.
+Two Math sessions continuing in the advanced Math section (~35% of SAT Math): perfect squares, exponentials, quadratic formula, and discriminant.
+Review 5 diagnostic misses in nonlinear equations and systems; continue medium equivalent expressions until she hits 95% on her own.
 First full-length practice test at the end of the week (June 23 to 30) under real test conditions. This shows score improvement since her June 6 diagnostic and whether she is on track for 1400 (first-month checkpoint: about +100 points, roughly 1225+).
-We will keep sessions interactive: live problems and drills, not long slide lectures.
+Sessions stay hands-on: live problems and drills, not long lectures.
 
 Thanks,
 
