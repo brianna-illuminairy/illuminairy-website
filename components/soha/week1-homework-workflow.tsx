@@ -1,9 +1,6 @@
 import Link from "next/link";
 import { homeworkPortalLoginUrl } from "@/lib/internal-links";
-import {
-  WEEK1_HOMEWORK_WORKFLOW,
-  WEEK1_SLIDE_DECK_HREF,
-} from "@/lib/soha-post-session-1-notes";
+import { WEEK1_HOMEWORK_WORKFLOW } from "@/lib/soha-post-session-1-notes";
 
 export function Week1HomeworkWorkflow() {
   return (
@@ -16,12 +13,8 @@ export function Week1HomeworkWorkflow() {
             <p className="soha-week1__focus">{item.detail}</p>
             {item.step === 1 && (
               <p className="soha-week1__habit">
-                <Link href="#mistake-log-setup" className="soha-week1__inline-link">
-                  Mistake log setup instructions
-                </Link>
-                {" · "}
                 <Link href="/soha/plan#error-log" className="soha-week1__inline-link">
-                  Study plan error log section
+                  Error log setup on your study plan
                 </Link>
               </p>
             )}
@@ -49,23 +42,14 @@ export function Week1HomeworkWorkflow() {
             )}
             {item.step === 5 && (
               <p className="soha-week1__habit">
-                <Link href="#mistake-log-setup" className="soha-week1__inline-link">
-                  Example row for a transitions miss
+                <Link href="/soha/plan#error-log" className="soha-week1__inline-link">
+                  Error log column guide
                 </Link>
               </p>
             )}
           </div>
         </li>
       ))}
-      <li className="soha-week1__workflow-foot">
-        <p className="soha-week1__focus">
-          Optional review:{" "}
-          <Link href={WEEK1_SLIDE_DECK_HREF} className="soha-week1__inline-link">
-            reopen the slide deck
-          </Link>{" "}
-          if you want another pass through the method slides or diagnostic walk-throughs.
-        </p>
-      </li>
     </ol>
   );
 }

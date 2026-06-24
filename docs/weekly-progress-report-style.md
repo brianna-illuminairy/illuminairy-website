@@ -28,7 +28,7 @@ Then the sections below, in order.
 | 1 | **Overview** | Six sentences above |
 | 2 | **Score Progression** | Trajectory chart (1125 → WK1 → WK2 → goal). Point labels on chart; WK labels on x-axis |
 | 3 | **Weekly Summary** | What happened in **each session** and what topic we covered (Session 1 / Session 2). Use owner copy when provided |
-| 4 | **Aha Moments** | What clicked in sessions — skill names, not internal passage titles |
+| 4 | **Aha Moments** | Skill or relationship that improved in sessions — name it plainly, not internal passage titles |
 | 5 | **Practice & Homework** | Assignments completed, **X of Y correct**, accuracy % — **complete ≠ accuracy** |
 | 6 | **Skills & Accuracy** | Skill-by-skill improvement + week-over-week accuracy chart if useful |
 | 7 | **What's Next** | Next week's sessions, homework, milestones |
@@ -62,6 +62,7 @@ Do not add extra sections unless the owner asks.
 | transition | linking word |
 | homework, Homework Portal | prep, prep plan |
 | estimated score ~1210 | modeled points, rank #7 |
+| skills from the session, name the relationship | locked in, what you locked in, what clicked |
 
 **Aha moments:** name the relationship or skill — not Cosmic Canvas, Billy Joel, etc. OK to reference **June 6 practice test** (parents know that baseline).
 

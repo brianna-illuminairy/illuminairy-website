@@ -188,7 +188,7 @@ export const ENROLL_COMPLETE_MENTOR_LINE =
   "Your mentor will introduce themselves by email this week. Until then, I'm here.";
 /** @deprecated use `enrollCompleteLead(testDateLabel)`. */
 export const ENROLL_COMPLETE_LEAD =
-  "Skill Diagnostic locked in. Watch your inbox over the next few days.";
+  "Skill Diagnostic is booked. Watch your inbox over the next few days.";
 export const ENROLL_COMPLETE_AGENDA_EYEBROW = "What happens this week";
 // Backwards-compat alias — welcome step renders the same agenda.
 export const ENROLL_WELCOME_AGENDA_EYEBROW = ENROLL_COMPLETE_AGENDA_EYEBROW;

@@ -36,8 +36,8 @@ export const SOHA_MISTAKE_LOG_COLUMN_DETAILS = SOHA_ERROR_LOG_COLUMNS;
 export const SOHA_MISTAKE_LOG_TRANSITIONS_EXAMPLE = {
   questionId: "R&W · Transitions 1 · Q14",
   category: "Transitions",
-  answers: 'Your answer: "For example," · Correct: "In contrast,"',
+  answers: 'Your answer: "For example" · Correct: "In contrast"',
   errorType: "Conceptual",
   fix:
-    "Cover choices. Sentence A: cortisol slows recovery for most athletes. Sentence B: opposite effect for a marathon runner. Relationship = contrast, not example.",
+    "Cover the choices. Name the relationship in plain words first. Module 1, Q22: the second sentence contradicts the first, so the answer is contrast, not example.",
 } as const;

@@ -140,7 +140,7 @@ everything on the SAT instead of the few skills that actually move their score
 
 ### Don't
 
-- AI/tutor-ad jargon: "cost points," "points leaking/hiding," "point leak(s)," "gains," "Our read," "broad review," **"generic prep," "prep plan," "generic review/lessons/advice."**
+- AI/tutor-ad jargon: "cost points," "points leaking/hiding," "point leak(s)," "gains," "Our read," "broad review," **"generic prep," "prep plan," "generic review/lessons/advice,"** **"locked in," "lock in," "what you locked in," "what clicked."**
 - Tutoring-ad tone: "boost," "supercharge," "close the gap," "score jump."
 - Weird meta lines: "not a Khan stat," "our program outcome vs…"
 - Negative headlines: "No empty promises," "Not self-study."

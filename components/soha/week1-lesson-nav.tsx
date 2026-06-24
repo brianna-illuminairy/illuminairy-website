@@ -11,7 +11,7 @@ const LESSONS = [
   },
   {
     href: "/soha/week-1/exercises",
-    label: "Post-session exercises",
+    label: "Exercises",
     match: (path: string) => path.includes("/exercises"),
   },
 ] as const;

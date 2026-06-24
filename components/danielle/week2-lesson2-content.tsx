@@ -43,9 +43,9 @@ export function DanielleWeek2Lesson2Content() {
         <p className="danielle-portal__eyebrow">Illuminairy · Week 2 · Lesson 2</p>
         <h1>Transitions · medium depth session</h1>
         <p className="danielle-portal__lede">
-          Thursday, June 18, 6:00 to 7:00 PM CT · Reading and Writing. Easy is locked in. This
-          session targets medium misses: cause and effect, the seven jobs, and the words that look
-          alike until you name the relationship first.
+          Thursday, June 18, 6:00 to 7:00 PM CT · Reading and Writing. This session targets
+          medium misses: cause and effect, the seven jobs, and the words that look alike until you
+          name the relationship first.
         </p>
       </div>
 

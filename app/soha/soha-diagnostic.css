@@ -142,6 +142,75 @@
   margin-bottom: 20px;
 }
 
+.soha-week1__page-head--compact {
+  margin-bottom: 12px;
+}
+
+.soha-week1__topic {
+  font-family: var(--aurora-mono, monospace);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--aurora-celestial, #0057a8);
+  margin: 0 0 8px;
+}
+
+.soha-week1__subheading {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 20px 0 8px;
+  color: var(--aurora-ink);
+}
+
+.soha-week1__plan-points {
+  margin: 16px 0 0;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 87, 168, 0.2);
+  background: rgba(0, 87, 168, 0.06);
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--aurora-ink);
+  font-weight: 600;
+}
+
+.soha-week1__miss-list {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.soha-week1__miss-item {
+  padding: 12px 14px;
+  border: 1px solid var(--aurora-line, #d8e0e8);
+  border-radius: 12px;
+  background: var(--aurora-white, #f5f8fa);
+}
+
+.soha-week1__miss-meta {
+  display: block;
+  font-family: var(--aurora-mono, monospace);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--aurora-forest, #2f6e47);
+  margin-bottom: 4px;
+}
+
+.soha-week1__miss-label {
+  display: block;
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--aurora-ink-soft, #3d4a57);
+}
+
+.soha-week1__lesson-open {
+  margin: 0 0 14px;
+}
+
 .soha-week1__title {
   font-family: var(--aurora-display, var(--aurora-body));
   font-size: clamp(1.75rem, 3vw, 2.25rem);

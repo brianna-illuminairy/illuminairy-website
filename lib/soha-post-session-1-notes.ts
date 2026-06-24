@@ -1,12 +1,3 @@
-export const POST_SESSION_1_WINS = [
-  "You named the relationship between two sentences before looking at answer choices (cover the blank, plain words, then match).",
-  "You sorted transition words into contrast, causation, addition, and similarity buckets in the sorting game.",
-  "You matched transition phrases to what sentence B usually does in the study board drills.",
-  "You used copycat elimination: when two choices do the same job, cross both out before reading the passage.",
-  "You revisited the cortisol question (Module 1, Q22) with the contrast method and In contrast.",
-  "You worked Cosmic Canvas (Module 2, Q23) as a sequence problem: first impression to final understanding with Ultimately.",
-] as const;
-
 export type SohaHomeworkPortalSet = {
   id: string;
   title: string;
@@ -29,7 +20,7 @@ export const WEEK1_HOMEWORK_PORTAL_SETS: SohaHomeworkPortalSet[] = [
   },
 ];
 
-/** Ordered homework path after Week 1 Lesson 1. */
+/** Ordered homework path after Lesson 1. */
 export const WEEK1_HOMEWORK_WORKFLOW = [
   {
     step: 1,
@@ -61,10 +52,10 @@ export const WEEK1_HOMEWORK_WORKFLOW = [
   },
 ] as const;
 
-export const POST_SESSION_1_HOMEWORK = {
+export const WEEK1_HOMEWORK_INTRO = {
   headline: "Homework Portal · Transitions practice sets",
   body:
-    "Transitions 1 and Transitions 2 live in the Homework Portal (separate login). Follow the steps below on this portal first, then open the Homework Portal for the problem sets.",
+    "Transitions 1 and Transitions 2 live in the Homework Portal (separate login). After your Lesson 1 session, follow the steps on this page first, then open the Homework Portal for the problem sets.",
 } as const;
 
 export const WEEK1_SLIDE_DECK_HREF = "/soha/files/transitions-lesson";

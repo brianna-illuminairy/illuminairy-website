@@ -1,12 +1,12 @@
 import Link from "next/link";
-import { WEEK1_POST_SESSION_EXERCISES } from "@/lib/soha-week1-exercises";
+import { WEEK1_EXERCISES } from "@/lib/soha-week1-exercises";
 
 export function Week1ExerciseList({ showDue = true }: { showDue?: boolean }) {
   return (
     <div className="soha-week1__exercise-list">
-      {WEEK1_POST_SESSION_EXERCISES.map((exercise) => (
+      {WEEK1_EXERCISES.map((exercise) => (
         <article key={exercise.id} className="soha-week1__exercise-card">
-          <p className="soha-week1__note-label">Post-session exercise</p>
+          <p className="soha-week1__note-label">Practice exercise</p>
           <h3 className="soha-week1__note-title">{exercise.title}</h3>
           {showDue && (
             <p className="soha-week1__exercise-due">

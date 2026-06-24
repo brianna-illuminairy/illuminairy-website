@@ -76,7 +76,7 @@ export const DANIELLE_PORTAL_UPDATES: DaniellePortalUpdate[] = [
     publishedAt: "2026-06-09",
     title: "Post Session 1 notes are live",
     summary:
-      "Your Tuesday session summary is on Lesson 1, including what you locked in and what we are building next.",
+      "Your Tuesday session summary is on Lesson 1, with skills from the session and what we are building next.",
     href: "/danielle/week-1/lesson-1#post-session-1",
     cta: "Read session summary"
   }

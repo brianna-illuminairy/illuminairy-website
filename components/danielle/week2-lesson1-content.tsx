@@ -65,7 +65,7 @@ export function DanielleWeek2Lesson1Content() {
           Canvas, and the rhythmicity concession question.
         </p>
 
-        <h3 className="danielle-week1__slides-heading">What you locked in</h3>
+        <h3 className="danielle-week1__slides-heading">Skills from this session</h3>
         <ul className="danielle-week1__wins">
           {POST_SESSION_2_WINS.map((win) => (
             <li key={win}>{win}</li>

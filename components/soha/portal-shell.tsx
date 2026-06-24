@@ -6,9 +6,6 @@ import { IlluminairyLogoV7 } from "@/components/brand/illuminairy-logo-v7";
 import { Week1LessonNav } from "@/components/soha/week1-lesson-nav";
 import { homeworkPortalLoginUrl } from "@/lib/internal-links";
 
-/** Nada / Soha August 22 bootcamp — standard enroll page. */
-export const SOHA_BOOTCAMP_ENROLL_PATH = "/enroll/nada-soha-aug22-bootcamp";
-
 const NAV = [
   {
     href: "/soha/profile",
@@ -45,25 +42,11 @@ function HomeworkPortalCta() {
   );
 }
 
-function SohaEnrollCta() {
-  return (
-    <Link href={SOHA_BOOTCAMP_ENROLL_PATH} className="aurora-btn-ghost">
-      Bootcamp enrollment
-    </Link>
-  );
-}
-
 function SohaPortalFooter() {
   return (
     <footer className="aurora-footer">
       <div className="aurora-footer__inner">
         <p className="aurora-footer__legal">
-          Parents:{" "}
-          <Link href={SOHA_BOOTCAMP_ENROLL_PATH} style={{ color: "var(--aurora-green)" }}>
-            August 22 bootcamp enrollment
-          </Link>
-        </p>
-        <p className="aurora-footer__legal" style={{ marginTop: "8px" }}>
           © {new Date().getFullYear()} Illuminairy · Private student portal
         </p>
       </div>
@@ -102,10 +85,7 @@ export function SohaPortalShell({ children }: { children: React.ReactNode }) {
             <Link href="/soha/profile" aria-label="Illuminairy">
               <IlluminairyLogoV7 tone="on-dark" height={34} />
             </Link>
-            <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
-              <HomeworkPortalCta />
-              <SohaEnrollCta />
-            </div>
+            <HomeworkPortalCta />
           </div>
           <SohaHeaderNav pathname={pathname} />
           <Week1LessonNav />
@@ -125,7 +105,6 @@ export function SohaLoginChrome({ children }: { children: React.ReactNode }) {
           <span aria-label="Illuminairy">
             <IlluminairyLogoV7 tone="on-dark" height={34} />
           </span>
-          <SohaEnrollCta />
         </div>
       </header>
       <div className="aurora-body-wrap">{children}</div>

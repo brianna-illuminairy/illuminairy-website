@@ -21,7 +21,7 @@ export default async function SohaWeek1TransitionsFlashcardsPage() {
     <SohaPortalShell>
       <div className="soha-week1 aurora-portal__content">
         <div className="soha-week1__page-head">
-          <p className="aurora-eyebrow">Illuminairy · Week 1 · Post-session exercise</p>
+          <p className="aurora-eyebrow">Illuminairy · Week 1 · Exercise</p>
           <h1 className="soha-week1__title">{EXERCISE?.title ?? "Transitions category flashcards"}</h1>
           <p className="soha-week1__lede">
             {TRANSITION_FLASHCARDS.length} SAT transition phrases. Pick the category for each card. Use{" "}
@@ -31,8 +31,8 @@ export default async function SohaWeek1TransitionsFlashcardsPage() {
           {EXERCISE && (
             <p className="soha-week1__exercise-due-inline">
               <strong>Due {EXERCISE.dueLabel}.</strong>{" "}
-              <Link href="/soha/week-1/lesson-1#post-session-exercise" className="soha-week1__inline-link">
-                Back to Lesson 1 summary
+              <Link href="/soha/week-1/lesson-1#homework" className="soha-week1__inline-link">
+                Back to Lesson 1 homework
               </Link>
             </p>
           )}

@@ -25,7 +25,7 @@ export const SOHA_RW_PATTERNS: SohaPatternSkill[] = [
   },
   {
     title: "Transitions",
-    body: 'On the cortisol question she chose "For example," but the second sentence contradicts the first instead of illustrating it, so the answer was "In contrast." On the painting question she chose "Additionally," but the sentence moves to a final interpretation, so "Ultimately" fit. She is picking transitions based on whether the next sentence is related, rather than naming the exact relationship first.',
+    body: 'On Module 1, Q22 (easy) she chose "For example," but the second sentence contradicts the first instead of illustrating it, so the answer was "In contrast." On Module 2, Q23 (medium) she chose "Additionally," but the sentence moves to a final interpretation, so "Ultimately" fit. She is picking transitions based on whether the next sentence is related, rather than naming the exact relationship first.',
     fix: "Label the relationship before looking at the choices: contrast, example, result, addition, conclusion, or alternative.",
   },
   {

@@ -4,8 +4,6 @@ import {
   SOHA_PROFILE,
   type ProfilePerson,
 } from "@/lib/soha/profile-data";
-import { SOHA_BOOTCAMP_ENROLL_PATH } from "@/components/soha/portal-shell";
-
 function ProfileField({ label, value }: { label: string; value: string }) {
   return (
     <div>
@@ -63,10 +61,9 @@ export function SohaProfileContent() {
       <section className="skye-profile__section">
         <h2>Program plan</h2>
         <p className="skye-profile__section-lede">
-          Soha is not enrolled yet. The improvement plan and diagnostic analysis are ready; enrollment
-          is through the{" "}
-          <Link href={SOHA_BOOTCAMP_ENROLL_PATH}>August 22 bootcamp page</Link>. Week-by-week skills
-          are on the <Link href="/soha/plan">SAT Improvement Plan</Link>.
+          Soha is enrolled in the August 22 SAT Accelerator. Week-by-week skills are on the{" "}
+          <Link href="/soha/plan">SAT Improvement Plan</Link>. Current lesson work is in{" "}
+          <Link href="/soha/week-1/lesson-1">Week 1</Link>.
         </p>
         <dl className="skye-profile__timeline skye-profile__timeline--plan">
           {SOHA_PROFILE.programPlan.map((row) => (

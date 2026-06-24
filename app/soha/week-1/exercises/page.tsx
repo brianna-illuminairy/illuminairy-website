@@ -6,7 +6,7 @@ import { Week1HomeworkWorkflow } from "@/components/soha/week1-homework-workflow
 import { SohaNotConfigured } from "@/components/soha/not-configured";
 import { SohaPortalShell } from "@/components/soha/portal-shell";
 import { isSohaConfigured } from "@/lib/soha-auth";
-import { POST_SESSION_1_HOMEWORK } from "@/lib/soha-post-session-1-notes";
+import { WEEK1_HOMEWORK_INTRO } from "@/lib/soha-post-session-1-notes";
 import { requireSohaAuth } from "@/lib/soha-guard";
 
 export default async function SohaWeek1ExercisesPage() {
@@ -21,10 +21,10 @@ export default async function SohaWeek1ExercisesPage() {
       <div className="soha-week1 aurora-portal__content">
         <div className="soha-week1__page-head">
           <p className="aurora-eyebrow">Illuminairy · Week 1</p>
-          <h1 className="soha-week1__title">Post-session exercises</h1>
+          <h1 className="soha-week1__title">Week 1 exercises</h1>
           <p className="soha-week1__lede">
-            Follow the full homework order on Lesson 1. Step 2 here: flashcard rounds until three in a
-            row hit 95%+. Complete steps 1–2 before Transitions 1 in the Homework Portal.
+            Complete after your Lesson 1 session. Step 2 here: flashcard rounds until three in a
+            row hit 95%+. Finish steps 1–2 before Transitions 1 in the Homework Portal.
           </p>
         </div>
 
@@ -44,13 +44,13 @@ export default async function SohaWeek1ExercisesPage() {
         </section>
 
         <section className="soha-week1__section">
-          <h2 className="soha-week1__heading">{POST_SESSION_1_HOMEWORK.headline}</h2>
+          <h2 className="soha-week1__heading">{WEEK1_HOMEWORK_INTRO.headline}</h2>
           <Week1HomeworkPortalList />
         </section>
 
         <p className="soha-week1__habit">
-          <Link href="/soha/week-1/lesson-1#post-session-exercise" className="soha-week1__inline-link">
-            Lesson 1 post-session summary
+          <Link href="/soha/week-1/lesson-1#homework" className="soha-week1__inline-link">
+            Lesson 1 homework
           </Link>
         </p>
       </div>

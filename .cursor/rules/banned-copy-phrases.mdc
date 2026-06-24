@@ -57,6 +57,7 @@ Never use these in customer-facing strings (`app/`, `components/`, `lib/*-copy.t
 | get into [school], guaranteed admission | admission promise | "competitive for their list," "keeps options open" |
 | in range for admission | misreads middle 50% | "within the middle 50% of submitters — not a guarantee" |
 | fit call | off-brand CTA | **Strategy Call** |
+| **locked in**, **lock in**, **what you locked in**, **what clicked** | tutor-ad / vague session recap | name the skill or step: "Skills from this session," "what we covered," "Skill Diagnostic is booked" |
 
 ## Funnel product names (required)
 
