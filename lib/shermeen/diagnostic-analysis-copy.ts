@@ -1,10 +1,3 @@
-import {
-  SHERMEEN_MATH_SKILL_AREA_COUNT,
-  SHERMEEN_MATH_SKILLS_15_PLUS,
-  SHERMEEN_RW_SKILL_AREA_COUNT,
-  SHERMEEN_RW_SKILLS_15_PLUS,
-} from "@/lib/shermeen/diagnostic-skill-points";
-
 /** Mentor narrative from the June 23, 2026 diagnostic. */
 
 export type MissBullet = { q: string; text: string };
@@ -34,14 +27,8 @@ export type MathWalkthroughRow = {
 };
 
 export const SHERMEEN_OVERVIEW_INTRO = [
-  "Shermeen took her full-length Skill Diagnostic on June 23, 2026. Her total score range was 1100 to 1150, with Reading and Writing at 540 to 560 and Math at 560 to 590. That is slightly above her unproctored Blue Book practice average of about 1080, and above the national average total score of 1029 among the College Board class of 2025 (graduating seniors who took the SAT, using each student's most recent score if they tested more than once).",
-  "Math was the stronger section on this test. She missed 20 Reading and Writing questions and 14 Math questions.",
-  `In Reading and Writing, she missed 20 questions across ${SHERMEEN_RW_SKILL_AREA_COUNT} question types: transitions, command of evidence, form and structure, boundaries, text structure, central ideas, inferences, rhetorical synthesis, and words in context. She missed the most questions on transition questions and command of evidence questions (four each). She also missed questions on the other types listed above. Those 20 wrong answers were spread across the section. No one question type caused most of her misses in Reading and Writing.`,
-  `In Math, she missed 14 questions across ${SHERMEEN_MATH_SKILL_AREA_COUNT} question types, including factoring, circles, linear functions, nonlinear graphs, statistics, and grid-in questions. She missed several question types, not just one. No one question type caused most of her misses in Math.`,
-  `When I rank those misses by how often each question type appears on the SAT and the difficulty of what she missed on this test, ${SHERMEEN_RW_SKILLS_15_PLUS} Reading and Writing skills and ${SHERMEEN_MATH_SKILLS_15_PLUS} Math skills each likely cost her 15 or more points on her total score. Several other skills show smaller totals. That does not mean we teach every skill at once. We work one skill at a time in ranked order, starting with the skills that likely cost her the most points.`,
-  `On Reading and Writing she scored 70% on hard questions and 38% on easy. Most of her wrong answers were on easy or medium questions in several different skill areas. Students who miss easy and medium questions across many skills usually need to learn each SAT question type, how to tell what the question is asking, and the method to answer it. Shermeen's results match that pattern. Easy questions on this test usually test one specific rule or question type. Hard questions often require working through a longer passage.`,
-  "We will help her build this foundation by teaching the question types, how to identify what each question is asking, and the best method to solve it. We go through examples every session until she has the question type, what it is asking, and the method memorized. When she has that memorized, she can start each question right away instead of losing time on setup or reading every answer choice first. That saves time on every question, so she is less likely to run out of time before the module ends. There are more than 20 question types across Reading and Writing and Math, so this takes repetition, but it is the same process in each section.",
-  "Below I walk through how Module 2 was assigned in each section, her Reading and Writing results by skill, her Math results with a question-by-question table, and her timing on each question. This will help me better understand where to focus each lesson, which skills are costing her the most points, and which skills may be foundational to others. That helps me determine the order in which I should teach.",
+  "For someone just starting out, scoring in the 1100 to 1150 range on this diagnostic before she starts preparing for the SAT is not bad. The national average total score is 1029 among the College Board class of 2025 (graduating seniors who took the SAT, using each student's most recent score if they tested more than once), and she is already scoring slightly above that average. She achieved that score before starting to study, which shows me she has the capability to score much higher on the SAT with preparation and practice.",
+  "During the math section, what I saw was that she struggled to identify what the question was asking and then set up the problem correctly. On the Reading and Writing section, she chose an answer the passage supports instead of the answer that matches what the question was specifically asking for. Both point to the same conclusion: she needs to learn all the types of questions on the SAT, how they present themselves, and how to identify what is being asked. That is foundational work to start right away. She has time before her PSAT and SAT dates, and these are learnable skills. Below I break down her performance by section, then walk through each topic where she missed questions and what we will teach her to do differently.",
 ];
 
 export const SHERMEEN_OVERVIEW_INTRO_FOOTNOTE =

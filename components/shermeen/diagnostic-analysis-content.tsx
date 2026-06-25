@@ -17,6 +17,8 @@ import {
   SHERMEEN_MATH_PLAN_NOTE,
   SHERMEEN_MATH_Q9_CONTEXT,
   SHERMEEN_MATH_REMAINING,
+  SHERMEEN_OVERVIEW_INTRO,
+  SHERMEEN_OVERVIEW_INTRO_FOOTNOTE,
   SHERMEEN_RW_INTRO,
   SHERMEEN_RW_PATTERNS,
   SHERMEEN_RW_PLAN_NOTE,
@@ -71,6 +73,8 @@ export function ShermeenDiagnosticAnalysisContent() {
 
         <section className="diag-report__section diag-report__prose" id="shermeen-overall">
           <SectionHead num="01" title="Performance Overview" />
+          <ProseParagraphs lines={SHERMEEN_OVERVIEW_INTRO} />
+          <p className="diag-report__tnote">{SHERMEEN_OVERVIEW_INTRO_FOOTNOTE}</p>
           <QuestionPerformanceMap />
           <DifficultyReadout />
         </section>
