@@ -59,8 +59,7 @@ export default function ShermeenLoginForm() {
         <p className="aurora-eyebrow">Illuminairy</p>
         <h1 className="aurora-portal__title">Shermeen&apos;s SAT Portal</h1>
         <p className="aurora-portal__lede">
-          Enter Sohail or Shermeen&apos;s email to open the portal (sohailft@gmail.com or
-          shermeen.sohail2010@gmail.com).
+          Enter Sohail or Shermeen&apos;s email to open the portal.
         </p>
         <form onSubmit={submit}>
           <label className="aurora-portal__field">
