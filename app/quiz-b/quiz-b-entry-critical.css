@@ -1,29 +1,5 @@
-/* Plan Builder B — first-paint entry shell (inlined via PlanBCriticalCss). */
-
-.plan-b-entry-ssr {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  flex: 1 1 auto;
-  min-height: 0;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.qf-funnel-stage:has(.plan-b-entry-ssr) {
-  position: relative;
-}
-
-.qf-funnel-stage:has(.plan-b-entry-ssr) > .qf-quiz-provider-fill {
-  flex: 1 1 auto;
-  min-height: 0;
-  width: 100%;
-}
-
-.plan-b-entry-ssr .qf-opt {
-  pointer-events: none;
-}
+/* Plan Builder B — first-paint entry chrome (inlined via FunnelCriticalCss).
+   Entry shell overlay rules: app/funnel-entry-ssr.css (sync via funnel-responsive). */
 
 .qfb-lab-root {
   --qfb-marquee-speed: 130s;

@@ -50,7 +50,7 @@ const nextConfig = {
     "/quiz-b": [
       "./app/aurora-brand.css",
       "./app/quiz-globals.css",
-      "./app/funnel-shell.css",
+      "./app/funnel-responsive.css",
       "./app/quiz-b/quiz-b-core-chrome.css",
       "./app/quiz-b/quiz-b-entry-critical.css",
     ],

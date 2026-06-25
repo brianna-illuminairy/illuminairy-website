@@ -42,7 +42,7 @@ function pass(step, detail = "ok") {
 }
 
 async function waitForHydration(page) {
-  await page.waitForSelector(".qf-page, .il-premium-page, main", { timeout: TIMEOUT });
+  await page.locator(".qf-page, .il-premium-page, main >> visible=true").first().waitFor({ timeout: TIMEOUT });
   await page
     .locator("text=Loading your plan")
     .waitFor({ state: "detached", timeout: TIMEOUT })
@@ -83,7 +83,7 @@ async function timedNav(page, label, url) {
 }
 
 async function clickFirstOption(page) {
-  await page.locator(".qf-opt").first().click();
+  await page.locator(".qf-opt >> visible=true").first().click();
   await page.waitForTimeout(200);
 }
 
@@ -162,12 +162,12 @@ async function main() {
   await screenshot(page, "01-lp");
   pass("speed-lp", `${lpMs}ms`);
 
-  const cta = page.getByRole("button", { name: /Build my child|Claim my child/i }).first();
-  if ((await cta.count()) === 0) {
-    fail("lp-cta", "no CTA button found");
-  } else {
-    await cta.scrollIntoViewIfNeeded();
-    await cta.click();
+  const ctaLink = page.getByRole("link", { name: /Build my child|Claim my child/i }).first();
+  const ctaBtn = page.getByRole("button", { name: /Build my child|Claim my child/i }).first();
+  if ((await ctaLink.count()) > 0) {
+    pass("lp-cta", "Link CTA present");
+    await ctaLink.scrollIntoViewIfNeeded();
+    await ctaLink.click();
     try {
       await page.waitForURL(/\/plan-b/, { timeout: 8000 });
     } catch {
@@ -184,6 +184,13 @@ async function main() {
     await waitForHydration(page);
     await screenshot(page, "02-funnel-entry");
     pass("lp-handoff", page.url());
+  } else if ((await ctaBtn.count()) > 0) {
+    await ctaBtn.scrollIntoViewIfNeeded();
+    await ctaBtn.click();
+    await page.waitForURL(/\/plan-b/, { timeout: 8000 });
+    pass("lp-handoff", page.url());
+  } else {
+    fail("lp-cta", "no LP CTA found");
   }
 
   await waitForHydration(page);

@@ -8,7 +8,7 @@
 - **Quiz 1:** `/` LP + `/plan` funnel (high GPA / low SAT). Unchanged. Meta ads ad1–ad5 (except ad3 HD) land on `/`.
 - **Quiz 2 (ad3 HD only):** `/sat-plan-builder` → `/plan-b`. Frozen tutor copy in `lib/plan-b/ad3-hd-landing-copy.ts`. Full SSR page `Ad3HdLandingPage` + shared `landing-v4.css` + thin ad3 shell CSS.
 
-**2026-06-22 consumer polish:** Plan A SSR entry shell (`PlanAEntryShell`), LP CTAs are `<Link>` (homepage, score review, ad3), ad3 CSS deduped to shared v4 + overrides, Plan B deferred CSS slimmed (no critical re-import), session replay uses analytics defer gate, perf doc updated.
+**2026-06-22 funnel siblings:** Shared `components/funnel-sibling/` (layout shell, entry SSR, critical/deferred CSS, dismiss hook). Three-tier CSS contract + `funnel:css-contract-guard` in agent:verify. Plan A/B/C use same patterns; Score Review got SSR entry shell, dynamic runner, error boundary, flushSync option taps. Docs: `docs/funnel-sibling-architecture.md`.
 
 **2026-06-22 Plan B CSS dedup:** Critical inline = concat of source files (no monolithic duplicate). Mobile shell SSOT: `app/funnel-shell.css`.
 

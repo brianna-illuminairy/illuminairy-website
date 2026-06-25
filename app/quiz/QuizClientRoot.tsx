@@ -1,26 +1,26 @@
-'use client';
+"use client";
 
-import dynamic from 'next/dynamic';
-import { useCallback } from 'react';
-import { QuizProvider } from './state';
-import type { QuizSnapshot } from '@/lib/quiz-funnel/quiz-cookie';
+import dynamic from "next/dynamic";
+import { Suspense } from "react";
+import { useDismissFunnelEntryShell } from "@/components/funnel-sibling/funnel-client-root";
+import { QuizProvider } from "./state";
+import type { QuizSnapshot } from "@/lib/quiz-funnel/quiz-cookie";
 
-const QuizRunner = dynamic(() => import('./QuizRunner'), { ssr: false });
+const QuizRunner = dynamic(() => import("./QuizRunner"), { ssr: false });
 
 type QuizClientRootProps = {
   initialSnapshot: QuizSnapshot | null;
-  dismissEntryShell?: boolean;
+  entryShellId?: string;
 };
 
-export function QuizClientRoot({ initialSnapshot, dismissEntryShell = false }: QuizClientRootProps) {
-  const onRunnerMounted = useCallback(() => {
-    if (!dismissEntryShell) return;
-    document.getElementById('plan-a-entry-ssr')?.remove();
-  }, [dismissEntryShell]);
+export function QuizClientRoot({ initialSnapshot, entryShellId }: QuizClientRootProps) {
+  const onRunnerMounted = useDismissFunnelEntryShell(entryShellId);
 
   return (
     <QuizProvider initialSnapshot={initialSnapshot}>
-      <QuizRunner onMounted={onRunnerMounted} />
+      <Suspense fallback={null}>
+        <QuizRunner onMounted={onRunnerMounted} />
+      </Suspense>
     </QuizProvider>
   );
 }

@@ -5,6 +5,11 @@ import { useEffect } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useAnalyticsReady } from '@/components/analytics-ready-provider';
 import { isPlanBuilderBEntryStep } from '@/lib/perf-defer-paths';
+import {
+  commitQuizAnswers,
+  OPTION_TAP_ADVANCE_MS,
+  scheduleOptionTapAdvance,
+} from '@/lib/funnel-sibling/option-tap-advance';
 import { usePlanBDeferredCss } from '@/lib/quiz-funnel-b/plan-b-deferred-css';
 import { useQuiz, type QuizAnswers } from './state';
 import { useQuizAnalytics } from './useQuizAnalytics';
@@ -46,9 +51,6 @@ import {
 import { QFProgressProvider } from '@/app/quiz/components/QFProgressContext';
 import { BSchoolReferral } from '@/app/quiz-b/screens/lab/BSchoolReferral';
 import { BStudentGrade } from '@/app/quiz-b/screens/lab/BStudentGrade';
-
-/** One frame so selected option state paints before route change. */
-const OPTION_TAP_ADVANCE_MS = 16;
 
 const QFInsightHit = dynamic(
   () => import('@/app/quiz/components/QFInsightHit').then((m) => ({ default: m.QFInsightHit })),
@@ -207,17 +209,22 @@ export default function QuizRunner({ onMounted }: { onMounted?: () => void }) {
   }
 
   function setQAndAdvance(key: string, value?: string, extra?: Partial<QuizAnswers>) {
-    dispatch({ type: 'SET_Q', key, value });
+    const updates: Array<{ key: string; value?: string }> = [{ key, value }];
     if (extra) {
       for (const [k, v] of Object.entries(extra)) {
-        if (v !== undefined) dispatch({ type: 'SET_Q', key: k, value: v as string });
+        if (v !== undefined) updates.push({ key: k, value: v as string });
       }
     }
+    commitQuizAnswers({ dispatch, updates });
     if (key === 'qWho' && value === 'child') {
       captureParentConfirmed(value);
     }
-    const pending = { [key]: value, ...extra };
-    window.setTimeout(() => advanceAfterAnswer(pending), OPTION_TAP_ADVANCE_MS);
+    scheduleOptionTapAdvance({
+      mergedAnswers: { ...answers, [key]: value, ...extra },
+      fromStepId: stepId,
+      getRouteSteps: getSteps,
+      goTo,
+    });
   }
 
   const a = answers;

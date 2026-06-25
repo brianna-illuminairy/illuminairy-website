@@ -17,10 +17,11 @@ const UNLOCK = process.env.FUNNEL_LAYOUT_UNLOCK === "1";
 
 const LOCKED_SHELL = [
   "app/funnel-shell.css",
+  "app/funnel-column.css",
   "app/quiz-globals.css",
-  "app/quiz/PlanAEntryShell.tsx",
+  "components/funnel-sibling/FunnelLayoutShell.tsx",
+  "components/funnel-sibling/FunnelWhoEntryShell.tsx",
   "app/quiz/components/QFShell.tsx",
-  "app/quiz/layout.tsx",
   "app/quiz/components/QFProgressContext.tsx",
   "app/quiz/state.tsx",
 ];

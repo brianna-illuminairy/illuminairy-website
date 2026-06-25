@@ -1,7 +1,8 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useCallback } from "react";
+import { Suspense } from "react";
+import { useDismissFunnelEntryShell } from "@/components/funnel-sibling/funnel-client-root";
 import { QuizProvider } from "./state";
 import { useSyncOAuthEmail } from "./useSyncOAuthEmail";
 import type { LabQuizSnapshot } from "@/lib/quiz-funnel-b/quiz-cookie";
@@ -15,19 +16,18 @@ function OAuthEmailSync() {
 
 type QuizClientRootProps = {
   initialSnapshot: LabQuizSnapshot | null;
-  dismissEntryShell?: boolean;
+  entryShellId?: string;
 };
 
-export function QuizClientRoot({ initialSnapshot, dismissEntryShell = false }: QuizClientRootProps) {
-  const onRunnerMounted = useCallback(() => {
-    if (!dismissEntryShell) return;
-    document.getElementById("plan-b-entry-ssr")?.remove();
-  }, [dismissEntryShell]);
+export function QuizClientRoot({ initialSnapshot, entryShellId }: QuizClientRootProps) {
+  const onRunnerMounted = useDismissFunnelEntryShell(entryShellId);
 
   return (
     <QuizProvider initialSnapshot={initialSnapshot}>
       <OAuthEmailSync />
-      <QuizRunner onMounted={onRunnerMounted} />
+      <Suspense fallback={null}>
+        <QuizRunner onMounted={onRunnerMounted} />
+      </Suspense>
     </QuizProvider>
   );
 }

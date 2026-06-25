@@ -79,7 +79,7 @@ function stepMode(stepId) {
 }
 
 async function waitForHydration(page) {
-  await page.waitForSelector(".qf-page", { timeout: TIMEOUT });
+  await page.locator(".qf-page >> visible=true").first().waitFor({ timeout: TIMEOUT });
   await page
     .locator("text=Loading your plan")
     .waitFor({ state: "detached", timeout: TIMEOUT })
@@ -173,7 +173,7 @@ async function assertStepInteraction(page, stepId, opts = {}) {
   const mode = stepMode(stepId);
 
   if (mode === "option-tap") {
-    await page.waitForSelector(".qf-opt", { timeout: TIMEOUT });
+    await page.locator(".qf-opt >> visible=true").first().waitFor({ timeout: TIMEOUT });
     const chrome = page.locator('[role="region"][aria-label="Step actions"]');
     if ((await chrome.count()) > 0) {
       fail(stepId, "option-tap must not show step CTA chrome");
@@ -493,11 +493,11 @@ async function checkNavigation(page) {
   await page.goto(`${BASE}/plan?step=q1-parent-child`, { waitUntil: "networkidle" });
   await waitForHydration(page);
 
-  await page.locator(".qf-opt").first().click();
+  await page.locator(".qf-opt >> visible=true").first().click();
   await page.waitForURL(/step=q-score-lower/, { timeout: TIMEOUT });
   pass("nav", "q1-parent-child option tap advances");
 
-  await page.locator(".qf-opt").first().click();
+  await page.locator(".qf-opt >> visible=true").first().click();
   await page.waitForURL(/step=q1/, { timeout: TIMEOUT });
   pass("nav", "q-score-lower option tap advances");
 
@@ -506,7 +506,7 @@ async function checkNavigation(page) {
     q4: undefined,
   });
   await openStep(page, "q4");
-  await page.locator(".qf-opt").nth(2).click();
+  await page.locator(".qf-opt >> visible=true").nth(2).click();
   await page.waitForURL(/step=q-doubts/, { timeout: TIMEOUT });
   pass("nav", "q4 option tap advances");
 }
@@ -559,7 +559,7 @@ async function checkUtmPreserved(page) {
     `${BASE}/plan?step=q1-parent-child&utm_source=meta&utm_campaign=ad3&utm_content=concerned_mom`,
     { waitUntil: "networkidle" }
   );
-  await page.locator(".qf-opt").first().click();
+  await page.locator(".qf-opt >> visible=true").first().click();
   await page.waitForURL(/utm_source=meta/, { timeout: TIMEOUT });
   const url = page.url();
   if (url.includes("utm_campaign=ad3") && url.includes("utm_content=concerned_mom")) {

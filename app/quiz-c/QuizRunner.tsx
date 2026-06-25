@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { commitQuizAnswers, scheduleOptionTapAdvance } from '@/lib/funnel-sibling/option-tap-advance';
 import { useQuiz, type QuizAnswers } from './state';
 import { useQuizAnalytics } from './useQuizAnalytics';
 import { scoreReviewStepHref } from '@/lib/score-review-routes';
@@ -37,7 +38,7 @@ function getSteps(answers: QuizAnswers) {
   return getScoreReviewRouteSteps(answers);
 }
 
-export default function QuizRunner() {
+export default function QuizRunner({ onMounted }: { onMounted?: () => void }) {
   const router = useRouter();
   const params = useSearchParams();
   const { answers, dispatch, lastStep, setLastStep, hydrated } = useQuiz();
@@ -79,17 +80,9 @@ export default function QuizRunner() {
 
   useQuizAnalytics(stepId, currentIdx, answers, hydrated);
 
-  if (!hydrated) {
-    return (
-      <div className="qf-page" style={{ color: 'var(--qf-ink)' }}>
-        <div className="qf-body">
-          <div className="qf-body-inner">
-            <p className="qf-lead muted">Loading…</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  useEffect(() => {
+    onMounted?.();
+  }, [onMounted]);
 
   function goTo(id: string) {
     router.replace(scoreReviewStepHref(id, search));
@@ -121,8 +114,13 @@ export default function QuizRunner() {
   }
 
   function setQAndAdvance(key: string, value: string) {
-    dispatch({ type: 'SET_Q', key, value });
-    advanceAfterAnswer({ [key]: value });
+    commitQuizAnswers({ dispatch, updates: [{ key, value }] });
+    scheduleOptionTapAdvance({
+      mergedAnswers: { ...answers, [key]: value },
+      fromStepId: stepId,
+      getRouteSteps: getSteps,
+      goTo,
+    });
   }
 
   function toggleQ(key: string, id: string) {

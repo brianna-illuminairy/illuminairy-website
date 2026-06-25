@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
-import { PlanBCriticalCss } from "@/components/cold-funnel/critical-css";
-import { DeferredStylesheet } from "@/components/cold-funnel/deferred-stylesheet";
+import { FunnelCriticalCss } from "@/components/funnel-sibling/FunnelCriticalCss";
+import { DeferredFunnelStylesheet } from "@/components/funnel-sibling/DeferredFunnelStylesheet";
+import { FunnelLayoutShell } from "@/components/funnel-sibling/FunnelLayoutShell";
+import "../funnel-responsive.css";
 
 export const metadata: Metadata = {
   title: "Free SAT Lesson · Illuminairy",
@@ -11,12 +13,18 @@ export const metadata: Metadata = {
 
 export default function QuizBLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="qf-funnel-root qfb-lab-root">
-      <PlanBCriticalCss />
-      <DeferredStylesheet />
-      <div className="qf-funnel-column">
-        <div className="qf-funnel-fill">{children}</div>
-      </div>
-    </div>
+    <FunnelLayoutShell
+      rootClassName="qfb-lab-root"
+      showLegal={false}
+      useFunnelFont={false}
+      head={
+        <>
+          <FunnelCriticalCss />
+          <DeferredFunnelStylesheet />
+        </>
+      }
+    >
+      {children}
+    </FunnelLayoutShell>
   );
 }

@@ -5,6 +5,7 @@ import { useQuiz, showGapScreen, type QuizAnswers } from './state';
 import { useQuizAnalytics } from './useQuizAnalytics';
 import { useQuizAvailabilityPrefetch } from './useQuizAvailabilityPrefetch';
 import { captureParentConfirmed, captureQuizStepBack } from '@/lib/quiz-funnel/analytics';
+import { commitQuizAnswers, scheduleOptionTapAdvance } from '@/lib/funnel-sibling/option-tap-advance';
 import { planBuilderStepHref } from '@/lib/plan-builder-routes';
 import {
   QUIZ_BOOKED_STEP,
@@ -125,17 +126,22 @@ export default function QuizRunner({ onMounted }: { onMounted?: () => void }) {
   }
 
   function setQAndAdvance(key: string, value?: string, extra?: Partial<QuizAnswers>) {
-    dispatch({ type: 'SET_Q', key, value });
+    const updates: Array<{ key: string; value?: string }> = [{ key, value }];
     if (extra) {
       for (const [k, v] of Object.entries(extra)) {
-        if (v !== undefined) dispatch({ type: 'SET_Q', key: k, value: v as string });
+        if (v !== undefined) updates.push({ key: k, value: v as string });
       }
     }
+    commitQuizAnswers({ dispatch, updates });
     if (key === 'qWho' && value === 'child') {
       captureParentConfirmed(value);
     }
-    const pending = { [key]: value, ...extra };
-    setTimeout(() => advanceAfterAnswer(pending), 120);
+    scheduleOptionTapAdvance({
+      mergedAnswers: { ...answers, [key]: value, ...extra },
+      fromStepId: stepId,
+      getRouteSteps: getSteps,
+      goTo,
+    });
   }
 
   const a = answers;

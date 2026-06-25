@@ -32,8 +32,9 @@ Artifacts: `exports/lighthouse-ad-funnel/`. See `growth/prod-deploy-checklist.md
 
 | Layer | File |
 |-------|------|
-| Critical (inline) | Concat: `aurora-brand` + `quiz-globals` + `funnel-shell` + `quiz-b-core-chrome` + `quiz-b-entry-critical` |
-| Deferred (idle) | `quiz-b-deferred.css` → responsive overrides + `quiz-b-core-rest` + `quiz-b-entry-rest` |
+| Critical (inline) | Chrome + entry step 1 only: `aurora-brand`, `quiz-globals`, `quiz-b-core-chrome`, `quiz-b-entry-critical` |
+| Sync (layout) | `funnel-responsive.css` — viewport shell + centered column (same as `/plan`) |
+| Deferred (idle) | `quiz-b-deferred.css` → `quiz-b-core-rest`, `quiz-b-entry-rest` only |
 | Step chunks | `quiz-b-booking.css`, `quiz-b-post.css` via `usePlanBDeferredCss` |
 | SSR entry shell | `PlanBEntryShell` (step 1 only) |
 

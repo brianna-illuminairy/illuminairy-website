@@ -1,107 +1,10 @@
 /* Funnel layout: mobile full-width · tablet · desktop centered column (not full-bleed). */
 @import "./funnel-shell.css";
+@import "./funnel-column.css";
+@import "./funnel-entry-ssr.css";
 
-/* Tablet portrait / small landscape */
-@media (min-width: 600px) {
-  .qf-funnel-root {
-    background:
-      radial-gradient(circle at 18% 22%, rgba(119, 200, 154, 0.1) 0%, transparent 42%),
-      radial-gradient(circle at 82% 78%, rgba(0, 87, 168, 0.06) 0%, transparent 48%),
-      var(--qf-bg, #f5f8fa);
-  }
-
-  .qf-funnel-column {
-    max-width: min(520px, 94vw);
-    box-shadow:
-      0 0 0 1px rgba(18, 26, 43, 0.05),
-      0 24px 64px rgba(18, 26, 43, 0.1);
-  }
-}
-
-/* Tablet landscape + desktop */
+/* LP-only overrides (Plan A landing pages using .lp-page inside funnel shell). */
 @media (min-width: 768px) {
-  .qf-funnel-column {
-    max-width: min(440px, 92vw);
-  }
-
-  .qf-funnel-column .qf-page .lead {
-    font-size: 16px;
-  }
-
-  .qf-funnel-column .qf-page .qf-btn,
-  .qf-funnel-column .qf-page .btn {
-    font-size: 15px;
-    min-height: 48px;
-    padding: 14px 20px;
-  }
-
-  .qf-funnel-column .qf-page .qf-body {
-    padding: 24px 26px 16px;
-  }
-
-  .qf-funnel-column .qf-page .qf-body--ink {
-    padding: 16px 22px 10px;
-  }
-
-  /* Multi-select questions (q6, q7): keep headline on one line, CTA above the fold */
-  .qf-funnel-column .qf-page .qf-question-head--multi {
-    margin-bottom: 14px;
-    gap: 6px;
-  }
-
-  .qf-funnel-column .qf-page .qf-question-head--multi .qf-h1 {
-    font-size: 24px;
-    line-height: 1.15;
-    letter-spacing: -0.012em;
-    text-wrap: pretty;
-    max-width: 100%;
-  }
-
-  .qf-funnel-column .qf-page .qf-question-head--multi .qf-multi-hint {
-    margin-top: 0;
-    font-size: 10px;
-    letter-spacing: 0.16em;
-  }
-
-  .qf-funnel-column .qf-page .qf-question-head--multi + .qf-options {
-    margin-top: 0;
-    gap: 8px;
-  }
-
-  .qf-funnel-column .qf-page .qf-question-head--multi + .qf-options .qf-opt.multi {
-    min-height: 52px;
-    padding: 12px 16px;
-    font-size: 14px;
-    line-height: 1.3;
-  }
-
-  .qf-funnel-column .qf-page .qf-top {
-    padding: max(env(safe-area-inset-top, 0px), 12px) 20px 12px;
-  }
-
-  .qf-funnel-column .qf-page .qf-insight-hit--manual.qf-insight-hit--visual {
-    gap: 12px;
-    padding-bottom: 4px;
-  }
-
-  .qf-funnel-column .qf-page .qf-insight-hit--manual.qf-insight-hit--visual .qf-insight-hit__visual {
-    margin-top: 20px;
-  }
-
-  .qf-funnel-column .qf-page .qf-insight-hit--manual.qf-insight-hit--visual .qf-h1 {
-    font-size: 24px;
-    line-height: 1.15;
-  }
-
-  .qf-funnel-column .qf-page .qf-insight-hit--manual .qf-insight-hit__eyebrow {
-    font-size: 11px;
-    margin-bottom: 2px;
-  }
-
-  .qf-funnel-column .qf-page .qf-insight-hit--outcome-proof .qf-insight-hit__copy {
-    margin-bottom: 44px;
-  }
-
   .lp-page .lp-hero-title {
     font-size: 44px !important;
   }
@@ -112,10 +15,6 @@
 }
 
 @media (min-width: 1024px) {
-  .qf-funnel-column {
-    max-width: min(480px, 90vw);
-  }
-
   .lp-page .lp-hero-title {
     font-size: 48px !important;
   }

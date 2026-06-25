@@ -1,14 +1,23 @@
-'use client';
+"use client";
 
-import { Suspense } from 'react';
-import { QuizProvider } from './state';
-import QuizRunner from './QuizRunner';
+import dynamic from "next/dynamic";
+import { Suspense } from "react";
+import { useDismissFunnelEntryShell } from "@/components/funnel-sibling/funnel-client-root";
+import { QuizProvider } from "./state";
 
-export function QuizClientRoot() {
+const QuizRunner = dynamic(() => import("./QuizRunner"), { ssr: false });
+
+type QuizClientRootProps = {
+  entryShellId?: string;
+};
+
+export function QuizClientRoot({ entryShellId }: QuizClientRootProps) {
+  const onRunnerMounted = useDismissFunnelEntryShell(entryShellId);
+
   return (
     <QuizProvider>
       <Suspense fallback={null}>
-        <QuizRunner />
+        <QuizRunner onMounted={onRunnerMounted} />
       </Suspense>
     </QuizProvider>
   );
