@@ -1,50 +1,33 @@
-/* Shermeen portal — plain sans-serif for parent readability */
+/* Shermeen portal — plain sans-serif for parent readability.
+   Requires hankenGrotesk.variable on a layout ancestor (app/shermeen/layout.tsx).
+   Without --font-hanken, :root --aurora-display falls back to Source Serif 4. */
 
 .shermeen-portal {
-  --aurora-display: var(--aurora-body);
-  font-family: var(--aurora-body);
+  --shermeen-sans: var(--font-hanken, "Hanken Grotesk"), system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  --aurora-display: var(--shermeen-sans);
+  --aurora-body: var(--shermeen-sans);
+  --aurora-mono: var(--shermeen-sans);
+  --font-display: var(--shermeen-sans);
+  font-family: var(--shermeen-sans);
   font-size: 17px;
   line-height: 1.65;
 }
 
 .shermeen-portal .diag-report {
-  --sr-display: var(--aurora-body);
-  --sr-mono: var(--aurora-body);
-  font-size: 17px;
-  line-height: 1.65;
+  --sr-display: var(--shermeen-sans);
+  --sr-body: var(--shermeen-sans);
+  --sr-mono: var(--shermeen-sans);
 }
 
-.shermeen-portal :is(
-  .aurora-portal__title,
-  .diag-report__student,
-  .diag-report__skill-title,
-  .diag-report__sec-head h2,
-  .diag-report__gap-title,
-  .skye-plan__section h2,
-  .dv-ledger__name,
-  .dv-ribbon__label
-) {
-  font-family: var(--aurora-body);
-  font-weight: 700;
-  letter-spacing: -0.01em;
+/* diagnostic-report.css and data-viz.css set display/mono fonts per-class */
+.shermeen-portal :where(.diag-report, .skye-plan, .aurora-body-wrap, .aurora-header, .aurora-footer)
+  :where(*:not(svg):not(path):not(circle):not(line):not(rect):not(g)) {
+  font-family: var(--shermeen-sans) !important;
 }
 
-.shermeen-portal :is(
-  .aurora-eyebrow,
-  .diag-report__eyebrow,
-  .diag-report__meta,
-  .diag-report__bignum-lab,
-  .diag-report__ss-lab,
-  .diag-report__card-lab,
-  .diag-report__tq,
-  .skye-plan__topic-week,
-  .dv-ledger__idx,
-  .dv-ledger__pts,
-  .dv-ledger__note,
-  .diag-report__tnote
-) {
-  font-family: var(--aurora-body);
-  letter-spacing: 0.02em;
+.shermeen-portal svg text {
+  font-family: var(--shermeen-sans) !important;
 }
 
 .shermeen-portal :is(

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { ShermeenPortalAnalytics } from "@/components/shermeen/portal-analytics";
+import { hankenGrotesk } from "@/lib/funnel-fonts";
 import "../aurora-brand.css";
 import "../aurora-components.css";
 import "../diagnostic-report.css";
@@ -17,9 +18,9 @@ export const metadata: Metadata = {
 
 export default function ShermeenLayout({ children }: { children: React.ReactNode }) {
   return (
-    <>
+    <div className={hankenGrotesk.variable}>
       <ShermeenPortalAnalytics />
       {children}
-    </>
+    </div>
   );
 }
