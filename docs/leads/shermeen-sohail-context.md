@@ -48,6 +48,7 @@ Login: enter allowed email at `/shermeen/login` (no password).
 | Login | https://illuminairy.com/shermeen/login |
 | Profile | https://illuminairy.com/shermeen/profile |
 | Diagnostic analysis | https://illuminairy.com/shermeen/diagnostic |
+| Improvement plan | https://illuminairy.com/shermeen/plan |
 | Full PDF | https://illuminairy.com/shermeen/diagnostic/full |
 | Tabular PDF | https://illuminairy.com/shermeen/diagnostic/tabular |
 

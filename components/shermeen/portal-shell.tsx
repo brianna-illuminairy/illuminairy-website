@@ -17,6 +17,11 @@ const NAV = [
     match: (path: string) =>
       path.startsWith("/shermeen/diagnostic") && !path.startsWith("/shermeen/login"),
   },
+  {
+    href: "/shermeen/plan",
+    label: "Improvement Plan",
+    match: (path: string) => path.startsWith("/shermeen/plan"),
+  },
 ] as const;
 
 function HomeworkPortalCta() {
