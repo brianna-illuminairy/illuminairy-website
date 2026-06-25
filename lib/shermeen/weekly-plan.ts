@@ -78,7 +78,7 @@ const SESSIONS: Record<string, PlanSession[]> = {
       n: 2,
       focus: "Reject choices that are true but do not prove the exact claim",
       homework:
-        "Mixed evidence drills from Module 1 and Module 2 misses (due before next week)",
+        "Mixed evidence practice from Module 1 and Module 2 misses (due before next week)",
     },
   ],
   "math-circles": [
@@ -129,7 +129,7 @@ const SESSIONS: Record<string, PlanSession[]> = {
     {
       n: 2,
       focus: "Comma, semicolon, and run-on rules",
-      homework: "Boundary punctuation drill set (due before next week)",
+      homework: "Boundary punctuation practice set (due before next week)",
     },
   ],
   "math-grid-in": [

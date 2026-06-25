@@ -1,0 +1,59 @@
+/* Shermeen portal — plain sans-serif for parent readability */
+
+.shermeen-portal {
+  --aurora-display: var(--aurora-body);
+  font-family: var(--aurora-body);
+  font-size: 17px;
+  line-height: 1.65;
+}
+
+.shermeen-portal .diag-report {
+  --sr-display: var(--aurora-body);
+  --sr-mono: var(--aurora-body);
+  font-size: 17px;
+  line-height: 1.65;
+}
+
+.shermeen-portal :is(
+  .aurora-portal__title,
+  .diag-report__student,
+  .diag-report__skill-title,
+  .diag-report__sec-head h2,
+  .diag-report__gap-title,
+  .skye-plan__section h2,
+  .dv-ledger__name,
+  .dv-ribbon__label
+) {
+  font-family: var(--aurora-body);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.shermeen-portal :is(
+  .aurora-eyebrow,
+  .diag-report__eyebrow,
+  .diag-report__meta,
+  .diag-report__bignum-lab,
+  .diag-report__ss-lab,
+  .diag-report__card-lab,
+  .diag-report__tq,
+  .skye-plan__topic-week,
+  .dv-ledger__idx,
+  .dv-ledger__pts,
+  .dv-ledger__note,
+  .diag-report__tnote
+) {
+  font-family: var(--aurora-body);
+  letter-spacing: 0.02em;
+}
+
+.shermeen-portal :is(
+  .diag-report__prose p,
+  .diag-report__lede,
+  .skye-plan__intro p,
+  .skye-plan__topic-bullets li,
+  .aurora-portal__lede
+) {
+  font-size: 17px;
+  line-height: 1.65;
+}

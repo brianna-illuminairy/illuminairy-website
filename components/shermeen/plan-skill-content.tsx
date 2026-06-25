@@ -7,7 +7,7 @@ import {
   shermeenMilestoneWeeks,
   shermeenRwLedgerRows,
 } from "@/lib/data-viz/adapters/shermeen-plan";
-import { MODELED_SKILL_POINTS_FOOTNOTE } from "@/lib/diagnostic/skill-point-model";
+import { SHERMEEN_SKILL_POINTS_FOOTNOTE } from "@/lib/shermeen/diagnostic-skill-points";
 import { approachForWeek } from "@/lib/shermeen/plan-topic-approaches";
 import { PLAN_TOTALS } from "@/lib/shermeen/plan-skill-data";
 import { currentPlanWeek, SHERMEEN_WEEKLY_PLAN } from "@/lib/shermeen/weekly-plan";
@@ -28,8 +28,9 @@ export function ShermeenPlanSkillContent() {
           <p>
             Shermeen scored {PLAN_TOTALS.baselineScore} on her June 23 diagnostic and missed{" "}
             {PLAN_TOTALS.missCount} questions. The skills below are what she needs to learn to improve her
-            SAT score, sorted so the highest-impact skills are taught first. Point totals are modeled
-            recoverable points from her miss pattern, not a score guarantee.
+            SAT score, sorted so the skills that likely cost her the most points come first. The point
+            totals estimate how many points she likely lost on her total score from misses in each skill.
+            Results vary.
           </p>
           <p>
             In Week 1, we review each question she got wrong on the June 23 diagnostic. The first session
@@ -54,7 +55,7 @@ export function ShermeenPlanSkillContent() {
           ariaLabel="Reading and writing skills ranked by points on the diagnostic"
           interactive={false}
         />
-        <p className="diag-report__tnote">{MODELED_SKILL_POINTS_FOOTNOTE}</p>
+        <p className="diag-report__tnote">{SHERMEEN_SKILL_POINTS_FOOTNOTE}</p>
       </section>
 
       <section className="skye-plan__section">
@@ -66,7 +67,7 @@ export function ShermeenPlanSkillContent() {
           ariaLabel="Math skills ranked by points on the diagnostic"
           interactive={false}
         />
-        <p className="diag-report__tnote">{MODELED_SKILL_POINTS_FOOTNOTE}</p>
+        <p className="diag-report__tnote">{SHERMEEN_SKILL_POINTS_FOOTNOTE}</p>
       </section>
 
       <section className="skye-plan__section">

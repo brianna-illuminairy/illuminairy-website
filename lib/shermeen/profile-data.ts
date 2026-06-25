@@ -33,7 +33,7 @@ export const SHERMEEN_PROFILE = {
     {
       label: "Phase 1",
       value:
-        "12-week foundation cycle (Jun 15 through Sep 7, 2026): rebuild the base and fix the highest-impact gaps first.",
+        "12-week foundation cycle (Jun 15 through Sep 7, 2026): rebuild the base and fix the skills that likely cost her the most points first.",
     },
     {
       label: "Tutoring",
@@ -58,8 +58,8 @@ export const SHERMEEN_PROFILE = {
   testingNotes: [
     "Prior official testing: unproctored Blue Book practice only (1070 to 1080 range).",
     "June 23 Skill Diagnostic was her first full-length proctored test with Illuminairy.",
-    `Reading and Writing: 70% on hard questions, 38% on easy. Misses spread across ${SHERMEEN_RW_SKILL_AREA_COUNT} skill areas in that section, not one concentrated lane.`,
-    `Math: misses spread across ${SHERMEEN_MATH_SKILL_AREA_COUNT} skill areas as well, including factoring, circles, linear functions, and grid-in questions. She scored 92% on easy and 50% on medium. On many misses the next step is naming the question type and which method to apply first, then finishing the problem.`,
+    `Reading and Writing: 70% on hard questions, 38% on easy. She missed 20 questions across ${SHERMEEN_RW_SKILL_AREA_COUNT} question types. Transition questions and command of evidence questions had the most misses (four each). She also missed several other question types.`,
+    `Math: she missed 14 questions across ${SHERMEEN_MATH_SKILL_AREA_COUNT} question types, including factoring, circles, linear functions, and grid-in questions. She scored 92% on easy and 50% on medium. On many misses she needs to name the question type and the method first, then finish the problem.`,
   ],
   timeline: [
     { label: "Strategy Call", value: "June 9, 2026" },
@@ -72,10 +72,10 @@ export const SHERMEEN_PROFILE = {
     { label: "Phase 1 review", value: "September 7, 2026 mock review milestone" },
   ],
   workingOn: [
-    "Question types, identification, and methods: teach each SAT question type, how to spot what it is asking, and the best approach to use. Review examples every session until she has them down, so she can start right away instead of losing time on setup or reading every choice.",
+    "Question types, identification, and methods: teach each SAT question type, how to spot what it is asking, and the best approach to use. Review examples every session until she has the type, what it is asking, and the method memorized, so she can start right away instead of losing time on setup or reading every choice.",
     "Factoring and equivalent forms: move to zero, factor out a common term, verify by expanding, factor theorem when a factor is given.",
     "Reading and Writing: transitions, command of evidence, form and structure, boundaries, and rhetorical synthesis.",
-    "Math follow-ons: linear word problems, circle arc length and tangency, statistics (spread vs center), grid-in habits (never leave blank).",
+    "Math follow-ons: linear word problems, circle arc length and tangency, statistics (variation vs average), grid-in habits (never leave blank).",
     "Pacing: know the question type and method right away so she does not run out of time or guess wrong on the last questions in a module.",
   ],
 } satisfies {

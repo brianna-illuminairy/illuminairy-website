@@ -12,7 +12,7 @@ Thank you again for completing the full-length Skill Diagnostic on June 23. I've
 
 **What's in the portal**
 
-1. **Diagnostic Analysis** — Shermeen's scores, a question-by-question map, and a walkthrough of what drove the misses in Reading and Writing and Math, including how adaptive routing affected Module 2 and what her timing charts show.
+1. **Diagnostic Analysis** — Shermeen's scores, a question-by-question map, and a walkthrough of what drove the misses in Reading and Writing and Math, including how adaptive routing affected Module 2 and her timing on each question.
 
 2. **Improvement Plan** — A high-level weekly schedule of the skills we'll work through in Phase 1. I'm still building this out, so that page may continue to change over the next few days. The diagnostic analysis is the main read for now.
 

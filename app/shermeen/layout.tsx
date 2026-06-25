@@ -4,6 +4,7 @@ import "../aurora-brand.css";
 import "../aurora-components.css";
 import "../diagnostic-report.css";
 import "../design/data-viz/data-viz.css";
+import "./shermeen-portal.css";
 
 export const dynamic = "force-dynamic";
 

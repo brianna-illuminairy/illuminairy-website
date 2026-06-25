@@ -144,8 +144,8 @@ export function ShermeenDiagnosticAnalysisContent() {
           <SectionHead num="02" title="Module 1 and Module 2" />
           <ProseParagraphs lines={SHERMEEN_ADAPTIVE_INTRO} />
           <ShermeenAdaptiveRoutingDiagram />
-          <p>{SHERMEEN_ADAPTIVE_RW}</p>
-          <p>{SHERMEEN_ADAPTIVE_MATH}</p>
+          <ProseParagraphs lines={SHERMEEN_ADAPTIVE_RW} />
+          <ProseParagraphs lines={SHERMEEN_ADAPTIVE_MATH} />
         </section>
 
         <section className="diag-report__section diag-report__prose" id="shermeen-rw">
@@ -205,9 +205,8 @@ export function ShermeenDiagnosticAnalysisContent() {
           ))}
 
           <p style={{ marginTop: 24 }}>
-            As far as order of importance is concerned, I&apos;d estimate she&apos;s losing the
-            following on Reading and Writing, based on how frequently those question types appear on
-            the SAT and the difficulty of what she missed on this test:
+            Based on how often each question type appears on the SAT and what she missed on this test, I
+            estimate she lost roughly this many points in each Reading and Writing skill:
           </p>
           <PriorityList items={RW_PRIORITY} />
           <p className="diag-report__tnote">{SHERMEEN_SKILL_POINT_MODEL.footnote}</p>
@@ -248,9 +247,8 @@ export function ShermeenDiagnosticAnalysisContent() {
           </div>
 
           <p style={{ marginTop: 24 }}>
-            As far as order of importance is concerned, I&apos;d estimate she&apos;s losing the
-            following, based on how frequently those question types appear across each module of the
-            SAT and their difficulty level:
+            Based on how often each question type appears on the SAT and what she missed on this test, I
+            estimate she lost roughly this many points in each Math skill:
           </p>
           <PriorityList items={MATH_PRIORITY} />
           <p className="diag-report__tnote">{SHERMEEN_SKILL_POINT_MODEL.footnote}</p>
@@ -273,7 +271,7 @@ export function ShermeenDiagnosticAnalysisContent() {
         </section>
 
         <section className="diag-report__section diag-report__prose" id="shermeen-timing">
-          <SectionHead num="05" title="Time and Pacing" />
+          <SectionHead num="05" title="Timing by Question" />
           <ProseParagraphs lines={SHERMEEN_TIMING_INTRO} />
           <ProseParagraphs lines={SHERMEEN_TIMING_RW} />
           <ProseParagraphs lines={SHERMEEN_TIMING_MATH} />

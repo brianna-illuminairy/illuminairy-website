@@ -1,6 +1,5 @@
 import {
   buildSectionSkillPoints,
-  MODELED_SKILL_POINTS_FOOTNOTE,
   type DiagnosticMissRow,
 } from "@/lib/diagnostic/skill-point-model";
 import {
@@ -80,10 +79,13 @@ export const SHERMEEN_MATH_SKILLS_15_PLUS = SHERMEEN_MATH_SKILL_MODEL.skills15Pl
 export const SHERMEEN_RW_SKILL_AREA_COUNT = SHERMEEN_RW_SKILL_MODEL.skills.length;
 export const SHERMEEN_MATH_SKILL_AREA_COUNT = SHERMEEN_MATH_SKILL_MODEL.skills.length;
 
+export const SHERMEEN_SKILL_POINTS_FOOTNOTE =
+  "These point totals estimate how many points she likely lost on her total score from misses in each skill, based on question difficulty and how often that skill appears on the SAT. Results vary.";
+
 export const SHERMEEN_SKILL_POINT_MODEL = {
   rw: SHERMEEN_RW_SKILL_MODEL,
   math: SHERMEEN_MATH_SKILL_MODEL,
   rwSkills15Plus: SHERMEEN_RW_SKILLS_15_PLUS,
   mathSkills15Plus: SHERMEEN_MATH_SKILLS_15_PLUS,
-  footnote: MODELED_SKILL_POINTS_FOOTNOTE,
+  footnote: SHERMEEN_SKILL_POINTS_FOOTNOTE,
 };

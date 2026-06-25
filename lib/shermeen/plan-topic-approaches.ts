@@ -20,7 +20,7 @@ export const PLAN_TOPIC_APPROACHES: Record<string, PlanTopicApproach> = {
       "Paraphrase each sentence before looking at choices.",
       "Name the relationship first: addition, contrast, cause-effect, example, or emphasis.",
       "Pick a transition word from that category only. Never start from the answer choices.",
-      "Automatic recognition saves setup time so she is less likely to run out of time before the module ends.",
+      "When she has the word groups memorized, she can name the relationship before looking at choices and start the question faster.",
     ],
   },
   "math-factoring": {
@@ -52,7 +52,7 @@ export const PLAN_TOPIC_APPROACHES: Record<string, PlanTopicApproach> = {
       "Read the full sentence before choosing. The blank must fit grammar and meaning.",
       "Check subject-verb agreement and pronoun reference.",
       "Verb tense must match the rest of the paragraph.",
-      "Method first on every form question type until it is automatic.",
+      "Method first on every form question type until she has the steps memorized.",
     ],
   },
   "math-linear": {

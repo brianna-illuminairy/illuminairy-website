@@ -84,7 +84,7 @@ export function ShermeenPortalShell({ children }: { children: React.ReactNode })
   const pathname = usePathname() ?? "";
 
   return (
-    <div className="aurora-portal">
+    <div className="aurora-portal shermeen-portal">
       <header className="aurora-header">
         <div className="aurora-header__inner" style={{ flexDirection: "column", alignItems: "stretch" }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px", width: "100%" }}>
@@ -104,7 +104,7 @@ export function ShermeenPortalShell({ children }: { children: React.ReactNode })
 
 export function ShermeenLoginChrome({ children }: { children: React.ReactNode }) {
   return (
-    <div className="aurora-portal aurora-portal--login">
+    <div className="aurora-portal aurora-portal--login shermeen-portal">
       <header className="aurora-header">
         <div className="aurora-header__inner">
           <span aria-label="Illuminairy">
