@@ -35,6 +35,8 @@ export const AnalyticsEvents = {
   sohaPortalPageView: "soha_portal_page_view",
   skyePortalLogin: "skye_portal_login",
   skyePortalPageView: "skye_portal_page_view",
+  shermeenPortalLogin: "shermeen_portal_login",
+  shermeenPortalPageView: "shermeen_portal_page_view",
   postCallSalesPageViewed: "post_call_sales_page_viewed",
   postCallPaymentClicked: "post_call_payment_clicked",
   postCallPaymentCompleted: "post_call_payment_completed",
