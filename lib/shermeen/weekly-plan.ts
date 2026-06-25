@@ -14,7 +14,7 @@ export type ShermeenPlanWeek = {
   section: "rw" | "math" | "review" | "diagnostic";
   skillLabel: string;
   points?: number;
-  phase: "diagnostic" | "topic" | "review";
+  phase: "diagnostic" | "topic" | "mixed" | "review";
   skillId?: string;
   hasPracticeTest?: boolean;
   sessions?: PlanSession[];
@@ -22,7 +22,8 @@ export type ShermeenPlanWeek = {
   reviewFocus?: string;
 };
 
-const PLAN_START = new Date("2026-06-23T12:00:00");
+const PLAN_START = new Date("2026-06-29T12:00:00");
+export const SHERMEEN_PHASE_1_WEEKS = 12;
 
 function weekRange(weekIndex: number): { start: string; end: string; label: string } {
   const start = new Date(PLAN_START);
@@ -246,12 +247,28 @@ export function buildShermeenWeeklyPlan(): ShermeenPlanWeek[] {
     endDate: w11.end,
     dateLabel: w11.label,
     section: "review",
-    skillLabel: "Phase 1 mock review",
+    skillLabel: "Full-length timed practice test",
+    phase: "mixed",
+    hasPracticeTest: true,
+    reviewFocus:
+      "Full-length timed practice test under test conditions before we close Phase 1. We note timing, calculator use, and which question types still break under pressure.",
+    volume:
+      "No new skill block this week. She takes the full-length test timed like test day after Week 10 homework.",
+  });
+
+  const w12 = weekRange(12);
+  weeks.push({
+    week: 12,
+    startDate: w12.start,
+    endDate: w12.end,
+    dateLabel: w12.label,
+    section: "review",
+    skillLabel: "Review missed questions",
     phase: "review",
     reviewFocus:
-      "This week is mixed practice on the skills from Weeks 2–10 plus mistakes from the diagnostic and from practice tests on weeks 5 and 9. She keeps working missed question types until she can do them the same way every time.",
+      "Go through every miss from the week 11 practice test and from earlier practice tests. Rework question types until she uses the same method every time. We adjust Phase 2 priorities from what this week shows.",
     volume:
-      "Homework is targeted practice sets built from diagnostic misses and mistakes on practice tests. Full-length timed check toward the Sep 7 Phase 1 milestone.",
+      "Homework is targeted practice sets from those misses. Phase 1 ends when she can run the methods from Weeks 1–11 on fresh items.",
   });
 
   return weeks;

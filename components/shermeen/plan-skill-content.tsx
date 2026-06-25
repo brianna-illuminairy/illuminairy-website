@@ -16,6 +16,10 @@ function weekTopicLabel(skillLabel: string) {
   return skillLabel.split("(")[0]?.trim() ?? skillLabel;
 }
 
+const week1 = SHERMEEN_WEEKLY_PLAN[0];
+const week11 = SHERMEEN_WEEKLY_PLAN[10];
+const week12 = SHERMEEN_WEEKLY_PLAN[SHERMEEN_WEEKLY_PLAN.length - 1];
+
 export function ShermeenPlanSkillContent() {
   const activeWeek = currentPlanWeek();
 
@@ -28,26 +32,33 @@ export function ShermeenPlanSkillContent() {
           <p>
             Shermeen scored {PLAN_TOTALS.baselineScore} on her June 23 diagnostic and missed{" "}
             {PLAN_TOTALS.missCount} questions. The skills below are what she needs to learn to improve her
-            SAT score, sorted so the skills that likely cost her the most points come first. The point
-            totals estimate how many points she likely lost on her total score from misses in each skill.
-            Results vary.
+            SAT score, sorted so the skills that likely cost her the most section points come first. Each
+            total is the sum of modeled points from her misses in that skill (weighted by difficulty and
+            module).
           </p>
           <p>
-            In Week 1, we review each question she got wrong on the June 23 diagnostic. The first session
-            covers math: question type, how to solve it, and whether the calculator can finish it once the
-            problem is set up. The second session covers Reading and Writing: question type and how to answer
-            it. She gets homework between the two sessions. New skill lessons start in Week 2.
+            Phase 1 is a 12-week foundation cycle with no fixed SAT date on the calendar. We move at
+            the pace her sessions and homework support, not a countdown to a test.
           </p>
           <p>
-            Starting Week 2 on June 30, we cover one topic each week, alternating Reading and Writing with
-            math. Each week has two sessions and homework on what we covered. Full practice tests are on weeks
-            5 and 9. Week 11 is the Phase 1 mock review milestone (Sep 1 through Sep 7).
+            Week 1 starts {week1?.dateLabel ?? "the week of June 29"}. We review each question she got
+            wrong on the June 23 diagnostic. The first session covers math: question type, how to solve
+            it, and whether the calculator can finish it once the problem is set up. The second session
+            covers Reading and Writing: question type and how to answer it. She gets homework between
+            the two sessions. New skill lessons start in Week 2.
+          </p>
+          <p>
+            Weeks 2 through 10 cover one topic each week, alternating Reading and Writing with math. Each
+            week has two sessions and homework on what we covered. Full-length timed practice tests are on
+            weeks 5, 9, and 11 ({week11?.dateLabel ?? "early September"}). Week 12 (
+            {week12?.dateLabel ?? "mid-September"}) we review every miss from the week 11 test and from
+            earlier practice tests.
           </p>
         </div>
       </header>
 
       <section className="skye-plan__section">
-        <h2>Highest Priority Reading &amp; Writing Skills +{PLAN_TOTALS.rwSection} pts</h2>
+        <h2>High Impact Reading &amp; Writing Skills</h2>
         <LedgerRank
           rows={shermeenRwLedgerRows()}
           footerLeft="Section subtotal"
@@ -59,7 +70,7 @@ export function ShermeenPlanSkillContent() {
       </section>
 
       <section className="skye-plan__section">
-        <h2>Highest Priority Math Skills +{PLAN_TOTALS.mathSection} pts</h2>
+        <h2>High Impact Math Skills</h2>
         <LedgerRank
           rows={shermeenMathLedgerRows()}
           footerLeft="Section subtotal"
@@ -71,11 +82,11 @@ export function ShermeenPlanSkillContent() {
       </section>
 
       <section className="skye-plan__section">
-        <h2>Eleven-week Phase 1 schedule</h2>
+        <h2>Twelve-week Phase 1 schedule</h2>
         <MilestoneRibbon
           weeks={shermeenMilestoneWeeks()}
           pins={shermeenMilestonePins()}
-          ariaLabel="Eleven week SAT improvement schedule"
+          ariaLabel="Twelve week SAT improvement schedule"
           interactive={false}
         />
         <ol className="skye-plan__topic-list skye-plan__topic-list--schedule">

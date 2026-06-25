@@ -33,7 +33,7 @@ export const SHERMEEN_PROFILE = {
     {
       label: "Phase 1",
       value:
-        "12-week foundation cycle (Jun 15 through Sep 7, 2026): rebuild the base and fix the skills that likely cost her the most points first.",
+        "12-week foundation cycle (Jun 29 through Sep 20, 2026): rebuild the base and fix the skills that likely cost her the most points first. Pace follows her sessions, not a test countdown.",
     },
     {
       label: "Tutoring",
@@ -41,7 +41,7 @@ export const SHERMEEN_PROFILE = {
     },
     {
       label: "Practice tests",
-      value: "Full-length timed checks on the Phase 1 schedule, including a mock review milestone Sep 7, 2026.",
+      value: "Full-length timed practice tests on weeks 5, 9, and 11 of Phase 1.",
     },
     {
       label: "Longer arc",
@@ -63,13 +63,14 @@ export const SHERMEEN_PROFILE = {
   ],
   timeline: [
     { label: "Strategy Call", value: "June 9, 2026" },
-    { label: "Phase 1 start", value: "June 15, 2026" },
+    { label: "Phase 1 start", value: "Week of June 29, 2026 (Week 1)" },
     { label: "Skill Diagnostic", value: "June 23, 2026 (full-length, proctored)" },
     {
       label: "Diagnostic score",
       value: "1100 to 1150 (540 to 560 R&W · 560 to 590 Math)",
     },
-    { label: "Phase 1 review", value: "September 7, 2026 mock review milestone" },
+    { label: "Full-length practice test", value: "Week of September 7, 2026 (Week 11)" },
+    { label: "Phase 1 review", value: "Week of September 14, 2026 (Week 12)" },
   ],
   workingOn: [
     "Question types, identification, and methods: teach each SAT question type, how to spot what it is asking, and the best approach to use. Review examples every session until she has the type, what it is asking, and the method memorized, so she can start right away instead of losing time on setup or reading every choice.",

@@ -63,10 +63,13 @@ export function LedgerRank({
         })}
         {footerLeft || footerTotal != null ? (
           <li className="dv-ledger__footer">
-            <span>{footerLeft}</span>
-            {footerTotal != null ? (
-              <span className="dv-ledger__pts">+{footerTotal}</span>
-            ) : null}
+            <span className="dv-ledger__idx" aria-hidden="true" />
+            <div className="dv-ledger__footer-right">
+              {footerLeft ? <span className="dv-ledger__footer-label">{footerLeft}</span> : null}
+              {footerTotal != null ? (
+                <span className="dv-ledger__pts">+{footerTotal}</span>
+              ) : null}
+            </div>
           </li>
         ) : null}
       </ol>

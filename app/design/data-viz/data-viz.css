@@ -235,6 +235,18 @@
   color: var(--aurora-muted);
 }
 
+.dv-ledger__footer-right {
+  grid-column: 2 / 4;
+  display: flex;
+  justify-content: flex-end;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.dv-ledger__footer-label {
+  text-align: right;
+}
+
 .dv-ribbon__weeks,
 .dv-ribbon__cards,
 .dv-ribbon__pins {

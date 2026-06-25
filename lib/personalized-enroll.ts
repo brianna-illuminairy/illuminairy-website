@@ -87,11 +87,11 @@ const sohailShermeen: PersonalizedEnrollLead = {
     weeks: 12,
     pacePerWeek: 15,
     startDateLabel: "Jun 15, 2026",
-    reviewDateLabel: "Sep 7, 2026",
-    reviewMilestoneLabel: "Phase 1 mock review"
+    reviewDateLabel: "Sep 20, 2026",
+    reviewMilestoneLabel: "Review missed questions"
   },
   longerArc: [
-    "Phase 1 (now → Sep 7): foundation cycle. Rebuild the base, fix the highest-impact gaps first.",
+    "Phase 1 (now → Sep 20): foundation cycle. Rebuild the base, fix the highest-impact gaps first.",
     "October sophomore PSAT: first official benchmark, written into the College Board record.",
     "Phase 2 (summer before junior year): National Merit / PSAT-NMSQT push, and her first official SAT (May 1, 2027 target — Mar 6 or Jun 5 as backups).",
     "Phase 3 (junior year, if needed): final score optimization for 1500+ and superscoring."

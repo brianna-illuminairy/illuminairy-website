@@ -1209,6 +1209,79 @@
 }
 
 /* adaptive routing diagram */
+.diag-report__adaptive-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 20px 0;
+}
+
+.diag-report__adaptive-section {
+  border: 1px solid var(--sr-line);
+  border-radius: 4px;
+  padding: 18px 20px;
+  background: var(--sr-paper);
+}
+
+.diag-report__adaptive-section-title {
+  font-family: var(--sr-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--sr-green);
+  margin: 0 0 16px;
+}
+
+.diag-report__adaptive-flow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: 12px 16px;
+  align-items: center;
+}
+
+.diag-report__adaptive-step {
+  min-width: 0;
+}
+
+.diag-report__adaptive-step-label {
+  display: block;
+  font-family: var(--sr-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--sr-muted);
+  margin-bottom: 8px;
+}
+
+.diag-report__adaptive-step--hard .diag-report__adaptive-step-label {
+  color: var(--sr-green);
+}
+
+.diag-report__adaptive-arrow {
+  font-family: var(--sr-mono);
+  font-size: 18px;
+  line-height: 1;
+  color: var(--sr-muted);
+  text-align: center;
+  padding: 0 4px;
+}
+
+.diag-report__adaptive-score {
+  font-family: var(--sr-display);
+  font-size: 28px;
+  font-weight: 600;
+  margin: 0 0 8px;
+  line-height: 1.1;
+}
+
+.diag-report__adaptive-note {
+  font-size: 13px;
+  color: var(--sr-muted);
+  margin: 0;
+  line-height: 1.45;
+}
+
+/* legacy side-by-side layout (Skye) */
 .diag-report__adaptive {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
@@ -1233,19 +1306,6 @@
   margin: 0 0 12px;
 }
 
-.diag-report__adaptive-score {
-  font-family: var(--sr-display);
-  font-size: 28px;
-  font-weight: 600;
-  margin: 0 0 8px;
-}
-
-.diag-report__adaptive-note {
-  font-size: 13px;
-  color: var(--sr-muted);
-  margin: 0;
-}
-
 .diag-report__adaptive-mid {
   display: flex;
   align-items: center;
@@ -1258,6 +1318,16 @@
 }
 
 @media (max-width: 760px) {
+  .diag-report__adaptive-flow {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .diag-report__adaptive-arrow {
+    transform: rotate(90deg);
+    padding: 4px 0;
+  }
+
   .diag-report__adaptive {
     grid-template-columns: 1fr;
   }

@@ -125,8 +125,8 @@ Ranked recoverable points are **not** SAT official data. They are a **model**:
 
 1. Collect misses from diagnostic tables (`RW_MISS_TABLE`, `MATH_MISS_TABLE`)
 2. Group by skill tag
-3. Weight by difficulty and frequency
-4. Allocate share of plausible gain using rank weights (`growth/score-path-gain-model.md`: 28/24/20/16/12 for top 5 illustrative)
+3. Assign **modeled section-score impact per miss** from difficulty (E/M/H) and module (M1 vs M2) — SSOT: `missQuestionPoints()` in `lib/diagnostic/skill-point-model.ts`
+4. **Sum** misses within each skill; section subtotal = sum of all misses in that section (scaled to `800 − sectionMid` when raw total drifts >5%)
 5. Label **modeled** until Skill Diagnostic on real items
 
 ### Why lollipop (`VisxSkillLollipop`)

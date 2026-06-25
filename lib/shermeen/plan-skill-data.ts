@@ -91,12 +91,12 @@ export const RW_SKILLS: PlanSkill[] = SHERMEEN_RW_SKILL_MODEL.skills.map((skill)
   rwPlanSkill(skill.topic, skill.points)
 );
 
-/** Mentor math buckets at 12+ modeled pts for the ledger. */
-export const MATH_SKILLS: PlanSkill[] = SHERMEEN_MATH_SKILL_MODEL.skills
-  .filter((skill) => skill.points >= 12)
-  .map((skill) => mathPlanSkill(skill.topic, skill.points));
+/** All modeled Math skills for the ledger (sorted by points in the model). */
+export const MATH_SKILLS: PlanSkill[] = SHERMEEN_MATH_SKILL_MODEL.skills.map((skill) =>
+  mathPlanSkill(skill.topic, skill.points)
+);
 
-/** Nine skills we teach in Weeks 2–10 (interleaved RW and Math). */
+/** Nine skills we teach in Weeks 2–10 (interleaved RW and Math). Weeks 11–12 are review. */
 const ROTATION_TOPICS = [
   "Transitions",
   "Factoring, zero-product, and factor theorem",
@@ -137,6 +137,6 @@ function parseScoreMid(range: string): number {
 export const PLAN_TOTALS = {
   rwSection: SHERMEEN_RW_SKILL_MODEL.ceiling,
   mathSection: SHERMEEN_MATH_SKILL_MODEL.ceiling,
-  missCount: 34,
+  missCount: 20,
   baselineScore: parseScoreMid(SHERMEEN_HERO.totalRange),
 };

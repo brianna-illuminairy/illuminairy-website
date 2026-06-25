@@ -30,13 +30,8 @@ export function shermeenMilestoneWeeks(): MilestoneWeek[] {
 }
 
 export function shermeenMilestonePins(): MilestonePin[] {
-  const pins: MilestonePin[] = SHERMEEN_WEEKLY_PLAN.filter((w) => w.hasPracticeTest).map((w) => ({
+  return SHERMEEN_WEEKLY_PLAN.filter((w) => w.hasPracticeTest).map((w) => ({
     week: w.week,
     label: "Practice test",
   }));
-  const reviewWeek = SHERMEEN_WEEKLY_PLAN.find((w) => w.phase === "review");
-  if (reviewWeek) {
-    pins.push({ week: reviewWeek.week, label: "Phase 1 mock" });
-  }
-  return pins;
 }

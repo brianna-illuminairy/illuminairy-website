@@ -87,12 +87,20 @@ export const PLAN_TOPIC_APPROACHES: Record<string, PlanTopicApproach> = {
       "Use the notes to confirm your pick or break a tie between two choices.",
     ],
   },
-  "week-11-review": {
+  "week-11-practice-test": {
     bullets: [
-      "Mixed practice on the skills from Weeks 2–10.",
-      "Pull in mistakes from the diagnostic and from practice tests on weeks 5 and 9.",
+      "Full-length timed practice test under test conditions (2 hr 14 min).",
+      "No new skill block this week. She takes the test after finishing Week 10 homework.",
+      "We note timing, calculator use, and which question types still break under pressure.",
+      "Week 12 is reserved for reviewing every miss from this test.",
+    ],
+  },
+  "week-12-review": {
+    bullets: [
+      "Review every miss from the week 11 practice test, question by question.",
+      "Pull in any repeats from the diagnostic and from practice tests on weeks 5 and 9.",
       "Rework missed question types until she uses the same method every time.",
-      "Full-length timed check toward the Sep 7 Phase 1 mock review milestone.",
+      "Adjust Phase 2 priorities from what this week shows. Phase 1 ends when she can run those methods on fresh items.",
     ],
   },
 };
@@ -100,7 +108,8 @@ export const PLAN_TOPIC_APPROACHES: Record<string, PlanTopicApproach> = {
 export function approachForWeek(week: ShermeenPlanWeek): string[] | null {
   let key: string | null = null;
   if (week.phase === "diagnostic") key = "week-1-diagnostic";
-  else if (week.phase === "review") key = "week-11-review";
+  else if (week.phase === "mixed") key = "week-11-practice-test";
+  else if (week.phase === "review") key = "week-12-review";
   else if (week.skillId) key = week.skillId;
 
   if (!key) return null;

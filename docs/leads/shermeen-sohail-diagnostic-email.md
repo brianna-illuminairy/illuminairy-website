@@ -10,11 +10,13 @@ Hi Sohail and Shermeen,
 
 Thank you again for completing the full-length Skill Diagnostic on June 23. I've finished analyzing Shermeen's results and the write-up is ready for you to review.
 
+On this test her score range was **1100 to 1150** (**540 to 560** Reading and Writing · **560 to 590** Math). The portal explains what drove the wrong answers, which question types we'll teach first, how Module 1 decided which Module 2 she got in each section, and her timing on each question.
+
 **What's in the portal**
 
-1. **Diagnostic Analysis** — Shermeen's scores, a question-by-question map, and a walkthrough of what drove the misses in Reading and Writing and Math, including how adaptive routing affected Module 2 and her timing on each question.
+1. **Diagnostic Analysis** — scores, a question-by-question map, and a walkthrough of her misses in Reading and Writing and Math. It includes why she qualified for the harder Module 2 in both sections (and why that matters for her score ceiling), plus timing notes question by question.
 
-2. **Improvement Plan** — A high-level weekly schedule of the skills we'll work through in Phase 1. I'm still building this out, so that page may continue to change over the next few days. The diagnostic analysis is the main read for now.
+2. **Improvement Plan** — the 12-week Phase 1 schedule: diagnostic review in Week 1 (starting the week of June 29), then the skills we'll work through one at a time, a full-length timed practice test in Week 11, and a review of missed questions in Week 12. I'll refine it as sessions start, but it gives you a first look at the order.
 
 **Log in to review**
 
@@ -22,11 +24,9 @@ Go to: https://illuminairy.com/shermeen/login
 
 Enter either Sohail or Shermeen's email (whichever you prefer), then click Continue.
 
-From there, open **Diagnostic Analysis** in the top navigation. **Improvement Plan** is there too when you want a first look at the schedule.
+Open **Diagnostic Analysis** first. **Improvement Plan** is in the top navigation when you want the schedule. The full PDF and tabular PDF from test day are linked at the bottom of the Diagnostic Analysis page.
 
-I'd love to walk through the results with you both and answer questions on timing, sessions, and how the weekly plan fits Shermeen's Phase 1 schedule. Reply with a few times that work, or book a 15-minute Strategy Call here: https://calendly.com/satprep-illuminairy/sat-planning-session
-
-Results vary by student and effort. The analysis shows where focus pays off; it is not a score guarantee.
+I'd love to walk through the results with you both and answer questions on sessions and how the weekly plan fits Phase 1. Reply with a few times that work, or book a 15-minute Strategy Call here: https://calendly.com/satprep-illuminairy/sat-planning-session
 
 Talk soon,
 

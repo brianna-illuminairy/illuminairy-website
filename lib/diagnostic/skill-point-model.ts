@@ -1,12 +1,12 @@
 /**
- * IRT-inspired modeled recoverable points from diagnostic misses.
+ * Modeled section-score impact from diagnostic misses.
  *
- * Full 3PL item parameters are not published for Digital SAT forms. This model uses
- * operational difficulty (E/M/H) as a difficulty proxy, weights Module 1 misses for
- * adaptive routing risk, groups by skill tag, then scales skill totals to a section
- * ceiling derived from the reported score band and miss count.
+ * Digital SAT uses IRT (no public per-item chart). We estimate each miss as a
+ * section-score point loss from difficulty (E/M/H) and module (M1 routing weight).
+ * Skill totals sum misses in that tag; section total sums all misses, scaled to
+ * section headroom (800 − section mid) when raw sum drifts >5%.
  *
- * SSOT process: docs/data-visualization-sat-model.md (steps 1–5).
+ * SSOT: docs/data-visualization-sat-model.md
  */
 
 export type MissDifficulty = "easy" | "med" | "hard";
@@ -26,55 +26,73 @@ export type SkillPointRow = {
 };
 
 export type SectionSkillPointModel = {
+  /** Sum of skill points (= section subtotal after headroom scale). */
   ceiling: number;
+  /** Raw sum before headroom scale (for guards). */
+  rawSectionTotal: number;
   totalWeightedMisses: number;
   skills: SkillPointRow[];
   skills15Plus: number;
 };
 
-/** Easy misses at moderate ability carry more score information (Soha routing narrative). */
-const IRT_DIFF_WEIGHT: Record<MissDifficulty, number> = {
-  easy: 3,
-  med: 2,
-  hard: 1,
+/** Modeled section-score impact per missed item (easy M1 highest, hard M2 lowest). */
+const MISS_SECTION_POINTS: Record<MissDifficulty, { m1: number; m2: number }> = {
+  easy: { m1: 18, m2: 14 },
+  med: { m1: 13, m2: 11 },
+  hard: { m1: 10, m2: 7 },
 };
 
-/** Module 1 wrong answers can cap Module 2 difficulty (adaptive SAT). */
-const MODULE1_ROUTING_FACTOR = 1.15;
+const HEADROOM_SCALE_THRESHOLD = 0.05;
 
-const HEADROOM_CAL_FACTOR = 1.35;
-
+/** @deprecated Use missQuestionPoints — kept for any external rank-only callers. */
 export function missItemWeight(diff: MissDifficulty, mod: string): number {
-  const base = IRT_DIFF_WEIGHT[diff];
-  return mod === "1" ? base * MODULE1_ROUTING_FACTOR : base;
+  return missQuestionPoints(diff, mod);
 }
 
-/**
- * Max plausible recoverable points for a section on this test.
- * Capped below 800 − sectionMid and below band-derived bound so skill totals
- * never exceed what the score report can support.
- */
+export function missQuestionPoints(diff: MissDifficulty, mod: string): number {
+  const band = MISS_SECTION_POINTS[diff];
+  return mod === "1" ? band.m1 : band.m2;
+}
+
+export function sectionHeadroom(scoreLow: number, scoreHigh: number): number {
+  const mid = (scoreLow + scoreHigh) / 2;
+  return Math.round(800 - mid);
+}
+
+/** @deprecated Proportional ceiling replaced by additive miss sums + headroom scale. */
 export function sectionRecoverableCeiling(
   scoreLow: number,
   scoreHigh: number,
-  missCount: number,
-  totalQuestions: number
+  _missCount: number,
+  _totalQuestions: number
 ): number {
-  const mid = (scoreLow + scoreHigh) / 2;
-  const headroom = 800 - mid;
-  const missShare = missCount / totalQuestions;
-  const irtGap = headroom * missShare * HEADROOM_CAL_FACTOR;
-  const bandCap = (scoreHigh - scoreLow) * 3 + missCount * 4;
-  return Math.min(Math.round(irtGap), Math.round(bandCap), Math.round(headroom));
-}
-
-function roundSkillPoints(raw: number, ceiling: number, totalRaw: number): number {
-  if (totalRaw <= 0 || ceiling <= 0) return 0;
-  return Math.round((raw / totalRaw) * ceiling);
+  return sectionHeadroom(scoreLow, scoreHigh);
 }
 
 function formatPts(points: number): string {
   return `~${points} pts`;
+}
+
+function scaleSkillPoints(skills: SkillPointRow[], targetTotal: number, rawTotal: number): SkillPointRow[] {
+  if (rawTotal <= 0 || targetTotal <= 0) return skills;
+
+  const factor = targetTotal / rawTotal;
+  const scaled = skills.map((skill) => {
+    const points = Math.round(skill.points * factor);
+    return { ...skill, points, pts: formatPts(points) };
+  });
+
+  const roundedSum = scaled.reduce((sum, skill) => sum + skill.points, 0);
+  const drift = targetTotal - roundedSum;
+  if (scaled.length > 0 && drift !== 0) {
+    scaled[0] = {
+      ...scaled[0],
+      points: scaled[0].points + drift,
+      pts: formatPts(scaled[0].points + drift),
+    };
+  }
+
+  return scaled;
 }
 
 export function buildSectionSkillPoints(input: {
@@ -82,67 +100,63 @@ export function buildSectionSkillPoints(input: {
   scoreLow: number;
   scoreHigh: number;
   totalQuestions: number;
-  /** When set, caps the model to score-report miss count instead of table row count. */
+  /** Ignored — kept for call-site compatibility; uses misses.length. */
   missCount?: number;
   normalizeTopic?: (row: DiagnosticMissRow) => string;
 }): SectionSkillPointModel {
-  const { misses, scoreLow, scoreHigh, totalQuestions, normalizeTopic } = input;
-  const reportedMisses = input.missCount ?? misses.length;
-  const ceiling = sectionRecoverableCeiling(
-    scoreLow,
-    scoreHigh,
-    reportedMisses,
-    totalQuestions
-  );
+  const { misses, scoreLow, scoreHigh, normalizeTopic } = input;
+  const headroom = sectionHeadroom(scoreLow, scoreHigh);
 
-  const byTopic = new Map<string, { weight: number; missCount: number }>();
-  let totalWeighted = 0;
+  const byTopic = new Map<string, { points: number; missCount: number }>();
+  let rawSectionTotal = 0;
 
   for (const row of misses) {
     const topic = normalizeTopic ? normalizeTopic(row) : row.topic;
-    const weight = missItemWeight(row.diff, row.mod);
-    totalWeighted += weight;
-    const hit = byTopic.get(topic) ?? { weight: 0, missCount: 0 };
-    hit.weight += weight;
+    const pts = missQuestionPoints(row.diff, row.mod);
+    rawSectionTotal += pts;
+    const hit = byTopic.get(topic) ?? { points: 0, missCount: 0 };
+    hit.points += pts;
     hit.missCount += 1;
     byTopic.set(topic, hit);
   }
 
-  if (totalWeighted <= 0 || ceiling <= 0) {
-    return { ceiling, totalWeightedMisses: totalWeighted, skills: [], skills15Plus: 0 };
+  if (rawSectionTotal <= 0 || headroom <= 0) {
+    return {
+      ceiling: 0,
+      rawSectionTotal,
+      totalWeightedMisses: misses.length,
+      skills: [],
+      skills15Plus: 0,
+    };
   }
 
-  const skills = Array.from(byTopic.entries())
-    .map(([topic, data]) => {
-      const points = roundSkillPoints(data.weight, ceiling, totalWeighted);
-      return {
-        topic,
-        points,
-        pts: formatPts(points),
-        missCount: data.missCount,
-      };
-    })
+  let skills = Array.from(byTopic.entries())
+    .map(([topic, data]) => ({
+      topic,
+      points: data.points,
+      pts: formatPts(data.points),
+      missCount: data.missCount,
+    }))
     .sort((a, b) => b.points - a.points || b.missCount - a.missCount);
 
-  const roundedSum = skills.reduce((sum, skill) => sum + skill.points, 0);
-  const drift = ceiling - roundedSum;
-  if (skills.length > 0 && drift !== 0) {
-    skills[0] = {
-      ...skills[0],
-      points: skills[0].points + drift,
-      pts: formatPts(skills[0].points + drift),
-    };
+  const needsScale =
+    Math.abs(rawSectionTotal - headroom) / headroom > HEADROOM_SCALE_THRESHOLD;
+  const sectionTotal = needsScale ? headroom : rawSectionTotal;
+
+  if (needsScale) {
+    skills = scaleSkillPoints(skills, sectionTotal, rawSectionTotal);
   }
 
   const skills15Plus = skills.filter((skill) => skill.points >= 15).length;
 
   return {
-    ceiling,
-    totalWeightedMisses: totalWeighted,
+    ceiling: sectionTotal,
+    rawSectionTotal,
+    totalWeightedMisses: misses.length,
     skills,
     skills15Plus,
   };
 }
 
 export const MODELED_SKILL_POINTS_FOOTNOTE =
-  "Modeled recoverable points from missed items (difficulty-weighted), scaled to fit this section's score range. Results vary.";
+  "Modeled section score impact per miss (difficulty and module weighted). Not official College Board scoring.";

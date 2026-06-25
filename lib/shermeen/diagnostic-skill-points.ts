@@ -80,7 +80,7 @@ export const SHERMEEN_RW_SKILL_AREA_COUNT = SHERMEEN_RW_SKILL_MODEL.skills.lengt
 export const SHERMEEN_MATH_SKILL_AREA_COUNT = SHERMEEN_MATH_SKILL_MODEL.skills.length;
 
 export const SHERMEEN_SKILL_POINTS_FOOTNOTE =
-  "These point totals estimate how many points she likely lost on her total score from misses in each skill, based on question difficulty and how often that skill appears on the SAT. Results vary.";
+  "These totals are modeled section score impact (200–800 per section), not official College Board scoring. Each miss is estimated from question difficulty and whether it was in Module 1 or Module 2. A skill total is the sum of its misses; the section subtotal is the sum of all misses in that section.";
 
 export const SHERMEEN_SKILL_POINT_MODEL = {
   rw: SHERMEEN_RW_SKILL_MODEL,

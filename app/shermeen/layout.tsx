@@ -12,7 +12,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Shermeen's SAT Portal",
   description:
-    "Private Illuminairy student portal for Shermeen Sohail's diagnostic analysis.",
+    "Private Illuminairy student portal for Shermeen's diagnostic analysis.",
   robots: { index: false, follow: false }
 };
 

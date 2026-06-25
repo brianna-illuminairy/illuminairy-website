@@ -300,7 +300,7 @@ export function ShermeenDiagnosticAnalysisContent() {
           <span>
             <span className="diag-report__star">✦</span> Illuminairy · SAT Diagnostic Analysis
           </span>
-          <span>Shermeen Sohail · June 23, 2026</span>
+          <span>Shermeen · June 23, 2026</span>
         </footer>
       </div>
     </article>
