@@ -1,9 +1,62 @@
 import Link from "next/link";
+import {
+  SHERMEEN_PHASE1_LEARNING_OBJECTIVES,
+  SHERMEEN_PLAN_ACCURACY_FOCUS,
+  SHERMEEN_PLAN_ACCURACY_ROWS,
+  SHERMEEN_PLAN_ACCURACY_SECTION_NOTE,
+  SHERMEEN_PLAN_ACCURACY_SKILL_NOTE,
+  SHERMEEN_PLAN_PRACTICE_VOLUME_COPY,
+  formatAccuracyDelta,
+} from "@/lib/shermeen/plan-accuracy";
 
 export function ShermeenPlanTailContent() {
   return (
     <section>
       <div className="eyebrow">The Plan</div>
+
+      <p className="subh">Practice volume</p>
+      <p className="note">{SHERMEEN_PLAN_PRACTICE_VOLUME_COPY}</p>
+
+      <p className="subh">Phase 1 learning objectives</p>
+      <p className="note">By the end of this 12-week phase, Shermeen should be able to do all of the following:</p>
+      <ul className="checks">
+        {SHERMEEN_PHASE1_LEARNING_OBJECTIVES.map((objective, index) => (
+          <li key={index}>{objective}</li>
+        ))}
+      </ul>
+
+      <p className="subh">Phase 1 focus: easy and medium accuracy</p>
+      <p className="note">{SHERMEEN_PLAN_ACCURACY_FOCUS}</p>
+
+      <p className="subh">Accuracy: diagnostic vs Phase 1 target</p>
+      <table className="session-table">
+        <thead>
+          <tr>
+            <th>Level</th>
+            <th>Reading &amp; Writing today</th>
+            <th>RW Phase 1 target</th>
+            <th>Math today</th>
+            <th>Math Phase 1 target</th>
+          </tr>
+        </thead>
+        <tbody>
+          {SHERMEEN_PLAN_ACCURACY_ROWS.map((row) => (
+            <tr key={row.level}>
+              <td>{row.level}</td>
+              <td>{row.rwToday}%</td>
+              <td>
+                {row.rwTarget}% ({formatAccuracyDelta(row.rwToday, row.rwTarget)})
+              </td>
+              <td>{row.mathToday}%</td>
+              <td>
+                {row.mathTarget}% ({formatAccuracyDelta(row.mathToday, row.mathTarget)})
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <p className="note">{SHERMEEN_PLAN_ACCURACY_SECTION_NOTE}</p>
+      <p className="note">{SHERMEEN_PLAN_ACCURACY_SKILL_NOTE}</p>
 
       <p className="subh">Check-ins</p>
       <ul className="checks">

@@ -291,6 +291,28 @@
   font-size: 16px;
 }
 
+.aurora-portal__plan-root .session-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 14px 0;
+  font-size: 14px;
+}
+
+.aurora-portal__plan-root .session-table th,
+.aurora-portal__plan-root .session-table td {
+  border: 1px solid var(--plan-line);
+  padding: 10px 12px;
+  text-align: left;
+}
+
+.aurora-portal__plan-root .session-table th {
+  background: var(--plan-sage);
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--plan-forest);
+}
+
 .aurora-portal__plan-root .note {
   font-size: 13.5px;
   color: var(--plan-muted);
@@ -384,6 +406,12 @@
 
   .aurora-portal__plan-root .honest {
     grid-template-columns: 1fr;
+  }
+
+  .aurora-portal__plan-root .session-table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   .aurora-portal__plan-root .name {

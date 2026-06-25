@@ -112,7 +112,7 @@ export function ShermeenPlanOverviewContent() {
 
         <div className="effort">
           <span>2 sessions / week</span>
-          <span>~15 problems / week homework</span>
+          <span>60–100 questions / week</span>
           <span>Practice tests on weeks 5, 9, and 11</span>
         </div>
       </div>
