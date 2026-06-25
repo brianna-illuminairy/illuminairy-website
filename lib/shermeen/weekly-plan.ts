@@ -263,12 +263,12 @@ export function buildShermeenWeeklyPlan(): ShermeenPlanWeek[] {
     endDate: w12.end,
     dateLabel: w12.label,
     section: "review",
-    skillLabel: "Review missed questions",
+    skillLabel: "Review misses and plan next steps",
     phase: "review",
     reviewFocus:
-      "Go through every miss from the week 11 practice test and from earlier practice tests. Rework question types until she uses the same method every time. We adjust Phase 2 priorities from what this week shows.",
+      "Review every miss from the week 11 practice test, question by question. Then we build and walk through a new plan for what to focus on next in her SAT path.",
     volume:
-      "Homework is targeted practice sets from those misses. Phase 1 ends when she can run the methods from Weeks 1–11 on fresh items.",
+      "Homework targets misses from the week 11 test. We finish the week with a written next-step plan for Phase 2 and beyond.",
   });
 
   return weeks;

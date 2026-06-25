@@ -70,7 +70,7 @@ export const SHERMEEN_PROFILE = {
       value: "1100 to 1150 (540 to 560 R&W · 560 to 590 Math)",
     },
     { label: "Full-length practice test", value: "Week of September 7, 2026 (Week 11)" },
-    { label: "Phase 1 review", value: "Week of September 14, 2026 (Week 12)" },
+    { label: "Next-step plan review", value: "Week of September 14, 2026 (Week 12)" },
   ],
   workingOn: [
     "Question types, identification, and methods: teach each SAT question type, how to spot what it is asking, and the best approach to use. Review examples every session until she has the type, what it is asking, and the method memorized, so she can start right away instead of losing time on setup or reading every choice.",

@@ -46,8 +46,8 @@ export function ShermeenPlanSkillContent() {
             Weeks 2 through 10 cover one topic each week, alternating Reading and Writing with math. Each
             week has two sessions and homework on what we covered. Full-length timed practice tests are on
             weeks 5, 9, and 11 ({week11?.dateLabel ?? "early September"}). Week 12 (
-            {week12?.dateLabel ?? "mid-September"}) we review every miss from the week 11 test and from
-            earlier practice tests.
+            {week12?.dateLabel ?? "mid-September"}) we review every miss from the week 11 practice test
+            and put together her next-step SAT plan.
           </p>
         </div>
       </header>

@@ -32,7 +32,7 @@ export function shermeenMilestoneWeeks(): MilestoneWeek[] {
 function ribbonSkillLabel(week: (typeof SHERMEEN_WEEKLY_PLAN)[number]): string {
   if (week.phase === "diagnostic") return "Diagnostic review";
   if (week.phase === "mixed") return "Full-length practice test";
-  if (week.phase === "review") return "Review missed questions";
+  if (week.phase === "review") return "Plan next steps";
   return week.skillLabel.split("(")[0]?.trim() ?? week.skillLabel;
 }
 

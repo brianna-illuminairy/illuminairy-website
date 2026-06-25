@@ -88,7 +88,7 @@ const sohailShermeen: PersonalizedEnrollLead = {
     pacePerWeek: 15,
     startDateLabel: "Jun 15, 2026",
     reviewDateLabel: "Sep 20, 2026",
-    reviewMilestoneLabel: "Review missed questions"
+    reviewMilestoneLabel: "Next-step SAT plan"
   },
   longerArc: [
     "Phase 1 (now → Sep 20): foundation cycle. Rebuild the base, fix the highest-impact gaps first.",

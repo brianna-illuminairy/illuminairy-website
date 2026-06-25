@@ -16,7 +16,7 @@ On this test her score range was **1100 to 1150** (**540 to 560** Reading and Wr
 
 1. **Diagnostic Analysis** — scores, a question-by-question map, and a walkthrough of her misses in Reading and Writing and Math. It includes why she qualified for the harder Module 2 in both sections (and why that matters for her score ceiling), plus timing notes question by question.
 
-2. **Improvement Plan** — the 12-week Phase 1 schedule: diagnostic review in Week 1 (starting the week of June 29), then the skills we'll work through one at a time, a full-length timed practice test in Week 11, and a review of missed questions in Week 12. I'll refine it as sessions start, but it gives you a first look at the order.
+2. **Improvement Plan** — the 12-week Phase 1 schedule: diagnostic review in Week 1 (starting the week of June 29), then the skills we'll work through one at a time, a full-length timed practice test in Week 11, and in Week 12 a review of misses from that test plus a next-step SAT plan. I'll refine it as sessions start, but it gives you a first look at the order.
 
 **Log in to review**
 

@@ -92,15 +92,15 @@ export const PLAN_TOPIC_APPROACHES: Record<string, PlanTopicApproach> = {
       "Full-length timed practice test under test conditions (2 hr 14 min).",
       "No new skill block this week. She takes the test after finishing Week 10 homework.",
       "We note timing, calculator use, and which question types still break under pressure.",
-      "Week 12 is reserved for reviewing every miss from this test.",
+      "Week 12 we review those misses and map her next-step SAT plan.",
     ],
   },
   "week-12-review": {
     bullets: [
       "Review every miss from the week 11 practice test, question by question.",
-      "Pull in any repeats from the diagnostic and from practice tests on weeks 5 and 9.",
-      "Rework missed question types until she uses the same method every time.",
-      "Adjust Phase 2 priorities from what this week shows. Phase 1 ends when she can run those methods on fresh items.",
+      "Build a new plan for what to focus on next (timeline, tests, and skills).",
+      "Walk through that plan together so everyone knows what comes after Phase 1.",
+      "Homework targets misses from the week 11 test only.",
     ],
   },
 };
