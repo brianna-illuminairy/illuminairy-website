@@ -1,22 +1,14 @@
+import Link from "next/link";
 import {
-  DIFFICULTY_READOUT,
   MATH_MISS_TABLE,
-  QUESTION_MAP,
   RW_MISS_TABLE,
-  SHERMEEN_HERO,
 } from "@/lib/shermeen/diagnostic-report-data";
+import { MATH_PRIORITY, RW_PRIORITY } from "@/lib/shermeen/diagnostic-skill-points";
 import {
-  MATH_PRIORITY,
-  RW_PRIORITY,
-  SHERMEEN_SKILL_POINT_MODEL,
-} from "@/lib/shermeen/diagnostic-skill-points";
-import {
+  SHERMEEN_ADAPTIVE_GOOD_NEWS,
   SHERMEEN_ADAPTIVE_INTRO,
-  SHERMEEN_ADAPTIVE_MATH,
-  SHERMEEN_ADAPTIVE_RW,
-  SHERMEEN_MATH_FORMULAS,
-  SHERMEEN_MATH_FORMULAS_HEAD,
-  SHERMEEN_MATH_FORMULAS_INTRO,
+  SHERMEEN_BEHAVIOR_REVIEW,
+  SHERMEEN_BEHAVIOR_SETUP,
   SHERMEEN_MATH_GAP1_AFTER,
   SHERMEEN_MATH_GAP1_INTRO,
   SHERMEEN_MATH_GAP2,
@@ -25,38 +17,24 @@ import {
   SHERMEEN_MATH_PLAN_NOTE,
   SHERMEEN_MATH_Q9_CONTEXT,
   SHERMEEN_MATH_REMAINING,
-  SHERMEEN_OVERVIEW_INTRO,
-  SHERMEEN_OVERVIEW_INTRO_FOOTNOTE,
-  SHERMEEN_RW_INTRO_LEAD,
-  SHERMEEN_RW_M1_MISSES,
-  SHERMEEN_RW_M1_MISSES_HEAD,
-  SHERMEEN_RW_M2_MISSES,
-  SHERMEEN_RW_M2_MISSES_HEAD,
+  SHERMEEN_RW_INTRO,
+  SHERMEEN_RW_PATTERNS,
   SHERMEEN_RW_PLAN_NOTE,
-  SHERMEEN_RW_SKILLS,
-  SHERMEEN_RW_SKILLS_RANK_HEAD,
-  SHERMEEN_SKIP_TIME,
-  SHERMEEN_TIMING_INTRO,
-  SHERMEEN_TIMING_MATH,
-  SHERMEEN_TIMING_RW,
-  type RwSkillBodyBlock,
-  type RwSkillListItem,
 } from "@/lib/shermeen/diagnostic-analysis-copy";
 import {
   DiagnosticHero,
   DifficultyReadout,
-  QuestionPerformanceMap,
   MissTable,
+  PatternCard,
   PriorityList,
+  QuestionPerformanceMap,
   SectionHead,
-} from "@/components/diagnostic/report-visuals";
-import {
+  ShermeenHabitsGrid,
+  ShermeenMathFormulaReference,
   WorkedExampleM2Q20,
   WorkedExampleM2Q9,
   WorkedExampleQ9,
-} from "@/components/shermeen/diagnostic-visuals-extras";
-import { ShermeenAdaptiveRoutingDiagram } from "@/components/shermeen/adaptive-routing-diagram";
-import Link from "next/link";
+} from "@/components/shermeen/diagnostic-visuals";
 
 function ProseParagraphs({ lines }: { lines: string[] }) {
   return (
@@ -64,47 +42,6 @@ function ProseParagraphs({ lines }: { lines: string[] }) {
       {lines.map((line) => (
         <p key={line.slice(0, 48)}>{line}</p>
       ))}
-    </>
-  );
-}
-
-function RwSkillListItemView({ item }: { item: RwSkillListItem }) {
-  if (typeof item === "string") {
-    return <li>{item}</li>;
-  }
-  return (
-    <li>
-      <strong>{item.label}:</strong> {item.text}
-    </li>
-  );
-}
-
-function RwSkillBody({ blocks }: { blocks: RwSkillBodyBlock[] }) {
-  return (
-    <>
-      {blocks.map((block, idx) => {
-        if (block.kind === "p") {
-          return <p key={`p-${idx}`}>{block.text}</p>;
-        }
-
-        const ListTag = block.kind === "ol" ? "ol" : "ul";
-        const listClass =
-          block.kind === "ol" ? "diag-report__skill-ol" : "diag-report__skill-ul";
-
-        return (
-          <div key={`list-${idx}`} className="diag-report__skill-body-list">
-            {block.intro ? <p>{block.intro}</p> : null}
-            <ListTag className={listClass}>
-              {block.items.map((item, itemIdx) => (
-                <RwSkillListItemView
-                  key={typeof item === "string" ? `${idx}-${itemIdx}` : item.label}
-                  item={item}
-                />
-              ))}
-            </ListTag>
-          </div>
-        );
-      })}
     </>
   );
 }
@@ -130,87 +67,52 @@ export function ShermeenDiagnosticAnalysisContent() {
           </div>
         </header>
 
-        <DiagnosticHero {...SHERMEEN_HERO} />
+        <DiagnosticHero />
 
         <section className="diag-report__section diag-report__prose" id="shermeen-overall">
           <SectionHead num="01" title="Performance Overview" />
-          <ProseParagraphs lines={SHERMEEN_OVERVIEW_INTRO} />
-          <p className="diag-report__tnote">{SHERMEEN_OVERVIEW_INTRO_FOOTNOTE}</p>
-          <QuestionPerformanceMap sections={QUESTION_MAP} totalCorrect={64} totalQuestions={98} />
-          <DifficultyReadout rows={DIFFICULTY_READOUT} />
+          <QuestionPerformanceMap />
+          <DifficultyReadout />
         </section>
 
         <section className="diag-report__section diag-report__prose" id="shermeen-adaptive">
-          <SectionHead num="02" title="Module 1 and Module 2" />
-          <ProseParagraphs lines={SHERMEEN_ADAPTIVE_INTRO} />
-          <ShermeenAdaptiveRoutingDiagram />
-          <ProseParagraphs lines={SHERMEEN_ADAPTIVE_RW} />
-          <ProseParagraphs lines={SHERMEEN_ADAPTIVE_MATH} />
+          <SectionHead num="02" title="Adaptive Results" />
+          <p>{SHERMEEN_ADAPTIVE_INTRO}</p>
+          <p>{SHERMEEN_ADAPTIVE_GOOD_NEWS}</p>
         </section>
 
         <section className="diag-report__section diag-report__prose" id="shermeen-rw">
           <SectionHead num="03" title="Reading and Writing Analysis" />
-          <p>{SHERMEEN_RW_INTRO_LEAD}</p>
+          <ProseParagraphs lines={SHERMEEN_RW_INTRO} />
+          <p className="diag-report__lede">Some examples from her diagnostic are below:</p>
+
+          <div className="diag-report__patterns">
+            {SHERMEEN_RW_PATTERNS.map((skill, index) => (
+              <PatternCard
+                key={skill.title}
+                index={index + 1}
+                title={skill.title}
+                body={skill.body}
+                fix={skill.fix}
+              />
+            ))}
+          </div>
 
           <MissTable rows={RW_MISS_TABLE} />
           <p className="diag-report__tnote">
-            Question-level table · 20 Reading and Writing wrong answers across both modules.
+            Correct answer vs. answer marked · sourced from the question-level breakdown.
           </p>
-
-          <h3 className="diag-report__gap-title">{SHERMEEN_RW_M1_MISSES_HEAD}</h3>
-          <p className="diag-report__lede">
-            These seven Module 1 wrong answers are mostly easy or medium questions. Six of them are
-            easy. Missing easy questions in Module 1 still costs points on the section, even when
-            Module 2 uses the harder question set.
-          </p>
-          <ul className="diag-report__miss-bullets">
-            {SHERMEEN_RW_M1_MISSES.map((miss) => (
-              <li key={miss.q}>
-                <strong>{miss.q}:</strong> {miss.text}
-              </li>
-            ))}
-          </ul>
-
-          <h3 className="diag-report__gap-title">{SHERMEEN_RW_M2_MISSES_HEAD}</h3>
-          <p className="diag-report__lede">
-            She got 21 of 27 right in Module 1, so Module 2 used harder questions. She got 13 of 27
-            correct in Module 2. Most misses are medium or hard, but the same root issue repeats:
-            answer the question type asked, not the theme that sounds closest.
-          </p>
-          <ul className="diag-report__miss-bullets">
-            {SHERMEEN_RW_M2_MISSES.map((miss) => (
-              <li key={miss.q}>
-                <strong>{miss.q}:</strong> {miss.text}
-              </li>
-            ))}
-          </ul>
-
-          <h3 className="diag-report__gap-title">{SHERMEEN_RW_SKILLS_RANK_HEAD}</h3>
-
-          {SHERMEEN_RW_SKILLS.map((skill) => (
-            <div key={skill.rank} className="diag-report__skill-block" id={`shermeen-rw-skill-${skill.rank}`}>
-              <h4 className="diag-report__skill-title">
-                {skill.rank}. {skill.title}
-              </h4>
-              <p>{skill.lead}</p>
-              <ul className="diag-report__miss-bullets">
-                {skill.misses.map((miss) => (
-                  <li key={miss.q}>
-                    <strong>{miss.q}:</strong> {miss.text}
-                  </li>
-                ))}
-              </ul>
-              <RwSkillBody blocks={skill.body} />
-            </div>
-          ))}
 
           <p style={{ marginTop: 24 }}>
-            Based on how often each question type appears on the SAT and what she missed on this test, I
-            estimate she lost roughly this many points in each Reading and Writing skill:
+            As far as order of importance is concerned, I&apos;d estimate she&apos;s losing the
+            following points per skill:
           </p>
           <PriorityList items={RW_PRIORITY} />
-          <p className="diag-report__tnote">{SHERMEEN_SKILL_POINT_MODEL.footnote}</p>
           <p>{SHERMEEN_RW_PLAN_NOTE}</p>
+          <p>
+            In the SAT Improvement Plan we would tutor her until she&apos;s reached the required level of
+            accuracy, attacking one skill at a time, starting with the one costing the most points.
+          </p>
         </section>
 
         <section className="diag-report__section diag-report__prose" id="shermeen-math">
@@ -247,43 +149,34 @@ export function ShermeenDiagnosticAnalysisContent() {
           </div>
 
           <p style={{ marginTop: 24 }}>
-            Based on how often each question type appears on the SAT and what she missed on this test, I
-            estimate she lost roughly this many points in each Math skill:
+            As far as order of importance is concerned, I&apos;d estimate she&apos;s losing the
+            following, based on how frequently those questions occur across each module of the SAT and
+            their difficulty level:
           </p>
           <PriorityList items={MATH_PRIORITY} />
-          <p className="diag-report__tnote">{SHERMEEN_SKILL_POINT_MODEL.footnote}</p>
           <p>{SHERMEEN_MATH_PLAN_NOTE}</p>
           <p>
             In the SAT Improvement Plan we would tutor her until she&apos;s reached the required level of
             accuracy, attacking one skill at a time, starting with the one costing the most points.
           </p>
 
-          <h3 className="diag-report__gap-title">{SHERMEEN_MATH_FORMULAS_HEAD}</h3>
-          <p>{SHERMEEN_MATH_FORMULAS_INTRO}</p>
-          <ul className="diag-report__skill-ul">
-            {SHERMEEN_MATH_FORMULAS.map((item) => (
-              <RwSkillListItemView
-                key={typeof item === "string" ? item.slice(0, 32) : item.label}
-                item={item}
-              />
-            ))}
-          </ul>
+          <ShermeenMathFormulaReference />
         </section>
 
-        <section className="diag-report__section diag-report__prose" id="shermeen-timing">
-          <SectionHead num="05" title="Timing by Question" />
-          <ProseParagraphs lines={SHERMEEN_TIMING_INTRO} />
-          <ProseParagraphs lines={SHERMEEN_TIMING_RW} />
-          <ProseParagraphs lines={SHERMEEN_TIMING_MATH} />
-        </section>
+        <section className="diag-report__section diag-report__prose" id="shermeen-behavior">
+          <SectionHead num="05" title="Test-Taking Behavior" />
+          <ShermeenHabitsGrid />
 
-        <section className="diag-report__section diag-report__prose" id="shermeen-focus">
-          <SectionHead num="06" title="Sections she does not need to practice first" />
-          <p>
-            <strong>Reading:</strong> {SHERMEEN_SKIP_TIME.reading}
+          <p style={{ marginTop: 24 }}>
+            <b>First, how she uses time on wrong answers.</b> {SHERMEEN_BEHAVIOR_REVIEW}
           </p>
           <p>
-            <strong>Math:</strong> {SHERMEEN_SKIP_TIME.math}
+            <b>Second, question setup before solving.</b> {SHERMEEN_BEHAVIOR_SETUP}
+          </p>
+
+          <p className="diag-report__plan-link">
+            For the week-by-week schedule and skill order, see the{" "}
+            <Link href="/shermeen/plan">Improvement Plan</Link> tab.
           </p>
         </section>
 

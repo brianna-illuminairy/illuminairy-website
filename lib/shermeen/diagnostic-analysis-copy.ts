@@ -47,7 +47,54 @@ export const SHERMEEN_OVERVIEW_INTRO = [
 export const SHERMEEN_OVERVIEW_INTRO_FOOTNOTE =
   "National average · College Board 2025 SAT Suite Annual Report (total-group mean, most recent score if retaken).";
 
-export const SHERMEEN_ADAPTIVE_INTRO = [
+export type ShermeenPatternSkill = {
+  title: string;
+  body: string;
+  fix: string;
+};
+
+export const SHERMEEN_ADAPTIVE_INTRO =
+  "The Digital SAT is adaptive, which means the second module either becomes easier or harder based on your performance in the first module for each section. The goal is to do well enough on Module 1 that Module 2 uses the harder question set, which is what allows a higher section score.";
+
+export const SHERMEEN_ADAPTIVE_GOOD_NEWS =
+  "Shermeen cleared the Module 1 cutoff in both Reading and Writing and Math, so she received the harder Module 2 in each section. That is good for her score ceiling. The work now is fixing the easy and medium misses that still cost points in both modules.";
+
+export const SHERMEEN_RW_INTRO = [
+  "Shermeen missed 20 Reading and Writing questions across both modules. In Module 1 she missed 7 questions, and six of those were easy or medium questions on transitions, command of evidence, form and structure, and rhetorical synthesis. She got 21 of 27 correct on Module 1, which unlocked the harder Module 2, where she missed 13 more questions.",
+  "Her misses were spread across transitions, command of evidence, form and structure, boundaries, text structure, central ideas, inferences, rhetorical synthesis, and words in context. She scored 70% on hard questions and 38% on easy on this section. Most wrong answers were on easy or medium questions in several different skills, not one narrow topic.",
+  "After reviewing each miss, the core pattern is similar: she often picks an answer that fits the passage topic but does not satisfy what that question type requires.",
+];
+
+export const SHERMEEN_RW_PATTERNS: ShermeenPatternSkill[] = [
+  {
+    title: "Transitions",
+    body: 'On Module 1 Question 23 she chose "Nevertheless" where the second sentence confirms the first with iconic examples, so the relationship is emphasis ("Indeed"). On Question 24 the poem seems like barren terrain but Bloom finds fertile ground, so the relationship is contrast ("Nonetheless"). She marked "In turn," which signals sequence, not opposition.',
+    fix: "Label the relationship before looking at the choices: contrast, example, result, addition, conclusion, or emphasis.",
+  },
+  {
+    title: "Command of Evidence",
+    body: 'On Module 1 Questions 10 and 11 she spent well above average time on easy evidence questions and marked true table details that did not support the exact claim in the question stem. On Module 2 she picked background on Kurosawa or later visitation statistics instead of evidence for the specific claim being tested.',
+    fix: "Restate the exact claim before reading the answer choices, then reject anything that is true from the passage but not matched to that claim.",
+  },
+  {
+    title: "Boundaries and complete clauses",
+    body: 'On Module 2 Question 18 she left a dash pair unmatched around a nonessential phrase. On Question 20 she marked a comma between two independent clauses about the Mars rover, which creates a comma splice. The correct mark introduces the explanation with a colon.',
+    fix: "At every punctuation choice, check whether each side is a complete sentence on its own.",
+  },
+  {
+    title: "Form, structure, and rhetorical synthesis",
+    body: 'On Module 1 Question 20 she marked simple past where the timeline required past perfect ("had already made"). On Question 26 she described what the alloy is without naming the stated advantage (simpler manufacturing). On several medium form questions she marked an answer that did not satisfy the full sentence.',
+    fix: "Read what the question type is asking for first: verb form, subject match, or the specific job in a rhetorical synthesis goal.",
+  },
+];
+
+export const SHERMEEN_BEHAVIOR_REVIEW =
+  "On Reading and Writing, her longest times on wrong answers did not turn into correct answers. Module 1 Questions 10 and 11 on command of evidence each took about two minutes and were still wrong. Module 2 Question 6 on text structure took more than three minutes and was wrong. That pattern points to method, not review speed.";
+
+export const SHERMEEN_BEHAVIOR_SETUP =
+  "On Math, several medium misses came from stopping before the question was fully answered (Module 1 Question 14: she found h = 4 but not h + k) or from answering in under 20 seconds on hard setup questions (Module 2 Question 20 on the factor theorem). She also left three grid-in boxes blank in Module 2. Naming the question type and method first, then finishing the last step the question asks for, is the habit we will build in tutoring.";
+
+export const SHERMEEN_ADAPTIVE_INTRO_LEGACY = [
   "The Digital SAT has two modules per section. How you do on Module 1 affects whether Module 2 stays on an easier question set or moves to a harder one. If you miss too many easy and medium questions in Module 1, Module 2 usually stays easier, which caps how high that section score can go. In practice, Reading and Writing Module 1 often needs about 18 correct out of 27 before Module 2 gets harder, and Math Module 1 often needs about 13 or 14 out of 22.",
 ];
 

@@ -69,10 +69,11 @@ export const RW_PRIORITY = SHERMEEN_RW_SKILL_MODEL.skills.map(({ topic, pts }) =
   pts,
 }));
 
-/** Parent-facing list: mentor buckets and other skills at 12+ modeled pts. */
-export const MATH_PRIORITY = SHERMEEN_MATH_SKILL_MODEL.skills
-  .filter((skill) => skill.points >= 12)
-  .map(({ topic, pts }) => ({ topic, pts }));
+/** Parent-facing list for the diagnostic report (all modeled Math skills). */
+export const MATH_PRIORITY = SHERMEEN_MATH_SKILL_MODEL.skills.map(({ topic, pts }) => ({
+  topic,
+  pts,
+}));
 
 export const SHERMEEN_RW_SKILLS_15_PLUS = SHERMEEN_RW_SKILL_MODEL.skills15Plus;
 export const SHERMEEN_MATH_SKILLS_15_PLUS = SHERMEEN_MATH_SKILL_MODEL.skills15Plus;
