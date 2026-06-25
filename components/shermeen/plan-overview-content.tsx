@@ -1,5 +1,13 @@
+import { ShermeenPlanScoreChart } from "@/components/shermeen/plan-score-chart";
 import { MATH_SKILLS, PLAN_TOTALS, RW_SKILLS, type PlanSkill } from "@/lib/shermeen/plan-skill-data";
 import { SHERMEEN_HERO } from "@/lib/shermeen/diagnostic-report-data";
+import {
+  SHERMEEN_PHASE1_TARGET_LOW,
+  SHERMEEN_PHASE1_TARGET_HIGH,
+  SHERMEEN_PLAN_CHECKPOINT_COPY,
+  SHERMEEN_PLAN_PACE_PILLS,
+  SHERMEEN_PLAN_REALISTIC_COPY,
+} from "@/lib/shermeen/plan-projection";
 import { currentPlanWeek, SHERMEEN_PHASE_1_WEEKS } from "@/lib/shermeen/weekly-plan";
 
 function skillRow(skill: PlanSkill, rank: number) {
@@ -32,9 +40,9 @@ function skillSection(title: string, skills: PlanSkill[], subtotal: number) {
 
 export function ShermeenPlanOverviewContent() {
   const activeWeek = currentPlanWeek() ?? 1;
-  const progress = Math.min(100, Math.round((activeWeek / SHERMEEN_PHASE_1_WEEKS) * 100));
   const totalMisses = RW_SKILLS.reduce((sum, skill) => sum + skill.misses.total, 0)
     + MATH_SKILLS.reduce((sum, skill) => sum + skill.misses.total, 0);
+  const phaseTargetLabel = `${SHERMEEN_PHASE1_TARGET_LOW}–${SHERMEEN_PHASE1_TARGET_HIGH}`;
 
   return (
     <section>
@@ -51,31 +59,12 @@ export function ShermeenPlanOverviewContent() {
 
         <p className="card-intro">
           Shermeen scored {SHERMEEN_HERO.totalRange} on her June 23 diagnostic ({SHERMEEN_HERO.rwRange}{" "}
-          Reading and Writing · {SHERMEEN_HERO.mathRange} Math) and missed {totalMisses} questions. The
-          skills below are ranked by modeled section impact from those misses.
+          Reading and Writing · {SHERMEEN_HERO.mathRange} Math) and missed {totalMisses} questions. Phase
+          1 targets {phaseTargetLabel} by Week 12. The skills below are ranked by modeled section impact
+          from those misses.
         </p>
 
-        <div
-          className="progress"
-          style={{
-            height: 6,
-            borderRadius: 6,
-            background: "rgba(47, 110, 71, 0.12)",
-            marginTop: 18,
-            overflow: "hidden",
-          }}
-          aria-hidden
-        >
-          <span
-            style={{
-              display: "block",
-              height: "100%",
-              width: `${progress}%`,
-              background: "linear-gradient(90deg, #7fd0a0, #2f8b55)",
-              borderRadius: 6,
-            }}
-          />
-        </div>
+        <ShermeenPlanScoreChart />
 
         <div className="stats">
           <div className="stat">
@@ -83,16 +72,38 @@ export function ShermeenPlanOverviewContent() {
             <span>Diagnostic</span>
           </div>
           <div className="stat">
+            <b>{phaseTargetLabel}</b>
+            <span>Phase 1 target</span>
+          </div>
+          <div className="stat">
             <b>Jun 29 – Sep 20</b>
-            <span>Phase 1</span>
+            <span>12 weeks</span>
           </div>
           <div className="stat">
             <b>2 / wk</b>
             <span>Sessions</span>
           </div>
-          <div className="stat">
-            <b>{totalMisses}</b>
-            <span>Misses mapped</span>
+        </div>
+
+        <div className="rating-label">What&apos;s realistic for Phase 1</div>
+        <div className="pills">
+          {SHERMEEN_PLAN_PACE_PILLS.map((pill) => (
+            <div className={`pill${pill.active ? " on" : ""}`} key={pill.label}>
+              <div className="pl">{pill.label}</div>
+              <div className="pp">{pill.pace}</div>
+              <div className="ps">{pill.score}</div>
+            </div>
+          ))}
+        </div>
+
+        <div className="honest">
+          <div className="hbox">
+            <div className="ht">What is realistic</div>
+            <p>{SHERMEEN_PLAN_REALISTIC_COPY}</p>
+          </div>
+          <div className="hbox">
+            <div className="ht">First checkpoint</div>
+            <p>{SHERMEEN_PLAN_CHECKPOINT_COPY}</p>
           </div>
         </div>
 
