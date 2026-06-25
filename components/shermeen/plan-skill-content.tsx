@@ -37,10 +37,6 @@ export function ShermeenPlanSkillContent() {
             module).
           </p>
           <p>
-            Phase 1 is a 12-week foundation cycle with no fixed SAT date on the calendar. We move at
-            the pace her sessions and homework support, not a countdown to a test.
-          </p>
-          <p>
             Week 1 starts {week1?.dateLabel ?? "the week of June 29"}. We review each question she got
             wrong on the June 23 diagnostic. The first session covers math: question type, how to solve
             it, and whether the calculator can finish it once the problem is set up. The second session

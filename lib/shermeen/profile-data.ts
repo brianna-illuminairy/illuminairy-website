@@ -33,7 +33,7 @@ export const SHERMEEN_PROFILE = {
     {
       label: "Phase 1",
       value:
-        "12-week foundation cycle (Jun 29 through Sep 20, 2026): rebuild the base and fix the skills that likely cost her the most points first. Pace follows her sessions, not a test countdown.",
+        "12-week Phase 1 (Jun 29 through Sep 20, 2026): rebuild the base and fix the skills that likely cost her the most points first.",
     },
     {
       label: "Tutoring",
