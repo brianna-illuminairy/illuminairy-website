@@ -72,11 +72,11 @@ export const SHERMEEN_PROFILE = {
     { label: "Phase 1 review", value: "September 7, 2026 mock review milestone" },
   ],
   workingOn: [
-    "Question types, identification, and methods: teach each SAT question type, how to spot what it is asking, and the best approach to use. Review examples every session until memorized.",
+    "Question types, identification, and methods: teach each SAT question type, how to spot what it is asking, and the best approach to use. Review examples every session until automatic, so she can start solving immediately instead of losing time on setup or re-reading every choice.",
     "Factoring and equivalent forms: move to zero, factor out a common term, verify by expanding, factor theorem when a factor is given.",
     "Reading and Writing: transitions, command of evidence, form and structure, boundaries, and rhetorical synthesis.",
     "Math follow-ons: linear word problems, circle arc length and tangency, statistics (spread vs center), grid-in habits (never leave blank).",
-    "Pacing: watch mid-module time sinks on the next practice test, especially when hard questions get under 20 seconds at the end of a module.",
+    "Pacing: automatic type-and-method recognition protects time across each module and lowers the risk of running out of time or guessing wrong at the end.",
   ],
 } satisfies {
   student: ProfilePerson;
