@@ -1,42 +1,32 @@
-/* Shermeen portal — plain sans-serif for parent readability.
-   Requires hankenGrotesk.variable on a layout ancestor (app/shermeen/layout.tsx).
-   Without --font-hanken, :root --aurora-display falls back to Source Serif 4. */
+/* Shermeen portal — sans-serif on profile + chrome only.
+   Diagnostic analysis and improvement plan use shared Soha template CSS
+   (diagnostic-report.css, shermeen-plan.css) without font overrides. */
 
 .shermeen-portal {
   --shermeen-sans: var(--font-hanken, "Hanken Grotesk"), system-ui, -apple-system, BlinkMacSystemFont,
     "Segoe UI", sans-serif;
-  --aurora-display: var(--shermeen-sans);
-  --aurora-body: var(--shermeen-sans);
-  --aurora-mono: var(--shermeen-sans);
-  --font-display: var(--shermeen-sans);
+}
+
+.shermeen-portal .aurora-header,
+.shermeen-portal .aurora-footer,
+.shermeen-portal .aurora-nav,
+.shermeen-portal .skye-profile {
   font-family: var(--shermeen-sans);
   font-size: 17px;
   line-height: 1.65;
 }
 
-.shermeen-portal .diag-report {
-  --sr-display: var(--shermeen-sans);
-  --sr-body: var(--shermeen-sans);
-  --sr-mono: var(--shermeen-sans);
+.shermeen-portal .skye-profile {
+  --aurora-display: var(--shermeen-sans);
+  --aurora-body: var(--shermeen-sans);
+  --aurora-mono: var(--shermeen-sans);
 }
 
-/* diagnostic-report.css and data-viz.css set display/mono fonts per-class */
-.shermeen-portal :where(.diag-report, .skye-plan, .aurora-body-wrap, .aurora-header, .aurora-footer)
-  :where(*:not(svg):not(path):not(circle):not(line):not(rect):not(g)) {
-  font-family: var(--shermeen-sans) !important;
+.shermeen-portal .skye-profile :where(*:not(svg):not(path):not(circle):not(line):not(rect):not(g)) {
+  font-family: var(--shermeen-sans);
 }
 
-.shermeen-portal svg text {
-  font-family: var(--shermeen-sans) !important;
-}
-
-.shermeen-portal :is(
-  .diag-report__prose p,
-  .diag-report__lede,
-  .skye-plan__intro p,
-  .skye-plan__topic-bullets li,
-  .aurora-portal__lede
-) {
+.shermeen-portal .skye-profile :is(.skye-profile__section-lede, .skye-profile__list li, .skye-profile__links) {
   font-size: 17px;
   line-height: 1.65;
 }
