@@ -1,16 +1,18 @@
 # Active context
 
-*Last updated: 2026-06-22 (cold funnel consumer polish)*
+*Last updated: 2026-06-25 (Shermeen diagnostic portal)*
 
 ## Resume here (start next chat with this)
+
+**Shermeen portal (2026-06-25):** `/shermeen/` private portal — profile + diagnostic analysis for Jun 23 test (1100–1150). **Owner before prod:** `SHERMEEN_ACCESS_ALLOWLIST=sohailft@gmail.com,shermeen.sohail2010@gmail.com,brianna@illuminairy.com` in Vercel + `.env.local`; push `main`. Docs: `docs/leads/shermeen-sohail-context.md`.
+
+---
 
 **Two funnels — do not mix:**
 - **Quiz 1:** `/` LP + `/plan` funnel (high GPA / low SAT). Unchanged. Meta ads ad1–ad5 (except ad3 HD) land on `/`.
 - **Quiz 2 (ad3 HD only):** `/sat-plan-builder` → `/plan-b`. Frozen tutor copy in `lib/plan-b/ad3-hd-landing-copy.ts`. Full SSR page `Ad3HdLandingPage` + shared `landing-v4.css` + thin ad3 shell CSS.
 
-**2026-06-22 funnel siblings:** Shared `components/funnel-sibling/` (layout shell, entry SSR, critical/deferred CSS, dismiss hook). Three-tier CSS contract + `funnel:css-contract-guard` in agent:verify. Plan A/B/C use same patterns; Score Review got SSR entry shell, dynamic runner, error boundary, flushSync option taps. Docs: `docs/funnel-sibling-architecture.md`.
-
-**2026-06-22 Plan B CSS dedup:** Critical inline = concat of source files (no monolithic duplicate). Mobile shell SSOT: `app/funnel-shell.css`.
+**2026-06-25 funnel revert + Plan B launch (this session):** Removed shared `components/funnel-sibling/` + `lib/funnel-sibling/` modules and the per-step Plan B CSS split (9 chunks → 2 files). **Plan A is bit-perfect against 9057d99** — production funnel `/plan` is untouched. **Plan B (`/plan-b`)** is now a copy-paste sibling of Plan A: same layout/page/QuizClientRoot/QuizRunner shape, with its own state/screens. CSS chain = `quiz-b-bundle.css` → `quiz-b-lab.css` sync from `layout.tsx`. No critical inline, no deferred chunks, no SSR entry shell. New `app/quiz-b/utm-capture.tsx` captures UTMs to localStorage + cookie + PostHog superproperties (capture-only, no UI branching) for Meta ads attribution. Plan A untouched by UTM work. Score Review (`/quiz-c`) parked as placeholder page.
 
 ---
 

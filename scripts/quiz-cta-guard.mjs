@@ -16,12 +16,11 @@ const ROOT = process.cwd();
 const UNLOCK = process.env.FUNNEL_LAYOUT_UNLOCK === "1";
 
 const LOCKED_SHELL = [
-  "app/funnel-shell.css",
-  "app/funnel-column.css",
+  "app/funnel-responsive.css",
   "app/quiz-globals.css",
-  "components/funnel-sibling/FunnelLayoutShell.tsx",
-  "components/funnel-sibling/FunnelWhoEntryShell.tsx",
   "app/quiz/components/QFShell.tsx",
+  "app/quiz/layout.tsx",
+  "app/quiz/page.tsx",
   "app/quiz/components/QFProgressContext.tsx",
   "app/quiz/state.tsx",
 ];
@@ -145,27 +144,17 @@ try {
   errors.push("Missing file: app/quiz/components/QFInsightHit.jsx");
 }
 
-const responsiveCssPath = join(ROOT, "app/funnel-responsive.css");
-const shellCssPath = join(ROOT, "app/funnel-shell.css");
+const responsiveCss = join(ROOT, "app/funnel-responsive.css");
 try {
-  const responsiveCss = readFileSync(responsiveCssPath, "utf8");
-  if (!responsiveCss.includes('@import "./funnel-shell.css"')) {
-    errors.push("app/funnel-responsive.css: must @import ./funnel-shell.css");
+  const css = readFileSync(responsiveCss, "utf8");
+  if (!css.includes("FUNNEL-MOBILE-SHELL-START") || !css.includes("FUNNEL-MOBILE-SHELL-END")) {
+    errors.push("app/funnel-responsive.css: missing FUNNEL-MOBILE-SHELL markers");
+  }
+  if (!/\.qf-funnel-root\s*\{[\s\S]*?--qf-viewport-h:\s*100dvh/.test(css)) {
+    errors.push("app/funnel-responsive.css: .qf-funnel-root must anchor viewport with --qf-viewport-h");
   }
 } catch {
   errors.push("Missing file: app/funnel-responsive.css");
-}
-
-try {
-  const css = readFileSync(shellCssPath, "utf8");
-  if (!css.includes("FUNNEL-MOBILE-SHELL-START") || !css.includes("FUNNEL-MOBILE-SHELL-END")) {
-    errors.push("app/funnel-shell.css: missing FUNNEL-MOBILE-SHELL markers");
-  }
-  if (!/\.qf-funnel-root\s*\{[\s\S]*?--qf-viewport-h:\s*100dvh/.test(css)) {
-    errors.push("app/funnel-shell.css: .qf-funnel-root must anchor viewport with --qf-viewport-h");
-  }
-} catch {
-  errors.push("Missing file: app/funnel-shell.css");
 }
 
 const funnelCss = join(ROOT, "app/quiz-funnel.css");
@@ -179,7 +168,7 @@ try {
     errors.push("app/quiz-funnel.css: .qf-page shell must not use display:grid");
   }
   if (/100dvh|100svh|100vh/.test(pageShell)) {
-    errors.push("app/quiz-funnel.css: .qf-page must not set viewport units — use funnel-shell.css");
+    errors.push("app/quiz-funnel.css: .qf-page must not set viewport units — use funnel-responsive.css");
   }
   const actionsRule =
     css.match(/\.qf-page \.qf-step-actions\s*\{[\s\S]*?\n\}/)?.[0] ?? "";
@@ -211,7 +200,7 @@ try {
     errors.push("app/quiz-globals.css: missing funnel-main flex bridge");
   }
   if (/100dvh|100svh/.test(css)) {
-    errors.push("app/quiz-globals.css: viewport units belong only in funnel-shell.css");
+    errors.push("app/quiz-globals.css: viewport units belong only in funnel-responsive.css");
   }
 } catch {
   errors.push("Missing file: app/quiz-globals.css");

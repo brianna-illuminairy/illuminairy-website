@@ -48,11 +48,8 @@ const nextConfig = {
     "/soha/files/[slug]": ["./content/soha/**/*"],
     "/skye/files/[slug]": ["./content/skye/**/*"],
     "/quiz-b": [
-      "./app/aurora-brand.css",
-      "./app/quiz-globals.css",
-      "./app/funnel-responsive.css",
-      "./app/quiz-b/quiz-b-core-chrome.css",
-      "./app/quiz-b/quiz-b-entry-critical.css",
+      "./app/quiz-b/quiz-b-bundle.css",
+      "./app/quiz-b/quiz-b-lab.css",
     ],
     "/sat-plan-builder": [
       "./app/landing/landing-v4.css",

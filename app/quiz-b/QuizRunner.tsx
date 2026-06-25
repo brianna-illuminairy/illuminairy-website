@@ -2,15 +2,7 @@
 
 import dynamic from 'next/dynamic';
 import { useEffect } from 'react';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useAnalyticsReady } from '@/components/analytics-ready-provider';
-import { isPlanBuilderBEntryStep } from '@/lib/perf-defer-paths';
-import {
-  commitQuizAnswers,
-  OPTION_TAP_ADVANCE_MS,
-  scheduleOptionTapAdvance,
-} from '@/lib/funnel-sibling/option-tap-advance';
-import { usePlanBDeferredCss } from '@/lib/quiz-funnel-b/plan-b-deferred-css';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useQuiz, type QuizAnswers } from './state';
 import { useQuizAnalytics } from './useQuizAnalytics';
 import { planBuilderBStepHref } from '@/lib/plan-builder-b-routes';
@@ -51,6 +43,9 @@ import {
 import { QFProgressProvider } from '@/app/quiz/components/QFProgressContext';
 import { BSchoolReferral } from '@/app/quiz-b/screens/lab/BSchoolReferral';
 import { BStudentGrade } from '@/app/quiz-b/screens/lab/BStudentGrade';
+
+/** One frame so selected option state paints before route change. */
+const OPTION_TAP_ADVANCE_MS = 16;
 
 const QFInsightHit = dynamic(
   () => import('@/app/quiz/components/QFInsightHit').then((m) => ({ default: m.QFInsightHit })),
@@ -117,9 +112,8 @@ function getSteps(answers: QuizAnswers) {
   return getLabQuizRouteSteps(answers);
 }
 
-export default function QuizRunner({ onMounted }: { onMounted?: () => void }) {
+export default function QuizRunner() {
   const router = useRouter();
-  const pathname = usePathname();
   const params = useSearchParams();
   const { answers, dispatch, lastStep, setLastStep, hydrated } = useQuiz();
   const search = params.toString();
@@ -158,18 +152,7 @@ export default function QuizRunner({ onMounted }: { onMounted?: () => void }) {
     }
   }, [hydrated, stepId, requestedStep, resumeStep, router, search, requestedIdx, guardedIdx, stepsKey]);
 
-  usePlanBDeferredCss(stepId);
-
-  const deferEntryAnalytics = isPlanBuilderBEntryStep(pathname, stepId);
-  const { defer: marketingDefer, ready: marketingReady } = useAnalyticsReady();
-  const entryAnalyticsReady = !deferEntryAnalytics || !marketingDefer || marketingReady;
-  const analyticsEnabled = hydrated && entryAnalyticsReady;
-
-  useEffect(() => {
-    onMounted?.();
-  }, [onMounted]);
-
-  useQuizAnalytics(stepId, currentIdx, answers, analyticsEnabled);
+  useQuizAnalytics(stepId, currentIdx, answers, hydrated);
 
   function goTo(id: string) {
     router.replace(planBuilderBStepHref(id, search));
@@ -209,22 +192,17 @@ export default function QuizRunner({ onMounted }: { onMounted?: () => void }) {
   }
 
   function setQAndAdvance(key: string, value?: string, extra?: Partial<QuizAnswers>) {
-    const updates: Array<{ key: string; value?: string }> = [{ key, value }];
+    dispatch({ type: 'SET_Q', key, value });
     if (extra) {
       for (const [k, v] of Object.entries(extra)) {
-        if (v !== undefined) updates.push({ key: k, value: v as string });
+        if (v !== undefined) dispatch({ type: 'SET_Q', key: k, value: v as string });
       }
     }
-    commitQuizAnswers({ dispatch, updates });
     if (key === 'qWho' && value === 'child') {
       captureParentConfirmed(value);
     }
-    scheduleOptionTapAdvance({
-      mergedAnswers: { ...answers, [key]: value, ...extra },
-      fromStepId: stepId,
-      getRouteSteps: getSteps,
-      goTo,
-    });
+    const pending = { [key]: value, ...extra };
+    window.setTimeout(() => advanceAfterAnswer(pending), OPTION_TAP_ADVANCE_MS);
   }
 
   const a = answers;

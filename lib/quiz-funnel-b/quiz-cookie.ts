@@ -99,7 +99,11 @@ export function readQuizSnapshotFromRequestCookies(
 }
 
 function cookieWriteString(encoded: string): string {
-  return `${QUIZ_SNAPSHOT_COOKIE}=${encoded}; Path=/; Max-Age=7776000; SameSite=Lax`;
+  const isHttps =
+    typeof window !== "undefined" && window.location.protocol === "https:";
+  return `${QUIZ_SNAPSHOT_COOKIE}=${encoded}; Path=/; Max-Age=7776000; SameSite=Lax${
+    isHttps ? "; Secure" : ""
+  }`;
 }
 
 let cookieWriteFailLogged = false;

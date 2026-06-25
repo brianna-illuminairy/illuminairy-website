@@ -5,7 +5,6 @@ import { useQuiz, showGapScreen, type QuizAnswers } from './state';
 import { useQuizAnalytics } from './useQuizAnalytics';
 import { useQuizAvailabilityPrefetch } from './useQuizAvailabilityPrefetch';
 import { captureParentConfirmed, captureQuizStepBack } from '@/lib/quiz-funnel/analytics';
-import { commitQuizAnswers, scheduleOptionTapAdvance } from '@/lib/funnel-sibling/option-tap-advance';
 import { planBuilderStepHref } from '@/lib/plan-builder-routes';
 import {
   QUIZ_BOOKED_STEP,
@@ -38,7 +37,7 @@ function getSteps(answers: QuizAnswers) {
   return getQuizRouteSteps(answers);
 }
 
-export default function QuizRunner({ onMounted }: { onMounted?: () => void }) {
+export default function QuizRunner() {
   const router = useRouter();
   const params = useSearchParams();
   const { answers, dispatch, lastStep, setLastStep, hydrated } = useQuiz();
@@ -82,9 +81,17 @@ export default function QuizRunner({ onMounted }: { onMounted?: () => void }) {
   useQuizAnalytics(stepId, currentIdx, answers, gapScreen, hydrated);
   useQuizAvailabilityPrefetch(stepId, hydrated);
 
-  useEffect(() => {
-    onMounted?.();
-  }, [onMounted]);
+  if (!hydrated) {
+    return (
+      <div className="qf-page" style={{ color: 'var(--qf-ink)' }}>
+        <div className="qf-body">
+          <div className="qf-body-inner">
+            <p className="qf-lead muted">Loading your plan...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   function goTo(id: string) {
     router.replace(planBuilderStepHref(id, search));
@@ -126,22 +133,17 @@ export default function QuizRunner({ onMounted }: { onMounted?: () => void }) {
   }
 
   function setQAndAdvance(key: string, value?: string, extra?: Partial<QuizAnswers>) {
-    const updates: Array<{ key: string; value?: string }> = [{ key, value }];
+    dispatch({ type: 'SET_Q', key, value });
     if (extra) {
       for (const [k, v] of Object.entries(extra)) {
-        if (v !== undefined) updates.push({ key: k, value: v as string });
+        if (v !== undefined) dispatch({ type: 'SET_Q', key: k, value: v as string });
       }
     }
-    commitQuizAnswers({ dispatch, updates });
     if (key === 'qWho' && value === 'child') {
       captureParentConfirmed(value);
     }
-    scheduleOptionTapAdvance({
-      mergedAnswers: { ...answers, [key]: value, ...extra },
-      fromStepId: stepId,
-      getRouteSteps: getSteps,
-      goTo,
-    });
+    const pending = { [key]: value, ...extra };
+    setTimeout(() => advanceAfterAnswer(pending), 120);
   }
 
   const a = answers;

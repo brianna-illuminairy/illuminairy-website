@@ -1,0 +1,5 @@
+/* Plan Builder B — single CSS entry (one network request on /plan-b). */
+@import "../quiz-funnel.css";
+@import "../quiz-globals.css";
+@import "../funnel-responsive.css";
+@import "./quiz-b-lab.css";

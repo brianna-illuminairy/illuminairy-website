@@ -1,26 +1,26 @@
-"use client";
+'use client';
 
-import dynamic from "next/dynamic";
-import { Suspense } from "react";
-import { useDismissFunnelEntryShell } from "@/components/funnel-sibling/funnel-client-root";
-import { QuizProvider } from "./state";
-import type { QuizSnapshot } from "@/lib/quiz-funnel/quiz-cookie";
+import dynamic from 'next/dynamic';
+import { QuizProvider } from './state';
+import type { QuizSnapshot } from '@/lib/quiz-funnel/quiz-cookie';
 
-const QuizRunner = dynamic(() => import("./QuizRunner"), { ssr: false });
+const QuizRunnerNoSSR = dynamic(() => import('./QuizRunner'), {
+  ssr: false,
+  loading: () => (
+    <div className="qf-page" style={{ color: 'var(--qf-ink)' }}>
+      <div className="qf-body">
+        <div className="qf-body-inner">
+          <p className="qf-lead muted">Loading your plan...</p>
+        </div>
+      </div>
+    </div>
+  ),
+});
 
-type QuizClientRootProps = {
-  initialSnapshot: QuizSnapshot | null;
-  entryShellId?: string;
-};
-
-export function QuizClientRoot({ initialSnapshot, entryShellId }: QuizClientRootProps) {
-  const onRunnerMounted = useDismissFunnelEntryShell(entryShellId);
-
+export function QuizClientRoot({ initialSnapshot }: { initialSnapshot: QuizSnapshot | null }) {
   return (
     <QuizProvider initialSnapshot={initialSnapshot}>
-      <Suspense fallback={null}>
-        <QuizRunner onMounted={onRunnerMounted} />
-      </Suspense>
+      <QuizRunnerNoSSR />
     </QuizProvider>
   );
 }
