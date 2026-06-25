@@ -18,11 +18,11 @@ export function ShermeenPlanScheduleContent() {
   const activeWeek = currentPlanWeek();
 
   return (
-    <div className="shermeen-plan-schedule">
+    <div className="soha-plan-schedule">
       <section className="skye-plan__section">
-        <p className="eyebrow">The Schedule</p>
-        <h2 className="shermeen-plan-schedule__title">Twelve-week Phase 1 plan</h2>
-        <p className="shermeen-plan-schedule__lede">
+        <p className="aurora-eyebrow">The Schedule</p>
+        <h2 className="soha-plan-schedule__title">Twelve-week Phase 1 plan</h2>
+        <p className="soha-plan-schedule__lede">
           Week 1 reviews the June 23 diagnostic. Weeks 2–10 teach one skill at a time, alternating
           Reading and Writing with math. Week 11 is a full-length timed practice test. Week 12 reviews
           misses from that test and maps next steps.
@@ -41,13 +41,13 @@ export function ShermeenPlanScheduleContent() {
               key={week.week}
               className={[
                 activeWeek === week.week ? "is-current" : "",
-                week.week >= 11 ? "shermeen-plan-schedule__week--closing" : "",
+                week.week >= 11 ? "soha-plan-schedule__week--mistake-driven" : "",
               ]
                 .filter(Boolean)
                 .join(" ") || undefined}
             >
               {week.week === 11 ? (
-                <p className="shermeen-plan-schedule__phase-label">
+                <p className="soha-plan-schedule__phase-label">
                   Weeks 11–12 · Practice test and next-step plan
                 </p>
               ) : null}

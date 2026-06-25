@@ -29,7 +29,7 @@ export const SHERMEEN_PLAN_CHART_CAPTION =
   "Each score above is where she should be at that check-in. We compare her real practice-test score to it to see if she is on track or if the plan needs adjusting.";
 
 export function scoreToChartY(score: number, minScore = 1125, maxScore = 1300): number {
-  const bottom = 280;
+  const bottom = 300;
   const top = 56;
   const span = maxScore - minScore;
   return bottom - ((score - minScore) / span) * (bottom - top);

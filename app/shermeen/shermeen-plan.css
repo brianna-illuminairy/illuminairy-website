@@ -8,6 +8,8 @@
   --plan-green: #2f6e47;
   --plan-forest: #1a4d2f;
   --plan-sage: rgba(119, 200, 154, 0.12);
+  --plan-sage-line: rgba(119, 200, 154, 0.22);
+  --plan-amber: #c98a2b;
   --plan-display: var(--font-display, "Source Serif 4"), Georgia, serif;
   --plan-body: var(--font-sans, "Hanken Grotesk"), system-ui, sans-serif;
   margin: 0 -24px;
@@ -73,17 +75,13 @@
 }
 
 .aurora-portal__plan-root .chart {
-  width: 100%;
-  height: auto;
-  margin: 22px 0 6px;
-  display: block;
+  margin: 18px 0 6px;
 }
 
-.aurora-portal__plan-root .chart-caption {
-  font-size: 12.5px;
-  color: var(--plan-muted);
-  margin: 0 0 4px;
-  line-height: 1.5;
+.aurora-portal__plan-root .chart svg {
+  width: 100%;
+  height: auto;
+  display: block;
 }
 
 .aurora-portal__plan-root .rating-label {
@@ -92,86 +90,79 @@
   letter-spacing: 2px;
   text-transform: uppercase;
   color: var(--plan-muted);
-  margin: 24px 0 12px;
-  font-weight: 600;
+  margin: 24px 0 10px;
 }
 
 .aurora-portal__plan-root .pills {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
-  margin-bottom: 20px;
+  display: flex;
+  gap: 6px;
 }
 
 .aurora-portal__plan-root .pill {
-  border: 1px solid var(--plan-line);
-  border-radius: 12px;
-  padding: 12px 8px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  align-items: center;
   text-align: center;
-  background: #fff;
+  padding: 9px 3px;
+  border-radius: 9px;
+  background: var(--plan-sage);
+  color: #6e8a76;
+}
+
+.aurora-portal__plan-root .pill b {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+.aurora-portal__plan-root .pill span {
+  font-size: 10px;
+  font-weight: 600;
+  opacity: 0.8;
+}
+
+.aurora-portal__plan-root .pill .sc {
+  font-family: var(--plan-display);
+  font-size: 15px;
+  font-weight: 600;
+  opacity: 1;
+  margin-top: 1px;
 }
 
 .aurora-portal__plan-root .pill.on {
-  border-color: var(--plan-green);
-  background: var(--plan-sage);
+  background: var(--plan-forest);
+  color: #fff;
 }
 
-.aurora-portal__plan-root .pill .pl {
-  font-size: 10px;
-  letter-spacing: 1.2px;
-  text-transform: uppercase;
-  color: var(--plan-muted);
-  font-weight: 600;
-}
-
-.aurora-portal__plan-root .pill .pp {
-  font-size: 13px;
-  color: var(--plan-ink);
-  margin: 4px 0 2px;
-}
-
-.aurora-portal__plan-root .pill .ps {
-  font-family: var(--plan-display);
-  font-size: 20px;
-  font-weight: 600;
-  color: var(--plan-forest);
+.aurora-portal__plan-root .pill.on span {
+  opacity: 0.9;
 }
 
 .aurora-portal__plan-root .honest {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 8px;
-}
-
-.aurora-portal__plan-root .hbox {
+  background: #fbf6ea;
   border: 1px solid var(--plan-line);
-  border-radius: 14px;
-  padding: 16px 14px;
-  background: rgba(119, 200, 154, 0.06);
-}
-
-.aurora-portal__plan-root .hbox .ht {
-  font-size: 11px;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: var(--plan-green);
-  font-weight: 600;
-  margin-bottom: 8px;
-}
-
-.aurora-portal__plan-root .hbox p {
-  margin: 0;
-  font-size: 13.5px;
+  border-left: 3px solid var(--plan-amber);
+  border-radius: 10px;
+  padding: 14px 16px;
+  font-size: 15.5px;
   line-height: 1.55;
-  color: var(--plan-ink);
+  color: #5f5a4d;
+  margin-top: 14px;
+}
+
+.aurora-portal__plan-root .honest--checkpoint {
+  border-left-color: var(--plan-green);
+  background: var(--plan-sage);
+  color: #2c5740;
 }
 
 .aurora-portal__plan-root .stats {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 10px;
-  margin: 22px 0 4px;
+  margin: 18px 0 4px;
 }
 
 .aurora-portal__plan-root .stat {
@@ -185,10 +176,10 @@
 .aurora-portal__plan-root .stat b {
   display: block;
   font-family: var(--plan-display);
-  font-size: 22px;
+  font-size: 24px;
   color: var(--plan-forest);
   font-weight: 600;
-  line-height: 1.1;
+  line-height: 1;
 }
 
 .aurora-portal__plan-root .stat span {
@@ -316,6 +307,49 @@
 .aurora-portal__plan-root .note {
   font-size: 13.5px;
   color: var(--plan-muted);
+  margin: 10px 0;
+}
+
+.soha-plan-schedule {
+  margin: 0 0 48px;
+}
+
+.soha-plan-schedule__title {
+  font-family: var(--plan-display, var(--aurora-display));
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin: 0 0 12px;
+  color: var(--plan-ink, var(--aurora-ink));
+}
+
+.soha-plan-schedule__lede {
+  margin: 0 0 24px;
+  max-width: 62ch;
+  line-height: 1.55;
+  color: var(--plan-muted, var(--aurora-ink-soft));
+}
+
+.soha-plan-schedule__phase-label {
+  font-family: var(--aurora-mono, monospace);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--plan-forest, var(--aurora-forest));
+  margin: 8px 0 14px;
+}
+
+.soha-plan-schedule__week--mistake-driven {
+  border-left: 3px solid rgba(47, 110, 71, 0.35);
+  padding-left: 14px;
+}
+
+.aurora-portal__plan-root .soha-plan-schedule .skye-plan__section {
+  margin-bottom: 40px;
+}
+
+.aurora-portal__plan-root .soha-plan-schedule .dv-ribbon {
+  margin-bottom: 28px;
 }
 
 .aurora-portal__plan-root .checks {
@@ -353,59 +387,29 @@
   font-weight: 600;
 }
 
-.shermeen-plan-schedule {
-  margin: 0 0 48px;
-}
-
-.shermeen-plan-schedule__title {
-  font-family: var(--plan-display, var(--aurora-display));
-  font-size: clamp(1.5rem, 2.5vw, 2rem);
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  margin: 0 0 12px;
-  color: var(--plan-ink, var(--aurora-ink));
-}
-
-.shermeen-plan-schedule__lede {
-  margin: 0 0 24px;
-  max-width: 62ch;
-  line-height: 1.55;
-  color: var(--plan-muted, var(--aurora-ink-soft));
-}
-
-.shermeen-plan-schedule__phase-label {
-  font-family: var(--aurora-mono, monospace);
-  font-size: 11px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--plan-forest, var(--aurora-forest));
-  margin: 8px 0 14px;
-}
-
-.shermeen-plan-schedule__week--closing {
-  border-left: 3px solid rgba(47, 110, 71, 0.35);
-  padding-left: 14px;
-}
-
-.aurora-portal__plan-root .shermeen-plan-schedule .skye-plan__section {
-  margin-bottom: 40px;
-}
-
-.aurora-portal__plan-root .shermeen-plan-schedule .dv-ribbon {
-  margin-bottom: 28px;
-}
-
 @media (max-width: 560px) {
   .aurora-portal__plan-root .stats {
     grid-template-columns: repeat(2, 1fr);
   }
 
   .aurora-portal__plan-root .pills {
-    grid-template-columns: repeat(2, 1fr);
+    gap: 4px;
   }
 
-  .aurora-portal__plan-root .honest {
-    grid-template-columns: 1fr;
+  .aurora-portal__plan-root .pill {
+    padding: 8px 2px;
+  }
+
+  .aurora-portal__plan-root .pill b {
+    font-size: 9px;
+  }
+
+  .aurora-portal__plan-root .pill span {
+    font-size: 8.5px;
+  }
+
+  .aurora-portal__plan-root .pill .sc {
+    font-size: 12px;
   }
 
   .aurora-portal__plan-root .session-table {

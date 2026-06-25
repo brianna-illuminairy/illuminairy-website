@@ -89,22 +89,18 @@ export function ShermeenPlanOverviewContent() {
         <div className="pills">
           {SHERMEEN_PLAN_PACE_PILLS.map((pill) => (
             <div className={`pill${pill.active ? " on" : ""}`} key={pill.label}>
-              <div className="pl">{pill.label}</div>
-              <div className="pp">{pill.pace}</div>
-              <div className="ps">{pill.score}</div>
+              <b>{pill.label}</b>
+              <span>{pill.pace}</span>
+              <span className="sc">{pill.score}</span>
             </div>
           ))}
         </div>
 
         <div className="honest">
-          <div className="hbox">
-            <div className="ht">What is realistic</div>
-            <p>{SHERMEEN_PLAN_REALISTIC_COPY}</p>
-          </div>
-          <div className="hbox">
-            <div className="ht">First checkpoint</div>
-            <p>{SHERMEEN_PLAN_CHECKPOINT_COPY}</p>
-          </div>
+          <b>What is realistic:</b> {SHERMEEN_PLAN_REALISTIC_COPY}
+        </div>
+        <div className="honest honest--checkpoint">
+          <b>First checkpoint:</b> {SHERMEEN_PLAN_CHECKPOINT_COPY}
         </div>
 
         {skillSection("High Impact Reading & Writing Skills", RW_SKILLS, PLAN_TOTALS.rwSection)}

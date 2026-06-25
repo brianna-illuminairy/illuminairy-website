@@ -58,7 +58,7 @@ export function ShermeenPlanTailContent() {
       <p className="note">{SHERMEEN_PLAN_ACCURACY_SECTION_NOTE}</p>
       <p className="note">{SHERMEEN_PLAN_ACCURACY_SKILL_NOTE}</p>
 
-      <p className="subh">Check-ins</p>
+      <p className="subh">Check-ins:</p>
       <ul className="checks">
         <li>
           <b>Week 1.</b> Review every miss from the June 23 diagnostic (math session, then Reading and
