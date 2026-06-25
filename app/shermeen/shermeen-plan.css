@@ -1,0 +1,289 @@
+.aurora-portal__plan-root {
+  --plan-cream: var(--aurora-white, #f5f8fa);
+  --plan-paper: #fff;
+  --plan-navy: #121a2b;
+  --plan-ink: #121a2b;
+  --plan-muted: rgba(18, 26, 43, 0.66);
+  --plan-line: #e6e3da;
+  --plan-green: #2f6e47;
+  --plan-forest: #1a4d2f;
+  --plan-sage: rgba(119, 200, 154, 0.12);
+  --plan-display: var(--font-display, "Source Serif 4"), Georgia, serif;
+  --plan-body: var(--font-sans, "Hanken Grotesk"), system-ui, sans-serif;
+  margin: 0 -24px;
+  font-family: var(--plan-body);
+  color: var(--plan-ink);
+  line-height: 1.55;
+}
+
+.aurora-portal__plan-root .wrap {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 24px 56px;
+}
+
+.aurora-portal__plan-root section {
+  margin-top: 46px;
+}
+
+.aurora-portal__plan-root .eyebrow {
+  font-size: 12px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--plan-green);
+  font-weight: 600;
+}
+
+.aurora-portal__plan-root .card {
+  background: var(--plan-paper);
+  border: 1px solid var(--plan-line);
+  border-radius: 20px;
+  padding: 26px 24px;
+  box-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.02),
+    0 18px 40px -28px rgba(31, 39, 51, 0.35);
+}
+
+.aurora-portal__plan-root .card .head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  margin-bottom: 6px;
+}
+
+.aurora-portal__plan-root .card .head .right {
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--plan-muted);
+  text-align: right;
+}
+
+.aurora-portal__plan-root .name {
+  font-family: var(--plan-display);
+  font-size: 32px;
+  font-weight: 500;
+}
+
+.aurora-portal__plan-root .card-intro {
+  font-size: 15.5px;
+  margin: 14px 0 0;
+  color: var(--plan-ink);
+}
+
+.aurora-portal__plan-root .stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin: 22px 0 4px;
+}
+
+.aurora-portal__plan-root .stat {
+  border: 1px solid var(--plan-line);
+  border-radius: 14px;
+  padding: 14px 10px;
+  text-align: center;
+  background: #fff;
+}
+
+.aurora-portal__plan-root .stat b {
+  display: block;
+  font-family: var(--plan-display);
+  font-size: 22px;
+  color: var(--plan-forest);
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.aurora-portal__plan-root .stat span {
+  display: block;
+  font-size: 10.5px;
+  letter-spacing: 1.3px;
+  text-transform: uppercase;
+  color: var(--plan-muted);
+  margin-top: 7px;
+}
+
+.aurora-portal__plan-root .skills-title {
+  text-align: center;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--plan-muted);
+  margin: 26px 0 10px;
+}
+
+.aurora-portal__plan-root .srow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 13px 4px;
+  border-bottom: 1px solid var(--plan-line);
+}
+
+.aurora-portal__plan-root .srow:last-of-type {
+  border-bottom: none;
+}
+
+.aurora-portal__plan-root .chip {
+  flex-shrink: 0;
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: var(--plan-muted);
+  background: var(--plan-sage);
+  border-radius: 7px;
+  padding: 6px 0;
+  font-weight: 600;
+  width: 34px;
+  text-align: center;
+}
+
+.aurora-portal__plan-root .sname {
+  flex: 1;
+  font-size: 15px;
+}
+
+.aurora-portal__plan-root .sname small {
+  display: block;
+  color: var(--plan-muted);
+  font-size: 12.5px;
+  margin-top: 1px;
+}
+
+.aurora-portal__plan-root .pts {
+  font-family: var(--plan-display);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--plan-green);
+}
+
+.aurora-portal__plan-root .total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 2px solid var(--plan-ink);
+}
+
+.aurora-portal__plan-root .total span {
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.aurora-portal__plan-root .total b {
+  font-family: var(--plan-display);
+  font-size: 30px;
+  color: var(--plan-forest);
+}
+
+.aurora-portal__plan-root .effort {
+  display: flex;
+  justify-content: space-between;
+  color: var(--plan-muted);
+  font-size: 12.5px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.aurora-portal__plan-root .subh {
+  font-weight: 600;
+  margin-top: 20px;
+  font-size: 16px;
+}
+
+.aurora-portal__plan-root .note {
+  font-size: 13.5px;
+  color: var(--plan-muted);
+}
+
+.aurora-portal__plan-root .checks {
+  list-style: none;
+  margin: 12px 0;
+  padding: 0;
+}
+
+.aurora-portal__plan-root .checks li {
+  padding: 8px 0 8px 26px;
+  position: relative;
+  font-size: 14.5px;
+  border-bottom: 1px solid var(--plan-line);
+}
+
+.aurora-portal__plan-root .checks li:last-child {
+  border-bottom: none;
+}
+
+.aurora-portal__plan-root .checks li::before {
+  content: "\2736";
+  position: absolute;
+  left: 2px;
+  color: var(--plan-green);
+}
+
+.aurora-portal__plan-root .plan-foot-link {
+  margin-top: 24px;
+  font-size: 14px;
+  color: var(--plan-muted);
+}
+
+.aurora-portal__plan-root .plan-foot-link a {
+  color: var(--plan-green);
+  font-weight: 600;
+}
+
+.shermeen-plan-schedule {
+  margin: 0 0 48px;
+}
+
+.shermeen-plan-schedule__title {
+  font-family: var(--plan-display, var(--aurora-display));
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin: 0 0 12px;
+  color: var(--plan-ink, var(--aurora-ink));
+}
+
+.shermeen-plan-schedule__lede {
+  margin: 0 0 24px;
+  max-width: 62ch;
+  line-height: 1.55;
+  color: var(--plan-muted, var(--aurora-ink-soft));
+}
+
+.shermeen-plan-schedule__phase-label {
+  font-family: var(--aurora-mono, monospace);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--plan-forest, var(--aurora-forest));
+  margin: 8px 0 14px;
+}
+
+.shermeen-plan-schedule__week--closing {
+  border-left: 3px solid rgba(47, 110, 71, 0.35);
+  padding-left: 14px;
+}
+
+.aurora-portal__plan-root .shermeen-plan-schedule .skye-plan__section {
+  margin-bottom: 40px;
+}
+
+.aurora-portal__plan-root .shermeen-plan-schedule .dv-ribbon {
+  margin-bottom: 28px;
+}
+
+@media (max-width: 560px) {
+  .aurora-portal__plan-root .stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .aurora-portal__plan-root .name {
+    font-size: 26px;
+  }
+}
