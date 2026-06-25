@@ -33,6 +33,9 @@ export function MilestoneRibbon({
 }: MilestoneRibbonProps) {
   const hover = useChartHover<string>();
   const maxWeek = Math.max(...weeks.map((w) => w.week), ...pins.map((p) => p.week), 1);
+  const weekSlots = Array.from({ length: maxWeek }, (_, i) =>
+    weeks.find((w) => w.week === i + 1)
+  );
   const activeWeek = weeks.find((w) => String(w.week) === hover.activeId);
   const activePin = activeWeek ? pins.find((p) => p.week === activeWeek.week) : undefined;
 
@@ -44,18 +47,22 @@ export function MilestoneRibbon({
       <div className="dv-ribbon" role="img" aria-label={ariaLabel}>
         <div
           className="dv-ribbon__weeks"
-          style={{ gridTemplateColumns: `repeat(${maxWeek}, 1fr)` }}
+          style={{ gridTemplateColumns: `repeat(${maxWeek}, minmax(72px, 1fr))` }}
         >
-          {weeks.map((w) => (
-            <span key={w.week}>Wk {w.week}</span>
+          {weekSlots.map((w, i) => (
+            <span key={i + 1}>Wk {i + 1}</span>
           ))}
         </div>
         <div className="dv-ribbon__track" aria-hidden />
         <div
           className="dv-ribbon__cards"
-          style={{ gridTemplateColumns: `repeat(${maxWeek}, 1fr)` }}
+          style={{ gridTemplateColumns: `repeat(${maxWeek}, minmax(72px, 1fr))` }}
         >
-          {weeks.map((w) => {
+          {weekSlots.map((w, i) => {
+            const weekNum = i + 1;
+            if (!w) {
+              return <div key={weekNum} className="dv-ribbon__card dv-ribbon__card--empty" aria-hidden />;
+            }
             const id = String(w.week);
             const active = interactive && hover.isActive(id);
             const dimmed = interactive && hover.isDimmed(id);
@@ -80,7 +87,7 @@ export function MilestoneRibbon({
         </div>
         <div
           className="dv-ribbon__pins"
-          style={{ gridTemplateColumns: `repeat(${maxWeek}, 1fr)` }}
+          style={{ gridTemplateColumns: `repeat(${maxWeek}, minmax(72px, 1fr))` }}
         >
           {Array.from({ length: maxWeek }, (_, i) => {
             const week = i + 1;

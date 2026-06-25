@@ -247,6 +247,11 @@
   text-align: right;
 }
 
+.dv-ribbon {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 .dv-ribbon__weeks,
 .dv-ribbon__cards,
 .dv-ribbon__pins {
@@ -288,6 +293,11 @@
 .dv-ribbon__card--hi {
   background: rgba(184, 245, 209, 0.25);
   border-color: rgba(119, 200, 154, 0.35);
+}
+
+.dv-ribbon__card--empty {
+  border-style: dashed;
+  opacity: 0.35;
 }
 
 .dv-ribbon__skill {

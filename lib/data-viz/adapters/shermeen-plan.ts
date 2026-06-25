@@ -21,12 +21,19 @@ export function shermeenMathLedgerRows(): LedgerRow[] {
 }
 
 export function shermeenMilestoneWeeks(): MilestoneWeek[] {
-  return SHERMEEN_WEEKLY_PLAN.filter((w) => w.phase === "topic").map((w) => ({
+  return SHERMEEN_WEEKLY_PLAN.map((w) => ({
     week: w.week,
-    skill: w.skillLabel.split("(")[0]?.trim() ?? w.skillLabel,
+    skill: ribbonSkillLabel(w),
     points: w.points ?? null,
     highlight: w.section === "rw",
   }));
+}
+
+function ribbonSkillLabel(week: (typeof SHERMEEN_WEEKLY_PLAN)[number]): string {
+  if (week.phase === "diagnostic") return "Diagnostic review";
+  if (week.phase === "mixed") return "Full-length practice test";
+  if (week.phase === "review") return "Review missed questions";
+  return week.skillLabel.split("(")[0]?.trim() ?? week.skillLabel;
 }
 
 export function shermeenMilestonePins(): MilestonePin[] {

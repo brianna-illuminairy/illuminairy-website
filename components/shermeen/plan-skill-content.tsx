@@ -7,7 +7,6 @@ import {
   shermeenMilestoneWeeks,
   shermeenRwLedgerRows,
 } from "@/lib/data-viz/adapters/shermeen-plan";
-import { SHERMEEN_SKILL_POINTS_FOOTNOTE } from "@/lib/shermeen/diagnostic-skill-points";
 import { approachForWeek } from "@/lib/shermeen/plan-topic-approaches";
 import { PLAN_TOTALS } from "@/lib/shermeen/plan-skill-data";
 import { currentPlanWeek, SHERMEEN_WEEKLY_PLAN } from "@/lib/shermeen/weekly-plan";
@@ -62,7 +61,6 @@ export function ShermeenPlanSkillContent() {
           ariaLabel="Reading and writing skills ranked by points on the diagnostic"
           interactive={false}
         />
-        <p className="diag-report__tnote">{SHERMEEN_SKILL_POINTS_FOOTNOTE}</p>
       </section>
 
       <section className="skye-plan__section">
@@ -74,7 +72,6 @@ export function ShermeenPlanSkillContent() {
           ariaLabel="Math skills ranked by points on the diagnostic"
           interactive={false}
         />
-        <p className="diag-report__tnote">{SHERMEEN_SKILL_POINTS_FOOTNOTE}</p>
       </section>
 
       <section className="skye-plan__section">
