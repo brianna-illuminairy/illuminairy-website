@@ -43,6 +43,10 @@ export const DANIELLE_FILE_MAP = {
   "weekly-report-week-2": {
     filename: "weekly-report-week-2.html",
     contentType: "text/html; charset=utf-8"
+  },
+  "equivalent-expressions-slides": {
+    filename: "equivalent-expressions-slides.html",
+    contentType: "text/html; charset=utf-8"
   }
 } as const;
 

@@ -7,6 +7,7 @@ import { OwnerQaBadge } from "@/components/danielle/owner-qa-badge";
 import { PortalUpdatesBanner } from "@/components/danielle/portal-updates-banner";
 import { Week1LessonNav } from "@/components/danielle/week1-lesson-nav";
 import { Week2LessonNav } from "@/components/danielle/week2-lesson-nav";
+import { Week3LessonNav } from "@/components/danielle/week3-lesson-nav";
 import { homeworkPortalLoginUrl } from "@/lib/internal-links";
 
 const NAV = [
@@ -29,6 +30,11 @@ const NAV = [
     href: "/danielle/week-2",
     label: "Week 2",
     match: (path: string) => path.startsWith("/danielle/week-2")
+  },
+  {
+    href: "/danielle/week-3",
+    label: "Week 3",
+    match: (path: string) => path.startsWith("/danielle/week-3")
   }
 ] as const;
 
@@ -87,6 +93,7 @@ export function DaniellePortalShell({ children }: { children: React.ReactNode })
       <PortalUpdatesBanner />
       <Week1LessonNav />
       <Week2LessonNav />
+      <Week3LessonNav />
       <div className="danielle-portal__body">{children}</div>
       <footer className="danielle-portal__footer">
         © {new Date().getFullYear()} Illuminairy · Private student portal

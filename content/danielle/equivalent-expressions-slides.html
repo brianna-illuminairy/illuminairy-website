@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Equivalent Expressions: Patterns to Memorize</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,400;1,8..60,500;1,8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --surface:#f5ecd9;--surface-2:#efe3cb;--navy:#14233b;--navy-2:#1e3250;
+    --forest:#2c5f4f;--forest-deep:#214a3d;--mint:#bfe3cf;--mint-soft:#dcefe3;
+    --ink:#1b2a22;--muted:#56635a;--line:#d9cba9;
+    --correct:#2c5f4f;--correct-bg:#dcefe3;--wrong:#b35442;--wrong-bg:#f2dcd5;
+    --serif:'Source Serif 4','Iowan Old Style',Georgia,'Times New Roman',serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{margin:0;background:var(--navy);color:var(--ink);font-family:'Space Grotesk',system-ui,sans-serif;-webkit-font-smoothing:antialiased;display:flex;flex-direction:column;min-height:100%;}
+  .stage{flex:1;display:flex;align-items:center;justify-content:center;padding:24px 20px 12px;position:relative;overflow:hidden;}
+  .deck{width:min(980px,100%);height:min(680px,82vh);position:relative;}
+  .slide{position:absolute;inset:0;background:var(--surface);border-radius:20px;border:1px solid #0c1726;box-shadow:0 24px 60px rgba(0,0,0,.34);padding:40px 46px;overflow:auto;opacity:0;transform:translateY(10px) scale(.99);pointer-events:none;transition:opacity .3s ease, transform .3s ease;}
+  .slide.active{opacity:1;transform:none;pointer-events:auto;}
+  .slide.dark{background:var(--navy);color:var(--surface);border-color:#0a1320;}
+  @media(prefers-reduced-motion:reduce){.slide{transition:opacity .12s ease;transform:none;}}
+  .eyebrow{font-family:'Space Mono',monospace;text-transform:uppercase;letter-spacing:.2em;font-size:.7rem;font-weight:700;color:var(--forest);margin:0 0 14px;}
+  .dark .eyebrow{color:var(--mint);}
+  h1.t{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(1.9rem,4.4vw,2.7rem);line-height:1.1;letter-spacing:-.015em;margin:0 0 16px;color:var(--navy);}
+  .dark h1.t{color:var(--surface);}
+  h2.t{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(1.4rem,3vw,1.95rem);line-height:1.16;letter-spacing:-.01em;margin:0 0 16px;color:var(--navy);}
+  .dark h2.t{color:var(--surface);}
+  p{margin:0 0 13px;font-size:1.04rem;line-height:1.58;}
+  .sub{font-size:1.1rem;color:var(--muted);max-width:680px;}
+  .dark .sub{color:#d3dad3;}
+  strong{font-weight:600;color:var(--navy);}
+  .dark strong{color:var(--mint);}
+  em{font-style:italic;}
+  .center{height:100%;display:flex;flex-direction:column;justify-content:center;}
+  .star{color:var(--forest);}.dark .star{color:var(--mint);}
+
+  /* math: readable serif */
+  .m{font-family:var(--serif);font-weight:500;font-size:1.08em;white-space:nowrap;letter-spacing:.005em;}
+  .m i{font-style:italic;}
+  .m sup{font-size:.66em;vertical-align:.45em;}
+  .frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 .2em;font-family:var(--serif);font-weight:500;}
+  .frac .num{border-bottom:1.6px solid currentColor;padding:0 .42em 2px;line-height:1.28;}
+  .frac .den{padding:2px .42em 0;line-height:1.28;}
+  .formula{font-family:var(--serif);font-weight:600;font-size:1.55rem;color:var(--navy);letter-spacing:.005em;}
+  .dark .formula{color:var(--surface);}
+  .formula i{font-style:italic;}
+  .formula sup{font-size:.66em;vertical-align:.45em;}
+
+  .mem{list-style:none;padding:0;margin:4px 0 0;}
+  .mem li{display:grid;grid-template-columns:300px 1fr;gap:18px;align-items:baseline;padding:9px 0;border-top:1px solid #2c466b;}
+  .mem li:first-child{border-top:none;}
+  .mem .pat{font-family:var(--serif);font-weight:600;font-size:1.18rem;color:var(--mint);letter-spacing:.005em;}
+  .mem .pat i{font-style:italic;}.mem .pat sup{font-size:.66em;vertical-align:.45em;}
+  .mem .desc{font-size:.98rem;color:#dfe6df;}
+  .mem .desc b{color:var(--surface);font-weight:600;}
+
+  .card-note{border-left:4px solid var(--forest);background:var(--mint-soft);padding:13px 18px;border-radius:0 11px 11px 0;font-size:1rem;margin:14px 0 0;}
+  .dark .card-note{background:var(--navy-2);border-color:var(--mint);}
+  .card-note b{color:var(--forest-deep);}.dark .card-note b{color:var(--mint);}
+
+  .formula-card{background:#fffaf0;border:1px solid var(--line);border-radius:14px;padding:18px 22px;margin:0 0 16px;}
+  .dark .formula-card{background:var(--navy-2);border-color:#2c466b;}
+  .formula-card .lab{font-family:'Space Mono',monospace;font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:var(--forest);font-weight:700;margin-bottom:9px;}
+  .dark .formula-card .lab{color:var(--mint);}
+  .formula-card .eg{font-size:1.02rem;color:var(--muted);margin-top:10px;}
+  .dark .formula-card .eg{color:#d3dad3;}
+  .eg .m{color:var(--navy);font-weight:600;}.dark .eg .m{color:var(--surface);}
+
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .sheet{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:4px;}
+  .sheet-card{background:#fffaf0;border:1px solid var(--line);border-radius:12px;padding:13px 16px;}
+  .sheet-card .lab{font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--forest);font-weight:700;margin-bottom:6px;}
+  .sheet-card .id{font-family:var(--serif);font-weight:600;font-size:1.14rem;color:var(--navy);letter-spacing:.005em;}
+  .sheet-card .id i{font-style:italic;}.sheet-card .id sup{font-size:.66em;vertical-align:.45em;}
+  .sheet-card .egm{font-size:.92rem;color:var(--muted);margin-top:6px;}
+  .sheet-card .egm .m{color:var(--navy);font-weight:600;font-size:1em;}
+  .sheet-rules{list-style:none;padding:0;margin:4px 0 0;}
+  .sheet-rules li{position:relative;padding-left:26px;margin-bottom:10px;font-size:1.02rem;line-height:1.5;}
+  .sheet-rules li::before{content:"\2736";position:absolute;left:0;top:1px;color:var(--forest);}
+  .sheet-rules b{color:var(--navy);font-weight:600;}
+  @media(max-width:660px){.sheet{grid-template-columns:1fr;}}
+  .uses{list-style:none;padding:0;margin:4px 0 0;}
+  .uses li{position:relative;padding-left:28px;margin-bottom:11px;font-size:1.02rem;line-height:1.5;}
+  .uses li::before{content:"\2736";position:absolute;left:0;top:1px;color:var(--forest);}
+  .dark .uses li::before{color:var(--mint);}
+  .uses b{color:var(--navy);font-weight:600;}.dark .uses b{color:var(--mint);}
+
+  .work{background:#fffaf0;border:1px solid var(--line);border-radius:13px;padding:16px 20px;margin:6px 0 0;}
+  .work .step{display:flex;gap:13px;align-items:flex-start;margin-bottom:11px;font-size:1.02rem;line-height:1.5;}
+  .work .step:last-child{margin-bottom:0;}
+  .work .n{flex:0 0 auto;width:24px;height:24px;border-radius:50%;background:var(--mint-soft);border:1.5px solid #cbe6d5;color:var(--forest-deep);font-family:'Space Mono',monospace;font-weight:700;font-size:.74rem;display:flex;align-items:center;justify-content:center;margin-top:1px;}
+
+  .pq{background:#fffaf0;border:1px solid var(--line);border-radius:15px;padding:20px 22px;margin-top:4px;}
+  .pq .qlab{font-family:'Space Mono',monospace;font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:var(--forest);font-weight:700;margin-bottom:9px;}
+  .pq .stem{font-size:1.08rem;line-height:1.55;color:var(--navy);margin-bottom:6px;}
+  .pq .ask{font-size:.96rem;color:var(--muted);margin-bottom:13px;}
+  .pq-opts{display:flex;flex-direction:column;gap:9px;}
+  .pq-opt{display:flex;align-items:center;gap:13px;width:100%;text-align:left;background:#fff;border:1.5px solid var(--line);border-radius:11px;padding:12px 15px;font-family:'Space Grotesk';font-size:1rem;color:var(--ink);cursor:pointer;transition:border-color .15s,background .15s;}
+  .pq-opt:hover{border-color:var(--forest);}
+  .pq-opt .badge{flex:0 0 auto;width:26px;height:26px;border-radius:50%;border:1.5px solid var(--muted);display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-weight:700;font-size:.78rem;color:var(--muted);}
+  .pq-opt.sel{border-color:var(--forest);background:var(--mint-soft);}
+  .pq-opt.sel .badge{border-color:var(--forest);color:var(--forest-deep);background:#fff;}
+  .pq-opt.correct{border-color:var(--correct);background:var(--correct-bg);}
+  .pq-opt.correct .badge{background:var(--forest);border-color:var(--forest);color:#fff;}
+  .pq-opt.incorrect{border-color:var(--wrong);background:var(--wrong-bg);}
+  .pq-opt.incorrect .badge{background:var(--wrong);border-color:var(--wrong);color:#fff;}
+  .pq-opt[disabled]{cursor:default;}
+  .pq-opt .tick{margin-left:auto;font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700;opacity:0;}
+  .pq-opt.correct .tick{opacity:1;color:var(--forest-deep);}
+  .pq-opt.incorrect .tick{opacity:1;color:var(--wrong);}
+
+  .pq-actions{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;}
+  .act{font-family:'Space Grotesk';font-weight:600;font-size:.86rem;border-radius:10px;cursor:pointer;padding:9px 15px;border:1.5px solid var(--line);background:transparent;color:var(--forest-deep);transition:border-color .15s,background .15s,color .15s;}
+  .act:hover{border-color:var(--forest);}
+  .act.primary{background:var(--forest);border-color:var(--forest);color:var(--mint-soft);}
+  .act.primary:hover{background:var(--forest-deep);}
+  .act.on{background:var(--mint-soft);border-color:var(--forest);}
+  .act[hidden]{display:none;}
+
+  .panel{display:none;margin-top:13px;border-radius:12px;overflow:hidden;border:1px solid var(--line);}
+  .panel.show{display:block;}
+  .panel .head{padding:9px 16px;font-family:'Space Mono',monospace;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700;background:var(--mint-soft);color:var(--forest-deep);}
+  .panel .body{padding:14px 16px 4px;background:#fff;}
+  .panel.hint .head{background:#efe3cb;color:var(--forest-deep);}
+  .panel .body p{font-size:1rem;line-height:1.55;}
+  .verdict{margin-top:13px;font-family:'Space Mono',monospace;font-size:.78rem;letter-spacing:.02em;font-weight:700;padding:9px 14px;border-radius:999px;display:none;}
+  .verdict.show{display:inline-block;}
+  .verdict.right{background:var(--correct-bg);color:var(--forest-deep);}
+  .verdict.wrong{background:var(--wrong-bg);color:var(--wrong);}
+
+  .bar{flex:0 0 auto;display:flex;align-items:center;gap:18px;justify-content:center;padding:13px 20px 18px;color:var(--surface);}
+  .navbtn{font-family:'Space Grotesk';font-weight:600;font-size:.92rem;background:var(--forest);color:var(--mint-soft);border:none;border-radius:10px;padding:11px 20px;cursor:pointer;transition:background .15s,opacity .15s;}
+  .navbtn:hover{background:var(--forest-deep);}
+  .navbtn:disabled{opacity:.34;cursor:default;}
+  .counter{font-family:'Space Mono',monospace;font-size:.8rem;letter-spacing:.08em;color:#9fb0c4;min-width:160px;text-align:center;}
+  .counter b{color:var(--mint);}
+  .counter .sec{display:block;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:#7d8ea3;margin-top:2px;}
+  .progress{position:fixed;top:0;left:0;height:3px;background:var(--mint);width:0;transition:width .3s ease;z-index:10;}
+  .hintbar{position:fixed;bottom:6px;left:0;right:0;text-align:center;font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:#5f718a;}
+  @media(max-width:660px){.slide{padding:26px 22px;}.two{grid-template-columns:1fr;}.mem li{grid-template-columns:1fr;gap:4px;}.deck{height:min(700px,76vh);}p,.sub{font-size:1rem;}.counter{min-width:120px;}}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="stage">
+  <div class="deck" id="deck">
+
+    <!-- 1 TITLE -->
+    <section class="slide dark active" data-sec="Overview">
+      <div class="center">
+        <p class="eyebrow"><span class="star">&#10038;</span>&nbsp; Illuminairy &middot; SAT Math</p>
+        <h1 class="t">Equivalent expressions:<br>the patterns to memorize</h1>
+        <p class="sub">You know the moves already. This set is about speed: recognizing a factoring pattern on sight so you spend seconds, not minutes. Light on lecture, heavy on examples you work yourself.</p>
+      </div>
+    </section>
+
+    <!-- 2 MEMORIZE -->
+    <section class="slide dark" data-sec="Memorize">
+      <p class="eyebrow">Memorize these, and why</p>
+      <h2 class="t">The patterns, fastest to spot at the top</h2>
+      <ul class="mem">
+        <li><span class="pat m">GCF first</span><span class="desc">A reflex before anything else. <span class="m">3<i>x</i><sup>2</sup>+12<i>x</i> = 3<i>x</i>(<i>x</i>+4)</span></span></li>
+        <li><span class="pat m"><i>a</i><sup>2</sup> &minus; <i>b</i><sup>2</sup> = (<i>a</i>&minus;<i>b</i>)(<i>a</i>+<i>b</i>)</span><span class="desc"><b>Difference of squares.</b> Two squares, a minus between them.</span></li>
+        <li><span class="pat m"><i>a</i><sup>2</sup> + 2<i>ab</i> + <i>b</i><sup>2</sup> = (<i>a</i>+<i>b</i>)<sup>2</sup></span><span class="desc"><b>Perfect square, positive.</b> Middle term is positive.</span></li>
+        <li><span class="pat m"><i>a</i><sup>2</sup> &minus; 2<i>ab</i> + <i>b</i><sup>2</sup> = (<i>a</i>&minus;<i>b</i>)<sup>2</sup></span><span class="desc"><b>Perfect square, negative.</b> Middle term is negative.</span></li>
+        <li><span class="pat m"><i>x</i><sup>2</sup> + <i>bx</i> + <i>c</i> = (<i>x</i>+<i>m</i>)(<i>x</i>+<i>n</i>)</span><span class="desc"><b>Basic trinomial.</b> <span class="m"><i>m</i>+<i>n</i>=<i>b</i></span>, <span class="m"><i>mn</i>=<i>c</i></span>.</span></li>
+        <li><span class="pat m"><i>ax</i><sup>2</sup> + <i>bx</i> + <i>c</i></span><span class="desc"><b>Leading coefficient not 1.</b> Use the AC method.</span></li>
+      </ul>
+      <div class="card-note"><b>Why memorize:</b> the SAT hides these inside messier expressions. Recognize the shape instantly and you skip the slow expand-and-regroup work, saving the time you need for the back half of the section.</div>
+    </section>
+
+    <!-- 3 GCF (single reflex slide) -->
+    <section class="slide" data-sec="GCF">
+      <p class="eyebrow">Reflex &middot; do this before any pattern</p>
+      <h2 class="t">Pull out the common factor first</h2>
+      <p>You have this one down already, so just one rep to keep it sharp. Factoring out the shared piece turns <span class="m"><i>ax</i> + <i>b</i></span> into <span class="m"><i>a</i>(<i>x</i> + ?)</span>.</p>
+      <div class="pq" data-correct="B"
+        data-hint="Factor out the largest number dividing both 12 and 48. It becomes a(x + b). Then multiply a &middot; b.">
+        <div class="qlab">GCF factoring</div>
+        <div class="stem">The expression <span class="m">12<i>x</i> + 48</span> is equivalent to <span class="m"><i>a</i>(<i>x</i> + <i>b</i>)</span>, where <span class="m"><i>a</i></span> and <span class="m"><i>b</i></span> are constants. What is the value of <span class="m"><i>ab</i></span>?</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span><span class="m">4</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span><span class="m">48</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span><span class="m">60</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span><span class="m">12</span><span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body">
+          <div class="work">
+            <div class="step"><span class="n">1</span><span>GCF of 12 and 48 is 12: <span class="m">12<i>x</i> + 48 = 12(<i>x</i> + 4)</span>.</span></div>
+            <div class="step"><span class="n">2</span><span>So <span class="m"><i>a</i> = 12</span>, <span class="m"><i>b</i> = 4</span>.</span></div>
+            <div class="step"><span class="n">3</span><span><span class="m"><i>ab</i> = 12 &middot; 4 = 48</span>. <strong>Choice B.</strong></span></div>
+          </div>
+        </div></div>
+      </div>
+    </section>
+
+    <!-- 4 DOS TEACHING -->
+    <section class="slide" data-sec="Difference of squares">
+      <p class="eyebrow">Pattern 1 &middot; difference of squares</p>
+      <h2 class="t">Two squares with a minus between them</h2>
+      <div class="formula-card">
+        <div class="lab">The identity</div>
+        <span class="formula"><i>a</i><sup>2</sup> &minus; <i>b</i><sup>2</sup> = (<i>a</i> &minus; <i>b</i>)(<i>a</i> + <i>b</i>)</span>
+        <div class="eg"><span class="m"><i>x</i><sup>2</sup> &minus; 16 = (<i>x</i> &minus; 4)(<i>x</i> + 4)</span> &nbsp;&middot;&nbsp; <span class="m">(2<i>x</i> &minus; 3)(2<i>x</i> + 3) = 4<i>x</i><sup>2</sup> &minus; 9</span></div>
+      </div>
+      <ul class="uses">
+        <li><b>Factor:</b> two perfect squares with a minus, like <span class="m"><i>x</i><sup>2</sup>&minus;16</span>, become <span class="m">(<i>x</i>&minus;4)(<i>x</i>+4)</span>.</li>
+        <li><b>Expand:</b> a pair like <span class="m">(2<i>x</i>&minus;3)(2<i>x</i>+3)</span> collapses to <span class="m">4<i>x</i><sup>2</sup>&minus;9</span>.</li>
+        <li><b>Simplify fractions:</b> factor top and bottom, then cancel the shared piece.</li>
+      </ul>
+    </section>
+
+    <!-- 5 DOS PRACTICE Q1 -->
+    <section class="slide" data-sec="Difference of squares">
+      <p class="eyebrow">Practice &middot; intermediate</p>
+      <div class="pq" data-correct="A"
+        data-hint="Both 9 and 4 are perfect squares (3<sup>2</sup> and 2<sup>2</sup>). Pull the 3 and the 2 inside the parentheses so the whole thing reads as a<sup>2</sup> &minus; b<sup>2</sup>.">
+        <div class="qlab">Difference of squares</div>
+        <div class="stem">Which of the following is equivalent to <span class="m">9(<i>x</i>&minus;2)<sup>2</sup> &minus; 4(2<i>x</i>+1)<sup>2</sup></span>?</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span><span class="m">(3<i>x</i>&minus;6+4<i>x</i>+2)(3<i>x</i>&minus;6&minus;4<i>x</i>&minus;2)</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span><span class="m">(3<i>x</i>&minus;6+2<i>x</i>+1)(3<i>x</i>&minus;6&minus;2<i>x</i>&minus;1)</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span><span class="m">(3<i>x</i>&minus;2<i>x</i>&minus;6&minus;1)(3<i>x</i>+2<i>x</i>&minus;6+1)</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span><span class="m">(3<i>x</i>&minus;2<i>x</i>&minus;6+1)(3<i>x</i>+2<i>x</i>&minus;6&minus;1)</span><span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body">
+          <div class="work">
+            <div class="step"><span class="n">1</span><span>Write each term as one square: <span class="m">9(<i>x</i>&minus;2)<sup>2</sup> = (3<i>x</i>&minus;6)<sup>2</sup></span> and <span class="m">4(2<i>x</i>+1)<sup>2</sup> = (4<i>x</i>+2)<sup>2</sup></span>.</span></div>
+            <div class="step"><span class="n">2</span><span>Now it is <span class="m">(3<i>x</i>&minus;6)<sup>2</sup> &minus; (4<i>x</i>+2)<sup>2</sup></span>, with <span class="m"><i>a</i> = 3<i>x</i>&minus;6</span>, <span class="m"><i>b</i> = 4<i>x</i>+2</span>.</span></div>
+            <div class="step"><span class="n">3</span><span>Apply <span class="m">(<i>a</i>+<i>b</i>)(<i>a</i>&minus;<i>b</i>)</span>: <span class="m">(3<i>x</i>&minus;6+4<i>x</i>+2)(3<i>x</i>&minus;6&minus;4<i>x</i>&minus;2)</span>. The minus hits both <span class="m">4<i>x</i></span> and <span class="m">2</span>.</span></div>
+            <div class="step"><span class="n">4</span><span><strong>Choice A.</strong> Choice B forgets the factor of 2 from <span class="m">&radic;4</span> and uses <span class="m">2<i>x</i>+1</span> instead of <span class="m">4<i>x</i>+2</span>.</span></div>
+          </div>
+        </div></div>
+      </div>
+    </section>
+
+    <!-- 6 DOS PRACTICE Q2 -->
+    <section class="slide" data-sec="Difference of squares">
+      <p class="eyebrow">Practice &middot; intermediate</p>
+      <div class="pq" data-correct="A"
+        data-hint="16 = 4<sup>2</sup> and 25 = 5<sup>2</sup>. Bring the 4 and the 5 inside the parentheses before you factor.">
+        <div class="qlab">Difference of squares</div>
+        <div class="stem">Which of the following is equivalent to <span class="m">16(<i>x</i>+3)<sup>2</sup> &minus; 25(<i>x</i>&minus;1)<sup>2</sup></span>?</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span><span class="m">(4<i>x</i>+12+5<i>x</i>&minus;5)(4<i>x</i>+12&minus;5<i>x</i>+5)</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span><span class="m">(4<i>x</i>+12+5<i>x</i>&minus;1)(4<i>x</i>+12&minus;5<i>x</i>+1)</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span><span class="m">(4<i>x</i>+3+5<i>x</i>&minus;5)(4<i>x</i>+3&minus;5<i>x</i>+5)</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span><span class="m">(4<i>x</i>+12+5<i>x</i>&minus;5)(4<i>x</i>+12&minus;5<i>x</i>&minus;5)</span><span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body">
+          <div class="work">
+            <div class="step"><span class="n">1</span><span><span class="m">16(<i>x</i>+3)<sup>2</sup> = (4<i>x</i>+12)<sup>2</sup></span> and <span class="m">25(<i>x</i>&minus;1)<sup>2</sup> = (5<i>x</i>&minus;5)<sup>2</sup></span>.</span></div>
+            <div class="step"><span class="n">2</span><span>Difference of squares with <span class="m"><i>a</i> = 4<i>x</i>+12</span>, <span class="m"><i>b</i> = 5<i>x</i>&minus;5</span>.</span></div>
+            <div class="step"><span class="n">3</span><span><span class="m">(<i>a</i>+<i>b</i>)(<i>a</i>&minus;<i>b</i>) = (4<i>x</i>+12+5<i>x</i>&minus;5)(4<i>x</i>+12&minus;5<i>x</i>+5)</span>. The minus turns <span class="m">&minus;(5<i>x</i>&minus;5)</span> into <span class="m">&minus;5<i>x</i>+5</span>.</span></div>
+            <div class="step"><span class="n">4</span><span><strong>Choice A.</strong> B mis-scales <span class="m">(<i>x</i>&minus;1)</span> as <span class="m">5<i>x</i>&minus;1</span>; C mis-scales <span class="m">(<i>x</i>+3)</span> as <span class="m">4<i>x</i>+3</span>; D forgets to flip the sign on the <span class="m">&minus;5</span>.</span></div>
+          </div>
+        </div></div>
+      </div>
+    </section>
+
+    <!-- 7 DOS PRACTICE Q3 (new, cleaner rep) -->
+    <section class="slide" data-sec="Difference of squares">
+      <p class="eyebrow">Practice &middot; spot it fast</p>
+      <div class="pq" data-correct="A"
+        data-hint="25x<sup>2</sup> = (5x)<sup>2</sup> and 49 = 7<sup>2</sup>. Two squares, a minus between them.">
+        <div class="qlab">Difference of squares</div>
+        <div class="stem">Which of the following is equivalent to <span class="m">25<i>x</i><sup>2</sup> &minus; 49</span>?</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span><span class="m">(5<i>x</i> &minus; 7)(5<i>x</i> + 7)</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span><span class="m">(5<i>x</i> + 7)(5<i>x</i> + 7)</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span><span class="m">(25<i>x</i> &minus; 7)(<i>x</i> + 7)</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span><span class="m">(5<i>x</i> &minus; 49)(5<i>x</i> + 1)</span><span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body">
+          <div class="work">
+            <div class="step"><span class="n">1</span><span><span class="m">25<i>x</i><sup>2</sup> = (5<i>x</i>)<sup>2</sup></span>, <span class="m">49 = 7<sup>2</sup></span>, so <span class="m"><i>a</i> = 5<i>x</i></span>, <span class="m"><i>b</i> = 7</span>.</span></div>
+            <div class="step"><span class="n">2</span><span><span class="m">(<i>a</i>&minus;<i>b</i>)(<i>a</i>+<i>b</i>) = (5<i>x</i> &minus; 7)(5<i>x</i> + 7)</span>. <strong>Choice A.</strong></span></div>
+            <div class="step"><span class="n">3</span><span>Choice B is <span class="m">(5<i>x</i>+7)<sup>2</sup></span>, which gives a positive middle term, not a difference.</span></div>
+          </div>
+        </div></div>
+      </div>
+    </section>
+
+    <!-- 8 DOS FRACTION -->
+    <section class="slide" data-sec="Difference of squares">
+      <p class="eyebrow">Practice &middot; with a fraction</p>
+      <div class="pq" data-correct="A"
+        data-hint="The top is a difference of squares: 4x<sup>2</sup>&minus;9 = (2x)<sup>2</sup> &minus; 3<sup>2</sup>. Factor it, then look for a piece that cancels with the bottom.">
+        <div class="qlab">Simplifying a rational expression</div>
+        <div class="stem">Which of the following is equivalent to <span class="frac"><span class="num"><span class="m">4<i>x</i><sup>2</sup> &minus; 9</span></span><span class="den"><span class="m">2<i>x</i> &minus; 3</span></span></span> &nbsp;(for <span class="m">2<i>x</i> &minus; 3 &ne; 0</span>)?</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span><span class="m">2<i>x</i> + 3</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span><span class="m">2<i>x</i> &minus; 3</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span><span class="m">4<i>x</i> + 3</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span><span class="m">2<i>x</i> + 9</span><span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body">
+          <div class="work">
+            <div class="step"><span class="n">1</span><span>Factor the top: <span class="m">4<i>x</i><sup>2</sup> &minus; 9 = (2<i>x</i> &minus; 3)(2<i>x</i> + 3)</span>.</span></div>
+            <div class="step"><span class="n">2</span><span>Rewrite: <span class="frac"><span class="num"><span class="m">(2<i>x</i>&minus;3)(2<i>x</i>+3)</span></span><span class="den"><span class="m">2<i>x</i>&minus;3</span></span></span>.</span></div>
+            <div class="step"><span class="n">3</span><span>Cancel the shared <span class="m">(2<i>x</i>&minus;3)</span>: left with <span class="m">2<i>x</i>+3</span>. <strong>Choice A.</strong></span></div>
+          </div>
+        </div></div>
+      </div>
+    </section>
+
+    <!-- 9 DOS TRAP (moved from GCF) -->
+    <section class="slide" data-sec="Difference of squares">
+      <p class="eyebrow">Careful &middot; is this really a difference of squares?</p>
+      <div class="pq" data-correct="A"
+        data-hint="There is no a<sup>2</sup> &minus; b<sup>2</sup> here. Both terms already share the factor (x &minus; 5). Pull it out first.">
+        <div class="qlab">Looks like squares, but it is a common factor</div>
+        <div class="stem">Which of the following is equivalent to <span class="m">6(<i>x</i>&minus;5)<sup>2</sup> &minus; 3(2<i>x</i>&minus;7)(<i>x</i>&minus;5)</span>?</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span><span class="m">&minus;9(<i>x</i> &minus; 5)</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span><span class="m">(<i>x</i> &minus; 5)(6<i>x</i> &minus; 21)</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span><span class="m">3(<i>x</i> &minus; 5)(2<i>x</i> &minus; 7)</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span><span class="m">(<i>x</i> &minus; 5)(&minus;3)</span><span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body">
+          <div class="work">
+            <div class="step"><span class="n">1</span><span>Both terms share <span class="m">(<i>x</i>&minus;5)</span>. Factor it out: <span class="m">(<i>x</i>&minus;5)[6(<i>x</i>&minus;5) &minus; 3(2<i>x</i>&minus;7)]</span>.</span></div>
+            <div class="step"><span class="n">2</span><span>Inside: <span class="m">6(<i>x</i>&minus;5) = 6<i>x</i>&minus;30</span> and <span class="m">3(2<i>x</i>&minus;7) = 6<i>x</i>&minus;21</span>.</span></div>
+            <div class="step"><span class="n">3</span><span><span class="m">6<i>x</i>&minus;30 &minus; (6<i>x</i>&minus;21) = 6<i>x</i>&minus;30&minus;6<i>x</i>+21 = &minus;9</span>.</span></div>
+            <div class="step"><span class="n">4</span><span>Result: <span class="m">(<i>x</i>&minus;5)(&minus;9) = &minus;9(<i>x</i>&minus;5)</span>. <strong>Choice A.</strong> Choice B is only the second term by itself, dropping the first.</span></div>
+          </div>
+          <div class="card-note" style="margin-top:14px;"><b>The lesson:</b> the squared binomial makes this look like a squares problem, but there is no minus between two squares. The shared <span class="m">(<i>x</i>&minus;5)</span> means common factor first.</div>
+        </div></div>
+      </div>
+    </section>
+
+    <!-- 10 PST TEACHING -->
+    <section class="slide" data-sec="Perfect squares">
+      <p class="eyebrow">Pattern 2 &middot; perfect square trinomials</p>
+      <h2 class="t">First and last are squares, middle is <span class="m">2<i>ab</i></span></h2>
+      <div class="two">
+        <div class="formula-card">
+          <div class="lab">Positive middle</div>
+          <span class="formula"><i>a</i><sup>2</sup> + 2<i>ab</i> + <i>b</i><sup>2</sup> = (<i>a</i> + <i>b</i>)<sup>2</sup></span>
+          <div class="eg"><span class="m"><i>x</i><sup>2</sup> + 6<i>x</i> + 9 = (<i>x</i> + 3)<sup>2</sup></span></div>
+        </div>
+        <div class="formula-card">
+          <div class="lab">Negative middle</div>
+          <span class="formula"><i>a</i><sup>2</sup> &minus; 2<i>ab</i> + <i>b</i><sup>2</sup> = (<i>a</i> &minus; <i>b</i>)<sup>2</sup></span>
+          <div class="eg"><span class="m"><i>x</i><sup>2</sup> &minus; 6<i>x</i> + 9 = (<i>x</i> &minus; 3)<sup>2</sup></span></div>
+        </div>
+      </div>
+      <div class="card-note"><b>The tell:</b> first and last terms are perfect squares, and the middle equals <span class="m">2</span> times their roots. The sign of the middle term is the sign inside the binomial.</div>
+    </section>
+
+    <!-- 11 PST POSITIVE -->
+    <section class="slide" data-sec="Perfect squares">
+      <p class="eyebrow">Practice &middot; positive middle</p>
+      <div class="pq" data-correct="A"
+        data-hint="25 = 5<sup>2</sup> and the middle is 10x. Is 10x equal to 2 &middot; x &middot; 5? If so, and the sign is plus, it is (x + 5)<sup>2</sup>.">
+        <div class="qlab">Perfect square trinomial</div>
+        <div class="stem">Which of the following is equivalent to <span class="m"><i>x</i><sup>2</sup> + 10<i>x</i> + 25</span>?</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span><span class="m">(<i>x</i> + 5)<sup>2</sup></span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span><span class="m">(<i>x</i> &minus; 5)<sup>2</sup></span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span><span class="m">(<i>x</i> + 5)(<i>x</i> &minus; 5)</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span><span class="m">(<i>x</i> + 25)<sup>2</sup></span><span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body">
+          <div class="work">
+            <div class="step"><span class="n">1</span><span>First and last are squares: <span class="m"><i>x</i><sup>2</sup></span> and <span class="m">25 = 5<sup>2</sup></span>. Roots are <span class="m"><i>x</i></span> and <span class="m">5</span>.</span></div>
+            <div class="step"><span class="n">2</span><span>Middle check: <span class="m">2 &middot; <i>x</i> &middot; 5 = 10<i>x</i></span>. It matches.</span></div>
+            <div class="step"><span class="n">3</span><span>Middle is positive, so <span class="m">(<i>x</i> + 5)<sup>2</sup></span>. <strong>Choice A.</strong> Choice C is a difference of squares, which gives <span class="m"><i>x</i><sup>2</sup>&minus;25</span>.</span></div>
+          </div>
+        </div></div>
+      </div>
+    </section>
+
+    <!-- 12 PST NEGATIVE -->
+    <section class="slide" data-sec="Perfect squares">
+      <p class="eyebrow">Practice &middot; negative middle</p>
+      <div class="pq" data-correct="A"
+        data-hint="9x<sup>2</sup> = (3x)<sup>2</sup> and 16 = 4<sup>2</sup>. Is the middle 2 &middot; 3x &middot; 4 = 24x? Check the sign too.">
+        <div class="qlab">Perfect square trinomial</div>
+        <div class="stem">Which of the following is equivalent to <span class="m">9<i>x</i><sup>2</sup> &minus; 24<i>x</i> + 16</span>?</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span><span class="m">(3<i>x</i> &minus; 4)<sup>2</sup></span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span><span class="m">(3<i>x</i> + 4)<sup>2</sup></span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span><span class="m">(9<i>x</i> &minus; 4)<sup>2</sup></span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span><span class="m">(3<i>x</i> &minus; 16)<sup>2</sup></span><span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body">
+          <div class="work">
+            <div class="step"><span class="n">1</span><span>Squares: <span class="m">9<i>x</i><sup>2</sup> = (3<i>x</i>)<sup>2</sup></span>, <span class="m">16 = 4<sup>2</sup></span>. Roots are <span class="m">3<i>x</i></span> and <span class="m">4</span>.</span></div>
+            <div class="step"><span class="n">2</span><span>Middle check: <span class="m">2 &middot; 3<i>x</i> &middot; 4 = 24<i>x</i></span>. Matches the size.</span></div>
+            <div class="step"><span class="n">3</span><span>Middle is negative, so <span class="m">(3<i>x</i> &minus; 4)<sup>2</sup></span>. <strong>Choice A.</strong></span></div>
+          </div>
+        </div></div>
+      </div>
+    </section>
+
+    <!-- 13 PST PRACTICE 3 (new) -->
+    <section class="slide" data-sec="Perfect squares">
+      <p class="eyebrow">Practice &middot; leading coefficient not 1</p>
+      <div class="pq" data-correct="A"
+        data-hint="4x<sup>2</sup> = (2x)<sup>2</sup> and 9 = 3<sup>2</sup>. Is the middle 2 &middot; 2x &middot; 3 = 12x, and is it positive?">
+        <div class="qlab">Perfect square trinomial</div>
+        <div class="stem">Which of the following is equivalent to <span class="m">4<i>x</i><sup>2</sup> + 12<i>x</i> + 9</span>?</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span><span class="m">(2<i>x</i> + 3)<sup>2</sup></span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span><span class="m">(2<i>x</i> &minus; 3)<sup>2</sup></span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span><span class="m">(4<i>x</i> + 3)<sup>2</sup></span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span><span class="m">(2<i>x</i> + 9)<sup>2</sup></span><span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body">
+          <div class="work">
+            <div class="step"><span class="n">1</span><span><span class="m">4<i>x</i><sup>2</sup> = (2<i>x</i>)<sup>2</sup></span>, <span class="m">9 = 3<sup>2</sup></span>. Roots are <span class="m">2<i>x</i></span> and <span class="m">3</span>.</span></div>
+            <div class="step"><span class="n">2</span><span>Middle check: <span class="m">2 &middot; 2<i>x</i> &middot; 3 = 12<i>x</i></span>, positive. Matches.</span></div>
+            <div class="step"><span class="n">3</span><span><span class="m">(2<i>x</i> + 3)<sup>2</sup></span>. <strong>Choice A.</strong> Choice C uses <span class="m">4<i>x</i></span> as the root, but <span class="m">(4<i>x</i>)<sup>2</sup> = 16<i>x</i><sup>2</sup></span>, not <span class="m">4<i>x</i><sup>2</sup></span>.</span></div>
+          </div>
+        </div></div>
+      </div>
+    </section>
+
+    <!-- 14 MATCHING m/k -->
+    <section class="slide" data-sec="Perfect squares">
+      <p class="eyebrow">Practice &middot; solve for the ratio</p>
+      <div class="formula-card" style="margin-bottom:14px;">
+        <div class="lab">The expansion to match against</div>
+        <span class="formula">(<i>px</i> &minus; <i>q</i>)<sup>2</sup> = <i>p</i><sup>2</sup><i>x</i><sup>2</sup> &minus; 2<i>pqx</i> + <i>q</i><sup>2</sup></span>
+        <div class="eg">Square-root the leading number for <span class="m"><i>p</i></span>, read <span class="m"><i>q</i></span> from the binomial, and the middle is forced.</div>
+      </div>
+      <div class="pq" data-correct="A"
+        data-hint="Expand (kt &minus; 8)<sup>2</sup> = k<sup>2</sup>t<sup>2</sup> &minus; 16kt + 64. Match k<sup>2</sup> to 121, then the middle term to mt.">
+        <div class="qlab">Perfect square &middot; matching</div>
+        <div class="stem">If <span class="m">121<i>t</i><sup>2</sup> + <i>mt</i> + 64 = (<i>kt</i> &minus; 8)<sup>2</sup></span>, what is the value of <span class="frac"><span class="num"><span class="m"><i>m</i></span></span><span class="den"><span class="m"><i>k</i></span></span></span>?</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span><span class="m">&minus;16</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span><span class="m">16</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span><span class="m">&minus;<span class="frac"><span class="num">1</span><span class="den">16</span></span></span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span><span class="m">&minus;176</span><span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body">
+          <div class="work">
+            <div class="step"><span class="n">1</span><span>Expand: <span class="m">(<i>kt</i> &minus; 8)<sup>2</sup> = <i>k</i><sup>2</sup><i>t</i><sup>2</sup> &minus; 16<i>kt</i> + 64</span>.</span></div>
+            <div class="step"><span class="n">2</span><span>Match leading terms: <span class="m"><i>k</i><sup>2</sup> = 121</span>, so <span class="m"><i>k</i> = 11</span>.</span></div>
+            <div class="step"><span class="n">3</span><span>Match middle terms: <span class="m"><i>m</i> = &minus;16<i>k</i> = &minus;176</span>.</span></div>
+            <div class="step"><span class="n">4</span><span><span class="m"><i>m</i>/<i>k</i> = &minus;176 / 11 = &minus;16</span>. <strong>Choice A.</strong> The <span class="m">+64</span> confirms <span class="m">(&minus;8)<sup>2</sup> = 64</span>.</span></div>
+          </div>
+        </div></div>
+      </div>
+    </section>
+
+    <!-- 15 MATCHING n/q -->
+    <section class="slide" data-sec="Perfect squares">
+      <p class="eyebrow">Practice &middot; solve for the ratio</p>
+      <div class="pq" data-correct="B"
+        data-hint="Expand (qx &minus; 5)<sup>2</sup> = q<sup>2</sup>x<sup>2</sup> &minus; 10qx + 25. Match q<sup>2</sup> to 49, then the middle term to nx.">
+        <div class="qlab">Perfect square &middot; matching</div>
+        <div class="stem">If <span class="m">49<i>x</i><sup>2</sup> + <i>nx</i> + 25 = (<i>qx</i> &minus; 5)<sup>2</sup></span>, what is the value of <span class="frac"><span class="num"><span class="m"><i>n</i></span></span><span class="den"><span class="m"><i>q</i></span></span></span>?</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span><span class="m">&minus;110</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span><span class="m">&minus;10</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span><span class="m"><span class="frac"><span class="num">1</span><span class="den">14</span></span></span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span><span class="m"><span class="frac"><span class="num">1</span><span class="den">4</span></span></span><span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body">
+          <div class="work">
+            <div class="step"><span class="n">1</span><span>Expand: <span class="m">(<i>qx</i> &minus; 5)<sup>2</sup> = <i>q</i><sup>2</sup><i>x</i><sup>2</sup> &minus; 10<i>qx</i> + 25</span>.</span></div>
+            <div class="step"><span class="n">2</span><span>Match leading terms: <span class="m"><i>q</i><sup>2</sup> = 49</span>, so <span class="m"><i>q</i> = 7</span>.</span></div>
+            <div class="step"><span class="n">3</span><span>Match middle terms: <span class="m"><i>n</i> = &minus;10<i>q</i> = &minus;70</span>.</span></div>
+            <div class="step"><span class="n">4</span><span><span class="m"><i>n</i>/<i>q</i> = &minus;70 / 7 = &minus;10</span>. <strong>Choice B.</strong></span></div>
+          </div>
+        </div></div>
+      </div>
+    </section>
+
+    <!-- 16 BASIC TRINOMIAL + SIGN LOGIC -->
+    <section class="slide" data-sec="Trinomials">
+      <p class="eyebrow">Pattern 3 &middot; basic trinomial</p>
+      <h2 class="t">Find two numbers, but read the signs first</h2>
+      <div class="formula-card">
+        <div class="lab">The setup</div>
+        <span class="formula"><i>x</i><sup>2</sup> + <i>bx</i> + <i>c</i> = (<i>x</i> + <i>m</i>)(<i>x</i> + <i>n</i>)</span>
+        <div class="eg">where <span class="m"><i>m</i> + <i>n</i> = <i>b</i></span> and <span class="m"><i>mn</i> = <i>c</i></span>. Example: <span class="m"><i>x</i><sup>2</sup> + 5<i>x</i> + 6 = (<i>x</i> + 2)(<i>x</i> + 3)</span>.</div>
+      </div>
+      <ul class="uses">
+        <li><b><span class="m"><i>c</i></span> positive, <span class="m"><i>b</i></span> positive:</b> both numbers positive.</li>
+        <li><b><span class="m"><i>c</i></span> positive, <span class="m"><i>b</i></span> negative:</b> both numbers negative.</li>
+        <li><b><span class="m"><i>c</i></span> negative:</b> one positive, one negative. The bigger one carries the sign of <span class="m"><i>b</i></span>.</li>
+      </ul>
+      <div class="card-note"><b>Use it to scan:</b> decide the sign pattern first, then read the answer choices. Often only one choice even has the right signs, and you are done before factoring.</div>
+    </section>
+
+    <!-- 17 TRINOMIAL PRACTICE 1 -->
+    <section class="slide" data-sec="Trinomials">
+      <p class="eyebrow">Practice &middot; both numbers negative</p>
+      <div class="pq" data-correct="A"
+        data-hint="c = +12 is positive and b = &minus;7 is negative, so both numbers are negative. Find two negatives that multiply to 12 and add to &minus;7.">
+        <div class="qlab">Basic trinomial</div>
+        <div class="stem">Which of the following is equivalent to <span class="m"><i>x</i><sup>2</sup> &minus; 7<i>x</i> + 12</span>?</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span><span class="m">(<i>x</i> &minus; 3)(<i>x</i> &minus; 4)</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span><span class="m">(<i>x</i> + 3)(<i>x</i> + 4)</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span><span class="m">(<i>x</i> &minus; 2)(<i>x</i> &minus; 6)</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span><span class="m">(<i>x</i> &minus; 1)(<i>x</i> &minus; 12)</span><span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body">
+          <div class="work">
+            <div class="step"><span class="n">1</span><span>Need <span class="m"><i>mn</i> = 12</span> and <span class="m"><i>m</i> + <i>n</i> = &minus;7</span>.</span></div>
+            <div class="step"><span class="n">2</span><span>Positive product, negative sum, so both numbers are negative. That kills choice B at a glance.</span></div>
+            <div class="step"><span class="n">3</span><span><span class="m">&minus;3 &middot; &minus;4 = 12</span> and <span class="m">&minus;3 + (&minus;4) = &minus;7</span>. Match. (C sums to &minus;8, D sums to &minus;13.)</span></div>
+            <div class="step"><span class="n">4</span><span><span class="m">(<i>x</i> &minus; 3)(<i>x</i> &minus; 4)</span>. <strong>Choice A.</strong></span></div>
+          </div>
+        </div></div>
+      </div>
+    </section>
+
+    <!-- 18 TRINOMIAL PRACTICE 2 (new, mixed signs) -->
+    <section class="slide" data-sec="Trinomials">
+      <p class="eyebrow">Practice &middot; one positive, one negative</p>
+      <div class="pq" data-correct="A"
+        data-hint="c = &minus;15 is negative, so one number is positive and one is negative. b = +2, so the bigger one is positive.">
+        <div class="qlab">Basic trinomial</div>
+        <div class="stem">Which of the following is equivalent to <span class="m"><i>x</i><sup>2</sup> + 2<i>x</i> &minus; 15</span>?</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span><span class="m">(<i>x</i> + 5)(<i>x</i> &minus; 3)</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span><span class="m">(<i>x</i> &minus; 5)(<i>x</i> + 3)</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span><span class="m">(<i>x</i> + 15)(<i>x</i> &minus; 1)</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span><span class="m">(<i>x</i> + 5)(<i>x</i> + 3)</span><span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body">
+          <div class="work">
+            <div class="step"><span class="n">1</span><span>Need <span class="m"><i>mn</i> = &minus;15</span> and <span class="m"><i>m</i> + <i>n</i> = 2</span>.</span></div>
+            <div class="step"><span class="n">2</span><span>Negative product means one positive, one negative. Positive sum means the bigger one is positive.</span></div>
+            <div class="step"><span class="n">3</span><span><span class="m">+5</span> and <span class="m">&minus;3</span>: <span class="m">5 &middot; (&minus;3) = &minus;15</span>, <span class="m">5 + (&minus;3) = 2</span>. Match.</span></div>
+            <div class="step"><span class="n">4</span><span><span class="m">(<i>x</i> + 5)(<i>x</i> &minus; 3)</span>. <strong>Choice A.</strong> Choice B has the signs flipped and sums to <span class="m">&minus;2</span>.</span></div>
+          </div>
+        </div></div>
+      </div>
+    </section>
+
+    <!-- 19 TRINOMIAL PRACTICE 3 (new) -->
+    <section class="slide" data-sec="Trinomials">
+      <p class="eyebrow">Practice &middot; one positive, one negative</p>
+      <div class="pq" data-correct="A"
+        data-hint="c = &minus;20 is negative: one positive, one negative. b = &minus;1, so the bigger number is negative.">
+        <div class="qlab">Basic trinomial</div>
+        <div class="stem">Which of the following is equivalent to <span class="m"><i>x</i><sup>2</sup> &minus; <i>x</i> &minus; 20</span>?</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span><span class="m">(<i>x</i> &minus; 5)(<i>x</i> + 4)</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span><span class="m">(<i>x</i> + 5)(<i>x</i> &minus; 4)</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span><span class="m">(<i>x</i> &minus; 4)(<i>x</i> &minus; 5)</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span><span class="m">(<i>x</i> &minus; 10)(<i>x</i> + 2)</span><span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body">
+          <div class="work">
+            <div class="step"><span class="n">1</span><span>Need <span class="m"><i>mn</i> = &minus;20</span> and <span class="m"><i>m</i> + <i>n</i> = &minus;1</span>.</span></div>
+            <div class="step"><span class="n">2</span><span>Negative product, so opposite signs. Sum is <span class="m">&minus;1</span>, so the bigger number is negative.</span></div>
+            <div class="step"><span class="n">3</span><span><span class="m">&minus;5</span> and <span class="m">+4</span>: <span class="m">&minus;5 &middot; 4 = &minus;20</span>, <span class="m">&minus;5 + 4 = &minus;1</span>. Match.</span></div>
+            <div class="step"><span class="n">4</span><span><span class="m">(<i>x</i> &minus; 5)(<i>x</i> + 4)</span>. <strong>Choice A.</strong> Choice B sums to <span class="m">+1</span>; D sums to <span class="m">&minus;8</span>.</span></div>
+          </div>
+        </div></div>
+      </div>
+    </section>
+
+    <!-- 20 AC METHOD -->
+    <section class="slide" data-sec="AC method">
+      <p class="eyebrow">Pattern 4 &middot; leading coefficient not 1</p>
+      <h2 class="t">The AC method</h2>
+      <p>For <span class="m"><i>ax</i><sup>2</sup> + <i>bx</i> + <i>c</i></span>: multiply <span class="m"><i>a</i> &middot; <i>c</i></span>, find two numbers that multiply to that and add to <span class="m"><i>b</i></span>, split the middle term, then factor by grouping.</p>
+      <div class="work">
+        <div class="step"><span class="n">1</span><span>Factor <span class="m">6<i>x</i><sup>2</sup> + 31<i>x</i> + 35</span>. Compute <span class="m"><i>ac</i> = 6 &middot; 35 = 210</span>.</span></div>
+        <div class="step"><span class="n">2</span><span>Two numbers multiply to <span class="m">210</span>, add to <span class="m">31</span>: that is <span class="m">10</span> and <span class="m">21</span>.</span></div>
+        <div class="step"><span class="n">3</span><span>Split the middle: <span class="m">6<i>x</i><sup>2</sup> + 10<i>x</i> + 21<i>x</i> + 35</span>.</span></div>
+        <div class="step"><span class="n">4</span><span>Group: <span class="m">2<i>x</i>(3<i>x</i> + 5) + 7(3<i>x</i> + 5) = (2<i>x</i> + 7)(3<i>x</i> + 5)</span>.</span></div>
+      </div>
+      <div class="card-note"><b>On multiple choice, there is a shortcut:</b> pick a small value for <span class="m"><i>x</i></span>, plug it into the original and each choice, and keep the one that matches. Often faster than factoring.</div>
+    </section>
+
+    <!-- 21 BIG NUMBER TRICKS -->
+    <section class="slide" data-sec="AC method">
+      <p class="eyebrow">Speed &middot; when the product is large</p>
+      <h2 class="t">Big numbers like 560: narrow before you search</h2>
+      <ul class="uses">
+        <li><b>Sign first.</b> Product positive with a positive sum means both factors positive; positive product with a negative sum means both negative; negative product means one of each. This cuts the search in half before you start.</li>
+        <li><b>Start near <span class="m">&radic;<span style="border-top:1.4px solid;padding-top:1px;"><i>ac</i></span></span>.</b> The two numbers sit on either side of the square root, so begin there and step outward toward the sum you need.</li>
+      </ul>
+      <div class="work" style="margin-top:14px;">
+        <div class="step"><span class="n">1</span><span>Factor <span class="m">7<i>x</i><sup>2</sup> + 66<i>x</i> + 80</span>. <span class="m"><i>ac</i> = 7 &middot; 80 = 560</span>. Both signs positive, so both numbers positive.</span></div>
+        <div class="step"><span class="n">2</span><span><span class="m">&radic;560 &asymp; 23.7</span>. Scan pairs near there for a sum of 66: <span class="m">20&middot;28</span> (48), <span class="m">16&middot;35</span> (51), <span class="m">14&middot;40</span> (54), <span class="m">10&middot;56</span> (66). Stop at <span class="m">10</span> and <span class="m">56</span>.</span></div>
+        <div class="step"><span class="n">3</span><span>Split and group: <span class="m">7<i>x</i><sup>2</sup> + 10<i>x</i> + 56<i>x</i> + 80 = <i>x</i>(7<i>x</i> + 10) + 8(7<i>x</i> + 10) = (<i>x</i> + 8)(7<i>x</i> + 10)</span>.</span></div>
+      </div>
+      <div class="card-note"><b>Stuck on the pair?</b> The two numbers solve <span class="m"><i>t</i><sup>2</sup> &minus; <i>bt</i> + <i>ac</i> = 0</span>. Here <span class="m"><i>t</i><sup>2</sup> &minus; 66<i>t</i> + 560 = 0</span> gives <span class="m"><i>t</i> = 10</span> or <span class="m">56</span>. If that has no whole-number answer, it will not factor cleanly.</div>
+    </section>
+
+    <!-- 22 AC PRACTICE 1 -->
+    <section class="slide" data-sec="AC method">
+      <p class="eyebrow">Practice &middot; AC plus plug-in check</p>
+      <div class="pq" data-correct="A"
+        data-hint="ac = 10 &middot; (&minus;6) = &minus;60. Negative product means one positive, one negative, summing to +11. Or just plug in x = 1: the original is 15.">
+        <div class="qlab">Leading coefficient not 1</div>
+        <div class="stem">Which of the following is equivalent to <span class="m">10<i>x</i><sup>2</sup> + 11<i>x</i> &minus; 6</span>?</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span><span class="m">(5<i>x</i> &minus; 2)(2<i>x</i> + 3)</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span><span class="m">(5<i>x</i> + 2)(2<i>x</i> &minus; 3)</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span><span class="m">(2<i>x</i> &minus; 1)(5<i>x</i> + 6)</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span><span class="m">(5<i>x</i> &minus; 3)(2<i>x</i> + 2)</span><span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body">
+          <div class="work">
+            <div class="step"><span class="n">1</span><span><b>AC method:</b> <span class="m"><i>ac</i> = 10 &middot; (&minus;6) = &minus;60</span>. Two numbers multiply to <span class="m">&minus;60</span>, add to <span class="m">11</span>: <span class="m">15</span> and <span class="m">&minus;4</span>.</span></div>
+            <div class="step"><span class="n">2</span><span>Split: <span class="m">10<i>x</i><sup>2</sup> + 15<i>x</i> &minus; 4<i>x</i> &minus; 6</span>. Group: <span class="m">5<i>x</i>(2<i>x</i> + 3) &minus; 2(2<i>x</i> + 3) = (5<i>x</i> &minus; 2)(2<i>x</i> + 3)</span>.</span></div>
+            <div class="step"><span class="n">3</span><span><b>Plug-in check:</b> at <span class="m"><i>x</i> = 1</span> the original is <span class="m">10 + 11 &minus; 6 = 15</span>. Choice A gives <span class="m">(3)(5) = 15</span>. Match. <strong>Choice A.</strong></span></div>
+          </div>
+        </div></div>
+      </div>
+    </section>
+
+    <!-- 23 AC PRACTICE 2 (new) -->
+    <section class="slide" data-sec="AC method">
+      <p class="eyebrow">Practice &middot; do it your fastest way</p>
+      <div class="pq" data-correct="A"
+        data-hint="ac = 6 &middot; (&minus;12) = &minus;72. Need two numbers multiplying to &minus;72, adding to +1: that is 9 and &minus;8. Or plug in x = 1: the original is &minus;5.">
+        <div class="qlab">Leading coefficient not 1</div>
+        <div class="stem">Which of the following is equivalent to <span class="m">6<i>x</i><sup>2</sup> + <i>x</i> &minus; 12</span>?</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span><span class="m">(3<i>x</i> &minus; 4)(2<i>x</i> + 3)</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span><span class="m">(3<i>x</i> + 4)(2<i>x</i> &minus; 3)</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span><span class="m">(2<i>x</i> &minus; 4)(3<i>x</i> + 3)</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span><span class="m">(6<i>x</i> &minus; 4)(<i>x</i> + 3)</span><span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body">
+          <div class="work">
+            <div class="step"><span class="n">1</span><span><span class="m"><i>ac</i> = 6 &middot; (&minus;12) = &minus;72</span>. Two numbers multiply to <span class="m">&minus;72</span>, add to <span class="m">1</span>: <span class="m">9</span> and <span class="m">&minus;8</span>.</span></div>
+            <div class="step"><span class="n">2</span><span>Split: <span class="m">6<i>x</i><sup>2</sup> + 9<i>x</i> &minus; 8<i>x</i> &minus; 12</span>. Group: <span class="m">3<i>x</i>(2<i>x</i> + 3) &minus; 4(2<i>x</i> + 3) = (3<i>x</i> &minus; 4)(2<i>x</i> + 3)</span>.</span></div>
+            <div class="step"><span class="n">3</span><span><b>Plug-in check:</b> at <span class="m"><i>x</i> = 1</span> the original is <span class="m">6 + 1 &minus; 12 = &minus;5</span>. Choice A gives <span class="m">(&minus;1)(5) = &minus;5</span>. Match. <strong>Choice A.</strong></span></div>
+          </div>
+        </div></div>
+      </div>
+    </section>
+
+    <!-- 24 CLOSE -->
+    <section class="slide dark" data-sec="Recap">
+      <p class="eyebrow">The order to run every time</p>
+      <h2 class="t">Your fast decision tree</h2>
+      <ul class="mem">
+        <li><span class="pat m">0 &middot; GCF</span><span class="desc">Does every term share a factor? Pull it out first.</span></li>
+        <li><span class="pat m">1 &middot; Two squares, minus</span><span class="desc"><span class="m"><i>a</i><sup>2</sup> &minus; <i>b</i><sup>2</sup> &rarr; (<i>a</i>&minus;<i>b</i>)(<i>a</i>+<i>b</i>)</span></span></li>
+        <li><span class="pat m">2 &middot; Squares + middle 2ab</span><span class="desc">Perfect square trinomial. The middle sign is the sign in the binomial.</span></li>
+        <li><span class="pat m">3 &middot; <i>x</i><sup>2</sup>+<i>bx</i>+<i>c</i></span><span class="desc">Find <span class="m"><i>m</i>, <i>n</i></span>. Read the signs first to prune the choices.</span></li>
+        <li><span class="pat m">4 &middot; <i>ax</i><sup>2</sup>+<i>bx</i>+<i>c</i></span><span class="desc">AC method, sign and <span class="m">&radic;<span style="border-top:1.3px solid;"><i>ac</i></span></span> to move fast. On multiple choice, plug in a number.</span></li>
+      </ul>
+    </section>
+
+    <!-- 25 CHEAT SHEET: IDENTITIES -->
+    <section class="slide" data-sec="Cheat sheet">
+      <p class="eyebrow"><span class="star">&#10038;</span>&nbsp; Cheat sheet &middot; the identities</p>
+      <h2 class="t">Every pattern, all in one place</h2>
+      <div class="sheet">
+        <div class="sheet-card">
+          <div class="lab">Difference of squares</div>
+          <div class="id"><i>a</i><sup>2</sup> &minus; <i>b</i><sup>2</sup> = (<i>a</i> &minus; <i>b</i>)(<i>a</i> + <i>b</i>)</div>
+          <div class="egm"><span class="m"><i>x</i><sup>2</sup> &minus; 16 = (<i>x</i> &minus; 4)(<i>x</i> + 4)</span></div>
+        </div>
+        <div class="sheet-card">
+          <div class="lab">Perfect square &middot; positive</div>
+          <div class="id"><i>a</i><sup>2</sup> + 2<i>ab</i> + <i>b</i><sup>2</sup> = (<i>a</i> + <i>b</i>)<sup>2</sup></div>
+          <div class="egm"><span class="m"><i>x</i><sup>2</sup> + 6<i>x</i> + 9 = (<i>x</i> + 3)<sup>2</sup></span></div>
+        </div>
+        <div class="sheet-card">
+          <div class="lab">Perfect square &middot; negative</div>
+          <div class="id"><i>a</i><sup>2</sup> &minus; 2<i>ab</i> + <i>b</i><sup>2</sup> = (<i>a</i> &minus; <i>b</i>)<sup>2</sup></div>
+          <div class="egm"><span class="m"><i>x</i><sup>2</sup> &minus; 6<i>x</i> + 9 = (<i>x</i> &minus; 3)<sup>2</sup></span></div>
+        </div>
+        <div class="sheet-card">
+          <div class="lab">Basic trinomial</div>
+          <div class="id"><i>x</i><sup>2</sup> + <i>bx</i> + <i>c</i> = (<i>x</i> + <i>m</i>)(<i>x</i> + <i>n</i>)</div>
+          <div class="egm"><span class="m"><i>m</i> + <i>n</i> = <i>b</i></span>, &nbsp;<span class="m"><i>mn</i> = <i>c</i></span></div>
+        </div>
+        <div class="sheet-card">
+          <div class="lab">Leading coefficient not 1</div>
+          <div class="id"><i>ax</i><sup>2</sup> + <i>bx</i> + <i>c</i> &middot; AC method</div>
+          <div class="egm">Split the middle using two numbers that multiply to <span class="m"><i>ac</i></span>, add to <span class="m"><i>b</i></span>, then group.</div>
+        </div>
+        <div class="sheet-card">
+          <div class="lab">GCF first</div>
+          <div class="id"><i>ax</i> + <i>b</i> = <i>a</i>(<i>x</i> + ?)</div>
+          <div class="egm"><span class="m">12<i>x</i> + 48 = 12(<i>x</i> + 4)</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 26 CHEAT SHEET: SIGNS & SPEED -->
+    <section class="slide" data-sec="Cheat sheet">
+      <p class="eyebrow"><span class="star">&#10038;</span>&nbsp; Cheat sheet &middot; signs and speed</p>
+      <h2 class="t">How to read signs and move fast</h2>
+      <div class="two">
+        <div class="formula-card" style="margin:0;">
+          <div class="lab">Signs for <span style="text-transform:none;font-family:var(--serif);"><i>x</i><sup>2</sup> + <i>bx</i> + <i>c</i></span></div>
+          <ul class="sheet-rules">
+            <li><b><span class="m"><i>c</i></span> positive, <span class="m"><i>b</i></span> positive:</b> both numbers positive.</li>
+            <li><b><span class="m"><i>c</i></span> positive, <span class="m"><i>b</i></span> negative:</b> both numbers negative.</li>
+            <li><b><span class="m"><i>c</i></span> negative:</b> one positive, one negative. The bigger one carries the sign of <span class="m"><i>b</i></span>.</li>
+          </ul>
+        </div>
+        <div class="formula-card" style="margin:0;">
+          <div class="lab">Speed moves</div>
+          <ul class="sheet-rules">
+            <li><b>Plug in a number.</b> On any "which is equivalent" question, pick a small <span class="m"><i>x</i></span>, evaluate the original and each choice, keep the match.</li>
+            <li><b>Big <span class="m"><i>ac</i></span>:</b> decide the signs first, then search for the pair near <span class="m">&radic;<span style="border-top:1.3px solid;padding-top:1px;"><i>ac</i></span></span>.</li>
+            <li><b>Stuck on the pair?</b> Solve <span class="m"><i>t</i><sup>2</sup> &minus; <i>bt</i> + <i>ac</i> = 0</span>. Whole-number roots are the split numbers.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="card-note"><b>Run them in order:</b> GCF, then difference of squares, then perfect square trinomial, then <span class="m"><i>x</i><sup>2</sup>+<i>bx</i>+<i>c</i></span>, then <span class="m"><i>ax</i><sup>2</sup>+<i>bx</i>+<i>c</i></span>.</div>
+    </section>
+
+  </div>
+</div>
+
+<div class="bar">
+  <button class="navbtn" id="prev" disabled>Back</button>
+  <div class="counter"><b id="cur">1</b> / <span id="total">1</span><span class="sec" id="sec">Overview</span></div>
+  <button class="navbtn" id="next">Next</button>
+</div>
+<div class="hintbar">Arrow keys to move &middot; <span class="star">&#10038;</span> Illuminairy</div>
+
+<script>
+(function(){
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var idx=0;
+  var prev=document.getElementById('prev'), next=document.getElementById('next');
+  var cur=document.getElementById('cur'), sec=document.getElementById('sec'), progress=document.getElementById('progress');
+  document.getElementById('total').textContent=slides.length;
+  function show(n){
+    idx=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach(function(s,i){s.classList.toggle('active',i===idx);});
+    cur.textContent=idx+1;
+    sec.textContent=slides[idx].getAttribute('data-sec')||'';
+    prev.disabled=idx===0; next.disabled=idx===slides.length-1;
+    progress.style.width=((idx)/(slides.length-1)*100)+'%';
+    slides[idx].scrollTop=0;
+  }
+  prev.addEventListener('click',function(){show(idx-1);});
+  next.addEventListener('click',function(){show(idx+1);});
+  document.addEventListener('keydown',function(e){
+    var tag=(e.target.tagName||'').toLowerCase();
+    if(tag==='button')return;
+    if(e.key==='ArrowRight'||e.key==='PageDown'){show(idx+1);}
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){show(idx-1);}
+  });
+
+  document.querySelectorAll('.pq').forEach(function(pq){
+    var correct=pq.getAttribute('data-correct');
+    var opts=Array.prototype.slice.call(pq.querySelectorAll('.pq-opt'));
+    var hintBtn=pq.querySelector('[data-act="hint"]');
+    var checkBtn=pq.querySelector('[data-act="check"]');
+    var stepsBtn=pq.querySelector('[data-act="steps"]');
+    var resetBtn=pq.querySelector('[data-act="reset"]');
+    var hintPanel=pq.querySelector('.panel.hint');
+    var stepsPanel=pq.querySelector('.panel.steps');
+    var verdict=pq.querySelector('.verdict');
+    var selected=null, locked=false;
+
+    var hintBody=hintPanel.querySelector('.body');
+    hintBody.innerHTML='<p style="margin:0 0 8px;">'+(pq.getAttribute('data-hint')||'')+'</p>';
+
+    opts.forEach(function(opt){
+      opt.addEventListener('click',function(){
+        if(locked)return;
+        opts.forEach(function(o){o.classList.remove('sel');});
+        opt.classList.add('sel');
+        selected=opt.getAttribute('data-c');
+      });
+    });
+
+    hintBtn.addEventListener('click',function(){
+      var on=hintPanel.classList.toggle('show');
+      hintBtn.classList.toggle('on',on);
+    });
+    stepsBtn.addEventListener('click',function(){
+      var on=stepsPanel.classList.toggle('show');
+      stepsBtn.classList.toggle('on',on);
+    });
+
+    checkBtn.addEventListener('click',function(){
+      if(!selected){
+        verdict.className='verdict show wrong';
+        verdict.textContent='Pick an answer first.';
+        return;
+      }
+      locked=true;
+      var right=selected===correct;
+      opts.forEach(function(o){
+        o.disabled=true;o.classList.remove('sel');
+        var c=o.getAttribute('data-c');
+        if(c===correct){o.classList.add('correct');o.querySelector('.tick').textContent='Correct';}
+        else if(c===selected){o.classList.add('incorrect');o.querySelector('.tick').textContent='Your pick';}
+      });
+      verdict.className='verdict show '+(right?'right':'wrong');
+      verdict.textContent=right?'\u2736 Correct':'Not quite \u2736 the answer is '+correct;
+      resetBtn.hidden=false;
+    });
+
+    resetBtn.addEventListener('click',function(){
+      locked=false;selected=null;
+      opts.forEach(function(o){o.disabled=false;o.classList.remove('correct','incorrect','sel');o.querySelector('.tick').textContent='';});
+      verdict.className='verdict';verdict.textContent='';
+      resetBtn.hidden=true;
+    });
+  });
+
+  show(0);
+})();
+</script>
+</body>
+</html>
