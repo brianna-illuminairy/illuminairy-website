@@ -14,26 +14,26 @@ Danielle's Weekly SAT Progress Report | June 16–23, 2026
 ```
 Hi Danielle & Amma,
 
-Danielle's weekly SAT progress report for June 16–23, 2026 is ready on her private Illuminairy portal, https://illuminairy.com/danielle/week-2/report
+Danielle's weekly SAT progress report for June 16–23, 2026 is ready on her private Illuminairy portal:
+https://illuminairy.com/danielle/week-2/report
 
-Highlights from last week:
+Overview:
 
-Completed 2 one-hour tutoring sessions on Reading and Writing — study plan #7 Transitions (+22 modeled pts).
-Diagnostic: missed 3 transitions (easy, medium, hard). Practice now: 96% set 1, 96% flashcards, 88% hard untimed.
-Week 1: factoring and equivalent expressions (foundation for #4/#5 Advanced Math) plus study plan #5 Nonlinear equations (+24): 2 diagnostic misses; 8 equation items on the test (13 with #4).
-Equivalent expressions homework: 95% easy, 72% medium — same algebra runs on most quadratics and nonlinear items, not just the one EE question type.
-Overall practice: 67% on June 6 diagnostic (66/98) → 89% week 1 → 91% week 2.
-Module routing: harder Module 2 in both sections; RW 19/27 and Math 16/22 in Module 1 (1 question above cutoff each).
-On her own: started #3 Command of evidence practice (3 diagnostic misses; not taught in sessions yet).
-Estimated score ~1210 today (1125 Jun 6 midpoint + ~85 points gained). Goal 1400 on August 22.
+Danielle is on track for her goal of 1400 on the August 22 test.
+We estimate her score at about 1210 today, up about 35 points from about 1175 last week (85 points total since her June 6 practice test at 1125).
+She completed 2 tutoring sessions and 116 practice problems this week (71 on Transitions, 45 on equivalent expressions).
+Both sessions were Reading and Writing on Transitions. She also kept working week-one Math homework on nonlinear equations and equivalent expressions.
+Transitions accuracy moved from missing all three on the June 6 test to 96% on flashcards and 87% across transition problem sets; overall homework accuracy rose from 89% to 91%.
+Next week: two Math sessions on nonlinear functions and nonlinear equations, her first full-length practice test, and finishing the timed Transitions homework set.
+
+The full report has session summaries, homework breakdown, and her score chart at the link above.
 
 This week:
 
-Finish #7 Transitions timed homework (30 questions, due June 28).
-Two Math sessions: #4 Nonlinear functions + continue #5 Nonlinear equations (quadratic formula, discriminant; review both diagnostic misses in #5).
-Keep equivalent expressions medium sets until 95%.
-First full-length practice test at end of week — real score vs June 6 baseline (first-month checkpoint: about +100 pts, roughly 1225+).
-Sessions stay hands-on: live problems and drills.
+Finish Transitions timed homework (30 questions, due June 28).
+Two Math sessions on nonlinear functions and nonlinear equations, with special factoring cases (difference of squares, squared binomials, and similar patterns).
+Keep reviewing medium equivalent expression miss types until 95% accuracy (assignment already complete).
+First full-length practice test at end of week.
 
 Thanks,
 

@@ -3,6 +3,7 @@ import { AgendaTable } from "@/components/danielle/week1-shared";
 import { Week3PostSessionResources } from "@/components/danielle/week3-post-session-resources";
 import {
   LESSON1_AGENDA,
+  POST_SESSION_3_LESSON1_SUMMARY,
   POST_SESSION_3_LESSON1_WINS,
   WEEK3_EE_MISS_LESSON1,
   WEEK3_EE_MISS_LESSON2,
@@ -25,6 +26,8 @@ export function DanielleWeek3Lesson1Content() {
       <section className="danielle-week1__section danielle-week1__notes">
         <p className="danielle-week1__lesson-meta">Post Session · Tuesday, June 23</p>
         <h2 className="danielle-week1__heading">Session summary</h2>
+
+        <p className="danielle-week1__focus">{POST_SESSION_3_LESSON1_SUMMARY}</p>
 
         <div className="danielle-week1__note-card">
           <p className="danielle-week1__note-label">Progress</p>

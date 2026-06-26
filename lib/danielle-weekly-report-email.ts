@@ -19,7 +19,10 @@ type WeeklyReportEmailContent = {
   weekLabel: string;
   reportPath: string;
   subjectDateRange: string;
-  highlights: string[];
+  /** Six-sentence overview (preferred for Week 2+). */
+  overview?: string[];
+  /** Legacy bullet highlights (Week 1). */
+  highlights?: string[];
   thisWeek: string[];
 };
 
@@ -48,20 +51,19 @@ const WEEKLY_REPORT_CONTENT: Record<DanielleWeeklyReportWeekKey, WeeklyReportEma
     weekLabel: "June 16–23, 2026",
     reportPath: "/danielle/week-2/report",
     subjectDateRange: "June 16–23, 2026",
-    highlights: [
-      "Both sessions went in depth on Reading and Writing Transitions: read two clauses, name the relationship (addition, contrast, cause, and similar), then pick the transition that fits",
-      "She missed all three transition questions on the June 6 practice test. Homework is now 96% on set 1, 96% on flashcards, and 88% on hard untimed",
-      "While learning transitions she kept week-one Math going: nonlinear equations (her most common math topic) and equivalent expressions (factoring and simplifying)",
-      "Equivalent expressions homework: easy 19/20 (95%, complete), medium 18/25 (72%, complete)",
-      "Overall homework accuracy: 67% on June 6 → 89% week 1 → 91% week 2",
-      "Estimated score ~1210 today: 1125 starting midpoint + ~85 points gained. Goal 1400 on August 22"
+    overview: [
+      "Danielle is on track for her goal of 1400 on the August 22 test",
+      "We estimate her score at about 1210 today, up about 35 points from about 1175 last week (85 points total since her June 6 practice test at 1125)",
+      "She completed 2 tutoring sessions and 116 practice problems this week (71 on Transitions, 45 on equivalent expressions)",
+      "Both sessions were Reading and Writing on Transitions. She also kept working week-one Math homework on nonlinear equations and equivalent expressions",
+      "Transitions accuracy moved from missing all three on the June 6 test to 96% on flashcards and 87% across transition problem sets; overall homework accuracy rose from 89% to 91%",
+      "Next week: two Math sessions on nonlinear functions and nonlinear equations, her first full-length practice test, and finishing the timed Transitions homework set"
     ],
     thisWeek: [
       "Finish Transitions timed homework (30 questions, due June 28)",
       "Two Math sessions on nonlinear functions and nonlinear equations, with special factoring cases (difference of squares, squared binomials, and similar patterns)",
       "Keep reviewing medium equivalent expression miss types until 95% accuracy (assignment already complete)",
-      "First full-length practice test at end of week",
-      "Sessions stay hands-on: live problems and drills"
+      "First full-length practice test at end of week"
     ]
   }
 };
@@ -99,17 +101,21 @@ export function buildDanielleWeeklyReportEmailBody(input: DanielleWeeklyReportEm
     ? `Hi Danielle & ${input.parentFirst.trim()},`
     : "Hi Danielle & Amma,";
 
-  const highlightLines = content.highlights.map((line) => `${line}.`);
+  const summaryLines = (content.overview ?? content.highlights ?? []).map((line) => `${line}.`);
+  const summaryHeading = content.overview ? "Overview:" : "Highlights from last week:";
   const thisWeekLines = content.thisWeek.map((line) => `${line}.`);
 
   return [
     greeting,
     ``,
-    `Danielle's weekly SAT progress report for ${weekLabel} is ready on her private Illuminairy portal, ${url}`,
+    `Danielle's weekly SAT progress report for ${weekLabel} is ready on her private Illuminairy portal:`,
+    url,
     ``,
-    `Highlights from last week:`,
+    summaryHeading,
     ``,
-    ...highlightLines,
+    ...summaryLines,
+    ``,
+    `The full report has session summaries, homework breakdown, and her score chart at the link above.`,
     ``,
     `This week:`,
     ``,

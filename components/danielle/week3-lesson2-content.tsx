@@ -7,6 +7,8 @@ import { homeworkPortalLoginUrl } from "@/lib/internal-links";
 import {
   LESSON2_AGENDA,
   POST_SESSION_3_LESSON2_HOMEWORK,
+  POST_SESSION_3_LESSON2_SUMMARY,
+  POST_SESSION_3_LESSON2_WINS,
   WEEK3_EE_MISS_LESSON1,
   WEEK3_EE_MISS_LESSON2,
   WEEK3_EE_MISS_TOTAL,
@@ -72,6 +74,13 @@ export function DanielleWeek3Lesson2Content() {
 
         <AgendaTable rows={LESSON2_AGENDA} />
 
+        <h3 className="danielle-week1__slides-heading">Skills from this session</h3>
+        <ul className="danielle-week1__wins">
+          {POST_SESSION_3_LESSON2_WINS.map((win) => (
+            <li key={win}>{win}</li>
+          ))}
+        </ul>
+
         <h3 className="danielle-week1__slides-heading">Patterns deck preview</h3>
         <p className="danielle-week1__focus">
           Embedded preview below. For practice questions and the cheat sheet during session, use the
@@ -85,7 +94,8 @@ export function DanielleWeek3Lesson2Content() {
         id="post-session-homework"
       >
         <p className="danielle-week1__lesson-meta">Post Session · Thursday, June 26</p>
-        <h2 className="danielle-week1__heading">Homework</h2>
+        <h2 className="danielle-week1__heading">Session summary + homework</h2>
+        <p className="danielle-week1__focus">{POST_SESSION_3_LESSON2_SUMMARY}</p>
         <p className="danielle-week1__focus">{POST_SESSION_3_LESSON2_HOMEWORK.body}</p>
         <Week3HomeworkWorkflow />
 

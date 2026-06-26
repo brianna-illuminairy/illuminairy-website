@@ -2,11 +2,18 @@ export const WEEK3_EE_MISS_TOTAL = 9;
 export const WEEK3_EE_MISS_LESSON1 = 4;
 export const WEEK3_EE_MISS_LESSON2 = 5;
 
+/** Narrative recap from the Jun 23 session transcript (Google Drive). */
+export const POST_SESSION_3_LESSON1_SUMMARY =
+  "We opened on your Equivalent Expressions set 2 misses and worked live on the whiteboard. You walked two factor-theorem cubics (pull a GCF, then AC split to match a given factor like 3x + k or 2x + k). We refreshed the AC method: label a, b, c, multiply to get the target, then split the middle term. You also nailed the difference-of-squares pattern on (2x − 7)² − 36, combined like terms on the two-variable distribute-and-match problem (Q3), and we started the squared-binomial rep from set 2 Q10 before time ran out.";
+
 export const POST_SESSION_3_LESSON1_WINS = [
-  "You reviewed 4 of 9 incorrect or skipped equivalent expressions homework problems on the whiteboard.",
-  "After each miss, you worked 2 similar examples before moving on.",
-  "You finished 8 medium problems on your own at the end of session.",
-  "You started naming the pattern (GCF, difference of squares, perfect square, AC split) before expanding."
+  "You recognized factor-theorem prompts: simplify first, factor, then read k from the matching binomial (not “set to zero”).",
+  "You pulled GCFs cleanly on cubics (3x on 9x³ − 6x² − 4x; 4x on 4x³ + 12x² − 16x) before AC splitting.",
+  "You refreshed AC method: target = a × c, find two numbers that multiply to the target and add to b, then split and group.",
+  "On the harder cubic you saw when the prompt asks for 2x + k but your factor is x + 4: multiply both terms by 2 to match.",
+  "You spotted difference of squares (something² minus something²) and applied a² − b² = (a − b)(a + b), then simplified.",
+  "On combine-and-match (Q3), distributing the negative across the second group was your first move before matching ax² + bxy + c.",
+  "You named the three equivalent-expression moves: factor, expand, or a special identity (difference of squares, perfect square)."
 ] as const;
 
 export const LESSON1_AGENDA = [
@@ -14,51 +21,77 @@ export const LESSON1_AGENDA = [
     time: "6:00 to 6:05",
     segment: "Open",
     detail:
-      "Quick recap of your Equivalent Expressions set 2 results. We have 9 incorrect or skipped problems to work through across two sessions."
+      "Week 2 report recap. Nine incorrect or skipped equivalent expressions problems to split across two sessions."
   },
   {
-    time: "6:05 to 6:35",
-    segment: "4 homework misses",
+    time: "6:05 to 6:20",
+    segment: "Factor theorem + AC",
     detail:
-      "Whiteboard walk-through of the first 4 incorrect or skipped medium problems. After each one, 2 similar examples for you to try."
+      "Two cubics: 9x³ − 6x² − 4x (3x + k, k = 4) and 4x³ + 12x² − 16x (2x + k, k = 8). GCF, AC split, rescale when the factor coefficient differs."
   },
   {
-    time: "6:35 to 6:55",
-    segment: "Independent reps",
-    detail: "8 medium equivalent expressions problems on your own while I check your setup."
-  },
-  {
-    time: "6:55 to 7:00",
-    segment: "Wrap",
+    time: "6:20 to 6:30",
+    segment: "Difference of squares",
     detail:
-      "5 incorrect or skipped problems left from your EE homework. We finish those in Lesson 2, then run the patterns deck."
+      "(2x − 7)² − 36: identity a² − b², then combine inside each binomial. Extra rep for speed."
+  },
+  {
+    time: "6:30 to 6:40",
+    segment: "Combine & coefficients",
+    detail:
+      "Set 2 Q3: distribute the negative, combine like terms, match ax² + bxy + c, add a + b."
+  },
+  {
+    time: "6:40 to 7:00",
+    segment: "Squared binomial (carryover)",
+    detail:
+      "Started set 2 Q10 (3(x + 5)² − 2(x − 5)² + 2x). Finished Thursday with the FOIL / reverse-FOIL shortcut."
   }
+] as const;
+
+/** Narrative recap from the Jun 25/26 session transcript (Google Drive). */
+export const POST_SESSION_3_LESSON2_SUMMARY =
+  "We picked up set 2 Q10 with a cleaner FOIL map: F gives the x² term, L gives the constant, O + I gives the middle. You finished the skipped expand-then-factor monster (Q12) by breaking into components, using (a − b)², and using sign rules on answer choices to stop early. We closed the two skipped rational and missing-value problems (Q16: match constants then solve for a; Q18: L = 3D, middle = O + I, solve for c). Patterns deck moved to homework; Equivalent Expressions 3 assigned untimed with chatbot reps on misses.";
+
+export const POST_SESSION_3_LESSON2_WINS = [
+  "On (5x + 5)(4x + b) = 20x² + kx + 25 you mapped FOIL to the expanded form: F → x², L → constant, O + I → middle (k = 45, not 50).",
+  "You used reverse FOIL: once F and L pin down a and b, only outer + inner builds the middle term.",
+  "On Q12 you split 12(x − 3)² + 5(5x − 12) − 8 into components, applied (a − b)² for the square, then recombined.",
+  "You used AC sign logic to eliminate choices early: product positive + sum negative → both factors negative.",
+  "On Q16 (15x + 90 = x/a + b) you matched the constants (b = 90), cleared the fraction, and solved a = 1/15.",
+  "On Q18 ((2x + 3)(2x + d) = 4x² + 7x + c) you tied c to L (3D) and solved D from O + I = 7x → c = 3/2.",
+  "You know the memorization list: difference of squares, (a + b)², (a − b)², and when to reach for AC after expanding."
 ] as const;
 
 export const LESSON2_AGENDA = [
   {
-    time: "6:00 to 6:10",
-    segment: "Score recap",
+    time: "6:00 to 6:15",
+    segment: "Finish Q10",
     detail:
-      "Quick check on Lesson 1 follow-up reps. Confirm the 5 remaining incorrect or skipped EE homework problems we are finishing today."
+      "Set 2 Q10 from Tuesday: FOIL labels on (5x + 5)(4x + b) = 20x² + kx + 25. Reverse FOIL to find k = 45."
   },
   {
-    time: "6:10 to 6:35",
-    segment: "Remaining 5 misses",
+    time: "6:15 to 6:30",
+    segment: "Q12 expand + factor",
     detail:
-      "Whiteboard walk-through of the 5 incorrect or skipped EE homework problems not covered Tuesday. Same format: miss, then 2 similar reps."
+      "12(x − 3)² + 5(5x − 12) − 8: component breakdown, perfect square formula, combine, AC sign shortcuts on choices."
   },
   {
-    time: "6:35 to 6:55",
-    segment: "Patterns deck",
+    time: "6:30 to 6:40",
+    segment: "Q16 missing a and b",
+    detail: "15x + 90 = x/a + b: match constants, clear the fraction, solve for a, then ab."
+  },
+  {
+    time: "6:40 to 6:55",
+    segment: "Q18 missing c",
     detail:
-      "Work through the equivalent expressions deck: memorize identities, difference of squares, perfect squares, AC method, and the cheat sheet."
+      "(2x + 3)(2x + d) = 4x² + 7x + c: L gives c in terms of D; O + I gives the middle; plug back for c = 3/2."
   },
   {
     time: "6:55 to 7:00",
     segment: "Wrap + homework",
     detail:
-      "Assign Equivalent Expressions 3 in the Homework Portal. Quiz at the start of Week 4."
+      "Patterns deck, formula sheet, and practice hub in the portal. Equivalent Expressions 3 untimed; quiz Week 4."
   }
 ] as const;
 
