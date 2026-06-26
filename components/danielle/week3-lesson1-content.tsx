@@ -1,11 +1,13 @@
 import Link from "next/link";
 import { AgendaTable } from "@/components/danielle/week1-shared";
+import { Week3PostSessionResources } from "@/components/danielle/week3-post-session-resources";
 import {
   LESSON1_AGENDA,
   POST_SESSION_3_LESSON1_WINS,
   WEEK3_EE_MISS_LESSON1,
   WEEK3_EE_MISS_LESSON2,
-  WEEK3_EE_MISS_TOTAL
+  WEEK3_EE_MISS_TOTAL,
+  WEEK3_WHITEBOARD_NOTES_URL
 } from "@/lib/danielle-post-session-3-notes";
 
 export function DanielleWeek3Lesson1Content() {
@@ -46,6 +48,16 @@ export function DanielleWeek3Lesson1Content() {
             No slide deck for this session. We worked problems together on a shared whiteboard:
             your miss, then 2 similar examples, then independent reps at the end.
           </p>
+          <p className="danielle-week1__habit">
+            <a
+              href={WEEK3_WHITEBOARD_NOTES_URL}
+              className="danielle-portal__pdf-open"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Open whiteboard notes (Excalidraw)
+            </a>
+          </p>
         </div>
 
         <h3 className="danielle-week1__slides-heading">Skills from this session</h3>
@@ -61,6 +73,8 @@ export function DanielleWeek3Lesson1Content() {
         </p>
 
         <AgendaTable rows={LESSON1_AGENDA} />
+
+        <Week3PostSessionResources />
 
         <p className="danielle-week1__habit">
           <Link href="/danielle/week-2/report" className="danielle-week1__inline-link">

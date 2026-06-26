@@ -1,5 +1,7 @@
 import Link from "next/link";
+import { Week3ExerciseList } from "@/components/danielle/week3-exercise-list";
 import { homeworkPortalLoginUrl } from "@/lib/internal-links";
+import { WEEK3_FORMULA_SHEET_HREF } from "@/lib/danielle-equivalent-expressions-formula-sheet";
 import {
   POST_SESSION_3_LESSON2_HOMEWORK,
   WEEK3_EE_MISS_LESSON1,
@@ -11,6 +13,7 @@ import {
 const WEEK_GOALS = [
   `Finish reviewing all ${WEEK3_EE_MISS_TOTAL} incorrect or skipped equivalent expressions homework problems (${WEEK3_EE_MISS_LESSON1} done in Lesson 1, ${WEEK3_EE_MISS_LESSON2} in Lesson 2).`,
   "Memorize the factoring patterns from the equivalent expressions deck (GCF, difference of squares, perfect squares, AC method).",
+  "Complete Level 1 in the practice hub: 20 reps each on pattern (17/20), FOIL (72/80 steps), combine & simplify (17/20), and missing values (17/20).",
   "Complete Equivalent Expressions 3 in the Homework Portal.",
   "Complete the Equivalent Expressions Quiz in the Homework Portal after set 3."
 ] as const;
@@ -28,6 +31,28 @@ export function DanielleWeek3HubContent() {
           assigns Homework Portal practice.
         </p>
       </div>
+
+      <section className="danielle-week1__section" id="week-3-post-session-resources">
+        <h2 className="danielle-week1__heading">Post-session resources</h2>
+        <p className="danielle-week1__focus">
+          Formula sheet, whiteboard notes, and the patterns deck for review after class.
+        </p>
+        <Link href={WEEK3_FORMULA_SHEET_HREF} className="danielle-portal__link-card">
+          <h2>Equivalent expressions formula sheet</h2>
+          <p>
+            Perfect squares, difference of squares, and FOIL matching (factored = expanded).
+          </p>
+        </Link>
+        <Link href="/danielle/week-3/exercises/equivalent-expressions" className="danielle-portal__link-card">
+          <h2>Equivalent expressions practice hub</h2>
+          <p>Pattern sort, FOIL builder, and missing-value drills before Homework Portal set 3.</p>
+        </Link>
+      </section>
+
+      <section className="danielle-week1__section" id="week-3-exercises">
+        <h2 className="danielle-week1__heading">Post-session exercise</h2>
+        <Week3ExerciseList />
+      </section>
 
       <section className="danielle-week1__section" id="week-3-homework-portal">
         <h2 className="danielle-week1__heading">{POST_SESSION_3_LESSON2_HOMEWORK.headline}</h2>

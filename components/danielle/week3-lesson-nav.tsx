@@ -13,6 +13,16 @@ const LESSONS = [
     href: "/danielle/week-3/lesson-2",
     label: "Lesson 2 · Thu Jun 26",
     match: (path: string) => path.includes("/lesson-2")
+  },
+  {
+    href: "/danielle/week-3/formula-sheet",
+    label: "Formula sheet",
+    match: (path: string) => path.includes("/formula-sheet")
+  },
+  {
+    href: "/danielle/week-3/exercises",
+    label: "Post-session exercises",
+    match: (path: string) => path.includes("/exercises")
   }
 ] as const;
 

@@ -88,3 +88,7 @@ export const POST_SESSION_3_LESSON2_HOMEWORK = {
 } as const;
 
 export const WEEK3_SLIDE_DECK_HREF = "/danielle/files/equivalent-expressions-slides";
+
+/** Excalidraw session notes from Week 3 whiteboard work. */
+export const WEEK3_WHITEBOARD_NOTES_URL =
+  "https://link.excalidraw.com/l/A4T4CdBzqDH/8yI6ckPlxQP";

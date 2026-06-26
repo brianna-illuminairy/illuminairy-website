@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { AgendaTable, SlideEmbed } from "@/components/danielle/week1-shared";
+import { Week3ExerciseList } from "@/components/danielle/week3-exercise-list";
+import { Week3PostSessionResources } from "@/components/danielle/week3-post-session-resources";
 import { homeworkPortalLoginUrl } from "@/lib/internal-links";
 import {
   LESSON2_AGENDA,
@@ -8,7 +10,8 @@ import {
   WEEK3_EE_MISS_LESSON2,
   WEEK3_EE_MISS_TOTAL,
   WEEK3_HOMEWORK_PORTAL_SETS,
-  WEEK3_SLIDE_DECK_HREF
+  WEEK3_SLIDE_DECK_HREF,
+  WEEK3_WHITEBOARD_NOTES_URL
 } from "@/lib/danielle-post-session-3-notes";
 
 export function DanielleWeek3Lesson2Content() {
@@ -45,6 +48,16 @@ export function DanielleWeek3Lesson2Content() {
             questions.
           </p>
           <p className="danielle-week1__habit">
+            <a
+              href={WEEK3_WHITEBOARD_NOTES_URL}
+              className="danielle-portal__pdf-open"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Open whiteboard notes (Excalidraw)
+            </a>
+          </p>
+          <p className="danielle-week1__habit">
             <Link href={WEEK3_SLIDE_DECK_HREF} className="danielle-portal__pdf-open">
               Open patterns deck (fullscreen)
             </Link>
@@ -72,6 +85,15 @@ export function DanielleWeek3Lesson2Content() {
       >
         <p className="danielle-week1__lesson-meta">Post Session · Thursday, June 26</p>
         <h2 className="danielle-week1__heading">Homework</h2>
+        <Week3PostSessionResources />
+
+        <h3 className="danielle-week1__slides-heading">Post-session exercise</h3>
+        <p className="danielle-week1__focus">
+          Run Level 1 in the practice hub before Homework Portal set 3: 20 reps each on pattern,
+          FOIL, combine & simplify, and missing values.
+        </p>
+        <Week3ExerciseList showGoal={false} />
+
         <p className="danielle-week1__focus">{POST_SESSION_3_LESSON2_HOMEWORK.body}</p>
 
         <div className="danielle-week2__homework-list">
