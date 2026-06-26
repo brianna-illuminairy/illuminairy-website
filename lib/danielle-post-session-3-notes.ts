@@ -58,7 +58,7 @@ export const LESSON2_AGENDA = [
     time: "6:55 to 7:00",
     segment: "Wrap + homework",
     detail:
-      "Equivalent Expressions 3 and the Equivalent Expressions Quiz in the Homework Portal."
+      "Assign Equivalent Expressions 3 in the Homework Portal. Quiz at the start of Week 4."
   }
 ] as const;
 
@@ -72,19 +72,60 @@ export const WEEK3_HOMEWORK_PORTAL_SETS: Week3HomeworkPortalSet[] = [
   {
     id: "equivalent-expressions-3",
     title: "Equivalent Expressions 3",
-    note: "Complete after today’s session. Review any misses before the quiz."
+    note:
+      "Untimed. Goal: 100% accuracy. Use your whiteboard, Excalidraw notes, and the formula sheet freely while you work every question."
   },
   {
     id: "equivalent-expressions-quiz",
     title: "Equivalent Expressions Quiz",
-    note: "Complete after Equivalent Expressions 3."
+    note:
+      "We start Week 4 with this quiz in session. Finish Equivalent Expressions 3 and your miss review first."
   }
 ];
 
+export const WEEK3_POST_SESSION_WORKFLOW = [
+  {
+    step: 1,
+    title: "Review the formula sheet",
+    detail:
+      "Read through perfect squares, difference of squares, and FOIL matching (factored = expanded) before you touch practice reps."
+  },
+  {
+    step: 2,
+    title: "Review the patterns deck",
+    detail:
+      "Reopen the equivalent expressions slide deck fullscreen. Reread the identities, cheat sheet, and worked examples from Lesson 2."
+  },
+  {
+    step: 3,
+    title: "Practice hub · pass all four sections",
+    detail:
+      "Work the portal exercise until you pass Pattern spotter, FOIL builder, Combine & simplify, and Missing values (20 reps each, pass targets on the hub)."
+  },
+  {
+    step: 4,
+    title: "Homework Portal · Equivalent Expressions 3",
+    detail:
+      "Untimed set. Goal: 100% accuracy. Use your whiteboard, Excalidraw session notes, and the formula sheet to get every question right."
+  },
+  {
+    step: 5,
+    title: "Review every miss from set 3",
+    detail:
+      "When you finish, go back through anything you missed. Work each one until you can explain why the correct answer works."
+  },
+  {
+    step: 6,
+    title: "Next week · Equivalent Expressions Quiz",
+    detail:
+      "We open Week 4 with a quiz on equivalent expressions. Be ready after set 3 and your miss review are solid."
+  }
+] as const;
+
 export const POST_SESSION_3_LESSON2_HOMEWORK = {
-  headline: "Homework Portal · Equivalent expressions",
+  headline: "Post-session homework · follow in order",
   body:
-    "Your assignments are in the Homework Portal (same login as the header button on this site). They are not on this page."
+    "Review the formula sheet and patterns deck, pass all four practice hub sections, then complete Equivalent Expressions 3 in the Homework Portal (untimed, 100% accuracy). Work through any misses until you understand them. The quiz comes at the start of next week."
 } as const;
 
 export const WEEK3_SLIDE_DECK_HREF = "/danielle/files/equivalent-expressions-slides";

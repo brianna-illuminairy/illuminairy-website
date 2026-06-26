@@ -62,7 +62,7 @@ export type EeSectionTarget = {
 export const EE_LEVEL_TITLE = "Equivalent expressions · Level 1";
 
 export const EE_LEVEL_CLEAR_COPY =
-  "Level 1 cleared. You can move to Equivalent Expressions 3 and the quiz in the Homework Portal.";
+  "All four sections passed. Open Equivalent Expressions 3 in the Homework Portal next (untimed, 100% accuracy).";
 
 export const EE_SECTION_ORDER: EeSectionId[] = ["pattern", "foil", "combine", "missing"];
 

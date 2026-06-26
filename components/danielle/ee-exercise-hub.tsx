@@ -535,8 +535,8 @@ export function EeExerciseHub() {
           Level progress: {levelsPassed} of 4 passed
         </h3>
         <p className="danielle-ee-exercise__level-detail">
-          20 reps per section, ramping difficulty. Pass each block to unlock the next. Clear all four
-          before Homework Portal set 3.
+          Step 3 in your post-session workflow. Pass each section to unlock the next, then move to
+          Equivalent Expressions 3 (untimed, 100% accuracy).
         </p>
         <ol className="danielle-ee-exercise__level-list">
           {EE_SECTION_ORDER.map((section) => {
@@ -653,7 +653,7 @@ export function EeExerciseHub() {
       {levelCleared && (
         <div className="danielle-flashcards__goal-banner" role="status">
           {levelMastered
-            ? "Level 1 mastered on all four sections. Homework Portal set 3 and the quiz are next."
+            ? "All four sections passed. Equivalent Expressions 3 is next (untimed, 100% accuracy)."
             : EE_LEVEL_CLEAR_COPY}
         </div>
       )}

@@ -22,8 +22,8 @@ export default async function DanielleWeek3EeExercisePage() {
           <p className="danielle-portal__eyebrow">Illuminairy · Week 3 · Post-session exercise</p>
           <h1>{EXERCISE?.title ?? "Equivalent expressions practice hub"}</h1>
           <p className="danielle-portal__lede">
-            Four sections, 20 reps each, warm-up to stretch. Combine & simplify is the SAT speed block.
-            Clear Level 1 before Homework Portal set 3.
+            Step 3 in the post-session workflow. Pass all four sections, then open Equivalent
+            Expressions 3 (untimed, 100% accuracy).
           </p>
           <p className="danielle-portal__lede danielle-week2__exercise-due-inline">
             <Link href="/danielle/week-3/formula-sheet" className="danielle-week1__inline-link">

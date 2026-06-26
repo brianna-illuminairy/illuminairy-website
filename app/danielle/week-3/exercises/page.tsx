@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Week3HomeworkWorkflow } from "@/components/danielle/week3-homework-workflow";
 import { Week3ExerciseList } from "@/components/danielle/week3-exercise-list";
 import { Week3PostSessionResources } from "@/components/danielle/week3-post-session-resources";
 import { DanielleNotConfigured } from "@/components/danielle/not-configured";
@@ -22,8 +23,8 @@ export default async function DanielleWeek3ExercisesPage() {
           <p className="danielle-portal__eyebrow">Illuminairy · Week 3</p>
           <h1>Post-session exercises</h1>
           <p className="danielle-portal__lede">
-            Pattern sort, FOIL builder, and missing-value drills. Complete the practice hub before
-            Equivalent Expressions 3 and the quiz in the Homework Portal.
+            Follow the post-session workflow in order: formula sheet, patterns deck, pass the
+            practice hub, then Equivalent Expressions 3 (untimed, 100% accuracy).
           </p>
         </div>
 
@@ -32,13 +33,18 @@ export default async function DanielleWeek3ExercisesPage() {
         </section>
 
         <section className="danielle-week1__section">
+          <h2 className="danielle-week1__heading">{POST_SESSION_3_LESSON2_HOMEWORK.headline}</h2>
+          <p className="danielle-week1__focus">{POST_SESSION_3_LESSON2_HOMEWORK.body}</p>
+          <Week3HomeworkWorkflow />
+        </section>
+
+        <section className="danielle-week1__section">
           <h2 className="danielle-week1__heading">Practice hub</h2>
           <Week3ExerciseList />
         </section>
 
         <section className="danielle-week1__section">
-          <h2 className="danielle-week1__heading">{POST_SESSION_3_LESSON2_HOMEWORK.headline}</h2>
-          <p className="danielle-week1__focus">{POST_SESSION_3_LESSON2_HOMEWORK.body}</p>
+          <h2 className="danielle-week1__heading">Homework Portal assignments</h2>
           <div className="danielle-week2__homework-list">
             {WEEK3_HOMEWORK_PORTAL_SETS.map((set) => (
               <article key={set.id} className="danielle-week2__homework-card">

@@ -19,8 +19,8 @@ export default async function DanielleWeek3FormulaSheetPage() {
           <p className="danielle-portal__eyebrow">Illuminairy · Week 3 · Quick reference</p>
           <h1>Equivalent expressions formula sheet</h1>
           <p className="danielle-portal__lede">
-            Patterns to memorize plus FOIL matching for factored = expanded questions. Keep this
-            open while you work Equivalent Expressions 3 and the quiz.
+            Step 1 in the post-session workflow. Review this before the patterns deck and practice
+            hub. Keep it open for Equivalent Expressions 3.
           </p>
           <p className="danielle-portal__lede danielle-week2__exercise-due-inline">
             <Link href="/danielle/week-3/lesson-2#post-session-resources" className="danielle-week1__inline-link">

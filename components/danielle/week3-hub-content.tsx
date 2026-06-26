@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Week3HomeworkWorkflow } from "@/components/danielle/week3-homework-workflow";
 import { Week3ExerciseList } from "@/components/danielle/week3-exercise-list";
 import { homeworkPortalLoginUrl } from "@/lib/internal-links";
 import { WEEK3_FORMULA_SHEET_HREF } from "@/lib/danielle-equivalent-expressions-formula-sheet";
@@ -12,10 +13,11 @@ import {
 
 const WEEK_GOALS = [
   `Finish reviewing all ${WEEK3_EE_MISS_TOTAL} incorrect or skipped equivalent expressions homework problems (${WEEK3_EE_MISS_LESSON1} done in Lesson 1, ${WEEK3_EE_MISS_LESSON2} in Lesson 2).`,
-  "Memorize the factoring patterns from the equivalent expressions deck (GCF, difference of squares, perfect squares, AC method).",
-  "Complete Level 1 in the practice hub: 20 reps each on pattern (17/20), FOIL (72/80 steps), combine & simplify (17/20), and missing values (17/20).",
-  "Complete Equivalent Expressions 3 in the Homework Portal.",
-  "Complete the Equivalent Expressions Quiz in the Homework Portal after set 3."
+  "Review the formula sheet and patterns deck after Lesson 2.",
+  "Pass all four sections in the practice hub (pattern, FOIL, combine & simplify, missing values).",
+  "Complete Equivalent Expressions 3 in the Homework Portal (untimed, 100% accuracy).",
+  "Review every miss from set 3 until you understand why.",
+  "Be ready for the Equivalent Expressions Quiz at the start of Week 4."
 ] as const;
 
 export function DanielleWeek3HubContent() {
@@ -45,8 +47,14 @@ export function DanielleWeek3HubContent() {
         </Link>
         <Link href="/danielle/week-3/exercises/equivalent-expressions" className="danielle-portal__link-card">
           <h2>Equivalent expressions practice hub</h2>
-          <p>Pattern sort, FOIL builder, and missing-value drills before Homework Portal set 3.</p>
+          <p>Pattern sort, FOIL builder, combine & simplify, and missing values. Pass all four before set 3.</p>
         </Link>
+      </section>
+
+      <section className="danielle-week1__section" id="week-3-homework-workflow">
+        <h2 className="danielle-week1__heading">{POST_SESSION_3_LESSON2_HOMEWORK.headline}</h2>
+        <p className="danielle-week1__focus">{POST_SESSION_3_LESSON2_HOMEWORK.body}</p>
+        <Week3HomeworkWorkflow />
       </section>
 
       <section className="danielle-week1__section" id="week-3-exercises">
@@ -55,8 +63,7 @@ export function DanielleWeek3HubContent() {
       </section>
 
       <section className="danielle-week1__section" id="week-3-homework-portal">
-        <h2 className="danielle-week1__heading">{POST_SESSION_3_LESSON2_HOMEWORK.headline}</h2>
-        <p className="danielle-week1__focus">{POST_SESSION_3_LESSON2_HOMEWORK.body}</p>
+        <h2 className="danielle-week1__heading">Homework Portal assignments</h2>
         <div className="danielle-week2__homework-list">
           {WEEK3_HOMEWORK_PORTAL_SETS.map((set) => (
             <article key={set.id} className="danielle-week2__homework-card">
@@ -93,7 +100,7 @@ export function DanielleWeek3HubContent() {
             <h2>Lesson 2 · Thu Jun 26</h2>
             <p>
               Homework review part 2: remaining {WEEK3_EE_MISS_LESSON2} misses, patterns deck, plus
-              Equivalent Expressions 3 and the quiz in the Homework Portal.
+              post-session homework (formula sheet, practice hub, Equivalent Expressions 3).
             </p>
           </Link>
         </div>

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { AgendaTable, SlideEmbed } from "@/components/danielle/week1-shared";
+import { Week3HomeworkWorkflow } from "@/components/danielle/week3-homework-workflow";
 import { Week3ExerciseList } from "@/components/danielle/week3-exercise-list";
 import { Week3PostSessionResources } from "@/components/danielle/week3-post-session-resources";
 import { homeworkPortalLoginUrl } from "@/lib/internal-links";
@@ -85,16 +86,15 @@ export function DanielleWeek3Lesson2Content() {
       >
         <p className="danielle-week1__lesson-meta">Post Session · Thursday, June 26</p>
         <h2 className="danielle-week1__heading">Homework</h2>
+        <p className="danielle-week1__focus">{POST_SESSION_3_LESSON2_HOMEWORK.body}</p>
+        <Week3HomeworkWorkflow />
+
         <Week3PostSessionResources />
 
-        <h3 className="danielle-week1__slides-heading">Post-session exercise</h3>
-        <p className="danielle-week1__focus">
-          Run Level 1 in the practice hub before Homework Portal set 3: 20 reps each on pattern,
-          FOIL, combine & simplify, and missing values.
-        </p>
+        <h3 className="danielle-week1__slides-heading">Practice hub details</h3>
         <Week3ExerciseList showGoal={false} />
 
-        <p className="danielle-week1__focus">{POST_SESSION_3_LESSON2_HOMEWORK.body}</p>
+        <h3 className="danielle-week1__slides-heading">Homework Portal assignments</h3>
 
         <div className="danielle-week2__homework-list">
           {WEEK3_HOMEWORK_PORTAL_SETS.map((set) => (
