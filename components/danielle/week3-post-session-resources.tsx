@@ -33,7 +33,7 @@ export function Week3PostSessionResources() {
             Whiteboard notes (Excalidraw)
           </a>
           {" · "}
-          for set 3 and miss review
+          use solutions + chatbot for miss review (3 in a row per type)
         </li>
         <li>
           <Link href="/danielle/week-3/exercises/equivalent-expressions" className="danielle-week1__inline-link">

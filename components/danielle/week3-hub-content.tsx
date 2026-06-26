@@ -16,7 +16,7 @@ const WEEK_GOALS = [
   "Review the formula sheet and patterns deck after Lesson 2.",
   "Pass all four sections in the practice hub (pattern, FOIL, combine & simplify, missing values).",
   "Complete Equivalent Expressions 3 in the Homework Portal (untimed, 100% accuracy).",
-  "Review every miss from set 3 until you understand why.",
+  "Review every miss from set 3: read the solution, use the Homework Portal chatbot for more of that type, and get 3 in a row correct.",
   "Be ready for the Equivalent Expressions Quiz at the start of Week 4."
 ] as const;
 

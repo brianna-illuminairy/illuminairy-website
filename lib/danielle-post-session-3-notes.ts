@@ -73,7 +73,7 @@ export const WEEK3_HOMEWORK_PORTAL_SETS: Week3HomeworkPortalSet[] = [
     id: "equivalent-expressions-3",
     title: "Equivalent Expressions 3",
     note:
-      "Untimed. Goal: 100% accuracy. Use your whiteboard, Excalidraw notes, and the formula sheet freely while you work every question."
+      "Untimed. Goal: 100% accuracy. Use your whiteboard, Excalidraw notes, and the formula sheet freely while you work every question. Afterward, use solutions and the chatbot for extra reps on each miss."
   },
   {
     id: "equivalent-expressions-quiz",
@@ -110,9 +110,9 @@ export const WEEK3_POST_SESSION_WORKFLOW = [
   },
   {
     step: 5,
-    title: "Review every miss from set 3",
+    title: "Miss review · solutions, then chatbot reps",
     detail:
-      "When you finish, go back through anything you missed. Work each one until you can explain why the correct answer works."
+      "For every question you missed on set 3: read the solution and understand why the correct answer works. Then use the Homework Portal chatbot to get more questions of that same type. Keep going until you can finish them on your own. For each miss, aim for 3 correct in a row before you move on."
   },
   {
     step: 6,
@@ -125,7 +125,7 @@ export const WEEK3_POST_SESSION_WORKFLOW = [
 export const POST_SESSION_3_LESSON2_HOMEWORK = {
   headline: "Post-session homework · follow in order",
   body:
-    "Review the formula sheet and patterns deck, pass all four practice hub sections, then complete Equivalent Expressions 3 in the Homework Portal (untimed, 100% accuracy). Work through any misses until you understand them. The quiz comes at the start of next week."
+    "Review the formula sheet and patterns deck, pass all four practice hub sections, then complete Equivalent Expressions 3 in the Homework Portal (untimed, 100% accuracy). For each miss: read the solution, use the chatbot for more of that question type, and get 3 in a row correct before you move on. The quiz comes at the start of next week."
 } as const;
 
 export const WEEK3_SLIDE_DECK_HREF = "/danielle/files/equivalent-expressions-slides";
