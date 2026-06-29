@@ -30,3 +30,50 @@
   font-size: 17px;
   line-height: 1.65;
 }
+
+/* Week 1 lesson pages */
+.shermeen-week1 {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 32px 24px 64px;
+}
+
+.shermeen-week1__section {
+  margin-top: 32px;
+}
+
+.shermeen-week1__heading {
+  font-family: var(--shermeen-sans);
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0 0 12px;
+  color: var(--aurora-ink, #14213d);
+}
+
+.shermeen-week1__habit {
+  margin: 0 0 16px;
+}
+
+.shermeen-week1__slides-block {
+  margin-top: 12px;
+}
+
+.shermeen-week1__slides-title {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0 0 8px;
+}
+
+.shermeen-week1__slide-frame {
+  width: 100%;
+  min-height: 520px;
+  border: 1px solid var(--aurora-line, #d8e0e8);
+  border-radius: 12px;
+  background: #fff;
+}
+
+@media (max-width: 640px) {
+  .shermeen-week1__slide-frame {
+    min-height: 360px;
+  }
+}

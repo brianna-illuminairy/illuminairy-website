@@ -11,6 +11,10 @@ export const SHERMEEN_FILE_MAP = {
   tabular: {
     filename: "diagnostic-tabular.pdf",
     contentType: "application/pdf"
+  },
+  "transitions-lesson": {
+    filename: "transitions-lesson-slides.html",
+    contentType: "text/html; charset=utf-8"
   }
 } as const;
 

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { MilestoneRibbon } from "@/components/data-viz/milestone-ribbon";
 import { shermeenMilestonePins, shermeenMilestoneWeeks } from "@/lib/data-viz/adapters/shermeen-plan";
 import { approachForWeek } from "@/lib/shermeen/plan-topic-approaches";
@@ -63,6 +64,11 @@ export function ShermeenPlanScheduleContent() {
                 <li>{weekSummary(week)}</li>
                 {week.volume ? <li>{week.volume}</li> : null}
               </ul>
+              {week.week === 2 && week.skillId === "rw-transitions" ? (
+                <p className="skye-plan__topic-lesson-link">
+                  <Link href="/shermeen/week-1/lesson-1">Open transitions lesson →</Link>
+                </p>
+              ) : null}
             </li>
           ))}
         </ol>
