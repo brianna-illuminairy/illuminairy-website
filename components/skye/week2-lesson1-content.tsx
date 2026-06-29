@@ -51,22 +51,35 @@ export function SkyeWeek2Lesson1Content() {
         <p className="aurora-eyebrow">Illuminairy · Week 2 · Session 1</p>
         <h1 className="aurora-portal__title">Nonlinear and quadratic equations</h1>
         <p className="aurora-portal__lede">
-          Complete. We covered factoring patterns, the quadratic formula, factor theorem reps, and
-          the full M1Q11 walkthrough on the whiteboard.
+          Factoring patterns and the quadratic formula. Homework and next-session focus are below;
+          session summary notes are pending.
         </p>
       </header>
 
       <section className="skye-lesson-deck__section" id="post-session-summary">
         <p className="skye-lesson-deck__lesson-meta">Post-session · Monday, June 29</p>
         <h2 className="skye-lesson-deck__heading">Session summary + homework</h2>
-        <p className="skye-lesson-deck__focus">{POST_SESSION_1_SUMMARY}</p>
 
-        <h3 className="skye-lesson-deck__slides-heading">Aha moments from this session</h3>
-        <ul className="skye-lesson-deck__wins">
-          {POST_SESSION_1_WINS.map((win) => (
-            <li key={win}>{win}</li>
-          ))}
-        </ul>
+        {POST_SESSION_1_SUMMARY ? (
+          <>
+            <p className="skye-lesson-deck__focus">{POST_SESSION_1_SUMMARY}</p>
+            {POST_SESSION_1_WINS.length > 0 ? (
+              <>
+                <h3 className="skye-lesson-deck__slides-heading">Aha moments from this session</h3>
+                <ul className="skye-lesson-deck__wins">
+                  {POST_SESSION_1_WINS.map((win) => (
+                    <li key={win}>{win}</li>
+                  ))}
+                </ul>
+              </>
+            ) : null}
+          </>
+        ) : (
+          <p className="skye-lesson-deck__focus">
+            Session summary and aha moments will be posted here once notes from today&apos;s call
+            are finalized.
+          </p>
+        )}
 
         <div className="skye-lesson-deck__note-card" id="homework-due">
           <p className="skye-lesson-deck__note-label">Homework Portal</p>

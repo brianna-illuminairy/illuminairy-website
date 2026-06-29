@@ -9,7 +9,7 @@
 
 Hi Skye,
 
-Great session today. Your session summary, slide deck, and whiteboard notes are in your **student portal** (separate from homework — see below).
+Great session today. Your slide deck and whiteboard notes are in your **student portal** (separate from homework — see below). I'll add a written session summary to that page once I've finalized notes from the call.
 
 ## Your student portal (lesson notes + slide deck)
 
