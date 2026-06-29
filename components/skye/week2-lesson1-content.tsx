@@ -1,90 +1,66 @@
 import Link from "next/link";
 import { AgendaTable, SlideEmbed } from "@/components/skye/lesson-shared";
+import { SessionSummarySection } from "@/components/skye/session-summary-section";
 import {
-  POST_SESSION_1_HOMEWORK,
-  POST_SESSION_1_NEXT_SESSION,
-  POST_SESSION_1_SUMMARY,
-  POST_SESSION_1_WINS,
   SKYE_HOMEWORK_PORTAL_SETS,
   SKYE_LESSON_DECK_HREF,
   SKYE_WHITEBOARD_URL,
-} from "@/lib/skye-post-session-1-notes";
+  WEEK2_LESSON1,
+} from "@/lib/skye/session-notes/week2-lesson1";
 import { homeworkPortalLoginUrl } from "@/lib/internal-links";
 
 const LESSON1_AGENDA = [
   {
     time: "Start",
     segment: "Quadratics overview",
-    detail:
-      "What makes an equation quadratic, standard form, and when the SAT is testing zeros, vertex, or maximum/minimum.",
+    detail: "Standard form, zero-product property, parabola direction, vertex form.",
   },
   {
-    time: "Next",
+    time: "Deck",
     segment: "Factoring refresher",
-    detail:
-      "GCF, difference of squares, perfect square trinomials, basic trinomials, and the AC method — walk through the deck together.",
+    detail: "GCF, difference of squares, perfect squares, trinomials, AC method.",
   },
   {
     time: "Live",
     segment: "M1Q11 whiteboard",
-    detail:
-      "Full solution to Module 1 Question 11 (nonlinear equation with a constant — the y − 42 problem most students miss).",
+    detail: "y − 42 nonlinear problem — component split, factor (y − 42), solve.",
   },
   {
     time: "Live",
-    segment: "Quadratic formula + factor theorem",
-    detail:
-      "Introduce the quadratic formula on the whiteboard, then factor-theorem examples from diagnostic-style questions.",
+    segment: "Equivalent expressions reps",
+    detail: "Read k from a factor, difference of squares, FOIL mapping, 15x + 90 = x/a + b.",
   },
   {
     time: "Wrap",
     segment: "Homework",
-    detail:
-      "Equivalent Expressions 1 and 2 in the Homework Portal (due before the next session).",
+    detail: "Equivalent Expressions 1 and 2 in the Homework Portal.",
   },
 ] as const;
 
 export function SkyeWeek2Lesson1Content() {
+  const session = WEEK2_LESSON1;
+
   return (
     <div className="skye-lesson-deck">
       <header className="aurora-portal__page-head">
         <p className="aurora-eyebrow">Illuminairy · Week 2 · Session 1</p>
-        <h1 className="aurora-portal__title">Nonlinear and quadratic equations</h1>
+        <h1 className="aurora-portal__title">{session.title}</h1>
         <p className="aurora-portal__lede">
-          Factoring patterns and the quadratic formula. Homework and next-session focus are below;
-          session summary notes are pending.
+          {session.dateLabel} · Quadratics deck, M1Q11 on the whiteboard, and equivalent-expression
+          reps.
         </p>
       </header>
 
-      <section className="skye-lesson-deck__section" id="post-session-summary">
-        <p className="skye-lesson-deck__lesson-meta">Post-session · Monday, June 29</p>
-        <h2 className="skye-lesson-deck__heading">Session summary + homework</h2>
-
-        {POST_SESSION_1_SUMMARY ? (
-          <>
-            <p className="skye-lesson-deck__focus">{POST_SESSION_1_SUMMARY}</p>
-            {POST_SESSION_1_WINS.length > 0 ? (
-              <>
-                <h3 className="skye-lesson-deck__slides-heading">Aha moments from this session</h3>
-                <ul className="skye-lesson-deck__wins">
-                  {POST_SESSION_1_WINS.map((win) => (
-                    <li key={win}>{win}</li>
-                  ))}
-                </ul>
-              </>
-            ) : null}
-          </>
-        ) : (
-          <p className="skye-lesson-deck__focus">
-            Session summary and aha moments will be posted here once notes from today&apos;s call
-            are finalized.
-          </p>
-        )}
-
+      <SessionSummarySection
+        dateLabel={session.dateLabel}
+        title="Session summary + homework"
+        summary={session.summary}
+        wins={session.wins}
+      >
         <div className="skye-lesson-deck__note-card" id="homework-due">
           <p className="skye-lesson-deck__note-label">Homework Portal</p>
-          <h3 className="skye-lesson-deck__note-title">{POST_SESSION_1_HOMEWORK.headline}</h3>
-          <p className="skye-lesson-deck__focus">{POST_SESSION_1_HOMEWORK.body}</p>
+          <h3 className="skye-lesson-deck__note-title">{session.homework.headline}</h3>
+          <p className="skye-lesson-deck__focus">{session.homework.body}</p>
           <ol className="skye-lesson-deck__homework-list">
             {SKYE_HOMEWORK_PORTAL_SETS.map((set) => (
               <li key={set.id}>
@@ -100,22 +76,21 @@ export function SkyeWeek2Lesson1Content() {
         </div>
 
         <div className="skye-lesson-deck__callout">
-          <p className="skye-lesson-deck__note-label">{POST_SESSION_1_NEXT_SESSION.headline}</p>
+          <p className="skye-lesson-deck__note-label">{session.nextSession.headline}</p>
           <h3 className="skye-lesson-deck__note-title">Miss review on homework</h3>
-          <p className="skye-lesson-deck__focus">{POST_SESSION_1_NEXT_SESSION.body}</p>
+          <p className="skye-lesson-deck__focus">{session.nextSession.body}</p>
         </div>
-      </section>
+      </SessionSummarySection>
 
       <section className="skye-lesson-deck__section">
         <p className="skye-lesson-deck__lesson-meta">Lesson replay</p>
         <h2 className="skye-lesson-deck__heading">Slide deck + whiteboard</h2>
 
         <div className="skye-lesson-deck__note-card">
-          <p className="skye-lesson-deck__note-label">Session format</p>
-          <h3 className="skye-lesson-deck__note-title">Deck + live whiteboard</h3>
+          <p className="skye-lesson-deck__note-label">Whiteboard</p>
+          <h3 className="skye-lesson-deck__note-title">M1Q11 + equivalent expressions</h3>
           <p className="skye-lesson-deck__focus">
-            Reopen the deck for the factoring refresher and special forms. M1Q11, the quadratic
-            formula, and factor theorem work stay on the shared whiteboard.
+            Live work from session — factor theorem reps, FOIL mapping, and component expansion.
           </p>
           <p className="skye-lesson-deck__habit">
             <a
@@ -129,37 +104,14 @@ export function SkyeWeek2Lesson1Content() {
           </p>
         </div>
 
-        <p className="skye-lesson-deck__goal-line">
-          <strong>Session goal:</strong> recognize when to factor, apply special-form patterns
-          quickly, and set up the quadratic formula when factoring does not finish the job.
-        </p>
-
         <AgendaTable rows={LESSON1_AGENDA} />
 
-        <div className="skye-lesson-deck__callout">
-          <p className="skye-lesson-deck__note-label">Diagnostic walkthrough</p>
-          <h3 className="skye-lesson-deck__note-title">Module 1 Question 11</h3>
-          <p className="skye-lesson-deck__focus">
-            Nonlinear equation with a constant — the y − 42 problem that trips up most students.
-            Full solution on the whiteboard.
-          </p>
-          <p className="skye-lesson-deck__habit">
-            <a href={SKYE_WHITEBOARD_URL} target="_blank" rel="noopener noreferrer">
-              M1Q11 solution on whiteboard →
-            </a>
-          </p>
-        </div>
-
-        <h3 className="skye-lesson-deck__slides-heading">Lesson deck</h3>
-        <p className="skye-lesson-deck__focus">
-          Quadratics overview, factoring patterns, and SAT-style practice questions.
-        </p>
+        <h3 className="skye-lesson-deck__slides-heading">Quadratics deck</h3>
         <p className="skye-lesson-deck__habit">
           <Link href={SKYE_LESSON_DECK_HREF} className="skye-lesson-deck__inline-link">
             Open lesson deck (fullscreen)
           </Link>
         </p>
-
         <SlideEmbed
           title="Quadratics: what they are and how the SAT tests them"
           src="/skye/files/quadratics-lesson"
@@ -167,9 +119,11 @@ export function SkyeWeek2Lesson1Content() {
       </section>
 
       <p className="skye-plan__foot-link">
-        Back to the{" "}
-        <Link href="/skye/plan">improvement plan</Link> or{" "}
-        <Link href="/skye/diagnostic">diagnostic analysis</Link>.
+        <Link href="/skye/week-1/lesson-1">Week 1 diagnostic review</Link>
+        {" · "}
+        <Link href="/skye/plan">Improvement plan</Link>
+        {" · "}
+        <Link href="/skye/diagnostic">Diagnostic analysis</Link>
       </p>
     </div>
   );

@@ -9,11 +9,11 @@
 
 Hi Skye,
 
-Great session today. Your slide deck and whiteboard notes are in your **student portal** (separate from homework — see below). I'll add a written session summary to that page once I've finalized notes from the call.
+Great session today. Your session summary, slide deck, and whiteboard notes are in your **student portal** (separate from homework — see below).
 
 ## Your student portal (lesson notes + slide deck)
 
-This is where the diagnostic analysis, improvement plan, and today's lesson live.
+This is where the diagnostic analysis, improvement plan, and session notes live.
 
 1. Go to **https://illuminairy.com/skye/login**
 2. Enter **skyelacrosse13@gmail.com** (or sara_crisafulli@hotmail.com) and click Continue.
@@ -23,11 +23,16 @@ This is where the diagnostic analysis, improvement plan, and today's lesson live
 
 On that page you'll find:
 
-- **Session summary** and aha moments from today
+- **Session summary** and aha moments from today's call
 - The **quadratics slide deck** (embedded + fullscreen link)
-- The **whiteboard** with the full M1Q11 walkthrough: https://link.excalidraw.com/l/A4T4CdBzqDH/5FcyM67mE1R
+- The **whiteboard** with M1Q11 and equivalent-expression work: https://link.excalidraw.com/l/A4T4CdBzqDH/5FcyM67mE1R
 
-Your diagnostic analysis and full improvement plan are also in the top navigation at **https://illuminairy.com/skye/**.
+Earlier sessions are also posted:
+
+- **Pre-diagnostic orientation (June 18):** https://illuminairy.com/skye/getting-started
+- **Week 1 diagnostic review (June 25):** https://illuminairy.com/skye/week-1/lesson-1
+
+Your full diagnostic analysis and improvement plan are in the top navigation at **https://illuminairy.com/skye/**.
 
 ## Homework portal (practice problem sets)
 
@@ -37,8 +42,8 @@ Homework is on a **separate site** — same Illuminairy account, different login
 2. Enter **your email** (skyelacrosse13@gmail.com).
 3. You'll get a **one-time code sent to your email** — enter it to log in.
 4. Complete these two sets **before our next session**, in order:
-   - **Equivalent Expressions 1**
-   - **Equivalent Expressions 2**
+   - **Equivalent Expressions 1** (easy warm-up)
+   - **Equivalent Expressions 2** (medium)
 
 ## Next session
 
