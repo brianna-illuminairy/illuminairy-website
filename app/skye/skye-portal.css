@@ -1457,3 +1457,54 @@
     height: min(720px, 88vh);
   }
 }
+
+.skye-lesson-deck__lesson-meta {
+  font-family: var(--aurora-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--aurora-green);
+  font-weight: 600;
+  margin: 0 0 8px;
+}
+
+.skye-lesson-deck__heading {
+  font-family: var(--aurora-display);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--aurora-ink);
+  margin: 0 0 10px;
+}
+
+.skye-lesson-deck__wins {
+  margin: 0 0 16px;
+  padding-left: 20px;
+  color: var(--aurora-ink);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.skye-lesson-deck__wins li {
+  margin-bottom: 10px;
+}
+
+.skye-lesson-deck__homework-list {
+  margin: 0 0 12px;
+  padding-left: 20px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--aurora-ink);
+}
+
+.skye-lesson-deck__homework-list li {
+  margin-bottom: 8px;
+}
+
+.skye-lesson-deck__habit a {
+  color: var(--aurora-forest);
+  font-weight: 700;
+}
+
+.skye-lesson-deck__habit a:hover {
+  color: var(--aurora-green);
+}

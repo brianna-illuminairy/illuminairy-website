@@ -44,8 +44,8 @@ const SESSIONS: Record<string, PlanSession[]> = {
     { n: 2, focus: "Function, structure, and command of evidence", homework: "Problem set: function/structure/evidence drills from diagnostic misses (due before next week)" },
   ],
   "math-nonlinear": [
-    { n: 1, focus: "Factoring and quadratic formula", homework: "Problem set on factoring + quadratic formula (due before Session 2)" },
-    { n: 2, focus: "Radicals and discriminant", homework: "Problem set on radicals + discriminant (due before next week)" },
+    { n: 1, focus: "Factoring and quadratic formula", homework: "Homework Portal: Equivalent Expressions 1 and 2 (due before Session 2)" },
+    { n: 2, focus: "Review EE homework misses, then radicals and discriminant", homework: "Problem set on radicals + discriminant (due before next week)" },
   ],
   "rw-transitions": [
     { n: 1, focus: "Learn the five transition types and SAT word groups", homework: "Sort transition words into the five categories until automatic (due before Session 2)" },

@@ -1,7 +1,15 @@
 import Link from "next/link";
 import { AgendaTable, SlideEmbed } from "@/components/skye/lesson-shared";
-
-const WHITEBOARD_URL = "https://link.excalidraw.com/l/A4T4CdBzqDH/5FcyM67mE1R";
+import {
+  POST_SESSION_1_HOMEWORK,
+  POST_SESSION_1_NEXT_SESSION,
+  POST_SESSION_1_SUMMARY,
+  POST_SESSION_1_WINS,
+  SKYE_HOMEWORK_PORTAL_SETS,
+  SKYE_LESSON_DECK_HREF,
+  SKYE_WHITEBOARD_URL,
+} from "@/lib/skye-post-session-1-notes";
+import { homeworkPortalLoginUrl } from "@/lib/internal-links";
 
 const LESSON1_AGENDA = [
   {
@@ -32,7 +40,7 @@ const LESSON1_AGENDA = [
     time: "Wrap",
     segment: "Homework",
     detail:
-      "Problem set on factoring and the quadratic formula (due before Session 2). Radicals and discriminant come next session.",
+      "Equivalent Expressions 1 and 2 in the Homework Portal (due before the next session).",
   },
 ] as const;
 
@@ -43,22 +51,62 @@ export function SkyeWeek2Lesson1Content() {
         <p className="aurora-eyebrow">Illuminairy · Week 2 · Session 1</p>
         <h1 className="aurora-portal__title">Nonlinear and quadratic equations</h1>
         <p className="aurora-portal__lede">
-          Factoring patterns and the quadratic formula. Radicals and the discriminant are saved for
-          Session 2.
+          Complete. We covered factoring patterns, the quadratic formula, factor theorem reps, and
+          the full M1Q11 walkthrough on the whiteboard.
         </p>
       </header>
 
+      <section className="skye-lesson-deck__section" id="post-session-summary">
+        <p className="skye-lesson-deck__lesson-meta">Post-session · Monday, June 29</p>
+        <h2 className="skye-lesson-deck__heading">Session summary + homework</h2>
+        <p className="skye-lesson-deck__focus">{POST_SESSION_1_SUMMARY}</p>
+
+        <h3 className="skye-lesson-deck__slides-heading">Aha moments from this session</h3>
+        <ul className="skye-lesson-deck__wins">
+          {POST_SESSION_1_WINS.map((win) => (
+            <li key={win}>{win}</li>
+          ))}
+        </ul>
+
+        <div className="skye-lesson-deck__note-card" id="homework-due">
+          <p className="skye-lesson-deck__note-label">Homework Portal</p>
+          <h3 className="skye-lesson-deck__note-title">{POST_SESSION_1_HOMEWORK.headline}</h3>
+          <p className="skye-lesson-deck__focus">{POST_SESSION_1_HOMEWORK.body}</p>
+          <ol className="skye-lesson-deck__homework-list">
+            {SKYE_HOMEWORK_PORTAL_SETS.map((set) => (
+              <li key={set.id}>
+                <strong>{set.title}</strong> — {set.note}
+              </li>
+            ))}
+          </ol>
+          <p className="skye-lesson-deck__habit">
+            <a href={homeworkPortalLoginUrl} target="_blank" rel="noopener noreferrer">
+              Open Homework Portal →
+            </a>
+          </p>
+        </div>
+
+        <div className="skye-lesson-deck__callout">
+          <p className="skye-lesson-deck__note-label">{POST_SESSION_1_NEXT_SESSION.headline}</p>
+          <h3 className="skye-lesson-deck__note-title">Miss review on homework</h3>
+          <p className="skye-lesson-deck__focus">{POST_SESSION_1_NEXT_SESSION.body}</p>
+        </div>
+      </section>
+
       <section className="skye-lesson-deck__section">
+        <p className="skye-lesson-deck__lesson-meta">Lesson replay</p>
+        <h2 className="skye-lesson-deck__heading">Slide deck + whiteboard</h2>
+
         <div className="skye-lesson-deck__note-card">
           <p className="skye-lesson-deck__note-label">Session format</p>
           <h3 className="skye-lesson-deck__note-title">Deck + live whiteboard</h3>
           <p className="skye-lesson-deck__focus">
-            Use the slide deck below for the factoring refresher and special forms. M1Q11, the
-            quadratic formula, and factor theorem reps happen live on the shared whiteboard.
+            Reopen the deck for the factoring refresher and special forms. M1Q11, the quadratic
+            formula, and factor theorem work stay on the shared whiteboard.
           </p>
           <p className="skye-lesson-deck__habit">
             <a
-              href={WHITEBOARD_URL}
+              href={SKYE_WHITEBOARD_URL}
               className="aurora-btn-ghost"
               target="_blank"
               rel="noopener noreferrer"
@@ -79,11 +127,11 @@ export function SkyeWeek2Lesson1Content() {
           <p className="skye-lesson-deck__note-label">Diagnostic walkthrough</p>
           <h3 className="skye-lesson-deck__note-title">Module 1 Question 11</h3>
           <p className="skye-lesson-deck__focus">
-            This is a nonlinear equation with a constant — the y − 42 problem that trips up most
-            students. We work the full answer on the whiteboard, not in the deck below.
+            Nonlinear equation with a constant — the y − 42 problem that trips up most students.
+            Full solution on the whiteboard.
           </p>
           <p className="skye-lesson-deck__habit">
-            <a href={WHITEBOARD_URL} target="_blank" rel="noopener noreferrer">
+            <a href={SKYE_WHITEBOARD_URL} target="_blank" rel="noopener noreferrer">
               M1Q11 solution on whiteboard →
             </a>
           </p>
@@ -91,11 +139,10 @@ export function SkyeWeek2Lesson1Content() {
 
         <h3 className="skye-lesson-deck__slides-heading">Lesson deck</h3>
         <p className="skye-lesson-deck__focus">
-          Quadratics overview, factoring patterns, and SAT-style practice questions. Open fullscreen
-          during session or review after class.
+          Quadratics overview, factoring patterns, and SAT-style practice questions.
         </p>
         <p className="skye-lesson-deck__habit">
-          <Link href="/skye/files/quadratics-lesson" className="skye-lesson-deck__inline-link">
+          <Link href={SKYE_LESSON_DECK_HREF} className="skye-lesson-deck__inline-link">
             Open lesson deck (fullscreen)
           </Link>
         </p>
