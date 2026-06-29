@@ -1328,3 +1328,132 @@
   color: var(--aurora-muted);
   line-height: 1.4;
 }
+
+/* Week lesson deck embed (Skye) */
+.skye-lesson-deck {
+  max-width: 920px;
+  margin: 0 auto;
+}
+
+.skye-lesson-deck__section {
+  margin-top: 8px;
+}
+
+.skye-lesson-deck__focus,
+.skye-lesson-deck__goal-line,
+.skye-lesson-deck__habit {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--aurora-ink);
+  margin: 0 0 12px;
+}
+
+.skye-lesson-deck__inline-link {
+  color: var(--aurora-forest);
+  font-weight: 700;
+}
+
+.skye-lesson-deck__inline-link:hover {
+  color: var(--aurora-green);
+}
+
+.skye-lesson-deck__table-wrap {
+  overflow-x: auto;
+  margin: 14px 0;
+}
+
+.skye-lesson-deck__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.skye-lesson-deck__table th,
+.skye-lesson-deck__table td {
+  border: 1px solid var(--aurora-line-solid);
+  padding: 10px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.skye-lesson-deck__table th {
+  background: var(--aurora-sage, rgba(191, 227, 207, 0.35));
+  color: var(--aurora-forest);
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.skye-lesson-deck__table td:first-child {
+  white-space: nowrap;
+  font-weight: 600;
+  color: var(--aurora-forest);
+}
+
+.skye-lesson-deck__slides-heading {
+  font-family: var(--aurora-display);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--aurora-navy, var(--aurora-ink));
+  margin: 22px 0 12px;
+}
+
+.skye-lesson-deck__slides-block {
+  margin-bottom: 18px;
+}
+
+.skye-lesson-deck__slides-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--aurora-muted);
+  margin: 0 0 8px;
+}
+
+.skye-lesson-deck__slide-frame {
+  display: block;
+  width: 100%;
+  height: min(920px, 94vh);
+  min-height: 820px;
+  border: 1px solid var(--aurora-line-solid);
+  border-radius: 12px;
+  background: #fff;
+}
+
+.skye-lesson-deck__note-card,
+.skye-lesson-deck__callout {
+  background: var(--aurora-paper);
+  border: 1px solid var(--aurora-line-solid);
+  border-radius: var(--aurora-radius);
+  padding: 18px 20px;
+  margin: 0 0 18px;
+}
+
+.skye-lesson-deck__callout {
+  border-left: 4px solid var(--aurora-green);
+}
+
+.skye-lesson-deck__note-label {
+  font-family: var(--aurora-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--aurora-green);
+  font-weight: 600;
+  margin: 0 0 6px;
+}
+
+.skye-lesson-deck__note-title {
+  font-family: var(--aurora-display);
+  font-size: 17px;
+  font-weight: 600;
+  margin: 0 0 8px;
+  color: var(--aurora-ink);
+}
+
+@media (max-width: 640px) {
+  .skye-lesson-deck__slide-frame {
+    min-height: 520px;
+    height: min(720px, 88vh);
+  }
+}

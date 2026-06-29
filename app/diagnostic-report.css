@@ -1596,6 +1596,20 @@
   font-weight: 600;
 }
 
+.skye-plan__topic-lesson-link {
+  margin: 10px 0 0;
+  font-size: 14px;
+}
+
+.skye-plan__topic-lesson-link a {
+  color: var(--aurora-forest);
+  font-weight: 700;
+}
+
+.skye-plan__topic-lesson-link a:hover {
+  color: var(--aurora-green);
+}
+
 /* profile page */
 .skye-profile {
   max-width: 900px;

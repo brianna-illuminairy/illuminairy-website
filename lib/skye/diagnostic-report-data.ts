@@ -132,7 +132,7 @@ export const MATH_MISS_TABLE = [
   { mod: "1", q: "5", topic: "Systems of two linear equations", diff: "easy" as const, correct: "b", marked: "c" },
   { mod: "1", q: "7", topic: "Nonlinear equations", diff: "easy" as const, correct: "b", marked: "d" },
   { mod: "1", q: "9", topic: "Nonlinear equations", diff: "med" as const, correct: "d", marked: "c" },
-  { mod: "1", q: "11", topic: "Exponential functions", diff: "med" as const, correct: "b", marked: "c" },
+  { mod: "1", q: "11", topic: "Nonlinear equations", diff: "med" as const, correct: "b", marked: "c" },
   { mod: "1", q: "13", topic: "Circle measures (radians)", diff: "med" as const, correct: "c", marked: "a" },
   { mod: "1", q: "14", topic: "Linear functions (intercepts)", diff: "med" as const, correct: "c", marked: "a" },
   { mod: "1", q: "16", topic: "Radical equations", diff: "hard" as const, correct: "b", marked: "a" },

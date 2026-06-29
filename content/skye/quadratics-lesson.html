@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quadratics: What They Are and How the SAT Tests Them</title>
+<style>
+  :root{
+    --surface:#f5ecd9;--surface-2:#efe3cb;--navy:#14233b;--navy-2:#1e3250;
+    --forest:#2c5f4f;--forest-deep:#214a3d;--mint:#bfe3cf;--mint-soft:#dcefe3;
+    --ink:#1b2a22;--muted:#56635a;--line:#d9cba9;
+    --correct:#2c5f4f;--correct-bg:#dcefe3;--wrong:#b35442;--wrong-bg:#f2dcd5;
+    --font:Arial,Helvetica,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{margin:0;background:var(--navy);color:var(--ink);font-family:var(--font);-webkit-font-smoothing:antialiased;display:flex;flex-direction:column;min-height:100%;}
+  .stage{flex:1;display:flex;align-items:center;justify-content:center;padding:24px 20px 12px;position:relative;overflow:hidden;}
+  .deck{width:min(980px,100%);height:min(680px,82vh);position:relative;}
+  .slide{position:absolute;inset:0;background:var(--surface);border-radius:20px;border:1px solid #0c1726;box-shadow:0 24px 60px rgba(0,0,0,.34);padding:38px 46px;overflow:auto;opacity:0;transform:translateY(10px) scale(.99);pointer-events:none;transition:opacity .3s ease, transform .3s ease;}
+  .slide.active{opacity:1;transform:none;pointer-events:auto;}
+  .slide.dark{background:var(--navy);color:var(--surface);border-color:#0a1320;}
+  @media(prefers-reduced-motion:reduce){.slide{transition:opacity .12s ease;transform:none;}}
+  .eyebrow{font-family:var(--font);text-transform:uppercase;letter-spacing:.16em;font-size:.72rem;font-weight:700;color:var(--forest);margin:0 0 14px;}
+  .dark .eyebrow{color:var(--mint);}
+  .eyebrow.sat{color:#b35442;}
+  h1.t{font-family:var(--font);font-weight:700;font-size:clamp(1.8rem,4.2vw,2.6rem);line-height:1.12;margin:0 0 16px;color:var(--navy);}
+  .dark h1.t{color:var(--surface);}
+  h2.t{font-family:var(--font);font-weight:700;font-size:clamp(1.35rem,3vw,1.9rem);line-height:1.18;margin:0 0 16px;color:var(--navy);}
+  .dark h2.t{color:var(--surface);}
+  p{margin:0 0 13px;font-size:1.04rem;line-height:1.58;}
+  .sub{font-size:1.1rem;color:var(--muted);max-width:680px;}
+  .dark .sub{color:#d3dad3;}
+  strong{font-weight:700;color:var(--navy);}
+  .dark strong{color:var(--mint);}
+  em{font-style:italic;}
+  .center{height:100%;display:flex;flex-direction:column;justify-content:center;}
+  .star{color:var(--forest);}.dark .star{color:var(--mint);}
+
+  .m{font-family:var(--font);font-weight:600;white-space:nowrap;}
+  .m i{font-style:italic;font-weight:600;}
+  .m sup{font-size:.7em;vertical-align:.42em;}
+  .frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 .2em;font-family:var(--font);font-weight:600;}
+  .frac .num{border-bottom:1.6px solid currentColor;padding:0 .42em 2px;line-height:1.28;}
+  .frac .den{padding:2px .42em 0;line-height:1.28;}
+  .formula{font-family:var(--font);font-weight:700;font-size:1.5rem;color:var(--navy);}
+  .dark .formula{color:var(--surface);}
+  .formula i{font-style:italic;}
+  .formula sup{font-size:.7em;vertical-align:.42em;}
+
+  .formula-card{background:#fffaf0;border:1px solid var(--line);border-radius:14px;padding:18px 22px;margin:0 0 16px;}
+  .dark .formula-card{background:var(--navy-2);border-color:#2c466b;}
+  .formula-card .lab{font-family:var(--font);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--forest);font-weight:700;margin-bottom:9px;}
+  .dark .formula-card .lab{color:var(--mint);}
+  .formula-card .eg{font-size:1.02rem;color:var(--muted);margin-top:10px;}
+  .dark .formula-card .eg{color:#d3dad3;}
+  .eg .m{color:var(--navy);}.dark .eg .m{color:var(--surface);}
+
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .uses{list-style:none;padding:0;margin:4px 0 0;}
+  .uses li{position:relative;padding-left:26px;margin-bottom:11px;font-size:1.03rem;line-height:1.5;}
+  .uses li::before{content:"\2736";position:absolute;left:0;top:1px;color:var(--forest);}
+  .dark .uses li::before{color:var(--mint);}
+  .uses b{color:var(--navy);font-weight:700;}.dark .uses b{color:var(--mint);}
+
+  .work{background:#fffaf0;border:1px solid var(--line);border-radius:13px;padding:16px 20px;margin:6px 0 0;}
+  .work .step{display:flex;gap:13px;align-items:flex-start;margin-bottom:11px;font-size:1.02rem;line-height:1.5;}
+  .work .step:last-child{margin-bottom:0;}
+  .work .n{flex:0 0 auto;width:24px;height:24px;border-radius:50%;background:var(--mint-soft);border:1.5px solid #cbe6d5;color:var(--forest-deep);font-family:var(--font);font-weight:700;font-size:.76rem;display:flex;align-items:center;justify-content:center;margin-top:1px;}
+
+  .sheet{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:4px;}
+  .sheet-card{background:#fffaf0;border:1px solid var(--line);border-radius:12px;padding:13px 16px;}
+  .sheet-card .lab{font-family:var(--font);font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:var(--forest);font-weight:700;margin-bottom:6px;}
+  .sheet-card .id{font-family:var(--font);font-weight:700;font-size:1.1rem;color:var(--navy);}
+  .sheet-card .id i{font-style:italic;}.sheet-card .id sup{font-size:.7em;vertical-align:.42em;}
+  .sheet-card .egm{font-size:.92rem;color:var(--muted);margin-top:6px;}
+  .sheet-card .egm .m{color:var(--navy);font-size:1em;}
+  @media(max-width:660px){.sheet{grid-template-columns:1fr;}}
+
+  .pgraph{display:flex;gap:22px;justify-content:center;flex-wrap:wrap;margin:6px 0 4px;}
+  .pgraph figure{margin:0;text-align:center;}
+  .pgraph svg{display:block;}
+  .pgraph figcaption{font-size:.92rem;color:var(--muted);margin-top:4px;}
+  .pgraph figcaption b{color:var(--navy);font-weight:700;}
+
+  .card-note{border-left:4px solid var(--forest);background:var(--mint-soft);padding:13px 18px;border-radius:0 11px 11px 0;font-size:1rem;margin:14px 0 0;}
+  .dark .card-note{background:var(--navy-2);border-color:var(--mint);}
+  .card-note b{color:var(--forest-deep);}.dark .card-note b{color:var(--mint);}
+
+  .pq{background:#fffaf0;border:1px solid var(--line);border-radius:15px;padding:20px 22px;margin-top:4px;}
+  .pq .qlab{font-family:var(--font);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--forest);font-weight:700;margin-bottom:9px;}
+  .pq .stem{font-size:1.08rem;line-height:1.55;color:var(--navy);margin-bottom:6px;}
+  .pq .ask{font-size:.96rem;color:var(--muted);margin-bottom:13px;}
+  .pq-opts{display:flex;flex-direction:column;gap:9px;}
+  .pq-opt{display:flex;align-items:center;gap:13px;width:100%;text-align:left;background:#fff;border:1.5px solid var(--line);border-radius:11px;padding:12px 15px;font-family:var(--font);font-size:1rem;color:var(--ink);cursor:pointer;transition:border-color .15s,background .15s;}
+  .pq-opt:hover{border-color:var(--forest);}
+  .pq-opt .badge{flex:0 0 auto;width:26px;height:26px;border-radius:50%;border:1.5px solid var(--muted);display:flex;align-items:center;justify-content:center;font-family:var(--font);font-weight:700;font-size:.82rem;color:var(--muted);}
+  .pq-opt.sel{border-color:var(--forest);background:var(--mint-soft);}
+  .pq-opt.sel .badge{border-color:var(--forest);color:var(--forest-deep);background:#fff;}
+  .pq-opt.correct{border-color:var(--correct);background:var(--correct-bg);}
+  .pq-opt.correct .badge{background:var(--forest);border-color:var(--forest);color:#fff;}
+  .pq-opt.incorrect{border-color:var(--wrong);background:var(--wrong-bg);}
+  .pq-opt.incorrect .badge{background:var(--wrong);border-color:var(--wrong);color:#fff;}
+  .pq-opt[disabled]{cursor:default;}
+  .pq-opt .tick{margin-left:auto;font-family:var(--font);font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;font-weight:700;opacity:0;}
+  .pq-opt.correct .tick{opacity:1;color:var(--forest-deep);}
+  .pq-opt.incorrect .tick{opacity:1;color:var(--wrong);}
+
+  .pq-actions{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;}
+  .act{font-family:var(--font);font-weight:700;font-size:.86rem;border-radius:10px;cursor:pointer;padding:9px 15px;border:1.5px solid var(--line);background:transparent;color:var(--forest-deep);transition:border-color .15s,background .15s,color .15s;}
+  .act:hover{border-color:var(--forest);}
+  .act.primary{background:var(--forest);border-color:var(--forest);color:var(--mint-soft);}
+  .act.primary:hover{background:var(--forest-deep);}
+  .act.on{background:var(--mint-soft);border-color:var(--forest);}
+  .act[hidden]{display:none;}
+
+  .panel{display:none;margin-top:13px;border-radius:12px;overflow:hidden;border:1px solid var(--line);}
+  .panel.show{display:block;}
+  .panel .head{padding:9px 16px;font-family:var(--font);font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700;background:var(--mint-soft);color:var(--forest-deep);}
+  .panel .body{padding:14px 16px 4px;background:#fff;}
+  .panel.hint .head{background:#efe3cb;color:var(--forest-deep);}
+  .panel .body p{font-size:1rem;line-height:1.55;}
+  .verdict{margin-top:13px;font-family:var(--font);font-size:.84rem;letter-spacing:.01em;font-weight:700;padding:9px 14px;border-radius:999px;display:none;}
+  .verdict.show{display:inline-block;}
+  .verdict.right{background:var(--correct-bg);color:var(--forest-deep);}
+  .verdict.wrong{background:var(--wrong-bg);color:var(--wrong);}
+
+  .bar{flex:0 0 auto;display:flex;align-items:center;gap:18px;justify-content:center;padding:13px 20px 18px;color:var(--surface);}
+  .navbtn{font-family:var(--font);font-weight:700;font-size:.92rem;background:var(--forest);color:var(--mint-soft);border:none;border-radius:10px;padding:11px 20px;cursor:pointer;transition:background .15s,opacity .15s;}
+  .navbtn:hover{background:var(--forest-deep);}
+  .navbtn:disabled{opacity:.34;cursor:default;}
+  .counter{font-family:var(--font);font-size:.82rem;letter-spacing:.04em;color:#9fb0c4;min-width:170px;text-align:center;}
+  .counter b{color:var(--mint);}
+  .counter .sec{display:block;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:#7d8ea3;margin-top:2px;}
+  .progress{position:fixed;top:0;left:0;height:3px;background:var(--mint);width:0;transition:width .3s ease;z-index:10;}
+  .hintbar{position:fixed;bottom:6px;left:0;right:0;text-align:center;font-family:var(--font);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:#5f718a;}
+  @media(max-width:660px){.slide{padding:26px 22px;}.two{grid-template-columns:1fr;}.deck{height:min(700px,76vh);}p,.sub{font-size:1rem;}.counter{min-width:120px;}}
+  body.embed{display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;padding:0;height:100%;overflow:hidden;}
+  body.embed .progress,body.embed .bar,body.embed .hintbar{display:none;}
+  body.embed .stage{flex:1;padding:10px 14px 12px;max-width:none;min-height:0;}
+  body.embed .deck{flex:1;height:auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="stage">
+  <div class="deck" id="deck">
+
+    <!-- 1 TITLE -->
+    <section class="slide dark active" data-sec="Overview">
+      <div class="center">
+        <p class="eyebrow"><span class="star">&#10038;</span>&nbsp; Illuminairy &middot; SAT Math</p>
+        <h1 class="t">Quadratics: what they are<br>and how the SAT tests them</h1>
+        <p class="sub">A quadratic brings in parabolas, factoring, up to two solutions, and maximum or minimum behavior. We will build the idea step by step, with a short SAT-style question after each piece.</p>
+      </div>
+    </section>
+
+    <!-- 2 CORE IDEA -->
+    <section class="slide" data-sec="What it is">
+      <p class="eyebrow">The core idea</p>
+      <h2 class="t">The highest power is 2</h2>
+      <div class="formula-card">
+        <div class="lab">Standard form</div>
+        <span class="formula"><i>ax</i><sup>2</sup> + <i>bx</i> + <i>c</i></span>, &nbsp; where <span class="m"><i>a</i> &ne; 0</span>
+        <div class="eg">The piece that makes it quadratic is the <span class="m"><i>ax</i><sup>2</sup></span> term. If that term disappears once you simplify, it is not quadratic.</div>
+      </div>
+      <p>Watch what happens here. It looks quadratic:</p>
+      <p style="margin:0 0 6px;"><span class="m"><i>x</i><sup>2</sup> + 5<i>x</i> = <i>x</i><sup>2</sup> &minus; 9</span></p>
+      <p>Subtract <span class="m"><i>x</i><sup>2</sup></span> from both sides and the squared term is gone: <span class="m">5<i>x</i> = &minus;9</span>. That is linear, not quadratic.</p>
+    </section>
+
+    <!-- 3 SAT Q: recognition -->
+    <section class="slide" data-sec="What it is">
+      <p class="eyebrow sat">On the SAT</p>
+      <div class="pq" data-correct="B"
+        data-hint="Simplify each one first. If the x<sup>2</sup> term survives, it is quadratic. If it cancels or divides away, it is linear.">
+        <div class="qlab">Recognizing a quadratic</div>
+        <div class="stem">Once simplified, which equation is quadratic?</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span><span class="m"><i>x</i><sup>2</sup> + 4<i>x</i> = <i>x</i><sup>2</sup> + 10</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span><span class="m"><i>x</i><sup>2</sup> + 5<i>x</i> = 9</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span><span class="m">3<i>x</i> &minus; 2 = 10</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span><span class="m"><span class="frac"><span class="num"><i>x</i><sup>2</sup></span><span class="den"><i>x</i></span></span> + 3 = 7</span><span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body">
+          <div class="work">
+            <div class="step"><span class="n">A</span><span><span class="m"><i>x</i><sup>2</sup></span> cancels both sides, leaving <span class="m">4<i>x</i> = 10</span>. Linear.</span></div>
+            <div class="step"><span class="n">B</span><span>Nothing cancels the <span class="m"><i>x</i><sup>2</sup></span>. It stays quadratic. <strong>Correct.</strong></span></div>
+            <div class="step"><span class="n">C</span><span>No squared term at all. Linear.</span></div>
+            <div class="step"><span class="n">D</span><span><span class="m"><i>x</i><sup>2</sup> / <i>x</i> = <i>x</i></span>, so this becomes <span class="m"><i>x</i> + 3 = 7</span>. Linear.</span></div>
+          </div>
+        </div></div>
+      </div>
+    </section>
+
+    <!-- 4 TWO SOLUTIONS + TOOLS -->
+    <section class="slide" data-sec="Solutions">
+      <p class="eyebrow">What changes once it is quadratic</p>
+      <h2 class="t">It can have up to two solutions</h2>
+      <p>A linear equation usually has one solution. A quadratic can have <span class="m">0</span>, <span class="m">1</span>, or <span class="m">2</span> real solutions.</p>
+      <p style="margin:0 0 6px;"><span class="m"><i>x</i><sup>2</sup> &minus; 9 = 0</span> &nbsp;factors as&nbsp; <span class="m">(<i>x</i> &minus; 3)(<i>x</i> + 3) = 0</span>, &nbsp;so&nbsp; <span class="m"><i>x</i> = 3</span> or <span class="m"><i>x</i> = &minus;3</span>.</p>
+      <div class="card-note"><b>Your solving tools:</b> factor, take square roots, complete the square, or use the quadratic formula. The SAT usually rewards spotting when factoring or structure is the fastest route.</div>
+    </section>
+
+    <!-- 5 SAT Q: solve x^2-9=0 -->
+    <section class="slide" data-sec="Solutions">
+      <p class="eyebrow sat">On the SAT</p>
+      <div class="pq" data-correct="B"
+        data-hint="This is a difference of squares: x<sup>2</sup> &minus; 9 = (x &minus; 3)(x + 3). Set each factor to 0.">
+        <div class="qlab">Counting and finding solutions</div>
+        <div class="stem">What are all solutions to <span class="m"><i>x</i><sup>2</sup> &minus; 9 = 0</span>?</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span><span class="m"><i>x</i> = 3 only</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span><span class="m"><i>x</i> = 3 or <i>x</i> = &minus;3</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span><span class="m"><i>x</i> = 9 or <i>x</i> = &minus;9</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span><span class="m">no real solutions</span><span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body">
+          <div class="work">
+            <div class="step"><span class="n">1</span><span><span class="m"><i>x</i><sup>2</sup> &minus; 9 = (<i>x</i> &minus; 3)(<i>x</i> + 3) = 0</span>.</span></div>
+            <div class="step"><span class="n">2</span><span>Each factor can be zero: <span class="m"><i>x</i> &minus; 3 = 0</span> gives <span class="m"><i>x</i> = 3</span>; <span class="m"><i>x</i> + 3 = 0</span> gives <span class="m"><i>x</i> = &minus;3</span>.</span></div>
+            <div class="step"><span class="n">3</span><span>Two solutions: <span class="m"><i>x</i> = 3</span> or <span class="m"><i>x</i> = &minus;3</span>. <strong>Choice B.</strong></span></div>
+          </div>
+        </div></div>
+      </div>
+    </section>
+
+    <!-- 6 SET TO ZERO -->
+    <section class="slide" data-sec="Set to zero">
+      <p class="eyebrow">The habit that prevents mistakes</p>
+      <h2 class="t">If it is an equation, move everything to one side first</h2>
+      <p>Quadratics are easiest to solve when one side is zero. Do not factor before you do this.</p>
+      <div class="work">
+        <div class="step"><span class="n">1</span><span>Start with <span class="m"><i>x</i><sup>2</sup> + 5<i>x</i> = 24</span>.</span></div>
+        <div class="step"><span class="n">2</span><span>Move everything left: <span class="m"><i>x</i><sup>2</sup> + 5<i>x</i> &minus; 24 = 0</span>.</span></div>
+        <div class="step"><span class="n">3</span><span>Factor: <span class="m">(<i>x</i> + 8)(<i>x</i> &minus; 3) = 0</span>.</span></div>
+        <div class="step"><span class="n">4</span><span>Solutions: <span class="m"><i>x</i> = &minus;8</span> or <span class="m"><i>x</i> = 3</span>.</span></div>
+      </div>
+    </section>
+
+    <!-- 7 SAT Q: solve x^2+5x=24 -->
+    <section class="slide" data-sec="Set to zero">
+      <p class="eyebrow sat">On the SAT</p>
+      <div class="pq" data-correct="A"
+        data-hint="Move the 24 over first: x<sup>2</sup> + 5x &minus; 24 = 0. Then find two numbers that multiply to &minus;24 and add to 5.">
+        <div class="qlab">Set equal to zero, then factor</div>
+        <div class="stem">What are all solutions to <span class="m"><i>x</i><sup>2</sup> + 5<i>x</i> = 24</span>?</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span><span class="m"><i>x</i> = &minus;8 or <i>x</i> = 3</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span><span class="m"><i>x</i> = 8 or <i>x</i> = &minus;3</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span><span class="m"><i>x</i> = &minus;5 or <i>x</i> = 24</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span><span class="m"><i>x</i> = 4 or <i>x</i> = 6</span><span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body">
+          <div class="work">
+            <div class="step"><span class="n">1</span><span>Set to zero: <span class="m"><i>x</i><sup>2</sup> + 5<i>x</i> &minus; 24 = 0</span>.</span></div>
+            <div class="step"><span class="n">2</span><span>Two numbers multiply to <span class="m">&minus;24</span>, add to <span class="m">5</span>: that is <span class="m">8</span> and <span class="m">&minus;3</span>.</span></div>
+            <div class="step"><span class="n">3</span><span><span class="m">(<i>x</i> + 8)(<i>x</i> &minus; 3) = 0</span>, so <span class="m"><i>x</i> = &minus;8</span> or <span class="m"><i>x</i> = 3</span>. <strong>Choice A.</strong> Choice D would multiply to 24, but that skips moving the 24 over.</span></div>
+          </div>
+        </div></div>
+      </div>
+    </section>
+
+    <!-- 8 PARABOLA -->
+    <section class="slide" data-sec="The graph">
+      <p class="eyebrow">The graph</p>
+      <h2 class="t">A quadratic graphs as a parabola</h2>
+      <p>It is not a straight line. It is a U shape or an upside-down U, and the sign of <span class="m"><i>a</i></span> tells you which.</p>
+      <div class="pgraph">
+        <figure>
+          <svg width="180" height="120" viewBox="0 0 180 120" aria-hidden="true">
+            <line x1="14" y1="104" x2="166" y2="104" stroke="#cdbf9d" stroke-width="1.5"/>
+            <line x1="90" y1="10" x2="90" y2="112" stroke="#cdbf9d" stroke-width="1.5"/>
+            <path d="M28,24 Q90,150 152,24" fill="none" stroke="#2c5f4f" stroke-width="3"/>
+            <circle cx="90" cy="92" r="4" fill="#b35442"/>
+          </svg>
+          <figcaption><b><span class="m"><i>a</i> &gt; 0</span></b>, opens up. Vertex is a minimum.</figcaption>
+        </figure>
+        <figure>
+          <svg width="180" height="120" viewBox="0 0 180 120" aria-hidden="true">
+            <line x1="14" y1="16" x2="166" y2="16" stroke="#cdbf9d" stroke-width="1.5"/>
+            <line x1="90" y1="8" x2="90" y2="110" stroke="#cdbf9d" stroke-width="1.5"/>
+            <path d="M28,96 Q90,-30 152,96" fill="none" stroke="#2c5f4f" stroke-width="3"/>
+            <circle cx="90" cy="28" r="4" fill="#b35442"/>
+          </svg>
+          <figcaption><b><span class="m"><i>a</i> &lt; 0</span></b>, opens down. Vertex is a maximum.</figcaption>
+        </figure>
+      </div>
+      <div class="card-note"><b>Example:</b> <span class="m"><i>y</i> = <i>x</i><sup>2</sup> + 3</span> opens up; <span class="m"><i>y</i> = &minus;<i>x</i><sup>2</sup> + 3</span> opens down.</div>
+    </section>
+
+    <!-- 9 SAT Q: direction -->
+    <section class="slide" data-sec="The graph">
+      <p class="eyebrow sat">On the SAT</p>
+      <div class="pq" data-correct="B"
+        data-hint="Look only at the sign of the number in front of x<sup>2</sup>. Positive opens up, negative opens down.">
+        <div class="qlab">Reading the direction</div>
+        <div class="stem">The graph of <span class="m"><i>y</i> = &minus;2<i>x</i><sup>2</sup> + 3<i>x</i> + 1</span> opens in which direction?</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span><span>Upward, with a minimum</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span><span>Downward, with a maximum</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span><span>It is a straight line</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span><span>Cannot be determined</span><span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body">
+          <div class="work">
+            <div class="step"><span class="n">1</span><span>The number in front of <span class="m"><i>x</i><sup>2</sup></span> is <span class="m"><i>a</i> = &minus;2</span>.</span></div>
+            <div class="step"><span class="n">2</span><span><span class="m"><i>a</i> &lt; 0</span>, so the parabola opens down and its vertex is a maximum. <strong>Choice B.</strong></span></div>
+          </div>
+        </div></div>
+      </div>
+    </section>
+
+    <!-- 10 VERTEX -->
+    <section class="slide" data-sec="Vertex">
+      <p class="eyebrow">The turning point</p>
+      <h2 class="t">The vertex is the maximum or minimum</h2>
+      <p>A line keeps going one direction. A quadratic turns around at one point, the vertex. Vertex form shows it directly:</p>
+      <div class="formula-card">
+        <div class="lab">Vertex form</div>
+        <span class="formula"><i>y</i> = (<i>x</i> &minus; <i>h</i>)<sup>2</sup> + <i>k</i></span> &nbsp; has vertex &nbsp; <span class="m">(<i>h</i>, <i>k</i>)</span>
+        <div class="eg"><span class="m"><i>y</i> = (<i>x</i> &minus; 4)<sup>2</sup> + 7</span> has vertex <span class="m">(4, 7)</span>. It opens up, so <span class="m">7</span> is the minimum value.</div>
+      </div>
+      <p>SAT questions use this to ask for a maximum value, a minimum value, or when something reaches its highest or lowest point.</p>
+    </section>
+
+    <!-- 11 SAT Q: min value -->
+    <section class="slide" data-sec="Vertex">
+      <p class="eyebrow sat">On the SAT</p>
+      <div class="pq" data-correct="B"
+        data-hint="Vertex form (x &minus; h)<sup>2</sup> + k has vertex (h, k). The minimum value is the k, the y-coordinate of the vertex.">
+        <div class="qlab">Maximum and minimum from vertex form</div>
+        <div class="stem">The function <span class="m"><i>f</i>(<i>x</i>) = (<i>x</i> &minus; 4)<sup>2</sup> + 7</span>. What is the minimum value of <span class="m"><i>f</i></span>?</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span><span class="m">4</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span><span class="m">7</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span><span class="m">&minus;7</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span><span class="m">11</span><span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body">
+          <div class="work">
+            <div class="step"><span class="n">1</span><span>Vertex form gives vertex <span class="m">(4, 7)</span>, so <span class="m"><i>x</i> = 4</span> is where the turn happens.</span></div>
+            <div class="step"><span class="n">2</span><span><span class="m">(<i>x</i> &minus; 4)<sup>2</sup></span> is never negative, so the smallest <span class="m"><i>f</i></span> can be is when it equals 0, leaving <span class="m">7</span>.</span></div>
+            <div class="step"><span class="n">3</span><span>The minimum value is <span class="m">7</span>. <strong>Choice B.</strong> The 4 is where it happens, not the value itself.</span></div>
+          </div>
+        </div></div>
+      </div>
+    </section>
+
+    <!-- 12 FORMS -->
+    <section class="slide" data-sec="Forms">
+      <p class="eyebrow">One quadratic, three outfits</p>
+      <h2 class="t">The same quadratic can be written three ways</h2>
+      <p>They describe the same thing, but each form hands you something different for free.</p>
+      <div class="two">
+        <div class="formula-card" style="margin:0;">
+          <div class="lab">Standard form</div>
+          <span class="m" style="font-size:1.18rem;"><i>x</i><sup>2</sup> &minus; 5<i>x</i> + 6</span>
+          <div class="eg">Shows <span class="m"><i>a</i></span>, <span class="m"><i>b</i></span>, <span class="m"><i>c</i></span> and the direction.</div>
+        </div>
+        <div class="formula-card" style="margin:0;">
+          <div class="lab">Factored form</div>
+          <span class="m" style="font-size:1.18rem;">(<i>x</i> &minus; 2)(<i>x</i> &minus; 3)</span>
+          <div class="eg">Shows the zeros: <span class="m"><i>x</i> = 2</span> and <span class="m"><i>x</i> = 3</span>.</div>
+        </div>
+      </div>
+      <div class="formula-card" style="margin-top:16px;">
+        <div class="lab">Vertex form</div>
+        <span class="m" style="font-size:1.18rem;">(<i>x</i> &minus; 2.5)<sup>2</sup> &minus; 0.25</span>
+        <div class="eg">Shows the vertex, and therefore the minimum or maximum: <span class="m">(2.5, &minus;0.25)</span>.</div>
+      </div>
+    </section>
+
+    <!-- 13 SAT Q: which form -->
+    <section class="slide" data-sec="Forms">
+      <p class="eyebrow sat">On the SAT</p>
+      <div class="pq" data-correct="B"
+        data-hint="Zeros are the x-values that make y = 0. Which form is already written as things multiplied together that can each equal zero?">
+        <div class="qlab">Choosing the useful form</div>
+        <div class="stem">Which form most directly shows the solutions (zeros) of a quadratic?</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span><span>Standard form, <span class="m"><i>ax</i><sup>2</sup> + <i>bx</i> + <i>c</i></span></span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span><span>Factored form, <span class="m">(<i>x</i> &minus; <i>r</i>)(<i>x</i> &minus; <i>s</i>)</span></span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span><span>Vertex form, <span class="m">(<i>x</i> &minus; <i>h</i>)<sup>2</sup> + <i>k</i></span></span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span><span>None of these</span><span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body">
+          <div class="work">
+            <div class="step"><span class="n">1</span><span>Zeros come from setting each factor to zero, which needs the expression written as a product.</span></div>
+            <div class="step"><span class="n">2</span><span>Factored form <span class="m">(<i>x</i> &minus; <i>r</i>)(<i>x</i> &minus; <i>s</i>)</span> gives zeros <span class="m"><i>x</i> = <i>r</i></span> and <span class="m"><i>x</i> = <i>s</i></span> on sight. <strong>Choice B.</strong></span></div>
+            <div class="step"><span class="n">3</span><span>Vertex form is best for max or min; standard form is best for reading <span class="m"><i>a</i></span>, <span class="m"><i>b</i></span>, <span class="m"><i>c</i></span>.</span></div>
+          </div>
+        </div></div>
+      </div>
+    </section>
+
+    <!-- 14 CANCELLATION -->
+    <section class="slide" data-sec="Simplify first">
+      <p class="eyebrow">A common trap</p>
+      <h2 class="t">A visible <span class="m"><i>x</i><sup>2</sup></span> does not guarantee a quadratic</h2>
+      <p>Simplify first, then decide. Sometimes the squared term divides away or cancels.</p>
+      <div class="two">
+        <div class="formula-card" style="margin:0;">
+          <div class="lab">Quadratic</div>
+          <span class="m" style="font-size:1.18rem;"><i>x</i><sup>2</sup> + 3<i>x</i> &minus; 4</span>
+          <div class="eg">The squared term stays. This one is quadratic.</div>
+        </div>
+        <div class="formula-card" style="margin:0;">
+          <div class="lab">Not quadratic</div>
+          <span class="m" style="font-size:1.18rem;"><span class="frac"><span class="num"><i>x</i><sup>2</sup></span><span class="den"><i>x</i></span></span> + 3</span>
+          <div class="eg">Simplifies to <span class="m"><i>x</i> + 3</span>. Linear.</div>
+        </div>
+      </div>
+      <div class="card-note"><b>Also watch equations:</b> <span class="m"><i>x</i><sup>2</sup> + 4<i>x</i> = <i>x</i><sup>2</sup> + 10</span> cancels to <span class="m">4<i>x</i> = 10</span>. Linear, despite the squared terms.</div>
+    </section>
+
+    <!-- 15 SAT Q: not quadratic -->
+    <section class="slide" data-sec="Simplify first">
+      <p class="eyebrow sat">On the SAT</p>
+      <div class="pq" data-correct="B"
+        data-hint="Simplify each one. The one whose x<sup>2</sup> divides or cancels away is the one that is not quadratic.">
+        <div class="qlab">Spotting the cancellation</div>
+        <div class="stem">Which expression is <strong>not</strong> quadratic?</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span><span class="m"><i>x</i><sup>2</sup> + 3<i>x</i> &minus; 4</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span><span class="m"><span class="frac"><span class="num"><i>x</i><sup>2</sup></span><span class="den"><i>x</i></span></span> + 3</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span><span class="m">(<i>x</i> &minus; 2)(<i>x</i> + 5)</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span><span class="m">2<i>x</i><sup>2</sup> &minus; 7</span><span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body">
+          <div class="work">
+            <div class="step"><span class="n">B</span><span><span class="m"><i>x</i><sup>2</sup> / <i>x</i> = <i>x</i></span>, so this is <span class="m"><i>x</i> + 3</span>, which is linear. <strong>Choice B.</strong></span></div>
+            <div class="step"><span class="n">C</span><span><span class="m">(<i>x</i> &minus; 2)(<i>x</i> + 5)</span> multiplies out to <span class="m"><i>x</i><sup>2</sup> + 3<i>x</i> &minus; 10</span>, which is quadratic.</span></div>
+            <div class="step"><span class="n">A, D</span><span>Both keep a real <span class="m"><i>x</i><sup>2</sup></span> term. Quadratic.</span></div>
+          </div>
+        </div></div>
+      </div>
+    </section>
+
+    <!-- 16 TAKEAWAY -->
+    <section class="slide dark" data-sec="Takeaway">
+      <p class="eyebrow">The SAT-level takeaway</p>
+      <h2 class="t">When you spot a quadratic, ask</h2>
+      <ul class="uses">
+        <li>Can I rewrite it in standard form, <span class="m"><i>ax</i><sup>2</sup> + <i>bx</i> + <i>c</i></span>?</li>
+        <li>Can I factor it into <span class="m">(<i>x</i> + <i>m</i>)(<i>x</i> + <i>n</i>)</span>?</li>
+        <li>Is one side equal to zero yet?</li>
+        <li>Are there two possible answers?</li>
+        <li>Is the question about zeros, solutions, maximum, minimum, vertex, or intercepts?</li>
+      </ul>
+    </section>
+
+    <!-- 17 FACTORING: GCF -->
+    <section class="slide" data-sec="Factoring">
+      <p class="eyebrow">Factoring method 1 &middot; GCF</p>
+      <h2 class="t">Pull out the common factor first</h2>
+      <p>Before anything else, check whether every term shares a factor. <span class="m">3<i>x</i><sup>2</sup> + 12<i>x</i> = 3<i>x</i>(<i>x</i> + 4)</span>.</p>
+      <div class="pq" data-correct="A"
+        data-hint="The largest factor shared by 6x<sup>2</sup> and 15x is 3x. Divide both terms by 3x.">
+        <div class="qlab">Greatest common factor</div>
+        <div class="stem">What is the completely factored form of <span class="m">6<i>x</i><sup>2</sup> + 15<i>x</i></span>?</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span><span class="m">3<i>x</i>(2<i>x</i> + 5)</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span><span class="m">3<i>x</i>(2<i>x</i> + 15)</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span><span class="m">5<i>x</i>(<i>x</i> + 3)</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span><span class="m">3(2<i>x</i><sup>2</sup> + 5)</span><span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body">
+          <div class="work">
+            <div class="step"><span class="n">1</span><span>Shared factor of <span class="m">6<i>x</i><sup>2</sup></span> and <span class="m">15<i>x</i></span> is <span class="m">3<i>x</i></span>.</span></div>
+            <div class="step"><span class="n">2</span><span><span class="m">6<i>x</i><sup>2</sup> &div; 3<i>x</i> = 2<i>x</i></span> and <span class="m">15<i>x</i> &div; 3<i>x</i> = 5</span>.</span></div>
+            <div class="step"><span class="n">3</span><span><span class="m">3<i>x</i>(2<i>x</i> + 5)</span>. <strong>Choice A.</strong> Multiply back to check: <span class="m">6<i>x</i><sup>2</sup> + 15<i>x</i></span>.</span></div>
+          </div>
+        </div></div>
+      </div>
+    </section>
+
+    <!-- 18 FACTORING: DIFFERENCE OF SQUARES -->
+    <section class="slide" data-sec="Factoring">
+      <p class="eyebrow">Factoring method 2 &middot; difference of squares</p>
+      <h2 class="t">Two squares with a minus between them</h2>
+      <p><span class="m"><i>a</i><sup>2</sup> &minus; <i>b</i><sup>2</sup> = (<i>a</i> &minus; <i>b</i>)(<i>a</i> + <i>b</i>)</span>. &nbsp;Example: <span class="m"><i>x</i><sup>2</sup> &minus; 16 = (<i>x</i> &minus; 4)(<i>x</i> + 4)</span>.</p>
+      <div class="pq" data-correct="A"
+        data-hint="9x<sup>2</sup> = (3x)<sup>2</sup> and 25 = 5<sup>2</sup>. So a = 3x and b = 5.">
+        <div class="qlab">Difference of squares</div>
+        <div class="stem">What is the factored form of <span class="m">9<i>x</i><sup>2</sup> &minus; 25</span>?</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span><span class="m">(3<i>x</i> &minus; 5)(3<i>x</i> + 5)</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span><span class="m">(3<i>x</i> &minus; 5)<sup>2</sup></span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span><span class="m">(9<i>x</i> &minus; 5)(<i>x</i> + 5)</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span><span class="m">(3<i>x</i> + 5)<sup>2</sup></span><span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body">
+          <div class="work">
+            <div class="step"><span class="n">1</span><span><span class="m">9<i>x</i><sup>2</sup> = (3<i>x</i>)<sup>2</sup></span>, <span class="m">25 = 5<sup>2</sup></span>, so <span class="m"><i>a</i> = 3<i>x</i></span>, <span class="m"><i>b</i> = 5</span>.</span></div>
+            <div class="step"><span class="n">2</span><span><span class="m">(<i>a</i> &minus; <i>b</i>)(<i>a</i> + <i>b</i>) = (3<i>x</i> &minus; 5)(3<i>x</i> + 5)</span>. <strong>Choice A.</strong></span></div>
+            <div class="step"><span class="n">3</span><span>B and D are squares, which give a middle term. There is no middle term here.</span></div>
+          </div>
+        </div></div>
+      </div>
+    </section>
+
+    <!-- 19 FACTORING: PERFECT SQUARE POSITIVE -->
+    <section class="slide" data-sec="Factoring">
+      <p class="eyebrow">Factoring method 3 &middot; perfect square, positive middle</p>
+      <h2 class="t">First and last are squares, middle is <span class="m">2<i>ab</i></span></h2>
+      <p><span class="m"><i>a</i><sup>2</sup> + 2<i>ab</i> + <i>b</i><sup>2</sup> = (<i>a</i> + <i>b</i>)<sup>2</sup></span>. &nbsp;Example: <span class="m"><i>x</i><sup>2</sup> + 6<i>x</i> + 9 = (<i>x</i> + 3)<sup>2</sup></span>.</p>
+      <div class="pq" data-correct="A"
+        data-hint="x<sup>2</sup> and 16 = 4<sup>2</sup> are squares. Is the middle 2 &middot; x &middot; 4 = 8x, and is it positive?">
+        <div class="qlab">Perfect square trinomial</div>
+        <div class="stem">What is the factored form of <span class="m"><i>x</i><sup>2</sup> + 8<i>x</i> + 16</span>?</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span><span class="m">(<i>x</i> + 4)<sup>2</sup></span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span><span class="m">(<i>x</i> &minus; 4)<sup>2</sup></span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span><span class="m">(<i>x</i> + 4)(<i>x</i> &minus; 4)</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span><span class="m">(<i>x</i> + 8)<sup>2</sup></span><span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body">
+          <div class="work">
+            <div class="step"><span class="n">1</span><span>Squares: <span class="m"><i>x</i><sup>2</sup></span> and <span class="m">16 = 4<sup>2</sup></span>. Roots <span class="m"><i>x</i></span> and <span class="m">4</span>.</span></div>
+            <div class="step"><span class="n">2</span><span>Middle check: <span class="m">2 &middot; <i>x</i> &middot; 4 = 8<i>x</i></span>, positive. Matches.</span></div>
+            <div class="step"><span class="n">3</span><span><span class="m">(<i>x</i> + 4)<sup>2</sup></span>. <strong>Choice A.</strong></span></div>
+          </div>
+        </div></div>
+      </div>
+    </section>
+
+    <!-- 20 FACTORING: PERFECT SQUARE NEGATIVE -->
+    <section class="slide" data-sec="Factoring">
+      <p class="eyebrow">Factoring method 4 &middot; perfect square, negative middle</p>
+      <h2 class="t">Same pattern, with a minus inside</h2>
+      <p><span class="m"><i>a</i><sup>2</sup> &minus; 2<i>ab</i> + <i>b</i><sup>2</sup> = (<i>a</i> &minus; <i>b</i>)<sup>2</sup></span>. &nbsp;Example: <span class="m"><i>x</i><sup>2</sup> &minus; 6<i>x</i> + 9 = (<i>x</i> &minus; 3)<sup>2</sup></span>.</p>
+      <div class="pq" data-correct="A"
+        data-hint="4x<sup>2</sup> = (2x)<sup>2</sup> and 9 = 3<sup>2</sup>. Is the middle 2 &middot; 2x &middot; 3 = 12x, and is it negative?">
+        <div class="qlab">Perfect square trinomial</div>
+        <div class="stem">What is the factored form of <span class="m">4<i>x</i><sup>2</sup> &minus; 12<i>x</i> + 9</span>?</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span><span class="m">(2<i>x</i> &minus; 3)<sup>2</sup></span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span><span class="m">(2<i>x</i> + 3)<sup>2</sup></span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span><span class="m">(4<i>x</i> &minus; 3)<sup>2</sup></span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span><span class="m">(2<i>x</i> &minus; 9)<sup>2</sup></span><span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body">
+          <div class="work">
+            <div class="step"><span class="n">1</span><span>Squares: <span class="m">4<i>x</i><sup>2</sup> = (2<i>x</i>)<sup>2</sup></span>, <span class="m">9 = 3<sup>2</sup></span>. Roots <span class="m">2<i>x</i></span> and <span class="m">3</span>.</span></div>
+            <div class="step"><span class="n">2</span><span>Middle: <span class="m">2 &middot; 2<i>x</i> &middot; 3 = 12<i>x</i></span>, and it is negative.</span></div>
+            <div class="step"><span class="n">3</span><span><span class="m">(2<i>x</i> &minus; 3)<sup>2</sup></span>. <strong>Choice A.</strong></span></div>
+          </div>
+        </div></div>
+      </div>
+    </section>
+
+    <!-- 21 FACTORING: BASIC TRINOMIAL -->
+    <section class="slide" data-sec="Factoring">
+      <p class="eyebrow">Factoring method 5 &middot; basic trinomial</p>
+      <h2 class="t">Find two numbers for <span class="m"><i>x</i><sup>2</sup> + <i>bx</i> + <i>c</i></span></h2>
+      <p>Two numbers that multiply to <span class="m"><i>c</i></span> and add to <span class="m"><i>b</i></span>. &nbsp;Example: <span class="m"><i>x</i><sup>2</sup> + 5<i>x</i> + 6 = (<i>x</i> + 2)(<i>x</i> + 3)</span>.</p>
+      <div class="pq" data-correct="A"
+        data-hint="Both c and b are positive, so both numbers are positive. Find two that multiply to 12 and add to 7.">
+        <div class="qlab">Basic trinomial</div>
+        <div class="stem">What is the factored form of <span class="m"><i>x</i><sup>2</sup> + 7<i>x</i> + 12</span>?</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span><span class="m">(<i>x</i> + 3)(<i>x</i> + 4)</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span><span class="m">(<i>x</i> &minus; 3)(<i>x</i> &minus; 4)</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span><span class="m">(<i>x</i> + 2)(<i>x</i> + 6)</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span><span class="m">(<i>x</i> + 1)(<i>x</i> + 12)</span><span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body">
+          <div class="work">
+            <div class="step"><span class="n">1</span><span>Need <span class="m"><i>mn</i> = 12</span>, <span class="m"><i>m</i> + <i>n</i> = 7</span>. Both positive.</span></div>
+            <div class="step"><span class="n">2</span><span><span class="m">3 &middot; 4 = 12</span> and <span class="m">3 + 4 = 7</span>. Match. (C adds to 8, D adds to 13.)</span></div>
+            <div class="step"><span class="n">3</span><span><span class="m">(<i>x</i> + 3)(<i>x</i> + 4)</span>. <strong>Choice A.</strong></span></div>
+          </div>
+        </div></div>
+      </div>
+    </section>
+
+    <!-- 22 FACTORING: AC METHOD -->
+    <section class="slide" data-sec="Factoring">
+      <p class="eyebrow">Factoring method 6 &middot; AC method</p>
+      <h2 class="t">When the leading coefficient is not 1</h2>
+      <p>For <span class="m"><i>ax</i><sup>2</sup> + <i>bx</i> + <i>c</i></span>: multiply <span class="m"><i>a</i> &middot; <i>c</i></span>, find two numbers that multiply to that and add to <span class="m"><i>b</i></span>, split the middle, then group.</p>
+      <div class="pq" data-correct="A"
+        data-hint="ac = 3 &middot; 8 = 24. Find two numbers that multiply to 24 and add to 10, then split the middle term.">
+        <div class="qlab">Leading coefficient not 1</div>
+        <div class="stem">What is the factored form of <span class="m">3<i>x</i><sup>2</sup> + 10<i>x</i> + 8</span>?</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span><span class="m">(3<i>x</i> + 4)(<i>x</i> + 2)</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span><span class="m">(3<i>x</i> + 2)(<i>x</i> + 4)</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span><span class="m">(3<i>x</i> + 8)(<i>x</i> + 1)</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span><span class="m">(<i>x</i> + 4)(3<i>x</i> &minus; 2)</span><span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body">
+          <div class="work">
+            <div class="step"><span class="n">1</span><span><span class="m"><i>ac</i> = 3 &middot; 8 = 24</span>. Two numbers multiply to <span class="m">24</span>, add to <span class="m">10</span>: <span class="m">4</span> and <span class="m">6</span>.</span></div>
+            <div class="step"><span class="n">2</span><span>Split: <span class="m">3<i>x</i><sup>2</sup> + 4<i>x</i> + 6<i>x</i> + 8</span>. Group: <span class="m"><i>x</i>(3<i>x</i> + 4) + 2(3<i>x</i> + 4)</span>.</span></div>
+            <div class="step"><span class="n">3</span><span><span class="m">(3<i>x</i> + 4)(<i>x</i> + 2)</span>. <strong>Choice A.</strong> Check by expanding: <span class="m">3<i>x</i><sup>2</sup> + 10<i>x</i> + 8</span>.</span></div>
+          </div>
+        </div></div>
+      </div>
+    </section>
+
+    <!-- 23 CHEAT SHEET -->
+    <section class="slide" data-sec="Cheat sheet">
+      <p class="eyebrow"><span class="star">&#10038;</span>&nbsp; Cheat sheet</p>
+      <h2 class="t">Factoring patterns, all in one place</h2>
+      <div class="sheet">
+        <div class="sheet-card">
+          <div class="lab">GCF first</div>
+          <div class="id"><i>ax</i> + <i>b</i> = <i>a</i>(<i>x</i> + ?)</div>
+          <div class="egm"><span class="m">6<i>x</i><sup>2</sup> + 15<i>x</i> = 3<i>x</i>(2<i>x</i> + 5)</span></div>
+        </div>
+        <div class="sheet-card">
+          <div class="lab">Difference of squares</div>
+          <div class="id"><i>a</i><sup>2</sup> &minus; <i>b</i><sup>2</sup> = (<i>a</i> &minus; <i>b</i>)(<i>a</i> + <i>b</i>)</div>
+          <div class="egm"><span class="m">9<i>x</i><sup>2</sup> &minus; 25 = (3<i>x</i> &minus; 5)(3<i>x</i> + 5)</span></div>
+        </div>
+        <div class="sheet-card">
+          <div class="lab">Perfect square &middot; positive</div>
+          <div class="id"><i>a</i><sup>2</sup> + 2<i>ab</i> + <i>b</i><sup>2</sup> = (<i>a</i> + <i>b</i>)<sup>2</sup></div>
+          <div class="egm"><span class="m"><i>x</i><sup>2</sup> + 8<i>x</i> + 16 = (<i>x</i> + 4)<sup>2</sup></span></div>
+        </div>
+        <div class="sheet-card">
+          <div class="lab">Perfect square &middot; negative</div>
+          <div class="id"><i>a</i><sup>2</sup> &minus; 2<i>ab</i> + <i>b</i><sup>2</sup> = (<i>a</i> &minus; <i>b</i>)<sup>2</sup></div>
+          <div class="egm"><span class="m">4<i>x</i><sup>2</sup> &minus; 12<i>x</i> + 9 = (2<i>x</i> &minus; 3)<sup>2</sup></span></div>
+        </div>
+        <div class="sheet-card">
+          <div class="lab">Basic trinomial</div>
+          <div class="id"><i>x</i><sup>2</sup> + <i>bx</i> + <i>c</i> = (<i>x</i> + <i>m</i>)(<i>x</i> + <i>n</i>)</div>
+          <div class="egm"><span class="m"><i>m</i> + <i>n</i> = <i>b</i></span>, &nbsp;<span class="m"><i>mn</i> = <i>c</i></span></div>
+        </div>
+        <div class="sheet-card">
+          <div class="lab">AC method</div>
+          <div class="id"><i>ax</i><sup>2</sup> + <i>bx</i> + <i>c</i></div>
+          <div class="egm">Split the middle with two numbers that multiply to <span class="m"><i>ac</i></span>, add to <span class="m"><i>b</i></span>, then group.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 24 CLOSE -->
+    <section class="slide dark" data-sec="Recap">
+      <p class="eyebrow">Run this every time</p>
+      <h2 class="t">The quadratic checklist</h2>
+      <ul class="uses">
+        <li><b>Simplify first.</b> If the <span class="m"><i>x</i><sup>2</sup></span> survives, it is quadratic.</li>
+        <li><b>If it is an equation,</b> set one side to zero before factoring.</li>
+        <li><b>Factor by pattern:</b> GCF, difference of squares, perfect square, basic trinomial, or AC method.</li>
+        <li><b>Expect up to two solutions,</b> and read the form for what the question wants.</li>
+        <li><b>Vertex form</b> for maximum or minimum, <b>factored form</b> for zeros, <b>standard form</b> for direction.</li>
+      </ul>
+    </section>
+
+  </div>
+</div>
+
+<div class="bar">
+  <button class="navbtn" id="prev" disabled>Back</button>
+  <div class="counter"><b id="cur">1</b> / <span id="total">1</span><span class="sec" id="sec">Overview</span></div>
+  <button class="navbtn" id="next">Next</button>
+</div>
+<div class="hintbar">Arrow keys to move &middot; <span class="star">&#10038;</span> Illuminairy</div>
+
+<script>
+if (new URLSearchParams(location.search).get('embed') === '1') {
+  document.body.classList.add('embed');
+}
+(function(){
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var idx=0;
+  var prev=document.getElementById('prev'), next=document.getElementById('next');
+  var cur=document.getElementById('cur'), sec=document.getElementById('sec'), progress=document.getElementById('progress');
+  document.getElementById('total').textContent=slides.length;
+  function show(n){
+    idx=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach(function(s,i){s.classList.toggle('active',i===idx);});
+    cur.textContent=idx+1;
+    sec.textContent=slides[idx].getAttribute('data-sec')||'';
+    prev.disabled=idx===0; next.disabled=idx===slides.length-1;
+    progress.style.width=((idx)/(slides.length-1)*100)+'%';
+    slides[idx].scrollTop=0;
+  }
+  prev.addEventListener('click',function(){show(idx-1);});
+  next.addEventListener('click',function(){show(idx+1);});
+  document.addEventListener('keydown',function(e){
+    var tag=(e.target.tagName||'').toLowerCase();
+    if(tag==='button')return;
+    if(e.key==='ArrowRight'||e.key==='PageDown'){show(idx+1);}
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){show(idx-1);}
+  });
+
+  document.querySelectorAll('.pq').forEach(function(pq){
+    var correct=pq.getAttribute('data-correct');
+    var opts=Array.prototype.slice.call(pq.querySelectorAll('.pq-opt'));
+    var hintBtn=pq.querySelector('[data-act="hint"]');
+    var checkBtn=pq.querySelector('[data-act="check"]');
+    var stepsBtn=pq.querySelector('[data-act="steps"]');
+    var resetBtn=pq.querySelector('[data-act="reset"]');
+    var hintPanel=pq.querySelector('.panel.hint');
+    var stepsPanel=pq.querySelector('.panel.steps');
+    var verdict=pq.querySelector('.verdict');
+    var selected=null, locked=false;
+
+    var hintBody=hintPanel.querySelector('.body');
+    hintBody.innerHTML='<p style="margin:0 0 8px;">'+(pq.getAttribute('data-hint')||'')+'</p>';
+
+    opts.forEach(function(opt){
+      opt.addEventListener('click',function(){
+        if(locked)return;
+        opts.forEach(function(o){o.classList.remove('sel');});
+        opt.classList.add('sel');
+        selected=opt.getAttribute('data-c');
+      });
+    });
+
+    hintBtn.addEventListener('click',function(){
+      var on=hintPanel.classList.toggle('show');
+      hintBtn.classList.toggle('on',on);
+    });
+    stepsBtn.addEventListener('click',function(){
+      var on=stepsPanel.classList.toggle('show');
+      stepsBtn.classList.toggle('on',on);
+    });
+
+    checkBtn.addEventListener('click',function(){
+      if(!selected){
+        verdict.className='verdict show wrong';
+        verdict.textContent='Pick an answer first.';
+        return;
+      }
+      locked=true;
+      var right=selected===correct;
+      opts.forEach(function(o){
+        o.disabled=true;o.classList.remove('sel');
+        var c=o.getAttribute('data-c');
+        if(c===correct){o.classList.add('correct');o.querySelector('.tick').textContent='Correct';}
+        else if(c===selected){o.classList.add('incorrect');o.querySelector('.tick').textContent='Your pick';}
+      });
+      verdict.className='verdict show '+(right?'right':'wrong');
+      verdict.textContent=right?'\u2736 Correct':'Not quite \u2736 the answer is '+correct;
+      resetBtn.hidden=false;
+    });
+
+    resetBtn.addEventListener('click',function(){
+      locked=false;selected=null;
+      opts.forEach(function(o){o.disabled=false;o.classList.remove('correct','incorrect','sel');o.querySelector('.tick').textContent='';});
+      verdict.className='verdict';verdict.textContent='';
+      resetBtn.hidden=true;
+    });
+  });
+
+  show(0);
+})();
+</script>
+</body>
+</html>

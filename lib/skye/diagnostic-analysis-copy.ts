@@ -340,12 +340,12 @@ export const MATH_WALKTHROUGH_ROWS: MathWalkthroughRow[] = [
     marked: "Marked III only; correct is I and III because 42 is also a solution",
   },
   {
-    question: "Q11 (M1, med) exponential growth",
-    how: "By hand: 1000=500·2^(3k), so 3k=1 and k=1/3; or test each value of k",
+    question: "Q11 (M1, med) nonlinear equation with a constant (y − 42)",
+    how: "Move all terms to one side, then test each statement by substituting the constant; 42 is a solution that is easy to skip",
     desmos: "No, by hand",
-    formulaNeeded: "Yes",
-    formulaName: "Exponential form (a·b^x)",
-    marked: "Marked k=3 (the doubling period from the story); correct is k=1/3",
+    formulaNeeded: "No",
+    formulaName: "",
+    marked: "Marked the wrong statement; correct includes the y = 42 solution",
   },
   {
     question: "Q13 (M1, med) circle, radians",

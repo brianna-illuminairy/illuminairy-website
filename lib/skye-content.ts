@@ -11,6 +11,10 @@ export const SKYE_FILE_MAP = {
   tabular: {
     filename: "diagnostic-tabular.pdf",
     contentType: "application/pdf"
+  },
+  "quadratics-lesson": {
+    filename: "quadratics-lesson.html",
+    contentType: "text/html; charset=utf-8"
   }
 } as const;
 
