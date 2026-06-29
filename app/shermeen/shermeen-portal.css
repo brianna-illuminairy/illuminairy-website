@@ -54,6 +54,25 @@
   margin: 0 0 16px;
 }
 
+.shermeen-week1__goals {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.shermeen-week1__inline-link {
+  color: var(--aurora-green, #2f6e47);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.shermeen-week1__inline-link:hover {
+  color: var(--aurora-forest, #1f4d33);
+}
+
 .shermeen-week1__slides-block {
   margin-top: 12px;
 }

@@ -63,7 +63,8 @@ export function ShermeenProfileContent() {
         <h2>Program plan</h2>
         <p className="skye-profile__section-lede">
           Phase 1 foundation cycle for Shermeen&apos;s longer SAT arc. Question-level detail is on the{" "}
-          <Link href="/shermeen/diagnostic">diagnostic analysis</Link> page.
+          <Link href="/shermeen/diagnostic">diagnostic analysis</Link> page. Week 1 lesson notes are on{" "}
+          <Link href="/shermeen/week-1">Week 1</Link>.
         </p>
         <dl className="skye-profile__timeline skye-profile__timeline--plan">
           {SHERMEEN_PROFILE.programPlan.map((row) => (

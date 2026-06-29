@@ -64,6 +64,11 @@ export function ShermeenPlanScheduleContent() {
                 <li>{weekSummary(week)}</li>
                 {week.volume ? <li>{week.volume}</li> : null}
               </ul>
+              {week.week === 1 ? (
+                <p className="skye-plan__topic-lesson-link">
+                  <Link href="/shermeen/week-1/lesson-1">Open transitions lesson →</Link>
+                </p>
+              ) : null}
               {week.week === 2 && week.skillId === "rw-transitions" ? (
                 <p className="skye-plan__topic-lesson-link">
                   <Link href="/shermeen/week-1/lesson-1">Open transitions lesson →</Link>
