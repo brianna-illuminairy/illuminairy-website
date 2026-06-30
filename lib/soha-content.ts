@@ -18,6 +18,12 @@ export const SOHA_FILE_MAP = {
   }
 } as const;
 
+export const SOHA_WEEKLY_REPORT_MAP = {
+  "week-1": "weekly-report-week-1.html"
+} as const;
+
+export type SohaWeeklyReportWeek = keyof typeof SOHA_WEEKLY_REPORT_MAP;
+
 export type SohaFileSlug = keyof typeof SOHA_FILE_MAP;
 
 export function readSohaFile(slug: SohaFileSlug) {
@@ -57,4 +63,9 @@ function readSohaHtmlDocument(filename: string) {
     styles: styleMatch?.[1]?.trim() ?? "",
     bodyHtml: bodyMatch?.[1]?.trim() ?? html
   };
+}
+
+export function readSohaWeeklyReportHtml(week: SohaWeeklyReportWeek) {
+  const filename = SOHA_WEEKLY_REPORT_MAP[week];
+  return readSohaHtmlDocument(filename);
 }

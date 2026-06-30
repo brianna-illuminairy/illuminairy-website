@@ -9,14 +9,32 @@ export const WEEK1_HOMEWORK_PORTAL_SETS: SohaHomeworkPortalSet[] = [
   {
     id: "transitions-1",
     title: "Transitions 1",
-    dueLabel: "Sunday, June 29",
-    note: "Complete after the flashcard deck hits 3 rounds in a row at 95%+. Finish before Transitions 2.",
+    dueLabel: "Completed Jun 25",
+    note: "Completed before Lesson 2. Log any misses in your Google Sheet.",
   },
   {
     id: "transitions-2",
     title: "Transitions 2",
-    dueLabel: "Before your next session",
-    note: "Complete after Transitions 1. Log every miss in your Google Sheet before we meet again.",
+    dueLabel: "Completed Jun 25",
+    note: "Completed before Lesson 2. We reviewed every miss in session.",
+  },
+  {
+    id: "transitions-3",
+    title: "Transitions 3 (timed)",
+    dueLabel: "Completed Jun 25",
+    note: "28/30 (93%) in session — 100% easy, ~95% medium/hard.",
+  },
+  {
+    id: "transitions-medium-hard",
+    title: "Transitions · medium & hard",
+    dueLabel: "Before Week 2",
+    note: "Assigned after the timed quiz. Finish before math-heavy Week 2.",
+  },
+  {
+    id: "equivalent-expressions-factoring",
+    title: "Equivalent expressions reps",
+    dueLabel: "Before Week 2 Session 1",
+    note: "Assigned after Lesson 3 — diagnostic-style factoring and EE problems.",
   },
 ];
 

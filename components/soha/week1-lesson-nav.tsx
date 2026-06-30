@@ -6,13 +6,28 @@ import { usePathname, useRouter } from "next/navigation";
 const LESSONS = [
   {
     href: "/soha/week-1/lesson-1",
-    label: "Lesson 1 · Wed Jun 24",
+    label: "Lesson 1 · Tue Jun 24",
     match: (path: string) => path.includes("/lesson-1"),
+  },
+  {
+    href: "/soha/week-1/lesson-2",
+    label: "Lesson 2 · Wed Jun 25",
+    match: (path: string) => path.includes("/lesson-2"),
+  },
+  {
+    href: "/soha/week-1/lesson-3",
+    label: "Lesson 3 · Sat Jun 28",
+    match: (path: string) => path.includes("/lesson-3"),
   },
   {
     href: "/soha/week-1/exercises",
     label: "Exercises",
     match: (path: string) => path.includes("/exercises"),
+  },
+  {
+    href: "/soha/week-1/report",
+    label: "Week 1 report",
+    match: (path: string) => path.includes("/report"),
   },
 ] as const;
 

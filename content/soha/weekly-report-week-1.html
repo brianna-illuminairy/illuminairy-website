@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Soha Naveed - Weekly Progress Report - Week 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,900&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#f5ecd9;
+    --paper:#fbf7ee;
+    --navy:#15203c;
+    --navy2:#1e2d52;
+    --ink:#1c2436;
+    --forest:#245741;
+    --forest-deep:#1b3f30;
+    --mint:#bfe3cc;
+    --mint-soft:#e4f1e8;
+    --tomato:#d8522e;
+    --muted:#73705f;
+    --line:#e3d8c1;
+    --line-soft:#ece2cd;
+  }
+
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;
+    background:var(--cream);
+    color:var(--ink);
+    font-family:'Space Grotesk',system-ui,sans-serif;
+    font-size:16px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .sheet{
+    max-width:860px;
+    margin:32px auto 64px;
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:22px;
+    overflow:hidden;
+    box-shadow:0 18px 50px -28px rgba(21,32,60,0.45);
+  }
+
+  /* ---------- Header ---------- */
+  .head{
+    position:relative;
+    background:var(--navy);
+    color:#f4efe2;
+    padding:38px 44px 34px;
+    overflow:hidden;
+  }
+  .constellation{position:absolute;inset:0;opacity:0.5;pointer-events:none;}
+  .head-inner{position:relative;z-index:1;}
+  .brandrow{
+    display:flex;align-items:center;gap:11px;
+    margin-bottom:30px;
+  }
+  .brandmark{color:var(--mint);font-size:18px;line-height:1;}
+  .brandname{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:700;letter-spacing:0.14em;text-transform:uppercase;
+    font-size:14px;color:#f4efe2;
+  }
+  .eyebrow{
+    font-family:'Space Mono',monospace;
+    text-transform:uppercase;letter-spacing:0.22em;
+    font-size:11px;color:var(--mint);
+    margin-bottom:10px;
+  }
+  .student{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:46px;line-height:1.02;
+    letter-spacing:-0.01em;
+    margin:0 0 14px;color:#fdfbf4;
+  }
+  .meta{
+    font-family:'Space Mono',monospace;
+    font-size:12.5px;color:#c7cedd;letter-spacing:0.02em;
+  }
+  .meta span{color:#7e8aa6;padding:0 8px;}
+
+  .status{
+    display:inline-flex;align-items:center;gap:9px;
+    margin-top:24px;
+    background:var(--mint-soft);
+    color:var(--forest-deep);
+    border-radius:999px;
+    padding:8px 16px 8px 12px;
+    font-weight:600;font-size:14px;
+  }
+  .status .dot{
+    width:9px;height:9px;border-radius:50%;
+    background:var(--forest);display:inline-block;
+  }
+
+  /* ---------- Stat band ---------- */
+  .stats{
+    display:grid;grid-template-columns:repeat(4,1fr);
+    border-bottom:1px solid var(--line);
+  }
+  .stat{
+    padding:26px 20px 24px;
+    text-align:center;
+    border-right:1px solid var(--line-soft);
+  }
+  .stat:last-child{border-right:none;}
+  .stat .num{
+    font-family:'Fraunces',serif;
+    font-weight:900;
+    font-size:38px;line-height:1;
+    color:var(--forest-deep);
+    letter-spacing:-0.02em;
+  }
+  .stat .lab{
+    font-family:'Space Mono',monospace;
+    text-transform:uppercase;letter-spacing:0.13em;
+    font-size:10.5px;color:var(--muted);
+    margin-top:10px;
+  }
+
+  /* ---------- Body ---------- */
+  .body{padding:14px 44px 8px;}
+
+  section{
+    padding:26px 0;
+    border-bottom:1px solid var(--line-soft);
+  }
+  section:last-of-type{border-bottom:none;}
+
+  .sec-label{
+    font-family:'Space Mono',monospace;
+    text-transform:uppercase;letter-spacing:0.18em;
+    font-size:11px;color:var(--forest);
+    margin-bottom:12px;
+    display:flex;align-items:center;gap:9px;
+  }
+  .sec-label::before{
+    content:"\2736";color:var(--mint);font-size:13px;
+  }
+  h2{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:700;font-size:22px;line-height:1.28;
+    margin:0 0 14px;color:var(--ink);letter-spacing:-0.005em;
+  }
+  p{margin:0 0 14px;}
+  p:last-child{margin-bottom:0;}
+  .lede{font-size:17px;}
+
+  ul{list-style:none;margin:6px 0 0;padding:0;}
+  li{
+    position:relative;
+    padding-left:26px;
+    margin-bottom:12px;
+    line-height:1.55;
+  }
+  li::before{
+    content:"\2736";
+    position:absolute;left:0;top:1px;
+    color:var(--forest);
+    font-size:13px;
+  }
+  li:last-child{margin-bottom:0;}
+  strong{font-weight:600;color:var(--ink);}
+
+  /* then vs now */
+  .compare{
+    display:grid;grid-template-columns:1fr auto 1fr;
+    align-items:center;gap:18px;
+    background:var(--mint-soft);
+    border:1px solid var(--mint);
+    border-radius:16px;
+    padding:22px 26px;
+    margin-top:4px;
+  }
+  .compare .cell{text-align:center;}
+  .compare .cnum{
+    font-family:'Fraunces',serif;font-weight:900;
+    font-size:40px;line-height:1;color:var(--forest-deep);
+  }
+  .compare .clab{
+    font-family:'Space Mono',monospace;font-size:10px;
+    text-transform:uppercase;letter-spacing:0.1em;
+    color:var(--muted);margin-top:8px;line-height:1.4;
+  }
+  .compare .arrow{
+    text-align:center;color:var(--tomato);
+    font-weight:700;font-size:15px;line-height:1.2;
+  }
+  .compare .arrow .delta{
+    display:block;font-family:'Space Mono',monospace;
+    font-size:11px;letter-spacing:0.04em;margin-top:4px;color:var(--forest);
+  }
+  .compare .arrow .glyph{font-size:22px;}
+
+  /* mastery / next chips */
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;}
+  .chip{
+    font-family:'Space Mono',monospace;font-size:11px;
+    letter-spacing:0.03em;
+    background:#fff;border:1px solid var(--line);
+    border-radius:999px;padding:6px 13px;color:var(--ink);
+  }
+  .chip.done{background:var(--mint-soft);border-color:var(--mint);color:var(--forest-deep);}
+  .chip.done::before{content:"\2713  ";color:var(--forest);font-weight:700;}
+
+  .plan-week{
+    border-left:2px solid var(--mint);
+    padding:2px 0 2px 18px;margin:16px 0;
+  }
+  .plan-when{
+    font-family:'Space Mono',monospace;font-size:11px;
+    text-transform:uppercase;letter-spacing:0.12em;color:var(--tomato);
+    margin-bottom:5px;
+  }
+  .plan-what{font-weight:600;margin-bottom:4px;}
+  .plan-note{color:var(--muted);font-size:14.5px;}
+
+  .callout{
+    background:var(--navy);color:#eef1f6;
+    border-radius:16px;padding:24px 28px;margin-top:4px;
+  }
+  .callout .sec-label{color:var(--mint);}
+  .callout .sec-label::before{color:var(--mint);}
+  .callout h2{color:#fdfbf4;}
+  .callout p{color:#d5dae6;margin-bottom:0;}
+
+  /* score trajectory line graph */
+  .traj{width:100%;height:auto;margin:20px 0 4px;display:block;}
+  .traj text{font-family:'Space Mono',monospace;}
+  .traj .t-yl{font-size:12px;fill:var(--muted);}
+  .traj .t-xl{font-size:12px;fill:var(--muted);letter-spacing:0.08em;}
+  .traj .t-today{font-size:10px;fill:var(--forest);letter-spacing:0.12em;}
+  .traj .t-pt{font-family:'Fraunces',serif;font-weight:600;font-size:15px;fill:var(--ink);}
+  .traj .t-pt.strong{font-size:18px;fill:var(--forest-deep);}
+  .traj .t-pt.goal{fill:var(--tomato);font-weight:700;}
+  .path-grid{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px;
+  }
+  .path-cell{
+    background:var(--mint-soft);border:1px solid var(--mint);border-radius:14px;
+    padding:16px 14px;text-align:center;
+  }
+  .path-cell .pnum{font-family:'Fraunces',serif;font-weight:900;font-size:28px;color:var(--forest-deep);line-height:1;}
+  .path-cell .plab{font-family:'Space Mono',monospace;font-size:10px;text-transform:uppercase;
+    letter-spacing:0.1em;color:var(--muted);margin-top:9px;line-height:1.4;}
+  .verdict{
+    margin-top:20px;border-left:3px solid var(--forest);padding:4px 0 4px 18px;
+  }
+  .verdict .vtag{
+    font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--forest-deep);
+  }
+  @media (max-width:680px){
+    .path-grid{grid-template-columns:1fr;}
+  }
+
+  footer{
+    padding:24px 44px 34px;
+    font-family:'Space Mono',monospace;
+    font-size:11px;color:var(--muted);letter-spacing:0.02em;
+    display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;
+    border-top:1px solid var(--line);
+  }
+  footer .star{color:var(--mint);}
+
+  .savebar{max-width:860px;margin:24px auto 0;text-align:right;padding:0 8px;}
+  .savebtn{
+    font-family:'Space Mono',monospace;font-size:12px;letter-spacing:0.05em;
+    background:var(--forest);color:#f4efe2;border:none;cursor:pointer;
+    padding:10px 18px;border-radius:999px;
+  }
+  .savebtn:hover{background:var(--forest-deep);}
+
+  @media (max-width:680px){
+    .sheet{margin:14px;border-radius:16px;}
+    .head{padding:30px 24px;}
+    .student{font-size:34px;}
+    .body{padding:6px 24px;}
+    .stats{grid-template-columns:repeat(2,1fr);}
+    .stat{border-bottom:1px solid var(--line-soft);}
+    .stat:nth-child(2){border-right:none;}
+    .compare{grid-template-columns:1fr;gap:14px;}
+    .compare .arrow .glyph{transform:rotate(90deg);display:inline-block;}
+    footer{padding:22px 24px;}
+  }
+
+  @media print{
+    body{background:#fff;}
+    .savebar{display:none;}
+    .sheet{box-shadow:none;border:none;margin:0;max-width:none;border-radius:0;}
+    section,.compare,.callout,.stat{break-inside:avoid;}
+    .head{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    .stat .num,.compare,.callout,.status,.chip.done{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  }
+</style>
+</head>
+<body>
+
+<div class="savebar">
+  <button class="savebtn" onclick="window.print()">Save as PDF</button>
+</div>
+
+<div class="sheet">
+
+  <!-- HEADER -->
+  <header class="head">
+    <svg class="constellation" viewBox="0 0 860 220" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <g>
+        <line x1="120" y1="48" x2="210" y2="92" stroke="#2c3a63" stroke-width="1"/>
+        <line x1="210" y1="92" x2="300" y2="60" stroke="#2c3a63" stroke-width="1"/>
+        <line x1="640" y1="150" x2="720" y2="110" stroke="#2c3a63" stroke-width="1"/>
+        <line x1="720" y1="110" x2="800" y2="158" stroke="#2c3a63" stroke-width="1"/>
+      </g>
+      <g fill="#a9c7b6">
+        <circle cx="120" cy="48" r="2.2"/>
+        <circle cx="210" cy="92" r="1.6"/>
+        <circle cx="300" cy="60" r="2.4"/>
+        <circle cx="640" cy="150" r="1.8"/>
+        <circle cx="720" cy="110" r="2.6"/>
+        <circle cx="800" cy="158" r="1.7"/>
+        <circle cx="430" cy="36" r="1.5"/>
+        <circle cx="520" cy="180" r="1.4"/>
+        <circle cx="70" cy="150" r="1.5"/>
+      </g>
+    </svg>
+    <div class="head-inner">
+      <div class="brandrow">
+        <span class="brandmark">&#10038;</span>
+        <span class="brandname">Illuminairy</span>
+      </div>
+      <div class="eyebrow">Weekly Progress Report</div>
+      <h1 class="student">Soha Naveed</h1>
+      <div class="meta">WEEK 1<span>/</span>JUNE 24 TO 28, 2026<span>/</span>GOAL: UPPER 1400S · AUG 22, 2026</div>
+      <div class="status"><span class="dot"></span>On track for her August 22 test date</div>
+    </div>
+  </header>
+
+  <!-- STAT BAND -->
+  <div class="stats">
+    <div class="stat"><div class="num">3</div><div class="lab">Sessions<br>this week</div></div>
+    <div class="stat"><div class="num">2+</div><div class="lab">Transition sets<br>completed</div></div>
+    <div class="stat"><div class="num">30</div><div class="lab">Timed quiz<br>questions</div></div>
+    <div class="stat"><div class="num">93%</div><div class="lab">Timed quiz<br>accuracy</div></div>
+  </div>
+
+  <div class="body">
+
+    <!-- OVERVIEW -->
+    <section>
+      <div class="sec-label">Overview</div>
+      <p class="lede">Soha is on track for her goal of reaching the upper 1400s on the August 22 test.
+      We estimate her score at about <strong>1390 to 1440</strong> today, up roughly <strong>10 to 15 points</strong>
+      from her June 17 practice test band of 1380 to 1430. She completed <strong>three tutoring sessions</strong>
+      and finished <strong>Transitions 1, Transitions 2, and a 30-question timed transition quiz</strong> (28 correct).
+      All three sessions focused on Reading and Writing transitions; the third session also previewed factoring and
+      equivalent expressions for Week 2. Transition accuracy moved from missing both transition questions on the
+      practice test to <strong>100% on easy</strong>, about <strong>95% on medium and hard</strong>, and
+      <strong>93% on the timed mixed quiz</strong>. Next week we shift to math: factoring, factor theorem, and
+      zero-product form, with homework reps on the diagnostic miss types she worked on Saturday.</p>
+    </section>
+
+    <!-- SCORE TRAJECTORY -->
+    <section>
+      <div class="sec-label">Score progression</div>
+      <h2>Estimated score today and the path to the upper 1400s</h2>
+      <p>Soha started in the <strong>1380 to 1430</strong> band on her June 17 practice test (670 to 690 Reading
+      and Writing, 710 to 740 Math). Week 1 targeted transitions because her easy Module 1 miss there cost more
+      points than any other single Reading and Writing error. Closing that gap plus solid medium and hard accuracy
+      should recover most of the 52 transition points on her improvement plan. We estimate a modest composite
+      lift this week and larger math gains once Week 2 factoring work is underway.</p>
+
+      <svg class="traj" viewBox="0 0 600 360" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Line graph projecting Soha's score from 1380-1430 on June 17 practice test to about 1390-1440 after Week 1, along a curve toward upper 1400s on August 22.">
+        <defs>
+          <linearGradient id="trajFill" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="var(--forest)" stop-opacity="0.16"/>
+            <stop offset="100%" stop-color="var(--forest)" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <g stroke="var(--line)" stroke-width="1">
+          <line x1="64" y1="66.5" x2="576" y2="66.5"/>
+          <line x1="64" y1="143.5" x2="576" y2="143.5"/>
+          <line x1="64" y1="220.5" x2="576" y2="220.5"/>
+          <line x1="64" y1="297.5" x2="576" y2="297.5"/>
+        </g>
+        <line x1="64" y1="336" x2="576" y2="336" stroke="var(--muted)" stroke-width="1"/>
+        <g class="t-yl">
+          <text x="56" y="70.5" text-anchor="end">1500</text>
+          <text x="56" y="147.5" text-anchor="end">1450</text>
+          <text x="56" y="224.5" text-anchor="end">1400</text>
+          <text x="56" y="301.5" text-anchor="end">1350</text>
+        </g>
+        <g class="t-xl">
+          <text x="100" y="353" text-anchor="middle">JUN 17</text>
+          <text x="200" y="353" text-anchor="middle">WK 1</text>
+          <text x="576" y="353" text-anchor="end">AUG 22</text>
+        </g>
+        <line x1="200" y1="42" x2="200" y2="336" stroke="var(--mint)" stroke-width="1.5" stroke-dasharray="3 4"/>
+        <text class="t-today" x="205" y="50" text-anchor="start">TODAY</text>
+        <path d="M84,220.5 L200,205.5 C320,120 450,90 576,74 L576,336 L84,336 Z" fill="url(#trajFill)"/>
+        <path d="M84,220.5 L200,205.5" fill="none" stroke="var(--forest)" stroke-width="3.5" stroke-linecap="round"/>
+        <path d="M200,205.5 C320,120 450,90 576,74" fill="none" stroke="var(--forest)" stroke-width="3" stroke-dasharray="2 7" stroke-linecap="round"/>
+        <circle cx="84" cy="220.5" r="6.5" fill="#fbf7ee" stroke="var(--forest)" stroke-width="3.5"/>
+        <circle cx="200" cy="205.5" r="7" fill="var(--forest)" stroke="#fbf7ee" stroke-width="2.5"/>
+        <circle cx="576" cy="74" r="7" fill="#fbf7ee" stroke="var(--tomato)" stroke-width="3.5"/>
+        <text class="t-pt" x="78" y="218" text-anchor="end">1380-1430</text>
+        <text class="t-pt strong" x="194" y="190" text-anchor="end">~1390-1440</text>
+        <text class="t-pt goal" x="576" y="62" text-anchor="end">UPPER 1400s</text>
+      </svg>
+
+      <div class="path-grid">
+        <div class="path-cell"><div class="pnum">~60-110</div><div class="plab">Points<br>to stretch goal</div></div>
+        <div class="path-cell"><div class="pnum">~8</div><div class="plab">Weeks<br>until test</div></div>
+        <div class="path-cell"><div class="pnum">52</div><div class="plab">Transition points<br>on plan</div></div>
+      </div>
+    </section>
+
+    <!-- WEEKLY SUMMARY -->
+    <section>
+      <div class="sec-label">Weekly summary</div>
+      <h2>Three sessions: transitions, then a math preview</h2>
+      <div class="plan-week">
+        <div class="plan-when">Session 1 · Tuesday, June 24</div>
+        <div class="plan-what">Portal setup + transitions lesson</div>
+        <div class="plan-note">We walked through both logins (Homework Portal and student portal), taught the
+        cover-the-blank method, covered all transition categories with live reps, and revisited her Module 1 easy
+        miss. Homework: mistake log, flashcard deck, Transitions 1 and 2.</div>
+      </div>
+      <div class="plan-week">
+        <div class="plan-when">Session 2 · Wednesday, June 25</div>
+        <div class="plan-what">Homework review + timed quiz</div>
+        <div class="plan-note">She completed Transitions 1 and 2 and we reviewed every miss — soft cause-and-effect
+        (consequentially vs likewise), addition traps (moreover), and contrast tip-offs (despite → nevertheless).
+        She then took the timed Transitions 3 quiz: <strong>28 of 30 correct (93%)</strong>, with misses on one
+        medium and one hard question.</div>
+      </div>
+      <div class="plan-week">
+        <div class="plan-when">Session 3 · Saturday, June 28</div>
+        <div class="plan-what">Transitions wrap + factoring preview</div>
+        <div class="plan-note">We reviewed her mistake log for the two quiz misses, closed out transitions, and
+        previewed Week 2 math: quadratics, the y − 42 diagnostic problem on a shared whiteboard, the 3x + k factor
+        problem, AC method, and factor theorem. She chose homework focused on diagnostic-style equivalent expression
+        reps rather than generic factoring drills.</div>
+      </div>
+    </section>
+
+    <!-- AHA MOMENTS -->
+    <section>
+      <div class="sec-label">Aha moments</div>
+      <h2>Skills that improved in sessions</h2>
+      <ul>
+        <li><strong>Naming the relationship before reading choices</strong> — contrast vs addition vs soft
+        cause-and-effect, instead of picking what sounds right in the blank.</li>
+        <li><strong>Soft cause-and-effect</strong> — Yeats’s mysticism influenced symbolic poetry; swap in “as a
+        result” vs “in the same way” to test.</li>
+        <li><strong>Tip-off words</strong> — despite/even though → contrast; as a result/because of → cause-and-effect;
+        also/another → addition; time cues → sequence.</li>
+        <li><strong>Module 1 transition miss</strong> — slow-down language plus opposite outcomes → in contrast,
+        not for example.</li>
+        <li><strong>y − 42 factoring</strong> — move to one side, split components, factor (y − 42) with a placeholder
+        1; do not cancel shared terms.</li>
+        <li><strong>3x + k factor problem</strong> — factor GCF 3x first (not x alone) to read k = 4 from the
+        factored form.</li>
+      </ul>
+    </section>
+
+    <!-- PRACTICE & HOMEWORK -->
+    <section>
+      <div class="sec-label">Practice &amp; homework</div>
+      <h2>What she completed and how she scored</h2>
+      <ul>
+        <li><strong>Transitions 1 and 2</strong> — completed before Session 2; misses reviewed in session (relationship
+        naming, not vocabulary).</li>
+        <li><strong>Transitions 3 timed quiz</strong> — <strong>28 of 30 correct (93% accuracy)</strong>; 100% on easy,
+        about 95% on medium and hard.</li>
+        <li><strong>Mistake log</strong> — assigned for all homework and quiz misses; reviewed live on June 28 for
+        Q15 (medium) and Q28 (hard).</li>
+        <li><strong>Flashcard deck</strong> — assigned (three rounds at 95%+ before problem sets); continue if not
+        yet at goal.</li>
+        <li><strong>Week 2 preview homework</strong> — equivalent expression / factoring reps assigned after Session 3
+        (~20–30 problems).</li>
+      </ul>
+      <div class="chips" style="margin-top:14px;">
+        <span class="chip done">Timed quiz: 28/30 (93%)</span>
+        <span class="chip done">Easy transitions: 100%</span>
+        <span class="chip done">Medium/hard: ~95%</span>
+      </div>
+    </section>
+
+    <!-- SKILLS & ACCURACY -->
+    <section>
+      <div class="sec-label">Skills &amp; accuracy</div>
+      <h2>Transitions: from two practice-test misses to quiz-ready</h2>
+      <div class="compare">
+        <div class="cell">
+          <div class="cnum">0/2</div>
+          <div class="clab">June 17 practice test<br>transition questions</div>
+        </div>
+        <div class="arrow">
+          <span class="glyph">&#8594;</span>
+          <span class="delta">+93%</span>
+        </div>
+        <div class="cell">
+          <div class="cnum">28/30</div>
+          <div class="clab">Timed mixed quiz<br>June 25</div>
+        </div>
+      </div>
+      <p style="margin-top:16px;">Her remaining transition misses are on medium and hard relationship nuance — not
+      vocabulary. Math preview on Saturday showed factoring rust on diagnostic-style problems; Week 2 will focus
+      there. Half of her math misses on the practice test were factoring-related, so this is the right next priority.</p>
+    </section>
+
+    <!-- WHAT'S NEXT -->
+    <section>
+      <div class="sec-label">What's next</div>
+      <h2>Week 2: factoring and equivalent expressions</h2>
+      <div class="plan-week">
+        <div class="plan-when">Week 2 · June 30 onward</div>
+        <div class="plan-what">Math — factoring, factor theorem, zero-product form</div>
+        <div class="plan-note">Three sessions on math setup: GCF, grouping, AC method, factor theorem, calculator vs
+        by-hand rules. Review homework misses from the equivalent expression reps assigned June 28.</div>
+      </div>
+      <ul>
+        <li>Finish any remaining medium/hard transition homework and keep logging misses.</li>
+        <li>Complete equivalent expression / factoring reps in the Homework Portal before Session 1.</li>
+        <li>Schedule Week 2 sessions on the calendar link (text reminders to Soha’s email).</li>
+      </ul>
+    </section>
+
+    <!-- BOTTOM LINE -->
+    <section>
+      <div class="callout">
+        <div class="sec-label">Bottom line</div>
+        <h2>On track</h2>
+        <p>After Week 1, Soha has a reliable transition method, strong easy accuracy, and quiz-level performance
+        on mixed difficulty. She is doing the homework, logging misses, and engaging well in live review. Week 2
+        moves to the math patterns that cost her the most points on the practice test.</p>
+      </div>
+    </section>
+
+  </div>
+
+  <footer>
+    <span><span class="star">&#10038;</span> Illuminairy SAT Tutoring</span>
+    <span>Prepared by Brianna Zajicek &middot; brianna@illuminairy.com</span>
+  </footer>
+
+</div>
+
+</body>
+</html>
