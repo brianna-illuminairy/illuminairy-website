@@ -2,14 +2,14 @@ import Link from "next/link";
 import { AgendaTable, SlideEmbed } from "@/components/skye/lesson-shared";
 import { SessionSummarySection } from "@/components/skye/session-summary-section";
 import {
-  SKYE_HOMEWORK_PORTAL_SETS,
   SKYE_LESSON_DECK_HREF,
   SKYE_WHITEBOARD_URL,
-  WEEK2_LESSON1,
-} from "@/lib/skye/session-notes/week2-lesson1";
+  WEEK1_LESSON2,
+  WEEK1_LESSON2_HOMEWORK_SETS,
+} from "@/lib/skye/session-notes/week1-lesson2";
 import { homeworkPortalLoginUrl } from "@/lib/internal-links";
 
-const LESSON1_AGENDA = [
+const LESSON2_AGENDA = [
   {
     time: "Start",
     segment: "Quadratics overview",
@@ -37,13 +37,13 @@ const LESSON1_AGENDA = [
   },
 ] as const;
 
-export function SkyeWeek2Lesson1Content() {
-  const session = WEEK2_LESSON1;
+export function SkyeWeek1Lesson2Content() {
+  const session = WEEK1_LESSON2;
 
   return (
     <div className="skye-lesson-deck">
       <header className="aurora-portal__page-head">
-        <p className="aurora-eyebrow">Illuminairy · Week 2 · Session 1</p>
+        <p className="aurora-eyebrow">Illuminairy · Week 1 · Session 2</p>
         <h1 className="aurora-portal__title">{session.title}</h1>
         <p className="aurora-portal__lede">
           {session.dateLabel} · Quadratics deck, M1Q11 on the whiteboard, and equivalent-expression
@@ -61,13 +61,13 @@ export function SkyeWeek2Lesson1Content() {
           <p className="skye-lesson-deck__note-label">Homework Portal</p>
           <h3 className="skye-lesson-deck__note-title">{session.homework.headline}</h3>
           <p className="skye-lesson-deck__focus">{session.homework.body}</p>
-          <ol className="skye-lesson-deck__homework-list">
-            {SKYE_HOMEWORK_PORTAL_SETS.map((set) => (
+          <ul className="skye-lesson-deck__homework-list">
+            {WEEK1_LESSON2_HOMEWORK_SETS.map((set) => (
               <li key={set.id}>
                 <strong>{set.title}</strong> — {set.note}
               </li>
             ))}
-          </ol>
+          </ul>
           <p className="skye-lesson-deck__habit">
             <a href={homeworkPortalLoginUrl} target="_blank" rel="noopener noreferrer">
               Open Homework Portal →
@@ -104,7 +104,7 @@ export function SkyeWeek2Lesson1Content() {
           </p>
         </div>
 
-        <AgendaTable rows={LESSON1_AGENDA} />
+        <AgendaTable rows={LESSON2_AGENDA} />
 
         <h3 className="skye-lesson-deck__slides-heading">Quadratics deck</h3>
         <p className="skye-lesson-deck__habit">
@@ -120,8 +120,6 @@ export function SkyeWeek2Lesson1Content() {
 
       <p className="skye-plan__foot-link">
         <Link href="/skye/week-1/lesson-1">Week 1 Session 1 · diagnostic review</Link>
-        {" · "}
-        <Link href="/skye/week-1/lesson-2">Week 1 Session 2 · equivalent expressions</Link>
         {" · "}
         <Link href="/skye/week-1/report">Week 1 progress report</Link>
         {" · "}

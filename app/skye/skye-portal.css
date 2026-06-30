@@ -1508,3 +1508,15 @@
 .skye-lesson-deck__habit a:hover {
   color: var(--aurora-green);
 }
+
+.skye-report-root {
+  max-width: 920px;
+  margin: 0 auto;
+}
+
+.skye-report-root .savebar {
+  max-width: 860px;
+  margin: 0 auto 12px;
+  text-align: right;
+  padding: 0 8px;
+}

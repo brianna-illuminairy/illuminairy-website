@@ -95,9 +95,17 @@ export function SkyePlanSkillContent() {
                   </ul>
                 ) : null}
                 {week.week === 1 && week.phase === "diagnostic" ? (
-                  <p className="skye-plan__topic-lesson-link">
-                    <Link href="/skye/week-1/lesson-1">Open diagnostic review notes →</Link>
-                  </p>
+                  <>
+                    <p className="skye-plan__topic-lesson-link">
+                      <Link href="/skye/week-1/lesson-1">Session 1 · diagnostic review →</Link>
+                    </p>
+                    <p className="skye-plan__topic-lesson-link">
+                      <Link href="/skye/week-1/lesson-2">Session 2 · equivalent expressions →</Link>
+                    </p>
+                    <p className="skye-plan__topic-lesson-link">
+                      <Link href="/skye/week-1/report">Week 1 progress report (parents) →</Link>
+                    </p>
+                  </>
                 ) : null}
                 {week.week === 2 && week.skillId === "math-nonlinear" ? (
                   <p className="skye-plan__topic-lesson-link">

@@ -1,4 +1,4 @@
-/** Week 2 Session 1 — June 29, 2026 (from Meet transcript). */
+/** Week 1 Session 2 — June 29, 2026 (from Meet transcript). */
 
 export type SkyeHomeworkPortalSet = {
   id: string;
@@ -6,7 +6,7 @@ export type SkyeHomeworkPortalSet = {
   note: string;
 };
 
-export const SKYE_HOMEWORK_PORTAL_SETS: SkyeHomeworkPortalSet[] = [
+export const WEEK1_LESSON2_HOMEWORK_SETS: SkyeHomeworkPortalSet[] = [
   {
     id: "equivalent-expressions-1",
     title: "Equivalent Expressions 1 (easy)",
@@ -19,7 +19,7 @@ export const SKYE_HOMEWORK_PORTAL_SETS: SkyeHomeworkPortalSet[] = [
   },
 ];
 
-export const WEEK2_LESSON1 = {
+export const WEEK1_LESSON2 = {
   dateLabel: "Monday, June 29",
   title: "Nonlinear & quadratic equations · equivalent expressions",
   summary:
@@ -30,7 +30,7 @@ export const WEEK2_LESSON1 = {
     "She already uses the AC method; we reinforced it on x² + 5x − 24 and leading-coefficient trinomials.",
     "Parabola opens down when a < 0 (maximum); vertex form (x − h)² + k gives the min/max directly (e.g. minimum 7 at vertex (4, 7)).",
     "Factored form shows zeros fastest; watch SAT traps where x² cancels and the equation is not quadratic.",
-    "M1Q11: factor (y − 42) from both components — include negative signs when splitting; solutions y = 42 and y = 1 − c. “Not that bad — just follow the steps.”",
+    "M1Q11: factor (y − 42) from both components — include negative signs when splitting; solutions y = 42 and y = 1 − c.",
     "When a factor like 3x + k is given, read k from factored form (k = 4) instead of solving all the way to x.",
     "Difference of squares: (2x − 7)² − 36 → (2x − 7 ± 6) — faster than expanding into a trinomial.",
     "FOIL shortcut: F → x² term, O + I → middle, L → constant; if both forms are given, match unknowns through F, O+I, L.",
@@ -40,21 +40,15 @@ export const WEEK2_LESSON1 = {
   homework: {
     headline: "Homework Portal · Equivalent Expressions 1 & 2",
     body:
-      "Skye completed both sets after this session — 26 of 30 correct overall (86.7%). Next session we review her misses.",
+      "Two problem sets assigned at the end of session. Skye completed both before the Week 1 report — 26 of 30 correct overall (86.7%).",
   },
   nextSession: {
-    headline: "Next session",
+    headline: "Week 2 · Session 1",
     body:
-      "We will work through any problems you got incorrect or skipped from Equivalent Expressions 1 and 2. Come ready to name the pattern, walk the method, and redo missed questions on the whiteboard.",
+      "We will work through any problems she got incorrect or skipped from Equivalent Expressions 1 and 2. Come ready to name the pattern, walk the method, and redo missed questions on the whiteboard.",
   },
 };
 
 export const SKYE_LESSON_DECK_HREF = "/skye/files/quadratics-lesson";
 export const SKYE_WHITEBOARD_URL =
   "https://link.excalidraw.com/l/A4T4CdBzqDH/5FcyM67mE1R";
-
-/** @deprecated Use WEEK2_LESSON1 — kept for imports during migration */
-export const POST_SESSION_1_SUMMARY = WEEK2_LESSON1.summary;
-export const POST_SESSION_1_WINS = WEEK2_LESSON1.wins;
-export const POST_SESSION_1_HOMEWORK = WEEK2_LESSON1.homework;
-export const POST_SESSION_1_NEXT_SESSION = WEEK2_LESSON1.nextSession;

@@ -27,15 +27,19 @@ export function SkyeWeek1Lesson1Content() {
           <h3 className="skye-lesson-deck__note-title">Skill lessons begin</h3>
           <p className="skye-lesson-deck__focus">{session.nextSessionNote}</p>
           <p className="skye-lesson-deck__habit">
-            <Link href="/skye/week-2/lesson-1" className="skye-lesson-deck__inline-link">
-              Week 2 Session 1 lesson →
+            <Link href="/skye/week-1/lesson-2" className="skye-lesson-deck__inline-link">
+              Week 1 Session 2 lesson →
             </Link>
           </p>
         </div>
       </SessionSummarySection>
 
       <p className="skye-plan__foot-link">
-        <Link href="/skye/getting-started">Pre-diagnostic orientation</Link>
+        <Link href="/skye/week-1/lesson-1">Week 1 Session 1 · diagnostic review</Link>
+        {" · "}
+        <Link href="/skye/week-1/lesson-2">Week 1 Session 2 · equivalent expressions</Link>
+        {" · "}
+        <Link href="/skye/week-1/report">Week 1 progress report</Link>
         {" · "}
         <Link href="/skye/diagnostic">Diagnostic analysis</Link>
         {" · "}
