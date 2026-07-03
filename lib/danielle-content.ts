@@ -44,17 +44,22 @@ export const DANIELLE_FILE_MAP = {
     filename: "weekly-report-week-2.html",
     contentType: "text/html; charset=utf-8"
   },
+  "weekly-report-week-3": {
+    filename: "weekly-report-week-3.html",
+    contentType: "text/html; charset=utf-8"
+  },
   "equivalent-expressions-slides": {
     filename: "equivalent-expressions-slides.html",
     contentType: "text/html; charset=utf-8"
   }
 } as const;
 
-export type DanielleWeeklyReportWeek = "week-1" | "week-2";
+export type DanielleWeeklyReportWeek = "week-1" | "week-2" | "week-3";
 
 const WEEKLY_REPORT_FILES: Record<DanielleWeeklyReportWeek, string> = {
   "week-1": "weekly-report-week-1.html",
-  "week-2": "weekly-report-week-2.html"
+  "week-2": "weekly-report-week-2.html",
+  "week-3": "weekly-report-week-3.html"
 };
 
 export type DanielleFileSlug = keyof typeof DANIELLE_FILE_MAP;

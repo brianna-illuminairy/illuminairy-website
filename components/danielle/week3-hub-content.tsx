@@ -87,6 +87,18 @@ export function DanielleWeek3HubContent() {
       </section>
 
       <section className="danielle-week1__section">
+        <h2 className="danielle-week1__heading">Week 3 progress report</h2>
+        <p className="danielle-week1__focus">
+          Your Week 3 summary (June 23 to 30) is on the portal, including equivalent expressions
+          sessions, hard transitions and math homework, and the plan for next week.
+        </p>
+        <Link href="/danielle/week-3/report" className="danielle-portal__link-card">
+          <h2>Week 3 report · Jun 23 to 30</h2>
+          <p>1220 estimated score (+10 this week), 119 practice problems, and command of evidence up next.</p>
+        </Link>
+      </section>
+
+      <section className="danielle-week1__section">
         <h2 className="danielle-week1__heading">Week 3 lessons</h2>
         <div className="danielle-week1__lesson-links">
           <Link href="/danielle/week-3/lesson-1" className="danielle-portal__link-card">

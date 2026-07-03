@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Danielle Danso - Weekly Progress Report - Week 3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,900&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#f5ecd9;
+    --paper:#fbf7ee;
+    --navy:#15203c;
+    --navy2:#1e2d52;
+    --ink:#1c2436;
+    --forest:#245741;
+    --forest-deep:#1b3f30;
+    --mint:#bfe3cc;
+    --mint-soft:#e4f1e8;
+    --tomato:#d8522e;
+    --muted:#73705f;
+    --line:#e3d8c1;
+    --line-soft:#ece2cd;
+  }
+
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;
+    background:var(--cream);
+    color:var(--ink);
+    font-family:'Space Grotesk',system-ui,sans-serif;
+    font-size:16px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .sheet{
+    max-width:860px;
+    margin:32px auto 64px;
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:22px;
+    overflow:hidden;
+    box-shadow:0 18px 50px -28px rgba(21,32,60,0.45);
+  }
+
+  /* ---------- Header ---------- */
+  .head{
+    position:relative;
+    background:var(--navy);
+    color:#f4efe2;
+    padding:38px 44px 34px;
+    overflow:hidden;
+  }
+  .constellation{position:absolute;inset:0;opacity:0.5;pointer-events:none;}
+  .head-inner{position:relative;z-index:1;}
+  .brandrow{
+    display:flex;align-items:center;gap:11px;
+    margin-bottom:30px;
+  }
+  .brandmark{color:var(--mint);font-size:18px;line-height:1;}
+  .brandname{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:700;letter-spacing:0.14em;text-transform:uppercase;
+    font-size:14px;color:#f4efe2;
+  }
+  .eyebrow{
+    font-family:'Space Mono',monospace;
+    text-transform:uppercase;letter-spacing:0.22em;
+    font-size:11px;color:var(--mint);
+    margin-bottom:10px;
+  }
+  .student{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:46px;line-height:1.02;
+    letter-spacing:-0.01em;
+    margin:0 0 14px;color:#fdfbf4;
+  }
+  .meta{
+    font-family:'Space Mono',monospace;
+    font-size:12.5px;color:#c7cedd;letter-spacing:0.02em;
+  }
+  .meta span{color:#7e8aa6;padding:0 8px;}
+
+  .status{
+    display:inline-flex;align-items:center;gap:9px;
+    margin-top:24px;
+    background:var(--mint-soft);
+    color:var(--forest-deep);
+    border-radius:999px;
+    padding:8px 16px 8px 12px;
+    font-weight:600;font-size:14px;
+  }
+  .status .dot{
+    width:9px;height:9px;border-radius:50%;
+    background:var(--forest);display:inline-block;
+  }
+
+  /* ---------- Stat band ---------- */
+  .stats{
+    display:grid;grid-template-columns:repeat(4,1fr);
+    border-bottom:1px solid var(--line);
+  }
+  .stat{
+    padding:26px 20px 24px;
+    text-align:center;
+    border-right:1px solid var(--line-soft);
+  }
+  .stat:last-child{border-right:none;}
+  .stat .num{
+    font-family:'Fraunces',serif;
+    font-weight:900;
+    font-size:38px;line-height:1;
+    color:var(--forest-deep);
+    letter-spacing:-0.02em;
+  }
+  .stat .lab{
+    font-family:'Space Mono',monospace;
+    text-transform:uppercase;letter-spacing:0.13em;
+    font-size:10.5px;color:var(--muted);
+    margin-top:10px;
+  }
+
+  /* ---------- Body ---------- */
+  .body{padding:14px 44px 8px;}
+
+  section{
+    padding:26px 0;
+    border-bottom:1px solid var(--line-soft);
+  }
+  section:last-of-type{border-bottom:none;}
+
+  .sec-label{
+    font-family:'Space Mono',monospace;
+    text-transform:uppercase;letter-spacing:0.18em;
+    font-size:11px;color:var(--forest);
+    margin-bottom:12px;
+    display:flex;align-items:center;gap:9px;
+  }
+  .sec-label::before{
+    content:"\2736";color:var(--mint);font-size:13px;
+  }
+  h2{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:700;font-size:22px;line-height:1.28;
+    margin:0 0 14px;color:var(--ink);letter-spacing:-0.005em;
+  }
+  p{margin:0 0 14px;}
+  p:last-child{margin-bottom:0;}
+  .lede{font-size:17px;}
+  .overview p{font-size:16px;line-height:1.6;margin:0 0 12px;}
+  .overview p:last-child{margin-bottom:0;}
+  .session-label{
+    font-family:'Space Mono',monospace;font-size:11px;text-transform:uppercase;
+    letter-spacing:0.12em;color:var(--tomato);margin:20px 0 10px;
+  }
+  .session-label:first-of-type{margin-top:0;}
+
+  ul{list-style:none;margin:6px 0 0;padding:0;}
+  li{
+    position:relative;
+    padding-left:26px;
+    margin-bottom:12px;
+    line-height:1.55;
+  }
+  li::before{
+    content:"\2736";
+    position:absolute;left:0;top:1px;
+    color:var(--forest);
+    font-size:13px;
+  }
+  li:last-child{margin-bottom:0;}
+  strong{font-weight:600;color:var(--ink);}
+
+  /* then vs now */
+  .compare{
+    display:grid;grid-template-columns:1fr auto 1fr;
+    align-items:center;gap:18px;
+    background:var(--mint-soft);
+    border:1px solid var(--mint);
+    border-radius:16px;
+    padding:22px 26px;
+    margin-top:4px;
+  }
+  .compare .cell{text-align:center;}
+  .compare .cnum{
+    font-family:'Fraunces',serif;font-weight:900;
+    font-size:40px;line-height:1;color:var(--forest-deep);
+  }
+  .compare .clab{
+    font-family:'Space Mono',monospace;font-size:10px;
+    text-transform:uppercase;letter-spacing:0.1em;
+    color:var(--muted);margin-top:8px;line-height:1.4;
+  }
+  .compare .arrow{
+    text-align:center;color:var(--tomato);
+    font-weight:700;font-size:15px;line-height:1.2;
+  }
+  .compare .arrow .delta{
+    display:block;font-family:'Space Mono',monospace;
+    font-size:11px;letter-spacing:0.04em;margin-top:4px;color:var(--forest);
+  }
+  .compare .arrow .glyph{font-size:22px;}
+
+  /* mastery / next chips */
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;}
+  .chip{
+    font-family:'Space Mono',monospace;font-size:11px;
+    letter-spacing:0.03em;
+    background:#fff;border:1px solid var(--line);
+    border-radius:999px;padding:6px 13px;color:var(--ink);
+  }
+  .chip.done{background:var(--mint-soft);border-color:var(--mint);color:var(--forest-deep);}
+  .chip.done::before{content:"\2713  ";color:var(--forest);font-weight:700;}
+
+  .plan-week{
+    border-left:2px solid var(--mint);
+    padding:2px 0 2px 18px;margin:16px 0;
+  }
+  .plan-when{
+    font-family:'Space Mono',monospace;font-size:11px;
+    text-transform:uppercase;letter-spacing:0.12em;color:var(--tomato);
+    margin-bottom:5px;
+  }
+  .plan-what{font-weight:600;margin-bottom:4px;}
+  .plan-note{color:var(--muted);font-size:14.5px;}
+
+  .callout{
+    background:var(--navy);color:#eef1f6;
+    border-radius:16px;padding:24px 28px;margin-top:4px;
+  }
+  .callout .sec-label{color:var(--mint);}
+  .callout .sec-label::before{color:var(--mint);}
+  .callout h2{color:#fdfbf4;}
+  .callout p{color:#d5dae6;margin-bottom:0;}
+
+  /* score trajectory line graph */
+  .traj{width:100%;height:auto;margin:20px 0 4px;display:block;}
+  .traj text{font-family:'Space Mono',monospace;}
+  .traj .t-yl{font-size:12px;fill:var(--muted);}
+  .traj .t-xl{font-size:12px;fill:var(--muted);letter-spacing:0.08em;}
+  .traj .t-today{font-size:10px;fill:var(--forest);letter-spacing:0.12em;}
+  .traj .t-pt{font-family:'Fraunces',serif;font-weight:600;font-size:15px;fill:var(--ink);}
+  .traj .t-pt.strong{font-size:18px;fill:var(--forest-deep);}
+  .traj .t-pt.goal{fill:var(--tomato);font-weight:700;}
+  .traj .t-axis{font-size:11px;fill:var(--muted);letter-spacing:0.08em;}
+  .path-grid{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px;
+  }
+  .path-cell{
+    background:var(--mint-soft);border:1px solid var(--mint);border-radius:14px;
+    padding:16px 14px;text-align:center;
+  }
+  .path-cell .pnum{font-family:'Fraunces',serif;font-weight:900;font-size:28px;color:var(--forest-deep);line-height:1;}
+  .path-cell .plab{font-family:'Space Mono',monospace;font-size:10px;text-transform:uppercase;
+    letter-spacing:0.1em;color:var(--muted);margin-top:9px;line-height:1.4;}
+  .verdict{
+    margin-top:20px;border-left:3px solid var(--forest);padding:4px 0 4px 18px;
+  }
+  .verdict .vtag{
+    font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--forest-deep);
+  }
+
+  /* parent-friendly progress charts */
+  .viz-intro{font-size:17px;margin-bottom:4px;}
+  .viz-note{font-size:14px;color:var(--muted);margin-bottom:16px;}
+
+  .score-bars{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:8px;
+  }
+  .score-col{
+    background:#fff;border:1px solid var(--line);border-radius:14px;
+    padding:16px 14px 14px;text-align:center;
+  }
+  .score-col.highlight{border-color:var(--forest);background:var(--mint-soft);}
+  .score-col.goal{border-color:var(--tomato);background:#fff8f5;}
+  .score-col .slab{
+    font-family:'Space Mono',monospace;font-size:10px;text-transform:uppercase;
+    letter-spacing:0.1em;color:var(--muted);margin-bottom:10px;line-height:1.4;
+  }
+  .score-col .snum{
+    font-family:'Fraunces',serif;font-weight:900;font-size:32px;line-height:1;
+    color:var(--forest-deep);margin-bottom:12px;
+  }
+  .score-col.goal .snum{color:var(--tomato);}
+  .score-vbar{
+    width:100%;max-width:72px;height:120px;margin:0 auto;
+    background:var(--line-soft);border-radius:10px;position:relative;overflow:hidden;
+  }
+  .score-vfill{
+    position:absolute;bottom:0;left:0;right:0;border-radius:0 0 10px 10px;
+    background:var(--forest);
+  }
+  .score-col.goal .score-vfill{background:var(--tomato);opacity:0.35;}
+  .score-col .scap{font-size:12px;color:var(--muted);margin-top:10px;line-height:1.35;}
+
+  .skill-panel{
+    background:#fff;border:1px solid var(--line);border-radius:16px;
+    padding:20px 22px;margin-top:10px;
+  }
+  .skill-row{padding:18px 0;border-bottom:1px solid var(--line-soft);}
+  .skill-row:first-child{padding-top:4px;}
+  .skill-row:last-child{border-bottom:none;padding-bottom:4px;}
+  .skill-name{font-weight:600;font-size:16px;margin-bottom:2px;}
+  .skill-plain{font-size:14px;color:var(--muted);margin-bottom:12px;line-height:1.45;}
+  .skill-foot{
+    margin-top:10px;font-size:13.5px;padding:10px 12px;border-radius:10px;
+    background:var(--mint-soft);color:var(--forest-deep);line-height:1.45;
+  }
+  .skill-foot.warn{background:#fceee8;color:#8a3b24;}
+
+  .plan-meter{margin-top:10px;}
+  .plan-meter-top{
+    display:flex;justify-content:space-between;align-items:baseline;
+    margin-bottom:10px;flex-wrap:wrap;gap:8px;
+  }
+  .plan-meter-big{
+    font-family:'Fraunces',serif;font-weight:900;font-size:28px;color:var(--forest-deep);
+  }
+  .plan-meter-sub{font-size:14px;color:var(--muted);}
+  .plan-meter-track{
+    height:32px;background:var(--line-soft);border-radius:999px;
+    overflow:hidden;border:1px solid var(--line);
+  }
+  .plan-meter-fill{
+    height:100%;width:18.2%;min-width:88px;
+    background:linear-gradient(90deg,var(--forest),#3a8f6a);
+    border-radius:999px;display:flex;align-items:center;justify-content:center;
+    font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:#fff;
+  }
+  .plan-skills{
+    display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:16px;
+  }
+  .plan-skill{
+    display:flex;align-items:flex-start;gap:10px;padding:12px 14px;
+    border-radius:12px;border:1px solid var(--line);background:#fff;font-size:13.5px;line-height:1.4;
+  }
+  .plan-skill.done{background:var(--mint-soft);border-color:var(--mint);}
+  .plan-skill.active{background:#fff9ec;border-color:#e8d4a8;}
+  .plan-skill .ps-icon{
+    font-family:'Space Mono',monospace;font-size:11px;font-weight:700;
+    min-width:22px;color:var(--forest);
+  }
+  .plan-skill.active .ps-icon{color:var(--tomato);}
+  .plan-skill .ps-later{color:var(--muted);font-size:13px;}
+
+  .trend-chart{margin-top:12px;}
+
+  /* SVG data charts (vertical bars, lines — no horizontal progress strips) */
+  .chart-wrap{
+    background:#fff;border:1px solid var(--line);border-radius:16px;
+    padding:16px 12px 8px;margin-top:10px;
+  }
+  .chart-svg{width:100%;height:auto;display:block;}
+  .chart-svg text{font-family:'Space Mono',monospace;}
+  .chart-svg .c-axis{stroke:var(--line);stroke-width:1;}
+  .chart-svg .c-grid{stroke:var(--line-soft);stroke-width:1;}
+  .chart-svg .c-yl{font-size:11px;fill:var(--muted);}
+  .chart-svg .c-xl{font-size:10px;fill:var(--muted);letter-spacing:0.04em;}
+  .chart-svg .c-val{
+    font-family:'Fraunces',serif;font-size:14px;font-weight:700;fill:var(--forest-deep);
+  }
+  .chart-svg .c-val.warn{fill:var(--tomato);}
+  .chart-svg .c-val.muted{fill:var(--muted);font-size:12px;}
+  .chart-svg .c-bar{rx:6;}
+  .chart-svg .c-bar.before{fill:#d4c4a8;}
+  .chart-svg .c-bar.after{fill:var(--forest);}
+  .chart-svg .c-bar.warn{fill:var(--tomato);}
+  .chart-svg .c-bar.pending{fill:#c8bfb0;}
+  .chart-svg .c-bar.dim{fill:#9bb5a8;}
+  .chart-svg .c-bar.goal{fill:var(--tomato);opacity:0.28;}
+  .chart-svg .c-line{
+    fill:none;stroke:var(--forest);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;
+  }
+  .chart-svg .c-dot{fill:var(--forest);stroke:#fbf7ee;stroke-width:2;}
+  .chart-svg .c-dot.current{fill:var(--forest);stroke:var(--mint);stroke-width:3;}
+  .chart-svg .c-goal{
+    stroke:var(--tomato);stroke-width:1.5;stroke-dasharray:5 4;opacity:0.85;
+  }
+  .chart-svg .c-goal-label{font-size:9px;fill:var(--tomato);letter-spacing:0.06em;}
+  .chart-caption{font-size:13px;color:var(--muted);margin-top:8px;line-height:1.45;}
+
+  .skill-chart{margin-top:14px;}
+  .skill-chart .chart-wrap{padding:12px 10px 6px;}
+
+  .hw-panel{
+    background:#fff;border:1px solid var(--line);border-radius:16px;
+    padding:18px 20px;margin-top:10px;
+  }
+  .hw-row{
+    display:grid;grid-template-columns:1fr auto;gap:8px 14px;
+    align-items:center;padding:12px 0;border-bottom:1px solid var(--line-soft);
+  }
+  .hw-row:last-child{border-bottom:none;padding-bottom:0;}
+  .hw-name{font-weight:600;font-size:14.5px;line-height:1.35;}
+  .hw-sub{font-size:13px;color:var(--muted);margin-top:2px;}
+  .hw-pct{
+    font-family:'Fraunces',serif;font-weight:900;font-size:22px;line-height:1;
+    color:var(--forest-deep);text-align:right;
+  }
+  .hw-pct.warn{color:var(--tomato);}
+  .hw-pct.pending{
+    color:var(--muted);font-size:16px;font-family:'Space Mono',monospace;font-weight:600;
+  }
+  .hw-meta{display:flex;flex-direction:column;align-items:flex-end;gap:6px;}
+  .hw-acc{
+    font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.02em;
+    color:var(--muted);text-align:right;line-height:1.35;
+  }
+  .hw-group-label{
+    font-family:'Space Mono',monospace;font-size:11px;text-transform:uppercase;
+    letter-spacing:0.12em;color:var(--tomato);margin:4px 0 10px;
+  }
+  .hw-group-label:not(:first-child){margin-top:20px;}
+  .hw-badge{
+    font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.04em;
+    padding:5px 10px;border-radius:999px;white-space:nowrap;
+  }
+  .hw-badge.done{background:var(--mint-soft);color:var(--forest-deep);}
+  .hw-badge.progress{background:#fff9ec;color:#8a5a12;}
+  .hw-badge.pending{background:var(--line-soft);color:var(--muted);}
+
+  .compact-list{margin-top:8px;}
+  .compact-list li{margin-bottom:10px;font-size:15px;}
+
+  .score-callout{
+    background:var(--mint-soft);border:1px solid var(--mint);border-radius:16px;
+    padding:20px 22px;margin-top:10px;
+  }
+  .score-callout p{font-size:15px;line-height:1.55;margin-bottom:12px;}
+  .score-callout p:last-child{margin-bottom:0;}
+  .score-headline{
+    font-family:'Fraunces',serif;font-weight:700;font-size:20px;line-height:1.45;
+    color:var(--forest-deep);margin:0 0 14px;
+  }
+  .score-headline .arrow{color:var(--muted);font-weight:600;padding:0 6px;}
+  .route-grid{
+    display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:14px;
+  }
+  .route-cell{
+    background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;
+  }
+  .route-cell .rlab{
+    font-family:'Space Mono',monospace;font-size:10px;text-transform:uppercase;
+    letter-spacing:0.08em;color:var(--muted);margin-bottom:6px;
+  }
+  .route-cell .rnum{font-family:'Fraunces',serif;font-weight:900;font-size:26px;color:var(--forest-deep);}
+  .route-cell .rcap{font-size:13px;color:var(--muted);margin-top:6px;line-height:1.4;}
+
+  .plan-track{
+    background:#fff;border:1px solid var(--line);border-radius:16px;
+    overflow:hidden;margin-top:12px;
+  }
+  .plan-track-row{
+    display:grid;grid-template-columns:36px 1fr 56px 72px 96px;
+    gap:10px;align-items:center;padding:12px 16px;
+    border-bottom:1px solid var(--line-soft);font-size:13.5px;line-height:1.35;
+  }
+  .plan-track-row:last-child{border-bottom:none;}
+  .plan-track-row.head{
+    background:var(--line-soft);font-family:'Space Mono',monospace;font-size:10px;
+    text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);
+    padding:10px 16px;
+  }
+  .plan-track-row.active{background:#fff9ec;}
+  .plan-track-row.strong{background:var(--mint-soft);}
+  .plan-rank{
+    font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:var(--muted);
+  }
+  .plan-track-row.active .plan-rank,.plan-track-row.strong .plan-rank{color:var(--forest);}
+  .plan-pts{
+    font-family:'Space Mono',monospace;font-size:12px;font-weight:700;
+    color:var(--tomato);text-align:right;
+  }
+  .plan-recovered{
+    font-family:'Space Mono',monospace;font-size:12px;font-weight:700;
+    color:var(--forest);text-align:right;
+  }
+  .plan-skill-sub{display:block;font-size:12px;color:var(--muted);font-weight:400;margin-top:2px;}
+  .plan-status{
+    font-family:'Space Mono',monospace;font-size:10px;text-align:right;
+    letter-spacing:0.03em;
+  }
+  .plan-status.done{color:var(--forest);}
+  .plan-status.now{color:#8a5a12;}
+  .plan-status.later{color:var(--muted);}
+
+  .summary-grid{
+    display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:12px;
+  }
+  .summary-item{
+    background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 18px;
+  }
+  .summary-item.wide{grid-column:1 / -1;}
+  .summary-item .silab{
+    font-family:'Space Mono',monospace;font-size:10px;text-transform:uppercase;
+    letter-spacing:0.1em;color:var(--muted);margin-bottom:8px;
+  }
+  .summary-item .sival{font-weight:600;font-size:15px;line-height:1.45;}
+  .summary-item .sidet{font-size:13.5px;color:var(--muted);margin-top:6px;line-height:1.45;}
+
+  @media (max-width:680px){
+    .path-grid{grid-template-columns:1fr;}
+    .score-bars{grid-template-columns:1fr;}
+    .plan-skills{grid-template-columns:1fr;}
+    .plan-track-row{grid-template-columns:32px 1fr;gap:6px;}
+    .plan-track-row .plan-pts,.plan-track-row .plan-recovered,.plan-track-row .plan-status{grid-column:2;text-align:left;}
+    .route-grid{grid-template-columns:1fr;}
+    .summary-grid{grid-template-columns:1fr;}
+    .summary-item.wide{grid-column:auto;}
+    .chart-svg .c-xl{font-size:8px;}
+  }
+
+  footer{
+    padding:24px 44px 34px;
+    font-family:'Space Mono',monospace;
+    font-size:11px;color:var(--muted);letter-spacing:0.02em;
+    display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;
+    border-top:1px solid var(--line);
+  }
+  footer .star{color:var(--mint);}
+
+  .savebar{max-width:860px;margin:24px auto 0;text-align:right;padding:0 8px;}
+  .savebtn{
+    font-family:'Space Mono',monospace;font-size:12px;letter-spacing:0.05em;
+    background:var(--forest);color:#f4efe2;border:none;cursor:pointer;
+    padding:10px 18px;border-radius:999px;
+  }
+  .savebtn:hover{background:var(--forest-deep);}
+
+  @media (max-width:680px){
+    .sheet{margin:14px;border-radius:16px;}
+    .head{padding:30px 24px;}
+    .student{font-size:34px;}
+    .body{padding:6px 24px;}
+    .stats{grid-template-columns:repeat(2,1fr);}
+    .stat{border-bottom:1px solid var(--line-soft);}
+    .stat:nth-child(2){border-right:none;}
+    .compare{grid-template-columns:1fr;gap:14px;}
+    .compare .arrow .glyph{transform:rotate(90deg);display:inline-block;}
+    footer{padding:22px 24px;}
+  }
+
+  @media print{
+    body{background:#fff;}
+    .savebar{display:none;}
+    .sheet{box-shadow:none;border:none;margin:0;max-width:none;border-radius:0;}
+    section,.compare,.callout,.stat{break-inside:avoid;}
+    .head{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    .stat .num,.compare,.callout,.status,.chip.done,.skill-panel,.hw-panel,.score-bars,.plan-meter-fill,.chart-wrap{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  }
+</style>
+</head>
+<body>
+
+<div class="savebar">
+  <button class="savebtn" onclick="window.print()">Save as PDF</button>
+</div>
+
+<div class="sheet">
+
+  <!-- HEADER -->
+  <header class="head">
+    <svg class="constellation" viewBox="0 0 860 220" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <g>
+        <line x1="120" y1="48" x2="210" y2="92" stroke="#2c3a63" stroke-width="1"/>
+        <line x1="210" y1="92" x2="300" y2="60" stroke="#2c3a63" stroke-width="1"/>
+        <line x1="640" y1="150" x2="720" y2="110" stroke="#2c3a63" stroke-width="1"/>
+        <line x1="720" y1="110" x2="800" y2="158" stroke="#2c3a63" stroke-width="1"/>
+      </g>
+      <g fill="#a9c7b6">
+        <circle cx="120" cy="48" r="2.2"/>
+        <circle cx="210" cy="92" r="1.6"/>
+        <circle cx="300" cy="60" r="2.4"/>
+        <circle cx="640" cy="150" r="1.8"/>
+        <circle cx="720" cy="110" r="2.6"/>
+        <circle cx="800" cy="158" r="1.7"/>
+        <circle cx="430" cy="36" r="1.5"/>
+        <circle cx="520" cy="180" r="1.4"/>
+        <circle cx="70" cy="150" r="1.5"/>
+      </g>
+    </svg>
+    <div class="head-inner">
+      <div class="brandrow">
+        <span class="brandmark">&#10038;</span>
+        <span class="brandname">Illuminairy</span>
+      </div>
+      <div class="eyebrow">Weekly Progress Report</div>
+      <h1 class="student">Danielle Danso</h1>
+      <div class="meta">WEEK 3<span>/</span>JUNE 23 TO 30, 2026<span>/</span>GOAL: 1400 ON AUG 22, 2026</div>
+      <div class="status"><span class="dot"></span>On track for 1400 by the August 22 test date</div>
+    </div>
+  </header>
+
+  <!-- STAT BAND -->
+  <div class="stats">
+    <div class="stat"><div class="num">6</div><div class="lab">Total<br>sessions</div></div>
+    <div class="stat"><div class="num">2</div><div class="lab">Sessions<br>this week</div></div>
+    <div class="stat"><div class="num">~1220</div><div class="lab">Est. score<br>today</div></div>
+    <div class="stat"><div class="num">~95</div><div class="lab">Pts since<br>Jun 6 test</div></div>
+  </div>
+
+  <div class="body">
+
+    <!-- OVERVIEW -->
+    <section>
+      <h2>Overview</h2>
+      <div class="overview">
+        <p>Danielle is <strong>on track</strong> for her goal of <strong>1400</strong> on the August 22 test.</p>
+        <p>We estimate her score at about <strong>1220</strong> today, up about <strong>10 points</strong> from
+        about <strong>1210</strong> last week (<strong>95 points</strong> total since her June 6 practice test at
+        1125).</p>
+        <p>She completed <strong>2 tutoring sessions</strong> and <strong>119 practice problems</strong> this week at
+        <strong>73% average accuracy</strong>.</p>
+        <p>Both sessions were Math on <strong>equivalent expressions</strong>. She has moved onto advanced or hard
+        transition questions for Reading and Writing and hard equivalent-expression questions for Math.</p>
+        <p>She is showing a much stronger command of factoring and is starting to internalize our work on quadratics;
+        she scored 87.5% on hard transitions untimed and 84.3% on her timed equivalent-expressions quiz (100% on easy).</p>
+        <p>Next week: <strong>3 sessions</strong> (one moved from this week), command of evidence in Reading and Writing,
+        nonlinear functions, equations, and systems in Math, and a full-length timed practice test at the end of the week
+        to re-baseline her score.</p>
+      </div>
+    </section>
+
+    <!-- SCORE PROGRESSION -->
+    <section>
+      <h2>Score Progression</h2>
+      <svg class="traj" viewBox="0 0 600 360" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Estimated score from 1125 on June 6, through 1175 after week 1, 1210 after week 2, and 1220 after week 3, toward 1400 on August 22.">
+        <defs>
+          <linearGradient id="trajFill" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="var(--forest)" stop-opacity="0.16"/>
+            <stop offset="100%" stop-color="var(--forest)" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <g stroke="var(--line)" stroke-width="1">
+          <line x1="64" y1="66.5" x2="576" y2="66.5"/>
+          <line x1="64" y1="143.5" x2="576" y2="143.5"/>
+          <line x1="64" y1="220.5" x2="576" y2="220.5"/>
+          <line x1="64" y1="297.5" x2="576" y2="297.5"/>
+        </g>
+        <line x1="64" y1="336" x2="576" y2="336" stroke="var(--muted)" stroke-width="1"/>
+        <g class="t-yl">
+          <text x="56" y="70.5" text-anchor="end">1400</text>
+          <text x="56" y="147.5" text-anchor="end">1300</text>
+          <text x="56" y="224.5" text-anchor="end">1200</text>
+          <text x="56" y="301.5" text-anchor="end">1100</text>
+        </g>
+        <g class="t-xl">
+          <text x="100" y="353" text-anchor="middle">JUN</text>
+          <text x="243" y="353" text-anchor="middle">JUL</text>
+          <text x="576" y="353" text-anchor="end">AUG 22</text>
+        </g>
+        <line x1="276" y1="42" x2="276" y2="336" stroke="var(--mint)" stroke-width="1.5" stroke-dasharray="3 4"/>
+        <text class="t-today" x="281" y="50" text-anchor="start">TODAY</text>
+        <path d="M84,278.25 L148,239.75 L212,201.25 L276,209.2 C340,100 450,74 576,66.5 L576,336 L84,336 Z" fill="url(#trajFill)"/>
+        <path d="M84,278.25 L148,239.75 L212,201.25 L276,209.2" fill="none" stroke="var(--forest)" stroke-width="3.5" stroke-linecap="round"/>
+        <path d="M276,209.2 C340,100 450,74 576,66.5" fill="none" stroke="var(--forest)" stroke-width="3" stroke-dasharray="2 7" stroke-linecap="round"/>
+        <circle cx="84" cy="278.25" r="6.5" fill="#fbf7ee" stroke="var(--forest)" stroke-width="3.5"/>
+        <circle cx="148" cy="239.75" r="6" fill="#fbf7ee" stroke="var(--forest)" stroke-width="2.5"/>
+        <circle cx="212" cy="201.25" r="6" fill="#fbf7ee" stroke="var(--forest)" stroke-width="2.5"/>
+        <circle cx="276" cy="209.2" r="7" fill="var(--forest)" stroke="#fbf7ee" stroke-width="2.5"/>
+        <circle cx="576" cy="66.5" r="7" fill="#fbf7ee" stroke="var(--tomato)" stroke-width="3.5"/>
+        <text class="t-pt" x="84" y="268" text-anchor="middle">1125</text>
+        <line x1="148" y1="246" x2="148" y2="336" stroke="var(--muted)" stroke-width="1" stroke-dasharray="3 4"/>
+        <text class="t-pt" x="148" y="228" text-anchor="middle">1175</text>
+        <text class="t-axis" x="148" y="353" text-anchor="middle">WK1</text>
+        <line x1="212" y1="209" x2="212" y2="336" stroke="var(--muted)" stroke-width="1" stroke-dasharray="3 4"/>
+        <text class="t-pt" x="212" y="188" text-anchor="middle">1210</text>
+        <text class="t-axis" x="212" y="353" text-anchor="middle">WK2</text>
+        <line x1="276" y1="217" x2="276" y2="336" stroke="var(--muted)" stroke-width="1" stroke-dasharray="3 4"/>
+        <text class="t-pt strong" x="276" y="196" text-anchor="middle">1220</text>
+        <text class="t-axis" x="276" y="353" text-anchor="middle">WK3</text>
+        <text class="t-pt goal" x="576" y="54" text-anchor="end">1400 GOAL</text>
+      </svg>
+    </section>
+
+    <!-- WEEKLY SUMMARY -->
+    <section>
+      <h2>Weekly Summary</h2>
+      <p class="session-label">Session 1 · Monday, June 23</p>
+      <p>We reviewed questions Danielle missed on the June 6 practice test and in her homework, walking through
+      equivalent-expression and factoring problems on the whiteboard. We covered the AC method for factoring quadratics,
+      pulling out greatest common factors before factoring further, distributing negative signs correctly, and breaking
+      long expressions into smaller components before combining terms. We also worked on squared-binomial patterns and
+      when to apply them instead of expanding everything by hand.</p>
+      <p class="session-label">Session 2 · Wednesday, June 25</p>
+      <p>We picked up a tricky equivalent-expression problem from last session and worked through reverse FOIL — using
+      the first and last terms of a trinomial to find missing values, then using the outer and inner terms to solve for
+      the middle coefficient. We practiced perfect-square binomial formulas, the component-breakdown method for
+      multi-part expressions, and several hard diagnostic misses. We reviewed <strong>8 of the 14 misses</strong> from
+      her Equivalent Expressions 3 assignment; she will work through the rest independently. She was assigned Equivalent
+      Expressions 3 (untimed) and a timed equivalent-expressions quiz once she finishes reviewing her mistakes.</p>
+      <p>She also kept working advanced and hard transition homework on her own this week, now that she has finished the
+      earlier transition sets.</p>
+    </section>
+
+    <!-- AHA MOMENTS -->
+    <section>
+      <h2>Aha Moments</h2>
+      <p class="viz-note" style="margin-bottom:14px;"><strong>Session 1 · Monday, June 23</strong></p>
+      <ul class="compact-list">
+        <li><strong>Find k, not x.</strong> When a problem gives a factor like 3x + k instead of asking for x, she
+        factors the expression and reads off the constant — not sets everything to zero.</li>
+        <li><strong>AC method for quadratics.</strong> Label a, b, and c; multiply a &times; c; find two numbers that
+        multiply to that product and add to b — then split the middle term and finish factoring.</li>
+        <li><strong>Break into components.</strong> Split a long expression by operator (+/−), simplify each piece,
+        then recombine — keeps sign errors and stalled-out answers from piling up.</li>
+        <li><strong>Distribute the negative first.</strong> On equivalent-expression problems with parentheses, she
+        distributes the minus sign before combining like terms.</li>
+      </ul>
+      <p class="viz-note" style="margin:18px 0 14px;"><strong>Session 2 · Wednesday, June 25</strong></p>
+      <ul class="compact-list">
+        <li><strong>Reverse FOIL.</strong> On a trinomial ax&sup2; + bx + c, the squared term comes from F, the
+        constant from L, and the middle term from O + I — use what you know to solve for unknown coefficients.</li>
+        <li><strong>Perfect-square shortcuts.</strong> (a &plusmn; b)&sup2; formulas let her expand or factor squared
+        binomials in one step instead of full FOIL — worth memorizing for timed work.</li>
+        <li><strong>Go the last step.</strong> She often gets most of an equivalent-expression problem right but stops
+        before the final combine — finishing the last simplification is now an explicit habit.</li>
+      </ul>
+    </section>
+
+    <!-- 4 · PRACTICE PROBLEMS -->
+    <section>
+      <h2>Practice &amp; Homework</h2>
+      <p class="viz-note"><strong>Complete</strong> = she finished the assignment. <strong>Accuracy</strong> = how many
+      she got right.</p>
+      <p><strong>Week total:</strong> 119 practice problems at <strong>73% average accuracy</strong>.</p>
+      <p class="hw-group-label">Reading and Writing · Transitions (advanced / hard)</p>
+      <div class="hw-panel">
+        <div class="hw-row">
+          <div>
+            <div class="hw-name">Transitions 3 · Untimed</div>
+            <div class="hw-sub">16 hard questions</div>
+          </div>
+          <div class="hw-meta">
+            <div class="hw-pct">88%</div>
+            <div class="hw-acc">14 of 16 correct</div>
+            <span class="hw-badge done">Complete</span>
+          </div>
+        </div>
+        <div class="hw-row">
+          <div>
+            <div class="hw-name">Transitions · Timed quiz</div>
+            <div class="hw-sub">30 hard questions · time-constrained</div>
+          </div>
+          <div class="hw-meta">
+            <div class="hw-pct warn">73%</div>
+            <div class="hw-acc">22 of 30 correct</div>
+            <span class="hw-badge done">Complete</span>
+          </div>
+        </div>
+      </div>
+      <p class="hw-group-label">Math · Equivalent expressions (hard)</p>
+      <div class="hw-panel">
+        <div class="hw-row">
+          <div>
+            <div class="hw-name">Equivalent Expressions 3 · Untimed</div>
+            <div class="hw-sub">31 hard questions</div>
+          </div>
+          <div class="hw-meta">
+            <div class="hw-pct warn">55%</div>
+            <div class="hw-acc">17 of 31 correct</div>
+            <span class="hw-badge done">Complete</span>
+          </div>
+        </div>
+        <div class="hw-row">
+          <div>
+            <div class="hw-name">Equivalent expressions · Timed quiz</div>
+            <div class="hw-sub">32 questions · 100% on easy items</div>
+          </div>
+          <div class="hw-meta">
+            <div class="hw-pct">84%</div>
+            <div class="hw-acc">27 of 32 correct</div>
+            <span class="hw-badge done">Complete</span>
+          </div>
+        </div>
+      </div>
+      <p>She reviewed <strong>8 of her 14 misses</strong> from Equivalent Expressions 3 in session and will work
+      through the rest on her own using her notes, formula sheet, and whiteboard examples.</p>
+    </section>
+
+    <!-- 5 · SKILLS AND ACCURACY -->
+    <section>
+      <h2>Skills &amp; Accuracy</h2>
+      <p><strong>Transitions:</strong> Danielle has moved onto advanced and hard transition questions. She scored 14 of
+      16 (87.5%) on Transitions 3 untimed — all hard — and 22 of 30 (73.3%) on the timed transitions quiz, also all
+      hard.</p>
+      <p><strong>Equivalent expressions:</strong> She is now on hard-level questions. Untimed set 3 was 17 of 31 (55%);
+      timed quiz was 27 of 32 (84.3%), including 100% on easy items. In sessions she is showing much stronger factoring
+      and is starting to internalize quadratics work from earlier weeks.</p>
+      <p><strong>Overall homework accuracy:</strong> 67% on June 6 → 89% after week 1 → 91% after week 2 → 73% this
+      week (harder assignments at the next difficulty level).</p>
+      <div class="chart-wrap">
+        <svg class="chart-svg" viewBox="0 0 560 260" role="img" aria-label="Homework accuracy from 67% on June 6 to 89% in week 1, 91% in week 2, and 73% in week 3 on harder sets.">
+          <line class="c-grid" x1="50" y1="40" x2="50" y2="200"/>
+          <line class="c-axis" x1="50" y1="200" x2="530" y2="200"/>
+          <line class="c-grid" x1="50" y1="60" x2="530" y2="60"/>
+          <line class="c-grid" x1="50" y1="95" x2="530" y2="95"/>
+          <line class="c-grid" x1="50" y1="130" x2="530" y2="130"/>
+          <line class="c-grid" x1="50" y1="165" x2="530" y2="165"/>
+          <text class="c-yl" x="44" y="204" text-anchor="end">0%</text>
+          <text class="c-yl" x="44" y="169" text-anchor="end">25</text>
+          <text class="c-yl" x="44" y="134" text-anchor="end">50</text>
+          <text class="c-yl" x="44" y="99" text-anchor="end">75</text>
+          <text class="c-yl" x="44" y="64" text-anchor="end">100</text>
+          <rect class="c-bar dim" x="72" y="93" width="48" height="107" rx="6"/>
+          <text class="c-val" x="96" y="85" text-anchor="middle">67%</text>
+          <text class="c-xl" x="96" y="218" text-anchor="middle">Jun 6</text>
+          <rect class="c-bar dim" x="168" y="58" width="48" height="142" rx="6"/>
+          <text class="c-val" x="192" y="50" text-anchor="middle">89%</text>
+          <text class="c-xl" x="192" y="218" text-anchor="middle">Week 1</text>
+          <rect class="c-bar dim" x="264" y="54" width="48" height="146" rx="6"/>
+          <text class="c-val" x="288" y="46" text-anchor="middle">91%</text>
+          <text class="c-xl" x="288" y="218" text-anchor="middle">Week 2</text>
+          <rect class="c-bar after" x="360" y="112" width="48" height="88" rx="6"/>
+          <text class="c-val" x="384" y="104" text-anchor="middle">73%</text>
+          <text class="c-xl" x="384" y="218" text-anchor="middle">Week 3</text>
+          <polyline class="c-line" points="96,93 192,58 288,54 384,112"/>
+          <circle class="c-dot" cx="96" cy="93" r="5"/>
+          <circle class="c-dot" cx="192" cy="58" r="5"/>
+          <circle class="c-dot" cx="288" cy="54" r="5"/>
+          <circle class="c-dot current" cx="384" cy="112" r="6"/>
+        </svg>
+        <p class="chart-caption">Week 3 accuracy reflects harder transition and equivalent-expression sets — not a step
+        back in skill, but a harder level of question.</p>
+      </div>
+    </section>
+
+    <!-- 6 · WHAT'S NEXT -->
+    <section>
+      <h2>What&rsquo;s Next</h2>
+      <p><strong>Three tutoring sessions</strong> next week (one session moved from this week).</p>
+      <p><strong>Reading and Writing:</strong> command of evidence — our next topic after transitions.</p>
+      <p><strong>Math:</strong> nonlinear functions, equations, and systems — builds on equivalent expressions and
+      quadratics work from the last three weeks.</p>
+      <p><strong>Full-length timed practice test</strong> at the end of next week to re-baseline her score and
+      performance against the June 6 practice test.</p>
+      <p><strong>Homework:</strong> Finish reviewing remaining Equivalent Expressions 3 misses independently; keep
+      formula sheet (difference of squares, perfect-square binomials) visible while practicing.</p>
+    </section>
+
+  </div>
+
+  <footer>
+    <span><span class="star">&#10038;</span> Illuminairy SAT Tutoring</span>
+    <span>Prepared by Brianna Zajicek &middot; brianna@illuminairy.com</span>
+  </footer>
+
+</div>
+
+</body>
+</html>

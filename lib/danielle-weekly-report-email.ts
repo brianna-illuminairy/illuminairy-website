@@ -3,7 +3,7 @@ import { site } from "@/lib/site";
 
 /** Parent email copy for weekly reports. Match tone + facts in docs/weekly-progress-report-style.md */
 
-export type DanielleWeeklyReportWeekKey = "week-1" | "week-2";
+export type DanielleWeeklyReportWeekKey = "week-1" | "week-2" | "week-3";
 
 export type DanielleWeeklyReportEmailInput = {
   parentEmail: string;
@@ -65,6 +65,27 @@ const WEEKLY_REPORT_CONTENT: Record<DanielleWeeklyReportWeekKey, WeeklyReportEma
       "Keep reviewing medium equivalent expression miss types until 95% accuracy (assignment already complete)",
       "First full-length practice test at end of week"
     ]
+  },
+  "week-3": {
+    week: "week-3",
+    weekLabel: "June 23–30, 2026",
+    reportPath: "/danielle/week-3/report",
+    subjectDateRange: "June 23–30, 2026",
+    overview: [
+      "Danielle is on track for her goal of 1400 on the August 22 test",
+      "We estimate her score at about 1220 today, up about 10 points from about 1210 last week (95 points total since her June 6 practice test at 1125)",
+      "She completed 2 tutoring sessions and 119 practice problems this week at 73% average accuracy",
+      "Both sessions were Math on equivalent expressions. She has moved onto advanced or hard transition questions for Reading and Writing and hard equivalent-expression questions for Math",
+      "She is showing a much stronger command of factoring and is starting to internalize our work on quadratics; she scored 87.5% on hard transitions untimed and 84.3% on her timed equivalent-expressions quiz (100% on easy)",
+      "Next week: 3 sessions (one moved from this week), command of evidence in Reading and Writing, nonlinear functions, equations, and systems in Math, and a full-length timed practice test at the end of the week to re-baseline her score"
+    ],
+    thisWeek: [
+      "Three tutoring sessions (one moved from last week)",
+      "Reading and Writing: command of evidence",
+      "Math: nonlinear functions, equations, and systems — builds on equivalent expressions",
+      "Finish reviewing remaining Equivalent Expressions 3 misses independently",
+      "Full-length timed practice test at end of week to re-baseline score vs June 6"
+    ]
   }
 };
 
@@ -76,6 +97,9 @@ function portalUrl(path: string) {
 function resolveWeekKey(input: DanielleWeeklyReportEmailInput): DanielleWeeklyReportWeekKey {
   if (input.week) {
     return input.week;
+  }
+  if (input.reportPath?.includes("week-3")) {
+    return "week-3";
   }
   if (input.reportPath?.includes("week-2")) {
     return "week-2";

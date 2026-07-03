@@ -25,7 +25,7 @@ export async function POST(request: Request) {
     parentEmail?: string;
     studentEmail?: string;
     parentFirst?: string;
-    week?: "week-1" | "week-2";
+    week?: "week-1" | "week-2" | "week-3";
     weekLabel?: string;
     reportPath?: string;
   } = {};

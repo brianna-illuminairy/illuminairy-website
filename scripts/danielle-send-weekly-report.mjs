@@ -2,8 +2,11 @@
 /**
  * Send Danielle weekly progress report email to student + parent.
  *
- * Usage (Week 2 — default):
+ * Usage (Week 3 — default):
  *   ADMIN_SECRET=... PARENT_EMAIL=... STUDENT_EMAIL=... npm run danielle:send-weekly-report
+ *
+ * Week 2:
+ *   REPORT_WEEK=2 ADMIN_SECRET=... PARENT_EMAIL=... STUDENT_EMAIL=... npm run danielle:send-weekly-report
  *
  * Week 1:
  *   REPORT_WEEK=1 ADMIN_SECRET=... PARENT_EMAIL=... npm run danielle:send-weekly-report
@@ -57,8 +60,9 @@ if (!parentEmail) {
 const studentEmail =
   process.env.STUDENT_EMAIL?.trim() || process.env.DANIELLE_STUDENT_EMAIL?.trim();
 
-const reportWeek = process.env.REPORT_WEEK?.trim() || "2";
+const reportWeek = process.env.REPORT_WEEK?.trim() || "3";
 const isWeek1 = reportWeek === "1";
+const isWeek2 = reportWeek === "2";
 
 const baseUrl = (
   process.env.DANIELLE_WEEKLY_REPORT_BASE_URL ||
@@ -66,15 +70,31 @@ const baseUrl = (
   "https://illuminairy.com"
 ).replace(/\/$/, "");
 
+const weekConfig = isWeek1
+  ? {
+      week: "week-1",
+      weekLabel: "June 9–16, 2026",
+      reportPath: "/danielle/week-1/report"
+    }
+  : isWeek2
+    ? {
+        week: "week-2",
+        weekLabel: "June 16–23, 2026",
+        reportPath: "/danielle/week-2/report"
+      }
+    : {
+        week: "week-3",
+        weekLabel: "June 23–30, 2026",
+        reportPath: "/danielle/week-3/report"
+      };
+
 const body = {
   parentEmail,
   studentEmail,
   parentFirst: process.env.PARENT_FIRST?.trim() || process.env.DANIELLE_PARENT_FIRST?.trim(),
-  week: isWeek1 ? "week-1" : "week-2",
-  weekLabel:
-    process.env.WEEK_LABEL?.trim() ||
-    (isWeek1 ? "June 9–16, 2026" : "June 16–23, 2026"),
-  reportPath: isWeek1 ? "/danielle/week-1/report" : "/danielle/week-2/report"
+  week: weekConfig.week,
+  weekLabel: process.env.WEEK_LABEL?.trim() || weekConfig.weekLabel,
+  reportPath: weekConfig.reportPath
 };
 
 const response = await fetch(`${baseUrl}/api/danielle/weekly-report/send`, {

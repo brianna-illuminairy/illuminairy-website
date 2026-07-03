@@ -9,6 +9,15 @@ export type DaniellePortalUpdate = {
 
 export const DANIELLE_PORTAL_UPDATES: DaniellePortalUpdate[] = [
   {
+    id: "2026-06-30-week-3-report",
+    publishedAt: "2026-06-30",
+    title: "Week 3 progress report",
+    summary:
+      "Your Week 3 summary is ready: equivalent expressions sessions, hard transitions and math homework, score update, and next week's plan.",
+    href: "/danielle/week-3/report",
+    cta: "Read Week 3 report"
+  },
+  {
     id: "2026-06-26-week-3-equivalent-expressions",
     publishedAt: "2026-06-26",
     title: "Week 3 Equivalent Expressions lesson is live",
