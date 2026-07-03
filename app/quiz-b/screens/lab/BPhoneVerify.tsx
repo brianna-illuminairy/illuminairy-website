@@ -104,6 +104,7 @@ export function BPhoneVerify({
   const [phoneTouched, setPhoneTouched] = useState(false);
   const confirmationRef = useRef<ConfirmationResult | null>(null);
   const advancingRef = useRef(false);
+  const justVerifiedRef = useRef(false);
 
   const phoneValid = isValidBookingPhone(phone);
   const showPhoneError = showBookingPhoneInlineError(phone, { touched: phoneTouched });
@@ -114,7 +115,10 @@ export function BPhoneVerify({
   const e164Phone = phoneToCalendlyE164(phone);
 
   useEffect(() => {
-    if (!verifiedAt || advancingRef.current) return;
+    // Only auto-advance right after a fresh verify in this session. A returning
+    // filler can arrive with a persisted phoneVerifiedAt; don't skip the screen
+    // out from under them (they'd have to hit "back" to see it).
+    if (!verifiedAt || advancingRef.current || !justVerifiedRef.current) return;
     advancingRef.current = true;
     const timer = window.setTimeout(() => {
       onContinue();
@@ -230,6 +234,7 @@ export function BPhoneVerify({
         setError(leadResult.message ?? 'Could not save your details. Please try again.');
         return;
       }
+      justVerifiedRef.current = true;
       onVerified(stamp);
       captureLabPhoneVerified();
       confirmationRef.current = null;
@@ -307,8 +312,14 @@ export function BPhoneVerify({
           <button
             type="button"
             className="qfb-phone-continue"
-            onClick={handleContinueClick}
-            disabled={verified || sending || !configured || !phoneValid}
+            onClick={() => {
+              if (verified) {
+                onContinue();
+                return;
+              }
+              handleContinueClick();
+            }}
+            disabled={sending || (!verified && (!configured || !phoneValid))}
           >
             {sending ? 'Sending…' : 'Continue'}
           </button>
