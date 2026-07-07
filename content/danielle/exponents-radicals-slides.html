@@ -1,0 +1,1334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exponents and Radicals</title>
+<style>
+  :root{
+    --surface:#f5ecd9;--surface-2:#efe3cb;--navy:#14233b;--navy-2:#1e3250;
+    --forest:#2c5f4f;--forest-deep:#214a3d;--mint:#bfe3cf;--mint-soft:#dcefe3;
+    --ink:#1b2a22;--muted:#56635a;--line:#d9cba9;
+    --correct:#2c5f4f;--correct-bg:#dcefe3;--wrong:#b35442;--wrong-bg:#f2dcd5;
+    --basec:#2c5f4f;--expc:#a9791f;
+    --font:Arial,Helvetica,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{margin:0;background:var(--navy);color:var(--ink);font-family:var(--font);-webkit-font-smoothing:antialiased;display:flex;flex-direction:column;min-height:100%;}
+  .stage{flex:1;display:flex;align-items:center;justify-content:center;padding:24px 20px 12px;position:relative;overflow:hidden;}
+  .deck{width:min(980px,100%);height:min(680px,82vh);position:relative;}
+  .slide{position:absolute;inset:0;background:var(--surface);border-radius:20px;border:1px solid #0c1726;box-shadow:0 24px 60px rgba(0,0,0,.34);padding:36px 44px;overflow:auto;opacity:0;transform:translateY(10px) scale(.99);pointer-events:none;transition:opacity .3s ease, transform .3s ease;}
+  .slide.active{opacity:1;transform:none;pointer-events:auto;}
+  .slide.dark{background:var(--navy);color:var(--surface);border-color:#0a1320;}
+  @media(prefers-reduced-motion:reduce){.slide{transition:opacity .12s ease;transform:none;}}
+  .eyebrow{font-family:var(--font);text-transform:uppercase;letter-spacing:.16em;font-size:.72rem;font-weight:700;color:var(--forest);margin:0 0 13px;}
+  .dark .eyebrow{color:var(--mint);}
+  .eyebrow.sat{color:#b35442;}
+  .eyebrow.game{color:#a9791f;}
+  h1.t{font-family:var(--font);font-weight:700;font-size:clamp(1.8rem,4.2vw,2.6rem);line-height:1.12;margin:0 0 16px;color:var(--navy);}
+  .dark h1.t{color:var(--surface);}
+  h2.t{font-family:var(--font);font-weight:700;font-size:clamp(1.28rem,3vw,1.8rem);line-height:1.18;margin:0 0 14px;color:var(--navy);}
+  .dark h2.t{color:var(--surface);}
+  p{margin:0 0 12px;font-size:1.02rem;line-height:1.55;}
+  .sub{font-size:1.1rem;color:var(--muted);max-width:680px;}
+  .dark .sub{color:#d3dad3;}
+  strong{font-weight:700;color:var(--navy);}
+  .dark strong{color:var(--mint);}
+  em{font-style:italic;}
+  .center{height:100%;display:flex;flex-direction:column;justify-content:center;}
+  .star{color:var(--forest);}.dark .star{color:var(--mint);}
+
+  .m{font-family:var(--font);font-weight:600;white-space:nowrap;}
+  .m i{font-style:italic;font-weight:600;}
+  .m sup{font-size:.7em;vertical-align:.42em;}
+  .m sub{font-size:.7em;vertical-align:-.25em;}
+  .frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 .16em;font-weight:600;}
+  .frac .num{border-bottom:1.6px solid currentColor;padding:0 .4em 1px;line-height:1.25;}
+  .frac .den{padding:1px .4em 0;line-height:1.25;}
+  .rad{white-space:nowrap;}
+  .rad .ridx{font-size:.6em;vertical-align:.62em;margin-right:-.22em;}
+  .rad .radicand{border-top:1.6px solid currentColor;padding:1px .16em 0 .12em;margin-left:1px;}
+
+  .formula{font-family:var(--font);font-weight:700;font-size:1.45rem;color:var(--navy);}
+  .dark .formula{color:var(--surface);}
+  .formula i{font-style:italic;}
+  .formula sup{font-size:.7em;vertical-align:.42em;}
+
+  .formula-card{background:#fffaf0;border:1px solid var(--line);border-radius:14px;padding:15px 20px;margin:0 0 14px;}
+  .dark .formula-card{background:var(--navy-2);border-color:#2c466b;}
+  .formula-card .lab{font-family:var(--font);font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;color:var(--forest);font-weight:700;margin-bottom:8px;}
+  .dark .formula-card .lab{color:var(--mint);}
+  .formula-card .eg{font-size:1rem;color:var(--muted);margin-top:8px;}
+  .dark .formula-card .eg{color:#d3dad3;}
+  .eg .m{color:var(--navy);}.dark .eg .m{color:var(--surface);}
+
+  /* definition diagram */
+  .definer{display:flex;gap:30px;align-items:center;flex-wrap:wrap;background:#fffaf0;border:1px solid var(--line);border-radius:14px;padding:18px 26px;margin:0 0 14px;}
+  .bigterm{font-family:var(--font);font-weight:700;font-size:3.1rem;color:var(--navy);line-height:1;}
+  .bigterm .b{color:var(--basec);}
+  .bigterm .e{color:var(--expc);font-size:.6em;vertical-align:super;}
+  .bigterm .rsym{color:var(--forest);}
+  .bigterm .ri{color:var(--expc);font-size:.5em;vertical-align:.9em;}
+  .bigterm .rc{color:var(--basec);border-top:2.4px solid var(--basec);padding:2px .1em 0;}
+  .deflegend{display:flex;flex-direction:column;gap:9px;}
+  .legrow{display:flex;align-items:center;gap:10px;font-size:1.02rem;}
+  .chip{width:15px;height:15px;border-radius:4px;flex:0 0 auto;}
+  .chip.base{background:var(--basec);}
+  .chip.exp{background:var(--expc);}
+  .legrow b{color:var(--navy);}
+
+  .exbox{background:#fffaf0;border:1px solid var(--line);border-radius:13px;padding:6px 20px;margin:6px 0 0;}
+  .exbox .exrow{font-size:1.05rem;line-height:1.55;padding:9px 0;border-bottom:1px dashed #e4d7ba;display:flex;flex-wrap:wrap;gap:8px;align-items:baseline;}
+  .exbox .exrow:last-child{border-bottom:none;}
+  .exbox .exrow .m{color:var(--navy);}
+  .exbox .exrow .note{color:var(--muted);font-size:.92rem;}
+  .exlabel{font-family:var(--font);font-size:.63rem;letter-spacing:.09em;text-transform:uppercase;color:var(--forest);font-weight:700;margin:0 0 6px;}
+
+  .bothways{border-left:4px solid var(--expc);background:#fbf3e0;padding:11px 17px;border-radius:0 11px 11px 0;font-size:.98rem;margin:13px 0 0;}
+  .bothways b{color:#8a6414;}
+
+  .inputchip{display:inline-block;background:#14233b;color:#dcefe3;border-radius:8px;padding:9px 15px;font-family:var(--font);font-weight:700;font-size:1.05rem;margin:3px 0;}
+
+  .lawgrid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:2px;}
+  .lawcard{background:#fffaf0;border:1px solid var(--line);border-radius:11px;padding:11px 15px;}
+  .lawcard .lab{font-family:var(--font);font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:var(--forest);font-weight:700;margin-bottom:4px;}
+  .lawcard .law{font-family:var(--font);font-weight:700;font-size:1.04rem;color:var(--navy);}
+  .lawcard .law i{font-style:italic;}.lawcard .law sup{font-size:.7em;vertical-align:.42em;}
+  .lawcard .lex{font-size:.9rem;color:var(--muted);margin-top:5px;}
+  .lawcard .lex .m{color:var(--forest-deep);}
+  @media(max-width:660px){.lawgrid{grid-template-columns:1fr;}.definer{gap:18px;}}
+
+  .card-note{border-left:4px solid var(--forest);background:var(--mint-soft);padding:11px 18px;border-radius:0 11px 11px 0;font-size:.98rem;margin:13px 0 0;}
+  .dark .card-note{background:var(--navy-2);border-color:var(--mint);}
+  .card-note b{color:var(--forest-deep);}.dark .card-note b{color:var(--mint);}
+  .warn-note{border-left:4px solid var(--wrong);background:var(--wrong-bg);padding:11px 18px;border-radius:0 11px 11px 0;font-size:.98rem;margin:13px 0 0;}
+  .warn-note b{color:var(--wrong);}
+
+  .work{background:#fffaf0;border:1px solid var(--line);border-radius:13px;padding:15px 20px;margin:6px 0 0;}
+  .work .step{display:flex;gap:13px;align-items:flex-start;margin-bottom:10px;font-size:1rem;line-height:1.5;}
+  .work .step:last-child{margin-bottom:0;}
+  .work .n{flex:0 0 auto;width:23px;height:23px;border-radius:50%;background:var(--mint-soft);border:1.5px solid #cbe6d5;color:var(--forest-deep);font-family:var(--font);font-weight:700;font-size:.74rem;display:flex;align-items:center;justify-content:center;margin-top:1px;}
+  .work .step.qn .n{background:#fbf3e0;border-color:#e6d3a6;color:#8a6414;}
+
+  .sheet{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:4px;}
+  .sheet-card{background:#fffaf0;border:1px solid var(--line);border-radius:12px;padding:13px 16px;}
+  .sheet-card .lab{font-family:var(--font);font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:var(--forest);font-weight:700;margin-bottom:6px;}
+  .sheet-card .id{font-family:var(--font);font-weight:700;font-size:1.02rem;color:var(--navy);}
+  .sheet-card .id i{font-style:italic;}.sheet-card .id sup{font-size:.7em;vertical-align:.42em;}
+  @media(max-width:660px){.sheet{grid-template-columns:1fr;}}
+
+  /* practice question */
+  .pq{background:#fffaf0;border:1px solid var(--line);border-radius:15px;padding:18px 22px;margin-top:4px;}
+  .pq.sat{border-color:#e2b7ab;}
+  .pq .qlab{font-family:var(--font);font-size:.63rem;letter-spacing:.1em;text-transform:uppercase;color:var(--forest);font-weight:700;margin-bottom:9px;}
+  .pq.sat .qlab{color:#b35442;}
+  .pq .stem{font-size:1.05rem;line-height:1.55;color:var(--navy);margin-bottom:6px;}
+  .pq .ask{font-size:.93rem;color:var(--muted);margin-bottom:12px;}
+  .pq-opts{display:flex;flex-direction:column;gap:9px;}
+  .pq-opt{display:flex;align-items:center;gap:13px;width:100%;text-align:left;background:#fff;border:1.5px solid var(--line);border-radius:11px;padding:11px 15px;font-family:var(--font);font-size:1rem;color:var(--ink);cursor:pointer;transition:border-color .15s,background .15s;}
+  .pq-opt:hover{border-color:var(--forest);}
+  .pq-opt .badge{flex:0 0 auto;width:26px;height:26px;border-radius:50%;border:1.5px solid var(--muted);display:flex;align-items:center;justify-content:center;font-family:var(--font);font-weight:700;font-size:.82rem;color:var(--muted);}
+  .pq-opt.sel{border-color:var(--forest);background:var(--mint-soft);}
+  .pq-opt.sel .badge{border-color:var(--forest);color:var(--forest-deep);background:#fff;}
+  .pq-opt.correct{border-color:var(--correct);background:var(--correct-bg);}
+  .pq-opt.correct .badge{background:var(--forest);border-color:var(--forest);color:#fff;}
+  .pq-opt.incorrect{border-color:var(--wrong);background:var(--wrong-bg);}
+  .pq-opt.incorrect .badge{background:var(--wrong);border-color:var(--wrong);color:#fff;}
+  .pq-opt[disabled]{cursor:default;}
+  .pq-opt .tick{margin-left:auto;font-family:var(--font);font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;font-weight:700;opacity:0;}
+  .pq-opt.correct .tick{opacity:1;color:var(--forest-deep);}
+  .pq-opt.incorrect .tick{opacity:1;color:var(--wrong);}
+  .pq-actions{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;}
+  .act{font-family:var(--font);font-weight:700;font-size:.85rem;border-radius:10px;cursor:pointer;padding:9px 15px;border:1.5px solid var(--line);background:transparent;color:var(--forest-deep);transition:border-color .15s,background .15s,color .15s;}
+  .act:hover{border-color:var(--forest);}
+  .act.primary{background:var(--forest);border-color:var(--forest);color:var(--mint-soft);}
+  .act.primary:hover{background:var(--forest-deep);}
+  .act.on{background:var(--mint-soft);border-color:var(--forest);}
+  .act[hidden]{display:none;}
+  .panel{display:none;margin-top:13px;border-radius:12px;overflow:hidden;border:1px solid var(--line);}
+  .panel.show{display:block;}
+  .panel .head{padding:9px 16px;font-family:var(--font);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700;background:var(--mint-soft);color:var(--forest-deep);}
+  .panel .body{padding:14px 16px 4px;background:#fff;}
+  .panel.hint .head{background:#efe3cb;color:var(--forest-deep);}
+  .panel .body p{font-size:1rem;line-height:1.55;}
+  .verdict{margin-top:13px;font-family:var(--font);font-size:.84rem;font-weight:700;padding:9px 14px;border-radius:999px;display:none;}
+  .verdict.show{display:inline-block;}
+  .verdict.right{background:var(--correct-bg);color:var(--forest-deep);}
+  .verdict.wrong{background:var(--wrong-bg);color:var(--wrong);}
+
+  /* matching game */
+  .match{background:#fffaf0;border:1px solid var(--line);border-radius:15px;padding:19px 22px;margin-top:4px;}
+  .match-cols{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+  .match-col{display:flex;flex-direction:column;gap:9px;}
+  .match-col .colhead{font-family:var(--font);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700;text-align:center;margin-bottom:2px;}
+  .m-item{display:flex;align-items:center;justify-content:center;background:#fff;border:1.5px solid var(--line);border-radius:11px;padding:13px;font-family:var(--font);font-size:1.1rem;font-weight:600;color:var(--ink);cursor:pointer;transition:border-color .12s,background .12s;}
+  .m-item:hover{border-color:var(--forest);}
+  .m-item.sel{border-color:var(--forest);background:var(--mint-soft);}
+  .m-item.done{border-color:var(--correct);background:var(--correct-bg);color:var(--forest-deep);cursor:default;}
+  .m-item.flash{border-color:var(--wrong);background:var(--wrong-bg);}
+  .match-status{margin-top:14px;font-weight:700;color:var(--forest-deep);font-size:.96rem;}
+
+  /* rapid drill */
+  .drill{background:#fffaf0;border:1px solid var(--line);border-radius:15px;padding:19px 22px;margin-top:4px;}
+  .drill-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+  .drill-head .t{font-weight:700;color:var(--navy);font-size:1.02rem;}
+  .drill-score{font-family:var(--font);font-size:.86rem;font-weight:700;color:var(--forest-deep);background:var(--mint-soft);border-radius:999px;padding:5px 13px;}
+  .drill-q{font-size:1.2rem;font-weight:700;color:var(--navy);margin-bottom:13px;}
+  .drill-opts{display:flex;flex-direction:column;gap:9px;}
+  .drill-opt{display:flex;align-items:center;gap:12px;background:#fff;border:1.5px solid var(--line);border-radius:11px;padding:12px 15px;font-family:var(--font);font-size:1.02rem;color:var(--ink);cursor:pointer;transition:border-color .12s,background .12s;}
+  .drill-opt:hover{border-color:var(--forest);}
+  .drill-opt.correct{border-color:var(--correct);background:var(--correct-bg);color:var(--forest-deep);}
+  .drill-opt.incorrect{border-color:var(--wrong);background:var(--wrong-bg);color:var(--wrong);}
+  .drill-opt[disabled]{cursor:default;}
+  .drill-foot{margin-top:14px;display:flex;align-items:center;gap:12px;}
+  .drill-final{font-size:1.15rem;font-weight:700;color:var(--navy);margin-bottom:10px;}
+
+  .bar{flex:0 0 auto;display:flex;align-items:center;gap:18px;justify-content:center;padding:13px 20px 18px;color:var(--surface);}
+  .navbtn{font-family:var(--font);font-weight:700;font-size:.92rem;background:var(--forest);color:var(--mint-soft);border:none;border-radius:10px;padding:11px 20px;cursor:pointer;transition:background .15s,opacity .15s;}
+  .navbtn:hover{background:var(--forest-deep);}
+  .navbtn:disabled{opacity:.34;cursor:default;}
+  .counter{font-family:var(--font);font-size:.82rem;letter-spacing:.04em;color:#9fb0c4;min-width:200px;text-align:center;}
+  .counter b{color:var(--mint);}
+  .counter .sec{display:block;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:#7d8ea3;margin-top:2px;}
+  .progress{position:fixed;top:0;left:0;height:3px;background:var(--mint);width:0;transition:width .3s ease;z-index:10;}
+  .hintbar{position:fixed;bottom:6px;left:0;right:0;text-align:center;font-family:var(--font);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:#5f718a;}
+  @media(max-width:660px){.slide{padding:26px 22px;}.deck{height:min(700px,76vh);}p,.sub{font-size:1rem;}.counter{min-width:120px;}.bigterm{font-size:2.4rem;}}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="stage">
+  <div class="deck" id="deck">
+
+    <!-- 1 TITLE -->
+    <section class="slide dark active" data-sec="Overview">
+      <div class="center">
+        <p class="eyebrow"><span class="star">&#10038;</span>&nbsp; Illuminairy &middot; SAT Math</p>
+        <h1 class="t">Exponents and radicals</h1>
+        <p class="sub">We will start with what the pieces mean, learn each rule with worked examples, practice it, then apply it to a real SAT problem. By the end, the goal is that you recognize which form a question wants and rewrite to match it.</p>
+      </div>
+    </section>
+
+    <!-- 2 WHAT IS AN EXPONENT -->
+    <section class="slide" data-sec="Foundations">
+      <p class="eyebrow">Start here</p>
+      <h2 class="t">What is a base? What is an exponent?</h2>
+      <div class="definer">
+        <div class="bigterm"><span class="b">2</span><span class="e">3</span></div>
+        <div class="deflegend">
+          <div class="legrow"><span class="chip base"></span><span>The <b>base</b> is <span class="m">2</span>, the number being multiplied.</span></div>
+          <div class="legrow"><span class="chip exp"></span><span>The <b>exponent</b> (also called the <b>power</b>) is <span class="m">3</span>, how many times you multiply the base by itself.</span></div>
+        </div>
+      </div>
+      <p>So an exponent is just shorthand for repeated multiplication:</p>
+      <div class="exbox">
+        <div class="exrow"><span class="m">2<sup>3</sup></span> = <span class="m">2 &times; 2 &times; 2</span> = <span class="m">8</span></div>
+        <div class="exrow"><span class="m">5<sup>2</sup></span> = <span class="m">5 &times; 5</span> = <span class="m">25</span></div>
+        <div class="exrow"><span class="m">10<sup>4</sup></span> = <span class="m">10 &times; 10 &times; 10 &times; 10</span> = <span class="m">10,000</span></div>
+      </div>
+      <div class="card-note"><b>Two you should just know:</b> anything to the first power is itself <span class="m">(<i>a</i><sup>1</sup> = <i>a</i>)</span>, and anything to the zero power is 1 <span class="m">(<i>a</i><sup>0</sup> = 1)</span>.</div>
+    </section>
+
+    <!-- 3 EXPONENT LAWS -->
+    <section class="slide" data-sec="Foundations">
+      <p class="eyebrow">Memorize the following</p>
+      <h2 class="t">Exponent laws, with an example each</h2>
+      <div class="lawgrid">
+        <div class="lawcard"><div class="lab">Multiply, same base</div><div class="law"><i>a</i><sup>m</sup> &middot; <i>a</i><sup>n</sup> = <i>a</i><sup>m+n</sup></div><div class="lex"><span class="m">2<sup>2</sup> &middot; 2<sup>3</sup> = 2<sup>5</sup> = 32</span></div></div>
+        <div class="lawcard"><div class="lab">Divide, same base</div><div class="law"><span class="frac"><span class="num"><i>a</i><sup>m</sup></span><span class="den"><i>a</i><sup>n</sup></span></span> = <i>a</i><sup>m&minus;n</sup></div><div class="lex"><span class="m"><span class="frac"><span class="num">2<sup>5</sup></span><span class="den">2<sup>2</sup></span></span> = 2<sup>3</sup> = 8</span></div></div>
+        <div class="lawcard"><div class="lab">Power of a power</div><div class="law">(<i>a</i><sup>m</sup>)<sup>n</sup> = <i>a</i><sup>mn</sup></div><div class="lex"><span class="m">(2<sup>2</sup>)<sup>3</sup> = 2<sup>6</sup> = 64</span></div></div>
+        <div class="lawcard"><div class="lab">Power of a product</div><div class="law">(<i>ab</i>)<sup>n</sup> = <i>a</i><sup>n</sup><i>b</i><sup>n</sup></div><div class="lex"><span class="m">(2 &middot; 3)<sup>2</sup> = 2<sup>2</sup> &middot; 3<sup>2</sup> = 36</span></div></div>
+        <div class="lawcard"><div class="lab">Power of a quotient</div><div class="law">(<span class="frac"><span class="num"><i>a</i></span><span class="den"><i>b</i></span></span>)<sup>n</sup> = <span class="frac"><span class="num"><i>a</i><sup>n</sup></span><span class="den"><i>b</i><sup>n</sup></span></span></div><div class="lex"><span class="m">(<span class="frac"><span class="num">2</span><span class="den">3</span></span>)<sup>2</sup> = <span class="frac"><span class="num">4</span><span class="den">9</span></span></span></div></div>
+        <div class="lawcard"><div class="lab">Negative and zero</div><div class="law"><i>a</i><sup>&minus;n</sup> = <span class="frac"><span class="num">1</span><span class="den"><i>a</i><sup>n</sup></span></span>, &nbsp; <i>a</i><sup>0</sup> = 1</div><div class="lex"><span class="m">2<sup>&minus;2</sup> = <span class="frac"><span class="num">1</span><span class="den">4</span></span>, &nbsp; 7<sup>0</sup> = 1</span></div></div>
+      </div>
+    </section>
+
+    <!-- 4 WHAT IS A RADICAL -->
+    <section class="slide" data-sec="Foundations">
+      <p class="eyebrow">Start here</p>
+      <h2 class="t">What is a radical?</h2>
+      <p>A radical asks the reverse of a power: what number, raised to a given root, gives what is inside?</p>
+      <div class="definer">
+        <div class="bigterm"><span class="ri">3</span><span class="rsym">&radic;</span><span class="rc">8</span></div>
+        <div class="deflegend">
+          <div class="legrow"><span class="chip exp"></span><span>The <b>index</b> is <span class="m">3</span>, which root you are taking (a cube root here). With no number written, the index is 2, a square root.</span></div>
+          <div class="legrow"><span class="chip base"></span><span>The <b>radicand</b> is <span class="m">8</span>, the number under the radical symbol.</span></div>
+        </div>
+      </div>
+      <div class="exbox">
+        <div class="exrow"><span class="m"><span class="rad">&radic;<span class="radicand">9</span></span></span> = <span class="m">3</span> <span class="note">because <span class="m">3<sup>2</sup> = 9</span></span></div>
+        <div class="exrow"><span class="m"><span class="rad"><span class="ridx">3</span>&radic;<span class="radicand">8</span></span></span> = <span class="m">2</span> <span class="note">because <span class="m">2<sup>3</sup> = 8</span></span></div>
+        <div class="exrow"><span class="m"><span class="rad">&radic;<span class="radicand">25</span></span></span> = <span class="m">5</span> <span class="note">because <span class="m">5<sup>2</sup> = 25</span></span></div>
+      </div>
+      <div class="card-note"><b>A radical is a power in disguise:</b> a square root is the same as the <span class="m">1/2</span> power, which is the bridge we use later.</div>
+    </section>
+
+    <!-- 5 RADICAL LAWS -->
+    <section class="slide" data-sec="Foundations">
+      <p class="eyebrow">Memorize the following</p>
+      <h2 class="t">Radical laws, with an example each</h2>
+      <div class="lawgrid">
+        <div class="lawcard"><div class="lab">Half power</div><div class="law"><i>a</i><sup>1/2</sup> = <span class="rad">&radic;<span class="radicand"><i>a</i></span></span></div><div class="lex"><span class="m">9<sup>1/2</sup> = <span class="rad">&radic;<span class="radicand">9</span></span> = 3</span></div></div>
+        <div class="lawcard"><div class="lab">nth root</div><div class="law"><i>a</i><sup>1/n</sup> = <span class="rad"><span class="ridx">n</span>&radic;<span class="radicand"><i>a</i></span></span></div><div class="lex"><span class="m">8<sup>1/3</sup> = <span class="rad"><span class="ridx">3</span>&radic;<span class="radicand">8</span></span> = 2</span></div></div>
+        <div class="lawcard"><div class="lab">Mixed power</div><div class="law"><i>a</i><sup>m/n</sup> = (<span class="rad"><span class="ridx">n</span>&radic;<span class="radicand"><i>a</i></span></span>)<sup>m</sup></div><div class="lex"><span class="m">8<sup>2/3</sup> = (<span class="rad"><span class="ridx">3</span>&radic;<span class="radicand">8</span></span>)<sup>2</sup> = 4</span></div></div>
+        <div class="lawcard"><div class="lab">Product</div><div class="law"><span class="rad">&radic;<span class="radicand"><i>ab</i></span></span> = <span class="rad">&radic;<span class="radicand"><i>a</i></span></span> <span class="rad">&radic;<span class="radicand"><i>b</i></span></span></div><div class="lex"><span class="m"><span class="rad">&radic;<span class="radicand">12</span></span> = <span class="rad">&radic;<span class="radicand">4</span></span><span class="rad">&radic;<span class="radicand">3</span></span> = 2<span class="rad">&radic;<span class="radicand">3</span></span></span></div></div>
+        <div class="lawcard"><div class="lab">Quotient</div><div class="law"><span class="rad">&radic;<span class="radicand"><span class="frac"><span class="num"><i>a</i></span><span class="den"><i>b</i></span></span></span></span> = <span class="frac"><span class="num"><span class="rad">&radic;<span class="radicand"><i>a</i></span></span></span><span class="den"><span class="rad">&radic;<span class="radicand"><i>b</i></span></span></span></span></div><div class="lex"><span class="m"><span class="rad">&radic;<span class="radicand"><span class="frac"><span class="num">9</span><span class="den">4</span></span></span></span> = <span class="frac"><span class="num">3</span><span class="den">2</span></span></span></div></div>
+        <div class="lawcard"><div class="lab">Square and root</div><div class="law">(<span class="rad">&radic;<span class="radicand"><i>a</i></span></span>)<sup>2</sup> = <i>a</i>, &nbsp; <span class="rad">&radic;<span class="radicand"><i>a</i><sup>2</sup></span></span> = |<i>a</i>|</div><div class="lex"><span class="m">(<span class="rad">&radic;<span class="radicand">5</span></span>)<sup>2</sup> = 5</span></div></div>
+      </div>
+    </section>
+
+    <!-- 6 REWRITING AS POWERS -->
+    <section class="slide" data-sec="Foundations">
+      <p class="eyebrow">A skill you will use constantly</p>
+      <h2 class="t">Rewriting a number as a power of a smaller base</h2>
+      <p>Many numbers are secretly a small base raised to a power. Recognizing this is what lets you compare or combine expressions. Learn these two families cold.</p>
+      <div class="exbox">
+        <div class="exlabel" style="padding-top:10px;">Powers of 2</div>
+        <div class="exrow"><span class="m">2 = 2<sup>1</sup></span>, <span class="m">4 = 2<sup>2</sup></span>, <span class="m">8 = 2<sup>3</sup></span>, <span class="m">16 = 2<sup>4</sup></span>, <span class="m">32 = 2<sup>5</sup></span>, <span class="m">64 = 2<sup>6</sup></span></div>
+        <div class="exlabel" style="padding-top:6px;">Powers of 3</div>
+        <div class="exrow"><span class="m">3 = 3<sup>1</sup></span>, <span class="m">9 = 3<sup>2</sup></span>, <span class="m">27 = 3<sup>3</sup></span>, <span class="m">81 = 3<sup>4</sup></span></div>
+      </div>
+      <div class="card-note"><b>Why it matters:</b> if a problem mixes <span class="m">4</span>, <span class="m">8</span>, and <span class="m">16</span>, you can rewrite them all as powers of <span class="m">2</span> and suddenly the bases match, which is the only way the exponent laws apply.</div>
+    </section>
+
+    <!-- 7 GAME: base match -->
+    <section class="slide" data-sec="Foundations">
+      <p class="eyebrow game">Game &middot; base match</p>
+      <h2 class="t">Match each number to its power form</h2>
+      <p style="margin-bottom:6px;">Click a number on the left, then its matching power on the right. Correct pairs lock in.</p>
+      <div class="match" id="baseMatch">
+        <div class="match-cols">
+          <div class="match-col">
+            <div class="colhead">Number</div>
+            <button class="m-item" data-pair="p1"><span class="m">8</span></button>
+            <button class="m-item" data-pair="p2"><span class="m">16</span></button>
+            <button class="m-item" data-pair="p3"><span class="m">32</span></button>
+            <button class="m-item" data-pair="p4"><span class="m">9</span></button>
+            <button class="m-item" data-pair="p5"><span class="m">27</span></button>
+            <button class="m-item" data-pair="p6"><span class="m">81</span></button>
+          </div>
+          <div class="match-col">
+            <div class="colhead">Power form</div>
+            <button class="m-item" data-pair="p2"><span class="m">2<sup>4</sup></span></button>
+            <button class="m-item" data-pair="p5"><span class="m">3<sup>3</sup></span></button>
+            <button class="m-item" data-pair="p1"><span class="m">2<sup>3</sup></span></button>
+            <button class="m-item" data-pair="p6"><span class="m">3<sup>4</sup></span></button>
+            <button class="m-item" data-pair="p3"><span class="m">2<sup>5</sup></span></button>
+            <button class="m-item" data-pair="p4"><span class="m">3<sup>2</sup></span></button>
+          </div>
+        </div>
+        <div class="match-status">Pairs matched: <span class="mcount">0</span> / 6</div>
+      </div>
+    </section>
+
+    <!-- 8 DESMOS -->
+    <section class="slide" data-sec="Foundations">
+      <p class="eyebrow">Calculator shortcut</p>
+      <h2 class="t">Finding a missing exponent in Desmos</h2>
+      <p>Sometimes you know the base and the result, and need the exponent. For example, <span class="m">3<sup>?</sup> = 81</span>. Two fast ways in Desmos:</p>
+      <div class="work">
+        <div class="step"><span class="n">1</span><span>Type the equation with <span class="m"><i>x</i></span> as the unknown exponent:<br><span class="inputchip">3^x = 81</span><br>Desmos graphs it and marks the solution <span class="m"><i>x</i> = 4</span>, since <span class="m">3<sup>4</sup> = 81</span>.</span></div>
+        <div class="step"><span class="n">2</span><span>Or use a logarithm, which asks that exact question directly:<br><span class="inputchip">log_3(81)</span><br>Desmos returns <span class="m">4</span>.</span></div>
+      </div>
+      <div class="card-note"><b>When to reach for this:</b> you know the base and the output and need the power. On the no-calculator section you would instead rewrite <span class="m">81</span> as <span class="m">3<sup>4</sup></span> by hand, which is why the power families on the last slide are worth memorizing.</div>
+    </section>
+
+    <!-- ================= PRODUCT LAW ================= -->
+    <!-- 9 product examples + exercise -->
+    <section class="slide" data-sec="Multiply">
+      <p class="eyebrow">Law 1 &middot; multiply with the same base</p>
+      <div class="formula-card">
+        <span class="formula"><i>a</i><sup>m</sup> &middot; <i>a</i><sup>n</sup> = <i>a</i><sup>m+n</sup></span>
+        <div class="eg">Same base, multiply: keep the base, add the exponents.</div>
+      </div>
+      <div class="exbox">
+        <div class="exrow"><span class="m">2<sup>3</sup> &middot; 2<sup>4</sup></span> = <span class="m">2<sup>3+4</sup></span> = <span class="m">2<sup>7</sup> = 128</span></div>
+        <div class="exrow"><span class="m"><i>x</i><sup>2</sup> &middot; <i>x</i><sup>5</sup></span> = <span class="m"><i>x</i><sup>7</sup></span></div>
+      </div>
+      <div class="bothways"><b>Read it both ways:</b> a sum in one exponent can be split back apart, so <span class="m">2<sup>7</sup> = 2<sup>3</sup> &middot; 2<sup>4</sup></span>. That split is exactly the trick for the SAT problem next.</div>
+      <div class="pq" data-correct="A" data-hint="Same base, so add the exponents.">
+        <div class="qlab">Exercise</div>
+        <div class="stem">Simplify <span class="m"><i>x</i><sup>3</sup> &middot; <i>x</i><sup>5</sup></span>.</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span><span class="m"><i>x</i><sup>8</sup></span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span><span class="m"><i>x</i><sup>15</sup></span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span><span class="m"><i>x</i><sup>2</sup></span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span><span class="m">2<i>x</i><sup>8</sup></span><span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body"><div class="work">
+          <div class="step"><span class="n">1</span><span>Bases match, so add exponents: <span class="m">3 + 5 = 8</span>.</span></div>
+          <div class="step"><span class="n">2</span><span><span class="m"><i>x</i><sup>8</sup></span>. <strong>Choice A.</strong> Choice B multiplies the exponents instead of adding.</span></div>
+        </div></div></div>
+      </div>
+    </section>
+
+    <!-- 10 product SAT -->
+    <section class="slide" data-sec="Multiply">
+      <p class="eyebrow sat">On the SAT &middot; multiply with the same base</p>
+      <div class="pq sat" data-correct="A" data-hint="A sum in the exponent splits into a product: 2<sup>r+s</sup> = 2<sup>r</sup> &middot; 2<sup>s</sup>. You are given both of those.">
+        <div class="qlab">Applying the law</div>
+        <div class="stem">If <span class="m">2<sup>r</sup> = 5</span> and <span class="m">2<sup>s</sup> = 7</span>, what is the value of <span class="m">2<sup>r+s</sup></span>?</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span><span class="m">35</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span><span class="m">12</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span><span class="m">2</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span><span class="m">57</span><span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body"><div class="work">
+          <div class="step"><span class="n">1</span><span>Split the sum: <span class="m">2<sup>r+s</sup> = 2<sup>r</sup> &middot; 2<sup>s</sup></span>.</span></div>
+          <div class="step"><span class="n">2</span><span>Substitute the given values: <span class="m">5 &middot; 7 = 35</span>. <strong>Choice A.</strong></span></div>
+          <div class="step"><span class="n">3</span><span>Choice B comes from adding the exponents <span class="m"><i>r</i> + <i>s</i></span> as if they were the numbers 5 and 7, which is not what the law says.</span></div>
+        </div></div></div>
+      </div>
+    </section>
+
+    <!-- ================= QUOTIENT LAW ================= -->
+    <!-- 11 quotient examples + exercise -->
+    <section class="slide" data-sec="Divide">
+      <p class="eyebrow">Law 2 &middot; divide with the same base</p>
+      <div class="formula-card">
+        <span class="formula"><span class="frac"><span class="num"><i>a</i><sup>m</sup></span><span class="den"><i>a</i><sup>n</sup></span></span> = <i>a</i><sup>m&minus;n</sup></span>
+        <div class="eg">Same base, divide: keep the base, subtract the exponents.</div>
+      </div>
+      <div class="exbox">
+        <div class="exrow"><span class="m"><span class="frac"><span class="num">2<sup>7</sup></span><span class="den">2<sup>3</sup></span></span></span> = <span class="m">2<sup>7&minus;3</sup></span> = <span class="m">2<sup>4</sup> = 16</span></div>
+        <div class="exrow"><span class="m"><span class="frac"><span class="num"><i>x</i><sup>9</sup></span><span class="den"><i>x</i><sup>2</sup></span></span></span> = <span class="m"><i>x</i><sup>7</sup></span></div>
+      </div>
+      <div class="bothways"><b>Read it both ways:</b> a difference in an exponent can become a division, so <span class="m">5<sup>p&minus;q</sup> = <span class="frac"><span class="num">5<sup>p</sup></span><span class="den">5<sup>q</sup></span></span></span>. That is the SAT move on the next slide.</div>
+      <div class="pq" data-correct="A" data-hint="Same base, so subtract the exponents.">
+        <div class="qlab">Exercise</div>
+        <div class="stem">Simplify <span class="m"><span class="frac"><span class="num"><i>x</i><sup>9</sup></span><span class="den"><i>x</i><sup>2</sup></span></span></span>.</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span><span class="m"><i>x</i><sup>7</sup></span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span><span class="m"><i>x</i><sup>11</sup></span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span><span class="m"><span class="frac"><span class="num">1</span><span class="den"><i>x</i><sup>7</sup></span></span></span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span><span class="m"><i>x</i><sup>4.5</sup></span><span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body"><div class="work">
+          <div class="step"><span class="n">1</span><span>Bases match, so subtract exponents: <span class="m">9 &minus; 2 = 7</span>.</span></div>
+          <div class="step"><span class="n">2</span><span><span class="m"><i>x</i><sup>7</sup></span>. <strong>Choice A.</strong> Choice D divides the exponents, which is not the rule.</span></div>
+        </div></div></div>
+      </div>
+    </section>
+
+    <!-- 12 quotient SAT -->
+    <section class="slide" data-sec="Divide">
+      <p class="eyebrow sat">On the SAT &middot; divide with the same base</p>
+      <div class="pq sat" data-correct="A" data-hint="A difference in the exponent becomes a division: 5<sup>p&minus;q</sup> = 5<sup>p</sup> / 5<sup>q</sup>. Divide the two given values.">
+        <div class="qlab">Applying the law</div>
+        <div class="stem">If <span class="m">5<sup>p</sup> = 80</span> and <span class="m">5<sup>q</sup> = 4</span>, what is the value of <span class="m">5<sup>p&minus;q</sup></span>?</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span><span class="m">20</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span><span class="m">76</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span><span class="m">320</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span><span class="m">5</span><span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body"><div class="work">
+          <div class="step"><span class="n">1</span><span>Turn the difference into a quotient: <span class="m">5<sup>p&minus;q</sup> = <span class="frac"><span class="num">5<sup>p</sup></span><span class="den">5<sup>q</sup></span></span></span>.</span></div>
+          <div class="step"><span class="n">2</span><span>Substitute: <span class="m"><span class="frac"><span class="num">80</span><span class="den">4</span></span> = 20</span>. <strong>Choice A.</strong></span></div>
+          <div class="step"><span class="n">3</span><span>Choice B subtracts the values; C multiplies them. The law says divide.</span></div>
+        </div></div></div>
+      </div>
+    </section>
+
+    <!-- ================= POWER OF A POWER ================= -->
+    <!-- 13 power of power examples + exercise -->
+    <section class="slide" data-sec="Power of a power">
+      <p class="eyebrow">Law 3 &middot; a power raised to a power</p>
+      <div class="formula-card">
+        <span class="formula">(<i>a</i><sup>m</sup>)<sup>n</sup> = <i>a</i><sup>mn</sup></span>
+        <div class="eg">Keep the base, multiply the exponents.</div>
+      </div>
+      <div class="exbox">
+        <div class="exrow"><span class="m">(2<sup>3</sup>)<sup>2</sup></span> = <span class="m">2<sup>6</sup> = 64</span></div>
+        <div class="exrow"><span class="m">(<i>x</i><sup>4</sup>)<sup>3</sup></span> = <span class="m"><i>x</i><sup>12</sup></span></div>
+      </div>
+      <div class="bothways"><b>Read it both ways:</b> you can pull a base apart too. Since <span class="m">16 = 4<sup>2</sup></span>, <span class="m">16<sup>x</sup> = (4<sup>2</sup>)<sup>x</sup> = (4<sup>x</sup>)<sup>2</sup></span>. That rewrite is what the SAT problem needs.</div>
+      <div class="pq" data-correct="A" data-hint="Multiply the two exponents.">
+        <div class="qlab">Exercise</div>
+        <div class="stem">Simplify <span class="m">(<i>x</i><sup>4</sup>)<sup>3</sup></span>.</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span><span class="m"><i>x</i><sup>12</sup></span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span><span class="m"><i>x</i><sup>7</sup></span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span><span class="m"><i>x</i><sup>64</sup></span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span><span class="m">3<i>x</i><sup>4</sup></span><span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body"><div class="work">
+          <div class="step"><span class="n">1</span><span>Multiply the exponents: <span class="m">4 &times; 3 = 12</span>.</span></div>
+          <div class="step"><span class="n">2</span><span><span class="m"><i>x</i><sup>12</sup></span>. <strong>Choice A.</strong> Choice B adds them instead.</span></div>
+        </div></div></div>
+      </div>
+    </section>
+
+    <!-- 14 power of power SAT -->
+    <section class="slide" data-sec="Power of a power">
+      <p class="eyebrow sat">On the SAT &middot; power of a power</p>
+      <div class="pq sat" data-correct="A" data-hint="Rewrite 16 as 4<sup>2</sup>, so 16<sup>x</sup> = (4<sup>2</sup>)<sup>x</sup> = (4<sup>x</sup>)<sup>2</sup>. You know 4<sup>x</sup>.">
+        <div class="qlab">Applying the law</div>
+        <div class="stem">If <span class="m">4<sup>x</sup> = 12</span>, what is the value of <span class="m">16<sup>x</sup></span>?</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span><span class="m">144</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span><span class="m">24</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span><span class="m">48</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span><span class="m">12</span><span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body"><div class="work">
+          <div class="step"><span class="n">1</span><span><span class="m">16 = 4<sup>2</sup></span>, so <span class="m">16<sup>x</sup> = (4<sup>2</sup>)<sup>x</sup> = 4<sup>2x</sup></span>.</span></div>
+          <div class="step"><span class="n">2</span><span>Regroup as <span class="m">4<sup>2x</sup> = (4<sup>x</sup>)<sup>2</sup></span>.</span></div>
+          <div class="step"><span class="n">3</span><span>Substitute: <span class="m">(12)<sup>2</sup> = 144</span>. <strong>Choice A.</strong> Choice B doubles 12 instead of squaring it.</span></div>
+        </div></div></div>
+      </div>
+    </section>
+
+    <!-- ================= NEGATIVE / ZERO ================= -->
+    <!-- 15 negative examples + exercise -->
+    <section class="slide" data-sec="Negative and zero">
+      <p class="eyebrow">Law 4 &middot; negative and zero exponents</p>
+      <div class="formula-card">
+        <span class="formula"><i>a</i><sup>&minus;n</sup> = <span class="frac"><span class="num">1</span><span class="den"><i>a</i><sup>n</sup></span></span>, &nbsp; <i>a</i><sup>0</sup> = 1</span>
+        <div class="eg">A negative exponent means reciprocal, not a negative number.</div>
+      </div>
+      <div class="exbox">
+        <div class="exrow"><span class="m">2<sup>&minus;3</sup></span> = <span class="m"><span class="frac"><span class="num">1</span><span class="den">2<sup>3</sup></span></span></span> = <span class="m"><span class="frac"><span class="num">1</span><span class="den">8</span></span></span></div>
+        <div class="exrow"><span class="m"><i>x</i><sup>&minus;2</sup></span> = <span class="m"><span class="frac"><span class="num">1</span><span class="den"><i>x</i><sup>2</sup></span></span></span></div>
+        <div class="exrow"><span class="m">5<sup>0</sup> = 1</span>, <span class="m">100<sup>0</sup> = 1</span></div>
+      </div>
+      <div class="bothways"><b>Read it both ways:</b> a fraction can become a negative exponent, so <span class="m"><span class="frac"><span class="num">1</span><span class="den">9</span></span> = 3<sup>&minus;2</sup></span>.</div>
+      <div class="pq" data-correct="A" data-hint="Negative exponent means take the reciprocal of the positive-power value.">
+        <div class="qlab">Exercise</div>
+        <div class="stem">What is the value of <span class="m">2<sup>&minus;3</sup></span>?</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span><span class="m"><span class="frac"><span class="num">1</span><span class="den">8</span></span></span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span><span class="m">&minus;8</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span><span class="m">&minus;6</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span><span class="m">8</span><span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body"><div class="work">
+          <div class="step"><span class="n">1</span><span><span class="m">2<sup>&minus;3</sup> = <span class="frac"><span class="num">1</span><span class="den">2<sup>3</sup></span></span> = <span class="frac"><span class="num">1</span><span class="den">8</span></span></span>. <strong>Choice A.</strong></span></div>
+          <div class="step"><span class="n">2</span><span>Choices B and C treat the negative as making the value negative, which is the classic trap.</span></div>
+        </div></div></div>
+      </div>
+    </section>
+
+    <!-- 16 negative SAT -->
+    <section class="slide" data-sec="Negative and zero">
+      <p class="eyebrow sat">On the SAT &middot; negative exponents</p>
+      <div class="pq sat" data-correct="A" data-hint="3<sup>&minus;x</sup> = 1 / 3<sup>x</sup> = 1/9. Then add 3<sup>x</sup> = 9.">
+        <div class="qlab">Applying the law</div>
+        <div class="stem">If <span class="m">3<sup>x</sup> = 9</span>, what is the value of <span class="m">3<sup>&minus;x</sup> + 3<sup>x</sup></span>?</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span><span class="m"><span class="frac"><span class="num">82</span><span class="den">9</span></span></span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span><span class="m">9</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span><span class="m"><span class="frac"><span class="num">10</span><span class="den">9</span></span></span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span><span class="m">&minus;<span class="frac"><span class="num">82</span><span class="den">9</span></span></span><span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body"><div class="work">
+          <div class="step"><span class="n">1</span><span><span class="m">3<sup>&minus;x</sup> = <span class="frac"><span class="num">1</span><span class="den">3<sup>x</sup></span></span> = <span class="frac"><span class="num">1</span><span class="den">9</span></span></span>.</span></div>
+          <div class="step"><span class="n">2</span><span>Add: <span class="m"><span class="frac"><span class="num">1</span><span class="den">9</span></span> + 9 = <span class="frac"><span class="num">1</span><span class="den">9</span></span> + <span class="frac"><span class="num">81</span><span class="den">9</span></span> = <span class="frac"><span class="num">82</span><span class="den">9</span></span></span>. <strong>Choice A.</strong></span></div>
+          <div class="step"><span class="n">3</span><span>The negative exponent made a reciprocal, not a negative value, so D is the trap.</span></div>
+        </div></div></div>
+      </div>
+    </section>
+
+    <!-- ================= FRACTIONAL ================= -->
+    <!-- 17 fractional examples + exercise -->
+    <section class="slide" data-sec="Fractional exponents">
+      <p class="eyebrow">Law 5 &middot; fractional exponents are radicals</p>
+      <div class="formula-card">
+        <span class="formula"><i>a</i><sup>m/n</sup> = (<span class="rad"><span class="ridx">n</span>&radic;<span class="radicand"><i>a</i></span></span>)<sup>m</sup></span>
+        <div class="eg">The bottom of the fraction is the root, the top is the power.</div>
+      </div>
+      <div class="exbox">
+        <div class="exrow"><span class="m">9<sup>1/2</sup></span> = <span class="m"><span class="rad">&radic;<span class="radicand">9</span></span></span> = <span class="m">3</span></div>
+        <div class="exrow"><span class="m">8<sup>1/3</sup></span> = <span class="m"><span class="rad"><span class="ridx">3</span>&radic;<span class="radicand">8</span></span></span> = <span class="m">2</span></div>
+        <div class="exrow"><span class="m">27<sup>2/3</sup></span> = <span class="m">(<span class="rad"><span class="ridx">3</span>&radic;<span class="radicand">27</span></span>)<sup>2</sup></span> = <span class="m">3<sup>2</sup> = 9</span></div>
+      </div>
+      <div class="bothways"><b>Read it both ways:</b> a root is a fractional power, so <span class="m"><span class="rad">&radic;<span class="radicand"><i>x</i></span></span> = <i>x</i><sup>1/2</sup></span> and <span class="m"><span class="rad"><span class="ridx">3</span>&radic;<span class="radicand"><i>x</i><sup>2</sup></span></span> = <i>x</i><sup>2/3</sup></span>. Switching to exponents often makes the algebra easier.</div>
+      <div class="pq" data-correct="A" data-hint="The 3 in the bottom means cube root; the 2 on top means square it. Cube root of 27 is 3.">
+        <div class="qlab">Exercise</div>
+        <div class="stem">What is the value of <span class="m">27<sup>2/3</sup></span>?</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span><span class="m">9</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span><span class="m">18</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span><span class="m">3</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span><span class="m">729</span><span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body"><div class="work">
+          <div class="step"><span class="n">1</span><span>Bottom is 3, so take the cube root: <span class="m"><span class="rad"><span class="ridx">3</span>&radic;<span class="radicand">27</span></span> = 3</span>.</span></div>
+          <div class="step"><span class="n">2</span><span>Top is 2, so square it: <span class="m">3<sup>2</sup> = 9</span>. <strong>Choice A.</strong> Choice C stops after the root and forgets the power.</span></div>
+        </div></div></div>
+      </div>
+    </section>
+
+    <!-- 18 fractional SAT -->
+    <section class="slide" data-sec="Fractional exponents">
+      <p class="eyebrow sat">On the SAT &middot; fractional exponents</p>
+      <div class="pq sat" data-correct="A" data-hint="Distribute the 3/4 power over the coefficient and the variable: 16<sup>3/4</sup> and (x<sup>8</sup>)<sup>3/4</sup>, then handle each.">
+        <div class="qlab">Equivalent expressions</div>
+        <div class="stem">For <span class="m"><i>x</i> &gt; 0</span>, which of the following is equivalent to <span class="m">(16<i>x</i><sup>8</sup>)<sup>3/4</sup></span>?</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span><span class="m">8<i>x</i><sup>6</sup></span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span><span class="m">12<i>x</i><sup>6</sup></span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span><span class="m">8<i>x</i><sup>11</sup></span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span><span class="m">64<i>x</i><sup>6</sup></span><span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body"><div class="work">
+          <div class="step"><span class="n">1</span><span>Distribute the outer power: <span class="m">(16<i>x</i><sup>8</sup>)<sup>3/4</sup> = 16<sup>3/4</sup> &middot; (<i>x</i><sup>8</sup>)<sup>3/4</sup></span>.</span></div>
+          <div class="step"><span class="n">2</span><span><span class="m">16<sup>3/4</sup> = (<span class="rad"><span class="ridx">4</span>&radic;<span class="radicand">16</span></span>)<sup>3</sup> = 2<sup>3</sup> = 8</span>.</span></div>
+          <div class="step"><span class="n">3</span><span><span class="m">(<i>x</i><sup>8</sup>)<sup>3/4</sup> = <i>x</i><sup>8 &middot; 3/4</sup> = <i>x</i><sup>6</sup></span>.</span></div>
+          <div class="step"><span class="n">4</span><span>Together: <span class="m">8<i>x</i><sup>6</sup></span>. <strong>Choice A.</strong> Choice B multiplies 16 by 3/4 for the coefficient, which is not how a power works.</span></div>
+        </div></div></div>
+      </div>
+    </section>
+
+    <!-- ================= COMMON BASE EQUATIONS ================= -->
+    <!-- solve by matching the base: obvious -->
+    <section class="slide" data-sec="Common base equations">
+      <p class="eyebrow sat">On the SAT &middot; solve by matching the base</p>
+      <div class="formula-card">
+        <span class="formula">If <i>a</i><sup>m</sup> = <i>a</i><sup>n</sup>, then <i>m</i> = <i>n</i></span>
+        <div class="eg">Rewrite both sides as the same base, then set the exponents equal and solve.</div>
+      </div>
+      <div class="exbox">
+        <div class="exrow"><span class="m">2<sup>x</sup> = 32</span> = <span class="m">2<sup>x</sup> = 2<sup>5</sup></span> <span class="note">so <span class="m"><i>x</i> = 5</span></span></div>
+        <div class="exrow"><span class="m">3<sup>x+1</sup> = 81</span> = <span class="m">3<sup>x+1</sup> = 3<sup>4</sup></span> <span class="note">so <span class="m"><i>x</i> + 1 = 4</span>, <span class="m"><i>x</i> = 3</span></span></div>
+      </div>
+      <div class="pq sat" data-correct="A" data-hint="Rewrite 125 as a power of 5. Then set the exponents equal.">
+        <div class="qlab">Exercise</div>
+        <div class="stem">Solve <span class="m">5<sup>x</sup> = 125</span>.</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span><span class="m"><i>x</i> = 3</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span><span class="m"><i>x</i> = 25</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span><span class="m"><i>x</i> = 5</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span><span class="m"><i>x</i> = 2</span><span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body"><div class="work">
+          <div class="step"><span class="n">1</span><span><span class="m">125 = 5<sup>3</sup></span>, so <span class="m">5<sup>x</sup> = 5<sup>3</sup></span>.</span></div>
+          <div class="step"><span class="n">2</span><span>Set the exponents equal: <span class="m"><i>x</i> = 3</span>. <strong>Choice A.</strong> Choice B divides 125 by 5, which is not how exponents work.</span></div>
+        </div></div></div>
+      </div>
+    </section>
+
+    <!-- solve: both sides need rewriting -->
+    <section class="slide" data-sec="Common base equations">
+      <p class="eyebrow sat">On the SAT &middot; when neither side is ready</p>
+      <p style="margin-bottom:10px;">Sometimes the two sides use different bases, and neither is the one you want. Rewrite <b>both</b> down to a common small base first.</p>
+      <div class="exbox">
+        <div class="exrow"><span class="m">4<sup>x</sup> = 8</span> = <span class="m">2<sup>2x</sup> = 2<sup>3</sup></span> <span class="note">so <span class="m">2<i>x</i> = 3</span>, <span class="m"><i>x</i> = <sup>3</sup>&frasl;<sub>2</sub></span></span></div>
+        <div class="exrow"><span class="m">9<sup>x</sup> = 27</span> = <span class="m">3<sup>2x</sup> = 3<sup>3</sup></span> <span class="note">so <span class="m"><i>x</i> = <sup>3</sup>&frasl;<sub>2</sub></span></span></div>
+      </div>
+      <div class="bothways"><b>Distribute carefully:</b> when the exponent is an expression like <span class="m"><i>x</i> &minus; 1</span>, the rewrite multiplies the whole thing. <span class="m">8<sup>x&minus;1</sup> = 2<sup>3(x&minus;1)</sup> = 2<sup>3x&minus;3</sup></span>, not <span class="m">2<sup>3x&minus;1</sup></span>.</div>
+      <div class="pq sat" data-correct="A" data-hint="Rewrite both 4 and 8 as powers of 2. Watch the exponent on the right: 3(x-1), not 3x-1.">
+        <div class="qlab">Exercise</div>
+        <div class="stem">Solve <span class="m">4<sup>x</sup> = 8<sup>x&minus;1</sup></span>.</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span><span class="m"><i>x</i> = 3</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span><span class="m"><i>x</i> = 1</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span><span class="m"><i>x</i> = <sup>3</sup>&frasl;<sub>2</sub></span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span><span class="m"><i>x</i> = &minus;1</span><span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body"><div class="work">
+          <div class="step"><span class="n">1</span><span>Rewrite both as powers of 2: <span class="m">4<sup>x</sup> = 2<sup>2x</sup></span> and <span class="m">8<sup>x&minus;1</sup> = 2<sup>3(x&minus;1)</sup> = 2<sup>3x&minus;3</sup></span>.</span></div>
+          <div class="step"><span class="n">2</span><span>Set exponents equal: <span class="m">2<i>x</i> = 3<i>x</i> &minus; 3</span>.</span></div>
+          <div class="step"><span class="n">3</span><span>Solve: <span class="m"><i>x</i> = 3</span>. <strong>Choice A.</strong> Check: <span class="m">4<sup>3</sup> = 64</span> and <span class="m">8<sup>2</sup> = 64</span>.</span></div>
+          <div class="step"><span class="n">4</span><span>Choice B comes from writing the right exponent as <span class="m">3<i>x</i> &minus; 1</span> and forgetting to distribute the 3.</span></div>
+        </div></div></div>
+      </div>
+    </section>
+
+    <!-- solve: combine first (sneaky) -->
+    <section class="slide" data-sec="Common base equations">
+      <p class="eyebrow sat">On the SAT &middot; the sneaky ones</p>
+      <h2 class="t">Combine before you match</h2>
+      <div class="warn-note"><b>Do not write</b> <span class="m">2<sup>x</sup> + 2<sup>x</sup> = 4<sup>x</sup></span>. Adding two copies of the same power <b>doubles</b> it, it does not change the base: <span class="m">2<sup>x</sup> + 2<sup>x</sup> = 2 &middot; 2<sup>x</sup> = 2<sup>x+1</sup></span>.</div>
+      <div class="exbox">
+        <div class="exrow"><span class="m">2<sup>x</sup> + 2<sup>x</sup></span> = <span class="m">2 &middot; 2<sup>x</sup></span> = <span class="m">2<sup>x+1</sup></span> <span class="note">two copies double</span></div>
+        <div class="exrow"><span class="m">2<sup>x</sup> + 2<sup>x+1</sup></span> = <span class="m">2<sup>x</sup>(1 + 2)</span> = <span class="m">3 &middot; 2<sup>x</sup></span> <span class="note">factor out the smaller power</span></div>
+      </div>
+      <div class="pq sat" data-correct="A" data-hint="2^x + 2^x is 2 times 2^x, which is 2^(x+1). Set that equal to 64 = 2^6.">
+        <div class="qlab">Exercise</div>
+        <div class="stem">If <span class="m">2<sup>x</sup> + 2<sup>x</sup> = 64</span>, what is the value of <span class="m"><i>x</i></span>?</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span><span class="m"><i>x</i> = 5</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span><span class="m"><i>x</i> = 6</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span><span class="m"><i>x</i> = 3</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span><span class="m"><i>x</i> = 32</span><span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body"><div class="work">
+          <div class="step"><span class="n">1</span><span>Combine the left side: <span class="m">2<sup>x</sup> + 2<sup>x</sup> = 2 &middot; 2<sup>x</sup> = 2<sup>x+1</sup></span>.</span></div>
+          <div class="step"><span class="n">2</span><span><span class="m">64 = 2<sup>6</sup></span>, so <span class="m">2<sup>x+1</sup> = 2<sup>6</sup></span>, giving <span class="m"><i>x</i> + 1 = 6</span>, <span class="m"><i>x</i> = 5</span>. <strong>Choice A.</strong></span></div>
+          <div class="step"><span class="n">3</span><span>Choice B treats the left as a single <span class="m">2<sup>x</sup> = 64</span>. Choice C treats it as <span class="m">2<sup>2x</sup> = 64</span>. Choice D reports <span class="m">2<sup>x</sup> = 32</span> instead of <span class="m"><i>x</i></span>.</span></div>
+        </div></div></div>
+      </div>
+    </section>
+
+    <!-- ================= CAPSTONE ================= -->
+    <!-- 19 how to think -->
+    <section class="slide" data-sec="Same-base capstone">
+      <p class="eyebrow">Putting it together &middot; how to start</p>
+      <h2 class="t">A harder one: where do you even begin?</h2>
+      <p>Suppose you see <span class="m"><span class="frac"><span class="num">8<sup>x</sup></span><span class="den">2<sup>y</sup></span></span></span> and a fact like <span class="m">3<i>x</i> &minus; <i>y</i> = 10</span>. Work through three questions before touching it.</p>
+      <div class="work">
+        <div class="step qn"><span class="n">1</span><span><b>Same base or same power?</b> The exponents <span class="m"><i>x</i></span> and <span class="m"><i>y</i></span> are different unknowns, so you cannot match powers. But the bases <span class="m">8</span> and <span class="m">2</span> are both powers of 2, so match the base. Write <span class="m">8 = 2<sup>3</sup></span>, giving <span class="m">8<sup>x</sup> = 2<sup>3x</sup></span>.</span></div>
+        <div class="step qn"><span class="n">2</span><span><b>Now it is <span class="m"><span class="frac"><span class="num">2<sup>3x</sup></span><span class="den">2<sup>y</sup></span></span></span>. Do the 2's cancel?</b> No. They are not separate factors you can strike out. Dividing powers of the same base means subtract the exponents: <span class="m">2<sup>3x&minus;y</sup></span>. The base 2 stays.</span></div>
+        <div class="step qn"><span class="n">3</span><span><b>What do you know?</b> The exponent is now <span class="m">3<i>x</i> &minus; <i>y</i></span>, which you were told equals 10. So the whole thing is <span class="m">2<sup>10</sup></span>.</span></div>
+      </div>
+      <div class="card-note"><b>The habit:</b> when bases differ, ask whether they share a smaller base before anything else. Matching the base is what lets every other rule apply.</div>
+    </section>
+
+    <!-- 20 capstone question -->
+    <section class="slide" data-sec="Same-base capstone">
+      <p class="eyebrow sat">On the SAT &middot; same-base rewriting</p>
+      <div class="pq sat" data-correct="A" data-hint="Rewrite 8 as 2<sup>3</sup>, so the top is 2<sup>3x</sup>. Dividing same bases subtracts exponents: 2<sup>3x&minus;y</sup>. You know 3x&minus;y.">
+        <div class="qlab">The capstone</div>
+        <div class="stem">If <span class="m">3<i>x</i> &minus; <i>y</i> = 10</span>, what is the value of <span class="m"><span class="frac"><span class="num">8<sup>x</sup></span><span class="den">2<sup>y</sup></span></span></span>?</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span><span class="m">1024</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span><span class="m">512</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span><span class="m">8</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span><span class="m">10</span><span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body"><div class="work">
+          <div class="step"><span class="n">1</span><span>Match the base: <span class="m">8 = 2<sup>3</sup></span>, so <span class="m">8<sup>x</sup> = 2<sup>3x</sup></span>.</span></div>
+          <div class="step"><span class="n">2</span><span>Divide same bases by subtracting exponents: <span class="m"><span class="frac"><span class="num">2<sup>3x</sup></span><span class="den">2<sup>y</sup></span></span> = 2<sup>3x&minus;y</sup></span>. The 2's do not cancel.</span></div>
+          <div class="step"><span class="n">3</span><span>The exponent equals 10, so <span class="m">2<sup>10</sup> = 1024</span>. <strong>Choice A.</strong> Choice D just restates the exponent without raising 2 to it.</span></div>
+        </div></div></div>
+      </div>
+    </section>
+
+    <!-- ================= SIMPLIFY RADICALS ================= -->
+    <!-- 21 simplify examples + exercise -->
+    <section class="slide" data-sec="Simplify radicals">
+      <p class="eyebrow">Law 6 &middot; simplifying radicals</p>
+      <div class="formula-card">
+        <span class="formula"><span class="rad">&radic;<span class="radicand"><i>ab</i></span></span> = <span class="rad">&radic;<span class="radicand"><i>a</i></span></span> <span class="rad">&radic;<span class="radicand"><i>b</i></span></span></span>
+        <div class="eg">Pull out the largest perfect square factor and take its root out front.</div>
+      </div>
+      <div class="exbox">
+        <div class="exrow"><span class="m"><span class="rad">&radic;<span class="radicand">72</span></span></span> = <span class="m"><span class="rad">&radic;<span class="radicand">36 &middot; 2</span></span></span> = <span class="m">6<span class="rad">&radic;<span class="radicand">2</span></span></span></div>
+        <div class="exrow"><span class="m"><span class="rad">&radic;<span class="radicand">50</span></span></span> = <span class="m"><span class="rad">&radic;<span class="radicand">25 &middot; 2</span></span></span> = <span class="m">5<span class="rad">&radic;<span class="radicand">2</span></span></span></div>
+        <div class="exrow"><span class="m"><span class="rad">&radic;<span class="radicand">18</span></span></span> = <span class="m"><span class="rad">&radic;<span class="radicand">9 &middot; 2</span></span></span> = <span class="m">3<span class="rad">&radic;<span class="radicand">2</span></span></span></div>
+      </div>
+      <div class="card-note"><b>Perfect squares to know:</b> <span class="m">4, 9, 16, 25, 36, 49, 64, 81, 100, 121, 144</span>. Always factor out the biggest one so nothing is left to simplify.</div>
+      <div class="pq" data-correct="A" data-hint="50 = 25 &middot; 2, and 25 is a perfect square.">
+        <div class="qlab">Exercise</div>
+        <div class="stem">Simplify <span class="m"><span class="rad">&radic;<span class="radicand">50</span></span></span>.</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span><span class="m">5<span class="rad">&radic;<span class="radicand">2</span></span></span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span><span class="m">2<span class="rad">&radic;<span class="radicand">5</span></span></span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span><span class="m">25<span class="rad">&radic;<span class="radicand">2</span></span></span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span><span class="m">10</span><span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body"><div class="work">
+          <div class="step"><span class="n">1</span><span><span class="m">50 = 25 &middot; 2</span>, and 25 is a perfect square.</span></div>
+          <div class="step"><span class="n">2</span><span><span class="m"><span class="rad">&radic;<span class="radicand">25</span></span><span class="rad">&radic;<span class="radicand">2</span></span> = 5<span class="rad">&radic;<span class="radicand">2</span></span></span>. <strong>Choice A.</strong></span></div>
+        </div></div></div>
+      </div>
+    </section>
+
+    <!-- 22 simplify SAT -->
+    <section class="slide" data-sec="Simplify radicals">
+      <p class="eyebrow sat">On the SAT &middot; simplifying with a variable</p>
+      <div class="pq sat" data-correct="A" data-hint="Split 48x<sup>3</sup> into a perfect-square part and the rest: 16x<sup>2</sup> is a perfect square, leaving 3x inside.">
+        <div class="qlab">Equivalent expressions</div>
+        <div class="stem">For <span class="m"><i>x</i> &gt; 0</span>, which of the following is equivalent to <span class="m"><span class="rad">&radic;<span class="radicand">48<i>x</i><sup>3</sup></span></span></span>?</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span><span class="m">4<i>x</i><span class="rad">&radic;<span class="radicand">3<i>x</i></span></span></span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span><span class="m">4<i>x</i><sup>2</sup><span class="rad">&radic;<span class="radicand">3</span></span></span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span><span class="m">16<i>x</i><span class="rad">&radic;<span class="radicand">3<i>x</i></span></span></span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span><span class="m">4<span class="rad">&radic;<span class="radicand">3<i>x</i></span></span></span><span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body"><div class="work">
+          <div class="step"><span class="n">1</span><span><span class="m">48<i>x</i><sup>3</sup> = 16<i>x</i><sup>2</sup> &middot; 3<i>x</i></span>, where <span class="m">16<i>x</i><sup>2</sup></span> is a perfect square.</span></div>
+          <div class="step"><span class="n">2</span><span><span class="m"><span class="rad">&radic;<span class="radicand">16<i>x</i><sup>2</sup></span></span> = 4<i>x</i></span> for <span class="m"><i>x</i> &gt; 0</span>.</span></div>
+          <div class="step"><span class="n">3</span><span>So <span class="m"><span class="rad">&radic;<span class="radicand">48<i>x</i><sup>3</sup></span></span> = 4<i>x</i><span class="rad">&radic;<span class="radicand">3<i>x</i></span></span></span>. <strong>Choice A.</strong> Choice D drops an <span class="m"><i>x</i></span> from inside the root.</span></div>
+        </div></div></div>
+      </div>
+    </section>
+
+    <!-- ================= RATIONALIZE ================= -->
+    <!-- 23 rationalize examples + exercise -->
+    <section class="slide" data-sec="Rationalize">
+      <p class="eyebrow">Law 7 &middot; rationalizing the denominator</p>
+      <div class="formula-card">
+        <span class="formula">Multiply top and bottom by the same square root</span>
+        <div class="eg">A single square root in the denominator clears when you multiply it by itself.</div>
+      </div>
+      <div class="exbox">
+        <div class="exrow"><span class="m"><span class="frac"><span class="num">1</span><span class="den"><span class="rad">&radic;<span class="radicand">2</span></span></span></span></span> = <span class="m"><span class="frac"><span class="num">1</span><span class="den"><span class="rad">&radic;<span class="radicand">2</span></span></span></span> &middot; <span class="frac"><span class="num"><span class="rad">&radic;<span class="radicand">2</span></span></span><span class="den"><span class="rad">&radic;<span class="radicand">2</span></span></span></span></span> = <span class="m"><span class="frac"><span class="num"><span class="rad">&radic;<span class="radicand">2</span></span></span><span class="den">2</span></span></span></div>
+        <div class="exrow"><span class="m"><span class="frac"><span class="num">6</span><span class="den"><span class="rad">&radic;<span class="radicand">3</span></span></span></span></span> = <span class="m"><span class="frac"><span class="num">6<span class="rad">&radic;<span class="radicand">3</span></span></span><span class="den">3</span></span></span> = <span class="m">2<span class="rad">&radic;<span class="radicand">3</span></span></span></div>
+      </div>
+      <div class="card-note"><b>Why bother:</b> the SAT usually writes answer choices with no radical in the denominator, so you match their form by rationalizing.</div>
+      <div class="pq" data-correct="A" data-hint="Multiply top and bottom by &radic;2. The bottom becomes &radic;2 &middot; &radic;2 = 2.">
+        <div class="qlab">Exercise</div>
+        <div class="stem">Which expression is equivalent to <span class="m"><span class="frac"><span class="num">1</span><span class="den"><span class="rad">&radic;<span class="radicand">2</span></span></span></span></span>?</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span><span class="m"><span class="frac"><span class="num"><span class="rad">&radic;<span class="radicand">2</span></span></span><span class="den">2</span></span></span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span><span class="m"><span class="frac"><span class="num">1</span><span class="den">2</span></span></span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span><span class="m">2<span class="rad">&radic;<span class="radicand">2</span></span></span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span><span class="m"><span class="rad">&radic;<span class="radicand">2</span></span></span><span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body"><div class="work">
+          <div class="step"><span class="n">1</span><span>Multiply by <span class="m"><span class="frac"><span class="num"><span class="rad">&radic;<span class="radicand">2</span></span></span><span class="den"><span class="rad">&radic;<span class="radicand">2</span></span></span></span></span>: bottom becomes <span class="m"><span class="rad">&radic;<span class="radicand">2</span></span> &middot; <span class="rad">&radic;<span class="radicand">2</span></span> = 2</span>.</span></div>
+          <div class="step"><span class="n">2</span><span>Result: <span class="m"><span class="frac"><span class="num"><span class="rad">&radic;<span class="radicand">2</span></span></span><span class="den">2</span></span></span>. <strong>Choice A.</strong></span></div>
+        </div></div></div>
+      </div>
+    </section>
+
+    <!-- 24 rationalize SAT -->
+    <section class="slide" data-sec="Rationalize">
+      <p class="eyebrow sat">On the SAT &middot; rationalizing</p>
+      <div class="pq sat" data-correct="A" data-hint="Multiply top and bottom by &radic;3. The bottom becomes 3.">
+        <div class="qlab">Equivalent expressions</div>
+        <div class="stem">Which expression is equivalent to <span class="m"><span class="frac"><span class="num">5</span><span class="den"><span class="rad">&radic;<span class="radicand">3</span></span></span></span></span>?</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span><span class="m"><span class="frac"><span class="num">5<span class="rad">&radic;<span class="radicand">3</span></span></span><span class="den">3</span></span></span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span><span class="m"><span class="frac"><span class="num">5</span><span class="den">3</span></span></span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span><span class="m"><span class="frac"><span class="num"><span class="rad">&radic;<span class="radicand">15</span></span></span><span class="den">3</span></span></span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span><span class="m">5<span class="rad">&radic;<span class="radicand">3</span></span></span><span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body"><div class="work">
+          <div class="step"><span class="n">1</span><span>Multiply by <span class="m"><span class="frac"><span class="num"><span class="rad">&radic;<span class="radicand">3</span></span></span><span class="den"><span class="rad">&radic;<span class="radicand">3</span></span></span></span></span>. Bottom: <span class="m"><span class="rad">&radic;<span class="radicand">3</span></span> &middot; <span class="rad">&radic;<span class="radicand">3</span></span> = 3</span>. Top: <span class="m">5<span class="rad">&radic;<span class="radicand">3</span></span></span>.</span></div>
+          <div class="step"><span class="n">2</span><span>Result: <span class="m"><span class="frac"><span class="num">5<span class="rad">&radic;<span class="radicand">3</span></span></span><span class="den">3</span></span></span>. <strong>Choice A.</strong> Choice B wrongly drops the radical entirely.</span></div>
+        </div></div></div>
+      </div>
+    </section>
+
+    <!-- ================= CONJUGATE ================= -->
+    <!-- 25 conjugate examples + exercise -->
+    <section class="slide" data-sec="Conjugates">
+      <p class="eyebrow">Law 8 &middot; conjugates with radicals</p>
+      <div class="formula-card">
+        <span class="formula">(<i>a</i> &minus; <i>b</i>)(<i>a</i> + <i>b</i>) = <i>a</i><sup>2</sup> &minus; <i>b</i><sup>2</sup></span>
+        <div class="eg">When the denominator has two terms with a radical, multiply by its conjugate to clear it.</div>
+      </div>
+      <div class="exbox">
+        <div class="exrow"><span class="note">The conjugate of</span> <span class="m">3 &minus; <span class="rad">&radic;<span class="radicand">5</span></span></span> <span class="note">is</span> <span class="m">3 + <span class="rad">&radic;<span class="radicand">5</span></span></span></div>
+        <div class="exrow"><span class="m">(2 + <span class="rad">&radic;<span class="radicand">3</span></span>)(2 &minus; <span class="rad">&radic;<span class="radicand">3</span></span>)</span> = <span class="m">2<sup>2</sup> &minus; (<span class="rad">&radic;<span class="radicand">3</span></span>)<sup>2</sup></span> = <span class="m">4 &minus; 3 = 1</span></div>
+      </div>
+      <div class="card-note"><b>The point:</b> multiplying by the conjugate squares away the radical, since the middle terms cancel and you are left with <span class="m"><i>a</i><sup>2</sup> &minus; <i>b</i><sup>2</sup></span>.</div>
+      <div class="pq" data-correct="A" data-hint="The conjugate keeps the same two terms but flips the sign in the middle.">
+        <div class="qlab">Exercise</div>
+        <div class="stem">What is the conjugate of <span class="m">3 &minus; <span class="rad">&radic;<span class="radicand">5</span></span></span>?</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span><span class="m">3 + <span class="rad">&radic;<span class="radicand">5</span></span></span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span><span class="m"><span class="rad">&radic;<span class="radicand">5</span></span> &minus; 3</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span><span class="m">&minus;3 &minus; <span class="rad">&radic;<span class="radicand">5</span></span></span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span><span class="m">3 &minus; <span class="rad">&radic;<span class="radicand">5</span></span></span><span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body"><div class="work">
+          <div class="step"><span class="n">1</span><span>Keep both terms, flip the middle sign: <span class="m">3 &minus; <span class="rad">&radic;<span class="radicand">5</span></span></span> becomes <span class="m">3 + <span class="rad">&radic;<span class="radicand">5</span></span></span>. <strong>Choice A.</strong></span></div>
+        </div></div></div>
+      </div>
+    </section>
+
+    <!-- 26 conjugate SAT -->
+    <section class="slide" data-sec="Conjugates">
+      <p class="eyebrow sat">On the SAT &middot; conjugates</p>
+      <div class="pq sat" data-correct="A" data-hint="Multiply top and bottom by the conjugate 3 + &radic;5. The bottom becomes 3<sup>2</sup> &minus; (&radic;5)<sup>2</sup> = 4.">
+        <div class="qlab">Equivalent expressions</div>
+        <div class="stem">Which expression is equivalent to <span class="m"><span class="frac"><span class="num">4</span><span class="den">3 &minus; <span class="rad">&radic;<span class="radicand">5</span></span></span></span></span>?</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span><span class="m">3 + <span class="rad">&radic;<span class="radicand">5</span></span></span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span><span class="m">3 &minus; <span class="rad">&radic;<span class="radicand">5</span></span></span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span><span class="m"><span class="frac"><span class="num">3 + <span class="rad">&radic;<span class="radicand">5</span></span></span><span class="den">4</span></span></span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span><span class="m">12 + 4<span class="rad">&radic;<span class="radicand">5</span></span></span><span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body"><div class="work">
+          <div class="step"><span class="n">1</span><span>Multiply top and bottom by the conjugate <span class="m">3 + <span class="rad">&radic;<span class="radicand">5</span></span></span>.</span></div>
+          <div class="step"><span class="n">2</span><span>Bottom: <span class="m">(3 &minus; <span class="rad">&radic;<span class="radicand">5</span></span>)(3 + <span class="rad">&radic;<span class="radicand">5</span></span>) = 9 &minus; 5 = 4</span>. Top: <span class="m">4(3 + <span class="rad">&radic;<span class="radicand">5</span></span>) = 12 + 4<span class="rad">&radic;<span class="radicand">5</span></span></span>.</span></div>
+          <div class="step"><span class="n">3</span><span>Divide by 4: <span class="m">3 + <span class="rad">&radic;<span class="radicand">5</span></span></span>. <strong>Choice A.</strong> Choice D is the numerator before dividing by 4.</span></div>
+        </div></div></div>
+      </div>
+    </section>
+
+    <!-- ================= RADICAL EQUATIONS ================= -->
+    <!-- 27 radical eqn examples + exercise -->
+    <section class="slide" data-sec="Radical equations">
+      <p class="eyebrow">Law 9 &middot; radical equations</p>
+      <div class="formula-card">
+        <span class="formula">Square both sides, then check every solution</span>
+        <div class="eg">Squaring can create fake answers, so always test them in the original equation.</div>
+      </div>
+      <div class="exbox">
+        <div class="exrow"><span class="m"><span class="rad">&radic;<span class="radicand"><i>x</i></span></span> = 6</span> <span class="note">square both sides</span> <span class="m"><i>x</i> = 36</span> <span class="note">check: <span class="m"><span class="rad">&radic;<span class="radicand">36</span></span> = 6</span></span></div>
+        <div class="exrow"><span class="m"><span class="rad">&radic;<span class="radicand">2<i>x</i> + 3</span></span> = 5</span> <span class="note">square</span> <span class="m">2<i>x</i> + 3 = 25</span> <span class="note">so</span> <span class="m"><i>x</i> = 11</span></div>
+      </div>
+      <div class="card-note"><b>The habit:</b> isolate the radical, square, solve, then plug each answer back in. Any that fail are extraneous and get thrown out.</div>
+      <div class="pq" data-correct="A" data-hint="Square both sides to remove the radical, then solve the linear equation. Check at the end.">
+        <div class="qlab">Exercise</div>
+        <div class="stem">Solve <span class="m"><span class="rad">&radic;<span class="radicand">2<i>x</i> + 3</span></span> = 5</span>.</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span><span class="m"><i>x</i> = 11</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span><span class="m"><i>x</i> = 14</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span><span class="m"><i>x</i> = 4</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span><span class="m"><i>x</i> = 22</span><span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body"><div class="work">
+          <div class="step"><span class="n">1</span><span>Square both sides: <span class="m">2<i>x</i> + 3 = 25</span>.</span></div>
+          <div class="step"><span class="n">2</span><span>Solve: <span class="m">2<i>x</i> = 22</span>, so <span class="m"><i>x</i> = 11</span>.</span></div>
+          <div class="step"><span class="n">3</span><span>Check: <span class="m"><span class="rad">&radic;<span class="radicand">2(11) + 3</span></span> = <span class="rad">&radic;<span class="radicand">25</span></span> = 5</span>. Works. <strong>Choice A.</strong></span></div>
+        </div></div></div>
+      </div>
+    </section>
+
+    <!-- 28 radical eqn SAT -->
+    <section class="slide" data-sec="Radical equations">
+      <p class="eyebrow sat">On the SAT &middot; extraneous solutions</p>
+      <div class="pq sat" data-correct="A" data-hint="Square both sides, solve the quadratic, then plug each candidate back in. One will fail.">
+        <div class="qlab">Watch for the fake answer</div>
+        <div class="stem">What value of <span class="m"><i>m</i></span> satisfies <span class="m"><i>m</i> + 4 = <span class="rad">&radic;<span class="radicand"><i>m</i> + 10</span></span></span>?</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span><span class="m"><i>m</i> = &minus;1</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span><span class="m"><i>m</i> = &minus;6</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span><span class="m"><i>m</i> = &minus;1 or &minus;6</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span><span class="m">no solution</span><span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body"><div class="work">
+          <div class="step"><span class="n">1</span><span>Square both sides: <span class="m">(<i>m</i> + 4)<sup>2</sup> = <i>m</i> + 10</span>, so <span class="m"><i>m</i><sup>2</sup> + 8<i>m</i> + 16 = <i>m</i> + 10</span>.</span></div>
+          <div class="step"><span class="n">2</span><span>Set to zero: <span class="m"><i>m</i><sup>2</sup> + 7<i>m</i> + 6 = 0</span>, so <span class="m">(<i>m</i> + 1)(<i>m</i> + 6) = 0</span>. Candidates <span class="m">&minus;1</span> and <span class="m">&minus;6</span>.</span></div>
+          <div class="step"><span class="n">3</span><span>Check <span class="m"><i>m</i> = &minus;1</span>: <span class="m">3 = <span class="rad">&radic;<span class="radicand">9</span></span> = 3</span>. Works.</span></div>
+          <div class="step"><span class="n">4</span><span>Check <span class="m"><i>m</i> = &minus;6</span>: <span class="m">&minus;2 = <span class="rad">&radic;<span class="radicand">4</span></span> = 2</span>. Fails, so it is extraneous. Only <span class="m"><i>m</i> = &minus;1</span>. <strong>Choice A.</strong></span></div>
+        </div></div></div>
+      </div>
+    </section>
+
+    <!-- ================= SYSTEMS ================= -->
+    <!-- 29 systems intersection -->
+    <section class="slide" data-sec="Nonlinear systems">
+      <p class="eyebrow sat">On the SAT &middot; where a line meets a parabola</p>
+      <p style="margin-bottom:10px;">Both equations equal <span class="m"><i>y</i></span>, so set the right sides equal, move everything to one side, and solve the quadratic. The solutions are the intersection points.</p>
+      <div class="pq sat" data-correct="A" data-hint="Set x<sup>2</sup> &minus; 3 equal to 2x, then move to one side and factor.">
+        <div class="qlab">Solving a nonlinear system</div>
+        <div class="stem">The system <span class="m"><i>y</i> = <i>x</i><sup>2</sup> &minus; 3</span> and <span class="m"><i>y</i> = 2<i>x</i></span> has solutions at which <span class="m"><i>x</i></span>-values?</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span><span class="m"><i>x</i> = 3 and <i>x</i> = &minus;1</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span><span class="m"><i>x</i> = 1 and <i>x</i> = &minus;3</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span><span class="m"><i>x</i> = 3 only</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span><span class="m">no real solutions</span><span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body"><div class="work">
+          <div class="step"><span class="n">1</span><span>Both equal <span class="m"><i>y</i></span>: <span class="m"><i>x</i><sup>2</sup> &minus; 3 = 2<i>x</i></span>.</span></div>
+          <div class="step"><span class="n">2</span><span>Set to zero: <span class="m"><i>x</i><sup>2</sup> &minus; 2<i>x</i> &minus; 3 = 0</span>, so <span class="m">(<i>x</i> &minus; 3)(<i>x</i> + 1) = 0</span>.</span></div>
+          <div class="step"><span class="n">3</span><span><span class="m"><i>x</i> = 3</span> or <span class="m">&minus;1</span>. <strong>Choice A.</strong> The points are <span class="m">(3, 6)</span> and <span class="m">(&minus;1, &minus;2)</span>.</span></div>
+        </div></div></div>
+      </div>
+    </section>
+
+    <!-- 30 systems discriminant -->
+    <section class="slide" data-sec="Nonlinear systems">
+      <p class="eyebrow sat">On the SAT &middot; exactly one solution</p>
+      <p style="margin-bottom:10px;">A line and a parabola meet once when they are tangent. After setting them equal, that means the quadratic has one repeated root, so the discriminant <span class="m"><i>b</i><sup>2</sup> &minus; 4<i>ac</i></span> equals 0.</p>
+      <div class="pq sat" data-correct="A" data-hint="Set the equations equal to get x<sup>2</sup> &minus; 6x + k = 0. One solution means b<sup>2</sup> &minus; 4ac = 0.">
+        <div class="qlab">Using the discriminant</div>
+        <div class="stem">For what value of <span class="m"><i>k</i></span> does the system <span class="m"><i>y</i> = <i>x</i><sup>2</sup></span> and <span class="m"><i>y</i> = 6<i>x</i> &minus; <i>k</i></span> have exactly one real solution?</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span><span class="m">9</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span><span class="m">6</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span><span class="m">3</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span><span class="m">36</span><span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body"><div class="work">
+          <div class="step"><span class="n">1</span><span>Set equal: <span class="m"><i>x</i><sup>2</sup> = 6<i>x</i> &minus; <i>k</i></span>, so <span class="m"><i>x</i><sup>2</sup> &minus; 6<i>x</i> + <i>k</i> = 0</span>.</span></div>
+          <div class="step"><span class="n">2</span><span>One solution means discriminant 0: <span class="m">(&minus;6)<sup>2</sup> &minus; 4(1)(<i>k</i>) = 0</span>.</span></div>
+          <div class="step"><span class="n">3</span><span><span class="m">36 &minus; 4<i>k</i> = 0</span>, so <span class="m"><i>k</i> = 9</span>. <strong>Choice A.</strong></span></div>
+        </div></div></div>
+      </div>
+    </section>
+
+    <!-- 31 GAME rapid drill -->
+    <section class="slide" data-sec="Review game">
+      <p class="eyebrow game">Game &middot; rapid drill</p>
+      <h2 class="t">Six quick ones to review</h2>
+      <p style="margin-bottom:6px;">Answer fast, watch your score climb. You can replay at the end.</p>
+      <div class="drill" id="rapidDrill"></div>
+    </section>
+
+    <!-- 32 CHEAT SHEET -->
+    <section class="slide" data-sec="Cheat sheet">
+      <p class="eyebrow"><span class="star">&#10038;</span>&nbsp; Cheat sheet</p>
+      <h2 class="t">The questions to ask on every problem</h2>
+      <div class="sheet">
+        <div class="sheet-card"><div class="lab">Exponents</div><div class="id">Can I rewrite the bases to match?</div></div>
+        <div class="sheet-card"><div class="lab">Exponents</div><div class="id">Sum in the exponent &rarr; multiply</div></div>
+        <div class="sheet-card"><div class="lab">Exponents</div><div class="id">Difference in the exponent &rarr; divide</div></div>
+        <div class="sheet-card"><div class="lab">Exponents</div><div class="id">Fractional power &rarr; root and power</div></div>
+        <div class="sheet-card"><div class="lab">Radicals</div><div class="id">Pull out the largest perfect square</div></div>
+        <div class="sheet-card"><div class="lab">Radicals</div><div class="id">Rationalize, or use the conjugate</div></div>
+        <div class="sheet-card"><div class="lab">Radicals</div><div class="id">Square both sides, then check</div></div>
+        <div class="sheet-card"><div class="lab">Systems</div><div class="id">Set equal; one solution means discriminant 0</div></div>
+      </div>
+    </section>
+
+    <!-- 33 CLOSE -->
+    <section class="slide dark" data-sec="Recap">
+      <p class="eyebrow">The one idea</p>
+      <h2 class="t">Recognize the useful form, then rewrite to match it</h2>
+      <p class="sub">Start by asking whether the bases can be made to match, or whether a radical is really a fractional power. Once the forms line up, the exponent and radical laws do the rest, and the arithmetic is short. Always test radical-equation answers before you commit.</p>
+    </section>
+
+  </div>
+</div>
+
+<div class="bar">
+  <button class="navbtn" id="prev" disabled>Back</button>
+  <div class="counter"><b id="cur">1</b> / <span id="total">1</span><span class="sec" id="sec">Overview</span></div>
+  <button class="navbtn" id="next">Next</button>
+</div>
+<div class="hintbar">Arrow keys to move &middot; <span class="star">&#10038;</span> Illuminairy</div>
+
+<script>
+(function(){
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var idx=0;
+  var prev=document.getElementById('prev'), next=document.getElementById('next');
+  var cur=document.getElementById('cur'), sec=document.getElementById('sec'), progress=document.getElementById('progress');
+  document.getElementById('total').textContent=slides.length;
+  function show(n){
+    idx=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach(function(s,i){s.classList.toggle('active',i===idx);});
+    cur.textContent=idx+1;
+    sec.textContent=slides[idx].getAttribute('data-sec')||'';
+    prev.disabled=idx===0; next.disabled=idx===slides.length-1;
+    progress.style.width=((idx)/(slides.length-1)*100)+'%';
+    slides[idx].scrollTop=0;
+  }
+  prev.addEventListener('click',function(){show(idx-1);});
+  next.addEventListener('click',function(){show(idx+1);});
+  document.addEventListener('keydown',function(e){
+    var tag=(e.target.tagName||'').toLowerCase();
+    if(tag==='button')return;
+    if(e.key==='ArrowRight'||e.key==='PageDown'){show(idx+1);}
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){show(idx-1);}
+  });
+
+  document.querySelectorAll('.pq').forEach(function(pq){
+    var correct=pq.getAttribute('data-correct');
+    var opts=Array.prototype.slice.call(pq.querySelectorAll('.pq-opt'));
+    var hintBtn=pq.querySelector('[data-act="hint"]');
+    var checkBtn=pq.querySelector('[data-act="check"]');
+    var stepsBtn=pq.querySelector('[data-act="steps"]');
+    var resetBtn=pq.querySelector('[data-act="reset"]');
+    var hintPanel=pq.querySelector('.panel.hint');
+    var stepsPanel=pq.querySelector('.panel.steps');
+    var verdict=pq.querySelector('.verdict');
+    var selected=null, locked=false;
+    hintPanel.querySelector('.body').innerHTML='<p style="margin:0 0 8px;">'+(pq.getAttribute('data-hint')||'')+'</p>';
+    opts.forEach(function(opt){
+      opt.addEventListener('click',function(){
+        if(locked)return;
+        opts.forEach(function(o){o.classList.remove('sel');});
+        opt.classList.add('sel');
+        selected=opt.getAttribute('data-c');
+      });
+    });
+    hintBtn.addEventListener('click',function(){hintBtn.classList.toggle('on',hintPanel.classList.toggle('show'));});
+    stepsBtn.addEventListener('click',function(){stepsBtn.classList.toggle('on',stepsPanel.classList.toggle('show'));});
+    checkBtn.addEventListener('click',function(){
+      if(!selected){verdict.className='verdict show wrong';verdict.textContent='Pick an answer first.';return;}
+      locked=true;
+      var right=selected===correct;
+      opts.forEach(function(o){
+        o.disabled=true;o.classList.remove('sel');
+        var c=o.getAttribute('data-c');
+        if(c===correct){o.classList.add('correct');o.querySelector('.tick').textContent='Correct';}
+        else if(c===selected){o.classList.add('incorrect');o.querySelector('.tick').textContent='Your pick';}
+      });
+      verdict.className='verdict show '+(right?'right':'wrong');
+      verdict.textContent=right?'\u2736 Correct':'Not quite \u2736 the answer is '+correct;
+      resetBtn.hidden=false;
+    });
+    resetBtn.addEventListener('click',function(){
+      locked=false;selected=null;
+      opts.forEach(function(o){o.disabled=false;o.classList.remove('correct','incorrect','sel');o.querySelector('.tick').textContent='';});
+      verdict.className='verdict';verdict.textContent='';resetBtn.hidden=true;
+    });
+  });
+
+  document.querySelectorAll('.match').forEach(function(mg){
+    var items=Array.prototype.slice.call(mg.querySelectorAll('.m-item'));
+    var countEl=mg.querySelector('.mcount');
+    var status=mg.querySelector('.match-status');
+    var total=items.length/2, done=0, selEl=null;
+    items.forEach(function(it){
+      it.addEventListener('click',function(){
+        if(it.classList.contains('done'))return;
+        if(!selEl){selEl=it;it.classList.add('sel');return;}
+        if(selEl===it){it.classList.remove('sel');selEl=null;return;}
+        if(selEl.getAttribute('data-pair')===it.getAttribute('data-pair')){
+          selEl.classList.remove('sel');selEl.classList.add('done');it.classList.add('done');
+          selEl=null;done++;countEl.textContent=done;
+          if(done===total){status.textContent='All matched. Nicely done.';}
+        }else{
+          var a=selEl,b=it;a.classList.remove('sel');a.classList.add('flash');b.classList.add('flash');selEl=null;
+          setTimeout(function(){a.classList.remove('flash');b.classList.remove('flash');},450);
+        }
+      });
+    });
+  });
+
+  var drillData=[
+    {q:'8 = 2<sup>?</sup>', opts:['2','3','4'], a:1},
+    {q:'<span class="rad">&radic;<span class="radicand">49</span></span> = ?', opts:['6','7','8'], a:1},
+    {q:'2<sup>0</sup> = ?', opts:['0','1','2'], a:1},
+    {q:'4<sup>3/2</sup> = ?', opts:['6','8','12'], a:1},
+    {q:'3<sup>&minus;2</sup> = ?', opts:['&minus;9','<span class="frac"><span class="num">1</span><span class="den">9</span></span>','&minus;6'], a:1},
+    {q:'<span class="rad">&radic;<span class="radicand">50</span></span> = ?', opts:['5<span class="rad">&radic;<span class="radicand">2</span></span>','2<span class="rad">&radic;<span class="radicand">5</span></span>','25<span class="rad">&radic;<span class="radicand">2</span></span>'], a:0}
+  ];
+  document.querySelectorAll('.drill').forEach(function(dr){
+    var i=0, score=0;
+    function render(){
+      if(i>=drillData.length){
+        dr.innerHTML='<div class="drill-final">Score: '+score+' / '+drillData.length+'</div>'+
+          '<div class="drill-foot"><button class="act primary" data-role="replay">Play again</button></div>';
+        dr.querySelector('[data-role="replay"]').addEventListener('click',function(){i=0;score=0;render();});
+        return;
+      }
+      var d=drillData[i];
+      var html='<div class="drill-head"><span class="t"><span class="m">Question '+(i+1)+' of '+drillData.length+'</span></span><span class="drill-score">Score '+score+'</span></div>';
+      html+='<div class="drill-q"><span class="m">'+d.q+'</span></div><div class="drill-opts">';
+      d.opts.forEach(function(o,k){html+='<button class="drill-opt" data-k="'+k+'"><span class="m">'+o+'</span></button>';});
+      html+='</div><div class="drill-foot"></div>';
+      dr.innerHTML=html;
+      var foot=dr.querySelector('.drill-foot');
+      var answered=false;
+      dr.querySelectorAll('.drill-opt').forEach(function(btn){
+        btn.addEventListener('click',function(){
+          if(answered)return; answered=true;
+          var k=parseInt(btn.getAttribute('data-k'),10);
+          dr.querySelectorAll('.drill-opt').forEach(function(b){b.disabled=true;});
+          if(k===d.a){btn.classList.add('correct');score++;}
+          else{btn.classList.add('incorrect');dr.querySelectorAll('.drill-opt')[d.a].classList.add('correct');}
+          dr.querySelector('.drill-score').textContent='Score '+score;
+          var nb=document.createElement('button');
+          nb.className='act primary';nb.textContent=(i===drillData.length-1)?'See score':'Next';
+          nb.addEventListener('click',function(){i++;render();});
+          foot.appendChild(nb);
+        });
+      });
+    }
+    render();
+  });
+
+  show(0);
+})();
+</script>
+</body>
+</html>

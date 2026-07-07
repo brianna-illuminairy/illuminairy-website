@@ -51,6 +51,14 @@ export const DANIELLE_FILE_MAP = {
   "equivalent-expressions-slides": {
     filename: "equivalent-expressions-slides.html",
     contentType: "text/html; charset=utf-8"
+  },
+  "command-of-evidence-slides": {
+    filename: "command-of-evidence-slides.html",
+    contentType: "text/html; charset=utf-8"
+  },
+  "exponents-radicals-slides": {
+    filename: "exponents-radicals-slides.html",
+    contentType: "text/html; charset=utf-8"
   }
 } as const;
 

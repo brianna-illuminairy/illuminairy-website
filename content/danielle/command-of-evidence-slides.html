@@ -1,0 +1,1344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Command of Evidence</title>
+<style>
+  :root{
+    --surface:#f5ecd9;--surface-2:#efe3cb;--navy:#14233b;--navy-2:#1e3250;
+    --forest:#2c5f4f;--forest-deep:#214a3d;--mint:#bfe3cf;--mint-soft:#dcefe3;
+    --ink:#1b2a22;--muted:#56635a;--line:#d9cba9;
+    --correct:#2c5f4f;--correct-bg:#dcefe3;--wrong:#b35442;--wrong-bg:#f2dcd5;
+    --coef:#a9791f;
+    --font:Arial,Helvetica,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{margin:0;background:var(--navy);color:var(--ink);font-family:var(--font);-webkit-font-smoothing:antialiased;display:flex;flex-direction:column;min-height:100%;}
+  .stage{flex:1;display:flex;align-items:center;justify-content:center;padding:24px 20px 12px;position:relative;overflow:hidden;}
+  .deck{width:min(980px,100%);height:min(680px,82vh);position:relative;}
+  .slide{position:absolute;inset:0;background:var(--surface);border-radius:20px;border:1px solid #0c1726;box-shadow:0 24px 60px rgba(0,0,0,.34);padding:32px 42px;overflow:auto;opacity:0;transform:translateY(10px) scale(.99);pointer-events:none;transition:opacity .3s ease, transform .3s ease;}
+  .slide.active{opacity:1;transform:none;pointer-events:auto;}
+  .slide.dark{background:var(--navy);color:var(--surface);border-color:#0a1320;}
+  @media(prefers-reduced-motion:reduce){.slide{transition:opacity .12s ease;transform:none;}}
+  .eyebrow{text-transform:uppercase;letter-spacing:.16em;font-size:.72rem;font-weight:700;color:var(--forest);margin:0 0 12px;}
+  .dark .eyebrow{color:var(--mint);}
+  .eyebrow.sat{color:#b35442;}
+  .eyebrow.game{color:#a9791f;}
+  .eyebrow.diag{color:#8a6414;}
+  h1.t{font-weight:700;font-size:clamp(1.7rem,4vw,2.5rem);line-height:1.12;margin:0 0 16px;color:var(--navy);}
+  .dark h1.t{color:var(--surface);}
+  h2.t{font-weight:700;font-size:clamp(1.18rem,2.7vw,1.55rem);line-height:1.22;margin:0 0 14px;color:var(--navy);}
+  .dark h2.t{color:var(--surface);}
+  p{margin:0 0 12px;font-size:1.03rem;line-height:1.57;}
+  .sub{font-size:1.07rem;color:var(--muted);max-width:720px;}
+  .dark .sub{color:#d3dad3;}
+  strong{font-weight:700;color:var(--navy);}
+  .dark strong{color:var(--mint);}
+  em{font-style:italic;}
+  .center{height:100%;display:flex;flex-direction:column;justify-content:center;}
+  .star{color:var(--forest);}.dark .star{color:var(--mint);}
+
+  .example{background:#fffaf0;border:1px solid var(--line);border-radius:13px;padding:14px 19px;margin:6px 0 0;}
+  .example .lab{font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--forest);font-weight:700;margin-bottom:8px;}
+  .example .row{font-size:1.02rem;line-height:1.55;margin-bottom:9px;}
+  .example .row:last-child{margin-bottom:0;}
+  .example .row b{color:var(--navy);}
+  .example .row.bad b{color:var(--wrong);}
+  .example .row.good b{color:var(--forest-deep);}
+
+  .typecard{background:#fffaf0;border:1px solid var(--line);border-radius:13px;padding:14px 18px;margin-top:11px;border-left:4px solid var(--forest);}
+  .typecard .tt{font-weight:700;color:var(--navy);font-size:1.03rem;margin-bottom:5px;}
+  .typecard .td{font-size:.98rem;line-height:1.5;color:var(--ink);margin-bottom:7px;}
+  .typecard .stem{font-size:.92rem;color:var(--forest-deep);background:var(--mint-soft);border-radius:8px;padding:7px 11px;line-height:1.45;font-style:italic;}
+
+  .qlist{display:flex;flex-direction:column;gap:9px;margin-top:4px;}
+  .qrow{background:#fffaf0;border:1px solid var(--line);border-radius:11px;padding:11px 15px;}
+  .qrow .qq{font-style:italic;color:var(--navy);font-size:.99rem;line-height:1.45;margin-bottom:6px;}
+  .qrow .qa{font-size:.95rem;line-height:1.45;color:var(--ink);}
+  .qrow .qa b{color:var(--forest-deep);}
+  .qrow .look{display:inline-block;font-size:.66rem;letter-spacing:.05em;text-transform:uppercase;font-weight:700;border-radius:999px;padding:3px 9px;margin-top:7px;}
+  .qrow .look.inpass{background:var(--mint-soft);color:var(--forest-deep);}
+  .qrow .look.outside{background:#fbf3e0;color:#8a6414;}
+
+  .drill-opt.tval{justify-content:space-between;}
+  .tflabel{flex:0 0 auto;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;border-radius:999px;padding:3px 10px;margin-left:10px;}
+  .tflabel.t{background:var(--mint-soft);color:var(--forest-deep);}
+  .tflabel.f{background:var(--wrong-bg);color:var(--wrong);}
+
+  .walk{background:#fffaf0;border:1px solid var(--line);border-radius:15px;padding:16px 20px;margin-top:4px;}
+  .walk-steps{display:flex;gap:6px;margin-bottom:13px;flex-wrap:wrap;}
+  .walk-chip{font-size:.63rem;letter-spacing:.04em;text-transform:uppercase;font-weight:700;border-radius:999px;padding:5px 11px;background:#efe3cb;color:var(--muted);}
+  .walk-chip.on{background:var(--forest);color:var(--mint-soft);}
+  .walk-chip.done{background:var(--mint-soft);color:var(--forest-deep);}
+  .walk-prompt{font-weight:700;color:var(--navy);font-size:1.02rem;line-height:1.45;margin-bottom:11px;}
+  .walk-sent{cursor:pointer;border-radius:5px;padding:1px 2px;transition:background .15s,box-shadow .15s;}
+  .walk-sent:hover{background:#f0e6cf;}
+  .walk-sent.sel{background:#fbf3e0;box-shadow:0 0 0 1px #e3cf9a;font-weight:600;}
+  .walk-sent.good{background:var(--correct-bg);box-shadow:0 0 0 1px #9ccbb0;font-weight:600;}
+  .walk-sent.bad{background:var(--wrong-bg);box-shadow:0 0 0 1px #d9a99b;}
+  .walk-pass{background:#fff;border:1px solid var(--line);border-radius:11px;padding:13px 16px;font-size:1.0rem;line-height:1.62;color:var(--ink);margin-bottom:12px;}
+  .walk-q{font-weight:600;color:var(--forest-deep);font-size:.99rem;line-height:1.45;margin-bottom:12px;background:var(--mint-soft);border-radius:9px;padding:9px 13px;}
+  .walk-opts{display:flex;flex-direction:column;gap:8px;}
+  .walk-opt{text-align:left;background:#fff;border:1.5px solid var(--line);border-radius:10px;padding:10px 14px;font-size:.95rem;line-height:1.45;color:var(--ink);cursor:pointer;transition:border-color .15s,background .15s;display:flex;gap:10px;align-items:flex-start;}
+  .walk-opt:hover{border-color:var(--forest);}
+  .walk-opt .wl{flex:0 0 auto;font-weight:700;color:var(--muted);}
+  .walk-opt.correct{border-color:var(--correct);background:var(--correct-bg);}
+  .walk-opt.incorrect{border-color:var(--wrong);background:var(--wrong-bg);}
+  .walk-opt[disabled]{cursor:default;}
+  .walk-note{margin-top:11px;font-size:.92rem;line-height:1.5;border-radius:10px;padding:10px 14px;animation:fade .25s ease;}
+  .walk-note.right{background:var(--correct-bg);color:var(--forest-deep);}
+  .walk-note.wrong{background:var(--wrong-bg);color:var(--wrong);}
+  .walk-note b{font-weight:700;}
+  .walk-foot{margin-top:12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+  .walk-tag{font-size:.72rem;font-weight:700;color:var(--forest-deep);background:var(--mint-soft);border-radius:999px;padding:5px 12px;}
+  .walk-judge{display:flex;flex-direction:column;gap:7px;margin-top:4px;}
+  .walk-choicebox{background:#fff;border:1px solid var(--line);border-radius:10px;padding:11px 14px;}
+  .walk-choicebox .cl{font-weight:700;color:var(--navy);font-size:.95rem;margin-bottom:8px;}
+  .walk-choicebox.done{opacity:.62;}
+  .walk-choicebox.done.correctchoice{opacity:1;border-color:var(--correct);background:var(--correct-bg);}
+
+  .card-note{border-left:4px solid var(--forest);background:var(--mint-soft);padding:11px 18px;border-radius:0 11px 11px 0;font-size:1rem;margin:13px 0 0;line-height:1.55;}
+  .dark .card-note{background:var(--navy-2);border-color:var(--mint);}
+  .card-note b{color:var(--forest-deep);}.dark .card-note b{color:var(--mint);}
+  .warn-note{border-left:4px solid var(--wrong);background:var(--wrong-bg);padding:11px 18px;border-radius:0 11px 11px 0;font-size:1rem;margin:13px 0 0;line-height:1.55;}
+  .warn-note b{color:var(--wrong);}
+
+  .guide{background:#fffaf0;border:1px solid var(--line);border-radius:15px;padding:18px 22px;margin-top:4px;}
+  .guide-pass{font-size:1.02rem;line-height:1.6;color:var(--ink);}
+  .gclaim{border-radius:6px;padding:1px 3px;transition:background .2s,box-shadow .2s;}
+  .gclaim.on{background:#fbf3e0;font-weight:600;box-shadow:0 0 0 1px #e3cf9a;}
+  .guide-row{margin-top:11px;padding:11px 15px;border-radius:11px;background:#fff;border:1px solid var(--line);font-size:1rem;line-height:1.5;animation:fade .25s ease;}
+  .guide-row .rl{font-size:.63rem;letter-spacing:.06em;text-transform:uppercase;font-weight:700;color:var(--forest);margin-bottom:4px;}
+  @keyframes fade{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:none;}}
+  .guide-stem{margin-top:12px;font-weight:600;color:var(--navy);font-size:1rem;line-height:1.5;}
+  .guide-choices{margin-top:11px;display:flex;flex-direction:column;gap:8px;}
+  .guide-opt{display:flex;align-items:flex-start;gap:11px;text-align:left;border:1.5px solid var(--line);border-radius:11px;padding:10px 14px;font-size:.95rem;line-height:1.45;background:#fff;color:var(--ink);cursor:pointer;transition:border-color .15s,background .15s;}
+  .guide-opt:hover{border-color:var(--forest);}
+  .guide-opt .wl{flex:0 0 auto;font-weight:700;color:var(--muted);}
+  .guide-opt.correct{border-color:var(--correct);background:var(--correct-bg);}
+  .guide-opt.correct .wl{color:var(--forest-deep);}
+  .guide-opt.incorrect{border-color:var(--wrong);background:var(--wrong-bg);}
+  .guide-opt.incorrect .wl{color:var(--wrong);}
+  .guide-opt[disabled]{cursor:default;}
+  .guide-why{display:block;font-size:.86rem;margin-top:5px;line-height:1.45;}
+  .guide-opt.correct .guide-why{color:var(--forest-deep);}
+  .guide-opt.incorrect .guide-why{color:var(--wrong);}
+  .guide-foot{margin-top:13px;display:flex;gap:11px;align-items:center;flex-wrap:wrap;}
+  .guide-step{font-size:.75rem;font-weight:700;color:var(--forest-deep);background:var(--mint-soft);border-radius:999px;padding:5px 13px;}
+
+  .trapgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:4px;}
+  .trapcard{background:#fffaf0;border:1px solid var(--line);border-radius:12px;padding:13px 16px;border-top:4px solid var(--wrong);}
+  .trapcard .lab{font-size:.64rem;letter-spacing:.06em;text-transform:uppercase;color:var(--wrong);font-weight:700;margin-bottom:6px;}
+  .trapcard .id{font-weight:600;font-size:.98rem;color:var(--navy);line-height:1.45;}
+  .trapcard .eg{font-size:.9rem;color:var(--muted);margin-top:6px;line-height:1.45;}
+  @media(max-width:660px){.trapgrid{grid-template-columns:1fr;}}
+
+  .sheet{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:4px;}
+  .sheet-card{background:#fffaf0;border:1px solid var(--line);border-radius:12px;padding:12px 15px;}
+  .sheet-card .lab{font-size:.62rem;letter-spacing:.06em;text-transform:uppercase;color:var(--forest);font-weight:700;margin-bottom:5px;}
+  .sheet-card .id{font-weight:600;font-size:.93rem;color:var(--navy);line-height:1.42;}
+  @media(max-width:660px){.sheet{grid-template-columns:1fr;}}
+
+  table.dtable{width:100%;border-collapse:collapse;margin:6px 0 0;font-size:.85rem;background:#fffaf0;border-radius:10px;overflow:hidden;}
+  table.dtable th,table.dtable td{border:1px solid var(--line);padding:6px 8px;text-align:center;}
+  table.dtable th{background:var(--mint-soft);color:var(--forest-deep);font-size:.75rem;line-height:1.3;}
+  table.dtable td.rise{color:var(--wrong);font-weight:700;}
+  table.dtable td.fall{color:var(--forest-deep);font-weight:700;}
+
+  .passage{background:#fffaf0;border:1px solid var(--line);border-radius:13px;padding:14px 19px;margin:0 0 12px;font-size:1.01rem;line-height:1.58;}
+  .passage .src{font-size:.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:700;margin-bottom:7px;}
+  .claimline{background:#fbf3e0;border-radius:6px;padding:2px 6px;font-weight:600;}
+  .work{background:#fffaf0;border:1px solid var(--line);border-radius:13px;padding:15px 20px;margin:6px 0 0;}
+  .work .step{display:flex;gap:13px;align-items:flex-start;margin-bottom:11px;font-size:1.01rem;line-height:1.55;}
+  .work .step:last-child{margin-bottom:0;}
+  .work .n{flex:0 0 auto;width:24px;height:24px;border-radius:50%;background:var(--mint-soft);border:1.5px solid #cbe6d5;color:var(--forest-deep);font-weight:700;font-size:.76rem;display:flex;align-items:center;justify-content:center;margin-top:1px;}
+  .work .step.qn .n{background:#fbf3e0;border-color:#e3cf9a;color:#8a6414;}
+
+  .pq{background:#fffaf0;border:1px solid var(--line);border-radius:15px;padding:18px 22px;margin-top:4px;}
+  .pq.sat{border-color:#e2b7ab;}
+  .pq.diag{border-color:#e3cf9a;}
+  .pq .stem{font-size:1.01rem;line-height:1.55;color:var(--navy);margin-bottom:6px;}
+  .pq .ask{font-size:.9rem;color:var(--muted);margin-bottom:12px;}
+  .pq-opts{display:flex;flex-direction:column;gap:9px;}
+  .pq-opt{display:flex;align-items:flex-start;gap:13px;width:100%;text-align:left;background:#fff;border:1.5px solid var(--line);border-radius:11px;padding:11px 15px;font-size:.96rem;line-height:1.5;color:var(--ink);cursor:pointer;transition:border-color .15s,background .15s;}
+  .pq-opt:hover{border-color:var(--forest);}
+  .pq-opt .badge{flex:0 0 auto;width:26px;height:26px;border-radius:50%;border:1.5px solid var(--muted);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.82rem;color:var(--muted);margin-top:1px;}
+  .pq-opt.sel{border-color:var(--forest);background:var(--mint-soft);}
+  .pq-opt.sel .badge{border-color:var(--forest);color:var(--forest-deep);background:#fff;}
+  .pq-opt.correct{border-color:var(--correct);background:var(--correct-bg);}
+  .pq-opt.correct .badge{background:var(--forest);border-color:var(--forest);color:#fff;}
+  .pq-opt.incorrect{border-color:var(--wrong);background:var(--wrong-bg);}
+  .pq-opt.incorrect .badge{background:var(--wrong);border-color:var(--wrong);color:#fff;}
+  .pq-opt[disabled]{cursor:default;}
+  .pq-opt .tick{margin-left:auto;font-size:.6rem;letter-spacing:.06em;text-transform:uppercase;font-weight:700;opacity:0;white-space:nowrap;padding-left:8px;}
+  .pq-opt.correct .tick{opacity:1;color:var(--forest-deep);}
+  .pq-opt.incorrect .tick{opacity:1;color:var(--wrong);}
+  .pq-actions{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;}
+  .act{font-weight:700;font-size:.85rem;border-radius:10px;cursor:pointer;padding:9px 15px;border:1.5px solid var(--line);background:transparent;color:var(--forest-deep);transition:border-color .15s,background .15s,color .15s;}
+  .act:hover{border-color:var(--forest);}
+  .act.primary{background:var(--forest);border-color:var(--forest);color:var(--mint-soft);}
+  .act.primary:hover{background:var(--forest-deep);}
+  .act.on{background:var(--mint-soft);border-color:var(--forest);}
+  .act[hidden]{display:none;}
+  .panel{display:none;margin-top:13px;border-radius:12px;overflow:hidden;border:1px solid var(--line);}
+  .panel.show{display:block;}
+  .panel .head{padding:9px 16px;font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;font-weight:700;background:var(--mint-soft);color:var(--forest-deep);}
+  .panel .body{padding:14px 16px 4px;background:#fff;}
+  .panel.hint .head{background:#efe3cb;color:var(--forest-deep);}
+  .panel .body p{font-size:1rem;line-height:1.55;}
+  .verdict{margin-top:13px;font-size:.84rem;font-weight:700;padding:9px 14px;border-radius:999px;display:none;}
+  .verdict.show{display:inline-block;}
+  .verdict.right{background:var(--correct-bg);color:var(--forest-deep);}
+  .verdict.wrong{background:var(--wrong-bg);color:var(--wrong);}
+
+  .drill{background:#fffaf0;border:1px solid var(--line);border-radius:15px;padding:19px 22px;margin-top:4px;}
+  .drill-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px;}
+  .drill-head .t{font-weight:700;color:var(--navy);font-size:1rem;}
+  .drill-score{font-size:.86rem;font-weight:700;color:var(--forest-deep);background:var(--mint-soft);border-radius:999px;padding:5px 13px;}
+  .drill-stats{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+  .drill-q{font-size:1.02rem;font-weight:600;color:var(--navy);margin-bottom:14px;padding:6px 0;line-height:1.55;}
+  .drill-q .qtag{display:block;font-size:.8rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;}
+  .drill-q .qpre{display:block;font-weight:400;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:9px;padding:9px 12px;margin-bottom:9px;font-size:.96rem;line-height:1.5;}
+  .drill-opts{display:flex;flex-direction:column;gap:9px;}
+  .drill-opt{display:flex;align-items:center;gap:12px;background:#fff;border:1.5px solid var(--line);border-radius:11px;padding:11px 15px;font-size:.97rem;color:var(--ink);cursor:pointer;transition:border-color .12s,background .12s;line-height:1.45;}
+  .drill-opt:hover{border-color:var(--forest);}
+  .drill-opt.correct{border-color:var(--correct);background:var(--correct-bg);color:var(--forest-deep);}
+  .drill-opt.incorrect{border-color:var(--wrong);background:var(--wrong-bg);color:var(--wrong);}
+  .drill-opt[disabled]{cursor:default;}
+  .drill-foot{margin-top:14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+  .drill-final{font-size:1.15rem;font-weight:700;color:var(--navy);margin-bottom:10px;}
+  .drill-explain{margin-top:12px;font-size:.94rem;line-height:1.55;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:10px;padding:11px 14px;display:none;}
+  .drill-explain.show{display:block;}
+  .drill-explain b{color:var(--forest-deep);}
+
+  .bar{flex:0 0 auto;display:flex;align-items:center;gap:18px;justify-content:center;padding:13px 20px 18px;color:var(--surface);}
+  .navbtn{font-weight:700;font-size:.92rem;background:var(--forest);color:var(--mint-soft);border:none;border-radius:10px;padding:11px 20px;cursor:pointer;transition:background .15s,opacity .15s;}
+  .navbtn:hover{background:var(--forest-deep);}
+  .navbtn:disabled{opacity:.34;cursor:default;}
+  .counter{font-size:.82rem;letter-spacing:.04em;color:#9fb0c4;min-width:210px;text-align:center;}
+  .counter b{color:var(--mint);}
+  .counter .sec{display:block;font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:#7d8ea3;margin-top:2px;}
+  .progress{position:fixed;top:0;left:0;height:3px;background:var(--mint);width:0;transition:width .3s ease;z-index:10;}
+  .hintbar{position:fixed;bottom:6px;left:0;right:0;text-align:center;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:#5f718a;}
+  @media(max-width:660px){.slide{padding:26px 22px;}.deck{height:min(700px,76vh);}p,.sub{font-size:1rem;}.counter{min-width:120px;}}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="stage">
+  <div class="deck" id="deck">
+
+    <!-- 1 TITLE -->
+    <section class="slide dark active" data-sec="Start">
+      <div class="center">
+        <p class="eyebrow"><span class="star">&#10038;</span>&nbsp; Illuminairy &middot; SAT Reading and Writing</p>
+        <h1 class="t">Command of Evidence</h1>
+        <p class="sub">Every one of these questions gives you a claim and asks you to pick the evidence that fits it. Most wrong answers come from misreading what the question is actually asking for, so this lesson starts there, then builds the habit of deciding your answer before you read the choices.</p>
+      </div>
+    </section>
+
+    <!-- 2 THE QUESTION TELLS YOU WHAT TO FIND -->
+    <section class="slide" data-sec="Read the question">
+      <p class="eyebrow sat">Start here every time</p>
+      <h2 class="t">Read the question carefully before you look for the answer</h2>
+      <p>These questions are worded in different ways, and the wording tells you two things: which idea in the passage you are working with, and whether you support it or argue against it. Read the wrong idea, or miss the word "undermine," and you will pick a choice that does the opposite of what was asked.</p>
+      <div class="qlist">
+        <div class="qrow"><div class="qq">"Which quotation from the article best illustrates Bloom's argument?"</div><div class="qa">Match <b>one named person's argument</b>, Bloom's, not the other expert in the passage.</div></div>
+        <div class="qrow"><div class="qq">"Which finding would most strongly support the researchers' hypothesis?"</div><div class="qa">Match <b>the hypothesis</b>, the specific thing they predicted, and support it.</div></div>
+        <div class="qrow"><div class="qq">"Which finding would most directly undermine the conclusion of the study?"</div><div class="qa">Match <b>the conclusion</b>, then find what argues <b>against</b> it, not for it.</div></div>
+        <div class="qrow"><div class="qq">"Which choice best uses data from the table to complete the statement?"</div><div class="qa">Match <b>the sentence with the blank</b>, and fill it in the direction that sentence is going.</div></div>
+      </div>
+    </section>
+
+    <!-- 3 IN THE PASSAGE VS SUPPORTED BY IT -->
+    <section class="slide" data-sec="Read the question">
+      <p class="eyebrow sat">A difference that decides where to look</p>
+      <h2 class="t">Some questions want words from the passage; others want an outside fact that fits it</h2>
+      <p>When the question asks for a quotation, the answer is text that already lives in the passage or a work it names, so you go find it. When the question asks which finding "if true" would support or undermine an idea, the answer is a new fact you have never seen, and your only job is to judge whether it would help or hurt the idea.</p>
+      <div class="example">
+        <div class="row good"><b>Look inside the passage:</b> "Which quotation illustrates the claim?" The right words are already there.</div>
+        <div class="row"><b>Look outside the passage:</b> "Which finding, if true, would support the hypothesis?" First read the hypothesis in the passage, then judge each new fact by whether it would back that hypothesis up.</div>
+        <div class="row"><b>Look at the figure and the sentence:</b> "Which choice completes the statement using the graph?" The numbers come from the figure, but the sentence decides which numbers are right.</div>
+      </div>
+    </section>
+
+    <!-- 4 THE FOUR STEPS -->
+    <section class="slide" data-sec="Four steps">
+      <p class="eyebrow">A method that works on all of them</p>
+      <h2 class="t">If the passage says A and the question asks about B, decide what the answer must do</h2>
+      <div class="work">
+        <div class="step"><span class="n">1</span><span><b>Read the question and find what it is asking for,</b> and where to look. A hypothesis, one person's argument, the overall claim, the conclusion, or something that argues against one of these.</span></div>
+        <div class="step"><span class="n">2</span><span><b>Restate that idea in your own words,</b> using only what the passage says. "The hypothesis is ...", "Bloom's argument is ...", "the claim is ...".</span></div>
+        <div class="step"><span class="n">3</span><span><b>Decide what the answer must do</b> to that idea: support it, complete it, or argue against it.</span></div>
+        <div class="step"><span class="n">4</span><span><b>Find the choice that does it.</b> If it is obvious, pick it. Cross out choices only when the answer does not jump out.</span></div>
+      </div>
+      <div class="card-note"><b>Step 2 is where people get confused.</b> Restate the idea exactly as the passage puts it. If you find yourself adding a detail to make it fit better, stop, because the answer matches the passage's idea, not a sharper version you built.</div>
+    </section>
+
+    <!-- 5 GUIDED 1 (avocado, quick warmup) -->
+    <section class="slide" data-sec="Work one through">
+      <p class="eyebrow game">Work through one &middot; the quick version</p>
+      <h2 class="t">Read the whole thing, then decide what the answer must do</h2>
+      <div class="guide" id="guideAvo"></div>
+    </section>
+
+    <!-- 6 WALKTHROUGH 1 (migraine, full step-by-step) -->
+    <section class="slide" data-sec="Think it through">
+      <p class="eyebrow game">Think it through &middot; every step</p>
+      <h2 class="t">Do the whole process on one question, one step at a time</h2>
+      <div class="walk" id="walkMig"></div>
+    </section>
+
+    <!-- 6b WALKTHROUGH 2 (glial, argue against) -->
+    <section class="slide" data-sec="Think it through">
+      <p class="eyebrow game">Think it through &middot; an argue-against question</p>
+      <h2 class="t">Same process when the question wants you to argue against the idea</h2>
+      <div class="walk" id="walkGlial"></div>
+    </section>
+
+    <!-- 7 DRILL: if A and asked B, what must the answer do -->
+    <section class="slide" data-sec="Exercise">
+      <p class="eyebrow game">Exercise &middot; what must the answer do?</p>
+      <h2 class="t">If the passage says A and the question asks about B, what does the answer have to do?</h2>
+      <div class="drill" id="predictDrill"></div>
+    </section>
+
+    <!-- 8 TRAP 1 -->
+    <section class="slide" data-sec="Trap 1">
+      <p class="eyebrow sat">Trap 1 of 4</p>
+      <h2 class="t">More than one choice can be true, and only one answers the question</h2>
+      <p>The most common mistake is picking a choice because it is true and you can find it in the passage, even though it does not do what the question asked. Several choices are often true. Being true is not the test. Doing the job the question asked is.</p>
+      <div class="card-note"><b>On the next screen, sort the choices first.</b> Mark each one true or false against the passage, notice that more than one is true, then see which of the true ones actually supports the claim.</div>
+    </section>
+
+    <!-- 9 TRAP 1 EXERCISE: true/false then answer, full question -->
+    <section class="slide" data-sec="Exercise">
+      <p class="eyebrow game">Exercise &middot; true first, then answering</p>
+      <h2 class="t">Mark each choice true or false, then find the one that answers the question</h2>
+      <div class="guide" id="guideTrap1"></div>
+    </section>
+
+    <!-- 10 TRAP 2 -->
+    <section class="slide" data-sec="Trap 2">
+      <p class="eyebrow sat">Trap 2 of 4</p>
+      <h2 class="t">A choice can be about the right topic but miss what the claim actually says</h2>
+      <p>Read what the claim asserts, exactly. If the claim is that something is harmful, a choice that only shows the thing exists is about the right topic but does not show harm. If the claim is about a total, a choice about one part does not cover it.</p>
+      <div class="example">
+        <div class="row"><b>Claim:</b> avocado monoculture introduces problems, meaning it is harmful.</div>
+        <div class="row bad"><b>Trap choice:</b> land once used for mixed crops is now planted only with avocado.</div>
+        <div class="row"><b>Why it fails:</b> that shows monoculture exists, not that it causes harm. The claim is about harm, so the answer has to show a problem.</div>
+      </div>
+    </section>
+
+    <!-- 11 DRILL: spot trap 2 -->
+    <section class="slide" data-sec="Exercise">
+      <p class="eyebrow game">Exercise &middot; does it match what the claim says?</p>
+      <h2 class="t">Decide whether each choice matches what the claim actually asserts</h2>
+      <div class="drill" id="trap2Drill"></div>
+    </section>
+
+    <!-- 14 TRAP 3 -->
+    <section class="slide" data-sec="Trap 3">
+      <p class="eyebrow sat">Trap 3 of 4</p>
+      <h2 class="t">A choice can point the opposite way, especially on undermine questions</h2>
+      <p>If the question asks you to undermine and a choice supports the idea, it is wrong no matter how well it fits. This is the trap in the glial cells question: three of the four choices are about the effect of glutamate, and the one that restates the passage's own result supports the conclusion instead of arguing against it.</p>
+      <div class="example">
+        <div class="row"><b>Question:</b> which finding would undermine the claim that a drug improves memory?</div>
+        <div class="row bad"><b>Trap choice:</b> people taking the drug scored higher on memory tests.</div>
+        <div class="row"><b>Why it fails:</b> that supports the claim. The question asked you to weaken it, so you need the finding that shows no effect.</div>
+      </div>
+    </section>
+
+    <!-- 15 DRILL: support or undermine -->
+    <section class="slide" data-sec="Exercise">
+      <p class="eyebrow game">Exercise &middot; do what the question asks</p>
+      <h2 class="t">Read whether the question says support or argue against, then pick the finding that fits</h2>
+      <div class="drill" id="trap3Drill"></div>
+    </section>
+
+    <!-- 16 TRAP 4 -->
+    <section class="slide" data-sec="Trap 4">
+      <p class="eyebrow sat">Trap 4 of 4</p>
+      <h2 class="t">Two things happening together does not prove one caused the other</h2>
+      <p>When a claim is about cause, a choice that only shows two things rising at the same time is not enough. This shows up most in data questions.</p>
+      <div class="example">
+        <div class="row"><b>Claim:</b> the ad campaign caused the rise in sales.</div>
+        <div class="row bad"><b>Trap choice:</b> sales and the campaign both rose in the same quarter.</div>
+        <div class="row"><b>Why it fails:</b> rising together is only timing. Support has to tie the campaign to the sales, the way heat, not ice cream, drives summer sunburns.</div>
+      </div>
+    </section>
+
+    <!-- 17 DRILL: name the trap -->
+    <section class="slide" data-sec="Exercise">
+      <p class="eyebrow game">Exercise &middot; name the trap</p>
+      <h2 class="t">Identify which trap each wrong choice is using</h2>
+      <div class="drill" id="trapNameDrill"></div>
+    </section>
+
+    <!-- 18 QUOTATION TYPE + WHOSE -->
+    <section class="slide" data-sec="Quotation type">
+      <p class="eyebrow">Type 1 &middot; quotation questions</p>
+      <h2 class="t">Match the quotation to the exact claim, and to the right person</h2>
+      <p>The choices are quotations, and the right one shows the claim is true. When a passage quotes more than one person, the question names whose argument you want, and the other person's view is planted as a trap.</p>
+      <div class="card-note"><b>Before the choices,</b> say the claim in your own words and note whose it is. On the next screen, the passage holds two opposing experts, so whose argument you are illustrating decides the answer.</div>
+    </section>
+
+    <!-- 19 BLOOM (real, answer D) -->
+    <section class="slide" data-sec="Quotation type">
+      <p class="eyebrow diag">Practice &middot; whose argument is it?</p>
+      <div class="pq diag" data-correct="D" data-hint="The question wants Bloom, who argues empathy HINDERS moral action by making us overlook systemic issues. Zaki argues the opposite. Match Bloom's stated view: empathy gets in the way on big, systemic problems.">
+        <div class="stem"><div class="passage" style="margin-bottom:10px;"><div class="src">Passage</div>In the article <em>Does Empathy Guide or Hinder Moral Action?</em>, two experts discuss empathy in moral decisions. Some researchers, such as Paul Bloom, argue that <span class="claimline">empathy can hinder moral action by causing us to focus too much on individual cases and overlook systemic issues.</span> Others like Jamil Zaki argue that empathy is essential for moral action. The article suggests empathy can guide us if we engage with it critically.</div>Which quotation from the article best illustrates Bloom's argument?</div>
+        <div class="ask">Select an answer, then check it or open the explanation.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span>"Rationality alone isn't enough to be a good person; you also need some sort of motivation. But compassion, caring for others without feeling their pain, does the trick quite nicely."<span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span>"People constantly think themselves into and out of feelings. Strong emotions can act like a psychological alarm system, drawing our consciousness toward whatever causes them."<span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span>"Many Americans opposed slavery before 1852, but Uncle Tom's Cabin, in shedding light on its horrors, moved millions and sparked new momentum for abolitionism. In cases like this, empathy enlivens moral principles, making them urgent."<span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span>"When we appreciate that a crisis such as climate change has great significance, even though it is an abstract threat, we are transcending empathy. A good policy maker makes decisions using reason, aspiring toward the fairness and impartiality empathy doesn't provide."<span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Explanation</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Explanation</div><div class="body"><div class="work">
+          <div class="step"><span class="n">1</span><span>Bloom's stated argument: empathy hinders moral action by making us overlook systemic issues. Choice D shows empathy being transcended for an abstract, systemic problem, with reason doing better. That matches Bloom. <strong>Choice D.</strong></span></div>
+          <div class="step"><span class="n">2</span><span><b>C is the trap most students pick.</b> It praises empathy for making moral principles urgent, which is Zaki's pro-empathy side, not Bloom's. It matches the topic of empathy but the wrong person.</span></div>
+          <div class="step"><span class="n">3</span><span>A sounds Bloom-like if you already know his work, but this passage frames his argument around systemic issues, which A never touches. B is a neutral description of emotions. Match the argument as the passage states it, and to the named person.</span></div>
+        </div></div></div>
+      </div>
+    </section>
+
+    <!-- 19b KUROSAWA (real, answer B) -->
+    <section class="slide" data-sec="Quotation type">
+      <p class="eyebrow diag">Practice &middot; match the exact claim</p>
+      <div class="pq diag" data-correct="B" data-hint="The claim is that others creating across forms reflects Kurosawa's OWN approach, which the passage describes as blending genres. Find the quote that ties his genre-merging to other art forms engaging with film.">
+        <div class="stem"><div class="passage" style="margin-bottom:10px;"><div class="src">Passage</div>Boldly blending samurai drama, Western genres, and philosophical inquiry, Akira Kurosawa creates a hybrid cinematic style. His works have inspired responses across many fields and formats, from musical compositions to graphic novels. A student asserts that <span class="claimline">the production of these diverse creations by others reflects Kurosawa's own approach to crafting film.</span></div>Which quotation from a scholarly review of Kurosawa's work best supports the student's claim?</div>
+        <div class="ask">Select an answer, then check it or open the explanation.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span>Kurosawa is the focus of a 2015 collection of essays in which twelve scholars from five different countries analyzed the visual and thematic patterns of his films.<span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span>Kurosawa's willingness to merge genres within cinema invites us to consider how other art forms might also engage with filmmaking.<span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span>Before settling in Tokyo, where he would become a renowned director, Kurosawa studied both theater and painting in Kyoto.<span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span>In addition to his film works, Kurosawa produced academic pieces analyzing the works of Yasujir&#333; Ozu and Kenji Mizoguchi.<span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Explanation</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Explanation</div><div class="body"><div class="work">
+          <div class="step"><span class="n">1</span><span>The claim links his own genre-merging to others creating across forms. Choice B does exactly that: "willingness to merge genres" is his approach, and "other art forms might also engage with filmmaking" is the cross-form response by others, tied together by "also." <strong>Choice B.</strong></span></div>
+          <div class="step"><span class="n">2</span><span><b>A is the trap most students pick.</b> It is true that scholars analyzed his films, but scholars studying him is not his approach being reflected in other people's work. True but does not support the claim.</span></div>
+          <div class="step"><span class="n">3</span><span>C is biography. D shows him analyzing others, the reverse direction of others responding to him.</span></div>
+        </div></div></div>
+      </div>
+    </section>
+
+    <!-- 20 FINDING TYPE -->
+    <section class="slide" data-sec="Finding type">
+      <p class="eyebrow">Type 2 &middot; finding, if true</p>
+      <h2 class="t">The answer is usually a new fact, not something from the passage</h2>
+      <p>These say "which finding, if true." The choices are hypothetical results you are asked to imagine. The right one does not appear in the passage; it is an outside fact that would support or undermine the idea the question names.</p>
+      <div class="card-note"><b>This flips the usual instinct.</b> On quotation questions you hunt for text that is already there. On finding questions you accept a choice you have never seen and ask only one thing: if this were true, would it make the claim stronger, or weaker, exactly as the question asked?</div>
+    </section>
+
+    <!-- 21 AVOCADO (real, answer B) -->
+    <section class="slide" data-sec="Finding type">
+      <p class="eyebrow diag">Practice &middot; harm, not existence</p>
+      <div class="pq diag" data-correct="B" data-hint="The claim is that monoculture introduces problems, meaning it is harmful. Support has to show a problem monoculture causes, even if that problem is not mentioned in the passage.">
+        <div class="stem"><div class="passage" style="margin-bottom:10px;"><div class="src">Passage</div>Most avocados eaten in the United States come from Michoac&aacute;n, Mexico. Though a robust avocado market helps the largest producers, professor Viridiana Hern&aacute;ndez Fern&aacute;ndez notes that avocados in Michoac&aacute;n are a monoculture crop, one that dominates an area's agriculture to the exclusion of other crops, and that <span class="claimline">monoculture farming introduces its own problems.</span></div>Which finding, if true, would most effectively support Hern&aacute;ndez Fern&aacute;ndez's claim about avocados in Michoac&aacute;n?</div>
+        <div class="ask">Select an answer, then check it or open the explanation.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span>Land that was once used for a combination of crop types is now being exclusively designated for avocado trees under the monoculture approach of Michoac&aacute;n's largest growers.<span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span>Planting only avocado trees on a large parcel of land decreases the fertility of that land over the long term, and this approach is too resource-intensive for smaller growers.<span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span>Recent efforts to diversify Michoac&aacute;n's agriculture have emphasized growing peaches, lemons, and other fruits that could be cultivated alongside avocados.<span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span>The Haas avocado is the primary strain grown in Michoac&aacute;n, as well as the most popular type of avocado in the United States.<span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Explanation</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Explanation</div><div class="body"><div class="work">
+          <div class="step"><span class="n">1</span><span>The claim is that monoculture is harmful. Choice B names two concrete harms: it drains soil fertility over time and prices out smaller growers. Those are problems monoculture introduces, so it supports the claim. <strong>Choice B.</strong></span></div>
+          <div class="step"><span class="n">2</span><span><b>A is the trap most students pick.</b> It describes monoculture spreading, which shows it exists, not that it causes harm. The claim was never that monoculture exists; it was that monoculture is a problem.</span></div>
+          <div class="step"><span class="n">3</span><span>C is about diversifying away from monoculture, not a harm of it. D is an unrelated fact about avocado strains. Neither shows a problem.</span></div>
+        </div></div></div>
+      </div>
+    </section>
+
+    <!-- 22 MIGRAINE (real, answer A) -->
+    <section class="slide" data-sec="Finding type">
+      <p class="eyebrow diag">Practice &middot; pin the hypothesis</p>
+      <div class="pq diag" data-correct="A" data-hint="The hypothesis is that DECREASES in estrogen trigger migraines. Support has to connect falling estrogen to worse migraines, not just mention hormones or the word trigger.">
+        <div class="stem"><div class="passage" style="margin-bottom:10px;"><div class="src">Passage</div>Women are three times more likely than men to experience migraines. Studying cisgender women, lead author Bianca Raffaelli and colleagues <span class="claimline">hypothesized that decreases in estrogen are a potential trigger for migraines.</span> They observed that migraines can worsen during the menstrual cycle, become more severe during the transition to menopause, and then decrease once menopause is complete. Raffaelli notes the underlying mechanisms remain poorly understood.</div>Which finding from the study, if true, would most strongly support the researchers' hypothesis?</div>
+        <div class="ask">Select an answer, then check it or open the explanation.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span>Estrogen levels significantly drop during the transition to menopause.<span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span>Contraceptives that cause hormonal fluctuations are a likely trigger of migraines.<span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span>Men are not as affected by migraine headaches because their hormones greatly differ from women's.<span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span>Extensive research is needed to fully understand female pathophysiological mechanisms.<span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Explanation</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Explanation</div><div class="body"><div class="work">
+          <div class="step"><span class="n">1</span><span>The hypothesis is specific: falling estrogen triggers migraines. The passage says migraines worsen during the transition to menopause. Choice A shows estrogen drops during exactly that transition, tying the estrogen decrease to the worsening. <strong>Choice A.</strong></span></div>
+          <div class="step"><span class="n">2</span><span><b>B is the word-match trap:</b> it contains "trigger" but points to vague hormonal fluctuations, not a decrease in estrogen. <b>D is the caveat trap:</b> it echoes the last sentence about mechanisms being poorly understood, which is not the hypothesis.</span></div>
+          <div class="step"><span class="n">3</span><span>C is about men, irrelevant to whether falling estrogen drives migraines in the women studied.</span></div>
+        </div></div></div>
+      </div>
+    </section>
+
+    <!-- 23 GLIAL (real, answer A, undermine) -->
+    <section class="slide" data-sec="Finding type">
+      <p class="eyebrow diag">Practice &middot; read the word undermine</p>
+      <div class="pq diag" data-correct="A" data-hint="The question says argue against (undermine). The conclusion is that online and offline learning use DIFFERENT mechanisms, with glutamate driving online. To undermine that, find the finding where glutamate also drives offline the same way, so the two are not distinct.">
+        <div class="stem"><div class="passage" style="margin-bottom:10px;"><div class="src">Passage</div>Researchers concluded that online and offline learning are distinct processes governed by different cellular mechanisms. Glial cells release gliotransmitters like glutamate, which can influence memory. In mice, activating glial cells enhanced online learning, while inhibiting them suppressed it.</div>Which finding, if true, would most directly undermine the conclusion of the study?</div>
+        <div class="ask">Select an answer, then check it or open the explanation.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span>Offline learning outcomes increased by 15% when excess levels of glutamate were released in the brain.<span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span>Offline learning outcomes decreased by 15% when excess levels of glutamate were released in the brain.<span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span>Online learning outcomes increased by 15% when excess levels of glutamate were released in the brain.<span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span>Online learning outcomes decreased by 15% when excess levels of glutamate were released in the brain.<span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Explanation</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Explanation</div><div class="body"><div class="work">
+          <div class="step"><span class="n">1</span><span>The conclusion is that online and offline learning run on different mechanisms, and glutamate is the online one. To undermine that, show glutamate also drives offline learning the same way. Choice A shows more glutamate raising offline learning, just as it raises online, so the two are not distinct after all. <strong>Choice A.</strong></span></div>
+          <div class="step"><span class="n">2</span><span><b>C is the trap most students pick.</b> It restates the passage's own result, that glutamate boosts online learning, which supports the conclusion. The question asked you to argue against it, so a supporting choice is wrong.</span></div>
+          <div class="step"><span class="n">3</span><span>B has glutamate affecting offline in the opposite direction, which does not collapse the distinction as cleanly. D contradicts the passage's online result and still leaves the two processes separate.</span></div>
+        </div></div></div>
+      </div>
+    </section>
+
+    <!-- 23b YELLOWSTONE (real, answer C) -->
+    <section class="slide" data-sec="Finding type">
+      <p class="eyebrow diag">Practice &middot; match the stated motive</p>
+      <div class="pq diag" data-correct="C" data-hint="The claim is about the MOTIVE for the policy: economic benefit. The best support is contemporaneous with the decision and about economic value, not a result that showed up decades later.">
+        <div class="stem"><div class="passage" style="margin-bottom:10px;"><div class="src">Passage</div>In 1872, the U.S. government made Yellowstone the first national park, partly to preserve it from commercial exploitation, and expanded the policy to Yosemite and others by 1890. <span class="claimline">Some historians assert that the policy was primarily motivated by economic benefits, such as boosting tourism and local development.</span></div>Which of the following, if true, best supports the assertion of the historians mentioned in the text?</div>
+        <div class="ask">Select an answer, then check it or open the explanation.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span>At the time Yellowstone was established, about 5 percent of the U.S. population visited natural landmarks annually; by 1900, that proportion had risen to nearly 15 percent.<span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span>A contemporary account of the Yosemite establishment, written by John Muir, describes the breathtaking beauty of the park's landscapes and the need to protect them for future generations.<span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span>In 1871, the year before Yellowstone's designation, Congress commissioned a geological survey of the region's natural resources that estimated their potential value for tourism.<span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span>The 1880s saw increased logging and mining near Yosemite, which led to public outcry and demands for conservation.<span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Explanation</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Explanation</div><div class="body"><div class="work">
+          <div class="step"><span class="n">1</span><span>The claim is about the motive for the policy: economic benefit. Choice C is dated the year before the designation and shows the government estimating the land's tourism value, which is evidence that economic value shaped the decision. <strong>Choice C.</strong></span></div>
+          <div class="step"><span class="n">2</span><span><b>A is the trap most students pick.</b> Rising visits sound economic, but they happen after the parks exist and stretch to 1900, so they show a later result, not the motive behind enacting the policy. Support for a motive should sit with the decision, not decades downstream.</span></div>
+          <div class="step"><span class="n">3</span><span>B and D name the opposite motive: Muir's account is about beauty and protection, and the logging outcry is about conservation. Both point to preservation rather than economics.</span></div>
+        </div></div></div>
+      </div>
+    </section>
+
+    <!-- 23c FERGUSON (real, answer A) -->
+    <section class="slide" data-sec="Finding type">
+      <p class="eyebrow diag">Practice &middot; read the logic of the claim</p>
+      <div class="pq diag" data-correct="A" data-hint="Ferguson claims that BEYOND the shared factors, country-specific drivers mattered. Support means showing countries with the same shared input got different results, which forces a country-specific explanation.">
+        <div class="stem"><div class="passage" style="margin-bottom:10px;"><div class="src">Passage</div>Historian Tony Judt cites factors common to European countries that spurred post-war growth, such as the Marshall Plan and reconstruction. Reviewing Judt's work, historian Niall Ferguson asserts that <span class="claimline">beyond these shared factors, there must have been additional drivers of recovery specific to particular countries.</span></div>Which statement, if true, would most directly support Ferguson's assertion?</div>
+        <div class="ask">Select an answer, then check it or open the explanation.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span>West Germany and the United Kingdom experienced significantly different rates of economic growth despite receiving similar amounts of Marshall Plan aid.<span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span>The Marshall Plan allowed France and Italy to achieve economic recovery rates that were consistent with the continental average.<span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span>Post-war reconstruction efforts were standardized to ensure that countries like Belgium and the Netherlands achieved uniform levels of economic resurgence.<span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span>Factors specific to the agricultural sectors of Southern Europe were less influential in driving growth than were general post-war initiatives.<span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Explanation</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Explanation</div><div class="body"><div class="work">
+          <div class="step"><span class="n">1</span><span>Ferguson says country-specific drivers mattered beyond the shared ones. The way to support that is to show the shared factor alone cannot explain the results. Choice A does it: same Marshall Plan aid, very different growth, so something specific to each country must be at work. <strong>Choice A.</strong></span></div>
+          <div class="step"><span class="n">2</span><span><b>C is the trap most students pick.</b> Uniform resurgence from a standardized shared effort argues the shared factors explain everything, which is the opposite of Ferguson's point. B does the same with a uniform continental average.</span></div>
+          <div class="step"><span class="n">3</span><span>D says country-specific factors mattered less, which also works against Ferguson. Only A shows variation the shared factors cannot account for.</span></div>
+        </div></div></div>
+      </div>
+    </section>
+
+    <!-- 24 DATA TYPE: how to analyze -->
+    <section class="slide" data-sec="Data type">
+      <p class="eyebrow">Type 3 &middot; data questions</p>
+      <h2 class="t">Read the figure before you read the choices</h2>
+      <div class="work">
+        <div class="step"><span class="n">1</span><span><b>Read the title, the labels, and the units.</b> Know what each row, column, or axis measures before anything else.</span></div>
+        <div class="step"><span class="n">2</span><span><b>Read the sentence with the blank</b> and note what it needs: a rise, a fall, a comparison between two groups, or a specific number.</span></div>
+        <div class="step"><span class="n">3</span><span><b>Find that in the figure yourself,</b> then match it to a choice.</span></div>
+        <div class="step"><span class="n">4</span><span><b>Check both halves of each choice:</b> the numbers must be right, and they must complete the sentence's point. A choice can quote the figure correctly and still not fit the sentence.</span></div>
+      </div>
+    </section>
+
+    <!-- 25 DATA worked example (complete the statement) -->
+    <section class="slide" data-sec="Data type">
+      <p class="eyebrow diag">Practice &middot; complete the statement with data</p>
+      <div class="pq diag" data-correct="C" data-hint="The sentence needs the region where recycled tons rose the most from 2020 to 2023. Compute each region's increase from the table, then match.">
+        <div class="stem"><div class="passage" style="margin-bottom:10px;"><div class="src">Passage</div>A city compared recycling across four districts. The author writes: to show the program worked best where outreach was heaviest, note that from 2020 to 2023 the district with the largest increase in tons recycled was <span class="claimline">__________</span></div>
+          <table class="dtable" style="margin-bottom:10px;">
+            <tr><th>District</th><th>Tons recycled, 2020</th><th>Tons recycled, 2023</th></tr>
+            <tr><td>North</td><td>410</td><td>520</td></tr>
+            <tr><td>East</td><td>300</td><td>360</td></tr>
+            <tr><td>South</td><td>250</td><td>500</td></tr>
+            <tr><td>West</td><td>480</td><td>545</td></tr>
+          </table>Which choice most effectively uses data from the table to complete the statement?</div>
+        <div class="ask">Select an answer, then check it or open the explanation.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span>North, which rose from 410 to 520 tons.<span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span>West, which reached the highest 2023 total at 545 tons.<span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span>South, which rose from 250 to 500 tons.<span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span>East, which rose from 300 to 360 tons.<span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Explanation</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Explanation</div><div class="body"><div class="work">
+          <div class="step"><span class="n">1</span><span>The sentence needs the largest increase. Increases: North +110, East +60, South +250, West +65. South is largest. <strong>Choice C.</strong></span></div>
+          <div class="step"><span class="n">2</span><span><b>B is the trap:</b> its numbers are correct, but "highest 2023 total" is not what the sentence asked for. The sentence asked for the largest increase, and West rose only 65. A correct number in the wrong role is still wrong.</span></div>
+          <div class="step"><span class="n">3</span><span>A and D quote the table accurately but their increases are smaller than South's.</span></div>
+        </div></div></div>
+      </div>
+    </section>
+
+    <!-- 26 NECESSARY NOT SUFFICIENT concept -->
+    <section class="slide" data-sec="Data type">
+      <p class="eyebrow">A logic pattern in data claims</p>
+      <h2 class="t">"Necessary but not sufficient" asks the data to show two separate things</h2>
+      <div class="example">
+        <div class="row"><b>Necessary</b> means the result never happens without the condition. Every case missing the condition fails to get the result.</div>
+        <div class="row"><b>Not sufficient</b> means the condition alone does not guarantee the result. At least one case has the condition and still fails.</div>
+      </div>
+      <div class="card-note"><b>A choice that shows only one half is incomplete.</b> If a claim says a condition is necessary but not sufficient, the right answer has to reflect both the "never without it" part and the "does not guarantee it" part.</div>
+    </section>
+
+    <!-- 27 NECESSARY NOT SUFFICIENT 4 examples -->
+    <section class="slide" data-sec="Data type">
+      <p class="eyebrow">Four quick reads</p>
+      <h2 class="t">See both halves in four everyday cases</h2>
+      <div class="example">
+        <div class="row"><b>A key for a locked door.</b> Necessary: you never get in without the key. Not sufficient: the key alone fails if the door is also bolted.</div>
+        <div class="row"><b>Water for a plant to grow.</b> Necessary: no water, no growth, ever. Not sufficient: watered plants in the dark still die, so water alone does not guarantee growth.</div>
+        <div class="row"><b>Studying to pass a test.</b> Necessary: students who never study fail. Not sufficient: some students study and still fail, so studying alone does not guarantee a pass.</div>
+        <div class="row"><b>Rain for a flood.</b> Necessary: no floods occur without rain here. Not sufficient: light rain brings no flood, so rain alone does not guarantee one.</div>
+      </div>
+    </section>
+
+    <!-- 28 CO2 table -->
+    <section class="slide" data-sec="Data type">
+      <p class="eyebrow diag">Practice &middot; support a claim with data</p>
+      <h2 class="t">Percentage point changes in industrial CO&#8322; emissions by regulatory status</h2>
+      <div class="passage" style="margin-bottom:10px;">
+        <div class="src">Argument</div>
+        Dr. Aisha Kumar shows that strict regulations tend to accompany reductions in total CO&#8322; emissions relative to output. She points to her data as evidence that strict regulation may be a <span class="claimline">"necessary but not sufficient condition" for a decrease in emissions to occur.</span>
+      </div>
+      <table class="dtable">
+        <tr><th>Period</th><th>Regulation</th><th>Total emissions</th><th>Process</th><th>Combustion</th></tr>
+        <tr><td>2010&ndash;2012</td><td>Relaxed</td><td class="rise">+1.8</td><td>+0.9</td><td>+0.9</td></tr>
+        <tr><td>2013&ndash;2015</td><td>Strict</td><td class="fall">&minus;0.5</td><td>&minus;0.3</td><td>&minus;0.2</td></tr>
+        <tr><td>2016&ndash;2018</td><td>Relaxed</td><td class="rise">+1.2</td><td>+0.6</td><td>+0.6</td></tr>
+        <tr><td>2019&ndash;2021</td><td>Strict</td><td class="fall">&minus;0.7</td><td>&minus;0.4</td><td>&minus;0.3</td></tr>
+        <tr><td>2022&ndash;2024</td><td>Strict</td><td class="rise">+0.15</td><td>+0.1</td><td>+0.05</td></tr>
+        <tr><td>2025&ndash;2027</td><td>Relaxed</td><td class="rise">+1.0</td><td>+0.5</td><td>+0.5</td></tr>
+      </table>
+      <div class="card-note"><b>Check both halves in the total column.</b> Every relaxed period rose and the two decreases are both strict, so decreases happen only under strict rule. The strict 2022&ndash;2024 period rose, so strict rule did not guarantee a decrease.</div>
+    </section>
+
+    <!-- 29 CO2 question -->
+    <section class="slide" data-sec="Data type">
+      <p class="eyebrow diag">Practice &middot; choose</p>
+      <div class="pq diag" data-correct="D" data-hint="Both halves must appear, on total emissions. Necessary: all relaxed periods rose. Not sufficient: one strict period rose. Stay on total, not process or combustion.">
+        <div class="stem">Which choice best describes data from the table that support the underlined claim?</div>
+        <div class="ask">Select an answer, then check it or open the explanation.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span>The periods of strict regulations were associated with reductions in total CO&#8322; emissions, whereas all the periods of relaxed regulations were associated with increases in total CO&#8322; emissions.<span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span>All the periods of strict regulations except one were associated with reductions in process emissions, although one period was also associated with increases in total CO&#8322; emissions.<span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span>The periods of relaxed regulations were associated with increases in total CO&#8322; emissions, whereas all the periods of strict regulations were associated with reductions in either process emissions or combustion emissions.<span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span>All the periods of strict regulations except one were associated with reductions in total CO&#8322; emissions, whereas the periods of relaxed regulations were associated with increases in total CO&#8322; emissions.<span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Explanation</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Explanation</div><div class="body"><div class="work">
+          <div class="step"><span class="n">1</span><span>Choice D states both halves on total emissions: all strict periods except one decreased total, and the relaxed periods increased total. <strong>Choice D.</strong></span></div>
+          <div class="step"><span class="n">2</span><span><b>B is a scope shift</b> to process emissions and it drops the necessary half. This is the answer marked on the diagnostic.</span></div>
+          <div class="step"><span class="n">3</span><span>A says strict periods reduced total, but 2022&ndash;2024 rose, so it is false. C shifts to process or combustion and is also false for 2022&ndash;2024, where both rose.</span></div>
+        </div></div></div>
+      </div>
+    </section>
+
+    <!-- 29b WATER TABLE (real, answer A) -->
+    <section class="slide" data-sec="Data type">
+      <p class="eyebrow diag">Practice &middot; support the full scope of the claim</p>
+      <h2 class="t">The choice has to cover what the claim says, in every region</h2>
+      <div class="passage" style="margin-bottom:10px;">
+        <div class="src">Argument</div>
+        Dr. Maria Santos categorized water quality impacts into drinking water, purification, and recreational use. Santos asserts that <span class="claimline">drinking water availability is the most frequently reported impact across all regions.</span>
+      </div>
+      <table class="dtable" style="margin-bottom:0;">
+        <tr><th>Region</th><th>Drinking water</th><th>Purification</th><th>Recreational</th></tr>
+        <tr><td>Northwest</td><td class="fall">65%</td><td>25%</td><td>10%</td></tr>
+        <tr><td>Southeast</td><td class="fall">78%</td><td>15%</td><td>7%</td></tr>
+        <tr><td>Central</td><td class="fall">55%</td><td>30%</td><td>15%</td></tr>
+        <tr><td>South</td><td class="fall">70%</td><td>20%</td><td>10%</td></tr>
+        <tr><td>Overall</td><td class="fall">67%</td><td>22%</td><td>11%</td></tr>
+      </table>
+    </section>
+
+    <!-- 29c WATER TABLE question -->
+    <section class="slide" data-sec="Data type">
+      <p class="eyebrow diag">Practice &middot; choose</p>
+      <div class="pq diag" data-correct="A" data-hint="The claim is that drinking water is the most frequent impact in every region. Support has to show drinking is the largest share in each region and overall, not just true numbers about part of the table.">
+        <div class="stem">Which choice best describes data from the table that support Santos's assertion?</div>
+        <div class="ask">Select an answer, then check it or open the explanation.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span>Drinking water availability represents at least 55% of the impacts reported for each region, and the overall percentage of reported impacts on drinking water is 67%.<span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span>None of the percentages shown for drinking water availability are lower than 50%, and all reported percentages for water purification are below 50%.<span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span>Drinking water availability is shown for each region, while recreational use impacts vary across regions.<span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span>The greatest percentage shown for drinking water availability is 78% for the Southeast region, and the least is 55% for the Central region.<span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Explanation</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Explanation</div><div class="body"><div class="work">
+          <div class="step"><span class="n">1</span><span>The claim is that drinking water is the most frequent impact in every region. Choice A shows drinking is at least 55% of impacts in each region, which makes it the majority and therefore the largest of the three categories everywhere, and 67% overall. That covers the full claim. <strong>Choice A.</strong></span></div>
+          <div class="step"><span class="n">2</span><span><b>B is the trap most students pick.</b> Its numbers are true, but it only compares drinking with purification and ignores recreational, so it does not establish that drinking is the most frequent in each region. A partial comparison does not support the whole claim.</span></div>
+          <div class="step"><span class="n">3</span><span>C is vague and shows nothing about frequency. D reports only the highest and lowest drinking figures, which does not show drinking leads in every region.</span></div>
+        </div></div></div>
+      </div>
+    </section>
+
+    <!-- 30 CHEAT SHEET -->
+    <section class="slide" data-sec="Cheat sheet">
+      <p class="eyebrow"><span class="star">&#10038;</span>&nbsp; Cheat sheet</p>
+      <h2 class="t">Command of Evidence: read the question, then work the claim</h2>
+      <div class="sheet">
+        <div class="sheet-card"><div class="lab">Type 1</div><div class="id">Quotation: pick the quote that shows the claim, and match the right person.</div></div>
+        <div class="sheet-card"><div class="lab">Type 2</div><div class="id">Finding, if true: the answer is a new outside fact that supports or undermines.</div></div>
+        <div class="sheet-card"><div class="lab">Type 3</div><div class="id">Data: numbers must be right and complete the sentence's point.</div></div>
+        <div class="sheet-card"><div class="lab">Read the question</div><div class="id">Support or argue against, and which idea, and whose.</div></div>
+        <div class="sheet-card"><div class="lab">Steps</div><div class="id">Read what is asked, restate it from the passage, decide what the answer must do, then match.</div></div>
+        <div class="sheet-card"><div class="lab">Trap 1</div><div class="id">A true detail from the passage that does not support the claim.</div></div>
+        <div class="sheet-card"><div class="lab">Trap 2</div><div class="id">On topic but off the point, like existence when the claim is harm.</div></div>
+        <div class="sheet-card"><div class="lab">Traps 3 and 4</div><div class="id">Wrong direction on an argue-against question, or timing mistaken for cause.</div></div>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<div class="bar">
+  <button class="navbtn" id="prev" disabled>Back</button>
+  <div class="counter"><b id="cur">1</b> / <span id="total">1</span><span class="sec" id="sec">Start</span></div>
+  <button class="navbtn" id="next">Next</button>
+</div>
+<div class="hintbar">Arrow keys to move &middot; <span class="star">&#10038;</span> Illuminairy</div>
+
+<script>
+(function(){
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var idx=0;
+  var prev=document.getElementById('prev'), next=document.getElementById('next');
+  var cur=document.getElementById('cur'), sec=document.getElementById('sec'), progress=document.getElementById('progress');
+  document.getElementById('total').textContent=slides.length;
+  function show(n){
+    idx=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach(function(s,i){s.classList.toggle('active',i===idx);});
+    cur.textContent=idx+1;
+    sec.textContent=slides[idx].getAttribute('data-sec')||'';
+    prev.disabled=idx===0; next.disabled=idx===slides.length-1;
+    progress.style.width=((idx)/(slides.length-1)*100)+'%';
+    slides[idx].scrollTop=0;
+  }
+  prev.addEventListener('click',function(){show(idx-1);});
+  next.addEventListener('click',function(){show(idx+1);});
+  document.addEventListener('keydown',function(e){
+    var tag=(e.target.tagName||'').toLowerCase();
+    if(tag==='button')return;
+    if(e.key==='ArrowRight'||e.key==='PageDown'){show(idx+1);}
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){show(idx-1);}
+  });
+
+  /* guided reveal then select (no forced elimination) */
+  /* guided walkthrough: full passage stays visible, then restate, then decide, then choose */
+  function makeGuided(el, d){
+    var stage=0; // 0 passage, 1 restate, 2 must-do, 3 choices selectable
+    var answered=false, picked=null;
+    function render(){
+      var html='<div class="guide-pass">'+d.passage+'</div>';
+      html+='<div class="guide-row" style="background:#fff;border-color:var(--line);"><div class="rl">The question</div>'+d.question+'</div>';
+      if(stage>=1) html+='<div class="guide-row"><div class="rl">'+d.restateLabel+'</div>'+d.restate+'</div>';
+      if(stage>=2) html+='<div class="guide-row"><div class="rl">So the answer must</div>'+d.mustDo+'</div>';
+      if(stage>=3){
+        html+='<div class="guide-choices">';
+        d.choices.forEach(function(c){
+          var cls='guide-opt';
+          if(answered){
+            if(c.ok)cls+=' correct';
+            else if(c.l===picked)cls+=' incorrect';
+          }
+          html+='<button class="'+cls+'" data-l="'+c.l+'"'+(answered?' disabled':'')+'><span class="wl">'+c.l+'</span><span>'+c.t+(answered&&(c.ok||c.l===picked)?'<span class="guide-why">'+c.why+'</span>':'')+'</span></button>';
+        });
+        html+='</div>';
+      }
+      html+='<div class="guide-foot"><span class="guide-step">'+(stage===0?'Read it all':stage===1?'Restated':stage===2?'The job is clear':answered?'Answer':'Choose')+'</span>';
+      if(stage<3) html+='<button class="act primary" data-role="adv">'+(stage===0?d.restateBtn:stage===1?'Decide what the answer must do':'Show the choices')+'</button>';
+      html+='</div>';
+      el.innerHTML=html;
+      var adv=el.querySelector('[data-role="adv"]');
+      if(adv) adv.addEventListener('click',function(){stage++;render();});
+      el.querySelectorAll('.guide-opt').forEach(function(b){
+        b.addEventListener('click',function(){
+          if(answered)return; answered=true; picked=b.getAttribute('data-l'); render();
+        });
+      });
+    }
+    render();
+  }
+
+  makeGuided(document.getElementById('guideAvo'), {
+    passage:'Most avocados eaten in the United States come from Michoac\u00e1n, Mexico. Though a robust avocado market helps the largest producers, professor Hern\u00e1ndez Fern\u00e1ndez notes that avocados in Michoac\u00e1n are a monoculture crop, one that dominates an area\u2019s agriculture to the exclusion of other crops, and that <span class="gclaim on">monoculture farming introduces its own problems.</span>',
+    question:'Which finding, if true, would most effectively support Hern\u00e1ndez Fern\u00e1ndez\u2019s claim?',
+    restateLabel:'The claim, in your words',
+    restate:'Monoculture is <b>harmful</b>. The claim is not that monoculture exists, it is that monoculture causes problems.',
+    restateBtn:'Restate the claim',
+    mustDo:'Name a problem monoculture causes. The finding can be something the passage never mentioned, as long as it shows a harm.',
+    choices:[
+      {l:'A',t:'Land once used for a mix of crops is now planted only with avocado.',ok:false,why:'True, but it shows monoculture exists, not that it is harmful. Right topic, not the claim.'},
+      {l:'B',t:'Planting only avocado lowers soil fertility over time and prices out smaller growers.',ok:true,why:'Names concrete harms, which is exactly what the claim asserts.'},
+      {l:'C',t:'Efforts to diversify now grow peaches and lemons alongside avocado.',ok:false,why:'About moving away from monoculture, not a harm it causes.'},
+      {l:'D',t:'The Haas avocado is the most popular strain in the United States.',ok:false,why:'An unrelated fact about avocado types.'}
+    ]
+  });
+
+  /* full step-by-step walkthrough: click the sentence, say the job, say the answer type, judge each choice, then finalize */
+  function makeWalk(el, d){
+    var stage=0; // 0 find sentence, 1 support/against, 2 answer type, 3 judge each, 4 finalize, 5 done
+    var sentPicked=null, jobPicked=null, typePicked=null, judgeIdx=0, judged=[], finalPicked=null;
+    var stageNames=['Find it','What to look for','Where the answer comes from','Check each choice','Your answer'];
+    function stepbar(){
+      var h='<div class="walk-steps">';
+      for(var i=0;i<stageNames.length;i++){
+        var cls='walk-chip'+(i===stage?' on':(i<stage?' done':''));
+        h+='<span class="'+cls+'">'+(i+1)+'. '+stageNames[i]+'</span>';
+      }
+      return h+'</div>';
+    }
+    function passageHTML(reveal){
+      return d.sentences.map(function(s,i){
+        var cls='walk-sent';
+        if(reveal){ if(s.target)cls+=' good'; }
+        else if(sentPicked===i)cls+=' sel';
+        return '<span class="'+cls+'" data-si="'+i+'">'+s.t+'</span>';
+      }).join(' ');
+    }
+    function render(){
+      var html=stepbar();
+      // Stage 0: click the sentence
+      if(stage===0){
+        html+='<div class="walk-prompt">'+d.findPrompt+'</div>';
+        html+='<div class="walk-pass">'+passageHTML(false)+'</div>';
+        html+='<div class="walk-foot"><span class="walk-tag">Click a sentence above</span></div>';
+        el.innerHTML=html;
+        el.querySelectorAll('.walk-sent').forEach(function(sp){
+          sp.addEventListener('click',function(){
+            var i=parseInt(sp.getAttribute('data-si'),10);
+            var s=d.sentences[i];
+            if(s.target){
+              stage=1;
+              el.innerHTML=stepbar()+'<div class="walk-prompt">'+d.findPrompt+'</div><div class="walk-pass">'+passageHTML(true)+'</div><div class="walk-note right"><b>Yes.</b> '+d.findWhy+'</div><div class="walk-foot"><button class="act primary" data-role="next">Next step</button></div>';
+              el.querySelector('[data-role="next"]').addEventListener('click',render);
+            } else {
+              sp.classList.add('bad');
+              var note=el.querySelector('.walk-livenote');
+              var msg='<div class="walk-note wrong walk-livenote"><b>Not that one.</b> '+(s.why||'That sentence is not what the question is about. Look again.')+'</div>';
+              if(note) note.outerHTML=msg; else el.querySelector('.walk-pass').insertAdjacentHTML('afterend',msg);
+            }
+          });
+        });
+        return;
+      }
+      // Common header for stages 1-4: show passage with target highlighted, and the question
+      html+='<div class="walk-pass">'+passageHTML(true)+'</div>';
+      html+='<div class="walk-q">'+d.question+'</div>';
+      // Stage 1: support or argue against
+      if(stage===1){
+        html+='<div class="walk-prompt">'+d.jobPrompt+'</div><div class="walk-opts">';
+        d.jobOpts.forEach(function(o,i){html+='<button class="walk-opt" data-ji="'+i+'"><span>'+o.t+'</span></button>';});
+        html+='</div>';
+        el.innerHTML=html;
+        el.querySelectorAll('.walk-opt').forEach(function(b){
+          b.addEventListener('click',function(){
+            if(jobPicked!==null)return;
+            var i=parseInt(b.getAttribute('data-ji'),10); jobPicked=i;
+            el.querySelectorAll('.walk-opt').forEach(function(x){x.disabled=true;});
+            var o=d.jobOpts[i]; b.classList.add(o.ok?'correct':'incorrect');
+            if(!o.ok){var ci=d.jobOpts.findIndex(function(z){return z.ok;});el.querySelectorAll('.walk-opt')[ci].classList.add('correct');}
+            var note=document.createElement('div');
+            note.className='walk-note '+(o.ok?'right':'wrong');
+            note.innerHTML=(o.ok?'<b>Right.</b> ':'<b>Read again.</b> ')+d.jobWhy;
+            b.parentNode.after(note);
+            var nb=document.createElement('div');nb.className='walk-foot';
+            nb.innerHTML='<button class="act primary" data-role="next">Next step</button>';
+            note.after(nb);
+            nb.querySelector('[data-role="next"]').addEventListener('click',function(){stage=2;jobPicked=null;render();});
+          });
+        });
+        return;
+      }
+      // Stage 2: where the answer comes from
+      if(stage===2){
+        html+='<div class="walk-prompt">'+d.typePrompt+'</div><div class="walk-opts">';
+        d.typeOpts.forEach(function(o,i){html+='<button class="walk-opt" data-ti="'+i+'"><span>'+o.t+'</span></button>';});
+        html+='</div>';
+        el.innerHTML=html;
+        el.querySelectorAll('.walk-opt').forEach(function(b){
+          b.addEventListener('click',function(){
+            if(typePicked!==null)return;
+            var i=parseInt(b.getAttribute('data-ti'),10); typePicked=i;
+            el.querySelectorAll('.walk-opt').forEach(function(x){x.disabled=true;});
+            var o=d.typeOpts[i]; b.classList.add(o.ok?'correct':'incorrect');
+            if(!o.ok){var ci=d.typeOpts.findIndex(function(z){return z.ok;});el.querySelectorAll('.walk-opt')[ci].classList.add('correct');}
+            var note=document.createElement('div');
+            note.className='walk-note '+(o.ok?'right':'wrong');
+            note.innerHTML=(o.ok?'<b>Right.</b> ':'<b>Not quite.</b> ')+d.typeWhy;
+            b.parentNode.after(note);
+            var nb=document.createElement('div');nb.className='walk-foot';
+            nb.innerHTML='<button class="act primary" data-role="next">Now check the choices</button>';
+            note.after(nb);
+            nb.querySelector('[data-role="next"]').addEventListener('click',function(){stage=3;typePicked=null;render();});
+          });
+        });
+        return;
+      }
+      // Stage 3: judge each choice one at a time
+      if(stage===3){
+        var c=d.choices[judgeIdx];
+        html+='<div class="walk-prompt">'+d.judgePrompt+'</div>';
+        html+='<div class="walk-choicebox"><div class="cl">Choice '+c.l+': '+c.t+'</div><div class="walk-opts">';
+        d.judgeOpts.forEach(function(o,i){html+='<button class="walk-opt" data-oi="'+i+'"><span>'+o+'</span></button>';});
+        html+='</div></div>';
+        html+='<div class="walk-foot"><span class="walk-tag">Choice '+(judgeIdx+1)+' of '+d.choices.length+'</span></div>';
+        el.innerHTML=html;
+        el.querySelectorAll('.walk-opt').forEach(function(b){
+          b.addEventListener('click',function(){
+            var i=parseInt(b.getAttribute('data-oi'),10);
+            el.querySelectorAll('.walk-opt').forEach(function(x){x.disabled=true;});
+            var right=(i===c.correctVerdict);
+            b.classList.add(right?'correct':'incorrect');
+            if(!right)el.querySelectorAll('.walk-opt')[c.correctVerdict].classList.add('correct');
+            var note=document.createElement('div');note.className='walk-note '+(right?'right':'wrong');
+            note.innerHTML=(right?'<b>Yes.</b> ':'<b>Look closer.</b> ')+c.judgeWhy;
+            el.querySelector('.walk-choicebox').after(note);
+            var nb=document.createElement('div');nb.className='walk-foot';
+            var last=(judgeIdx===d.choices.length-1);
+            nb.innerHTML='<button class="act primary" data-role="next">'+(last?'Now pick your final answer':'Next choice')+'</button>';
+            note.after(nb);
+            nb.querySelector('[data-role="next"]').addEventListener('click',function(){
+              if(last){stage=4;render();}else{judgeIdx++;render();}
+            });
+          });
+        });
+        return;
+      }
+      // Stage 4: finalize
+      if(stage===4){
+        html+='<div class="walk-prompt">'+d.finalPrompt+'</div><div class="walk-opts">';
+        d.choices.forEach(function(c){html+='<button class="walk-opt" data-fl="'+c.l+'"><span class="wl">'+c.l+'</span><span>'+c.t+'</span></button>';});
+        html+='</div>';
+        el.innerHTML=html;
+        el.querySelectorAll('.walk-opt').forEach(function(b){
+          b.addEventListener('click',function(){
+            if(finalPicked!==null)return;
+            finalPicked=b.getAttribute('data-fl');
+            el.querySelectorAll('.walk-opt').forEach(function(x){x.disabled=true;});
+            d.choices.forEach(function(c,ix){
+              var opt=el.querySelectorAll('.walk-opt')[ix];
+              if(c.l===d.answer)opt.classList.add('correct');
+              else if(c.l===finalPicked)opt.classList.add('incorrect');
+            });
+            var right=finalPicked===d.answer;
+            var note=document.createElement('div');note.className='walk-note '+(right?'right':'wrong');
+            note.innerHTML=(right?'<b>That is the answer.</b> ':'<b>The answer is '+d.answer+'.</b> ')+d.finalWhy;
+            el.querySelector('.walk-opts').after(note);
+          });
+        });
+        return;
+      }
+    }
+    render();
+  }
+
+  makeWalk(document.getElementById('walkMig'), {
+    sentences:[
+      {t:'Women are three times more likely than men to experience migraines.',target:false,why:'This is background about who gets migraines, not the prediction the researchers are testing.'},
+      {t:'Studying cisgender women, Raffaelli and colleagues hypothesized that decreases in estrogen are a potential trigger for migraines.',target:true},
+      {t:'They observed that migraines worsen during the menstrual cycle, become more severe during the transition to menopause, and decrease once menopause is complete.',target:true},
+      {t:'Raffaelli adds that the underlying mechanisms remain poorly understood.',target:false,why:'This is a side comment about what is still unknown. It is not the hypothesis, and it is a common wrong thing to match.'}
+    ],
+    findPrompt:'Click the sentence that states the hypothesis the question is about. It runs across two sentences here, so you may need both.',
+    findWhy:'The hypothesis is that falling estrogen triggers migraines, and the next sentence backs it with when migraines get worse. Together they are the hypothesis.',
+    question:'Which finding, if true, would most strongly support the researchers\u2019 hypothesis?',
+    jobPrompt:'Now decide what you are looking for. Does the question want a choice that supports the hypothesis, or one that argues against it?',
+    jobOpts:[
+      {t:'A choice that supports the hypothesis.',ok:true},
+      {t:'A choice that argues against the hypothesis.',ok:false},
+      {t:'A choice that completes a sentence using data.',ok:false}
+    ],
+    jobWhy:'The question says "support," so you want the choice that makes the hypothesis stronger.',
+    typePrompt:'Where will the answer come from? Is it a quotation already in the passage, a new finding you are asked to imagine, or a number from a figure?',
+    typeOpts:[
+      {t:'A quotation already written in the passage.',ok:false},
+      {t:'A new finding, if true, that you judge against the hypothesis.',ok:true},
+      {t:'A number read from a graph or table.',ok:false}
+    ],
+    typeWhy:'It says "which finding, if true," so the answer is a new fact. Your job is to judge whether it would support the hypothesis.',
+    judgePrompt:'Go one choice at a time. For this choice, decide what it does to the hypothesis that falling estrogen triggers migraines.',
+    judgeOpts:['Supports the hypothesis','True, but does not do the job','Off topic'],
+    choices:[
+      {l:'A',t:'Estrogen levels significantly drop during the transition to menopause.',correctVerdict:0,judgeWhy:'The passage says migraines worsen during that transition, so a drop in estrogen right then ties falling estrogen to worse migraines. This supports the hypothesis.'},
+      {l:'B',t:'Contraceptives that cause hormonal fluctuations are a likely trigger of migraines.',correctVerdict:1,judgeWhy:'It uses the word "trigger," but "hormonal fluctuations" is vague and does not point to a drop in estrogen. It does not do the job.'},
+      {l:'C',t:'Men are not as affected by migraines because their hormones differ.',correctVerdict:2,judgeWhy:'This is about men. The hypothesis is about falling estrogen in the women studied, so this is off topic.'},
+      {l:'D',t:'Extensive research is needed to understand these mechanisms.',correctVerdict:1,judgeWhy:'True, and it echoes the side comment about mechanisms being poorly understood, but that is not the hypothesis, so it does not do the job.'}
+    ],
+    finalPrompt:'You judged all four. Now pick the one choice that supports the hypothesis.',
+    answer:'A',
+    finalWhy:'A is the only choice that ties a drop in estrogen to the time migraines get worse.'
+  });
+
+  makeWalk(document.getElementById('walkGlial'), {
+    sentences:[
+      {t:'Glial cells, once thought to only fill gaps between neurons, play a role in processing information in the brain.',target:false,why:'This is background about glial cells, not the conclusion the study reached.'},
+      {t:'They release gliotransmitters like glutamate, which can influence memory and modulate plasticity.',target:false,why:'This explains how glial cells work. It is not the study\u2019s conclusion.'},
+      {t:'Researchers concluded that online and offline learning are distinct processes governed by different cellular mechanisms.',target:true},
+      {t:'In mice, activating glial cells enhanced online learning, while inhibiting them suppressed it.',target:false,why:'This is the evidence about online learning. The conclusion you are testing is the claim that the two kinds of learning are distinct.'}
+    ],
+    findPrompt:'Click the sentence that states the conclusion the question is about.',
+    findWhy:'The conclusion is that online and offline learning are distinct, run by different mechanisms. That is what you have to argue against.',
+    question:'Which finding, if true, would most directly undermine the conclusion of the study?',
+    jobPrompt:'Now decide what you are looking for. The question says "undermine," so are you supporting the conclusion or arguing against it?',
+    jobOpts:[
+      {t:'A choice that argues against the conclusion.',ok:true},
+      {t:'A choice that supports the conclusion.',ok:false},
+      {t:'A choice that completes a sentence using data.',ok:false}
+    ],
+    jobWhy:'"Undermine" means argue against, so you want the choice that makes the conclusion weaker, not stronger.',
+    typePrompt:'Where will the answer come from? A quotation already in the passage, a new finding you are asked to imagine, or a number from a figure?',
+    typeOpts:[
+      {t:'A quotation already written in the passage.',ok:false},
+      {t:'A new finding, if true, that you judge against the conclusion.',ok:true},
+      {t:'A number read from a graph or table.',ok:false}
+    ],
+    typeWhy:'It says "which finding, if true," so the answer is a new fact, and you judge whether it weakens the conclusion.',
+    judgePrompt:'Go one choice at a time. The conclusion is that online and offline learning use different mechanisms. Glutamate boosts online learning. To argue against "different mechanisms," you want glutamate to also affect offline learning the same way. Decide what this choice does.',
+    judgeOpts:['Argues against the conclusion','Supports the conclusion','Does not clearly weaken it'],
+    choices:[
+      {l:'A',t:'Offline learning outcomes increased by 15% when excess glutamate was released in the brain.',correctVerdict:0,judgeWhy:'Glutamate boosts offline learning the same way it boosts online learning, so the two are not run by different mechanisms after all. This argues against the conclusion.'},
+      {l:'B',t:'Offline learning outcomes decreased by 15% when excess glutamate was released in the brain.',correctVerdict:2,judgeWhy:'Glutamate affects offline learning, but in the opposite direction, which does not cleanly collapse the difference between the two. It does not clearly weaken the conclusion.'},
+      {l:'C',t:'Online learning outcomes increased by 15% when excess glutamate was released in the brain.',correctVerdict:1,judgeWhy:'This just restates the passage\u2019s own result that glutamate boosts online learning, so it supports the conclusion. The question asked you to argue against it.'},
+      {l:'D',t:'Online learning outcomes decreased by 15% when excess glutamate was released in the brain.',correctVerdict:2,judgeWhy:'This contradicts the passage\u2019s own finding and still leaves online and offline as separate processes, so it does not clearly weaken the "different mechanisms" conclusion.'}
+    ],
+    finalPrompt:'You judged all four. Now pick the one choice that argues against the conclusion.',
+    answer:'A',
+    finalWhy:'A makes glutamate affect offline learning just like online learning, so the two are not distinct, which is exactly what undermines the conclusion.'
+  });
+
+  /* sort widget: mark each choice true/false vs passage, then pick the one that answers the question */
+  function makeSort(el, d){
+    var phase=0; // 0 intro, 1 sorting, 2 sorted+choose, 3 answered
+    var marks={}, picked=null;
+    function allMarked(){return d.choices.every(function(c){return marks[c.l];});}
+    function render(){
+      var html='<div class="guide-pass">'+d.passage+'</div>';
+      html+='<div class="guide-row" style="background:#fff;"><div class="rl">The question</div>'+d.question+'</div>';
+      if(phase===0){
+        html+='<div class="guide-foot"><span class="guide-step">Step 1 of 2</span><button class="act primary" data-role="startsort">Mark each choice true or false</button></div>';
+        el.innerHTML=html; el.querySelector('[data-role="startsort"]').addEventListener('click',function(){phase=1;render();}); return;
+      }
+      // sorting / choosing
+      html+='<div class="guide-choices">';
+      d.choices.forEach(function(c){
+        var cls='guide-opt';
+        if(phase>=2){
+          if(marks[c.l]==='F') cls+=' incorrect';
+          else cls+=' '; // true ones neutral until answered
+        }
+        if(phase===3){
+          if(c.ok) cls='guide-opt correct';
+          else if(c.l===picked) cls='guide-opt incorrect';
+          else if(marks[c.l]==='F') cls='guide-opt incorrect';
+        }
+        html+='<div class="guide-opt-wrap" style="display:flex;flex-direction:column;gap:0;">';
+        var clickable=(phase===2 && marks[c.l]==='T');
+        html+='<button class="'+cls+'" data-l="'+c.l+'"'+(clickable?'':' disabled')+' style="width:100%;">'
+            +'<span class="wl">'+c.l+'</span><span>'+c.t
+            +(phase>=1&&marks[c.l]?'<span class="tflabel '+(marks[c.l]==='T'?'t':'f')+'">'+(marks[c.l]==='T'?'True':'False')+'</span>':'')
+            +(phase===3&&(c.ok||c.l===picked)?'<span class="guide-why">'+c.why+'</span>':'')
+            +'</span></button>';
+        if(phase===1 && !marks[c.l]){
+          html+='<div style="display:flex;gap:8px;margin:6px 0 2px;"><button class="act" data-mark="T" data-l="'+c.l+'">True</button><button class="act" data-mark="F" data-l="'+c.l+'">False</button></div>';
+        }
+        html+='</div>';
+      });
+      html+='</div>';
+      if(phase===1){
+        html+='<div class="guide-foot"><span class="guide-step">Mark all four</span>'+(allMarked()?'<button class="act primary" data-role="tosel">Now find the answer</button>':'')+'</div>';
+      } else if(phase===2){
+        html+='<div class="guide-row" style="background:#fbf3e0;border-color:#e3cf9a;"><div class="rl" style="color:#8a6414;">Notice</div>'+d.noticeText+'</div>';
+        html+='<div class="guide-foot"><span class="guide-step">Now choose from the true ones</span></div>';
+      } else if(phase===3){
+        html+='<div class="guide-foot"><span class="guide-step">Answer</span></div>';
+      }
+      el.innerHTML=html;
+      el.querySelectorAll('[data-mark]').forEach(function(b){
+        b.addEventListener('click',function(){marks[b.getAttribute('data-l')]=b.getAttribute('data-mark');render();});
+      });
+      var ts=el.querySelector('[data-role="tosel"]'); if(ts) ts.addEventListener('click',function(){phase=2;render();});
+      el.querySelectorAll('.guide-opt').forEach(function(b){
+        b.addEventListener('click',function(){
+          if(phase!==2)return; if(marks[b.getAttribute('data-l')]!=='T')return;
+          picked=b.getAttribute('data-l'); phase=3; render();
+        });
+      });
+    }
+    render();
+  }
+
+  makeSort(document.getElementById('guideTrap1'), {
+    passage:'Black beans are nutritious but hard to digest, partly because of soluble fiber and raffinose. They also contain antinutrients like tannins and trypsin inhibitors, which block the body from absorbing nutrients. Granito and \u00c1lvarez <span class="gclaim on">claim that fermenting black beans makes them easier to digest and more nutritious.</span>',
+    question:'Which finding, if true, would most directly support their claim?',
+    noticeText:'Two choices are true, but only one does what the question asked. A true statement that does not show fermentation improved digestion is still the wrong answer.',
+    choices:[
+      {l:'A',t:'Black beans contain antinutrients like tannins and trypsin inhibitors.',ok:false,mark:'T',why:'True, straight from the passage, but it says nothing about fermentation changing anything. True is not the same as answering the question.'},
+      {l:'B',t:'Fermented beans had less raffinose and fewer trypsin inhibitors than unfermented beans.',ok:true,mark:'T',why:'True, and it ties fermentation to less of the hard-to-digest and nutrient-blocking compounds. This one actually supports the claim.'},
+      {l:'C',t:'Fermenting beans turns them a brighter shade of black.',ok:false,mark:'F',why:'Not stated and not about digestion.'},
+      {l:'D',t:'Unfermented black beans cannot be eaten safely.',ok:false,mark:'F',why:'Not stated in the passage, and the passage says the beans are eaten already.'}
+    ]
+  });
+
+  /* standard pick-check-explain questions */
+  document.querySelectorAll('.pq').forEach(function(pq){
+    var correct=pq.getAttribute('data-correct');
+    var opts=Array.prototype.slice.call(pq.querySelectorAll('.pq-opt'));
+    var hintBtn=pq.querySelector('[data-act="hint"]');
+    var checkBtn=pq.querySelector('[data-act="check"]');
+    var stepsBtn=pq.querySelector('[data-act="steps"]');
+    var resetBtn=pq.querySelector('[data-act="reset"]');
+    var hintPanel=pq.querySelector('.panel.hint');
+    var stepsPanel=pq.querySelector('.panel.steps');
+    var verdict=pq.querySelector('.verdict');
+    var selected=null, locked=false;
+    hintPanel.querySelector('.body').innerHTML='<p style="margin:0 0 8px;">'+(pq.getAttribute('data-hint')||'')+'</p>';
+    opts.forEach(function(opt){
+      opt.addEventListener('click',function(){
+        if(locked)return;
+        opts.forEach(function(o){o.classList.remove('sel');});
+        opt.classList.add('sel');
+        selected=opt.getAttribute('data-c');
+      });
+    });
+    hintBtn.addEventListener('click',function(){hintBtn.classList.toggle('on',hintPanel.classList.toggle('show'));});
+    stepsBtn.addEventListener('click',function(){stepsBtn.classList.toggle('on',stepsPanel.classList.toggle('show'));});
+    checkBtn.addEventListener('click',function(){
+      if(!selected){verdict.className='verdict show wrong';verdict.textContent='Select an answer first.';return;}
+      locked=true;
+      var right=selected===correct;
+      opts.forEach(function(o){
+        o.disabled=true;o.classList.remove('sel');
+        var c=o.getAttribute('data-c');
+        if(c===correct){o.classList.add('correct');o.querySelector('.tick').textContent='Correct';}
+        else if(c===selected){o.classList.add('incorrect');o.querySelector('.tick').textContent='Your pick';}
+      });
+      verdict.className='verdict show '+(right?'right':'wrong');
+      verdict.textContent=right?'\u2736 Correct':'Not quite \u2736 the answer is '+correct;
+      resetBtn.hidden=false;
+    });
+    resetBtn.addEventListener('click',function(){
+      locked=false;selected=null;
+      opts.forEach(function(o){o.disabled=false;o.classList.remove('correct','incorrect','sel');o.querySelector('.tick').textContent='';});
+      verdict.className='verdict';verdict.textContent='';resetBtn.hidden=true;
+    });
+  });
+
+  function shuffle(arr){
+    var a=arr.slice();
+    for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}
+    return a;
+  }
+  function makeDrill(el, bank, startLabel){
+    var deck=[], i=0, score=0, streak=0, best=0;
+    function startScreen(){
+      el.innerHTML='<div class="drill-q">'+startLabel+'</div>'+
+        '<div class="drill-foot"><button class="act primary" data-role="start">Start</button></div>';
+      el.querySelector('[data-role="start"]').addEventListener('click',function(){
+        deck=shuffle(bank); i=0;score=0;streak=0;best=0; render();
+      });
+    }
+    function render(){
+      if(i>=deck.length){
+        el.innerHTML='<div class="drill-final">Score: '+score+' / '+deck.length+'</div>'+
+          '<div class="drill-stats"><span class="drill-score">Best streak '+best+'</span></div>'+
+          '<div class="drill-foot"><button class="act primary" data-role="replay">Run again</button></div>';
+        el.querySelector('[data-role="replay"]').addEventListener('click',startScreen);
+        return;
+      }
+      var d=deck[i];
+      var html='<div class="drill-head"><span class="t">Item '+(i+1)+' of '+deck.length+'</span>'+
+        '<span class="drill-stats"><span class="drill-score">Score '+score+'</span><span class="drill-score">Streak '+streak+'</span></span></div>';
+      html+='<div class="drill-q">'+(d.tag?'<span class="qtag">'+d.tag+'</span>':'')+(d.pre?'<span class="qpre">'+d.pre+'</span>':'')+d.q+'</div><div class="drill-opts">';
+      d.opts.forEach(function(o,k){html+='<button class="drill-opt" data-k="'+k+'">'+o+'</button>';});
+      html+='</div><div class="drill-explain"></div><div class="drill-foot"></div>';
+      el.innerHTML=html;
+      var foot=el.querySelector('.drill-foot');
+      var explain=el.querySelector('.drill-explain');
+      var answered=false;
+      el.querySelectorAll('.drill-opt').forEach(function(btn){
+        btn.addEventListener('click',function(){
+          if(answered)return; answered=true;
+          var k=parseInt(btn.getAttribute('data-k'),10);
+          el.querySelectorAll('.drill-opt').forEach(function(b){b.disabled=true;});
+          if(k===d.a){btn.classList.add('correct');score++;streak++;if(streak>best)best=streak;}
+          else{btn.classList.add('incorrect');el.querySelectorAll('.drill-opt')[d.a].classList.add('correct');streak=0;}
+          if(d.why){explain.innerHTML=d.why;explain.classList.add('show');}
+          el.querySelector('.drill-head .drill-stats').innerHTML='<span class="drill-score">Score '+score+'</span><span class="drill-score">Streak '+streak+'</span>';
+          var nb=document.createElement('button');
+          nb.className='act primary';nb.textContent=(i===deck.length-1)?'See results':'Next';
+          nb.addEventListener('click',function(){i++;render();});
+          foot.appendChild(nb);
+        });
+      });
+    }
+    startScreen();
+  }
+
+  /* If the passage says A and the question asks about B, what must the answer do */
+  var predictBank=[
+    {tag:'A named person\u2019s claim', pre:'The passage quotes two critics. One argues a film\u2019s slow pacing builds tension. The question asks you to illustrate that critic\u2019s claim.', q:'What must the answer do?',
+     opts:['Show a moment where the slow pacing creates tension.','Show any strong moment in the film.','Show what the other critic said.'], a:0,
+     why:'<b>First choice.</b> Match that one critic\u2019s point, tension from slow pacing, not the film in general and not the other critic.'},
+    {tag:'A hypothesis', pre:'Researchers hypothesize that falling estrogen triggers migraines. The passage also ends by saying the mechanisms are not well understood.', q:'What must the answer do?',
+     opts:['Restate that the mechanisms are unclear.','Tie a drop in estrogen to worse migraines.','Show migraines are common in women.'], a:1,
+     why:'<b>Second choice.</b> Support the hypothesis itself, falling estrogen and worse migraines. The closing comment and the background fact are not the hypothesis.'},
+    {tag:'A claim about harm', pre:'The passage claims that growing a single crop introduces problems. It also describes how widespread that single-crop farming has become.', q:'What must the answer do?',
+     opts:['Show that single-crop farming is spreading.','Name a problem the single-crop farming causes.','Show the crop sells well.'], a:1,
+     why:'<b>Second choice.</b> The claim is about harm, so the answer names a problem. That the farming is spreading only shows it exists.'},
+    {tag:'A conclusion, to argue against', pre:'A study concludes two learning processes use different mechanisms, since one treatment changed only the first. The question asks you to undermine that conclusion.', q:'What must the answer do?',
+     opts:['Show the treatment changed both processes the same way.','Show the treatment changed only the first process.','Show the two processes both happen in the brain.'], a:0,
+     why:'<b>First choice.</b> Undermine means argue against. If one treatment changes both processes alike, they are not so different after all.'},
+    {tag:'A claim of cause', pre:'An author claims a new bus line caused ridership to rise. Ridership did go up the same year the line opened.', q:'What must the answer do?',
+     opts:['Show ridership and the bus line rose in the same year.','Show the rise happened because of the bus line, not something else.','Show the buses were comfortable.'], a:1,
+     why:'<b>Second choice.</b> A cause claim needs the cause tied to the result. Rising in the same year is only timing.'},
+    {tag:'A data sentence', pre:'A sentence with a blank says the program worked best where outreach was heaviest, so the district with the largest increase was ____.', q:'What must the answer do?',
+     opts:['Give the district with the highest final total.','Give the district with the largest increase.','Give any district shown in the table.'], a:1,
+     why:'<b>Second choice.</b> Follow the sentence. It asks for the largest increase, so a correct highest-total number is still the wrong role.'},
+    {tag:'A quotation to find', pre:'The passage claims a poem\u2019s imagery conveys grief. The four choices are lines from the poem.', q:'What must the answer do?',
+     opts:['Quote a line naming the season.','Quote a line whose images evoke loss and mourning.','Quote the line with the strictest rhyme.'], a:1,
+     why:'<b>Second choice.</b> The claim is grief, so the quote has to carry that feeling. Season and rhyme are the wrong point.'},
+    {tag:'A hypothesis, to argue against', pre:'A study hypothesizes a supplement improves sleep. The question asks you to undermine the hypothesis.', q:'What must the answer do?',
+     opts:['Show the supplement group slept the same as a placebo group.','Show the supplement group slept better than a placebo group.','Show the supplement was easy to take.'], a:0,
+     why:'<b>First choice.</b> Undermine means show no effect. Sleeping the same as placebo does that. Sleeping better would support it instead.'}
+  ];
+
+  /* Trap 2: on topic vs on point */
+  var trap2Bank=[
+    {tag:'Claim: monoculture is harmful.', q:'Choice: "More land in the region is being converted to single-crop avocado farms." On point?',
+     opts:['On point, supports harm','On topic, but only shows it exists'], a:1,
+     why:'<b>Only shows it exists.</b> The claim is harm, so growth of monoculture is topic without point.'},
+    {tag:'Claim: monoculture is harmful.', q:'Choice: "Single-crop avocado farming strips the soil of nutrients within a few seasons." On point?',
+     opts:['On point, supports harm','On topic, but only shows it exists'], a:0,
+     why:'<b>On point.</b> It names a concrete harm monoculture causes.'},
+    {tag:'Claim: the policy cut total crime.', q:'Choice: "The policy cut property crime specifically." On point?',
+     opts:['On point, supports the total','On topic, but the wrong scope'], a:1,
+     why:'<b>Wrong scope.</b> Property crime is one part; the claim was about the total.'},
+    {tag:'Claim: the new bus line raised overall ridership.', q:'Choice: "Total transit trips across the city rose after the bus line opened." On point?',
+     opts:['On point, supports overall ridership','On topic, but the wrong scope'], a:0,
+     why:'<b>On point.</b> Total trips matches the claim about overall ridership.'}
+  ];
+
+  /* Trap 3: support vs undermine direction */
+  var trap3Bank=[
+    {tag:'The question says SUPPORT the claim that a vaccine lowers infection rates.', q:'Which finding fits?',
+     opts:['Vaccinated people had lower infection rates than unvaccinated people.','Vaccinated and unvaccinated people had the same infection rates.','The vaccine was inexpensive to produce.'], a:0,
+     why:'<b>First choice.</b> Lower rates support the claim. Equal rates would undermine it.'},
+    {tag:'The question says ARGUE AGAINST the claim that a vaccine lowers infection rates.', q:'Which finding fits?',
+     opts:['Vaccinated people had lower infection rates than unvaccinated people.','Vaccinated and unvaccinated people had the same infection rates.','Most people found the vaccine easy to access.'], a:1,
+     why:'<b>Second choice.</b> Equal rates undermine the claim. The lower-rate finding supports it, and the question said undermine.'},
+    {tag:'The question says ARGUE AGAINST the conclusion that two processes use different mechanisms.', q:'Which finding fits?',
+     opts:['The same trigger changed both processes the same way.','The trigger changed one process but not the other.','Both processes occur in the brain.'], a:0,
+     why:'<b>First choice.</b> If one trigger drives both alike, the processes are not distinct, which undermines the conclusion.'},
+    {tag:'The question says SUPPORT the claim that shade lowers a building\u2019s cooling costs.', q:'Which finding fits?',
+     opts:['Shaded buildings had lower cooling bills than similar unshaded ones.','Shaded and unshaded buildings had identical cooling bills.','Shade trees take years to grow.'], a:0,
+     why:'<b>First choice.</b> Lower bills with shade supports the claim. Identical bills would undermine it.'}
+  ];
+
+  /* name the trap */
+  var trapNameBank=[
+    {tag:'Claim: the sail improved underwater maneuvering.', q:'Wrong choice: "The sailed model displaced more water than the sail-less model." Which trap?',
+     opts:['True but not supporting','Scope shift','Correlation as cause'], a:0,
+     why:'<b>True but not supporting.</b> Displacement is accurate but unrelated to maneuvering.'},
+    {tag:'Claim: monoculture is harmful.', q:'Wrong choice: "Monoculture avocado farming is expanding across the region." Which trap?',
+     opts:['On topic but off the point','Wrong direction','Correlation as cause'], a:0,
+     why:'<b>Off the point.</b> It shows monoculture exists, not that it is harmful.'},
+    {tag:'Claim (undermine): the drug improves memory.', q:'Wrong choice: "People taking the drug scored higher on memory tests." Which trap?',
+     opts:['Wrong direction','Scope shift','Correlation as cause'], a:0,
+     why:'<b>Wrong direction.</b> That supports the claim, but the question asked you to undermine it.'},
+    {tag:'Claim: the new sign caused fewer collisions.', q:'Wrong choice: "The sign went up the same year collisions fell." Which trap?',
+     opts:['Correlation as cause','Scope shift','True but not supporting'], a:0,
+     why:'<b>Correlation as cause.</b> Same-year timing does not prove the sign caused the drop.'}
+  ];
+
+  makeDrill(document.getElementById('predictDrill'), predictBank, 'For each one, decide what the answer has to do.');
+  makeDrill(document.getElementById('trap2Drill'), trap2Bank, 'Decide whether each choice matches what the claim says.');
+  makeDrill(document.getElementById('trap3Drill'), trap3Bank, 'Read whether it says support or argue against, then pick the finding that fits.');
+  makeDrill(document.getElementById('trapNameDrill'), trapNameBank, 'Name the trap each wrong choice relies on.');
+
+  show(0);
+})();
+</script>
+</body>
+</html>
