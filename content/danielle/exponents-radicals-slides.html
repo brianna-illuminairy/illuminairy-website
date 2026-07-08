@@ -193,6 +193,34 @@
   .counter .sec{display:block;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:#7d8ea3;margin-top:2px;}
   .progress{position:fixed;top:0;left:0;height:3px;background:var(--mint);width:0;transition:width .3s ease;z-index:10;}
   .hintbar{position:fixed;bottom:6px;left:0;right:0;text-align:center;font-family:var(--font);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:#5f718a;}
+  /* worked SAT walkthrough */
+  .walk{background:#fffaf0;border:1px solid var(--line);border-radius:15px;padding:18px 22px;margin-top:4px;}
+  .walk.sat{border-color:#e2b7ab;}
+  .walk .qlab{font-family:var(--font);font-size:.63rem;letter-spacing:.1em;text-transform:uppercase;color:#b35442;font-weight:700;margin-bottom:9px;}
+  .walk .stem{font-size:1.05rem;line-height:1.55;color:var(--navy);margin-bottom:4px;}
+  .walk .stem .m{color:var(--navy);}
+  .walk-opts{display:flex;flex-direction:column;gap:8px;margin-top:11px;}
+  .walk-opt{display:flex;align-items:center;gap:13px;background:#fff;border:1.5px solid var(--line);border-radius:11px;padding:10px 15px;font-family:var(--font);font-size:1rem;color:var(--ink);}
+  .walk-opt .badge{flex:0 0 auto;width:26px;height:26px;border-radius:50%;border:1.5px solid var(--muted);display:flex;align-items:center;justify-content:center;font-family:var(--font);font-weight:700;font-size:.82rem;color:var(--muted);}
+  .walk-opt .m{color:var(--navy);}
+  .walk-opt .tick{margin-left:auto;font-family:var(--font);font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;font-weight:700;color:var(--forest-deep);opacity:0;}
+  .walk-opt.correct{border-color:var(--correct);background:var(--correct-bg);}
+  .walk-opt.correct .badge{background:var(--forest);border-color:var(--forest);color:#fff;}
+  .walk-opt.correct .tick{opacity:1;}
+  .wsteps{margin-top:15px;display:flex;flex-direction:column;gap:10px;}
+  .wstep{border-left:4px solid var(--forest);background:var(--mint-soft);border-radius:0 11px 11px 0;padding:11px 16px;}
+  .wstep.pre{display:none;}
+  .wstep .whead{display:flex;align-items:baseline;gap:10px;margin-bottom:7px;flex-wrap:wrap;}
+  .wstep .wn{flex:0 0 auto;font-family:var(--font);font-size:.6rem;letter-spacing:.09em;text-transform:uppercase;font-weight:700;color:var(--forest-deep);background:#fff;border:1px solid #cbe6d5;border-radius:999px;padding:3px 10px;}
+  .wstep .wdir{font-weight:700;color:var(--navy);font-size:1rem;line-height:1.4;}
+  .wstep .wmath{font-size:1.02rem;line-height:1.6;color:var(--ink);}
+  .wstep .wmath .m{color:var(--navy);}
+  .wstep .wnote{color:var(--muted);font-size:.9rem;margin-top:5px;}
+  .walk-actions{display:flex;gap:10px;margin-top:15px;flex-wrap:wrap;}
+  .wanswer{margin-top:13px;background:var(--correct-bg);border:1px solid #bcdcc7;border-radius:11px;padding:11px 16px;font-size:1rem;color:var(--forest-deep);font-weight:600;}
+  .wanswer.pre{display:none;}
+  .wanswer .m{color:var(--forest-deep);}
+
   @media(max-width:660px){.slide{padding:26px 22px;}.deck{height:min(700px,76vh);}p,.sub{font-size:1rem;}.counter{min-width:120px;}.bigterm{font-size:2.4rem;}}
 </style>
 </head>
@@ -1153,6 +1181,177 @@
       </div>
     </section>
 
+    <!-- ================= SAT WALKTHROUGHS ================= -->
+    <!-- W0 walkthrough intro -->
+    <section class="slide" data-sec="SAT walkthroughs">
+      <p class="eyebrow sat">Putting it together &middot; real SAT problems</p>
+      <h2 class="t">Now the full problems, worked one step at a time</h2>
+      <p>These next questions match the style of the ones on your practice test. For each one the work is shown a single step at a time, so try the step in your head first, then reveal it to check. Nearly every problem in this unit comes down to the same three moves.</p>
+      <div class="work">
+        <div class="step qn"><span class="n">1</span><span><b>Name the form the question wants.</b> A single power, a matched base, a cleared radical, or matched coefficients. The wording points you at the target.</span></div>
+        <div class="step qn"><span class="n">2</span><span><b>Rewrite until the forms match.</b> Change the bases, turn a root into a fractional power, expand a product, or combine over one denominator.</span></div>
+        <div class="step qn"><span class="n">3</span><span><b>Do the short arithmetic, then confirm the choice.</b> The numbers stay small once the setup is right, so a messy total usually means a setup slip.</span></div>
+      </div>
+    </section>
+
+    <!-- W1 rational-exponent product -->
+    <section class="slide" data-sec="SAT walkthroughs">
+      <p class="eyebrow sat">Walkthrough 1 &middot; rational exponents</p>
+      <div class="walk sat" data-correct="A">
+        <div class="qlab">Equivalent expressions</div>
+        <div class="stem">Which of the following is equivalent to <span class="m">4<i>x</i><sup>1/2</sup> &middot; 3<i>x</i><sup>2/3</sup></span>?</div>
+        <div class="walk-opts">
+          <div class="walk-opt" data-c="A"><span class="badge">A</span><span class="m">12<i>x</i><sup>7/6</sup></span><span class="tick"></span></div>
+          <div class="walk-opt" data-c="B"><span class="badge">B</span><span class="m">12<i>x</i><sup>1/3</sup></span><span class="tick"></span></div>
+          <div class="walk-opt" data-c="C"><span class="badge">C</span><span class="m">7<i>x</i><sup>7/6</sup></span><span class="tick"></span></div>
+          <div class="walk-opt" data-c="D"><span class="badge">D</span><span class="m">12<i>x</i><sup>1/6</sup></span><span class="tick"></span></div>
+        </div>
+        <div class="wsteps">
+          <div class="wstep"><div class="whead"><span class="wn">Step 1</span><span class="wdir">Multiply the number coefficients.</span></div><div class="wmath"><span class="m">4 &middot; 3 = 12</span>. The 12 sits out front of the answer.</div></div>
+          <div class="wstep"><div class="whead"><span class="wn">Step 2</span><span class="wdir">The base <span class="m"><i>x</i></span> is the same, so add the exponents.</span></div><div class="wmath"><span class="m"><span class="frac"><span class="num">1</span><span class="den">2</span></span> + <span class="frac"><span class="num">2</span><span class="den">3</span></span></span></div></div>
+          <div class="wstep"><div class="whead"><span class="wn">Step 3</span><span class="wdir">Use a common denominator of 6 to add the fractions.</span></div><div class="wmath"><span class="m"><span class="frac"><span class="num">3</span><span class="den">6</span></span> + <span class="frac"><span class="num">4</span><span class="den">6</span></span> = <span class="frac"><span class="num">7</span><span class="den">6</span></span></span></div></div>
+          <div class="wstep"><div class="whead"><span class="wn">Step 4</span><span class="wdir">Put the coefficient and exponent together.</span></div><div class="wmath"><span class="m">12<i>x</i><sup>7/6</sup></span><div class="wnote">Choice C adds the coefficients as <span class="m">4 + 3</span>. Choice B multiplies the exponents; choice D subtracts them.</div></div></div>
+        </div>
+        <div class="walk-actions">
+          <button class="act primary" data-act="wnext">Show step 1</button>
+          <button class="act" data-act="wreset" hidden>Start over</button>
+        </div>
+        <div class="wanswer">Answer: <span class="m">12<i>x</i><sup>7/6</sup></span>, choice A.</div>
+      </div>
+    </section>
+
+    <!-- W2 radical equation with a coefficient -->
+    <section class="slide" data-sec="SAT walkthroughs">
+      <p class="eyebrow sat">Walkthrough 2 &middot; radical equations</p>
+      <div class="walk sat" data-correct="C">
+        <div class="qlab">Solve for the variable</div>
+        <div class="stem"><span class="m"><span class="rad">&radic;<span class="radicand"><i>h</i> + 5</span></span> = <i>t</i><span class="rad">&radic;<span class="radicand">3</span></span></span>. If <span class="m"><i>t</i> = 3</span>, what is the value of <span class="m"><i>h</i></span>?</div>
+        <div class="walk-opts">
+          <div class="walk-opt" data-c="A"><span class="badge">A</span><span class="m">27</span><span class="tick"></span></div>
+          <div class="walk-opt" data-c="B"><span class="badge">B</span><span class="m">76</span><span class="tick"></span></div>
+          <div class="walk-opt" data-c="C"><span class="badge">C</span><span class="m">22</span><span class="tick"></span></div>
+          <div class="walk-opt" data-c="D"><span class="badge">D</span><span class="m">4</span><span class="tick"></span></div>
+        </div>
+        <div class="wsteps">
+          <div class="wstep"><div class="whead"><span class="wn">Step 1</span><span class="wdir">Substitute the given value <span class="m"><i>t</i> = 3</span>.</span></div><div class="wmath"><span class="m"><span class="rad">&radic;<span class="radicand"><i>h</i> + 5</span></span> = 3<span class="rad">&radic;<span class="radicand">3</span></span></span></div></div>
+          <div class="wstep"><div class="whead"><span class="wn">Step 2</span><span class="wdir">Square both sides to clear the radical.</span></div><div class="wmath">Left: <span class="m"><i>h</i> + 5</span>. &nbsp; Right: <span class="m">(3<span class="rad">&radic;<span class="radicand">3</span></span>)<sup>2</sup> = 3<sup>2</sup> &middot; (<span class="rad">&radic;<span class="radicand">3</span></span>)<sup>2</sup> = 9 &middot; 3 = 27</span>.</div></div>
+          <div class="wstep"><div class="whead"><span class="wn">Step 3</span><span class="wdir">Set the two sides equal.</span></div><div class="wmath"><span class="m"><i>h</i> + 5 = 27</span></div></div>
+          <div class="wstep"><div class="whead"><span class="wn">Step 4</span><span class="wdir">Subtract 5 from both sides.</span></div><div class="wmath"><span class="m"><i>h</i> = 22</span><div class="wnote">Choice B squares <span class="m">3<span class="rad">&radic;<span class="radicand">3</span></span></span> as <span class="m">9 &middot; 9 = 81</span>, then subtracts 5. Choice A forgets to subtract the 5.</div></div></div>
+        </div>
+        <div class="walk-actions">
+          <button class="act primary" data-act="wnext">Show step 1</button>
+          <button class="act" data-act="wreset" hidden>Start over</button>
+        </div>
+        <div class="wanswer">Answer: <span class="m"><i>h</i> = 22</span>, choice C.</div>
+      </div>
+    </section>
+
+    <!-- W3 same base, fractional target -->
+    <section class="slide" data-sec="SAT walkthroughs">
+      <p class="eyebrow sat">Walkthrough 3 &middot; matching the base</p>
+      <div class="walk sat" data-correct="B">
+        <div class="qlab">Equivalent expressions</div>
+        <div class="stem">If <span class="m"><span class="frac"><span class="num">8<sup>2<i>x</i></sup></span><span class="den">4<sup><i>y</i></sup></span></span> = 2</span>, what is the value of <span class="m">3<i>x</i> &minus; <i>y</i></span>?</div>
+        <div class="walk-opts">
+          <div class="walk-opt" data-c="A"><span class="badge">A</span><span class="m">1</span><span class="tick"></span></div>
+          <div class="walk-opt" data-c="B"><span class="badge">B</span><span class="m"><span class="frac"><span class="num">1</span><span class="den">2</span></span></span><span class="tick"></span></div>
+          <div class="walk-opt" data-c="C"><span class="badge">C</span><span class="m">2</span><span class="tick"></span></div>
+          <div class="walk-opt" data-c="D"><span class="badge">D</span><span class="m"><span class="frac"><span class="num">1</span><span class="den">4</span></span></span><span class="tick"></span></div>
+        </div>
+        <div class="wsteps">
+          <div class="wstep"><div class="whead"><span class="wn">Step 1</span><span class="wdir">Rewrite each base as a power of 2.</span></div><div class="wmath"><span class="m">8 = 2<sup>3</sup></span>, so <span class="m">8<sup>2<i>x</i></sup> = 2<sup>6<i>x</i></sup></span>. &nbsp; <span class="m">4 = 2<sup>2</sup></span>, so <span class="m">4<sup><i>y</i></sup> = 2<sup>2<i>y</i></sup></span>.</div></div>
+          <div class="wstep"><div class="whead"><span class="wn">Step 2</span><span class="wdir">Divide same bases by subtracting the exponents.</span></div><div class="wmath"><span class="m"><span class="frac"><span class="num">2<sup>6<i>x</i></sup></span><span class="den">2<sup>2<i>y</i></sup></span></span> = 2<sup>6<i>x</i>&minus;2<i>y</i></sup></span></div></div>
+          <div class="wstep"><div class="whead"><span class="wn">Step 3</span><span class="wdir">The right side is <span class="m">2 = 2<sup>1</sup></span>, so match the exponents.</span></div><div class="wmath"><span class="m">6<i>x</i> &minus; 2<i>y</i> = 1</span></div></div>
+          <div class="wstep"><div class="whead"><span class="wn">Step 4</span><span class="wdir">The question asks for <span class="m">3<i>x</i> &minus; <i>y</i></span>, which is half of that.</span></div><div class="wmath"><span class="m"><span class="frac"><span class="num">6<i>x</i> &minus; 2<i>y</i></span><span class="den">2</span></span> = <span class="frac"><span class="num">1</span><span class="den">2</span></span></span><div class="wnote">Choice A reports <span class="m">6<i>x</i> &minus; 2<i>y</i></span> itself without halving it.</div></div></div>
+        </div>
+        <div class="walk-actions">
+          <button class="act primary" data-act="wnext">Show step 1</button>
+          <button class="act" data-act="wreset" hidden>Start over</button>
+        </div>
+        <div class="wanswer">Answer: <span class="m">3<i>x</i> &minus; <i>y</i> = <span class="frac"><span class="num">1</span><span class="den">2</span></span></span>, choice B.</div>
+      </div>
+    </section>
+
+    <!-- W4 hard rational exponent with substitution -->
+    <section class="slide" data-sec="SAT walkthroughs">
+      <p class="eyebrow sat">Walkthrough 4 &middot; rational exponents, harder</p>
+      <div class="walk sat" data-correct="C">
+        <div class="qlab">Equivalent expressions</div>
+        <div class="stem">If the expression <span class="m">3<i>x</i><sup>1/2</sup> &middot; <i>y</i><sup>2/3</sup></span> is equivalent to <span class="m">3(<i>xy</i>)<sup><i>k</i></sup></span>, what is the value of <span class="m"><i>k</i></span> when <span class="m"><i>y</i> = <i>x</i><sup>2</sup></span>?</div>
+        <div class="walk-opts">
+          <div class="walk-opt" data-c="A"><span class="badge">A</span><span class="m"><span class="frac"><span class="num">11</span><span class="den">6</span></span></span><span class="tick"></span></div>
+          <div class="walk-opt" data-c="B"><span class="badge">B</span><span class="m"><span class="frac"><span class="num">5</span><span class="den">18</span></span></span><span class="tick"></span></div>
+          <div class="walk-opt" data-c="C"><span class="badge">C</span><span class="m"><span class="frac"><span class="num">11</span><span class="den">18</span></span></span><span class="tick"></span></div>
+          <div class="walk-opt" data-c="D"><span class="badge">D</span><span class="m"><span class="frac"><span class="num">7</span><span class="den">18</span></span></span><span class="tick"></span></div>
+        </div>
+        <div class="wsteps">
+          <div class="wstep"><div class="whead"><span class="wn">Step 1</span><span class="wdir">Substitute <span class="m"><i>y</i> = <i>x</i><sup>2</sup></span> into <span class="m"><i>y</i><sup>2/3</sup></span>.</span></div><div class="wmath"><span class="m">(<i>x</i><sup>2</sup>)<sup>2/3</sup> = <i>x</i><sup>4/3</sup></span> &nbsp;<span class="wnote" style="display:inline;">(multiply the exponents: <span class="m">2 &middot; <span class="frac"><span class="num">2</span><span class="den">3</span></span> = <span class="frac"><span class="num">4</span><span class="den">3</span></span></span>)</span></div></div>
+          <div class="wstep"><div class="whead"><span class="wn">Step 2</span><span class="wdir">Multiply the <span class="m"><i>x</i></span> powers on the left.</span></div><div class="wmath"><span class="m"><i>x</i><sup>1/2</sup> &middot; <i>x</i><sup>4/3</sup> = <i>x</i><sup>1/2 + 4/3</sup></span>, so the left side is <span class="m">3<i>x</i><sup>1/2 + 4/3</sup></span>.</div></div>
+          <div class="wstep"><div class="whead"><span class="wn">Step 3</span><span class="wdir">Add the exponents with a common denominator of 6.</span></div><div class="wmath"><span class="m"><span class="frac"><span class="num">3</span><span class="den">6</span></span> + <span class="frac"><span class="num">8</span><span class="den">6</span></span> = <span class="frac"><span class="num">11</span><span class="den">6</span></span></span>. Left side is <span class="m">3<i>x</i><sup>11/6</sup></span>.</div></div>
+          <div class="wstep"><div class="whead"><span class="wn">Step 4</span><span class="wdir">Rewrite the right side, also using <span class="m"><i>y</i> = <i>x</i><sup>2</sup></span>.</span></div><div class="wmath"><span class="m"><i>xy</i> = <i>x</i> &middot; <i>x</i><sup>2</sup> = <i>x</i><sup>3</sup></span>, so <span class="m">3(<i>xy</i>)<sup><i>k</i></sup> = 3(<i>x</i><sup>3</sup>)<sup><i>k</i></sup> = 3<i>x</i><sup>3<i>k</i></sup></span>.</div></div>
+          <div class="wstep"><div class="whead"><span class="wn">Step 5</span><span class="wdir">Both sides are <span class="m">3<i>x</i><sup>(...)</sup></span>, so match the exponents.</span></div><div class="wmath"><span class="m">3<i>k</i> = <span class="frac"><span class="num">11</span><span class="den">6</span></span></span>, so <span class="m"><i>k</i> = <span class="frac"><span class="num">11</span><span class="den">18</span></span></span>.<div class="wnote">Choice A is <span class="m"><span class="frac"><span class="num">11</span><span class="den">6</span></span></span>, the exponent before dividing by 3.</div></div></div>
+        </div>
+        <div class="walk-actions">
+          <button class="act primary" data-act="wnext">Show step 1</button>
+          <button class="act" data-act="wreset" hidden>Start over</button>
+        </div>
+        <div class="wanswer">Answer: <span class="m"><i>k</i> = <span class="frac"><span class="num">11</span><span class="den">18</span></span></span>, choice C.</div>
+      </div>
+    </section>
+
+    <!-- W5 expand and match coefficients -->
+    <section class="slide" data-sec="SAT walkthroughs">
+      <p class="eyebrow sat">Walkthrough 5 &middot; matching coefficients</p>
+      <div class="walk sat" data-correct="B">
+        <div class="qlab">Find the constants</div>
+        <div class="stem"><span class="m">(<i>hx</i> + 2)(4<i>x</i><sup>2</sup> &minus; <i>kx</i> + 5) = 12<i>x</i><sup>3</sup> &minus; <i>kx</i><sup>2</sup> + 7<i>x</i> + 10</span> is true for all <span class="m"><i>x</i></span>, where <span class="m"><i>h</i></span> and <span class="m"><i>k</i></span> are constants. What is the value of <span class="m"><i>hk</i></span>?</div>
+        <div class="walk-opts">
+          <div class="walk-opt" data-c="A"><span class="badge">A</span><span class="m">7</span><span class="tick"></span></div>
+          <div class="walk-opt" data-c="B"><span class="badge">B</span><span class="m">12</span><span class="tick"></span></div>
+          <div class="walk-opt" data-c="C"><span class="badge">C</span><span class="m">15</span><span class="tick"></span></div>
+          <div class="walk-opt" data-c="D"><span class="badge">D</span><span class="m">24</span><span class="tick"></span></div>
+        </div>
+        <div class="wsteps">
+          <div class="wstep"><div class="whead"><span class="wn">Step 1</span><span class="wdir">Expand the left side by distributing every term.</span></div><div class="wmath"><span class="m">4<i>h</i><i>x</i><sup>3</sup> + (8 &minus; <i>hk</i>)<i>x</i><sup>2</sup> + (5<i>h</i> &minus; 2<i>k</i>)<i>x</i> + 10</span></div></div>
+          <div class="wstep"><div class="whead"><span class="wn">Step 2</span><span class="wdir">Match the <span class="m"><i>x</i><sup>3</sup></span> coefficients.</span></div><div class="wmath"><span class="m">4<i>h</i> = 12</span>, so <span class="m"><i>h</i> = 3</span>.</div></div>
+          <div class="wstep"><div class="whead"><span class="wn">Step 3</span><span class="wdir">Match the <span class="m"><i>x</i><sup>2</sup></span> coefficients, then solve for <span class="m"><i>k</i></span>.</span></div><div class="wmath"><span class="m">8 &minus; <i>hk</i> = &minus;<i>k</i></span>. With <span class="m"><i>h</i> = 3</span>: <span class="m">8 &minus; 3<i>k</i> = &minus;<i>k</i></span>, so <span class="m">8 = 2<i>k</i></span> and <span class="m"><i>k</i> = 4</span>.</div></div>
+          <div class="wstep"><div class="whead"><span class="wn">Step 4</span><span class="wdir">Check the <span class="m"><i>x</i></span> coefficient to be safe.</span></div><div class="wmath"><span class="m">5<i>h</i> &minus; 2<i>k</i> = 15 &minus; 8 = 7</span>, which matches the given <span class="m">7<i>x</i></span>.</div></div>
+          <div class="wstep"><div class="whead"><span class="wn">Step 5</span><span class="wdir">Multiply to get what the question asked for.</span></div><div class="wmath"><span class="m"><i>hk</i> = 3 &middot; 4 = 12</span><div class="wnote">Choice A stops at the <span class="m"><i>x</i></span> coefficient. Choice D reads <span class="m"><i>h</i></span> as 2 instead of 3.</div></div></div>
+        </div>
+        <div class="walk-actions">
+          <button class="act primary" data-act="wnext">Show step 1</button>
+          <button class="act" data-act="wreset" hidden>Start over</button>
+        </div>
+        <div class="wanswer">Answer: <span class="m"><i>hk</i> = 12</span>, choice B.</div>
+      </div>
+    </section>
+
+    <!-- W6 rational expression, remainder -->
+    <section class="slide" data-sec="SAT walkthroughs">
+      <p class="eyebrow sat">Walkthrough 6 &middot; rational expressions</p>
+      <div class="walk sat" data-correct="D">
+        <div class="qlab">Find the constant</div>
+        <div class="stem">If <span class="m"><span class="frac"><span class="num"><i>x</i><sup>2</sup> &minus; 8<i>x</i> + 7</span><span class="den"><i>x</i> + 3</span></span> = <i>A</i> + <span class="frac"><span class="num"><i>B</i></span><span class="den"><i>x</i> + 3</span></span></span>, where <span class="m"><i>A</i></span> is a polynomial, what is the value of <span class="m"><i>B</i></span>?</div>
+        <div class="walk-opts">
+          <div class="walk-opt" data-c="A"><span class="badge">A</span><span class="m">7</span><span class="tick"></span></div>
+          <div class="walk-opt" data-c="B"><span class="badge">B</span><span class="m">33</span><span class="tick"></span></div>
+          <div class="walk-opt" data-c="C"><span class="badge">C</span><span class="m">&minus;8</span><span class="tick"></span></div>
+          <div class="walk-opt" data-c="D"><span class="badge">D</span><span class="m">40</span><span class="tick"></span></div>
+        </div>
+        <div class="wsteps">
+          <div class="wstep"><div class="whead"><span class="wn">Step 1</span><span class="wdir">Read what <span class="m"><i>B</i></span> means in this form.</span></div><div class="wmath"><span class="m"><i>B</i></span> is the remainder when <span class="m"><i>x</i><sup>2</sup> &minus; 8<i>x</i> + 7</span> is divided by <span class="m"><i>x</i> + 3</span>.</div></div>
+          <div class="wstep"><div class="whead"><span class="wn">Step 2</span><span class="wdir">Set the divisor equal to zero to find the test value.</span></div><div class="wmath"><span class="m"><i>x</i> + 3 = 0</span>, so <span class="m"><i>x</i> = &minus;3</span>.</div></div>
+          <div class="wstep"><div class="whead"><span class="wn">Step 3</span><span class="wdir">Plug <span class="m"><i>x</i> = &minus;3</span> into the numerator.</span></div><div class="wmath"><span class="m">(&minus;3)<sup>2</sup> &minus; 8(&minus;3) + 7</span></div></div>
+          <div class="wstep"><div class="whead"><span class="wn">Step 4</span><span class="wdir">Do the arithmetic in order.</span></div><div class="wmath"><span class="m">9 + 24 + 7 = 40</span>, so <span class="m"><i>B</i> = 40</span>.<div class="wnote">Choice C uses <span class="m"><i>x</i> = +3</span> by mistake. Choice A is the numerator's constant term, not the remainder.</div></div></div>
+        </div>
+        <div class="walk-actions">
+          <button class="act primary" data-act="wnext">Show step 1</button>
+          <button class="act" data-act="wreset" hidden>Start over</button>
+        </div>
+        <div class="wanswer">Answer: <span class="m"><i>B</i> = 40</span>, choice D. This remainder trick is faster than long division on the SAT.</div>
+      </div>
+    </section>
+
     <!-- 31 GAME rapid drill -->
     <section class="slide" data-sec="Review game">
       <p class="eyebrow game">Game &middot; rapid drill</p>
@@ -1325,6 +1524,43 @@
       });
     }
     render();
+  });
+
+  document.querySelectorAll('.walk').forEach(function(w){
+    var steps=Array.prototype.slice.call(w.querySelectorAll('.wstep'));
+    var nextBtn=w.querySelector('[data-act="wnext"]');
+    var resetBtn=w.querySelector('[data-act="wreset"]');
+    var answer=w.querySelector('.wanswer');
+    var correct=w.getAttribute('data-correct');
+    var opts=Array.prototype.slice.call(w.querySelectorAll('.walk-opt'));
+    var shown=0;
+    function label(){
+      if(shown===0){nextBtn.textContent='Show step 1';}
+      else if(shown<steps.length){nextBtn.textContent='Show step '+(shown+1);}
+      else{nextBtn.textContent='All steps shown';}
+    }
+    function init(){
+      steps.forEach(function(s){s.classList.add('pre');});
+      if(answer){answer.classList.add('pre');}
+      opts.forEach(function(o){o.classList.remove('correct');var t=o.querySelector('.tick');if(t){t.textContent='';}});
+      shown=0;nextBtn.disabled=false;resetBtn.hidden=true;label();
+    }
+    nextBtn.addEventListener('click',function(){
+      if(shown>=steps.length)return;
+      steps[shown].classList.remove('pre');
+      shown++;
+      resetBtn.hidden=false;
+      label();
+      if(shown===steps.length){
+        if(answer){answer.classList.remove('pre');}
+        opts.forEach(function(o){
+          if(o.getAttribute('data-c')===correct){o.classList.add('correct');var t=o.querySelector('.tick');if(t){t.textContent='Answer';}}
+        });
+        nextBtn.disabled=true;
+      }
+    });
+    resetBtn.addEventListener('click',init);
+    init();
   });
 
   show(0);
