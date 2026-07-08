@@ -1181,6 +1181,80 @@
       </div>
     </section>
 
+    <!-- ================= RATIONAL EXPRESSIONS ================= -->
+    <!-- RE1 define -->
+    <section class="slide" data-sec="Rational expressions">
+      <p class="eyebrow">New topic &middot; rational expressions</p>
+      <h2 class="t">What a rational expression is</h2>
+      <p>A rational expression is a fraction whose top and bottom are both polynomials. The SAT treats them like ordinary number fractions, so you simplify them, combine them, and rewrite them into whatever form a question asks for.</p>
+      <div class="exbox">
+        <div class="exrow"><span class="m"><span class="frac"><span class="num"><i>x</i><sup>2</sup> &minus; 9</span><span class="den"><i>x</i> + 3</span></span></span> <span class="note">rational: top and bottom are both polynomials</span></div>
+        <div class="exrow"><span class="m"><span class="frac"><span class="num">3<i>x</i> + 1</span><span class="den"><i>x</i><sup>2</sup> &minus; 4</span></span></span> <span class="note">rational</span></div>
+        <div class="exrow"><span class="m"><span class="frac"><span class="num"><span class="rad">&radic;<span class="radicand"><i>x</i></span></span> + 1</span><span class="den"><i>x</i></span></span></span> <span class="note">not rational: the top has a root, so it is not a polynomial</span></div>
+      </div>
+      <div class="card-note"><b>Undefined where the bottom is 0:</b> you cannot divide by 0, so a rational expression has no value wherever its denominator equals 0. For a denominator of <span class="m"><i>x</i> + 3</span>, the expression is undefined at <span class="m"><i>x</i> = &minus;3</span>.</div>
+    </section>
+
+    <!-- RE2 what the SAT expects -->
+    <section class="slide" data-sec="Rational expressions">
+      <p class="eyebrow">Know the moves</p>
+      <h2 class="t">What the SAT expects you to do with them</h2>
+      <div class="lawgrid">
+        <div class="lawcard"><div class="lab">Simplify</div><div class="law">Factor, then cancel</div><div class="lex"><span class="m"><span class="frac"><span class="num"><i>x</i><sup>2</sup> &minus; 9</span><span class="den"><i>x</i> + 3</span></span> = <span class="frac"><span class="num">(<i>x</i> &minus; 3)(<i>x</i> + 3)</span><span class="den"><i>x</i> + 3</span></span> = <i>x</i> &minus; 3</span></div></div>
+        <div class="lawcard"><div class="lab">Combine</div><div class="law">Put over one common denominator</div><div class="lex"><span class="m"><span class="frac"><span class="num"><i>a</i></span><span class="den"><i>x</i></span></span> + <span class="frac"><span class="num"><i>b</i></span><span class="den"><i>x</i> + 1</span></span></span> becomes a single fraction</div></div>
+        <div class="lawcard"><div class="lab">Rewrite top-heavy</div><div class="law">Quotient plus remainder over divisor</div><div class="lex"><span class="m"><span class="frac"><span class="num"><i>P</i>(<i>x</i>)</span><span class="den"><i>x</i> &minus; <i>a</i></span></span> = <i>A</i> + <span class="frac"><span class="num"><i>B</i></span><span class="den"><i>x</i> &minus; <i>a</i></span></span></span></div></div>
+        <div class="lawcard"><div class="lab">Find undefined values</div><div class="law">Set the bottom to 0</div><div class="lex"><span class="m"><i>x</i><sup>2</sup> &minus; 4 = 0</span> gives <span class="m"><i>x</i> = 2</span> or <span class="m">&minus;2</span></div></div>
+      </div>
+      <div class="card-note"><b>The one to watch for:</b> the third move, rewriting a top-heavy fraction as a polynomial plus a remainder over the divisor, shows up often in Advanced Math. The next slide gives you a shortcut for the remainder part.</div>
+    </section>
+
+    <!-- RE3 remainder theorem -->
+    <section class="slide" data-sec="Rational expressions">
+      <p class="eyebrow">The shortcut</p>
+      <h2 class="t">The remainder theorem</h2>
+      <div class="formula-card">
+        <span class="formula">Remainder of <i>P</i>(<i>x</i>) &divide; (<i>x</i> &minus; <i>a</i>) is <i>P</i>(<i>a</i>)</span>
+        <div class="eg">To find the remainder, plug <span class="m"><i>a</i></span> into the polynomial. There is no need for long division.</div>
+      </div>
+      <div class="exbox">
+        <div class="exrow"><span class="m"><i>P</i>(<i>x</i>) = <i>x</i><sup>2</sup> + 1</span> <span class="note">divided by</span> <span class="m"><i>x</i> &minus; 2</span>: remainder <span class="m"><i>P</i>(2) = 2<sup>2</sup> + 1 = 5</span></div>
+        <div class="exrow"><span class="m"><i>P</i>(<i>x</i>) = <i>x</i><sup>2</sup> &minus; 5<i>x</i> + 6</span> <span class="note">divided by</span> <span class="m"><i>x</i> &minus; 1</span>: remainder <span class="m"><i>P</i>(1) = 1 &minus; 5 + 6 = 2</span></div>
+      </div>
+      <div class="warn-note"><b>Mind the sign:</b> the divisor has to look like <span class="m">(<i>x</i> &minus; <i>a</i>)</span>. For <span class="m">(<i>x</i> + 3)</span>, read it as <span class="m">(<i>x</i> &minus; (&minus;3))</span>, so <span class="m"><i>a</i> = &minus;3</span> and you plug in <span class="m">&minus;3</span>.</div>
+      <div class="card-note"><b>Why it matters:</b> when a question writes <span class="m"><span class="frac"><span class="num"><i>P</i>(<i>x</i>)</span><span class="den"><i>x</i> &minus; <i>a</i></span></span> = <i>A</i> + <span class="frac"><span class="num"><i>B</i></span><span class="den"><i>x</i> &minus; <i>a</i></span></span></span>, the <span class="m"><i>B</i></span> on top of the leftover fraction is exactly that remainder <span class="m"><i>P</i>(<i>a</i>)</span>. The <span class="m"><i>A</i></span> is the quotient from the division, but most questions only ask for <span class="m"><i>B</i></span>.</div>
+    </section>
+
+    <!-- RE4 remainder exercise -->
+    <section class="slide" data-sec="Rational expressions">
+      <p class="eyebrow">Try it</p>
+      <h2 class="t">Practice with the remainder theorem</h2>
+      <div class="pq" data-correct="B" data-hint="The divisor is (x &minus; 2), so a = 2. Plug 2 into the polynomial.">
+        <div class="qlab">Exercise</div>
+        <div class="stem">What is the remainder when <span class="m"><i>x</i><sup>2</sup> + 4<i>x</i> &minus; 1</span> is divided by <span class="m"><i>x</i> &minus; 2</span>?</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span><span class="m">&minus;5</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span><span class="m">11</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span><span class="m">&minus;1</span><span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span><span class="m">12</span><span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body"><div class="work">
+          <div class="step"><span class="n">1</span><span>The divisor is <span class="m"><i>x</i> &minus; 2</span>, so <span class="m"><i>a</i> = 2</span>.</span></div>
+          <div class="step"><span class="n">2</span><span>Plug <span class="m"><i>x</i> = 2</span> into the polynomial: <span class="m">2<sup>2</sup> + 4(2) &minus; 1</span>.</span></div>
+          <div class="step"><span class="n">3</span><span>Compute: <span class="m">4 + 8 &minus; 1 = 11</span>. <strong>Choice B.</strong></span></div>
+          <div class="step"><span class="n">4</span><span>Choice A uses <span class="m"><i>x</i> = &minus;2</span> by mistake. Choice C is just the constant term.</span></div>
+        </div></div></div>
+      </div>
+    </section>
+
     <!-- ================= SAT WALKTHROUGHS ================= -->
     <!-- W0 walkthrough intro -->
     <section class="slide" data-sec="SAT walkthroughs">
@@ -1289,7 +1363,8 @@
           <div class="wstep"><div class="whead"><span class="wn">Step 2</span><span class="wdir">Multiply the <span class="m"><i>x</i></span> powers on the left.</span></div><div class="wmath"><span class="m"><i>x</i><sup>1/2</sup> &middot; <i>x</i><sup>4/3</sup> = <i>x</i><sup>1/2 + 4/3</sup></span>, so the left side is <span class="m">3<i>x</i><sup>1/2 + 4/3</sup></span>.</div></div>
           <div class="wstep"><div class="whead"><span class="wn">Step 3</span><span class="wdir">Add the exponents with a common denominator of 6.</span></div><div class="wmath"><span class="m"><span class="frac"><span class="num">3</span><span class="den">6</span></span> + <span class="frac"><span class="num">8</span><span class="den">6</span></span> = <span class="frac"><span class="num">11</span><span class="den">6</span></span></span>. Left side is <span class="m">3<i>x</i><sup>11/6</sup></span>.</div></div>
           <div class="wstep"><div class="whead"><span class="wn">Step 4</span><span class="wdir">Rewrite the right side, also using <span class="m"><i>y</i> = <i>x</i><sup>2</sup></span>.</span></div><div class="wmath"><span class="m"><i>xy</i> = <i>x</i> &middot; <i>x</i><sup>2</sup> = <i>x</i><sup>3</sup></span>, so <span class="m">3(<i>xy</i>)<sup><i>k</i></sup> = 3(<i>x</i><sup>3</sup>)<sup><i>k</i></sup> = 3<i>x</i><sup>3<i>k</i></sup></span>.</div></div>
-          <div class="wstep"><div class="whead"><span class="wn">Step 5</span><span class="wdir">Both sides are <span class="m">3<i>x</i><sup>(...)</sup></span>, so match the exponents.</span></div><div class="wmath"><span class="m">3<i>k</i> = <span class="frac"><span class="num">11</span><span class="den">6</span></span></span>, so <span class="m"><i>k</i> = <span class="frac"><span class="num">11</span><span class="den">18</span></span></span>.<div class="wnote">Choice A is <span class="m"><span class="frac"><span class="num">11</span><span class="den">6</span></span></span>, the exponent before dividing by 3.</div></div></div>
+          <div class="wstep"><div class="whead"><span class="wn">Step 5</span><span class="wdir">Both sides are <span class="m">3<i>x</i><sup>(...)</sup></span>, so match the exponents.</span></div><div class="wmath"><span class="m">3<i>k</i> = <span class="frac"><span class="num">11</span><span class="den">6</span></span></span></div></div>
+          <div class="wstep"><div class="whead"><span class="wn">Step 6</span><span class="wdir">Divide both sides by 3 to get <span class="m"><i>k</i></span> by itself.</span></div><div class="wmath">Dividing by 3 is the same as multiplying by <span class="m"><span class="frac"><span class="num">1</span><span class="den">3</span></span></span>:<br><span class="m"><i>k</i> = <span class="frac"><span class="num">11</span><span class="den">6</span></span> &middot; <span class="frac"><span class="num">1</span><span class="den">3</span></span></span><br>Multiply straight across, top times top and bottom times bottom: <span class="m"><span class="frac"><span class="num">11 &middot; 1</span><span class="den">6 &middot; 3</span></span> = <span class="frac"><span class="num">11</span><span class="den">18</span></span></span>.<div class="wnote">Choice A is <span class="m"><span class="frac"><span class="num">11</span><span class="den">6</span></span></span>, the exponent before dividing by 3.</div></div></div>
         </div>
         <div class="walk-actions">
           <button class="act primary" data-act="wnext">Show step 1</button>
@@ -1302,27 +1377,21 @@
     <!-- W5 expand and match coefficients -->
     <section class="slide" data-sec="SAT walkthroughs">
       <p class="eyebrow sat">Walkthrough 5 &middot; matching coefficients</p>
-      <div class="walk sat" data-correct="B">
+      <div class="walk sat" data-correct="">
         <div class="qlab">Find the constants</div>
         <div class="stem"><span class="m">(<i>hx</i> + 2)(4<i>x</i><sup>2</sup> &minus; <i>kx</i> + 5) = 12<i>x</i><sup>3</sup> &minus; <i>kx</i><sup>2</sup> + 7<i>x</i> + 10</span> is true for all <span class="m"><i>x</i></span>, where <span class="m"><i>h</i></span> and <span class="m"><i>k</i></span> are constants. What is the value of <span class="m"><i>hk</i></span>?</div>
-        <div class="walk-opts">
-          <div class="walk-opt" data-c="A"><span class="badge">A</span><span class="m">7</span><span class="tick"></span></div>
-          <div class="walk-opt" data-c="B"><span class="badge">B</span><span class="m">12</span><span class="tick"></span></div>
-          <div class="walk-opt" data-c="C"><span class="badge">C</span><span class="m">15</span><span class="tick"></span></div>
-          <div class="walk-opt" data-c="D"><span class="badge">D</span><span class="m">24</span><span class="tick"></span></div>
-        </div>
         <div class="wsteps">
-          <div class="wstep"><div class="whead"><span class="wn">Step 1</span><span class="wdir">Expand the left side by distributing every term.</span></div><div class="wmath"><span class="m">4<i>h</i><i>x</i><sup>3</sup> + (8 &minus; <i>hk</i>)<i>x</i><sup>2</sup> + (5<i>h</i> &minus; 2<i>k</i>)<i>x</i> + 10</span></div></div>
-          <div class="wstep"><div class="whead"><span class="wn">Step 2</span><span class="wdir">Match the <span class="m"><i>x</i><sup>3</sup></span> coefficients.</span></div><div class="wmath"><span class="m">4<i>h</i> = 12</span>, so <span class="m"><i>h</i> = 3</span>.</div></div>
-          <div class="wstep"><div class="whead"><span class="wn">Step 3</span><span class="wdir">Match the <span class="m"><i>x</i><sup>2</sup></span> coefficients, then solve for <span class="m"><i>k</i></span>.</span></div><div class="wmath"><span class="m">8 &minus; <i>hk</i> = &minus;<i>k</i></span>. With <span class="m"><i>h</i> = 3</span>: <span class="m">8 &minus; 3<i>k</i> = &minus;<i>k</i></span>, so <span class="m">8 = 2<i>k</i></span> and <span class="m"><i>k</i> = 4</span>.</div></div>
-          <div class="wstep"><div class="whead"><span class="wn">Step 4</span><span class="wdir">Check the <span class="m"><i>x</i></span> coefficient to be safe.</span></div><div class="wmath"><span class="m">5<i>h</i> &minus; 2<i>k</i> = 15 &minus; 8 = 7</span>, which matches the given <span class="m">7<i>x</i></span>.</div></div>
-          <div class="wstep"><div class="whead"><span class="wn">Step 5</span><span class="wdir">Multiply to get what the question asked for.</span></div><div class="wmath"><span class="m"><i>hk</i> = 3 &middot; 4 = 12</span><div class="wnote">Choice A stops at the <span class="m"><i>x</i></span> coefficient. Choice D reads <span class="m"><i>h</i></span> as 2 instead of 3.</div></div></div>
+          <div class="wstep"><div class="whead"><span class="wn">Step 1</span><span class="wdir">Expand the left side using distribution.</span></div><div class="wmath">Multiply every term of <span class="m">(<i>hx</i> + 2)</span> by every term of <span class="m">(4<i>x</i><sup>2</sup> &minus; <i>kx</i> + 5)</span>:<br><span class="m">4<i>hx</i><sup>3</sup> &minus; <i>hkx</i><sup>2</sup> + 8<i>x</i><sup>2</sup> + 5<i>hx</i> &minus; 2<i>kx</i> + 10 = 12<i>x</i><sup>3</sup> &minus; <i>kx</i><sup>2</sup> + 7<i>x</i> + 10</span></div></div>
+          <div class="wstep"><div class="whead"><span class="wn">Step 2</span><span class="wdir">Match the <span class="m"><i>x</i><sup>3</sup></span> coefficients to solve for <span class="m"><i>h</i></span>.</span></div><div class="wmath">The only <span class="m"><i>x</i><sup>3</sup></span> term on the left is <span class="m">4<i>hx</i><sup>3</sup></span>, and on the right it is <span class="m">12<i>x</i><sup>3</sup></span>:<br><span class="m">4<i>hx</i><sup>3</sup> = 12<i>x</i><sup>3</sup></span><br>Divide both sides by <span class="m"><i>x</i><sup>3</sup></span>: <span class="m">4<i>h</i> = 12</span>.<br>Divide both sides by 4: <span class="m"><i>h</i> = 3</span>.</div></div>
+          <div class="wstep"><div class="whead"><span class="wn">Step 3</span><span class="wdir">Plug <span class="m">3</span> in for <span class="m"><i>h</i></span> on the left side.</span></div><div class="wmath">Every <span class="m"><i>h</i></span> becomes 3:<br><span class="m">12<i>x</i><sup>3</sup> &minus; 3<i>kx</i><sup>2</sup> + 8<i>x</i><sup>2</sup> + 15<i>x</i> &minus; 2<i>kx</i> + 10 = 12<i>x</i><sup>3</sup> &minus; <i>kx</i><sup>2</sup> + 7<i>x</i> + 10</span></div></div>
+          <div class="wstep"><div class="whead"><span class="wn">Step 4</span><span class="wdir">Solve for <span class="m"><i>k</i></span> using the <span class="m"><i>x</i><sup>2</sup></span> coefficients.</span></div><div class="wmath">The <span class="m"><i>x</i><sup>2</sup></span> terms on the left are <span class="m">&minus;3<i>kx</i><sup>2</sup></span> and <span class="m">8<i>x</i><sup>2</sup></span>, and together they must equal <span class="m">&minus;<i>kx</i><sup>2</sup></span> on the right:<br><span class="m">&minus;3<i>kx</i><sup>2</sup> + 8<i>x</i><sup>2</sup> = &minus;<i>kx</i><sup>2</sup></span><br>Divide by <span class="m"><i>x</i><sup>2</sup></span>: <span class="m">&minus;3<i>k</i> + 8 = &minus;<i>k</i></span>.<br>Subtract 8 from both sides: <span class="m">&minus;3<i>k</i> = &minus;<i>k</i> &minus; 8</span>.<br>Add <span class="m"><i>k</i></span> to both sides: <span class="m">&minus;2<i>k</i> = &minus;8</span>.<br>Divide by <span class="m">&minus;2</span>: <span class="m"><i>k</i> = 4</span>.</div></div>
+          <div class="wstep"><div class="whead"><span class="wn">Step 5</span><span class="wdir">Multiply <span class="m"><i>h</i></span> and <span class="m"><i>k</i></span> to answer what was asked.</span></div><div class="wmath"><span class="m"><i>hk</i> = 3 &middot; 4 = 12</span></div></div>
         </div>
         <div class="walk-actions">
           <button class="act primary" data-act="wnext">Show step 1</button>
           <button class="act" data-act="wreset" hidden>Start over</button>
         </div>
-        <div class="wanswer">Answer: <span class="m"><i>hk</i> = 12</span>, choice B.</div>
+        <div class="wanswer">Answer: <span class="m"><i>hk</i> = 12</span>.</div>
       </div>
     </section>
 
@@ -1339,7 +1408,7 @@
           <div class="walk-opt" data-c="D"><span class="badge">D</span><span class="m">40</span><span class="tick"></span></div>
         </div>
         <div class="wsteps">
-          <div class="wstep"><div class="whead"><span class="wn">Step 1</span><span class="wdir">Read what <span class="m"><i>B</i></span> means in this form.</span></div><div class="wmath"><span class="m"><i>B</i></span> is the remainder when <span class="m"><i>x</i><sup>2</sup> &minus; 8<i>x</i> + 7</span> is divided by <span class="m"><i>x</i> + 3</span>.</div></div>
+          <div class="wstep"><div class="whead"><span class="wn">Step 1</span><span class="wdir">Read what <span class="m"><i>B</i></span> means in this form.</span></div><div class="wmath">By the remainder theorem, <span class="m"><i>B</i></span> is the remainder when <span class="m"><i>x</i><sup>2</sup> &minus; 8<i>x</i> + 7</span> is divided by <span class="m"><i>x</i> + 3</span>.</div></div>
           <div class="wstep"><div class="whead"><span class="wn">Step 2</span><span class="wdir">Set the divisor equal to zero to find the test value.</span></div><div class="wmath"><span class="m"><i>x</i> + 3 = 0</span>, so <span class="m"><i>x</i> = &minus;3</span>.</div></div>
           <div class="wstep"><div class="whead"><span class="wn">Step 3</span><span class="wdir">Plug <span class="m"><i>x</i> = &minus;3</span> into the numerator.</span></div><div class="wmath"><span class="m">(&minus;3)<sup>2</sup> &minus; 8(&minus;3) + 7</span></div></div>
           <div class="wstep"><div class="whead"><span class="wn">Step 4</span><span class="wdir">Do the arithmetic in order.</span></div><div class="wmath"><span class="m">9 + 24 + 7 = 40</span>, so <span class="m"><i>B</i> = 40</span>.<div class="wnote">Choice C uses <span class="m"><i>x</i> = +3</span> by mistake. Choice A is the numerator's constant term, not the remainder.</div></div></div>
@@ -1373,6 +1442,8 @@
         <div class="sheet-card"><div class="lab">Radicals</div><div class="id">Rationalize, or use the conjugate</div></div>
         <div class="sheet-card"><div class="lab">Radicals</div><div class="id">Square both sides, then check</div></div>
         <div class="sheet-card"><div class="lab">Systems</div><div class="id">Set equal; one solution means discriminant 0</div></div>
+        <div class="sheet-card"><div class="lab">Rational expressions</div><div class="id">Undefined where the denominator is 0</div></div>
+        <div class="sheet-card"><div class="lab">Rational expressions</div><div class="id">Remainder of <i>P</i>(<i>x</i>) &divide; (<i>x</i> &minus; <i>a</i>) is <i>P</i>(<i>a</i>)</div></div>
       </div>
     </section>
 
