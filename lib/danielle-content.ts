@@ -59,6 +59,10 @@ export const DANIELLE_FILE_MAP = {
   "exponents-radicals-slides": {
     filename: "exponents-radicals-slides.html",
     contentType: "text/html; charset=utf-8"
+  },
+  "triangles-lesson-1-slides": {
+    filename: "triangles-lesson-1-slides.html",
+    contentType: "text/html; charset=utf-8"
   }
 } as const;
 
