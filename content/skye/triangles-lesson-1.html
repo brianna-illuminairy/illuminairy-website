@@ -1,0 +1,1344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Right Triangles Lesson 1</title>
+<style>
+  :root{
+    --surface:#f5ecd9;--surface-2:#efe3cb;--navy:#14233b;--navy-2:#1e3250;
+    --forest:#2c5f4f;--forest-deep:#214a3d;--mint:#bfe3cf;--mint-soft:#dcefe3;
+    --ink:#1b2a22;--muted:#56635a;--line:#d9cba9;
+    --correct:#2c5f4f;--correct-bg:#dcefe3;--wrong:#b35442;--wrong-bg:#f2dcd5;
+    --coef:#a9791f;
+    --font:Arial,Helvetica,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{margin:0;background:var(--navy);color:var(--ink);font-family:var(--font);-webkit-font-smoothing:antialiased;display:flex;flex-direction:column;min-height:100%;}
+  .stage{flex:1;display:flex;align-items:center;justify-content:center;padding:24px 20px 12px;position:relative;overflow:hidden;}
+  .deck{width:min(980px,100%);height:min(680px,82vh);position:relative;}
+  .slide{position:absolute;inset:0;background:var(--surface);border-radius:20px;border:1px solid #0c1726;box-shadow:0 24px 60px rgba(0,0,0,.34);padding:36px 44px;overflow:auto;opacity:0;transform:translateY(10px) scale(.99);pointer-events:none;transition:opacity .3s ease, transform .3s ease;}
+  .slide.active{opacity:1;transform:none;pointer-events:auto;}
+  .slide.dark{background:var(--navy);color:var(--surface);border-color:#0a1320;}
+  @media(prefers-reduced-motion:reduce){.slide{transition:opacity .12s ease;transform:none;}}
+  .eyebrow{text-transform:uppercase;letter-spacing:.16em;font-size:.72rem;font-weight:700;color:var(--forest);margin:0 0 13px;}
+  .dark .eyebrow{color:var(--mint);}
+  .eyebrow.sat{color:#b35442;}
+  .eyebrow.game{color:#a9791f;}
+  h1.t{font-weight:700;font-size:clamp(1.8rem,4.2vw,2.6rem);line-height:1.12;margin:0 0 16px;color:var(--navy);}
+  .dark h1.t{color:var(--surface);}
+  h2.t{font-weight:700;font-size:clamp(1.28rem,3vw,1.8rem);line-height:1.18;margin:0 0 14px;color:var(--navy);}
+  .dark h2.t{color:var(--surface);}
+  p{margin:0 0 12px;font-size:1.02rem;line-height:1.55;}
+  .sub{font-size:1.1rem;color:var(--muted);max-width:720px;}
+  .dark .sub{color:#d3dad3;}
+  strong{font-weight:700;color:var(--navy);}
+  .dark strong{color:var(--mint);}
+  .center{height:100%;display:flex;flex-direction:column;justify-content:center;}
+  .star{color:var(--forest);}.dark .star{color:var(--mint);}
+
+  .m{font-weight:600;white-space:nowrap;}
+  .m i{font-style:italic;font-weight:600;}
+  .m sup{font-size:.7em;vertical-align:.42em;}
+  .coef{color:var(--coef);font-weight:700;}
+  .flip{color:var(--wrong);font-weight:700;}
+
+  .formula-card{background:#fffaf0;border:1px solid var(--line);border-radius:14px;padding:15px 20px;margin:0 0 14px;}
+  .formula-card .lab{font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;color:var(--forest);font-weight:700;margin-bottom:8px;}
+  .formula{font-weight:700;font-size:1.3rem;color:var(--navy);}
+  .formula i{font-style:italic;}
+  .formula-card .eg{font-size:1rem;color:var(--muted);margin-top:8px;line-height:1.55;}
+  .eg .m{color:var(--navy);}
+
+  .exbox{background:#fffaf0;border:1px solid var(--line);border-radius:13px;padding:6px 20px;margin:6px 0 0;}
+
+  table.dtable{border-collapse:collapse;margin:6px 0;background:#fffaf0;border-radius:8px;overflow:hidden;font-size:1rem;}
+  table.dtable th,table.dtable td{border:1px solid var(--line);padding:7px 18px;text-align:center;}
+  table.dtable th{background:var(--mint-soft);color:var(--forest-deep);font-weight:700;}
+  table.dtable td{color:var(--ink);}
+  .exbox .exrow{font-size:1.05rem;line-height:1.6;padding:11px 0;border-bottom:1px dashed #e4d7ba;display:flex;flex-wrap:wrap;gap:8px;align-items:center;}
+  .exbox .exrow:last-child{border-bottom:none;}
+  .exbox .exrow .m{color:var(--navy);}
+  .exbox .exrow .arrow{color:var(--forest);font-weight:700;}
+  .exbox .exrow .note{color:var(--muted);font-size:.9rem;}
+  .ok{color:var(--forest-deep);font-weight:700;}
+  .no{color:var(--wrong);font-weight:700;}
+
+  .card-note{border-left:4px solid var(--forest);background:var(--mint-soft);padding:11px 18px;border-radius:0 11px 11px 0;font-size:.98rem;margin:13px 0 0;line-height:1.55;}
+  .dark .card-note{background:var(--navy-2);border-color:var(--mint);}
+  .card-note b{color:var(--forest-deep);}.dark .card-note b{color:var(--mint);}
+  .warn-note{border-left:4px solid var(--wrong);background:var(--wrong-bg);padding:11px 18px;border-radius:0 11px 11px 0;font-size:.98rem;margin:13px 0 0;line-height:1.55;}
+  .warn-note b{color:var(--wrong);}
+
+  .work{background:#fffaf0;border:1px solid var(--line);border-radius:13px;padding:15px 20px;margin:6px 0 0;}
+  .work .step{display:flex;gap:13px;align-items:flex-start;margin-bottom:10px;font-size:1rem;line-height:1.55;}
+  .work .step:last-child{margin-bottom:0;}
+  .work .n{flex:0 0 auto;width:23px;height:23px;border-radius:50%;background:var(--mint-soft);border:1.5px solid #cbe6d5;color:var(--forest-deep);font-weight:700;font-size:.74rem;display:flex;align-items:center;justify-content:center;margin-top:1px;}
+  .solve{background:#fffaf0;border:1px solid var(--line);border-radius:13px;padding:8px 20px;margin:6px 0 0;}
+  .solve .ln{display:flex;align-items:baseline;gap:14px;padding:9px 0;border-bottom:1px dashed #e4d7ba;font-size:1.06rem;line-height:1.5;}
+  .solve .ln:last-child{border-bottom:none;}
+  .solve .ln .eq{font-weight:700;color:var(--navy);white-space:nowrap;}
+  .solve .ln .eq i{font-style:italic;}
+  .solve .ln .why{color:var(--muted);font-size:.9rem;}
+  .solve .ln.result .eq{color:var(--forest-deep);}
+  .solve .ln.result{background:var(--mint-soft);border-radius:8px;margin:4px -10px 0;padding:9px 10px;border-bottom:none;}
+  .lead{font-size:1.04rem;line-height:1.5;margin:0 0 12px;color:var(--ink);}
+  .lead b{color:var(--navy);font-weight:700;}
+
+  .compare{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:6px 0 0;}
+  .cmpcard{background:#fffaf0;border:1px solid var(--line);border-radius:13px;padding:14px 18px;}
+  .cmpcard.a{border-top:4px solid var(--forest);}
+  .cmpcard.b{border-top:4px solid var(--coef);}
+  .cmpcard .tag{font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;font-weight:700;color:var(--muted);margin-bottom:8px;}
+  .cmpcard .big{font-weight:700;font-size:1.15rem;color:var(--navy);margin-bottom:8px;}
+  .cmpcard .big i{font-style:italic;}
+  .cmpcard .lineitem{font-size:.96rem;line-height:1.55;margin-bottom:6px;}
+  @media(max-width:660px){.compare{grid-template-columns:1fr;}}
+
+  .sheet{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:4px;}
+  .sheet-card{background:#fffaf0;border:1px solid var(--line);border-radius:12px;padding:13px 16px;}
+  .sheet-card .lab{font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:var(--forest);font-weight:700;margin-bottom:6px;}
+  .sheet-card .id{font-weight:600;font-size:.96rem;color:var(--navy);line-height:1.45;}
+  .sheet-card .id i{font-style:italic;}
+  .sheet-card .egm{font-size:.9rem;color:var(--muted);margin-top:6px;line-height:1.5;}
+  .sheet-card .egm .m{color:var(--navy);}
+  @media(max-width:660px){.sheet{grid-template-columns:1fr;}}
+
+  .pq{background:#fffaf0;border:1px solid var(--line);border-radius:15px;padding:18px 22px;margin-top:4px;}
+  .pq.sat{border-color:#e2b7ab;}
+  .pq .qlab{font-size:.63rem;letter-spacing:.1em;text-transform:uppercase;color:var(--forest);font-weight:700;margin-bottom:9px;}
+  .pq.sat .qlab{color:#b35442;}
+  .pq .stem{font-size:1.06rem;line-height:1.55;color:var(--navy);margin-bottom:6px;}
+  .pq .ask{font-size:.92rem;color:var(--muted);margin-bottom:12px;}
+  .pq-opts{display:flex;flex-direction:column;gap:9px;}
+  .pq-opt{display:flex;align-items:center;gap:13px;width:100%;text-align:left;background:#fff;border:1.5px solid var(--line);border-radius:11px;padding:11px 15px;font-size:1rem;color:var(--ink);cursor:pointer;transition:border-color .15s,background .15s;}
+  .pq-opt:hover{border-color:var(--forest);}
+  .pq-opt .badge{flex:0 0 auto;width:26px;height:26px;border-radius:50%;border:1.5px solid var(--muted);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.82rem;color:var(--muted);}
+  .pq-opt.sel{border-color:var(--forest);background:var(--mint-soft);}
+  .pq-opt.sel .badge{border-color:var(--forest);color:var(--forest-deep);background:#fff;}
+  .pq-opt.correct{border-color:var(--correct);background:var(--correct-bg);}
+  .pq-opt.correct .badge{background:var(--forest);border-color:var(--forest);color:#fff;}
+  .pq-opt.incorrect{border-color:var(--wrong);background:var(--wrong-bg);}
+  .pq-opt.incorrect .badge{background:var(--wrong);border-color:var(--wrong);color:#fff;}
+  .pq-opt[disabled]{cursor:default;}
+  .pq-opt .tick{margin-left:auto;font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;font-weight:700;opacity:0;}
+  .pq-opt.correct .tick{opacity:1;color:var(--forest-deep);}
+  .pq-opt.incorrect .tick{opacity:1;color:var(--wrong);}
+  .pq-actions{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;}
+  .act{font-weight:700;font-size:.85rem;border-radius:10px;cursor:pointer;padding:9px 15px;border:1.5px solid var(--line);background:transparent;color:var(--forest-deep);transition:border-color .15s,background .15s,color .15s;}
+  .act:hover{border-color:var(--forest);}
+  .act.primary{background:var(--forest);border-color:var(--forest);color:var(--mint-soft);}
+  .act.primary:hover{background:var(--forest-deep);}
+  .act.on{background:var(--mint-soft);border-color:var(--forest);}
+  .act[hidden]{display:none;}
+  .panel{display:none;margin-top:13px;border-radius:12px;overflow:hidden;border:1px solid var(--line);}
+  .panel.show{display:block;}
+  .panel .head{padding:9px 16px;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700;background:var(--mint-soft);color:var(--forest-deep);}
+  .panel .body{padding:14px 16px 4px;background:#fff;}
+  .panel.hint .head{background:#efe3cb;color:var(--forest-deep);}
+  .panel .body p{font-size:1rem;line-height:1.55;}
+  .verdict{margin-top:13px;font-size:.84rem;font-weight:700;padding:9px 14px;border-radius:999px;display:none;}
+  .verdict.show{display:inline-block;}
+  .verdict.right{background:var(--correct-bg);color:var(--forest-deep);}
+  .verdict.wrong{background:var(--wrong-bg);color:var(--wrong);}
+
+  .drill{background:#fffaf0;border:1px solid var(--line);border-radius:15px;padding:19px 22px;margin-top:4px;}
+  .drill-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px;}
+  .drill-head .t{font-weight:700;color:var(--navy);font-size:1.02rem;}
+  .drill-score{font-size:.86rem;font-weight:700;color:var(--forest-deep);background:var(--mint-soft);border-radius:999px;padding:5px 13px;}
+  .drill-stats{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+  .drill-q{font-size:1.3rem;font-weight:700;color:var(--navy);margin-bottom:14px;text-align:center;padding:8px 0;line-height:1.5;}
+  .drill-q i{font-style:italic;}
+  .drill-opts{display:flex;flex-direction:column;gap:9px;}
+  .drill-opt{display:flex;align-items:center;gap:12px;background:#fff;border:1.5px solid var(--line);border-radius:11px;padding:12px 15px;font-size:1.02rem;color:var(--ink);cursor:pointer;transition:border-color .12s,background .12s;}
+  .drill-opt:hover{border-color:var(--forest);}
+  .drill-opt.correct{border-color:var(--correct);background:var(--correct-bg);color:var(--forest-deep);}
+  .drill-opt.incorrect{border-color:var(--wrong);background:var(--wrong-bg);color:var(--wrong);}
+  .drill-opt[disabled]{cursor:default;}
+  .drill-opt i{font-style:italic;}
+  .drill-foot{margin-top:14px;display:flex;align-items:center;gap:12px;}
+  .drill-final{font-size:1.15rem;font-weight:700;color:var(--navy);margin-bottom:10px;}
+
+  .bar{flex:0 0 auto;display:flex;align-items:center;gap:18px;justify-content:center;padding:13px 20px 18px;color:var(--surface);}
+  .navbtn{font-weight:700;font-size:.92rem;background:var(--forest);color:var(--mint-soft);border:none;border-radius:10px;padding:11px 20px;cursor:pointer;transition:background .15s,opacity .15s;}
+  .navbtn:hover{background:var(--forest-deep);}
+  .navbtn:disabled{opacity:.34;cursor:default;}
+  .counter{font-size:.82rem;letter-spacing:.04em;color:#9fb0c4;min-width:210px;text-align:center;}
+  .counter b{color:var(--mint);}
+  .counter .sec{display:block;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:#7d8ea3;margin-top:2px;}
+  .progress{position:fixed;top:0;left:0;height:3px;background:var(--mint);width:0;transition:width .3s ease;z-index:10;}
+  .hintbar{position:fixed;bottom:6px;left:0;right:0;text-align:center;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:#5f718a;}
+  @media(max-width:660px){.slide{padding:26px 22px;}.deck{height:min(700px,76vh);}p,.sub{font-size:1rem;}.counter{min-width:120px;}}
+  .graphbox{background:#fffaf0;border:1px solid var(--line);border-radius:13px;padding:14px;margin:6px 0 0;display:flex;justify-content:center;}
+  .graphrow{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:center;margin:6px 0 0;}
+  .graphrow .solve{margin-top:0;}
+  @media(max-width:660px){.graphrow{grid-template-columns:1fr;}}
+  .walk{background:#fffaf0;border:1px solid var(--line);border-radius:13px;padding:4px 22px 16px;margin:8px 0 0;}
+  .walk .wln{display:none;align-items:baseline;gap:14px;padding:12px 0;border-bottom:1px dashed #e4d7ba;font-size:1.2rem;line-height:1.6;}
+  .walk .wln.show{display:flex;}
+  .walk .wln .eq{font-weight:700;color:var(--navy);}
+  .walk .wln .why{color:var(--muted);font-size:.95rem;}
+  .walk .wln.result.show{background:var(--mint-soft);border-radius:8px;border-bottom:none;padding:12px;}
+  .walk .wln.result .eq{color:var(--forest-deep);}
+  .walkfoot{margin-top:15px;}
+  .m{font-weight:700;color:var(--navy);}
+  .formula-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px 24px;margin:6px 0 4px;text-align:center;}
+  .formula-card .formula{font-size:1.55rem;line-height:1.8;font-weight:800;color:var(--navy);}
+  .formula-card .formula .soh{color:#2c5f4f;} .formula-card .formula .cah{color:#a9791f;} .formula-card .formula .toa{color:#1e5f8a;}
+  .tribox{display:flex;justify-content:center;margin:8px 0 6px;}
+  .trisvg{width:min(540px,94%);height:auto;}
+  .tstroke{stroke-width:5;fill:none;stroke-linecap:round;}
+  .t-opp{stroke:#2c5f4f;}.t-adj{stroke:#a9791f;}.t-hyp{stroke:#1e5f8a;}
+  .tri-plain{stroke:#14233b;stroke-width:5;fill:none;stroke-linecap:round;}
+  .trilbl{font:700 21px Arial;} .trilbl.opp{fill:#2c5f4f;}.trilbl.adj{fill:#a9791f;}.trilbl.hyp{fill:#1e5f8a;}.trilbl.plain{fill:#14233b;}
+  .trisq{fill:none;stroke:#14233b;stroke-width:2.5;} .triarc{fill:none;stroke:#b35442;stroke-width:3;}
+  .triang-lbl{font:800 22px Arial;fill:#b35442;} .trivtx{font:700 20px Arial;fill:#56635a;}
+  .trilab{background:#fffaf0;border:1px solid var(--line);border-radius:14px;padding:10px 18px 16px;}
+  .tside{stroke:#b6c5bb;stroke-width:15;fill:none;stroke-linecap:round;cursor:pointer;opacity:.6;transition:.15s;}
+  .tside:hover{opacity:1;}.tside.ok{stroke:#2c5f4f;opacity:1;}.tside.bad{stroke:#b35442;opacity:1;}
+  .tlab{opacity:0;transition:.25s;font:800 21px Arial;} .tlab.show{opacity:1;} .tlab.opp{fill:#2c5f4f;}.tlab.adj{fill:#a9791f;}.tlab.hyp{fill:#1e5f8a;}
+  .tl-task{font-size:1.35rem;font-weight:800;color:var(--navy);text-align:center;margin-top:6px;}
+  .tl-msg{text-align:center;font-weight:800;min-height:1.5em;margin-top:4px;font-size:1.1rem;}
+  .tl-msg.ok{color:var(--forest-deep);}.tl-msg.bad{color:var(--wrong);}
+  .ratiofill{background:#fffaf0;border:1px solid var(--line);border-radius:14px;padding:20px;text-align:center;}
+  .rf-eq{font-size:1.9rem;font-weight:800;color:var(--navy);display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;}
+  .rf-frac{display:inline-flex;flex-direction:column;align-items:center;gap:6px;}
+  .rf-slot{min-width:180px;padding:12px 14px;border:2px dashed var(--forest);border-radius:10px;background:#fff;font-size:1.15rem;font-weight:800;color:var(--muted);cursor:pointer;}
+  .rf-slot.active{border-style:solid;background:var(--mint-soft);color:var(--navy);}
+  .rf-slot.ok{border-style:solid;border-color:var(--forest);background:var(--mint-soft);color:var(--forest-deep);}
+  .rf-bar{width:200px;height:4px;background:var(--navy);border-radius:3px;}
+  .rf-opts{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:18px;}
+  .rf-opt{padding:12px 22px;border:1.5px solid var(--line);border-radius:999px;background:#fff;font-size:1.1rem;font-weight:800;cursor:pointer;}
+  .rf-opt:hover{border-color:var(--forest);}
+  .rf-msg{margin-top:14px;font-weight:800;font-size:1.15rem;min-height:1.5em;}
+  .rf-msg.ok{color:var(--forest-deep);}.rf-msg.bad{color:var(--wrong);}
+  .lead{font-size:1.15rem;line-height:1.6;}
+  h2.t{font-size:1.9rem;}
+  .twocol{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:center;}
+  .wsheet{background:#fffaf0;border:1px solid var(--line);border-radius:14px;padding:16px 20px;margin-top:12px;}
+  .ws-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:1.25rem;font-weight:700;color:var(--navy);padding:11px 0;border-bottom:1px dashed #e4d7ba;}
+  .ws-row:last-of-type{border-bottom:none;}
+  .ws-lbl{color:var(--muted);font-weight:800;font-size:.98rem;letter-spacing:.02em;text-transform:uppercase;width:100%;margin-bottom:-2px;}
+  .ws-in{width:66px;padding:9px 6px;border:2px solid var(--line);border-radius:8px;font-size:1.2rem;font-weight:800;text-align:center;font-family:Arial;color:var(--navy);}
+  .ws-in:focus{outline:none;border-color:var(--forest);}
+  .ws-in.ok{border-color:var(--forest);background:var(--mint-soft);color:var(--forest-deep);}
+  .ws-in.bad{border-color:var(--wrong);background:var(--wrong-bg);}
+  .ws-check{margin-top:16px;}
+  .ws-msg{margin-top:12px;font-weight:800;font-size:1.12rem;min-height:1.5em;}
+  .ws-msg.ok{color:var(--forest-deep);}.ws-msg.bad{color:var(--wrong);}
+  @media(max-width:640px){.twocol{grid-template-columns:1fr;}}
+  .ranktbl{border-collapse:collapse;width:100%;max-width:470px;margin:14px auto 0;font-size:1rem;}
+  .ranktbl th{background:var(--navy);color:#fff;padding:9px 12px;text-align:left;font-weight:800;}
+  .ranktbl td{padding:11px 12px;border-bottom:1px solid var(--line);font-weight:800;}
+  .ranktbl tr.r-long td{color:#b35442;} .ranktbl tr.r-mid td{color:#a9791f;} .ranktbl tr.r-short td{color:#2c5f4f;}
+  .markbox{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:8px;}
+  .markcard{background:#fffaf0;border:1px solid var(--line);border-radius:12px;padding:12px 10px;text-align:center;width:172px;}
+  .markcard svg{width:120px;height:78px;}
+  .markcard .ml{font-weight:800;color:var(--navy);margin-top:4px;font-size:1.02rem;}
+  .tb-cap{text-align:center;font-weight:700;color:var(--navy);margin-top:8px;font-size:1.06rem;}
+  .tb-hint{fill:#8a7f66;font:600 15px Arial;}
+  .qstrip{display:flex;flex-direction:column;gap:14px;margin-top:6px;}
+  .qs-item{background:#fffaf0;border:1px solid var(--line);border-radius:12px;padding:14px 18px;}
+  .qs-q{font-size:1.18rem;font-weight:800;color:var(--navy);margin-bottom:10px;}
+  .qs-opts{display:flex;gap:10px;flex-wrap:wrap;}
+  .qs-opt{padding:9px 18px;border:1.5px solid var(--line);border-radius:999px;background:#fff;font-size:1.04rem;font-weight:700;color:var(--navy);cursor:pointer;}
+  .qs-opt:hover{border-color:var(--forest);}
+  .qs-opt.ok{background:var(--mint-soft);border-color:var(--forest);color:var(--forest-deep);}
+  .qs-opt.bad{background:var(--wrong-bg);border-color:var(--wrong);color:var(--wrong);}
+  .qs-fb{margin-top:8px;font-weight:800;min-height:1.2em;font-size:1.02rem;}
+  .qs-fb.ok{color:var(--forest-deep);}.qs-fb.bad{color:var(--wrong);}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="stage">
+  <div class="deck" id="deck">
+
+<section class="slide dark" data-sec="Overview">
+<div class="center">
+  <p class="eyebrow"><span class="star">&#10038;</span>&nbsp; Illuminairy &middot; SAT Math &middot; Geometry and Trigonometry</p>
+  <h1 class="t">Lesson 1<br>Reading Triangles and the Basic Tools</h1>
+</div>
+</section>
+
+<section class="slide" data-sec="Triangle basics">
+<p class="eyebrow">Triangle basics</p>
+<h2 class="t">Sum of all angles in a triangle = 180&deg;</h2>
+<div class="tribox"><svg class="trisvg" viewBox="0 0 500 340" style="width:min(560px,88%)" xmlns="http://www.w3.org/2000/svg"><line x1="70" y1="300" x2="445" y2="300" stroke="#a9791f" stroke-width="6" stroke-linecap="round"/><line x1="95" y1="58" x2="70" y2="300" stroke="#2c5f4f" stroke-width="6" stroke-linecap="round"/><line x1="95" y1="58" x2="445" y2="300" stroke="#b35442" stroke-width="6" stroke-linecap="round"/><text x="42" y="184" text-anchor="end" style="fill:#2c5f4f;font-size:34px;font-weight:800">5</text><text x="252" y="334" text-anchor="middle" style="fill:#a9791f;font-size:34px;font-weight:800">7</text><text x="300" y="150" style="fill:#b35442;font-size:34px;font-weight:800">9</text><text x="100" y="284" style="fill:#b35442;font-size:29px;font-weight:800">96&deg;</text><text x="104" y="140" style="fill:#a9791f;font-size:29px;font-weight:800">50&deg;</text><text x="414" y="284" text-anchor="end" style="fill:#2c5f4f;font-size:29px;font-weight:800">34&deg;</text></svg></div>
+<table class="ranktbl"><thead><tr><th>Side</th><th>Angle across from it</th></tr></thead><tbody><tr class="r-long"><td>9 (longest)</td><td>96&deg; (largest)</td></tr><tr class="r-mid"><td>7 (middle)</td><td>50&deg; (middle)</td></tr><tr class="r-short"><td>5 (shortest)</td><td>34&deg; (smallest)</td></tr></tbody></table>
+</section>
+
+<section class="slide" data-sec="Triangle basics">
+<h2 class="t">Parts of a Triangle</h2>
+<p class="lead"><b>Height</b> and <b>altitude</b> mean the same line. The angle at the top vertex of an isosceles triangle, between its two equal sides, is the <b>vertex angle</b>.</p>
+<div class="twocol"><div class="tribox"><svg class="trisvg" viewBox="35 32 382 262" xmlns="http://www.w3.org/2000/svg"><line x1="120" y1="250" x2="400" y2="250" class="tri-plain"/><line x1="120" y1="250" x2="120" y2="60" class="tri-plain"/><line x1="120" y1="60" x2="400" y2="250" class="tri-plain"/><path class="trisq" d="M120 232 L138 232 L138 250"/><circle cx="120" cy="60" r="5" fill="#b35442"/><circle cx="120" cy="250" r="5" fill="#b35442"/><circle cx="400" cy="250" r="5" fill="#b35442"/><text class="trilbl plain" x="262" y="278" text-anchor="middle">base</text><text class="trilbl opp" x="74" y="158" text-anchor="middle">height</text><text class="trilbl hyp" x="302" y="140" text-anchor="middle">hypotenuse</text><text class="triang-lbl" x="150" y="52">vertex</text></svg></div><div class="tribox"><svg class="trisvg" viewBox="112 26 314 286" xmlns="http://www.w3.org/2000/svg"><line x1="120" y1="270" x2="380" y2="270" class="tri-plain"/><line x1="120" y1="270" x2="250" y2="55" class="tri-plain"/><line x1="380" y1="270" x2="250" y2="55" class="tri-plain"/><line x1="250" y1="55" x2="250" y2="270" stroke="#2c5f4f" stroke-width="3" stroke-dasharray="7 5"/><path class="trisq" d="M250 252 L268 252 L268 270"/><circle cx="250" cy="55" r="5" fill="#b35442"/><line x1="177" y1="150" x2="193" y2="162" stroke="#a9791f" stroke-width="3"/><line x1="323" y1="150" x2="307" y2="162" stroke="#a9791f" stroke-width="3"/><text class="trilbl plain" x="250" y="296" text-anchor="middle">base</text><text class="trilbl opp" x="262" y="208" text-anchor="start">height = altitude</text><text class="trilbl adj" x="150" y="150" text-anchor="middle">side</text><text class="trilbl adj" x="352" y="150" text-anchor="middle">side</text><text class="triang-lbl" x="250" y="44" text-anchor="middle">vertex</text></svg></div></div>
+</section>
+
+<section class="slide" data-sec="Triangle basics">
+<p class="eyebrow">Reading the marks</p>
+<h2 class="t">A figure only tells you what it marks</h2>
+<p class="lead">On the SAT, figures are usually not drawn to scale, so trust only what is marked or written, never what merely looks true. A small square means a right angle, matching tick marks mean equal sides, matching arcs mean equal angles, and matching arrows mean parallel lines.</p>
+<div class="markbox"><div class="markcard"><svg viewBox="0 0 120 90"><path d="M22 72 L22 18 M22 72 L98 72" stroke="#14233b" stroke-width="4" fill="none"/><path d="M22 56 L38 56 L38 72" stroke="#14233b" stroke-width="2.5" fill="none"/></svg><div class="ml">right angle</div></div><div class="markcard"><svg viewBox="0 0 120 90"><line x1="18" y1="34" x2="102" y2="34" stroke="#14233b" stroke-width="4"/><line x1="18" y1="64" x2="102" y2="64" stroke="#14233b" stroke-width="4"/><line x1="55" y1="42" x2="65" y2="26" stroke="#b35442" stroke-width="3"/><line x1="55" y1="56" x2="65" y2="72" stroke="#b35442" stroke-width="3"/></svg><div class="ml">equal sides</div></div><div class="markcard"><svg viewBox="0 0 120 90"><path d="M50 20 L20 72 L60 72" stroke="#14233b" stroke-width="4" fill="none"/><path d="M40 72 A 20 20 0 0 0 32.5 58" stroke="#a9791f" stroke-width="2.5" fill="none"/><path d="M102 20 L72 72 L112 72" stroke="#14233b" stroke-width="4" fill="none"/><path d="M92 72 A 20 20 0 0 0 84.5 58" stroke="#a9791f" stroke-width="2.5" fill="none"/></svg><div class="ml">equal angles</div></div><div class="markcard"><svg viewBox="0 0 120 90"><line x1="14" y1="34" x2="106" y2="34" stroke="#14233b" stroke-width="4"/><line x1="14" y1="62" x2="106" y2="62" stroke="#14233b" stroke-width="4"/><path d="M52 28 L62 34 L52 40" stroke="#2c5f4f" stroke-width="2.5" fill="none"/><path d="M52 56 L62 62 L52 68" stroke="#2c5f4f" stroke-width="2.5" fill="none"/></svg><div class="ml">parallel lines</div></div></div>
+</section>
+
+<section class="slide" data-sec="Triangle basics">
+<p class="eyebrow sat">Your turn</p>
+      <div class="pq sat" data-correct="C" data-hint="The side opposite the largest angle is always the longest, and 90&deg; is the largest angle here.">
+        <div class="qlab">Reasoning it out</div>
+        <div class="stem"><div class="tribox"><svg class="trisvg" viewBox="0 0 500 320" xmlns="http://www.w3.org/2000/svg"><line x1="104" y1="268" x2="440" y2="268" class="tri-plain"/><line x1="104" y1="52" x2="104" y2="268" class="tri-plain"/><line x1="104" y1="52" x2="440" y2="268" class="tri-plain"/><text class="trilbl plain" x="52" y="164" text-anchor="middle">7</text><text class="trilbl plain" x="272" y="300" text-anchor="middle">10</text><text class="trilbl plain" x="306" y="130" text-anchor="middle">?</text><path class="trisq" d="M104 250 L122 250 L122 268"/><path class="triarc" d="M406 268 A 34 34 0 0 0 411.4 249.6"/><text class="triang-lbl" x="384" y="258" text-anchor="end">35&deg;</text><path class="triarc" d="M104 86 A 34 34 0 0 0 132.6 70.4"/><text class="triang-lbl" x="118" y="104">55&deg;</text></svg></div>A triangle has angles 35&deg;, 55&deg;, and 90&deg;. The side opposite 35&deg; is 7 and the side opposite 55&deg; is 10. Without any calculation, which is the only possible length for the side opposite the 90&deg; angle?</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span>5<span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span>8<span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span>12<span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span>cannot be determined<span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body"><div class="work">
+          <div class="step"><span class="n">1</span><span>The <span class="m">90&deg;</span> angle is the largest, so the side across from it is the longest of the three.</span></div>
+          <div class="step"><span class="n">2</span><span>That means it must be longer than both 7 and 10, so 5 and 8 are too short to be it.</span></div>
+          <div class="step"><span class="n">3</span><span>Only 12 is longer than 10, so it must be the answer, with no calculation at all. <strong>Choice C.</strong></span></div>
+          <div class="step"><span class="n">4</span><span>This is the habit: rule out anything that is not bigger than the longest known side or is smaller than the shortest.</span></div>
+        </div></div></div>
+      </div>
+</section>
+
+<section class="slide" data-sec="Triangle basics">
+<p class="eyebrow">Triangle basics</p>
+<h2 class="t">Try it: change the shape and watch</h2>
+<p class="lead">Drag the top corner to reshape the triangle. Notice the largest angle is always across from the longest side, and the three angles always add to 180&deg;.</p>
+<div class="tribuild"><svg viewBox="0 0 560 360" xmlns="http://www.w3.org/2000/svg"><line class="tb-side" data-op="P" stroke-width="5" stroke-linecap="round"/><line class="tb-side" data-op="L" stroke-width="5" stroke-linecap="round"/><line class="tb-side" data-op="R" stroke-width="5" stroke-linecap="round"/><text class="tb-len P" text-anchor="middle"></text><text class="tb-len L" text-anchor="middle"></text><text class="tb-len R" text-anchor="middle"></text><text class="tb-ang P" text-anchor="middle"></text><text class="tb-ang L" text-anchor="middle"></text><text class="tb-ang R" text-anchor="middle"></text><circle class="tb-handle" r="13"></circle><text class="tb-hint" x="280" y="60" text-anchor="middle">drag me</text></svg><div class="tb-cap">Drag the top corner. The largest angle and the side across from it always share a color, and the three angles always add to 180&deg;.</div></div>
+</section>
+
+<section class="slide" data-sec="Triangle basics">
+<p class="eyebrow">Triangle basics</p>
+<h2 class="t">Two angles of a triangle are 50&deg; and 60&deg;. Find the third.</h2>
+<div class="tribox"><svg class="trisvg" viewBox="0 0 540 340" xmlns="http://www.w3.org/2000/svg"><line x1="80" y1="300" x2="450" y2="300" class="tri-plain"/><line x1="80" y1="300" x2="210" y2="56" class="tri-plain"/><line x1="450" y1="300" x2="210" y2="56" class="tri-plain"/><text class="triang-lbl" x="210" y="98" text-anchor="middle">?</text><text class="triang-lbl" x="104" y="288">50&deg;</text><text class="triang-lbl" x="430" y="288" text-anchor="end">60&deg;</text><text class="trivtx" x="210" y="42" text-anchor="middle">A</text><text class="trivtx" x="58" y="316">B</text><text class="trivtx" x="446" y="324" text-anchor="middle">C</text></svg></div>
+<div class="walk">
+  <div class="wln"><span class="eq">the three angles add to <span class="m">180&deg;</span></span><span class="why">always true</span></div>
+  <div class="wln"><span class="eq">third angle = <span class="m">180&deg; &minus; 50&deg; &minus; 60&deg;</span></span><span class="why">subtract the two you know</span></div>
+  <div class="wln result"><span class="eq">third angle = <span class="m">70&deg;</span></span></div>
+  <div class="walkfoot"><button class="act primary reveal-btn">Show the first step</button></div>
+</div>
+</section>
+
+<section class="slide" data-sec="Triangle basics">
+<p class="eyebrow sat">Your turn</p>
+      <div class="pq sat" data-correct="B" data-hint="The three angles add to 180&deg;.">
+        <div class="qlab">Triangle basics</div>
+        <div class="stem"><div class="tribox"><svg class="trisvg" viewBox="0 0 540 340" xmlns="http://www.w3.org/2000/svg"><line x1="80" y1="300" x2="450" y2="300" class="tri-plain"/><line x1="80" y1="300" x2="210" y2="56" class="tri-plain"/><line x1="450" y1="300" x2="210" y2="56" class="tri-plain"/><text class="triang-lbl" x="210" y="98" text-anchor="middle">45&deg;</text><text class="triang-lbl" x="104" y="288">75&deg;</text><text class="triang-lbl" x="430" y="288" text-anchor="end">?</text><text class="trivtx" x="210" y="42" text-anchor="middle">A</text><text class="trivtx" x="58" y="316">B</text><text class="trivtx" x="446" y="324" text-anchor="middle">C</text></svg></div>In <span class="m">&triangle;<i>ABC</i></span>, the measure of <span class="m">&ang;<i>A</i></span> is <span class="m">45&deg;</span> and the measure of <span class="m">&ang;<i>B</i></span> is <span class="m">75&deg;</span>. What is the measure of <span class="m">&ang;<i>C</i></span>?</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span>45&deg;<span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span>60&deg;<span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span>75&deg;<span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span>90&deg;<span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body"><div class="work">
+          <div class="step"><span class="n">1</span><span>Add what you know: <span class="m">45&deg; + 75&deg; = 120&deg;</span>.</span></div>
+          <div class="step"><span class="n">2</span><span><span class="m">&ang;<i>C</i> = 180&deg; &minus; 120&deg; = 60&deg;</span>. <strong>Choice B.</strong></span></div>
+        </div></div></div>
+      </div>
+</section>
+
+<section class="slide" data-sec="Triangle basics">
+<p class="eyebrow sat">Your turn</p>
+      <div class="pq sat" data-correct="C" data-hint="One angle is 90&deg;, one is 26&deg;, and all three add to 180&deg;.">
+        <div class="qlab">Triangle basics</div>
+        <div class="stem"><div class="tribox"><svg class="trisvg" viewBox="0 0 500 320" xmlns="http://www.w3.org/2000/svg"><line x1="104" y1="268" x2="440" y2="268" class="tri-plain"/><line x1="104" y1="52" x2="104" y2="268" class="tri-plain"/><line x1="104" y1="52" x2="440" y2="268" class="tri-plain"/><path class="trisq" d="M104 250 L122 250 L122 268"/><path class="triarc" d="M406 268 A 34 34 0 0 0 411.4 249.6"/><text class="triang-lbl" x="384" y="258" text-anchor="end">26&deg;</text></svg></div>In right triangle <span class="m"><i>DEF</i></span>, angle <span class="m"><i>E</i></span> is a right angle and <span class="m">&ang;<i>F</i> = 26&deg;</span>. What is the measure of <span class="m">&ang;<i>D</i></span>?</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span>26&deg;<span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span>54&deg;<span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span>64&deg;<span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span>74&deg;<span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body"><div class="work">
+          <div class="step"><span class="n">1</span><span><span class="m">&ang;<i>D</i> = 180&deg; &minus; 90&deg; &minus; 26&deg;</span>.</span></div>
+          <div class="step"><span class="n">2</span><span><span class="m">&ang;<i>D</i> = 64&deg;</span>. <strong>Choice C.</strong></span></div>
+          <div class="step"><span class="n">3</span><span>Shortcut: in a right triangle the two acute angles are complementary, so <span class="m">&ang;<i>D</i> = 90&deg; &minus; 26&deg; = 64&deg;</span>.</span></div>
+        </div></div></div>
+      </div>
+</section>
+
+<section class="slide" data-sec="Triangle basics">
+<p class="eyebrow">Right triangles</p>
+<h2 class="t">What makes a triangle a right triangle</h2>
+<p class="lead">A <b>right triangle</b> has exactly one <span class="m">90&deg;</span> angle, shown by the small square in the corner (a triangle can never have two). The two sides that form that corner are the <b>legs</b>; the side across from it, always the longest, is the <b>hypotenuse</b>. Since the three angles total <span class="m">180&deg;</span>, the two acute angles <span class="m"><i>a</i></span> and <span class="m"><i>b</i></span> always add to <span class="m">90&deg;</span>. Two angles that add to <span class="m">90&deg;</span> are called <b>complementary</b>.</p>
+<div class="tribox"><svg class="trisvg" viewBox="0 0 500 320" xmlns="http://www.w3.org/2000/svg"><line x1="104" y1="268" x2="440" y2="268" class="tri-plain"/><line x1="104" y1="52" x2="104" y2="268" class="tri-plain"/><line x1="104" y1="52" x2="440" y2="268" class="tri-plain"/><text class="trilbl plain" x="52" y="164" text-anchor="middle">leg</text><text class="trilbl plain" x="272" y="300" text-anchor="middle">leg</text><text class="trilbl plain" x="306" y="130" text-anchor="middle">hypotenuse</text><path class="trisq" d="M104 250 L122 250 L122 268"/><path class="triarc" d="M406 268 A 34 34 0 0 0 411.4 249.6"/><text class="triang-lbl" x="384" y="258" text-anchor="end">a&deg;</text><path class="triarc" d="M104 86 A 34 34 0 0 0 132.6 70.4"/><text class="triang-lbl" x="118" y="104">b&deg;</text></svg></div>
+</section>
+
+<section class="slide" data-sec="Triangle basics">
+<p class="eyebrow">Triangle basics</p>
+<h2 class="t">Isosceles triangle: equal sides give equal base angles</h2>
+<p class="lead"><b>Isosceles</b> means at least two sides are equal. By the angle-side rule, the two angles across from those equal sides are equal too; these are the <b>base angles</b>. The angle between the two equal sides, up at the top vertex, is the <b>vertex angle</b>. So once you know the vertex angle, the two base angles split whatever is left of <span class="m">180&deg;</span> evenly.</p>
+<div class="tribox"><svg class="trisvg" viewBox="0 0 540 340" xmlns="http://www.w3.org/2000/svg"><line x1="150" y1="300" x2="390" y2="300" class="tri-plain"/><line x1="150" y1="300" x2="270" y2="54" class="tri-plain"/><line x1="390" y1="300" x2="270" y2="54" class="tri-plain"/><line x1="201.9" y1="173.1" x2="218.1" y2="180.9" stroke="#b35442" stroke-width="3"/><line x1="338.1" y1="173.1" x2="321.9" y2="180.9" stroke="#b35442" stroke-width="3"/><text class="triang-lbl" x="270" y="98" text-anchor="middle">40&deg;</text><text class="triang-lbl" x="172" y="288">x</text><text class="triang-lbl" x="368" y="288" text-anchor="end">x</text><text class="trivtx" x="266" y="44" text-anchor="middle">A</text><text class="trivtx" x="132" y="314">B</text><text class="trivtx" x="396" y="314">C</text></svg></div>
+</section>
+
+<section class="slide" data-sec="Triangle basics">
+<p class="eyebrow">Triangle basics</p>
+<h2 class="t">An isosceles triangle has a top angle of 50&deg;. Find each base angle.</h2>
+<div class="tribox"><svg class="trisvg" viewBox="0 0 540 340" xmlns="http://www.w3.org/2000/svg"><line x1="150" y1="300" x2="390" y2="300" class="tri-plain"/><line x1="150" y1="300" x2="270" y2="54" class="tri-plain"/><line x1="390" y1="300" x2="270" y2="54" class="tri-plain"/><line x1="201.9" y1="173.1" x2="218.1" y2="180.9" stroke="#b35442" stroke-width="3"/><line x1="338.1" y1="173.1" x2="321.9" y2="180.9" stroke="#b35442" stroke-width="3"/><text class="triang-lbl" x="270" y="98" text-anchor="middle">50&deg;</text><text class="triang-lbl" x="172" y="288">?</text><text class="triang-lbl" x="368" y="288" text-anchor="end">?</text><text class="trivtx" x="266" y="44" text-anchor="middle">A</text><text class="trivtx" x="132" y="314">B</text><text class="trivtx" x="396" y="314">C</text></svg></div>
+<div class="walk">
+  <div class="wln"><span class="eq">the two base angles are equal, and all three angles add to <span class="m">180&deg;</span></span><span class="why">isosceles: equal sides give equal base angles</span></div>
+  <div class="wln"><span class="eq">the two base angles share what is left: <span class="m">180&deg; &minus; 50&deg; = 130&deg;</span></span><span class="why">subtract the top angle</span></div>
+  <div class="wln result"><span class="eq">each base angle = <span class="m">130&deg; &divide; 2 = 65&deg;</span></span></div>
+  <div class="walkfoot"><button class="act primary reveal-btn">Show the first step</button></div>
+</div>
+</section>
+
+<section class="slide" data-sec="Triangle basics">
+<p class="eyebrow sat">Your turn</p>
+      <div class="pq sat" data-correct="B" data-hint="Equal sides AB and AC give equal base angles. The three angles still add to 180&deg;.">
+        <div class="qlab">Triangle basics</div>
+        <div class="stem"><div class="tribox"><svg class="trisvg" viewBox="0 0 540 340" xmlns="http://www.w3.org/2000/svg"><line x1="150" y1="300" x2="390" y2="300" class="tri-plain"/><line x1="150" y1="300" x2="270" y2="54" class="tri-plain"/><line x1="390" y1="300" x2="270" y2="54" class="tri-plain"/><line x1="201.9" y1="173.1" x2="218.1" y2="180.9" stroke="#b35442" stroke-width="3"/><line x1="338.1" y1="173.1" x2="321.9" y2="180.9" stroke="#b35442" stroke-width="3"/><text class="triang-lbl" x="270" y="98" text-anchor="middle">40&deg;</text><text class="triang-lbl" x="172" y="288">x</text><text class="triang-lbl" x="368" y="288" text-anchor="end">x</text><text class="trivtx" x="266" y="44" text-anchor="middle">A</text><text class="trivtx" x="132" y="314">B</text><text class="trivtx" x="396" y="314">C</text></svg></div>In the triangle above, side <span class="m"><i>AB</i></span> equals side <span class="m"><i>AC</i></span>. If the measure of <span class="m">&ang;<i>A</i></span> is <span class="m">40&deg;</span>, what is the value of <span class="m"><i>x</i></span>?</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span>40&deg;<span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span>70&deg;<span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span>100&deg;<span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span>140&deg;<span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body"><div class="work">
+          <div class="step"><span class="n">1</span><span>The two base angles are equal, and together with <span class="m">&ang;<i>A</i></span> they add to <span class="m">180&deg;</span>.</span></div>
+          <div class="step"><span class="n">2</span><span>The two base angles share <span class="m">180&deg; &minus; 40&deg; = 140&deg;</span>.</span></div>
+          <div class="step"><span class="n">3</span><span>Each base angle: <span class="m"><i>x</i> = 140&deg; &divide; 2 = 70&deg;</span>. <strong>Choice B.</strong></span></div>
+        </div></div></div>
+      </div>
+</section>
+
+<section class="slide" data-sec="Triangle basics">
+<p class="eyebrow">Triangle basics</p>
+<h2 class="t">Given this, what else do you know?</h2>
+<p class="lead">Equal sides face equal angles, and it works both directions: equal angles mean equal sides. One fact unlocks the rest.</p>
+<div class="qstrip"><div class="qs-item" data-correct="0"><div class="qs-q">In triangle <i>ABC</i>, <i>AB</i> = <i>AC</i>. What else is guaranteed?</div><div class="qs-opts"><button class="qs-opt" data-c="0">&ang;B = &ang;C</button><button class="qs-opt" data-c="1">&ang;A = &ang;B</button><button class="qs-opt" data-c="2">the triangle is right</button><button class="qs-opt" data-c="3">all three sides equal</button></div><div class="qs-fb"></div></div><div class="qs-item" data-correct="0"><div class="qs-q">In triangle <i>ABC</i>, &ang;<i>B</i> = &ang;<i>C</i>. What else is guaranteed?</div><div class="qs-opts"><button class="qs-opt" data-c="0">AB = AC</button><button class="qs-opt" data-c="1">AB = BC</button><button class="qs-opt" data-c="2">&ang;A = 90&deg;</button><button class="qs-opt" data-c="3">it is equilateral</button></div><div class="qs-fb"></div></div><div class="qs-item" data-correct="0"><div class="qs-q">The vertex angle of an isosceles triangle is 40&deg;. Each base angle is:</div><div class="qs-opts"><button class="qs-opt" data-c="0">70&deg;</button><button class="qs-opt" data-c="1">40&deg;</button><button class="qs-opt" data-c="2">50&deg;</button><button class="qs-opt" data-c="3">140&deg;</button></div><div class="qs-fb"></div></div></div>
+</section>
+
+<section class="slide" data-sec="Triangle basics">
+<p class="eyebrow">Triangle basics</p>
+<h2 class="t">Always, sometimes, or never?</h2>
+<div class="qstrip"><div class="qs-item" data-correct="1"><div class="qs-q">A right triangle is isosceles.</div><div class="qs-opts"><button class="qs-opt" data-c="0">Always</button><button class="qs-opt" data-c="1">Sometimes</button><button class="qs-opt" data-c="2">Never</button></div><div class="qs-fb"></div></div><div class="qs-item" data-correct="0"><div class="qs-q">An equilateral triangle is isosceles.</div><div class="qs-opts"><button class="qs-opt" data-c="0">Always</button><button class="qs-opt" data-c="1">Sometimes</button><button class="qs-opt" data-c="2">Never</button></div><div class="qs-fb"></div></div><div class="qs-item" data-correct="2"><div class="qs-q">Every triangle has a hypotenuse.</div><div class="qs-opts"><button class="qs-opt" data-c="0">Always</button><button class="qs-opt" data-c="1">Sometimes</button><button class="qs-opt" data-c="2">Never</button></div><div class="qs-fb"></div></div><div class="qs-item" data-correct="0"><div class="qs-q">The longest side is opposite the largest angle.</div><div class="qs-opts"><button class="qs-opt" data-c="0">Always</button><button class="qs-opt" data-c="1">Sometimes</button><button class="qs-opt" data-c="2">Never</button></div><div class="qs-fb"></div></div><div class="qs-item" data-correct="2"><div class="qs-q">A triangle can have two right angles.</div><div class="qs-opts"><button class="qs-opt" data-c="0">Always</button><button class="qs-opt" data-c="1">Sometimes</button><button class="qs-opt" data-c="2">Never</button></div><div class="qs-fb"></div></div><div class="qs-item" data-correct="0"><div class="qs-q">A right triangle has two complementary angles.</div><div class="qs-opts"><button class="qs-opt" data-c="0">Always</button><button class="qs-opt" data-c="1">Sometimes</button><button class="qs-opt" data-c="2">Never</button></div><div class="qs-fb"></div></div></div>
+</section>
+
+<section class="slide" data-sec="Triangle basics">
+<p class="eyebrow">Lines and angles</p>
+<h2 class="t">A straight line = 180&deg;</h2>
+<p class="lead">A full circle measures <span class="m">360&deg;</span> all the way around. A straight line is exactly half of that turn, a semicircle, so a straight line measures <span class="m">180&deg;</span>.</p>
+<div class="tribox"><svg class="trisvg" viewBox="0 0 520 360" xmlns="http://www.w3.org/2000/svg"><circle cx="260" cy="180" r="150" fill="none" stroke="#c9bfa8" stroke-width="2" stroke-dasharray="6 6"/><path d="M110 180 A 150 150 0 0 1 410 180" fill="none" stroke="#b35442" stroke-width="5"/><line x1="70" y1="180" x2="450" y2="180" class="tri-plain"/><circle cx="260" cy="180" r="5" fill="#14233b"/><text x="260" y="96" text-anchor="middle" style="font:800 34px Arial;fill:#b35442">180&deg;</text><text x="260" y="300" text-anchor="middle" style="font:700 20px Arial;fill:#8a7f66">whole circle = 360&deg;</text></svg></div>
+</section>
+
+<section class="slide" data-sec="Triangle basics">
+<p class="eyebrow">Lines and angles</p>
+<h2 class="t">Cut a straight line and the two angles add to 180&deg;</h2>
+<p class="lead">Draw any line through a point on a straight line. It splits the <span class="m">180&deg;</span> into two pieces. No matter where you cut, the two pieces always add back to <span class="m">180&deg;</span>.</p>
+<div style="display:flex;gap:16px;justify-content:center;align-items:flex-end;flex-wrap:wrap;margin-top:6px;"><svg class="trisvg" viewBox="0 0 300 214" xmlns="http://www.w3.org/2000/svg" style="width:220px"><line x1="24" y1="152" x2="276" y2="152" class="tri-plain"/><line x1="150" y1="152" x2="227.135" y2="60.0747" class="tri-plain"/><path class="triarc" d="M182 152 A 32 32 0 0 0 170.569 127.487"/><path class="triarc" d="M179.568 116.762 A 46 46 0 0 0 104 152"/><text class="triang-lbl" x="204.378" y="126.643" text-anchor="middle">50&deg;</text><text class="triang-lbl" x="122.107" y="92.1837" text-anchor="middle">130&deg;</text><text class="trilbl plain" x="150" y="202" text-anchor="middle">130 + 50 = 180</text></svg><svg class="trisvg" viewBox="0 0 300 214" xmlns="http://www.w3.org/2000/svg" style="width:220px"><line x1="24" y1="152" x2="276" y2="152" class="tri-plain"/><line x1="150" y1="152" x2="150" y2="32" class="tri-plain"/><path class="triarc" d="M182 152 A 32 32 0 0 0 150 120"/><path class="triarc" d="M150 106 A 46 46 0 0 0 104 152"/><text class="triang-lbl" x="192.426" y="109.574" text-anchor="middle">90&deg;</text><text class="triang-lbl" x="103.331" y="105.331" text-anchor="middle">90&deg;</text><text class="trilbl plain" x="150" y="202" text-anchor="middle">90 + 90 = 180</text></svg><svg class="trisvg" viewBox="0 0 300 214" xmlns="http://www.w3.org/2000/svg" style="width:220px"><line x1="24" y1="152" x2="276" y2="152" class="tri-plain"/><line x1="150" y1="152" x2="253.923" y2="92" class="tri-plain"/><path class="triarc" d="M182 152 A 32 32 0 0 0 177.713 136"/><path class="triarc" d="M189.837 129 A 46 46 0 0 0 104 152"/><text class="triang-lbl" x="207.956" y="136.471" text-anchor="middle">30&deg;</text><text class="triang-lbl" x="132.918" y="88.2489" text-anchor="middle">150&deg;</text><text class="trilbl plain" x="150" y="202" text-anchor="middle">150 + 30 = 180</text></svg></div>
+</section>
+
+<section class="slide" data-sec="Triangle basics">
+<p class="eyebrow">Lines and angles</p>
+<h2 class="t">When two lines cross, one angle gives you all four</h2>
+<p class="lead">Now let that cut go all the way through. The two lines make <b>four</b> angles. Angles straight across from each other are <b>vertical angles</b> and are always equal, which is why the two <span style="color:#b35442">130&deg;</span> angles match and the two <span style="color:#2c5f4f">50&deg;</span> angles match. Any two angles side by side sit on a straight line, so they add to <span class="m">180&deg;</span>. Put those together and one angle is all you need: know the <span style="color:#b35442">130&deg;</span>, and the neighbors are <span class="m">180 &minus; 130 = 50&deg;</span> while the angle straight across is <span class="m">130&deg;</span>.</p>
+<div class="tribox"><svg class="trisvg" viewBox="0 0 540 300" xmlns="http://www.w3.org/2000/svg"><line x1="40" y1="150" x2="500" y2="150" class="tri-plain"/><line x1="186" y1="250" x2="354" y2="50" class="tri-plain"/><circle cx="270" cy="150" r="5" fill="#14233b"/><text class="triang-lbl" x="320" y="132" text-anchor="middle" style="fill:#2c5f4f">50&deg;</text><text class="triang-lbl" x="245" y="100" text-anchor="middle" style="fill:#b35442">130&deg;</text><text class="triang-lbl" x="220" y="178" text-anchor="middle" style="fill:#2c5f4f">50&deg;</text><text class="triang-lbl" x="296" y="208" text-anchor="middle" style="fill:#b35442">130&deg;</text></svg></div>
+</section>
+
+<section class="slide" data-sec="Triangle basics">
+<p class="eyebrow">Lines and angles</p>
+<h2 class="t">One angle at a crossing tells you all four</h2>
+<p class="lead">Angles straight across are equal; neighbors add to 180&deg;. So one measure gives you all four.</p>
+<div class="qstrip"><div class="qs-item" data-correct="0"><div class="qs-q">Two lines cross and one angle is 130&deg;. The other three are:</div><div class="qs-opts"><button class="qs-opt" data-c="0">50&deg;, 50&deg;, 130&deg;</button><button class="qs-opt" data-c="1">50&deg;, 130&deg;, 130&deg;</button><button class="qs-opt" data-c="2">130&deg;, 130&deg;, 130&deg;</button><button class="qs-opt" data-c="3">50&deg;, 50&deg;, 50&deg;</button></div><div class="qs-fb"></div></div><div class="qs-item" data-correct="0"><div class="qs-q">One angle at an intersection is 42&deg;. The other three are:</div><div class="qs-opts"><button class="qs-opt" data-c="0">138&deg;, 138&deg;, 42&deg;</button><button class="qs-opt" data-c="1">42&deg;, 42&deg;, 138&deg;</button><button class="qs-opt" data-c="2">138&deg;, 42&deg;, 138&deg;</button><button class="qs-opt" data-c="3">90&deg;, 90&deg;, 42&deg;</button></div><div class="qs-fb"></div></div><div class="qs-item" data-correct="0"><div class="qs-q">One angle where two lines cross is 90&deg;. The other three are:</div><div class="qs-opts"><button class="qs-opt" data-c="0">all 90&deg;</button><button class="qs-opt" data-c="1">90&deg;, 90&deg;, 45&deg;</button><button class="qs-opt" data-c="2">45&deg;, 45&deg;, 90&deg;</button><button class="qs-opt" data-c="3">cannot tell</button></div><div class="qs-fb"></div></div></div>
+</section>
+
+<section class="slide" data-sec="Triangle basics">
+<p class="eyebrow">Triangle basics</p>
+<h2 class="t">Interior angles inside; extend a side for an exterior angle</h2>
+<p class="lead">The three angles inside a triangle are its <b>interior angles</b>, and they add to <span class="m">180&deg;</span>. Extend one side past a corner to make an <b>exterior angle</b> (here <span class="m">&ang;<i>ACD</i></span>). The interior angle and the exterior angle at that corner sit on a straight line, so they add to <span class="m">180&deg;</span>. Combine the two facts and the exterior angle equals the other two interior angles added: <span class="m">&ang;<i>ACD</i> = &ang;<i>A</i> + &ang;<i>B</i></span>.</p>
+<div class="tribox"><svg class="trisvg" viewBox="0 0 560 340" xmlns="http://www.w3.org/2000/svg"><line x1="80" y1="300" x2="524" y2="300" class="tri-plain"/><line x1="80" y1="300" x2="210" y2="56" class="tri-plain"/><line x1="450" y1="300" x2="210" y2="56" class="tri-plain"/><path d="M195 84 A 32 32 0 0 0 232 79" fill="none" stroke="#14233b" stroke-width="3"/><path d="M112 300 A 32 32 0 0 0 95 272" fill="none" stroke="#14233b" stroke-width="3"/><path d="M412 300 A 38 38 0 0 0 423 273" fill="none" stroke="#14233b" stroke-width="3"/><path d="M478 300 A 28 28 0 0 0 430 280" fill="none" stroke="#b35442" stroke-width="3"/><text class="triang-lbl" x="486" y="262" text-anchor="middle">exterior</text><text class="trilbl plain" x="240" y="214" text-anchor="middle" style="font:700 17px Arial;fill:#56635a">interior angles</text><text class="trivtx" x="206" y="44" text-anchor="middle">A</text><text class="trivtx" x="66" y="314">B</text><text class="trivtx" x="452" y="316">C</text><text class="trivtx" x="512" y="322">D</text></svg></div>
+</section>
+
+<section class="slide" data-sec="Triangle basics">
+<p class="eyebrow">Triangle basics</p>
+<h2 class="t">Side BC is extended to D. If &ang;A = 55&deg; and &ang;B = 40&deg;, find &ang;ACD.</h2>
+<div class="tribox"><svg class="trisvg" viewBox="0 0 580 340" xmlns="http://www.w3.org/2000/svg"><line x1="80" y1="300" x2="540" y2="300" class="tri-plain"/><path class="triarc" d="M480 300 A 30 30 0 0 0 429 278.6"/><text class="triang-lbl" x="502" y="262" text-anchor="middle">&ang;ACD</text><line x1="80" y1="300" x2="210" y2="56" class="tri-plain"/><line x1="450" y1="300" x2="210" y2="56" class="tri-plain"/><text class="triang-lbl" x="210" y="98" text-anchor="middle">55&deg;</text><text class="triang-lbl" x="104" y="288">40&deg;</text><text class="trivtx" x="210" y="42" text-anchor="middle">A</text><text class="trivtx" x="58" y="316">B</text><text class="trivtx" x="446" y="324" text-anchor="middle">C</text><text class="trivtx" x="548" y="306">D</text></svg></div>
+<div class="walk">
+  <div class="wln"><span class="eq">first find the interior angle at C. The three interior angles add to 180: <span class="m">180 = 55 + 40 + <i>C</i></span></span><span class="why">triangle angle sum</span></div>
+  <div class="wln"><span class="eq"><span class="m">180 = 95 + <i>C</i></span></span><span class="why">add the two known angles</span></div>
+  <div class="wln"><span class="eq"><span class="m"><i>C</i> = 180 &minus; 95 = 85&deg;</span></span><span class="why">that is the interior angle at C</span></div>
+  <div class="wln"><span class="eq">the interior and exterior angles at C sit on a straight line, so they add to 180: <span class="m">&ang;<i>ACD</i> = 180 &minus; 85</span></span><span class="why">line = 180</span></div>
+  <div class="wln result"><span class="eq"><span class="m">&ang;<i>ACD</i> = 95&deg;</span></span></div>
+  <div class="wln"><span class="eq">faster shortcut: the exterior angle is just the two far angles added, <span class="m">55 + 40 = 95&deg;</span></span><span class="why">same answer, and now you see why</span></div>
+  <div class="walkfoot"><button class="act primary reveal-btn">Show the first step</button></div>
+</div>
+</section>
+
+<section class="slide" data-sec="Triangle basics">
+<p class="eyebrow sat">Your turn</p>
+      <div class="pq sat" data-correct="C" data-hint="An exterior angle of a triangle equals the sum of the two interior angles not next to it.">
+        <div class="qlab">Triangle basics</div>
+        <div class="stem"><div class="tribox"><svg class="trisvg" viewBox="0 0 580 340" xmlns="http://www.w3.org/2000/svg"><line x1="80" y1="300" x2="540" y2="300" class="tri-plain"/><path class="triarc" d="M480 300 A 30 30 0 0 0 429 278.6"/><text class="triang-lbl" x="502" y="262" text-anchor="middle">&ang;ACD</text><line x1="80" y1="300" x2="210" y2="56" class="tri-plain"/><line x1="450" y1="300" x2="210" y2="56" class="tri-plain"/><text class="triang-lbl" x="210" y="98" text-anchor="middle">50&deg;</text><text class="triang-lbl" x="104" y="288">70&deg;</text><text class="trivtx" x="210" y="42" text-anchor="middle">A</text><text class="trivtx" x="58" y="316">B</text><text class="trivtx" x="446" y="324" text-anchor="middle">C</text><text class="trivtx" x="548" y="306">D</text></svg></div>In the figure above, side <span class="m"><i>BC</i></span> of <span class="m">&triangle;<i>ABC</i></span> is extended to point <span class="m"><i>D</i></span>. If <span class="m">&ang;<i>A</i> = 50&deg;</span> and <span class="m">&ang;<i>B</i> = 70&deg;</span>, what is the measure of <span class="m">&ang;<i>ACD</i></span>?</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span>60&deg;<span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span>110&deg;<span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span>120&deg;<span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span>130&deg;<span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body"><div class="work">
+          <div class="step"><span class="n">1</span><span>The exterior angle <span class="m">&ang;<i>ACD</i></span> equals the two remote interior angles added together: <span class="m">&ang;<i>A</i> + &ang;<i>B</i></span>.</span></div>
+          <div class="step"><span class="n">2</span><span><span class="m">&ang;<i>ACD</i> = 50&deg; + 70&deg; = 120&deg;</span>. <strong>Choice C.</strong></span></div>
+          <div class="step"><span class="n">3</span><span>Check: <span class="m">&ang;<i>ACB</i> = 180 &minus; 50 &minus; 70 = 60&deg;</span>, and the straight line gives <span class="m">180 &minus; 60 = 120&deg;</span>.</span></div>
+        </div></div></div>
+      </div>
+</section>
+
+<section class="slide" data-sec="Triangle basics">
+<p class="eyebrow">Triangle basics</p>
+<h2 class="t">Perimeter = add up all the sides</h2>
+<div class="tribox"><svg class="trisvg" viewBox="0 0 540 340" xmlns="http://www.w3.org/2000/svg"><line x1="80" y1="300" x2="450" y2="300" class="tri-plain"/><line x1="80" y1="300" x2="210" y2="56" class="tri-plain"/><line x1="450" y1="300" x2="210" y2="56" class="tri-plain"/><text class="trivtx" x="210" y="42" text-anchor="middle">A</text><text class="trivtx" x="58" y="316">B</text><text class="trivtx" x="446" y="324" text-anchor="middle">C</text><text class="trilbl plain" x="265" y="330" text-anchor="middle">7</text><text class="trilbl plain" x="118" y="186" text-anchor="end">5</text><text class="trilbl plain" x="360" y="186">6</text></svg></div>
+<div class="walk">
+  <div class="wln"><span class="eq">the perimeter is the distance all the way around the triangle</span><span class="why">add the three side lengths</span></div>
+  <div class="wln"><span class="eq"><span class="m">perimeter = 5 + 6 + 7</span></span></div>
+  <div class="wln result"><span class="eq"><span class="m">perimeter = 18</span></span></div>
+  <div class="wln"><span class="eq">for an <b>equilateral</b> triangle all three sides are equal, so <span class="m">perimeter = 3 &times; one side</span></span></div>
+  <div class="walkfoot"><button class="act primary reveal-btn">Show the first step</button></div>
+</div>
+</section>
+
+<section class="slide" data-sec="Triangle basics">
+<p class="eyebrow sat">Your turn</p>
+      <div class="pq sat" data-correct="B" data-hint="Equilateral means all three sides equal, so perimeter = 3 &times; side. Find each perimeter first.">
+        <div class="qlab">Triangle basics</div>
+        <div class="stem">Equilateral triangle <span class="m"><i>T</i></span> has a perimeter that is one-third the perimeter of equilateral triangle <span class="m"><i>S</i></span>. If one side of triangle <span class="m"><i>S</i></span> is 9 inches, what is the length, in inches, of one side of triangle <span class="m"><i>T</i></span>?</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span>9<span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span>3<span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span>27<span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span>1<span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body"><div class="work">
+          <div class="step"><span class="n">1</span><span>Triangle <span class="m"><i>S</i></span> has perimeter <span class="m">3 &times; 9 = 27</span>.</span></div>
+          <div class="step"><span class="n">2</span><span>Triangle <span class="m"><i>T</i></span> has one-third of that: <span class="m">27 &divide; 3 = 9</span>.</span></div>
+          <div class="step"><span class="n">3</span><span>Each side of <span class="m"><i>T</i></span>: <span class="m">9 &divide; 3 = 3</span>. <strong>Choice B.</strong></span></div>
+        </div></div></div>
+      </div>
+</section>
+
+<section class="slide" data-sec="Pythagorean theorem">
+<p class="eyebrow">Pythagorean theorem</p>
+<h2 class="t"><i>a</i><sup>2</sup> + <i>b</i><sup>2</sup> = <i>c</i><sup>2</sup></h2>
+<p class="lead">In any right triangle, the two short sides are the <b>legs</b> (<i>a</i> and <i>b</i>). The longest side, always across from the right angle, is the <b>hypotenuse</b> (<i>c</i>).</p>
+<div class="tribox"><svg class="trisvg" viewBox="0 0 500 320" xmlns="http://www.w3.org/2000/svg"><line x1="104" y1="268" x2="440" y2="268" class="tri-plain"/><line x1="104" y1="52" x2="104" y2="268" class="tri-plain"/><line x1="104" y1="52" x2="440" y2="268" class="tri-plain"/><text class="trilbl plain" x="52" y="164" text-anchor="middle"><tspan>a</tspan></text><text class="trilbl plain" x="272" y="300" text-anchor="middle"><tspan>b</tspan></text><text class="trilbl plain" x="306" y="130" text-anchor="middle"><tspan>c</tspan></text><path class="trisq" d="M104 250 L122 250 L122 268"/><path class="triarc" d="M406 268 A 34 34 0 0 0 411.4 249.6"/><text class="triang-lbl" x="384" y="258" text-anchor="end">&deg;</text></svg></div>
+<div class="formula-card"><div class="formula"><i>a</i><sup>2</sup> + <i>b</i><sup>2</sup> = <i>c</i><sup>2</sup></div></div>
+</section>
+
+<section class="slide" data-sec="Pythagorean theorem">
+<p class="eyebrow">Pythagorean theorem</p>
+<h2 class="t">Before you compute: leg or hypotenuse?</h2>
+<p class="lead">Find the right angle first, mark the side across from it as the hypotenuse, then decide: add the squares to reach the hypotenuse, subtract to reach a leg.</p>
+<div class="qstrip"><div class="qs-item" data-correct="0"><div class="qs-q">The hypotenuse is always:</div><div class="qs-opts"><button class="qs-opt" data-c="0">across from the right angle</button><button class="qs-opt" data-c="1">the shortest side</button><button class="qs-opt" data-c="2">a leg of the triangle</button><button class="qs-opt" data-c="3">across from the smallest angle</button></div><div class="qs-fb"></div></div><div class="qs-item" data-correct="0"><div class="qs-q">You know both legs and want the hypotenuse. You:</div><div class="qs-opts"><button class="qs-opt" data-c="0">add the two squares</button><button class="qs-opt" data-c="1">subtract the squares</button><button class="qs-opt" data-c="2">multiply the legs</button><button class="qs-opt" data-c="3">cannot tell</button></div><div class="qs-fb"></div></div><div class="qs-item" data-correct="0"><div class="qs-q">You know the hypotenuse and one leg, and want the other leg. You:</div><div class="qs-opts"><button class="qs-opt" data-c="0">subtract the squares</button><button class="qs-opt" data-c="1">add the squares</button><button class="qs-opt" data-c="2">divide the sides</button><button class="qs-opt" data-c="3">cannot tell</button></div><div class="qs-fb"></div></div></div>
+</section>
+
+<section class="slide" data-sec="Pythagorean theorem">
+<p class="eyebrow">Pythagorean theorem</p>
+<h2 class="t">Find the hypotenuse when the legs are 9 and 40</h2>
+<div class="tribox"><svg class="trisvg" viewBox="0 0 500 320" xmlns="http://www.w3.org/2000/svg"><line x1="104" y1="268" x2="440" y2="268" class="tri-plain"/><line x1="104" y1="52" x2="104" y2="268" class="tri-plain"/><line x1="104" y1="52" x2="440" y2="268" class="tri-plain"/><text class="trilbl plain" x="52" y="164" text-anchor="middle">9</text><text class="trilbl plain" x="272" y="300" text-anchor="middle">40</text><text class="trilbl plain" x="306" y="130" text-anchor="middle">?</text><path class="trisq" d="M104 250 L122 250 L122 268"/><path class="triarc" d="M406 268 A 34 34 0 0 0 411.4 249.6"/><text class="triang-lbl" x="384" y="258" text-anchor="end">&deg;</text></svg></div>
+<div class="walk">
+  <div class="wln"><span class="eq"><span class="m"><i>a</i><sup>2</sup> + <i>b</i><sup>2</sup> = <i>c</i><sup>2</sup></span></span><span class="why">start from the formula</span></div>
+  <div class="wln"><span class="eq"><span class="m">9<sup>2</sup> + 40<sup>2</sup> = <i>c</i><sup>2</sup></span></span><span class="why">put the leg lengths in</span></div>
+  <div class="wln"><span class="eq"><span class="m">81 + 1600 = <i>c</i><sup>2</sup></span></span><span class="why">square each leg</span></div>
+  <div class="wln"><span class="eq"><span class="m">1681 = <i>c</i><sup>2</sup></span></span><span class="why">add</span></div>
+  <div class="wln result"><span class="eq"><span class="m"><i>c</i> = &radic;1681 = 41</span></span><span class="why">take the square root</span></div>
+  <div class="walkfoot"><button class="act primary reveal-btn">Show the first step</button></div>
+</div>
+</section>
+
+<section class="slide" data-sec="Pythagorean theorem">
+<p class="eyebrow sat">Your turn</p>
+      <div class="pq sat" data-correct="C" data-hint="The hypotenuse is c. Solve a&sup2; + b&sup2; = c&sup2; for the missing leg.">
+        <div class="qlab">Find the missing leg</div>
+        <div class="stem">A right triangle has a hypotenuse of 26 and one leg of length 10. What is the length of the other leg?</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span>16<span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span>28<span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span>24<span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span>36<span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body"><div class="work">
+          <div class="step"><span class="n">1</span><span>Write it: <span class="m">10<sup>2</sup> + <i>b</i><sup>2</sup> = 26<sup>2</sup></span>.</span></div>
+          <div class="step"><span class="n">2</span><span>Square: <span class="m">100 + <i>b</i><sup>2</sup> = 676</span>.</span></div>
+          <div class="step"><span class="n">3</span><span>Subtract 100: <span class="m"><i>b</i><sup>2</sup> = 576</span>.</span></div>
+          <div class="step"><span class="n">4</span><span>Square root: <span class="m"><i>b</i> = &radic;576 = 24</span>. <strong>Choice C.</strong></span></div>
+        </div></div></div>
+      </div>
+</section>
+
+<section class="slide" data-sec="Pythagorean theorem">
+<p class="eyebrow sat">Your turn</p>
+      <div class="pq sat" data-correct="C" data-hint="The two legs are a and b. Use a&sup2; + b&sup2; = c&sup2;.">
+        <div class="qlab">Pythagorean theorem</div>
+        <div class="stem">A right triangle has legs with lengths of 6 centimeters and 8 centimeters. What is the length, in centimeters, of the hypotenuse?</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span>14<span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span>12<span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span>10<span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span>48<span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body"><div class="work">
+          <div class="step"><span class="n">1</span><span><span class="m">6<sup>2</sup> + 8<sup>2</sup> = <i>c</i><sup>2</sup></span>.</span></div>
+          <div class="step"><span class="n">2</span><span><span class="m">36 + 64 = 100 = <i>c</i><sup>2</sup></span>.</span></div>
+          <div class="step"><span class="n">3</span><span><span class="m"><i>c</i> = &radic;100 = 10</span> cm. <strong>Choice C.</strong></span></div>
+        </div></div></div>
+      </div>
+</section>
+
+<section class="slide" data-sec="Label the triangle">
+<p class="eyebrow">Label the triangle</p>
+<h2 class="t">Hypotenuse, opposite, adjacent</h2>
+<p class="lead">Every ratio depends on naming sides <b>relative to an angle</b>. Here everything is named from angle <span class="m"><i>x</i></span>. The <b class="m" style="color:#1e5f8a">hypotenuse</b> is across from the right angle. The <b style="color:#2c5f4f">opposite</b> side is across from <span class="m"><i>x</i></span>. The <b style="color:#a9791f">adjacent</b> side is the leg touching <span class="m"><i>x</i></span> that is not the hypotenuse.</p>
+<div class="tribox"><svg class="trisvg" viewBox="0 0 500 320" xmlns="http://www.w3.org/2000/svg"><line x1="104" y1="52" x2="104" y2="268" class="tstroke t-opp"/><line x1="104" y1="268" x2="440" y2="268" class="tstroke t-adj"/><line x1="104" y1="52" x2="440" y2="268" class="tstroke t-hyp"/><text class="trilbl opp" x="52" y="164" text-anchor="middle">opposite</text><text class="trilbl adj" x="272" y="300" text-anchor="middle">adjacent</text><text class="trilbl hyp" x="306" y="130" text-anchor="middle">hypotenuse</text><path class="trisq" d="M104 250 L122 250 L122 268"/><path class="triarc" d="M406 268 A 34 34 0 0 0 411.4 249.6"/><text class="triang-lbl" x="384" y="258" text-anchor="end">x&deg;</text></svg></div>
+</section>
+
+<section class="slide" data-sec="Label the triangle">
+<p class="eyebrow">Label the triangle</p>
+<h2 class="t">Click the side I ask for</h2>
+<p class="lead">Same triangle, angle <span class="m"><i>x</i></span> at the bottom-right corner. Click each side as I name it.</p>
+<div class="trilab" id="lab1" data-seq='[["hyp", "the hypotenuse"], ["opp", "the side opposite angle x"], ["adj", "the side adjacent to angle x"]]'>
+<div class="tribox"><svg class="trisvg" viewBox="0 0 500 320" xmlns="http://www.w3.org/2000/svg"><line x1="104" y1="52" x2="104" y2="268" class="tside" data-side="opp"/><line x1="104" y1="268" x2="440" y2="268" class="tside" data-side="adj"/><line x1="104" y1="52" x2="440" y2="268" class="tside" data-side="hyp"/><path class="trisq" d="M104 250 L122 250 L122 268"/><path class="triarc" d="M406 268 A 34 34 0 0 0 411.4 249.6"/><text class="triang-lbl" x="384" y="258" text-anchor="end">x&deg;</text><text class="tlab opp tlab-opp" x="52" y="164" text-anchor="middle">opposite</text><text class="tlab adj tlab-adj" x="272" y="300" text-anchor="middle">adjacent</text><text class="tlab hyp tlab-hyp" x="306" y="130" text-anchor="middle">hypotenuse</text></svg></div>
+<div class="tl-task"></div><div class="tl-msg"></div>
+</div>
+</section>
+
+<section class="slide" data-sec="Label the triangle">
+<p class="eyebrow">Label the triangle</p>
+<h2 class="t">Now the angle moved &mdash; label it again</h2>
+<p class="lead">Angle <span class="m"><i>x</i></span> is now at the top corner. Opposite and adjacent switch when the angle moves. The hypotenuse never changes. Click each side.</p>
+<div class="trilab" id="lab2" data-seq='[["opp", "the side opposite angle x"], ["adj", "the side adjacent to angle x"], ["hyp", "the hypotenuse"]]'>
+<div class="tribox"><svg class="trisvg" viewBox="0 0 500 320" xmlns="http://www.w3.org/2000/svg"><line x1="104" y1="268" x2="440" y2="268" class="tside" data-side="opp"/><line x1="104" y1="52" x2="104" y2="268" class="tside" data-side="adj"/><line x1="104" y1="52" x2="440" y2="268" class="tside" data-side="hyp"/><path class="trisq" d="M104 250 L122 250 L122 268"/><path class="triarc" d="M104 86 A 34 34 0 0 0 132.6 70.4"/><text class="triang-lbl" x="118" y="104">x&deg;</text><text class="tlab opp tlab-opp" x="272" y="300" text-anchor="middle">opposite</text><text class="tlab adj tlab-adj" x="52" y="164" text-anchor="middle">adjacent</text><text class="tlab hyp tlab-hyp" x="306" y="130" text-anchor="middle">hypotenuse</text></svg></div>
+<div class="tl-task"></div><div class="tl-msg"></div>
+</div>
+</section>
+
+<section class="slide" data-sec="SOH CAH TOA">
+<p class="eyebrow">SOH CAH TOA</p>
+<h2 class="t">The three ratios</h2>
+<p class="lead">Each trig ratio is one pair of sides. The mnemonic is <b>SOH CAH TOA</b>: <b class="soh" style="color:#2c5f4f">S</b>ine is <b>O</b>pposite over <b>H</b>ypotenuse, <b style="color:#a9791f">C</b>osine is <b>A</b>djacent over <b>H</b>ypotenuse, <b style="color:#1e5f8a">T</b>angent is <b>O</b>pposite over <b>A</b>djacent.</p>
+<div class="formula-card"><div class="formula"><span class="soh">sin = <span style="font-size:.8em">opposite / hypotenuse</span></span><br><span class="cah">cos = <span style="font-size:.8em">adjacent / hypotenuse</span></span><br><span class="toa">tan = <span style="font-size:.8em">opposite / adjacent</span></span></div></div>
+</section>
+
+<section class="slide" data-sec="SOH CAH TOA">
+<p class="eyebrow">SOH CAH TOA</p>
+<h2 class="t">Build <span class="m">sin(<i>x</i>)</span></h2>
+<p class="lead">Tap the top box, choose what goes on top of sine, then fill the bottom box.</p>
+<div class="ratiofill" data-num="opposite" data-den="hypotenuse">
+  <div class="rf-eq"><span>sin(<i>x</i>) =</span><span class="rf-frac"><button class="rf-slot" data-slot="num">?</button><span class="rf-bar"></span><button class="rf-slot" data-slot="den">?</button></span></div>
+  <div class="rf-opts"><button class="rf-opt" data-val="opposite">opposite</button><button class="rf-opt" data-val="adjacent">adjacent</button><button class="rf-opt" data-val="hypotenuse">hypotenuse</button></div>
+  <div class="rf-msg">Tap a box, then tap opposite, adjacent, or hypotenuse.</div>
+</div>
+</section>
+
+<section class="slide" data-sec="SOH CAH TOA">
+<p class="eyebrow">SOH CAH TOA</p>
+<h2 class="t">Build <span class="m">cos(<i>x</i>)</span></h2>
+<p class="lead">Cosine next. Fill both boxes.</p>
+<div class="ratiofill" data-num="adjacent" data-den="hypotenuse">
+  <div class="rf-eq"><span>cos(<i>x</i>) =</span><span class="rf-frac"><button class="rf-slot" data-slot="num">?</button><span class="rf-bar"></span><button class="rf-slot" data-slot="den">?</button></span></div>
+  <div class="rf-opts"><button class="rf-opt" data-val="opposite">opposite</button><button class="rf-opt" data-val="adjacent">adjacent</button><button class="rf-opt" data-val="hypotenuse">hypotenuse</button></div>
+  <div class="rf-msg">Tap a box, then tap opposite, adjacent, or hypotenuse.</div>
+</div>
+</section>
+
+<section class="slide" data-sec="SOH CAH TOA">
+<p class="eyebrow">SOH CAH TOA</p>
+<h2 class="t">Build <span class="m">tan(<i>x</i>)</span></h2>
+<p class="lead">Tangent is the one with no hypotenuse. Fill both boxes.</p>
+<div class="ratiofill" data-num="opposite" data-den="adjacent">
+  <div class="rf-eq"><span>tan(<i>x</i>) =</span><span class="rf-frac"><button class="rf-slot" data-slot="num">?</button><span class="rf-bar"></span><button class="rf-slot" data-slot="den">?</button></span></div>
+  <div class="rf-opts"><button class="rf-opt" data-val="opposite">opposite</button><button class="rf-opt" data-val="adjacent">adjacent</button><button class="rf-opt" data-val="hypotenuse">hypotenuse</button></div>
+  <div class="rf-msg">Tap a box, then tap opposite, adjacent, or hypotenuse.</div>
+</div>
+</section>
+
+<section class="slide" data-sec="SOH CAH TOA">
+<p class="eyebrow">SOH CAH TOA</p>
+<h2 class="t">Fill in the whole routine for this triangle</h2>
+<p class="lead">Angle <span class="m"><i>x</i></span> is at the bottom-right. Work top to bottom: name the sides, check them with Pythagoras, then write each ratio. Fill every box, then check your work.</p>
+<div class="tribox"><svg class="trisvg" viewBox="0 0 500 320" xmlns="http://www.w3.org/2000/svg"><line x1="104" y1="268" x2="440" y2="268" class="tri-plain"/><line x1="104" y1="52" x2="104" y2="268" class="tri-plain"/><line x1="104" y1="52" x2="440" y2="268" class="tri-plain"/><text class="trilbl plain" x="52" y="164" text-anchor="middle">6</text><text class="trilbl plain" x="272" y="300" text-anchor="middle">8</text><text class="trilbl plain" x="306" y="130" text-anchor="middle">10</text><path class="trisq" d="M104 250 L122 250 L122 268"/><path class="triarc" d="M406 268 A 34 34 0 0 0 411.4 249.6"/><text class="triang-lbl" x="384" y="258" text-anchor="end">x&deg;</text></svg></div><div class="wsheet" data-opp="6" data-adj="8" data-hyp="10">
+<div class="ws-row"><div class="ws-lbl">Name the sides from angle x</div>opposite = <input class="ws-in" data-role="opp" inputmode="numeric" autocomplete="off"> &nbsp;&nbsp; adjacent = <input class="ws-in" data-role="adj" inputmode="numeric" autocomplete="off"> &nbsp;&nbsp; hypotenuse = <input class="ws-in" data-role="hyp" inputmode="numeric" autocomplete="off"></div>
+<div class="ws-row"><div class="ws-lbl">Double-check with Pythagoras</div><input class="ws-in" data-role="pa" inputmode="numeric" autocomplete="off"><sup>2</sup> + <input class="ws-in" data-role="pb" inputmode="numeric" autocomplete="off"><sup>2</sup> = <input class="ws-in" data-role="pc" inputmode="numeric" autocomplete="off"><sup>2</sup></div>
+<div class="ws-row"><div class="ws-lbl">Write the three ratios</div>sin(<i>x</i>) = <input class="ws-in" data-role="sinN" inputmode="numeric" autocomplete="off"> / <input class="ws-in" data-role="sinD" inputmode="numeric" autocomplete="off"></div>
+<div class="ws-row">cos(<i>x</i>) = <input class="ws-in" data-role="cosN" inputmode="numeric" autocomplete="off"> / <input class="ws-in" data-role="cosD" inputmode="numeric" autocomplete="off"></div>
+<div class="ws-row">tan(<i>x</i>) = <input class="ws-in" data-role="tanN" inputmode="numeric" autocomplete="off"> / <input class="ws-in" data-role="tanD" inputmode="numeric" autocomplete="off"></div>
+<button class="act primary ws-check">Check my work</button>
+<div class="ws-msg"></div>
+</div>
+</section>
+
+<section class="slide" data-sec="SOH CAH TOA">
+<p class="eyebrow">SOH CAH TOA</p>
+<h2 class="t">Do it on your scratch paper, one line at a time</h2>
+<p class="lead">This is the habit. Never do it in your head. Write every one of these lines on paper, in this order, every time.</p>
+<div class="tribox"><svg class="trisvg" viewBox="0 0 500 320" xmlns="http://www.w3.org/2000/svg"><line x1="104" y1="52" x2="104" y2="268" class="tstroke t-opp"/><line x1="104" y1="268" x2="440" y2="268" class="tstroke t-adj"/><line x1="104" y1="52" x2="440" y2="268" class="tstroke t-hyp"/><text class="trilbl opp" x="52" y="164" text-anchor="middle">5</text><text class="trilbl adj" x="272" y="300" text-anchor="middle">12</text><text class="trilbl hyp" x="306" y="130" text-anchor="middle">13</text><path class="trisq" d="M104 250 L122 250 L122 268"/><path class="triarc" d="M406 268 A 34 34 0 0 0 411.4 249.6"/><text class="triang-lbl" x="384" y="258" text-anchor="end">x&deg;</text></svg></div>
+<div class="walk">
+  <div class="wln"><span class="eq">Draw the right triangle and mark the angle you are working from. Call it <span class="m"><i>x</i></span>.</span><span class="why">always start with a picture</span></div>
+  <div class="wln"><span class="eq">Label the three sides from <span class="m"><i>x</i></span>: opposite, adjacent, hypotenuse.</span></div>
+  <div class="wln"><span class="eq">Write the lengths on the sides: opposite = 5, adjacent = 12, hypotenuse = 13.</span></div>
+  <div class="wln"><span class="eq">Double-check with Pythagoras: <span class="m">5<sup>2</sup> + 12<sup>2</sup> = 25 + 144 = 169 = 13<sup>2</sup></span>. It checks.</span></div>
+  <div class="wln"><span class="eq"><span class="m">sin <i>x</i> = opposite / hypotenuse = 5/13</span></span></div>
+  <div class="wln"><span class="eq"><span class="m">cos <i>x</i> = adjacent / hypotenuse = 12/13</span></span></div>
+  <div class="wln result"><span class="eq"><span class="m">tan <i>x</i> = opposite / adjacent = 5/12</span></span></div>
+  <div class="walkfoot"><button class="act primary reveal-btn">Show the first step</button></div>
+</div>
+</section>
+
+<section class="slide" data-sec="SOH CAH TOA">
+<p class="eyebrow">SOH CAH TOA</p>
+<h2 class="t">Now run the whole routine yourself</h2>
+<p class="lead">New triangle. Do all of it on your scratch paper first &minus; name the sides, check with Pythagoras, write the three ratios &minus; then fill it in here and check. No shortcuts in your head.</p>
+<div class="tribox"><svg class="trisvg" viewBox="0 0 500 320" xmlns="http://www.w3.org/2000/svg"><line x1="104" y1="268" x2="440" y2="268" class="tri-plain"/><line x1="104" y1="52" x2="104" y2="268" class="tri-plain"/><line x1="104" y1="52" x2="440" y2="268" class="tri-plain"/><text class="trilbl plain" x="52" y="164" text-anchor="middle">8</text><text class="trilbl plain" x="272" y="300" text-anchor="middle">15</text><text class="trilbl plain" x="306" y="130" text-anchor="middle">17</text><path class="trisq" d="M104 250 L122 250 L122 268"/><path class="triarc" d="M406 268 A 34 34 0 0 0 411.4 249.6"/><text class="triang-lbl" x="384" y="258" text-anchor="end">x&deg;</text></svg></div><div class="wsheet" data-opp="8" data-adj="15" data-hyp="17">
+<div class="ws-row">opposite = <input class="ws-in" data-role="opp" inputmode="numeric" autocomplete="off"> &nbsp;&nbsp; adjacent = <input class="ws-in" data-role="adj" inputmode="numeric" autocomplete="off"> &nbsp;&nbsp; hypotenuse = <input class="ws-in" data-role="hyp" inputmode="numeric" autocomplete="off"></div>
+<div class="ws-row"><input class="ws-in" data-role="pa" inputmode="numeric" autocomplete="off"><sup>2</sup> + <input class="ws-in" data-role="pb" inputmode="numeric" autocomplete="off"><sup>2</sup> = <input class="ws-in" data-role="pc" inputmode="numeric" autocomplete="off"><sup>2</sup></div>
+<div class="ws-row">sin(<i>x</i>) = <input class="ws-in" data-role="sinN" inputmode="numeric" autocomplete="off"> / <input class="ws-in" data-role="sinD" inputmode="numeric" autocomplete="off"></div>
+<div class="ws-row">cos(<i>x</i>) = <input class="ws-in" data-role="cosN" inputmode="numeric" autocomplete="off"> / <input class="ws-in" data-role="cosD" inputmode="numeric" autocomplete="off"></div>
+<div class="ws-row">tan(<i>x</i>) = <input class="ws-in" data-role="tanN" inputmode="numeric" autocomplete="off"> / <input class="ws-in" data-role="tanD" inputmode="numeric" autocomplete="off"></div>
+<button class="act primary ws-check">Check my work</button>
+<div class="ws-msg"></div>
+</div>
+</section>
+
+<section class="slide" data-sec="SOH CAH TOA">
+<p class="eyebrow sat">Your turn</p>
+      <div class="pq sat" data-correct="B" data-hint="Cosine is adjacent over hypotenuse. Which side touches angle F, and which is across from the right angle?">
+        <div class="qlab">Read the ratio</div>
+        <div class="stem">In right triangle <span class="m"><i>DEF</i></span>, angle <span class="m"><i>E</i></span> is a right angle, <span class="m"><i>DE</i>=9</span>, <span class="m"><i>EF</i>=40</span>, and <span class="m"><i>DF</i>=41</span>. What is the value of <span class="m">cos <i>F</i></span>?</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span>9/41<span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span>40/41<span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span>9/40<span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span>40/9<span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body"><div class="work">
+          <div class="step"><span class="n">1</span><span>The hypotenuse is across from the right angle at <span class="m"><i>E</i></span>: that is <span class="m"><i>DF</i>=41</span>.</span></div>
+          <div class="step"><span class="n">2</span><span>The side adjacent to <span class="m"><i>F</i></span> (touching it, not the hypotenuse) is <span class="m"><i>EF</i>=40</span>.</span></div>
+          <div class="step"><span class="n">3</span><span><span class="m">cos <i>F</i> = adjacent / hypotenuse = 40/41</span>. <strong>Choice B.</strong></span></div>
+        </div></div></div>
+      </div>
+</section>
+
+<section class="slide" data-sec="Find another ratio">
+<p class="eyebrow">Find another ratio</p>
+<h2 class="t">If <span class="m">tan <i>Z</i> = 7/24</span>, find <span class="m">sin <i>Z</i></span></h2>
+<div class="tribox"><svg class="trisvg" viewBox="0 0 500 320" xmlns="http://www.w3.org/2000/svg"><line x1="104" y1="52" x2="104" y2="268" class="tstroke t-opp"/><line x1="104" y1="268" x2="440" y2="268" class="tstroke t-adj"/><line x1="104" y1="52" x2="440" y2="268" class="tstroke t-hyp"/><text class="trilbl opp" x="52" y="164" text-anchor="middle">7</text><text class="trilbl adj" x="272" y="300" text-anchor="middle">24</text><text class="trilbl hyp" x="306" y="130" text-anchor="middle">?</text><path class="trisq" d="M104 250 L122 250 L122 268"/><path class="triarc" d="M406 268 A 34 34 0 0 0 411.4 249.6"/><text class="triang-lbl" x="384" y="258" text-anchor="end">Z&deg;</text></svg></div>
+<div class="walk">
+  <div class="wln"><span class="eq"><span class="m">tan <i>Z</i> = opposite / adjacent = 7/24</span></span><span class="why">so opposite = 7, adjacent = 24</span></div>
+  <div class="wln"><span class="eq"><span class="m">7<sup>2</sup> + 24<sup>2</sup> = <i>c</i><sup>2</sup></span></span><span class="why">find the hypotenuse with a&sup2;+b&sup2;=c&sup2;</span></div>
+  <div class="wln"><span class="eq"><span class="m">49 + 576 = <i>c</i><sup>2</sup></span></span><span class="why">square each</span></div>
+  <div class="wln"><span class="eq"><span class="m">625 = <i>c</i><sup>2</sup></span></span><span class="why">add</span></div>
+  <div class="wln"><span class="eq"><span class="m"><i>c</i> = &radic;625 = 25</span></span><span class="why">the hypotenuse is 25</span></div>
+  <div class="wln result"><span class="eq"><span class="m">sin <i>Z</i> = opposite / hypotenuse = 7/25</span></span></div>
+  <div class="walkfoot"><button class="act primary reveal-btn">Show the first step</button></div>
+</div>
+</section>
+
+<section class="slide" data-sec="Find another ratio">
+<p class="eyebrow sat">Your turn</p>
+      <div class="pq sat" data-correct="D" data-hint="Sine gives opposite (8) and hypotenuse (17). Find the adjacent leg, then build tangent.">
+        <div class="qlab">Find another ratio</div>
+        <div class="stem">In a right triangle, one acute angle <span class="m"><i>x</i></span> has <span class="m">sin <i>x</i> = 8/17</span>. What is the value of <span class="m">tan <i>x</i></span>?</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span>15/8<span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span>8/17<span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span>15/17<span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span>8/15<span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body"><div class="work">
+          <div class="step"><span class="n">1</span><span><span class="m">sin <i>x</i> = 8/17</span>, so opposite = 8 and hypotenuse = 17.</span></div>
+          <div class="step"><span class="n">2</span><span>Missing leg: <span class="m">&radic;(17<sup>2</sup> &minus; 8<sup>2</sup>) = &radic;(289 &minus; 64) = &radic;225 = 15</span>.</span></div>
+          <div class="step"><span class="n">3</span><span><span class="m">tan <i>x</i> = opposite / adjacent = 8/15</span>. <strong>Choice D.</strong></span></div>
+        </div></div></div>
+      </div>
+</section>
+
+<section class="slide" data-sec="Complementary angles">
+<p class="eyebrow">Complementary angles</p>
+<h2 class="t">Complementary means the two angles add to 90&deg;</h2>
+<p class="lead">Two angles are <b>complementary</b> when they add to <span class="m">90&deg;</span>. In a right triangle this is guaranteed: the right angle already uses <span class="m">90&deg;</span>, and all three angles must total <span class="m">180&deg;</span>, so the two acute angles are left to split the remaining <span class="m">90&deg;</span>. Call them <span class="m"><i>x</i></span> and <span class="m"><i>y</i></span>: <span class="m"><i>x</i> + <i>y</i> = 90&deg;</span>.</p>
+<div class="tribox"><svg class="trisvg" viewBox="0 0 500 320" xmlns="http://www.w3.org/2000/svg"><line x1="104" y1="268" x2="440" y2="268" class="tri-plain"/><line x1="104" y1="52" x2="104" y2="268" class="tri-plain"/><line x1="104" y1="52" x2="440" y2="268" class="tri-plain"/><path class="trisq" d="M104 250 L122 250 L122 268"/><path class="triarc" d="M406 268 A 34 34 0 0 0 411.4 249.6"/><text class="triang-lbl" x="384" y="258" text-anchor="end">x&deg;</text></svg></div>
+</section>
+
+<section class="slide" data-sec="Complementary angles">
+<p class="eyebrow">Complementary angles</p>
+<h2 class="t">See why with a real triangle</h2>
+<div class="tribox"><svg class="trisvg" viewBox="0 0 500 320" xmlns="http://www.w3.org/2000/svg"><line x1="104" y1="52" x2="104" y2="268" class="tstroke t-opp"/><line x1="104" y1="268" x2="440" y2="268" class="tstroke t-adj"/><line x1="104" y1="52" x2="440" y2="268" class="tstroke t-hyp"/><text class="trilbl opp" x="52" y="164" text-anchor="middle">3</text><text class="trilbl adj" x="272" y="300" text-anchor="middle">4</text><text class="trilbl hyp" x="306" y="130" text-anchor="middle">5</text><path class="trisq" d="M104 250 L122 250 L122 268"/><path class="triarc" d="M406 268 A 34 34 0 0 0 411.4 249.6"/><text class="triang-lbl" x="384" y="258" text-anchor="end">x&deg;</text><path class="triarc" d="M104 86 A 34 34 0 0 0 132.6 70.4"/><text class="triang-lbl" x="118" y="104">y&deg;</text></svg></div>
+<div class="walk">
+  <div class="wln"><span class="eq">the other acute angle is <span class="m"><i>y</i></span>, at the top corner, and <span class="m"><i>x</i> + <i>y</i> = 90&deg;</span></span><span class="why">the two acute angles</span></div>
+  <div class="wln"><span class="eq">from angle <span class="m"><i>x</i></span>: opposite = 3, hypotenuse = 5, so <span class="m">sin <i>x</i> = 3/5</span></span></div>
+  <div class="wln"><span class="eq">now switch to angle <span class="m"><i>y</i></span>: the side that was opposite <span class="m"><i>x</i></span> is adjacent to <span class="m"><i>y</i></span></span><span class="why">opposite and adjacent trade places</span></div>
+  <div class="wln"><span class="eq">so from angle <span class="m"><i>y</i></span>: adjacent = 3, hypotenuse = 5, giving <span class="m">cos <i>y</i> = 3/5</span></span></div>
+  <div class="wln result"><span class="eq"><span class="m">sin <i>x</i> = cos <i>y</i> = 3/5</span></span><span class="why">the sine of one is the cosine of the other</span></div>
+  <div class="walkfoot"><button class="act primary reveal-btn">Show the first step</button></div>
+</div>
+</section>
+
+<section class="slide" data-sec="Complementary angles">
+<p class="eyebrow">Complementary angles</p>
+<h2 class="t"><span class="m">sin <i>x</i> = cos(90&deg; &minus; <i>x</i>)</span></h2>
+<p class="lead">The sine of an angle equals the cosine of its complement, and the cosine equals the sine of its complement. It lets you switch between sine and cosine with no triangle at all.</p>
+<div class="formula-card"><div class="formula">sin <i>x</i> = cos(90&deg; &minus; <i>x</i>)<br><br>cos <i>x</i> = sin(90&deg; &minus; <i>x</i>)</div></div>
+</section>
+
+<section class="slide" data-sec="Complementary angles">
+<p class="eyebrow">Complementary angles</p>
+<h2 class="t">If <span class="m"><i>x</i> + <i>y</i> = 90&deg;</span> and <span class="m">cos <i>x</i> = 7/25</span>, find <span class="m">sin <i>y</i></span></h2>
+<div class="walk">
+  <div class="wln"><span class="eq"><span class="m"><i>x</i></span> and <span class="m"><i>y</i></span> add to <span class="m">90&deg;</span>, so they are complementary</span></div>
+  <div class="wln"><span class="eq">the sine of one equals the cosine of the other: <span class="m">sin <i>y</i> = cos <i>x</i></span></span></div>
+  <div class="wln result"><span class="eq"><span class="m">sin <i>y</i> = 7/25</span></span><span class="why">copy the value straight over</span></div>
+  <div class="walkfoot"><button class="act primary reveal-btn">Show the first step</button></div>
+</div>
+</section>
+
+<section class="slide" data-sec="Complementary angles">
+<p class="eyebrow sat">Your turn</p>
+      <div class="pq sat" data-correct="C" data-hint="Cosine equals the sine of the complement. The complement of 64&deg; is 90&deg; &minus; 64&deg;.">
+        <div class="qlab">Complementary angles</div>
+        <div class="stem">Which of the following is equivalent to <span class="m">cos 64&deg;</span>?</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span>sin 64&deg;<span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span>cos 26&deg;<span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span>sin 26&deg;<span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span>tan 26&deg;<span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body"><div class="work">
+          <div class="step"><span class="n">1</span><span>Cosine of an angle equals the sine of its complement: <span class="m">cos 64&deg; = sin(90&deg; &minus; 64&deg;)</span>.</span></div>
+          <div class="step"><span class="n">2</span><span>The complement is <span class="m">90&deg; &minus; 64&deg; = 26&deg;</span>.</span></div>
+          <div class="step"><span class="n">3</span><span>So <span class="m">cos 64&deg; = sin 26&deg;</span>. <strong>Choice C.</strong></span></div>
+        </div></div></div>
+      </div>
+</section>
+
+<section class="slide" data-sec="Complementary angles">
+<p class="eyebrow">Complementary angles</p>
+<h2 class="t">True or false? Sine and cosine of complements</h2>
+<p class="lead">Complementary angles swap sine and cosine. Run these quickly before we move on.</p>
+<div class="qstrip"><div class="qs-item" data-correct="0"><div class="qs-q">cos 64&deg; = sin 26&deg;</div><div class="qs-opts"><button class="qs-opt" data-c="0">True</button><button class="qs-opt" data-c="1">False</button></div><div class="qs-fb"></div></div><div class="qs-item" data-correct="1"><div class="qs-q">cos 64&deg; = cos 26&deg;</div><div class="qs-opts"><button class="qs-opt" data-c="0">True</button><button class="qs-opt" data-c="1">False</button></div><div class="qs-fb"></div></div><div class="qs-item" data-correct="0"><div class="qs-q">sin <i>x</i> = cos(90&deg; &minus; <i>x</i>)</div><div class="qs-opts"><button class="qs-opt" data-c="0">True</button><button class="qs-opt" data-c="1">False</button></div><div class="qs-fb"></div></div><div class="qs-item" data-correct="1"><div class="qs-q">tan <i>x</i> = tan(90&deg; &minus; <i>x</i>)</div><div class="qs-opts"><button class="qs-opt" data-c="0">True</button><button class="qs-opt" data-c="1">False</button></div><div class="qs-fb"></div></div><div class="qs-item" data-correct="0"><div class="qs-q">sin 30&deg; is the same as:</div><div class="qs-opts"><button class="qs-opt" data-c="0">cos 60&deg;</button><button class="qs-opt" data-c="1">cos 30&deg;</button><button class="qs-opt" data-c="2">sin 60&deg;</button></div><div class="qs-fb"></div></div><div class="qs-item" data-correct="0"><div class="qs-q">If sin <i>x</i> = 0.6, then cos(90&deg; &minus; <i>x</i>) is:</div><div class="qs-opts"><button class="qs-opt" data-c="0">0.6</button><button class="qs-opt" data-c="1">0.4</button><button class="qs-opt" data-c="2">cannot tell</button></div><div class="qs-fb"></div></div></div>
+</section>
+
+<section class="slide" data-sec="Special triangles">
+<p class="eyebrow">Isosceles right triangle</p>
+<h2 class="t">Isosceles right triangle = 45&deg;, 45&deg;, 90&deg;</h2>
+<p class="lead"><b>Isosceles</b> means two sides are equal. If the two legs of a right triangle are equal, the two angles across from them are equal too (biggest angle faces biggest side, so equal sides give equal angles). Those two angles share the leftover <span class="m">90&deg;</span>, so each is <span class="m">45&deg;</span>. Every isosceles right triangle is a <span class="m">45&deg;-45&deg;-90&deg;</span> triangle. Careful with the wording though: an isosceles triangle does <b>not</b> have to be right. A 70&deg;-70&deg;-40&deg; triangle is isosceles too. Only when an isosceles triangle also has a right angle do you get 45-45-90.</p>
+<div class="tribox"><svg class="trisvg" viewBox="0 0 480 290" xmlns="http://www.w3.org/2000/svg"><line x1="160" y1="255" x2="370" y2="255" class="tstroke t-adj"/><line x1="160" y1="255" x2="160" y2="45" class="tstroke t-opp"/><line x1="160" y1="45" x2="370" y2="255" class="tstroke t-hyp"/><path class="trisq" d="M160 237 L178 237 L178 255"/><line x1="150" y1="150" x2="170" y2="150" stroke="#a9791f" stroke-width="3"/><line x1="265" y1="245" x2="265" y2="265" stroke="#a9791f" stroke-width="3"/><path class="triarc" d="M340 255 A 30 30 0 0 0 348.8 233.8"/><text class="triang-lbl" x="322" y="248" text-anchor="end">45&deg;</text><path class="triarc" d="M160 75 A 30 30 0 0 0 181.2 66.2"/><text class="triang-lbl" x="176" y="94">45&deg;</text><text class="trilbl opp" x="118" y="158" text-anchor="middle">leg</text><text class="trilbl adj" x="265" y="285" text-anchor="middle">leg</text><text class="trilbl hyp" x="300" y="120" text-anchor="middle">leg &times; &radic;2</text></svg></div>
+</section>
+
+<section class="slide" data-sec="Special triangles">
+<p class="eyebrow">Isosceles right triangle</p>
+<h2 class="t">Does this force a 45-45-90 triangle?</h2>
+<p class="lead">It takes both a right angle and a 45&deg; angle (or equal legs) to force a 45-45-90. One clue alone is not enough.</p>
+<div class="qstrip"><div class="qs-item" data-correct="0"><div class="qs-q">A right triangle with one 45&deg; angle is:</div><div class="qs-opts"><button class="qs-opt" data-c="0">always 45-45-90</button><button class="qs-opt" data-c="1">sometimes 45-45-90</button><button class="qs-opt" data-c="2">never 45-45-90</button></div><div class="qs-fb"></div></div><div class="qs-item" data-correct="0"><div class="qs-q">A right triangle with equal legs is:</div><div class="qs-opts"><button class="qs-opt" data-c="0">always 45-45-90</button><button class="qs-opt" data-c="1">sometimes 45-45-90</button><button class="qs-opt" data-c="2">never 45-45-90</button></div><div class="qs-fb"></div></div><div class="qs-item" data-correct="1"><div class="qs-q">A triangle with two equal sides, not known to be right, is:</div><div class="qs-opts"><button class="qs-opt" data-c="0">always 45-45-90</button><button class="qs-opt" data-c="1">sometimes 45-45-90</button><button class="qs-opt" data-c="2">never 45-45-90</button></div><div class="qs-fb"></div></div><div class="qs-item" data-correct="1"><div class="qs-q">A triangle with one 45&deg; angle, not known to be right, is:</div><div class="qs-opts"><button class="qs-opt" data-c="0">always 45-45-90</button><button class="qs-opt" data-c="1">sometimes 45-45-90</button><button class="qs-opt" data-c="2">never 45-45-90</button></div><div class="qs-fb"></div></div></div>
+</section>
+
+<section class="slide" data-sec="Special triangles">
+<p class="eyebrow">Isosceles right triangle</p>
+<h2 class="t">Why the hypotenuse is leg &times; &radic;2</h2>
+<div class="tribox"><svg class="trisvg" viewBox="0 0 480 290" xmlns="http://www.w3.org/2000/svg"><line x1="160" y1="255" x2="370" y2="255" class="tstroke t-adj"/><line x1="160" y1="255" x2="160" y2="45" class="tstroke t-opp"/><line x1="160" y1="45" x2="370" y2="255" class="tstroke t-hyp"/><path class="trisq" d="M160 237 L178 237 L178 255"/><line x1="150" y1="150" x2="170" y2="150" stroke="#a9791f" stroke-width="3"/><line x1="265" y1="245" x2="265" y2="265" stroke="#a9791f" stroke-width="3"/><path class="triarc" d="M340 255 A 30 30 0 0 0 348.8 233.8"/><text class="triang-lbl" x="322" y="248" text-anchor="end">45&deg;</text><path class="triarc" d="M160 75 A 30 30 0 0 0 181.2 66.2"/><text class="triang-lbl" x="176" y="94">45&deg;</text><text class="trilbl opp" x="118" y="158" text-anchor="middle">s</text><text class="trilbl adj" x="265" y="285" text-anchor="middle">s</text><text class="trilbl hyp" x="300" y="120" text-anchor="middle">?</text></svg></div>
+<div class="walk">
+  <div class="wln"><span class="eq">both legs have the same length <span class="m"><i>s</i></span></span><span class="why">that is what isosceles gives us</span></div>
+  <div class="wln"><span class="eq">Pythagoras: <span class="m"><i>s</i><sup>2</sup> + <i>s</i><sup>2</sup> = <i>c</i><sup>2</sup></span></span><span class="why">add the squares of the legs</span></div>
+  <div class="wln"><span class="eq"><span class="m">2<i>s</i><sup>2</sup> = <i>c</i><sup>2</sup></span></span><span class="why">combine the two equal terms</span></div>
+  <div class="wln result"><span class="eq"><span class="m"><i>c</i> = &radic;(2<i>s</i><sup>2</sup>) = <i>s</i>&radic;2</span></span><span class="why">take the square root</span></div>
+  <div class="walkfoot"><button class="act primary reveal-btn">Show the first step</button></div>
+</div>
+</section>
+
+<section class="slide" data-sec="Special triangles">
+<p class="eyebrow">Isosceles right triangle</p>
+<h2 class="t">An isosceles right triangle has legs of length 9. Find its perimeter.</h2>
+<div class="tribox"><svg class="trisvg" viewBox="0 0 480 290" xmlns="http://www.w3.org/2000/svg"><line x1="160" y1="255" x2="370" y2="255" class="tstroke t-adj"/><line x1="160" y1="255" x2="160" y2="45" class="tstroke t-opp"/><line x1="160" y1="45" x2="370" y2="255" class="tstroke t-hyp"/><path class="trisq" d="M160 237 L178 237 L178 255"/><line x1="150" y1="150" x2="170" y2="150" stroke="#a9791f" stroke-width="3"/><line x1="265" y1="245" x2="265" y2="265" stroke="#a9791f" stroke-width="3"/><path class="triarc" d="M340 255 A 30 30 0 0 0 348.8 233.8"/><text class="triang-lbl" x="322" y="248" text-anchor="end">45&deg;</text><path class="triarc" d="M160 75 A 30 30 0 0 0 181.2 66.2"/><text class="triang-lbl" x="176" y="94">45&deg;</text><text class="trilbl opp" x="118" y="158" text-anchor="middle">9</text><text class="trilbl adj" x="265" y="285" text-anchor="middle">9</text><text class="trilbl hyp" x="300" y="120" text-anchor="middle">9&radic;2</text></svg></div>
+<div class="walk">
+  <div class="wln"><span class="eq">the two legs are equal: <span class="m">9</span> and <span class="m">9</span></span></div>
+  <div class="wln"><span class="eq">hypotenuse = leg &times; &radic;2 = <span class="m">9&radic;2</span></span><span class="why">the 45-45-90 rule</span></div>
+  <div class="wln"><span class="eq">perimeter = <span class="m">9 + 9 + 9&radic;2</span></span><span class="why">add all three sides</span></div>
+  <div class="wln result"><span class="eq">perimeter = <span class="m">18 + 9&radic;2</span></span></div>
+  <div class="walkfoot"><button class="act primary reveal-btn">Show the first step</button></div>
+</div>
+</section>
+
+<section class="slide" data-sec="Special triangles">
+<p class="eyebrow sat">Your turn</p>
+      <div class="pq sat" data-correct="B" data-hint="One 45&deg; angle in a right triangle forces the other to be 45&deg; too, so the legs are equal.">
+        <div class="qlab">Isosceles right triangle</div>
+        <div class="stem"><div class="tribox"><svg class="trisvg" viewBox="0 0 500 320" xmlns="http://www.w3.org/2000/svg"><line x1="104" y1="268" x2="440" y2="268" class="tri-plain"/><line x1="104" y1="52" x2="104" y2="268" class="tri-plain"/><line x1="104" y1="52" x2="440" y2="268" class="tri-plain"/><text class="trilbl plain" x="52" y="164" text-anchor="middle">14</text><text class="trilbl plain" x="306" y="130" text-anchor="middle">?</text><path class="trisq" d="M104 250 L122 250 L122 268"/><path class="triarc" d="M406 268 A 34 34 0 0 0 411.4 249.6"/><text class="triang-lbl" x="384" y="258" text-anchor="end">45&deg;</text></svg></div>In right triangle <span class="m"><i>ABC</i></span>, angle <span class="m"><i>B</i></span> is a right angle and <span class="m">&ang;<i>C</i> = 45&deg;</span>. If <span class="m"><i>AB</i> = 14</span> cm, what is the perimeter of the triangle?</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span>14 + 14&radic;2<span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span>28 + 14&radic;2<span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span>42<span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span>14(3 + &radic;2)<span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body"><div class="work">
+          <div class="step"><span class="n">1</span><span>One acute angle is <span class="m">45&deg;</span>, so both are, and the legs are equal: <span class="m"><i>BC</i> = 14</span>.</span></div>
+          <div class="step"><span class="n">2</span><span>Hypotenuse: <span class="m">14&radic;2</span>.</span></div>
+          <div class="step"><span class="n">3</span><span>Perimeter: <span class="m">14 + 14 + 14&radic;2 = 28 + 14&radic;2</span>. <strong>Choice B.</strong></span></div>
+        </div></div></div>
+      </div>
+</section>
+
+<section class="slide" data-sec="Special triangles">
+<p class="eyebrow sat">Your turn</p>
+      <div class="pq sat" data-correct="A" data-hint="Run the rule backward: if hypotenuse = leg &times; &radic;2, then leg = hypotenuse &divide; &radic;2.">
+        <div class="qlab">Isosceles right triangle</div>
+        <div class="stem"><div class="tribox"><svg class="trisvg" viewBox="0 0 480 290" xmlns="http://www.w3.org/2000/svg"><line x1="160" y1="255" x2="370" y2="255" class="tstroke t-adj"/><line x1="160" y1="255" x2="160" y2="45" class="tstroke t-opp"/><line x1="160" y1="45" x2="370" y2="255" class="tstroke t-hyp"/><path class="trisq" d="M160 237 L178 237 L178 255"/><line x1="150" y1="150" x2="170" y2="150" stroke="#a9791f" stroke-width="3"/><line x1="265" y1="245" x2="265" y2="265" stroke="#a9791f" stroke-width="3"/><path class="triarc" d="M340 255 A 30 30 0 0 0 348.8 233.8"/><text class="triang-lbl" x="322" y="248" text-anchor="end">45&deg;</text><path class="triarc" d="M160 75 A 30 30 0 0 0 181.2 66.2"/><text class="triang-lbl" x="176" y="94">45&deg;</text><text class="trilbl opp" x="118" y="158" text-anchor="middle">?</text><text class="trilbl adj" x="265" y="285" text-anchor="middle">?</text><text class="trilbl hyp" x="300" y="120" text-anchor="middle">10&radic;2</text></svg></div>A <span class="m">45&deg;-45&deg;-90&deg;</span> triangle has a hypotenuse of <span class="m">10&radic;2</span>. What is the length of each leg?</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span>10<span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span>5&radic;2<span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span>20<span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span>10&radic;2<span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body"><div class="work">
+          <div class="step"><span class="n">1</span><span>The rule is hypotenuse = leg &times; &radic;2.</span></div>
+          <div class="step"><span class="n">2</span><span>So leg = <span class="m">(10&radic;2) &divide; &radic;2 = 10</span>.</span></div>
+          <div class="step"><span class="n">3</span><span>Each leg is <span class="m">10</span>. <strong>Choice A.</strong></span></div>
+        </div></div></div>
+      </div>
+</section>
+
+<section class="slide" data-sec="Special triangles">
+<p class="eyebrow sat">Your turn &middot; hard</p>
+      <div class="pq sat" data-correct="B" data-hint="AB = 4 and hypotenuse AC = 4&radic;2 fits leg &times; &radic;2, so this is a 45-45-90 triangle. Find the third side first.">
+        <div class="qlab">Isosceles right triangle</div>
+        <div class="stem">In triangle <span class="m"><i>ABC</i></span>, angle <span class="m"><i>B</i></span> is a right angle, <span class="m"><i>AB</i> = 4</span>, and <span class="m"><i>AC</i> = 4&radic;2</span>. If the perimeter can be written as <span class="m">4(2 + <i>a</i>)</span>, what is the value of <span class="m"><i>a</i></span>?</div>
+        <div class="ask">Select an answer, then check it or open the steps.</div>
+        <div class="pq-opts">
+          <button class="pq-opt" data-c="A"><span class="badge">A</span>2<span class="tick"></span></button>
+          <button class="pq-opt" data-c="B"><span class="badge">B</span>&radic;2<span class="tick"></span></button>
+          <button class="pq-opt" data-c="C"><span class="badge">C</span>2&radic;2<span class="tick"></span></button>
+          <button class="pq-opt" data-c="D"><span class="badge">D</span>4<span class="tick"></span></button>
+        </div>
+        <div class="pq-actions">
+          <button class="act" data-act="hint">Give a hint</button>
+          <button class="act primary" data-act="check">Check answer</button>
+          <button class="act" data-act="steps">Step-by-step solution</button>
+          <button class="act" data-act="reset" hidden>Reset</button>
+        </div>
+        <div class="verdict"></div>
+        <div class="panel hint"><div class="head">Hint</div><div class="body"></div></div>
+        <div class="panel steps"><div class="head">Step-by-step solution</div><div class="body"><div class="work">
+          <div class="step"><span class="n">1</span><span>Hypotenuse = leg &times; &radic;2, and <span class="m">4&radic;2 = 4 &times; &radic;2</span>, so the legs are equal: <span class="m"><i>BC</i> = 4</span>.</span></div>
+          <div class="step"><span class="n">2</span><span>Perimeter = <span class="m">4 + 4 + 4&radic;2 = 8 + 4&radic;2</span>.</span></div>
+          <div class="step"><span class="n">3</span><span>Factor out 4: <span class="m">4(2 + &radic;2)</span>, so <span class="m"><i>a</i> = &radic;2</span>. <strong>Choice B.</strong></span></div>
+        </div></div></div>
+      </div>
+</section>
+
+<section class="slide" data-sec="Review">
+<p class="eyebrow game">Rapid review</p>
+<h2 class="t">Quick drill on the trig moves</h2>
+<p class="lead">Eight fast rounds on ratios, labeling, and special triangles. Beat your time on a second run.</p>
+<div class="drill" id="reviewDrill"></div>
+</section>
+
+
+
+
+
+  </div>
+</div>
+
+<div class="bar">
+  <button class="navbtn" id="prev" disabled>Back</button>
+  <div class="counter"><b id="cur">1</b> / <span id="total">1</span><span class="sec" id="sec">Overview</span></div>
+  <button class="navbtn" id="next">Next</button>
+</div>
+<div class="hintbar">Arrow keys to move &middot; <span class="star">&#10038;</span> Illuminairy</div>
+
+<script>
+(function(){
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var idx=0;
+  var prev=document.getElementById('prev'), next=document.getElementById('next');
+  var cur=document.getElementById('cur'), sec=document.getElementById('sec'), progress=document.getElementById('progress');
+  document.getElementById('total').textContent=slides.length;
+  function show(n){
+    idx=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach(function(s,i){s.classList.toggle('active',i===idx);});
+    cur.textContent=idx+1;
+    sec.textContent=slides[idx].getAttribute('data-sec')||'';
+    prev.disabled=idx===0; next.disabled=idx===slides.length-1;
+    progress.style.width=((idx)/(slides.length-1)*100)+'%';
+    slides[idx].scrollTop=0;
+  }
+  prev.addEventListener('click',function(){show(idx-1);});
+  next.addEventListener('click',function(){show(idx+1);});
+  document.addEventListener('keydown',function(e){
+    var tag=(e.target.tagName||'').toLowerCase();
+    if(tag==='button')return;
+    if(e.key==='ArrowRight'||e.key==='PageDown'){show(idx+1);}
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){show(idx-1);}
+  });
+
+  document.querySelectorAll('.pq').forEach(function(pq){
+    var correct=pq.getAttribute('data-correct');
+    var opts=Array.prototype.slice.call(pq.querySelectorAll('.pq-opt'));
+    var hintBtn=pq.querySelector('[data-act="hint"]');
+    var checkBtn=pq.querySelector('[data-act="check"]');
+    var stepsBtn=pq.querySelector('[data-act="steps"]');
+    var resetBtn=pq.querySelector('[data-act="reset"]');
+    var hintPanel=pq.querySelector('.panel.hint');
+    var stepsPanel=pq.querySelector('.panel.steps');
+    var verdict=pq.querySelector('.verdict');
+    var selected=null, locked=false;
+    hintPanel.querySelector('.body').innerHTML='<p style="margin:0 0 8px;">'+(pq.getAttribute('data-hint')||'')+'</p>';
+    opts.forEach(function(opt){
+      opt.addEventListener('click',function(){
+        if(locked)return;
+        opts.forEach(function(o){o.classList.remove('sel');});
+        opt.classList.add('sel');
+        selected=opt.getAttribute('data-c');
+      });
+    });
+    hintBtn.addEventListener('click',function(){hintBtn.classList.toggle('on',hintPanel.classList.toggle('show'));});
+    stepsBtn.addEventListener('click',function(){stepsBtn.classList.toggle('on',stepsPanel.classList.toggle('show'));});
+    checkBtn.addEventListener('click',function(){
+      if(!selected){verdict.className='verdict show wrong';verdict.textContent='Pick an answer first.';return;}
+      locked=true;
+      var right=selected===correct;
+      opts.forEach(function(o){
+        o.disabled=true;o.classList.remove('sel');
+        var c=o.getAttribute('data-c');
+        if(c===correct){o.classList.add('correct');o.querySelector('.tick').textContent='Correct';}
+        else if(c===selected){o.classList.add('incorrect');o.querySelector('.tick').textContent='Your pick';}
+      });
+      verdict.className='verdict show '+(right?'right':'wrong');
+      verdict.textContent=right?'\u2736 Correct':'Not quite \u2736 the answer is '+correct;
+      resetBtn.hidden=false;
+    });
+    resetBtn.addEventListener('click',function(){
+      locked=false;selected=null;
+      opts.forEach(function(o){o.disabled=false;o.classList.remove('correct','incorrect','sel');o.querySelector('.tick').textContent='';});
+      verdict.className='verdict';verdict.textContent='';resetBtn.hidden=true;
+    });
+  });
+
+  function shuffle(arr){var a=arr.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+  function makeSprint(el, bank, startLabel){
+    var deck=[], i=0, score=0, streak=0, best=0, t0=0, timerId=null;
+    function fmt(s){return s+'s';}
+    function startScreen(){
+      el.innerHTML='<div class="drill-q">'+startLabel+'</div><div class="drill-foot"><button class="act primary" data-role="start">Start the clock</button></div>';
+      el.querySelector('[data-role="start"]').addEventListener('click',function(){
+        deck=shuffle(bank); i=0;score=0;streak=0;best=0;t0=Date.now();
+        timerId=setInterval(function(){var c=el.querySelector('[data-role="clock"]');if(c)c.textContent=fmt(Math.floor((Date.now()-t0)/1000));},500);
+        render();
+      });
+    }
+    function render(){
+      if(i>=deck.length){
+        clearInterval(timerId);
+        var secs=Math.floor((Date.now()-t0)/1000);
+        el.innerHTML='<div class="drill-final">Score: '+score+' / '+deck.length+'</div>'+
+          '<div class="drill-stats"><span class="drill-score">Best streak '+best+'</span><span class="drill-score">Time '+fmt(secs)+'</span></div>'+
+          '<div class="drill-foot"><button class="act primary" data-role="replay">Play again and beat that time</button></div>';
+        el.querySelector('[data-role="replay"]').addEventListener('click',startScreen);
+        return;
+      }
+      var d=deck[i];
+      var html='<div class="drill-head"><span class="t"><span class="m">Round '+(i+1)+' of '+deck.length+'</span></span>'+
+        '<span class="drill-stats"><span class="drill-score">Score '+score+'</span><span class="drill-score">Streak '+streak+'</span><span class="drill-score" data-role="clock">'+fmt(Math.floor((Date.now()-t0)/1000))+'</span></span></div>';
+      html+='<div class="drill-q">'+d.q+'</div><div class="drill-opts">';
+      d.opts.forEach(function(o,k){html+='<button class="drill-opt" data-k="'+k+'">'+o+'</button>';});
+      html+='</div><div class="drill-foot"></div>';
+      el.innerHTML=html;
+      var foot=el.querySelector('.drill-foot');
+      var answered=false;
+      el.querySelectorAll('.drill-opt').forEach(function(btn){
+        btn.addEventListener('click',function(){
+          if(answered)return; answered=true;
+          var k=parseInt(btn.getAttribute('data-k'),10);
+          el.querySelectorAll('.drill-opt').forEach(function(b){b.disabled=true;});
+          if(k===d.a){btn.classList.add('correct');score++;streak++;if(streak>best)best=streak;}
+          else{btn.classList.add('incorrect');el.querySelectorAll('.drill-opt')[d.a].classList.add('correct');streak=0;}
+          el.querySelector('.drill-score').textContent='Score '+score;
+          var nb=document.createElement('button');
+          nb.className='act primary';nb.textContent=(i===deck.length-1)?'See results':'Next';
+          nb.addEventListener('click',function(){i++;render();});
+          foot.appendChild(nb);
+        });
+      });
+    }
+    startScreen();
+  }
+
+  var reviewBank=[
+    {q:'sin = ?', opts:['adjacent / hypotenuse','opposite / hypotenuse','opposite / adjacent'], a:1},
+    {q:'cos = ?', opts:['adjacent / hypotenuse','opposite / hypotenuse','opposite / adjacent'], a:0},
+    {q:'tan = ?', opts:['opposite / hypotenuse','adjacent / opposite','opposite / adjacent'], a:2},
+    {q:'The hypotenuse is across from the &hellip;', opts:['smallest angle','right angle','60&deg; angle'], a:1},
+    {q:'Legs 6 and 8: hypotenuse = ?', opts:['10','12','14'], a:0},
+    {q:'45-45-90 with leg 5: hypotenuse = ?', opts:['5&radic;3','10','5&radic;2'], a:2},
+    {q:'cos 70&deg; equals &hellip;', opts:['sin 20&deg;','sin 70&deg;','cos 20&deg;'], a:0},
+    {q:'30-60-90, short leg 4: hypotenuse = ?', opts:['4&radic;3','8','4&radic;2'], a:1}
+  ];
+  makeSprint(document.getElementById('reviewDrill'), reviewBank, 'Eight quick rounds on the trig moves.');
+
+  show(0);
+})();
+</script>
+<script>
+
+(function(){
+  // progressive reveal
+  document.querySelectorAll('.walk').forEach(function(w){
+    var steps=Array.prototype.slice.call(w.querySelectorAll('.wln'));
+    var btn=w.querySelector('.reveal-btn'); if(!btn||!steps.length)return; var i=0;
+    btn.addEventListener('click',function(){
+      if(i<steps.length){steps[i].classList.add('show');i++;}
+      if(i>=steps.length){btn.textContent='All steps shown';btn.disabled=true;}
+      else{btn.textContent='Show the next step';}
+    });
+  });
+  // triangle labeler
+  document.querySelectorAll('.trilab').forEach(function(w){
+    var seq; try{seq=JSON.parse(w.getAttribute('data-seq'));}catch(e){return;}
+    var i=0, task=w.querySelector('.tl-task'), msg=w.querySelector('.tl-msg');
+    function setTask(){ if(i<seq.length){task.innerHTML='Click <b>'+seq[i][1]+'</b>';} else {task.textContent='All three labeled.';} }
+    setTask();
+    w.querySelectorAll('.tside').forEach(function(s){
+      s.addEventListener('click',function(){
+        if(i>=seq.length)return;
+        if(s.getAttribute('data-side')===seq[i][0]){
+          s.classList.add('ok');
+          var lbl=w.querySelector('.tlab-'+seq[i][0]); if(lbl)lbl.classList.add('show');
+          i++; msg.className='tl-msg ok'; msg.textContent='Correct'; setTask();
+          if(i>=seq.length){msg.textContent='Nice. All three labeled.';}
+        } else {
+          s.classList.add('bad'); msg.className='tl-msg bad'; msg.textContent='Not that one. Try again.';
+          setTimeout(function(){s.classList.remove('bad');},450);
+        }
+      });
+    });
+  });
+  // ratio fill-in
+  var SHORT={opposite:'opposite',adjacent:'adjacent',hypotenuse:'hypotenuse'};
+  document.querySelectorAll('.ratiofill').forEach(function(w){
+    var num=w.getAttribute('data-num'), den=w.getAttribute('data-den');
+    var picks={num:null,den:null}, active='num';
+    var slots=Array.prototype.slice.call(w.querySelectorAll('.rf-slot'));
+    var msg=w.querySelector('.rf-msg');
+    function refresh(){ slots.forEach(function(s){ s.classList.toggle('active', s.getAttribute('data-slot')===active && !s.classList.contains('ok')); }); }
+    slots.forEach(function(s){ s.addEventListener('click',function(){ active=s.getAttribute('data-slot'); refresh(); }); });
+    refresh();
+    w.querySelectorAll('.rf-opt').forEach(function(o){
+      o.addEventListener('click',function(){
+        var v=o.getAttribute('data-val');
+        picks[active]=v;
+        var slot=w.querySelector('.rf-slot[data-slot="'+active+'"]');
+        slot.textContent=SHORT[v];
+        if(active==='num' && !picks.den){active='den';}
+        refresh(); check();
+      });
+    });
+    function check(){
+      if(!picks.num||!picks.den)return;
+      if(picks.num===num&&picks.den===den){
+        msg.className='rf-msg ok'; msg.textContent='Correct';
+        slots.forEach(function(s){s.classList.add('ok');s.classList.remove('active');});
+      } else {
+        msg.className='rf-msg bad'; msg.textContent='Not quite. Tap a box and pick again.';
+      }
+    }
+  });
+  // scratch-paper worksheet
+  document.querySelectorAll('.wsheet').forEach(function(w){
+    var opp=+w.getAttribute('data-opp'), adj=+w.getAttribute('data-adj'), hyp=+w.getAttribute('data-hyp');
+    var msg=w.querySelector('.ws-msg');
+    function el(r){return w.querySelector('.ws-in[data-role="'+r+'"]');}
+    function v(r){return el(r).value.trim();}
+    function frac(s){ if(s.indexOf('/')>-1){var p=s.split('/'); if(p.length!==2||p[0]===''||p[1]==='')return NaN; return (+p[0])/(+p[1]);} return +s; }
+    function mark(r,ok){ var e=el(r); e.classList.toggle('ok',ok); e.classList.toggle('bad',!ok); }
+    w.querySelector('.ws-check').addEventListener('click',function(){
+      var roles=['opp','adj','hyp','pa','pb','pc','sinN','sinD','cosN','cosD','tanN','tanD'];
+      var empty=false; roles.forEach(function(r){ if(v(r)==='')empty=true; });
+      if(empty){ msg.className='ws-msg bad'; msg.textContent='Fill in every box first.'; return; }
+      var ok=true;
+      var a=(+v('opp')===opp); mark('opp',a); ok=ok&&a;
+      var b=(+v('adj')===adj); mark('adj',b); ok=ok&&b;
+      var c=(+v('hyp')===hyp); mark('hyp',c); ok=ok&&c;
+      var legs=[opp,adj].sort(function(x,y){return x-y;}).join(',');
+      var got=[+v('pa'),+v('pb')].sort(function(x,y){return x-y;}).join(',');
+      var pok=(got===legs); mark('pa',pok); mark('pb',pok);
+      var pcok=(+v('pc')===hyp); mark('pc',pcok);
+      ok=ok&&pok&&pcok;
+      function pair(nR,dR,target){ var val=frac(v(nR))/frac(v(dR)); var good=isFinite(val)&&Math.abs(val-target)<1e-6; mark(nR,good); mark(dR,good); return good; }
+      var r1=pair('sinN','sinD',opp/hyp); var r2=pair('cosN','cosD',adj/hyp); var r3=pair('tanN','tanD',opp/adj);
+      ok=ok&&r1&&r2&&r3;
+      if(ok){ msg.className='ws-msg ok'; msg.textContent='All correct. That is the whole routine, start to finish.'; }
+      else { msg.className='ws-msg bad'; msg.textContent='Close. The red boxes need another look.'; }
+    });
+  });
+  // interactive triangle builder
+  var TBCO=['#2c5f4f','#a9791f','#b35442'];
+  document.querySelectorAll('.tribuild').forEach(function(w){
+    var svg=w.querySelector('svg');
+    var L=[130,310],R=[430,310];
+    var apex=w.querySelector('.tb-handle'), hint=w.querySelector('.tb-hint');
+    function q(c){return w.querySelector(c);}
+    var lineP=q('[data-op="P"]'),lineL=q('[data-op="L"]'),lineR=q('[data-op="R"]');
+    var angP=q('.tb-ang.P'),angL=q('.tb-ang.L'),angR=q('.tb-ang.R');
+    var lenP=q('.tb-len.P'),lenL=q('.tb-len.L'),lenR=q('.tb-len.R');
+    function dist(a,b){return Math.hypot(a[0]-b[0],a[1]-b[1]);}
+    function seg(el,a,b){el.setAttribute('x1',a[0]);el.setAttribute('y1',a[1]);el.setAttribute('x2',b[0]);el.setAttribute('y2',b[1]);}
+    function ang(opp,a,b){var v=(a*a+b*b-opp*opp)/(2*a*b);v=Math.max(-1,Math.min(1,v));return Math.acos(v)*180/Math.PI;}
+    function update(px,py){
+      var P=[px,py];
+      seg(lineP,L,R);seg(lineL,R,P);seg(lineR,L,P);
+      apex.setAttribute('cx',px);apex.setAttribute('cy',py);
+      var sP=dist(L,R),sL=dist(R,P),sR=dist(L,P);
+      var aP=ang(sP,sR,sL),aL=ang(sL,sR,sP),aR=ang(sR,sL,sP);
+      var rk=[['P',sP],['L',sL],['R',sR]].sort(function(a,b){return a[1]-b[1];});
+      var c={};rk.forEach(function(it,i){c[it[0]]=TBCO[i];});
+      lineP.setAttribute('stroke',c.P);lineL.setAttribute('stroke',c.L);lineR.setAttribute('stroke',c.R);
+      angP.setAttribute('fill',c.P);angL.setAttribute('fill',c.L);angR.setAttribute('fill',c.R);
+      lenP.setAttribute('fill',c.P);lenL.setAttribute('fill',c.L);lenR.setAttribute('fill',c.R);
+      angP.textContent=Math.round(aP)+'\u00B0';angL.textContent=Math.round(aL)+'\u00B0';angR.textContent=Math.round(aR)+'\u00B0';
+      angP.setAttribute('x',px);angP.setAttribute('y',py-16);
+      angL.setAttribute('x',L[0]+26);angL.setAttribute('y',L[1]-12);
+      angR.setAttribute('x',R[0]-26);angR.setAttribute('y',R[1]-12);
+      lenP.textContent=(sP/28).toFixed(1);lenL.textContent=(sL/28).toFixed(1);lenR.textContent=(sR/28).toFixed(1);
+      lenP.setAttribute('x',(L[0]+R[0])/2);lenP.setAttribute('y',R[1]+28);
+      lenL.setAttribute('x',(R[0]+px)/2+18);lenL.setAttribute('y',(R[1]+py)/2);
+      lenR.setAttribute('x',(L[0]+px)/2-18);lenR.setAttribute('y',(L[1]+py)/2);
+    }
+    function pt(e){var r=svg.getBoundingClientRect(),vb=svg.viewBox.baseVal;return [(e.clientX-r.left)/r.width*vb.width,(e.clientY-r.top)/r.height*vb.height];}
+    function clamp(p){return [Math.max(40,Math.min(520,p[0])),Math.max(28,Math.min(268,p[1]))];}
+    var drag=false;
+    apex.addEventListener('pointerdown',function(e){drag=true;if(hint)hint.style.display='none';try{apex.setPointerCapture(e.pointerId);}catch(_){}e.preventDefault();});
+    svg.addEventListener('pointermove',function(e){if(!drag)return;var p=clamp(pt(e));update(p[0],p[1]);});
+    window.addEventListener('pointerup',function(){drag=false;});
+    update(280,92);
+  });
+  // quick recognition strips
+  document.querySelectorAll('.qs-item').forEach(function(it){
+    var ci=+it.getAttribute('data-correct'); var fb=it.querySelector('.qs-fb');
+    it.querySelectorAll('.qs-opt').forEach(function(o){
+      o.addEventListener('click',function(){
+        if(o.classList.contains('ok'))return;
+        if(+o.getAttribute('data-c')===ci){o.classList.add('ok');fb.className='qs-fb ok';fb.textContent='Correct';}
+        else{o.classList.add('bad');fb.className='qs-fb bad';fb.textContent='Not quite. Try again.';}
+      });
+    });
+  });
+})();
+
+</script>
+</body>
+</html>

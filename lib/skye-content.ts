@@ -15,6 +15,10 @@ export const SKYE_FILE_MAP = {
   "quadratics-lesson": {
     filename: "quadratics-lesson.html",
     contentType: "text/html; charset=utf-8"
+  },
+  "triangles-lesson-1": {
+    filename: "triangles-lesson-1.html",
+    contentType: "text/html; charset=utf-8"
   }
 } as const;
 

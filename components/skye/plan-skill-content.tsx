@@ -112,6 +112,11 @@ export function SkyePlanSkillContent() {
                     <Link href="/skye/week-2/lesson-1">Open Session 1 lesson →</Link>
                   </p>
                 ) : null}
+                {week.week === 4 ? (
+                  <p className="skye-plan__topic-lesson-link">
+                    <Link href="/skye/week-4/lesson-1">Session 1 · right triangles →</Link>
+                  </p>
+                ) : null}
               </li>
             );
           })}
