@@ -47,6 +47,7 @@ const nextConfig = {
     "/danielle/files/[slug]": ["./content/danielle/**/*"],
     "/soha/files/[slug]": ["./content/soha/**/*"],
     "/skye/files/[slug]": ["./content/skye/**/*"],
+    "/shermeen/files/[slug]": ["./content/shermeen/**/*"],
     "/quiz-b": [
       "./app/quiz-b/quiz-b-bundle.css",
       "./app/quiz-b/quiz-b-lab.css",

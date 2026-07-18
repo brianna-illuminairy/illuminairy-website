@@ -47,6 +47,11 @@ const NAV = [
     href: "/danielle/week-5",
     label: "Week 5",
     match: (path: string) => path.startsWith("/danielle/week-5")
+  },
+  {
+    href: "/danielle/sat-algebra",
+    label: "SAT Algebra",
+    match: (path: string) => path.startsWith("/danielle/sat-algebra")
   }
 ] as const;
 

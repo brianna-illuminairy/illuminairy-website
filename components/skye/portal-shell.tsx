@@ -22,6 +22,11 @@ const NAV = [
     label: "Improvement Plan",
     match: (path: string) => path.startsWith("/skye/plan"),
   },
+  {
+    href: "/skye/sat-algebra",
+    label: "SAT Algebra",
+    match: (path: string) => path.startsWith("/skye/sat-algebra"),
+  },
 ] as const;
 
 function HomeworkPortalCta() {

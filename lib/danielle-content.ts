@@ -63,6 +63,10 @@ export const DANIELLE_FILE_MAP = {
   "triangles-lesson-1-slides": {
     filename: "triangles-lesson-1-slides.html",
     contentType: "text/html; charset=utf-8"
+  },
+  "algebra-lesson-1-linear-equations": {
+    filename: "algebra-lesson-1-linear-equations.html",
+    contentType: "text/html; charset=utf-8"
   }
 } as const;
 

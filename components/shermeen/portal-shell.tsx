@@ -27,6 +27,11 @@ const NAV = [
     label: "Week 1",
     match: (path: string) => path.startsWith("/shermeen/week-1"),
   },
+  {
+    href: "/shermeen/sat-algebra",
+    label: "SAT Algebra",
+    match: (path: string) => path.startsWith("/shermeen/sat-algebra"),
+  },
 ] as const;
 
 function HomeworkPortalCta() {

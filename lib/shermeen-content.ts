@@ -15,6 +15,10 @@ export const SHERMEEN_FILE_MAP = {
   "transitions-lesson": {
     filename: "transitions-lesson-slides.html",
     contentType: "text/html; charset=utf-8"
+  },
+  "algebra-lesson-1-linear-equations": {
+    filename: "algebra-lesson-1-linear-equations.html",
+    contentType: "text/html; charset=utf-8"
   }
 } as const;
 

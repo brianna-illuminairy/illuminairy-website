@@ -16,6 +16,10 @@ export const SKYE_FILE_MAP = {
     filename: "quadratics-lesson.html",
     contentType: "text/html; charset=utf-8"
   },
+  "algebra-lesson-1-linear-equations": {
+    filename: "algebra-lesson-1-linear-equations.html",
+    contentType: "text/html; charset=utf-8"
+  },
   "triangles-lesson-1": {
     filename: "triangles-lesson-1.html",
     contentType: "text/html; charset=utf-8"
