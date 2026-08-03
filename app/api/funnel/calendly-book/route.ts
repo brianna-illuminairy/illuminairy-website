@@ -21,6 +21,11 @@ import {
   type AttributionSnapshot
 } from "@/lib/attribution";
 import { getVisitorById } from "@/lib/crm/visitors";
+import {
+  acceptPhoneVerifyQaBypass,
+  isFreshPhoneVerifiedAt,
+  isPlanAPhoneVerifyRequired,
+} from "@/lib/quiz-funnel/phone-verify-gate";
 
 type CalendlyBookBody = {
   startTime?: string;
@@ -33,6 +38,8 @@ type CalendlyBookBody = {
   qWho?: string;
   sat_lp_variant?: string;
   lp_variant?: string;
+  phoneVerifiedAt?: string;
+  qaPhoneBypass?: boolean;
 };
 
 function readQWhoFromVisitor(visitor: Record<string, unknown> | null): string | undefined {
@@ -253,6 +260,49 @@ export async function POST(request: Request) {
       field: "parentPhone",
       message: BOOKING_FEEDBACK.phoneInvalid,
     });
+  }
+
+  if (isPlanAPhoneVerifyRequired() && !acceptPhoneVerifyQaBypass(body)) {
+    let verifiedAt =
+      typeof body.phoneVerifiedAt === "string" ? body.phoneVerifiedAt : undefined;
+    const email = parentEmail.toLowerCase();
+    const supabaseForVerify = getSupabaseAdmin();
+    if (supabaseForVerify && email) {
+      const { data: leadForVerify } = await supabaseForVerify
+        .from("leads")
+        .select("phone_verified_at")
+        .eq("parent_email", email)
+        .maybeSingle();
+      const dbStamp =
+        typeof leadForVerify?.phone_verified_at === "string"
+          ? leadForVerify.phone_verified_at
+          : undefined;
+      if (dbStamp && (!verifiedAt || Date.parse(dbStamp) > Date.parse(verifiedAt))) {
+        verifiedAt = dbStamp;
+      }
+    }
+    if (!isFreshPhoneVerifiedAt(verifiedAt)) {
+      await recordBookingError({
+        errorCode: "phone_verify_required",
+        errorMessage: BOOKING_FEEDBACK.phoneVerifyRequired,
+        httpStatus: 400,
+        parentEmail,
+        visitorId,
+        startTime,
+        attribution,
+        qWho,
+        field: "parentPhone",
+        retryable: false,
+        payload: {
+          sat_lp_variant: body.sat_lp_variant,
+          lp_variant: body.lp_variant
+        },
+      });
+      return funnelApiError(400, "phone_verify_required", {
+        field: "parentPhone",
+        message: BOOKING_FEEDBACK.phoneVerifyRequired,
+      });
+    }
   }
 
   try {

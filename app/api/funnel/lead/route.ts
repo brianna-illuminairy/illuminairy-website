@@ -17,6 +17,11 @@ import {
 } from "@/lib/calendly/booking-errors";
 import { BOOKING_FEEDBACK } from "@/lib/quiz-funnel/booking-feedback";
 import { appendTouchEvent } from "@/lib/crm/touch";
+import {
+  acceptPhoneVerifyQaBypass,
+  isFreshPhoneVerifiedAt,
+  isPlanAPhoneVerifyRequired,
+} from "@/lib/quiz-funnel/phone-verify-gate";
 
 type Body = QuizAnswersPayload & {
   visitorId?: string;
@@ -26,6 +31,7 @@ type Body = QuizAnswersPayload & {
   fbc?: string;
   fbcTs?: number;
   lp_variant?: string;
+  qaPhoneBypass?: boolean;
 };
 
 function readQWhoFromVisitor(visitor: Record<string, unknown> | null): string | undefined {
@@ -232,6 +238,26 @@ export async function POST(request: Request) {
       field: "kidName",
       retryable: false,
       message: BOOKING_FEEDBACK.kidRequired
+    });
+  }
+
+  if (
+    isPlanAPhoneVerifyRequired() &&
+    !acceptPhoneVerifyQaBypass(body) &&
+    !isFreshPhoneVerifiedAt(body.phoneVerifiedAt)
+  ) {
+    await recordLeadBookingError({
+      body,
+      errorCode: "phone_verify_required",
+      message: BOOKING_FEEDBACK.phoneVerifyRequired,
+      httpStatus: 400,
+      field: "parentPhone",
+      retryable: false
+    });
+    return funnelApiError(400, "phone_verify_required", {
+      field: "parentPhone",
+      retryable: false,
+      message: BOOKING_FEEDBACK.phoneVerifyRequired
     });
   }
 

@@ -13,12 +13,34 @@ import {
   captureQuizBookingError,
   captureQuizBookingValidation,
   captureQuizThankYouViewed,
+  captureQuizPhoneVerified,
 } from '@/lib/quiz-funnel/analytics';
 import {
   sanitizeBookingErrorMessage,
   type QuizBookingErrorCode,
 } from '@/lib/calendly/booking-errors';
-import { countPhoneDigits } from '@/lib/calendly/phone-e164';
+import { countPhoneDigits, phoneToCalendlyE164 } from '@/lib/calendly/phone-e164';
+import {
+  isFreshPhoneVerifiedAt,
+  isPlanAPhoneVerifyRequired,
+} from '@/lib/quiz-funnel/phone-verify-gate';
+import { isPlanPhoneVerifyQaActive } from '@/lib/quiz-funnel/phone-verify-qa-client';
+import {
+  QFPhoneOtpModal,
+  sendPlanAPhoneOtp,
+} from '../components/QFPhoneOtpModal';
+import type { ConfirmationResult } from 'firebase/auth';
+import {
+  executeFunnelPhoneRecaptchaEnterprise,
+  funnelRecaptchaEnterpriseClientErrorMessage,
+} from '@/lib/firebase/recaptcha-enterprise-client';
+import {
+  cleanupFunnelPhoneSession,
+  funnelFirebaseClientErrorMessage,
+  funnelPhoneRecaptchaContainerId,
+  preloadFunnelPhoneRecaptcha,
+} from '@/lib/firebase/funnel-phone-client';
+import { isFirebaseClientConfigured } from '@/lib/firebase/public-config';
 import { QUIZ_TESTIMONIALS } from '@/lib/quiz-funnel/testimonials';
 import { getClientAttributionPayload } from '@/lib/quiz-funnel/client-attribution';
 import { planBuilderStepHref } from '@/lib/plan-builder-routes';
@@ -58,6 +80,7 @@ import {
   type BookingFieldKey,
 } from '@/lib/quiz-funnel/booking-feedback';
 import { QFBookingAlert } from '../components/QFBookingAlert';
+import '../phone-otp.css';
 
 type PlanSchedulerSlot = {
   startTime: string;
@@ -152,10 +175,15 @@ export function QFS5Approved({
   const {
     parentName = '', parentEmail = '', parentPhone = '', kidName = '',
     confirmTcpa = false,
+    phoneVerifiedAt = '',
   } = answers as Record<string, string | boolean>;
 
   const [submitting, setSubmitting] = useState(false);
   const [submitAttempted, setSubmitAttempted] = useState(false);
+  const [otpOpen, setOtpOpen] = useState(false);
+  const [otpSending, setOtpSending] = useState(false);
+  const [otpSendError, setOtpSendError] = useState<string | null>(null);
+  const [otpConfirmation, setOtpConfirmation] = useState<ConfirmationResult | null>(null);
   const [bookingAlert, setBookingAlert] = useState<{
     title?: string;
     message: string;
@@ -167,6 +195,9 @@ export function QFS5Approved({
   const [slotsAvailable, setSlotsAvailable] = useState(true);
   const [availabilityLoading, setAvailabilityLoading] = useState(true);
   const reloadSlotsRef = useRef<(() => void) | null>(null);
+  const submitAfterVerifyRef = useRef(false);
+  const lastPhoneRef = useRef(String(parentPhone));
+  const enterpriseRecaptchaRef = useRef(false);
 
   const contact = useMemo(
     () => ({
@@ -204,10 +235,84 @@ export function QFS5Approved({
     contactReady &&
     validation.valid;
   const qWho = typeof answers.qWho === 'string' ? answers.qWho : undefined;
+  const phoneVerified = isFreshPhoneVerifiedAt(phoneVerifiedAt);
+  const verifyRequired = isPlanAPhoneVerifyRequired();
+  const qaBypass = isPlanPhoneVerifyQaActive();
+
+  useEffect(() => {
+    const phone = String(parentPhone);
+    if (lastPhoneRef.current !== phone) {
+      lastPhoneRef.current = phone;
+      if (phoneVerifiedAt) {
+        dispatch?.({ type: 'SET_FIELD', key: 'phoneVerifiedAt', value: '' });
+      }
+      setOtpConfirmation(null);
+    }
+  }, [parentPhone, phoneVerifiedAt, dispatch]);
+
+  useEffect(() => {
+    if (!verifyRequired || !isFirebaseClientConfigured()) return;
+    funnelPhoneRecaptchaContainerId();
+    void preloadFunnelPhoneRecaptcha().catch(() => {});
+    void fetch('/api/funnel/phone/send')
+      .then((res) => res.json().catch(() => ({})))
+      .then((data) => {
+        enterpriseRecaptchaRef.current = data.enterpriseRecaptchaEnabled === true;
+      })
+      .catch(() => {});
+  }, [verifyRequired]);
 
   function setField(key: string, value: unknown) {
     dispatch?.({ type: 'SET_FIELD', key, value });
+    if (key === 'parentPhone' && phoneVerifiedAt) {
+      dispatch?.({ type: 'SET_FIELD', key: 'phoneVerifiedAt', value: '' });
+    }
     if (bookingAlert?.field === key) setBookingAlert(null);
+  }
+
+  async function sendOtpCode() {
+    setOtpSending(true);
+    setOtpSendError(null);
+    try {
+      let postBody: { recaptchaToken?: string; recaptchaAction?: string } | undefined;
+      if (enterpriseRecaptchaRef.current) {
+        const { token: recaptchaToken, action: recaptchaAction } =
+          await executeFunnelPhoneRecaptchaEnterprise();
+        postBody = { recaptchaToken, recaptchaAction };
+      }
+      const res = await fetch('/api/funnel/phone/send', {
+        method: 'POST',
+        headers: postBody ? { 'Content-Type': 'application/json' } : undefined,
+        body: postBody ? JSON.stringify(postBody) : undefined,
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setOtpSendError(
+          typeof data.message === 'string' ? data.message : 'Could not send code.'
+        );
+        return;
+      }
+      const confirmation = await sendPlanAPhoneOtp(String(parentPhone));
+      setOtpConfirmation(confirmation);
+    } catch (err) {
+      if (
+        err instanceof Error &&
+        (err.message.startsWith('recaptcha_') || err.message === 'recaptcha_browser_only')
+      ) {
+        setOtpSendError(funnelRecaptchaEnterpriseClientErrorMessage(err));
+        return;
+      }
+      setOtpSendError(funnelFirebaseClientErrorMessage(err));
+    } finally {
+      setOtpSending(false);
+    }
+  }
+
+  async function openOtpAndSend() {
+    submitAfterVerifyRef.current = true;
+    setOtpOpen(true);
+    setOtpConfirmation(null);
+    await sendOtpCode();
   }
 
   function trackBookingError(
@@ -258,8 +363,36 @@ export function QFS5Approved({
   }
 
   function handleConfirmClick() {
-    if (!canSubmit || submitting) return;
+    if (!canSubmit || submitting || otpSending) return;
+    setSubmitAttempted(true);
+    if (!validation.valid) {
+      showValidationErrors();
+      return;
+    }
+    if (verifyRequired && !phoneVerified && !qaBypass) {
+      void openOtpAndSend();
+      return;
+    }
+    if (verifyRequired && !phoneVerified && qaBypass) {
+      const stamp = new Date().toISOString();
+      dispatch?.({ type: 'SET_FIELD', key: 'phoneVerifiedAt', value: stamp });
+      captureQuizPhoneVerified();
+      void handleContinue({ phoneVerifiedAt: stamp, qaPhoneBypass: true });
+      return;
+    }
     void handleContinue();
+  }
+
+  function handlePhoneVerified(stamp: string) {
+    dispatch?.({ type: 'SET_FIELD', key: 'phoneVerifiedAt', value: stamp });
+    captureQuizPhoneVerified();
+    setOtpOpen(false);
+    setOtpConfirmation(null);
+    setOtpSendError(null);
+    if (submitAfterVerifyRef.current) {
+      submitAfterVerifyRef.current = false;
+      void handleContinue({ phoneVerifiedAt: stamp });
+    }
   }
 
   useEffect(() => {
@@ -285,11 +418,25 @@ export function QFS5Approved({
     return () => window.removeEventListener('message', onMessage);
   }, [onBooked, onContinue, dispatch, qWho]);
 
-  async function handleContinue() {
-    if (!canSubmit || submitting) return;
+  async function handleContinue(opts?: {
+    phoneVerifiedAt?: string;
+    qaPhoneBypass?: boolean;
+  }) {
+    if (submitting) return;
     setSubmitAttempted(true);
     if (!validation.valid) {
       showValidationErrors();
+      return;
+    }
+
+    const verifiedStamp =
+      opts?.phoneVerifiedAt ||
+      (typeof phoneVerifiedAt === 'string' ? phoneVerifiedAt : '') ||
+      '';
+    const useQaBypass = Boolean(opts?.qaPhoneBypass) || qaBypass;
+
+    if (verifyRequired && !isFreshPhoneVerifiedAt(verifiedStamp) && !useQaBypass) {
+      void openOtpAndSend();
       return;
     }
 
@@ -302,12 +449,15 @@ export function QFS5Approved({
     const fbcTs = resolved.fbcTs;
     const sat_lp_variant = readPersistedLpVariant();
     const lp_variant = readPersistedLpVariantId();
+    const e164 = phoneToCalendlyE164(contact.parentPhone) ?? contact.parentPhone;
     try {
       const res = await fetch('/api/funnel/lead', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...answers,
+          parentPhone: e164,
+          phoneVerifiedAt: verifiedStamp || undefined,
           confirmTcpa: true,
           visitorId,
           attribution,
@@ -316,6 +466,7 @@ export function QFS5Approved({
           fbcTs,
           sat_lp_variant,
           lp_variant,
+          ...(useQaBypass ? { qaPhoneBypass: true } : {}),
         }),
       });
       const data = await res.json();
@@ -330,6 +481,11 @@ export function QFS5Approved({
           retryable: parsed.retryable,
         });
         setBookingAlert(parsed);
+        if (parsed.error_code === 'phone_verify_required') {
+          setSubmitting(false);
+          void openOtpAndSend();
+          return;
+        }
         setSubmitting(false);
         return;
       }
@@ -351,13 +507,15 @@ export function QFS5Approved({
           startTime: slotStart,
           parentName: contact.parentName,
           parentEmail: contact.parentEmail,
-          parentPhone: contact.parentPhone,
+          parentPhone: e164,
           kidName: contact.kidName,
           visitorId,
           attribution,
           qWho: typeof answers.qWho === 'string' ? answers.qWho : undefined,
           sat_lp_variant,
           lp_variant,
+          phoneVerifiedAt: verifiedStamp || undefined,
+          ...(useQaBypass ? { qaPhoneBypass: true } : {}),
         }),
       });
       const bookData = await bookRes.json().catch(() => ({}));
@@ -413,7 +571,9 @@ export function QFS5Approved({
         ? PLAN_HANDOFF_CTA
         : !selectedSlot
           ? 'Pick a time'
-          : planSchedulerConfirmLabel(selectedSlot.weekdayShort, selectedSlot.label);
+          : verifyRequired && !phoneVerified && !qaBypass
+            ? 'Text me a code'
+            : planSchedulerConfirmLabel(selectedSlot.weekdayShort, selectedSlot.label);
 
   return (
     <QFScreen stepIdx={18} ornament="glow" onBack={onBack}
@@ -421,9 +581,13 @@ export function QFS5Approved({
         <QFButton
           kind="forest"
           onClick={handleConfirmClick}
-          disabled={!canSubmit || submitting}
+          disabled={!canSubmit || submitting || otpOpen || otpSending}
         >
-          {submitting ? BOOKING_FEEDBACK.confirming : footerLabel}
+          {submitting
+            ? BOOKING_FEEDBACK.confirming
+            : otpSending
+              ? 'Sending code…'
+              : footerLabel}
         </QFButton>
       }
     >
@@ -447,6 +611,11 @@ export function QFS5Approved({
           reloadSlotsRef.current = reload;
         }}
       />
+      {phoneVerified ? (
+        <p className="qf-phone-verified" aria-live="polite">
+          Mobile number confirmed
+        </p>
+      ) : null}
       {bookingAlert ? (
         <QFBookingAlert
           title={bookingAlert.title}
@@ -462,6 +631,25 @@ export function QFS5Approved({
           }
         />
       ) : null}
+      <QFPhoneOtpModal
+        key={otpOpen ? `otp-${String(parentPhone)}` : 'otp-closed'}
+        open={otpOpen}
+        phone={String(parentPhone)}
+        confirmation={otpConfirmation}
+        sending={otpSending}
+        sendError={otpSendError}
+        onClose={() => {
+          submitAfterVerifyRef.current = false;
+          setOtpOpen(false);
+          setOtpConfirmation(null);
+          setOtpSendError(null);
+          void cleanupFunnelPhoneSession();
+        }}
+        onVerified={handlePhoneVerified}
+        onResend={() => {
+          void sendOtpCode();
+        }}
+      />
     </QFScreen>
   );
 }

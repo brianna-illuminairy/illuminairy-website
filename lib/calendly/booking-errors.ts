@@ -6,6 +6,7 @@ export type QuizBookingErrorCode =
   | "invalid_phone"
   | "invalid_contact"
   | "tcpa_required"
+  | "phone_verify_required"
   | "lead_save_failed"
   | "no_slot"
   | "slot_taken"
@@ -21,6 +22,7 @@ export function classifyBookingError(
   if (options?.apiCode === "invalid_phone") return "invalid_phone";
   if (options?.apiCode === "invalid_contact") return "invalid_contact";
   if (options?.apiCode === "tcpa_required") return "tcpa_required";
+  if (options?.apiCode === "phone_verify_required") return "phone_verify_required";
   if (options?.apiCode === "lead_save_failed") return "lead_save_failed";
   if (options?.apiCode === "no_slot") return "no_slot";
   if (options?.apiCode === "slot_taken") return "slot_taken";
@@ -28,6 +30,7 @@ export function classifyBookingError(
   if (options?.apiCode === "availability_load") return "availability_load";
   if (options?.apiCode === "network") return "network";
   const lower = message.toLowerCase();
+  if (lower.includes("verify") && lower.includes("phone")) return "phone_verify_required";
   if (lower.includes("invalid") && lower.includes("phone")) return "invalid_phone";
   if (lower.includes("pick a time") || lower.includes("no_slot")) return "no_slot";
   if (lower.includes("no longer available") || lower.includes("just taken")) {

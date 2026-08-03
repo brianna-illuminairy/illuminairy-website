@@ -321,6 +321,19 @@ export function identifyQuizLead(email: string, answers: Record<string, unknown>
   });
 }
 
+export function captureQuizPhoneVerified() {
+  const props = {
+    funnel: "sat_quiz" as const,
+    step: "s5",
+    ...quizAttributionProps(),
+  };
+  if (getPostHogKey()) {
+    posthog.capture(PostHogEvents.quizPhoneVerified, props);
+  }
+  trackQuizGaEvent(Ga4Events.quizPhoneVerified, props);
+  void recordClientTouch(TouchEvents.quizPhoneVerified, props);
+}
+
 export function captureQuizLeadSubmitted(
   answers: Record<string, unknown>,
   eventId?: string,

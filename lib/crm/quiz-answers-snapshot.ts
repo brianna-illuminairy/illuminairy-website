@@ -21,6 +21,7 @@ export type QuizAnswersSnapshotInput = {
   parentName?: string | null;
   parentEmail?: string | null;
   parentPhone?: string | null;
+  phoneVerifiedAt?: string | null;
   planChoice?: string | null;
   confirmTcpa?: boolean;
   sat_lp_variant?: string | null;
@@ -44,6 +45,7 @@ export type QuizAnswersSnapshot = {
   parentName: string | null;
   parentEmail: string | null;
   parentPhone: string | null;
+  phoneVerifiedAt: string | null;
   planChoice: string;
   confirmTcpa: boolean;
   sat_lp_variant: string | null;
@@ -81,6 +83,7 @@ export function buildQuizAnswersSnapshot(
     parentName: trimOrNull(answers.parentName),
     parentEmail: trimOrNull(answers.parentEmail),
     parentPhone: trimOrNull(answers.parentPhone),
+    phoneVerifiedAt: trimOrNull(answers.phoneVerifiedAt),
     planChoice: answers.planChoice?.trim() || "full",
     confirmTcpa: Boolean(answers.confirmTcpa),
     sat_lp_variant: answers.sat_lp_variant ?? null

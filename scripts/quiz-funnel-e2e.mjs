@@ -420,6 +420,54 @@ async function checkCriticalScreens(page) {
   await checkStep(page, "i2");
 }
 
+/** s5 stays live Calendly + phone OTP gate (not ad/UTM booking pause). */
+async function checkS5PhoneVerifyChrome(page) {
+  console.log("\n— s5 booking + phone verify chrome —");
+  await seedAnswers(page, {
+    ...PARENT_SAT_ANSWERS,
+    parentName: "Test Parent",
+    parentEmail: "testemil@gmail.com",
+    parentPhone: "(555) 123-4567",
+    kidName: "Alex",
+    confirmTcpa: true,
+  });
+
+  const ok = await openStep(page, "s5");
+  if (!ok) return;
+
+  const pageText = await page.locator(".qf-page").innerText();
+  if (/Save my plan/i.test(pageText)) {
+    fail("s5-booking", "unapproved 'Save my plan' CTA on s5");
+    return;
+  }
+
+  const chrome = page.locator('[role="region"][aria-label="Step actions"]');
+  await chrome.waitFor({ state: "visible", timeout: TIMEOUT });
+  const btn = chrome.locator("button.qf-btn").first();
+  if ((await btn.count()) === 0) {
+    fail("s5-booking", "missing s5 confirm CTA");
+    return;
+  }
+
+  const phoneField = page.locator('input[type="tel"], input[name="parentPhone"], input[autocomplete="tel"]');
+  const hasPhone =
+    (await phoneField.count()) > 0 || /mobile|phone/i.test(pageText);
+  if (!hasPhone) {
+    fail("s5-booking", "expected phone field on s5 scheduler");
+    return;
+  }
+
+  pass("s5-booking", "scheduler + CTA live (phone OTP gates confirm, not Calendly hide)");
+
+  await page.goto(`${BASE}/plan?step=s5&qa=1`, { waitUntil: "networkidle" });
+  await waitForHydration(page);
+  if (new URL(page.url()).searchParams.get("step") !== "s5") {
+    fail("s5-qa", "qa deep-link left s5");
+    return;
+  }
+  pass("s5-qa", "?qa=1 available for non-prod phone-verify bypass testing");
+}
+
 async function checkAllRoutedSteps(page) {
   console.log("\n— All routed steps —");
   await seedAnswers(page, PARENT_SAT_ANSWERS);
@@ -625,6 +673,7 @@ async function main() {
   });
 
   await checkCriticalScreens(page);
+  await checkS5PhoneVerifyChrome(page);
   await checkIStepsFooterAfterScroll(page);
   await checkAchievabilityFooterAfterScroll(page);
   await checkAutoAdvanceNavigates(page);

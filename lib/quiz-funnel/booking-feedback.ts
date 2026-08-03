@@ -35,6 +35,7 @@ export const BOOKING_FEEDBACK = {
   phoneInvalid: BOOKING_PHONE_INVALID_MSG,
   kidRequired: "Enter your student's name.",
   tcpaRequired: "Check the box to agree we may contact you about this call.",
+  phoneVerifyRequired: "Text yourself a code and enter it to confirm this number.",
   slotRequired: "Pick a time to continue.",
   slotTaken: "That time was just taken. Choose another open slot.",
   /** Shown after we refresh the slot list from Calendly. */
@@ -136,6 +137,13 @@ export function bookingFeedbackForCode(
         title: "Consent required",
         message: BOOKING_FEEDBACK.tcpaRequired,
         field: "confirmTcpa",
+        retryable: false,
+      };
+    case "phone_verify_required":
+      return {
+        title: "Confirm your mobile number",
+        message: BOOKING_FEEDBACK.phoneVerifyRequired,
+        field: "parentPhone",
         retryable: false,
       };
     case "no_slot":

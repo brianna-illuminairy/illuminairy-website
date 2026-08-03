@@ -23,6 +23,7 @@ export const TouchEvents = {
   bookingError: "booking_error",
   attributionReturn: "attribution_return",
   quizScheduleView: "quiz_schedule_view",
+  quizPhoneVerified: "quiz_phone_verified",
   labPhoneVerified: "lab_phone_verified",
   labLeadSubmitted: "lab_lead_submitted",
   labLessonBooked: "lab_lesson_booked",
@@ -51,6 +52,7 @@ export const CLIENT_TOUCH_EVENTS = new Set<TouchEventName>([
   TouchEvents.quizProgressSync,
   TouchEvents.quizScheduleView,
   TouchEvents.attributionReturn,
+  TouchEvents.quizPhoneVerified,
   TouchEvents.labPhoneVerified,
   TouchEvents.labLeadSubmitted,
   TouchEvents.labLessonBooked,
@@ -71,7 +73,8 @@ export const PostHogEvents = {
   quizBookingValidation: "quiz_booking_validation",
   quizStepBack: "quiz_step_back",
   achievabilityInputEdited: "achievability_input_edited",
-  quizDoubtsAnswered: "quiz_doubts_answered"
+  quizDoubtsAnswered: "quiz_doubts_answered",
+  quizPhoneVerified: "quiz_phone_verified",
 } as const;
 
 export const Ga4Events = {
@@ -88,6 +91,7 @@ export const Ga4Events = {
   quizBookingValidation: "quiz_booking_validation",
   quizStepBack: "quiz_step_back",
   achievabilityInputEdited: "achievability_input_edited",
+  quizPhoneVerified: "quiz_phone_verified",
   enrollCheckoutViewed: "enroll_checkout_viewed",
   beginCheckout: "begin_checkout",
   purchase: "purchase",

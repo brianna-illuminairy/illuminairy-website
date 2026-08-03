@@ -130,6 +130,10 @@ export async function upsertLeadFromQuizFunnel(
     weeks_until_test: weeksUntilQ5Test(answers.q5),
     tcpa_consent: Boolean(answers.confirmTcpa),
     tcpa_consent_at: answers.confirmTcpa ? now : null,
+    phone_verified_at:
+      typeof answers.phoneVerifiedAt === "string" && answers.phoneVerifiedAt.trim()
+        ? answers.phoneVerifiedAt.trim()
+        : null,
     quiz_answers: quizSnapshot,
     additional_context: JSON.stringify({
       funnel: options.funnel ?? "sat_quiz",
@@ -199,6 +203,7 @@ export async function upsertLeadFromQuizFunnel(
           weeks_until_test: leadRow.weeks_until_test,
           tcpa_consent: leadRow.tcpa_consent,
           tcpa_consent_at: leadRow.tcpa_consent_at,
+          phone_verified_at: leadRow.phone_verified_at,
           quiz_answers: leadRow.quiz_answers,
           additional_context: leadRow.additional_context,
           stage: leadRow.stage,

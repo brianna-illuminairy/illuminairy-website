@@ -1,16 +1,23 @@
 # Active context
 
-*Last updated: 2026-06-25 (Shermeen diagnostic portal)*
+*Last updated: 2026-08-02 (Plan A s5 phone OTP)*
 
 ## Resume here (start next chat with this)
+
+**Plan A phone verify (2026-08-02):** Ads funnel `/plan` s5 now requires Firebase OTP before lead + Calendly book (same stack as Plan B; Plan B routes unchanged). APIs: `/api/funnel/phone/send`, `/api/funnel/phone/verify`. Analytics: `quiz_phone_verified`. Non-prod QA bypass: `?qa=1` or `?qa=phone`. Gate only when Firebase is configured. `funnel:booking-guard` + `agent:verify` clean. E2E s5 chrome checks added; unrelated `hit-q3-none-auto` flake may still fail.
+
+**Plan B freeze + Learn consolidation (2026-07-19):** Plan B is the free-lesson funnel (`/sat-plan-builder` → `/plan-b` → free lesson → `/portal` with grayed areas). **Do not edit Plan B or `/portal` while building Illuminairy Learn** unless Brianna explicitly asks — ads depend on it. Long-term: one logged-in surface in Learn; build Learn first, then merge Plan B portal + per-student portals (`/soha`, `/danielle`, …). SSOT for that path lives in the Learn repo: `docs/product/surface-consolidation.md`.
+
+**Lesson platform archived (2026-07-19):** Advanced Math pack + live lesson scaffolding moved to [`archives/sat-lessons-advanced-math-retired-2026-07/`](../archives/sat-lessons-advanced-math-retired-2026-07/README.md). Portal **Lessons** tab → `/portal/home` (booking card only). Tutor Today keeps Meet schedule. Per-student algebra HTML portals untouched until Learn migration.
 
 **Shermeen portal (2026-06-25):** `/shermeen/` private portal — profile + diagnostic analysis for Jun 23 test (1100–1150). **Owner before prod:** `SHERMEEN_ACCESS_ALLOWLIST=sohailft@gmail.com,shermeen.sohail2010@gmail.com,brianna@illuminairy.com` in Vercel + `.env.local`; push `main`. Docs: `docs/leads/shermeen-sohail-context.md`.
 
 ---
 
-**Two funnels — do not mix:**
-- **Quiz 1:** `/` LP + `/plan` funnel (high GPA / low SAT). Unchanged. Meta ads ad1–ad5 (except ad3 HD) land on `/`.
-- **Quiz 2 (ad3 HD only):** `/sat-plan-builder` → `/plan-b`. Frozen tutor copy in `lib/plan-b/ad3-hd-landing-copy.ts`. Full SSR page `Ad3HdLandingPage` + shared `landing-v4.css` + thin ad3 shell CSS.
+**Funnels — do not mix:**
+- **Plan A (Quiz 1):** `/` LP + `/plan` funnel (high GPA / low SAT). Strategy Call. Meta ads ad1–ad5 (except ad3 HD) land on `/`.
+- **Plan B (Quiz 2 / ad3 HD):** `/sat-plan-builder` → `/plan-b` → **free lesson → `/portal`**. **Frozen** while Learn is under construction. Frozen tutor copy in `lib/plan-b/ad3-hd-landing-copy.ts`.
+- **Score Review:** `/june-score-review` → `/score-review` (separate offer).
 
 **2026-06-25 funnel revert + Plan B launch (this session):** Removed shared `components/funnel-sibling/` + `lib/funnel-sibling/` modules and the per-step Plan B CSS split (9 chunks → 2 files). **Plan A is bit-perfect against 9057d99** — production funnel `/plan` is untouched. **Plan B (`/plan-b`)** is now a copy-paste sibling of Plan A: same layout/page/QuizClientRoot/QuizRunner shape, with its own state/screens. CSS chain = `quiz-b-bundle.css` → `quiz-b-lab.css` sync from `layout.tsx`. No critical inline, no deferred chunks, no SSR entry shell. New `app/quiz-b/utm-capture.tsx` captures UTMs to localStorage + cookie + PostHog superproperties (capture-only, no UI branching) for Meta ads attribution. Plan A untouched by UTM work. Score Review (`/quiz-c`) parked as placeholder page.
 
@@ -299,3 +306,19 @@ npm run dev
 open http://localhost:3000/enroll?preview=1
 npm run agent:verify
 ```
+
+---
+
+## SAT Lesson Platform V1 (2026-07-02) — RETIRED 2026-07-19
+
+Advanced Math curriculum pack + live lesson platform were archived. They did not match the content Brianna actually teaches.
+
+**Archive:** [`archives/sat-lessons-advanced-math-retired-2026-07/`](../archives/sat-lessons-advanced-math-retired-2026-07/README.md)
+
+**Still live:**
+- Portal home booking card (Plan B free intro Meet) — Lessons tab → `/portal/home`
+- Tutor login + Today dashboard (students + Meet links only)
+- Per-student algebra HTML portals (danielle/soha/skye/shermeen)
+- Supabase `lesson_*` migration/tables left orphaned (no app writes)
+
+**Removed from product:** `content/sat-lessons/`, `lib/lessons/`, portal/admin/tutor lesson UIs, `/lesson/join`, lesson APIs, validate-lessons scripts.
