@@ -156,3 +156,39 @@
   text-align: center;
   text-wrap: pretty;
 }
+
+/* Covers s5 while lead + Calendly book run after OTP (no scheduler flash). */
+.qf-booking-progress-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  background: rgba(15, 23, 20, 0.5);
+}
+
+.qf-booking-progress-card {
+  width: min(400px, 100%);
+  padding: 28px 22px;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 16px 48px rgba(15, 23, 20, 0.18);
+  text-align: center;
+}
+
+.qf-booking-progress-title {
+  margin: 0 0 8px;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--qf-ink, #121a2b);
+}
+
+.qf-booking-progress-lead {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--qf-ink-mid, #5a6570);
+}

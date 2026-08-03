@@ -179,6 +179,8 @@ export function QFS5Approved({
   } = answers as Record<string, string | boolean>;
 
   const [submitting, setSubmitting] = useState(false);
+  /** Full-screen cover while lead+book run after OTP — avoids flashing the scheduler. */
+  const [bookingOverlay, setBookingOverlay] = useState(false);
   const [submitAttempted, setSubmitAttempted] = useState(false);
   const [otpOpen, setOtpOpen] = useState(false);
   const [otpSending, setOtpSending] = useState(false);
@@ -386,13 +388,17 @@ export function QFS5Approved({
   function handlePhoneVerified(stamp: string) {
     dispatch?.({ type: 'SET_FIELD', key: 'phoneVerifiedAt', value: stamp });
     captureQuizPhoneVerified();
-    setOtpOpen(false);
     setOtpConfirmation(null);
     setOtpSendError(null);
     if (submitAfterVerifyRef.current) {
       submitAfterVerifyRef.current = false;
+      // Cover s5 before closing the OTP modal so the scheduler does not flash.
+      setBookingOverlay(true);
+      setOtpOpen(false);
       void handleContinue({ phoneVerifiedAt: stamp });
+      return;
     }
+    setOtpOpen(false);
   }
 
   useEffect(() => {
@@ -441,6 +447,7 @@ export function QFS5Approved({
     }
 
     setSubmitting(true);
+    setBookingOverlay(true);
     setBookingAlert(null);
     const { visitorId, attribution } = getClientAttributionPayload();
     const resolved = resolveMetaClickIds(attribution.fbclid);
@@ -483,10 +490,12 @@ export function QFS5Approved({
         setBookingAlert(parsed);
         if (parsed.error_code === 'phone_verify_required') {
           setSubmitting(false);
+          setBookingOverlay(false);
           void openOtpAndSend();
           return;
         }
         setSubmitting(false);
+        setBookingOverlay(false);
         return;
       }
       captureQuizLeadSubmitted(answers as Record<string, unknown>, data.eventId, {
@@ -497,6 +506,7 @@ export function QFS5Approved({
       if (!slotStart) {
         showValidationErrors();
         setSubmitting(false);
+        setBookingOverlay(false);
         return;
       }
 
@@ -538,6 +548,7 @@ export function QFS5Approved({
           reloadSlotsRef.current?.();
         }
         setSubmitting(false);
+        setBookingOverlay(false);
         return;
       }
 
@@ -553,13 +564,18 @@ export function QFS5Approved({
         qWho,
       });
       setSubmitting(false);
+      // Keep overlay until thank-you mounts (onBooked navigates away).
       if (onBooked) onBooked();
-      else onContinue();
+      else {
+        setBookingOverlay(false);
+        onContinue();
+      }
     } catch {
       const parsed = parseFunnelApiError(null, 0);
       trackBookingError('network', parsed.message, { retryable: true });
       setBookingAlert({ ...parsed, title: 'Connection problem' });
       setSubmitting(false);
+      setBookingOverlay(false);
     }
   }
 
@@ -662,6 +678,19 @@ export function QFS5Approved({
           void sendOtpCode();
         }}
       />
+      {bookingOverlay ? (
+        <div
+          className="qf-booking-progress-backdrop"
+          role="status"
+          aria-live="polite"
+          aria-busy="true"
+        >
+          <div className="qf-booking-progress-card">
+            <p className="qf-booking-progress-title">{BOOKING_FEEDBACK.confirming}</p>
+            <p className="qf-booking-progress-lead">One moment while we confirm your time.</p>
+          </div>
+        </div>
+      ) : null}
     </QFScreen>
   );
 }
