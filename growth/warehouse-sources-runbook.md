@@ -8,10 +8,12 @@ Project: **Default project** `428901`.
 
 | Source | Status | Action needed |
 |--------|--------|---------------|
-| **Meta Ads** | Token invalid / expired (last success ~Jun 12) | Re-authorize Meta OAuth in PostHog; account `1020098850691864`; enable `campaign_stats`, `adset_stats`, `ad_stats`; sync |
-| **Stripe** | Misconfigured (Connect platform error) | Delete/recreate Stripe source with **Illuminairy Stripe account** OAuth or restricted API key for *this* account (not Connect platform credentials) |
-| **Google Ads** | Not linked | Link source → client customer ID (not MCC-only) → OAuth with Ads admin Google account |
-| **Google Analytics** | Not linked | Link GA4 property for `G-B1XC1ND9GT` (Admin → Property settings → numeric Property ID) |
+| **Meta Ads** | Token invalid / expired (last success ~Jun 12). Reload API called; still needs re-auth | **You:** Re-authorize Meta OAuth in PostHog; account `1020098850691864`; enable `campaign_stats`, `adset_stats`, `ad_stats`; sync |
+| **Stripe** | Misconfigured (Connect platform error) | **You:** Delete/recreate Stripe source with **Illuminairy Stripe account** OAuth or restricted API key for *this* account (not Connect platform credentials) |
+| **Google Ads** | Not linked | **You:** Link source → client customer ID (not MCC-only) → OAuth with Ads admin Google account |
+| **Google Analytics** | Not linked | **You:** Link GA4 property for `G-B1XC1ND9GT` (Admin → Property settings → numeric Property ID) |
+
+These four UI OAuth steps cannot be finished from the agent (PostHog login + Meta/Google/Stripe consent).
 
 ## Owner steps (UI)
 
