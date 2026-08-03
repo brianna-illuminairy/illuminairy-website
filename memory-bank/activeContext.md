@@ -2,16 +2,9 @@
 
 *Last updated: 2026-08-03 (PostHog ads measurement restore)*
 
-## Resume here
-
-**PostHog ingestion restored (2026-08-03):** Root cause was empty/missing client `NEXT_PUBLIC_POSTHOG_KEY` (Vercel had it as Sensitive / stale). Set **Non-sensitive** `phc_…` on Vercel Production + Preview + `.env.local`. Dual-funnel props (`offer_goal`), `$pageview` parity on `/plan-b`, LP GA4 tags, dashboard https://us.posthog.com/project/428901/dashboard/1945968. Docs: `growth/analytics-key-matrix.md`, `growth/warehouse-sources-runbook.md`, `growth/ads-conversion-parity.md`. **Owner:** re-auth Meta Ads + fix Stripe warehouse + link Google Ads/GA4 in PostHog UI.
-
-
-# Active context
-
-*Last updated: 2026-08-03 (funnel naming)*
-
 ## Resume here (start next chat with this)
+
+**PostHog ingestion restored (2026-08-03):** Root cause was empty/missing client `NEXT_PUBLIC_POSTHOG_KEY` (Vercel had it as Sensitive / stale). Set **Non-sensitive** `phc_…` on Vercel Production + Preview + `.env.local`. Dual-funnel props (`offer_goal`), `$pageview` parity on `/plan-b`, LP GA4 tags, dashboard https://us.posthog.com/project/428901/dashboard/1945968. Docs: `growth/analytics-key-matrix.md`, `growth/warehouse-sources-runbook.md`, `growth/ads-conversion-parity.md`. **Owner:** re-auth Meta Ads + fix Stripe warehouse + link Google Ads/GA4 in PostHog UI (see warehouse runbook).
 
 **Funnel names (SSOT):** [`docs/funnel-names.md`](../docs/funnel-names.md) — say **Strategy Call funnel** (`/plan`), **free lesson funnel** (`/plan-b`), **landing page** (`/sat-plan-builder`). Never “Plan A / Plan B” in discussion. URLs unchanged.
 
