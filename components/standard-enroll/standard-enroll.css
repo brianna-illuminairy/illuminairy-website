@@ -5,8 +5,7 @@
    `SAT Checkout (standalone).html`. All classes are namespaced under
    `.std-*` so they cannot collide with Sohail's `.co-*` / `.lp-*` stack. */
 
-@import url("https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&display=swap");
+/* Type via next/font on StandardEnrollPage — same Hanken stack as /plan (--qf-body). */
 
 .std,
 .std *,
@@ -28,8 +27,10 @@
   --line: var(--aurora-line-solid, #e6e3da);
   --line-d: var(--aurora-line-dark, rgba(255, 255, 255, 0.12));
   --shadow: var(--aurora-shadow-soft, 0 8px 40px -20px rgba(18, 26, 43, 0.12));
+  --std-body: var(--font-hanken), "Hanken Grotesk", system-ui, sans-serif;
+  --std-mono: var(--font-dm-mono), "DM Mono", ui-monospace, monospace;
 
-  font-family: "Hanken Grotesk", var(--font-hanken), system-ui, -apple-system, sans-serif;
+  font-family: var(--std-body);
   background: var(--bg);
   color: var(--ink);
   line-height: 1.55;
@@ -136,7 +137,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  font-family: "DM Mono", monospace;
+  font-family: var(--std-mono);
   font-size: 11px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -153,7 +154,7 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  font-family: "Hanken Grotesk", sans-serif;
+  font-family: var(--std-body);
   font-size: 11px;
   font-weight: 700;
   color: rgba(245, 248, 250, 0.55);
@@ -215,7 +216,7 @@
 }
 @media (max-width: 480px) { .std-summary { padding: 30px 22px; } }
 .std-summary h2 {
-  font-family: "Hanken Grotesk", var(--font-hanken), system-ui, -apple-system, sans-serif;
+  font-family: var(--std-body);
   font-weight: 700;
   font-size: 1.45rem;
   line-height: 1.22;
@@ -609,7 +610,7 @@
 }
 .std-rv-head { position: relative; z-index: 1; text-align: center; padding: 0 24px; margin-bottom: 34px; }
 .std-rv-label {
-  font-family: "DM Mono", monospace;
+  font-family: var(--std-mono);
   font-size: 0.72rem;
   letter-spacing: 0.08em;
   text-transform: none;
@@ -617,7 +618,7 @@
   margin-bottom: 14px;
 }
 .std-rv-title {
-  font-family: "Hanken Grotesk", var(--font-hanken), system-ui, -apple-system, sans-serif;
+  font-family: var(--std-body);
   font-weight: 700;
   font-size: clamp(1.75rem, 3.5vw, 2.4rem);
   line-height: 1.12;
@@ -627,7 +628,7 @@
 }
 .std-rv-title em { font-style: normal; color: var(--green); }
 .std-rv-sub {
-  font-family: "DM Mono", monospace;
+  font-family: var(--std-mono);
   font-size: 0.72rem;
   letter-spacing: 0.08em;
   color: var(--muted);
@@ -671,7 +672,7 @@
 .std-rv-card.c2 { background: rgba(184, 245, 209, 0.06); border-color: rgba(184, 245, 209, 0.2); }
 .std-rv-card .stars5 { color: #77c89a; font-size: 0.95rem; letter-spacing: 3px; margin-bottom: 16px; }
 .std-rv-quote {
-  font-family: "Hanken Grotesk", system-ui, -apple-system, sans-serif;
+  font-family: var(--std-body);
   font-style: normal;
   font-weight: 400;
   font-size: 1.05rem;
@@ -680,13 +681,13 @@
   margin-bottom: 20px;
   flex: 1;
 }
-.std-rv-by { font-family: "DM Mono", monospace; }
+.std-rv-by { font-family: var(--std-mono); }
 .std-rv-by b { display: block; font-weight: 500; font-size: 0.78rem; letter-spacing: 0.04em; color: var(--ink); }
 .std-rv-by span { display: block; font-size: 0.68rem; letter-spacing: 0.06em; text-transform: none; color: var(--muted); margin-top: 4px; }
 .std-rv-gain {
   align-self: flex-start;
   margin-top: 16px;
-  font-family: "DM Mono", monospace;
+  font-family: var(--std-mono);
   font-size: 0.72rem;
   letter-spacing: 0.06em;
   color: var(--green);

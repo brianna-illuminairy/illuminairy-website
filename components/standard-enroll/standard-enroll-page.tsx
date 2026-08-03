@@ -38,6 +38,7 @@ import {
   type StandardEnrollLead
 } from "@/lib/standard-enroll";
 import type { StandardEnrollInit } from "@/lib/standard-enroll-server";
+import { dmMono, hankenGrotesk } from "@/lib/funnel-fonts";
 import "./standard-enroll.css";
 
 const STRIPE_PUBLISHABLE_KEY =
@@ -1074,7 +1075,9 @@ export function StandardEnrollPage({ lead, init, embedded = false }: Props) {
   }, [lead]);
 
   return (
-    <div className={`std${embedded ? " std--embedded" : ""}`}>
+    <div
+      className={`std${embedded ? " std--embedded" : ""} ${hankenGrotesk.className} ${hankenGrotesk.variable} ${dmMono.variable}`}
+    >
       {!embedded ? <StarSymbol /> : null}
       {!embedded ? <TopBar /> : null}
       <ProgressStrip lead={lead} />
