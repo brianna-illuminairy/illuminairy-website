@@ -572,23 +572,35 @@ export function QFS5Approved({
         : !selectedSlot
           ? 'Pick a time'
           : verifyRequired && !phoneVerified && !qaBypass
-            ? 'Text me a code'
+            ? 'Continue booking'
             : planSchedulerConfirmLabel(selectedSlot.weekdayShort, selectedSlot.label);
+
+  const showPhoneSmsConsent =
+    verifyRequired && !phoneVerified && !qaBypass && contactReady && Boolean(selectedSlot);
 
   return (
     <QFScreen stepIdx={18} ornament="glow" onBack={onBack}
       actions={
-        <QFButton
-          kind="forest"
-          onClick={handleConfirmClick}
-          disabled={!canSubmit || submitting || otpOpen || otpSending}
-        >
-          {submitting
-            ? BOOKING_FEEDBACK.confirming
-            : otpSending
-              ? 'Sending code…'
-              : footerLabel}
-        </QFButton>
+        <div className="qf-phone-s5-actions">
+          <QFButton
+            kind="forest"
+            onClick={handleConfirmClick}
+            disabled={!canSubmit || submitting || otpOpen || otpSending}
+          >
+            {submitting
+              ? BOOKING_FEEDBACK.confirming
+              : otpSending
+                ? 'Sending…'
+                : footerLabel}
+          </QFButton>
+          {showPhoneSmsConsent ? (
+            <p className="qf-phone-sms-consent" id="qf-phone-sms-consent">
+              By pressing Continue booking I agree to receive text messages (SMS) from Illuminairy
+              with a verification code and Strategy Call reminders. Msg and data rates may apply.
+              Reply STOP to end messages.
+            </p>
+          ) : null}
+        </div>
       }
     >
       <QFPlanScheduler
