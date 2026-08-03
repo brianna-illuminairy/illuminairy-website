@@ -21,7 +21,11 @@ import {
 
 export type { StandardFaqPreset };
 
-export type StandardProgramVariant = "standard" | "aug22-bootcamp" | "plan-b-post-lesson";
+export type StandardProgramVariant =
+  | "standard"
+  | "aug22-bootcamp"
+  | "plan-b-post-lesson"
+  | "public";
 
 export type StandardDiagnosticPromo = {
   /** List price shown struck through on the pay card. */
@@ -137,10 +141,19 @@ export const STANDARD_POST_CALL_STEPS: StandardProgressStep[] = [
   { label: "Tutoring", state: "next" }
 ];
 
-/** Progress strip for checkout — Diagnostic done when already completed. */
+/** True for the shareable `/enroll/sat` (and future) public checkout pages. */
+export function isPublicStandardEnroll(lead: StandardEnrollLead): boolean {
+  return lead.programVariant === "public";
+}
+
+/** Progress strip for checkout — empty for public; Diagnostic done when already completed. */
+
 export function standardEnrollProgressSteps(
   lead: StandardEnrollLead
 ): StandardProgressStep[] {
+  if (isPublicStandardEnroll(lead)) {
+    return [];
+  }
   if (lead.programVariant === "plan-b-post-lesson") {
     return [
       { label: "Free SAT Plan", state: "done" },
@@ -491,6 +504,34 @@ export function buildStandardFaqForLead(lead: StandardEnrollLead): StandardFaqGr
   );
 }
 
+/** Same Stripe products as Michelle / standard post-call pages. */
+const STANDARD_PRICING = {
+  diagPrice: 249,
+  weeklyPrice: 99,
+  stripeDiagnosticProductId: "prod_UfmBm2GawHFXRA",
+  stripeWeeklyProductId: "prod_UfmE3JUG5ykfSk",
+  weeklyTrialDays: 7,
+  stripeFallbackLink: "https://buy.stripe.com/7sYcMY7DK1X19lO7gZc7u01"
+} as const;
+
+const STANDARD_ADVISOR = {
+  first: "Brianna",
+  full: "Brianna Zajicek",
+  email: "brianna@illuminairy.com"
+} as const;
+
+/** Shareable public checkout — /enroll/sat. Parent fills contact at pay. */
+const satPublic: StandardEnrollLead = {
+  slug: "sat",
+  parent: { first: "", full: "" },
+  student: { first: "", full: "", gradeNote: "" },
+  pricing: { ...STANDARD_PRICING },
+  advisor: { ...STANDARD_ADVISOR },
+  call: { dateLabel: "" },
+  programVariant: "public",
+  faqPreset: "standard-full"
+};
+
 const michelleMichaela: StandardEnrollLead = {
   slug: "michelle-michaela",
   parent: {
@@ -503,19 +544,8 @@ const michelleMichaela: StandardEnrollLead = {
     full: "Michaela",
     gradeNote: "rising senior"
   },
-  pricing: {
-    diagPrice: 249,
-    weeklyPrice: 99,
-    stripeDiagnosticProductId: "prod_UfmBm2GawHFXRA",
-    stripeWeeklyProductId: "prod_UfmE3JUG5ykfSk",
-    weeklyTrialDays: 7,
-    stripeFallbackLink: "https://buy.stripe.com/7sYcMY7DK1X19lO7gZc7u01"
-  },
-  advisor: {
-    first: "Brianna",
-    full: "Brianna Zajicek",
-    email: "brianna@illuminairy.com"
-  },
+  pricing: { ...STANDARD_PRICING },
+  advisor: { ...STANDARD_ADVISOR },
   call: { dateLabel: "June 13, 2026" }
 };
 
@@ -694,6 +724,7 @@ const nadaSohaAug22Bootcamp: StandardEnrollLead = {
 };
 
 export const standardEnrollLeads: Record<string, StandardEnrollLead> = {
+  [satPublic.slug]: satPublic,
   [michelleMichaela.slug]: michelleMichaela,
   [moniqueKylan.slug]: moniqueKylan,
   [shellyStandard.slug]: shellyStandard,

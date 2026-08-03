@@ -31,6 +31,7 @@ import {
   STANDARD_INCLUDED,
   STANDARD_TESTIMONIALS,
   buildStandardFaqForLead,
+  isPublicStandardEnroll,
   standardEnrollProgressSteps,
   standardEnrollStudentLabel,
   standardEnrollStudentPossessive,
@@ -204,6 +205,7 @@ function TopBar() {
 
 function ProgressStrip({ lead }: { lead: StandardEnrollLead }) {
   const steps = standardEnrollProgressSteps(lead);
+  if (!steps.length) return null;
   return (
     <div className="std-progress">
       <div className="std-progress-inner">
@@ -235,6 +237,8 @@ function MobileCheckoutIntro({ lead }: { lead: StandardEnrollLead }) {
       ? diagnosticWaivedIntroLine(lead)
       : `$${diagCharge} diagnostic today, then $${weekly}/week after your first week`;
 
+  const isPublic = isPublicStandardEnroll(lead);
+
   return (
     <div className="std-mobile-intro">
       <h1>
@@ -245,7 +249,8 @@ function MobileCheckoutIntro({ lead }: { lead: StandardEnrollLead }) {
             : "SAT Diagnostic & Weekly Tutoring"}
       </h1>
       <p>
-        For {lead.parent.first}. {diagLine}
+        {isPublic ? null : <>For {lead.parent.first}. </>}
+        {diagLine}
         {!isPlanB && !lead.bootcamp?.diagnosticComplete
           ? " Weekly billing starts 7 days from enroll."
           : null}
@@ -363,11 +368,16 @@ function PayCardInner({
   const weeklyCharge = getWeeklyChargePrice(lead);
   const planB = isPlanBPostLesson(lead);
   const regionalCode = lead.regionalDiscountCode;
+  const isPublic = isPublicStandardEnroll(lead);
   const derivedLast =
-    lead.parent.last ?? lead.parent.full.replace(lead.parent.first, "").trim();
+    lead.parent.last ??
+    (lead.parent.first
+      ? lead.parent.full.replace(lead.parent.first, "").trim()
+      : "");
   const [first, setFirst] = useState(lead.parent.first ?? "");
   const [last, setLast] = useState(derivedLast);
   const [email, setEmail] = useState(lead.parent.email ?? "");
+  const [studentFirst, setStudentFirst] = useState(lead.student.first ?? "");
   const [tos, setTos] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitLabel, setSubmitLabel] = useState<string>(initialSubmitLabel(lead));
@@ -391,8 +401,13 @@ function PayCardInner({
     const trimmedFirst = first.trim();
     const trimmedLast = last.trim();
     const trimmedEmail = email.trim();
+    const trimmedStudent = studentFirst.trim();
     if (!trimmedFirst || !trimmedLast || !trimmedEmail) {
       setError("Please complete your billing contact.");
+      return;
+    }
+    if (isPublic && !trimmedStudent) {
+      setError("Please enter your student's first name.");
       return;
     }
     if (!tos) {
@@ -409,6 +424,12 @@ function PayCardInner({
     const billingDetails = {
       name: `${trimmedFirst} ${trimmedLast}`.trim(),
       email: trimmedEmail
+    };
+    const finalizeContact = {
+      parentFirst: trimmedFirst,
+      parentLast: trimmedLast,
+      parentEmail: trimmedEmail,
+      studentFirst: trimmedStudent || lead.student.first || undefined
     };
 
     try {
@@ -459,7 +480,10 @@ function PayCardInner({
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(
-            enrollFinalizeRequestBody({ setupIntentId: setupIntent.id })
+            enrollFinalizeRequestBody({
+              setupIntentId: setupIntent.id,
+              ...finalizeContact
+            })
           )
         });
         const finalizeData = (await finalizeRes.json().catch(() => ({}))) as {
@@ -540,7 +564,10 @@ function PayCardInner({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(
-          enrollFinalizeRequestBody({ paymentIntentId: paymentIntent.id })
+          enrollFinalizeRequestBody({
+            paymentIntentId: paymentIntent.id,
+            ...finalizeContact
+          })
         )
       });
       const finalizeData = (await finalizeRes.json().catch(() => ({}))) as {
@@ -739,6 +766,18 @@ function PayCardInner({
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
+        {isPublic ? (
+          <div className="std-combo-row">
+            <input
+              className="std-combo-cell"
+              type="text"
+              autoComplete="off"
+              placeholder="Student's first name"
+              value={studentFirst}
+              onChange={(e) => setStudentFirst(e.target.value)}
+            />
+          </div>
+        ) : null}
       </div>
 
       <span className="std-section-label mt">Card details</span>

@@ -179,6 +179,10 @@ export function trackEnrollPaymentCompleted(
 export function enrollFinalizeRequestBody(input: {
   paymentIntentId?: string;
   setupIntentId?: string;
+  parentFirst?: string;
+  parentLast?: string;
+  parentEmail?: string;
+  studentFirst?: string;
 }) {
   const ids = resolveMetaClickIds();
   return {

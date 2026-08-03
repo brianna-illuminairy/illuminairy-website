@@ -18,7 +18,56 @@ type FinalizePayload = {
   setupIntentId?: string;
   fbp?: string;
   fbc?: string;
+  parentFirst?: string;
+  parentLast?: string;
+  parentEmail?: string;
+  studentFirst?: string;
 };
+
+function trimStr(value: unknown): string {
+  return typeof value === "string" ? value.trim() : "";
+}
+
+/** Prefer form-submitted contact over SSR lead placeholders (public /enroll/sat). */
+function mergeContactMeta(
+  meta: Record<string, string>,
+  body: FinalizePayload
+): Record<string, string> {
+  const parentFirst = trimStr(body.parentFirst) || meta.parent_first || "";
+  const parentLast = trimStr(body.parentLast) || meta.parent_last || "";
+  const parentEmail =
+    trimStr(body.parentEmail).toLowerCase() || meta.parent_email || "";
+  const studentFirst = trimStr(body.studentFirst) || meta.student_first || "";
+  return {
+    ...meta,
+    parent_first: parentFirst,
+    parent_last: parentLast,
+    parent_email: parentEmail,
+    student_first: studentFirst
+  };
+}
+
+async function syncStripeCustomerContact(
+  customerId: string,
+  contact: {
+    parentFirst: string;
+    parentLast: string;
+    parentEmail: string;
+    studentFirst: string;
+  }
+) {
+  const stripe = getStripe();
+  const name = `${contact.parentFirst} ${contact.parentLast}`.trim();
+  await stripe.customers.update(customerId, {
+    ...(contact.parentEmail ? { email: contact.parentEmail } : {}),
+    ...(name ? { name } : {}),
+    metadata: {
+      parent_first: contact.parentFirst,
+      parent_last: contact.parentLast,
+      student_first: contact.studentFirst
+    }
+  });
+}
 
 async function createWeeklySubscription(opts: {
   customerId: string;
@@ -191,7 +240,10 @@ export async function POST(request: Request) {
     const customerId = typeof si.customer === "string" ? si.customer : null;
     const paymentMethodId =
       typeof si.payment_method === "string" ? si.payment_method : null;
-    const meta = si.metadata ?? {};
+    const meta = mergeContactMeta(
+      (si.metadata ?? {}) as Record<string, string>,
+      body
+    );
     const weeklyPriceId = meta.weekly_price_id;
     const trialDaysRaw = meta.weekly_trial_days;
     const leadSlug = meta.lead_slug ?? "";
@@ -206,6 +258,24 @@ export async function POST(request: Request) {
         { error: "Card saved but enrollment setup failed. We will reach out." },
         { status: 502 }
       );
+    }
+
+    if (!meta.parent_email) {
+      return NextResponse.json(
+        { error: "Please enter your email for the receipt." },
+        { status: 400 }
+      );
+    }
+
+    try {
+      await syncStripeCustomerContact(customerId, {
+        parentFirst: meta.parent_first,
+        parentLast: meta.parent_last,
+        parentEmail: meta.parent_email,
+        studentFirst: meta.student_first
+      });
+    } catch (err) {
+      console.warn("standard-enroll finalize: customer sync failed (setup)", err);
     }
 
     const trialDays = Number.parseInt(trialDaysRaw ?? "7", 10) || 7;
@@ -289,7 +359,10 @@ export async function POST(request: Request) {
   const customerId = typeof pi.customer === "string" ? pi.customer : null;
   const paymentMethodId =
     typeof pi.payment_method === "string" ? pi.payment_method : null;
-  const meta = pi.metadata ?? {};
+  const meta = mergeContactMeta(
+    (pi.metadata ?? {}) as Record<string, string>,
+    body
+  );
   const weeklyPriceId = meta.weekly_price_id;
   const trialDaysRaw = meta.weekly_trial_days;
   const leadSlug = meta.lead_slug ?? "";
@@ -304,6 +377,24 @@ export async function POST(request: Request) {
       { error: "Payment succeeded but enrollment setup failed. We will reach out." },
       { status: 502 }
     );
+  }
+
+  if (!meta.parent_email) {
+    return NextResponse.json(
+      { error: "Please enter your email for the receipt." },
+      { status: 400 }
+    );
+  }
+
+  try {
+    await syncStripeCustomerContact(customerId, {
+      parentFirst: meta.parent_first,
+      parentLast: meta.parent_last,
+      parentEmail: meta.parent_email,
+      studentFirst: meta.student_first
+    });
+  } catch (err) {
+    console.warn("standard-enroll finalize: customer sync failed", err);
   }
 
   const trialDays = Number.parseInt(trialDaysRaw ?? "7", 10) || 7;
