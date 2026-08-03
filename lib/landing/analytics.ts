@@ -20,6 +20,28 @@ import type { LpVariant } from "@/lib/quiz-funnel/experiments";
 import type { LpLayout } from "@/lib/quiz-funnel/experiments-layout";
 import { trackQuizGaEvent } from "@/lib/quiz-funnel/analytics";
 import type { LandingSectionId } from "@/lib/landing/content";
+import { AD3_HD_LANDING_PATH } from "@/lib/plan-builder-b-routes";
+import { LAB_ANALYTICS_PROPS } from "@/lib/quiz-funnel-b/constants";
+import { STRATEGY_CALL_ANALYTICS_PROPS } from "@/lib/quiz-funnel/strategy-call-analytics-props";
+
+/** GA4/PostHog funnel tags by landing page (Strategy Call vs free lesson). */
+function landingOfferProps(landingPath: string) {
+  if (
+    landingPath === AD3_HD_LANDING_PATH ||
+    landingPath.startsWith(`${AD3_HD_LANDING_PATH}/`)
+  ) {
+    return {
+      funnel: LAB_ANALYTICS_PROPS.funnel_id,
+      funnel_id: LAB_ANALYTICS_PROPS.funnel_id,
+      offer_goal: LAB_ANALYTICS_PROPS.offer_goal,
+    };
+  }
+  return {
+    funnel: STRATEGY_CALL_ANALYTICS_PROPS.funnel_id,
+    funnel_id: STRATEGY_CALL_ANALYTICS_PROPS.funnel_id,
+    offer_goal: STRATEGY_CALL_ANALYTICS_PROPS.offer_goal,
+  };
+}
 
 declare global {
   interface Window {
@@ -111,13 +133,14 @@ export function trackLandingView(
 ) {
   const props = baseProps(variant, layout, landingPath, extra);
   const analyticsProps = analyticsEventProps(props);
+  const offer = landingOfferProps(landingPath);
   persistLandingAttribution(props);
   if (getPostHogKey()) {
-    posthog.capture(AnalyticsEvents.funnelLandingView, props);
+    posthog.capture(AnalyticsEvents.funnelLandingView, { ...props, ...offer });
   }
   trackQuizGaEvent(AnalyticsEvents.funnelLandingView, {
     ...analyticsProps,
-    funnel: "sat_quiz",
+    ...offer,
   });
   if (typeof window !== "undefined" && window.fbq) {
     window.fbq("track", "ViewContent", {
@@ -142,16 +165,18 @@ export function trackLandingCtaClick(
     ...extra
   });
   const analyticsProps = analyticsEventProps(props);
+  const offer = landingOfferProps(landingPath);
   persistLandingAttribution(props);
   if (getPostHogKey()) {
-    posthog.capture(AnalyticsEvents.funnelCtaClick, props);
+    posthog.capture(AnalyticsEvents.funnelCtaClick, { ...props, ...offer });
   }
   recordClientTouch(TouchEvents.funnelCtaClick, {
-    ...analyticsProps
+    ...analyticsProps,
+    ...offer,
   });
   trackQuizGaEvent(AnalyticsEvents.funnelCtaClick, {
     ...analyticsProps,
-    funnel: "sat_quiz",
+    ...offer,
   });
   if (typeof window !== "undefined" && window.fbq) {
     window.fbq("trackCustom", "FunnelCTA", {
@@ -176,13 +201,17 @@ export function trackLandingSmsClick(
     ...extra
   });
   const analyticsProps = analyticsEventProps(props);
+  const offer = landingOfferProps(landingPath);
   if (getPostHogKey()) {
-    posthog.capture(AnalyticsEvents.funnelLpSmsClick, props);
+    posthog.capture(AnalyticsEvents.funnelLpSmsClick, { ...props, ...offer });
   }
-  recordClientTouch(TouchEvents.funnelLpSmsClick, analyticsProps);
+  recordClientTouch(TouchEvents.funnelLpSmsClick, {
+    ...analyticsProps,
+    ...offer,
+  });
   trackQuizGaEvent(AnalyticsEvents.funnelLpSmsClick, {
     ...analyticsProps,
-    funnel: "sat_quiz"
+    ...offer,
   });
 }
 

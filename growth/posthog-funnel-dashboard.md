@@ -272,4 +272,29 @@ Source maps (readable stacks in prod): set on **Vercel Production** only:
 
 `next.config.mjs` wraps `@posthog/nextjs-config` when both are present at build time. Verify: PostHog → Error tracking → `$exception` events after a test error.
 
-Web vitals: `capture_performance.web_vitals: true` in `instrumentation-client.ts` → `$web_vitals` events.
+Web vitals: `capture_performance.web_vitals: true` in `lib/posthog/init-client.ts` → `$web_vitals` events.
+
+## Dual funnel — Strategy Call vs free lesson
+
+Ad Final URLs split traffic; measure as **parallel funnels**, not a randomized A/B.
+
+| Offer | LP | Quiz | `offer_goal` | `funnel_id` | Lead (PH) | Book (PH) | Book (GA4) |
+|-------|----|------|--------------|-------------|-----------|-----------|------------|
+| Strategy Call | `/` | `/plan` | `strategy_call` | `sat_quiz` | `quiz_lead_submitted` | `quiz_booking_confirmed` | `schedule` |
+| Free lesson | `/sat-plan-builder` | `/plan-b` | `free_lesson` | `plan_builder_b` | `lab_lead_submitted` | `lab_lesson_booked` | `lab_lesson_booked` |
+
+Dashboard: [Dual funnel — Strategy Call vs free lesson](https://us.posthog.com/project/428901/dashboard/1945968)
+
+- `$pageview` suppressed on both `/plan` and `/plan-b` (step events are SSOT).
+- CRM free-lesson touch funnel remains `sat_quiz_b` (client `funnel_id` stays `plan_builder_b`).
+- Free lesson playbook: [`plan-b-analytics-playbook.md`](plan-b-analytics-playbook.md)
+- Keys / warehouse: [`analytics-key-matrix.md`](analytics-key-matrix.md), [`warehouse-sources-runbook.md`](warehouse-sources-runbook.md)
+
+### Google Ads conversion parity
+
+| Offer | GA4 event | Ads action |
+|-------|-----------|------------|
+| Strategy Call | `schedule` | Primary Book appointment (Count: One) |
+| Free lesson | `lab_lesson_booked` | **Separate** import — do not mix with `schedule` |
+
+Meta: both paths fire `Lead` + `Schedule` with stable event ids (`lab_lead_*` / `schedule_*` on free lesson).

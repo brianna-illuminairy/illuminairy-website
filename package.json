@@ -17,6 +17,7 @@
     "deploy:prod": "node scripts/deploy-cli.mjs",
     "posthog:verify": "node scripts/verify-posthog.mjs",
     "posthog:enable-recordings": "node scripts/enable-posthog-session-recording.mjs",
+    "analytics:env-audit": "node scripts/analytics-env-audit.mjs",
     "cc:analyze-blog": "node scripts/analyze-curious-cardinals-blog.mjs",
     "cc:fetch-typeforms": "node scripts/fetch-cc-typeforms.mjs",
     "typeform:mentor:build": "node scripts/typeform/build-mentor-application.mjs",

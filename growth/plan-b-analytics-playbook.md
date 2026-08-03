@@ -47,9 +47,11 @@ node scripts/funnel-b-analytics-smoke.mjs
 
 ## PostHog filters
 
+- Prefer `properties.offer_goal = 'free_lesson'` or `properties.funnel_id = 'plan_builder_b'` (after 2026-08-03 deploy)
 - Scope URL: `$current_url ILIKE '%/plan-b%'` OR rewrite target `/quiz-b`
-- Exclude internal emails (same list as Plan Builder A playbook)
-- Break down by `plan_builder_variant`, `school_referral`, `utm_campaign`
+- Exclude internal emails (same list as Strategy Call playbook)
+- Break down by `offer_goal`, `plan_builder_variant`, `school_referral`, `utm_campaign`
+- Parallel comparison dashboard: [Dual funnel — Strategy Call vs free lesson](https://us.posthog.com/project/428901/dashboard/1945968) — see [`posthog-funnel-dashboard.md`](posthog-funnel-dashboard.md) § Dual funnel
 
 ## APIs
 

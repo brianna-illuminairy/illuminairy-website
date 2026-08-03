@@ -1,12 +1,23 @@
 # Active context
 
-*Last updated: 2026-08-02 (Plan A s5 phone OTP)*
+*Last updated: 2026-08-03 (PostHog ads measurement restore)*
+
+## Resume here
+
+**PostHog ingestion restored (2026-08-03):** Root cause was empty/missing client `NEXT_PUBLIC_POSTHOG_KEY` (Vercel had it as Sensitive / stale). Set **Non-sensitive** `phc_…` on Vercel Production + Preview + `.env.local`. Dual-funnel props (`offer_goal`), `$pageview` parity on `/plan-b`, LP GA4 tags, dashboard https://us.posthog.com/project/428901/dashboard/1945968. Docs: `growth/analytics-key-matrix.md`, `growth/warehouse-sources-runbook.md`, `growth/ads-conversion-parity.md`. **Owner:** re-auth Meta Ads + fix Stripe warehouse + link Google Ads/GA4 in PostHog UI.
+
+
+# Active context
+
+*Last updated: 2026-08-03 (funnel naming)*
 
 ## Resume here (start next chat with this)
 
-**Plan A phone verify (2026-08-02):** Ads funnel `/plan` s5 now requires Firebase OTP before lead + Calendly book (same stack as Plan B; Plan B routes unchanged). APIs: `/api/funnel/phone/send`, `/api/funnel/phone/verify`. Analytics: `quiz_phone_verified`. Non-prod QA bypass: `?qa=1` or `?qa=phone`. Gate only when Firebase is configured. `funnel:booking-guard` + `agent:verify` clean. E2E s5 chrome checks added; unrelated `hit-q3-none-auto` flake may still fail.
+**Funnel names (SSOT):** [`docs/funnel-names.md`](../docs/funnel-names.md) — say **Strategy Call funnel** (`/plan`), **free lesson funnel** (`/plan-b`), **landing page** (`/sat-plan-builder`). Never “Plan A / Plan B” in discussion. URLs unchanged.
 
-**Plan B freeze + Learn consolidation (2026-07-19):** Plan B is the free-lesson funnel (`/sat-plan-builder` → `/plan-b` → free lesson → `/portal` with grayed areas). **Do not edit Plan B or `/portal` while building Illuminairy Learn** unless Brianna explicitly asks — ads depend on it. Long-term: one logged-in surface in Learn; build Learn first, then merge Plan B portal + per-student portals (`/soha`, `/danielle`, …). SSOT for that path lives in the Learn repo: `docs/product/surface-consolidation.md`.
+**Strategy Call funnel phone verify (2026-08-02):** `/plan` s5 requires Firebase OTP before lead + Calendly book (same stack as free lesson funnel; `/plan-b` routes unchanged). APIs: `/api/funnel/phone/send`, `/api/funnel/phone/verify`. Analytics: `quiz_phone_verified`. Non-prod QA bypass: `?qa=1` or `?qa=phone`. Gate only when Firebase is configured. CTA: **Continue booking** + Strategy Call SMS consent. `funnel:booking-guard` + `agent:verify` clean.
+
+**Free lesson funnel freeze + Learn consolidation (2026-07-19):** Landing page → free lesson funnel → portal (`/sat-plan-builder` → `/plan-b` → free lesson → `/portal`). **Do not edit free lesson funnel or `/portal` while building Illuminairy Learn** unless Brianna explicitly asks — ads depend on it. Long-term: one logged-in surface in Learn; build Learn first, then merge portal + per-student portals (`/soha`, `/danielle`, …). SSOT: Learn repo `docs/product/surface-consolidation.md`.
 
 **Lesson platform archived (2026-07-19):** Advanced Math pack + live lesson scaffolding moved to [`archives/sat-lessons-advanced-math-retired-2026-07/`](../archives/sat-lessons-advanced-math-retired-2026-07/README.md). Portal **Lessons** tab → `/portal/home` (booking card only). Tutor Today keeps Meet schedule. Per-student algebra HTML portals untouched until Learn migration.
 
@@ -15,15 +26,13 @@
 ---
 
 **Funnels — do not mix:**
-- **Plan A (Quiz 1):** `/` LP + `/plan` funnel (high GPA / low SAT). Strategy Call. Meta ads ad1–ad5 (except ad3 HD) land on `/`.
-- **Plan B (Quiz 2 / ad3 HD):** `/sat-plan-builder` → `/plan-b` → **free lesson → `/portal`**. **Frozen** while Learn is under construction. Frozen tutor copy in `lib/plan-b/ad3-hd-landing-copy.ts`.
+- **Strategy Call funnel:** `/plan` (high GPA / low SAT path → Strategy Call). Some Meta ads still land on `/` then enter `/plan`.
+- **Landing page + free lesson funnel:** `/sat-plan-builder` → `/plan-b` → free lesson → `/portal`. **Frozen** while Learn is under construction. Frozen tutor copy in `lib/plan-b/ad3-hd-landing-copy.ts`.
 - **Score Review:** `/june-score-review` → `/score-review` (separate offer).
-
-**2026-06-25 funnel revert + Plan B launch (this session):** Removed shared `components/funnel-sibling/` + `lib/funnel-sibling/` modules and the per-step Plan B CSS split (9 chunks → 2 files). **Plan A is bit-perfect against 9057d99** — production funnel `/plan` is untouched. **Plan B (`/plan-b`)** is now a copy-paste sibling of Plan A: same layout/page/QuizClientRoot/QuizRunner shape, with its own state/screens. CSS chain = `quiz-b-bundle.css` → `quiz-b-lab.css` sync from `layout.tsx`. No critical inline, no deferred chunks, no SSR entry shell. New `app/quiz-b/utm-capture.tsx` captures UTMs to localStorage + cookie + PostHog superproperties (capture-only, no UI branching) for Meta ads attribution. Plan A untouched by UTM work. Score Review (`/quiz-c`) parked as placeholder page.
 
 ---
 
-## Previous: 50-state Plan B regional schools (2026-06-22)
+## Previous: 50-state regional schools (free lesson funnel) (2026-06-22)
 
 - **SSOT:** `lib/plan-b/school-catalog-data.ts`, `build-regional-market.ts`, `regional-schools.ts`
 - **Validate:** `npm run plan-b:validate-regional-schools` (in `agent:verify`)
@@ -44,7 +53,7 @@
 
 ---
 
-## Previous: Plan Builder B lab funnel (2026-06-22)
+## Previous: Free lesson funnel lab (2026-06-22)
 
 - **Live entry:** ad3 tutor HD only on `/sat-plan-builder` → **`/plan-b`** (other Meta ads use `/` → `/plan`)
 - **Route:** `/plan-b` → `app/quiz-b/` + `lib/quiz-funnel-b/` (separate `qfb_*` storage)

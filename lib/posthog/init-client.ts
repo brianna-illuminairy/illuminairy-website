@@ -18,6 +18,7 @@ export function ensurePostHogInitialized(): boolean {
     person_profiles: "identified_only",
     capture_pageview: false,
     capture_pageleave: true,
+    enable_heatmaps: true,
     capture_performance: {
       web_vitals: true,
     },

@@ -35,11 +35,12 @@ function loadEnvValue(name) {
   return "";
 }
 
-const personalKey = loadEnvValue("POSTHOG_PERSONAL_API_KEY");
+const personalKey =
+  loadEnvValue("POSTHOG_PERSONAL_API_KEY") || loadEnvValue("POSTHOG_API_KEY");
 
 if (!personalKey.startsWith("phx_")) {
   console.error(
-    "✗ Set POSTHOG_PERSONAL_API_KEY (phx_...) from PostHog → Settings → Personal API keys"
+    "✗ Set POSTHOG_PERSONAL_API_KEY or POSTHOG_API_KEY (phx_...) from PostHog → Settings → Personal API keys"
   );
   console.error("  Example: POSTHOG_PERSONAL_API_KEY=phx_... npm run posthog:enable-recordings");
   process.exit(1);
