@@ -72,12 +72,9 @@ console.log(`  session_recording_opt_in: ${project.session_recording_opt_in}`);
 const patchBody = {
   session_recording_opt_in: true,
   session_recording_sample_rate: "1.00",
-  recording_domains: [
-    "illuminairy.com",
-    "www.illuminairy.com",
-    "localhost",
-    "127.0.0.1"
-  ],
+  // Empty = record on every domain (prod, www, Vercel previews, localhost).
+  // A non-empty allowlist blocks any host not listed.
+  recording_domains: [],
   session_recording_masking_config: {
     maskAllInputs: true
   }
