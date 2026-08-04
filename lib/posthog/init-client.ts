@@ -22,7 +22,7 @@ export function ensurePostHogInitialized(): boolean {
     capture_performance: {
       web_vitals: true,
     },
-    disable_session_recording: true,
+    disable_session_recording: false,
     session_recording: {
       maskAllInputs: true,
       maskInputOptions: {
