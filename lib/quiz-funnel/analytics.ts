@@ -36,6 +36,7 @@ import {
   funnelScreenRole,
   isPlanRevealStep,
 } from "@/lib/quiz-funnel/funnel-screen-roles";
+import { STRATEGY_CALL_ANALYTICS_PROPS } from "@/lib/quiz-funnel/strategy-call-analytics-props";
 
 declare global {
   interface Window {
@@ -127,9 +128,12 @@ function persistedLpContext() {
   };
 }
 
-/** Session + URL UTMs on every quiz analytics payload (PostHog register + explicit props). */
+/** Session + URL UTMs + Strategy Call offer tags on every quiz analytics payload. */
 function quizAttributionProps() {
-  return analyticsAttributionProps();
+  return {
+    ...STRATEGY_CALL_ANALYTICS_PROPS,
+    ...analyticsAttributionProps(),
+  };
 }
 
 const PARENT_CONFIRMED_KEY = "illuminairy_parent_confirmed";

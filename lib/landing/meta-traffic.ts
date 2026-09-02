@@ -103,7 +103,28 @@ export function metaLandingUrl(input: {
   return `https://illuminairy.com/?${params.toString()}`;
 }
 
-/** Live Meta cold ads — `/sat-plan-builder` path (same LP, distinct reporting). */
+/** Strategy Call Meta ads — direct `/plan` entry (questionnaire → s5 book). */
+export function metaStrategyCallFunnelUrl(input: {
+  hook?: LandingHeroHook;
+  campaign?: string;
+  content: string;
+  term?: string;
+  source?: "facebook" | "meta";
+  version?: string;
+}): string {
+  const params = new URLSearchParams({
+    utm_source: input.source ?? "meta",
+    utm_medium: "paid_social",
+    utm_campaign: input.campaign ?? "c1_sat_plan_builder_cold_creative_test",
+    utm_content: input.content
+  });
+  if (input.term) params.set("utm_term", input.term);
+  if (input.hook) params.set("hook", input.hook);
+  if (input.version) params.set("version", input.version);
+  return `https://illuminairy.com/plan?${params.toString()}`;
+}
+
+/** Free lesson Meta ads — `/sat-plan-builder` LP → `/plan-b`. */
 export function metaSatPlanBuilderLandingUrl(input: {
   hook?: LandingHeroHook;
   campaign?: string;

@@ -2,6 +2,7 @@
 
 import type { LeadDetail } from "@/lib/admin/crm-queries";
 import { formatBookingDateTime } from "@/lib/admin/format-booking";
+import { offerLabelForCrmFunnel } from "@/lib/marketing/meta-live-creatives";
 import { ProfileCard as Card, ProfileRow as Row } from "./profile-card";
 import { EditableRow } from "./editable-row";
 
@@ -37,10 +38,12 @@ export function LeadProfileOverview({
     sat_baseline: string | null;
     score_range: string | null;
     main_goal: string | null;
+    funnel: string | null;
     utm_source: string | null;
     utm_medium: string | null;
     utm_campaign: string | null;
     utm_content: string | null;
+    utm_term: string | null;
     landing_page: string | null;
     referrer: string | null;
     gclid: string | null;
@@ -50,9 +53,26 @@ export function LeadProfileOverview({
     calendly_event_uri: string | null;
     created_at: string;
     first_touch_at: string | null;
+    additional_context: string | null;
   };
 
   const booking = formatBookingDateTime(l.booked_call_at);
+  let creativeVersion: string | null = null;
+  if (typeof l.additional_context === "string" && l.additional_context.trim()) {
+    try {
+      const parsed = JSON.parse(l.additional_context) as {
+        creative_version?: unknown;
+      };
+      if (
+        typeof parsed.creative_version === "string" &&
+        parsed.creative_version.trim()
+      ) {
+        creativeVersion = parsed.creative_version.trim();
+      }
+    } catch {
+      /* ignore */
+    }
+  }
 
   return (
     <div className="grid gap-4 md:grid-cols-2 [&>*]:min-w-0">
@@ -183,8 +203,12 @@ export function LeadProfileOverview({
       </Card>
 
       <Card title="Source & attribution">
+        <Row label="Offer" value={offerLabelForCrmFunnel(l.funnel)} />
+        <Row label="Funnel id" value={l.funnel} />
         <Row label="Campaign" value={l.utm_campaign} />
         <Row label="Content" value={l.utm_content} />
+        <Row label="Creative version" value={creativeVersion} />
+        <Row label="Term" value={l.utm_term} />
         <Row label="Source" value={l.utm_source} />
         <Row label="Medium" value={l.utm_medium} />
         <Row label="Landing" value={l.landing_page} />

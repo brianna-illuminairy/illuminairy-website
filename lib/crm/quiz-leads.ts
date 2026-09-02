@@ -137,11 +137,18 @@ export async function upsertLeadFromQuizFunnel(
     quiz_answers: quizSnapshot,
     additional_context: JSON.stringify({
       funnel: options.funnel ?? "sat_quiz",
+      offer_goal:
+        options.funnel === "sat_quiz_b"
+          ? "free_lesson"
+          : options.funnel === "score_review"
+            ? "score_review"
+            : "strategy_call",
       ...quizSnapshot,
       promised_gain_pts: promisedGain,
       showed_gpa_gap: gpaGap,
       weeks_until_test: weeksUntilQ5Test(answers.q5),
-      creative_version: attribution.version ?? null
+      creative_version: attribution.version ?? null,
+      utm_content: attribution.utm_content ?? null,
     }),
     stage: "intake_submitted" as const,
     lost_reason: null,

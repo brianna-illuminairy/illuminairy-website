@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { V4Footer } from "@/components/landing/v4/v4-footer";
 import { V4TrustBar } from "@/components/landing/v4/v4-trust-bar";
 import {
@@ -6,6 +5,7 @@ import {
   AD3_HD_CTA,
   AD3_HD_HEADLINE,
 } from "@/lib/plan-b/ad3-hd-landing-copy";
+import { Ad3HdCtaLink } from "./ad3-hd-cta-link";
 import { Ad3HdTopbar } from "./ad3-hd-topbar";
 
 type Ad3HdLandingPageProps = {
@@ -50,9 +50,7 @@ export function Ad3HdLandingPage({ ctaHref }: Ad3HdLandingPageProps) {
                   </li>
                 ))}
               </ul>
-              <Link href={ctaHref} className="lp-btn">
-                {AD3_HD_CTA.button} <span className="arrow">→</span>
-              </Link>
+              <Ad3HdCtaLink ctaHref={ctaHref} />
               <p className="lp-cta-sub">{AD3_HD_CTA.finePrint}</p>
             </div>
           </div>

@@ -11,9 +11,13 @@ for (const row of rows) {
 
 console.log("Live Meta ad destination URLs (paste into Ads Manager):\n");
 for (const row of rows) {
-  console.log(`${row.id} · utm_content=${row.utmContent} · hook=${row.heroHook}`);
+  console.log(
+    `${row.id} · offer=${row.offerGoal} · utm_content=${row.utmContent} · hook=${row.heroHook} · path=${row.landingPath}`
+  );
   console.log(row.url);
   console.log("");
 }
 
-console.log(`Validated ${rows.length} URLs — LP entry only, no /plan deep links.`);
+console.log(
+  `Validated ${rows.length} URLs — no step= deep links (Strategy Call may use /plan).`
+);
