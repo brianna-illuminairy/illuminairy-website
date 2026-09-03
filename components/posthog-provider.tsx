@@ -5,6 +5,7 @@ import { PostHogProvider as PHProvider } from "posthog-js/react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { Suspense, useEffect } from "react";
 import { useAnalyticsReady } from "@/components/analytics-ready-provider";
+import { funnelIdForPath } from "@/lib/analytics/funnel-id";
 import { ensureVisitorId } from "@/lib/attribution-visitor";
 import { trackAd3LandingViewOnce } from "@/lib/marketing/ad3-landing-analytics";
 import { AD3_HD_LANDING_PATH, isPlanBuilderBPathname } from "@/lib/plan-builder-b-routes";
@@ -42,6 +43,9 @@ function PostHogInitGate() {
     // the lead; PostHog refuses to merge one identified id into another, so
     // identifying here would orphan every pre-lead event on a visitor-id person.
     posthog.register({ visitor_id: ensureVisitorId() });
+    // Both funnels emit the same event names, so every event needs the funnel on
+    // it. Resolved from the path so a screen cannot forget to tag itself.
+    posthog.register({ funnel_id: funnelIdForPath(pathname) });
     if (isPlanBuilderBPathname(pathname) || pathname === "/quiz-b" || pathname?.startsWith("/quiz-b/")) {
       posthog.register(LAB_ANALYTICS_PROPS);
     } else if (isStrategyCallQuizPath(pathname)) {

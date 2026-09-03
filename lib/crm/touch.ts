@@ -2,6 +2,7 @@ import {
   attributionToTouchColumns,
   type AttributionSnapshot
 } from "@/lib/attribution";
+import { resolveFunnelId } from "@/lib/analytics/funnel-id";
 import { getSupabaseAdmin } from "@/lib/supabase/server";
 import type { TouchEventInput } from "@/lib/crm/types";
 
@@ -30,12 +31,16 @@ export async function appendTouchEvent(input: TouchEventInput) {
       ? { landing_page: attr.landing_page }
       : {})
   };
+  // Every touch from both funnels lands here, so this is the only place that
+  // needs to get funnel identity right.
+  const funnelId = resolveFunnelId({ path: input.path, payload });
   const row = {
     visitor_id: input.visitor_id ?? null,
     lead_id: input.lead_id ?? null,
     client_id: input.client_id ?? null,
     enrollment_id: input.enrollment_id ?? null,
     event_type: input.event_type,
+    funnel_id: funnelId,
     path: input.path ?? null,
     full_url: input.full_url ?? null,
     referrer: input.referrer ?? null,

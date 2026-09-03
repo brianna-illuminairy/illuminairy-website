@@ -2,7 +2,11 @@
 
 import { useEffect, useRef, useState } from 'react';
 import type { ConfirmationResult } from 'firebase/auth';
-import { captureLabPhoneVerified } from '@/lib/quiz-funnel-b/analytics';
+import {
+  captureLabPhoneOtpFailed,
+  captureLabPhoneOtpRequested,
+  captureLabPhoneVerified,
+} from '@/lib/quiz-funnel-b/analytics';
 import { submitVerifiedLabLead } from '@/lib/quiz-funnel-b/submit-verified-lead';
 import type { QuizAnswers } from '@/app/quiz-b/state';
 import { QFScreen } from '@/app/quiz/components/QFShell';
@@ -185,6 +189,7 @@ export function BPhoneVerify({
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
+        captureLabPhoneOtpFailed('send_rejected');
         setError(typeof data.message === 'string' ? data.message : 'Could not send code.');
         return;
       }
@@ -192,14 +197,17 @@ export function BPhoneVerify({
       confirmationRef.current = await sendFunnelPhoneVerificationCode(phone);
       setOtp('');
       setOtpOpen(true);
+      captureLabPhoneOtpRequested();
     } catch (err) {
       if (
         err instanceof Error &&
         (err.message.startsWith('recaptcha_') || err.message === 'recaptcha_browser_only')
       ) {
+        captureLabPhoneOtpFailed('recaptcha');
         setError(funnelRecaptchaEnterpriseClientErrorMessage(err));
         return;
       }
+      captureLabPhoneOtpFailed('send_failed');
       setError(funnelFirebaseClientErrorMessage(err));
     } finally {
       setSending(false);
@@ -222,6 +230,7 @@ export function BPhoneVerify({
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
+        captureLabPhoneOtpFailed('invalid_code');
         setError(typeof data.message === 'string' ? data.message : 'Invalid code.');
         return;
       }

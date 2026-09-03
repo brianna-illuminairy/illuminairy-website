@@ -23,7 +23,11 @@ export const TouchEvents = {
   bookingError: "booking_error",
   attributionReturn: "attribution_return",
   quizScheduleView: "quiz_schedule_view",
+  quizPhoneOtpRequested: "quiz_phone_otp_requested",
+  quizPhoneOtpFailed: "quiz_phone_otp_failed",
   quizPhoneVerified: "quiz_phone_verified",
+  labPhoneOtpRequested: "lab_phone_otp_requested",
+  labPhoneOtpFailed: "lab_phone_otp_failed",
   labPhoneVerified: "lab_phone_verified",
   labLeadSubmitted: "lab_lead_submitted",
   labLessonBooked: "lab_lesson_booked",
@@ -52,7 +56,11 @@ export const CLIENT_TOUCH_EVENTS = new Set<TouchEventName>([
   TouchEvents.quizProgressSync,
   TouchEvents.quizScheduleView,
   TouchEvents.attributionReturn,
+  TouchEvents.quizPhoneOtpRequested,
+  TouchEvents.quizPhoneOtpFailed,
   TouchEvents.quizPhoneVerified,
+  TouchEvents.labPhoneOtpRequested,
+  TouchEvents.labPhoneOtpFailed,
   TouchEvents.labPhoneVerified,
   TouchEvents.labLeadSubmitted,
   TouchEvents.labLessonBooked,
@@ -74,6 +82,8 @@ export const PostHogEvents = {
   quizStepBack: "quiz_step_back",
   achievabilityInputEdited: "achievability_input_edited",
   quizDoubtsAnswered: "quiz_doubts_answered",
+  quizPhoneOtpRequested: "quiz_phone_otp_requested",
+  quizPhoneOtpFailed: "quiz_phone_otp_failed",
   quizPhoneVerified: "quiz_phone_verified",
 } as const;
 
@@ -91,6 +101,8 @@ export const Ga4Events = {
   quizBookingValidation: "quiz_booking_validation",
   quizStepBack: "quiz_step_back",
   achievabilityInputEdited: "achievability_input_edited",
+  quizPhoneOtpRequested: "quiz_phone_otp_requested",
+  quizPhoneOtpFailed: "quiz_phone_otp_failed",
   quizPhoneVerified: "quiz_phone_verified",
   enrollCheckoutViewed: "enroll_checkout_viewed",
   beginCheckout: "begin_checkout",
@@ -127,6 +139,8 @@ export const KlaviyoEvents = {
 
 /** Plan Builder B (lab) — PostHog event names. */
 export const LabPostHogEvents = {
+  labPhoneOtpRequested: "lab_phone_otp_requested",
+  labPhoneOtpFailed: "lab_phone_otp_failed",
   labPhoneVerified: "lab_phone_verified",
   labLeadSubmitted: "lab_lead_submitted",
   labLessonBooked: "lab_lesson_booked",
@@ -144,6 +158,8 @@ export const LabPostHogEvents = {
 
 /** Plan Builder B (lab) — GA4 event names. */
 export const LabGa4Events = {
+  labPhoneOtpRequested: "lab_phone_otp_requested",
+  labPhoneOtpFailed: "lab_phone_otp_failed",
   labPhoneVerified: "lab_phone_verified",
   labLeadSubmitted: "lab_lead_submitted",
   labLessonBooked: "lab_lesson_booked",

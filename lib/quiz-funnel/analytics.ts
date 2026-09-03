@@ -328,6 +328,38 @@ export function identifyQuizLead(email: string, answers: Record<string, unknown>
   syncQuizPersonProperties(answers);
 }
 
+/**
+ * Fires when the parent asks for a code. Without this the scheduler drop-off is
+ * a single opaque step: no way to tell "never got as far as the code" from
+ * "would not enter it".
+ */
+export function captureQuizPhoneOtpRequested() {
+  const props = {
+    funnel: "sat_quiz" as const,
+    step: "s5",
+    ...quizAttributionProps(),
+  };
+  if (getPostHogKey()) {
+    posthog.capture(PostHogEvents.quizPhoneOtpRequested, props);
+  }
+  trackQuizGaEvent(Ga4Events.quizPhoneOtpRequested, props);
+  void recordClientTouch(TouchEvents.quizPhoneOtpRequested, props);
+}
+
+export function captureQuizPhoneOtpFailed(reason: string) {
+  const props = {
+    funnel: "sat_quiz" as const,
+    step: "s5",
+    reason,
+    ...quizAttributionProps(),
+  };
+  if (getPostHogKey()) {
+    posthog.capture(PostHogEvents.quizPhoneOtpFailed, props);
+  }
+  trackQuizGaEvent(Ga4Events.quizPhoneOtpFailed, props);
+  void recordClientTouch(TouchEvents.quizPhoneOtpFailed, props);
+}
+
 export function captureQuizPhoneVerified() {
   const props = {
     funnel: "sat_quiz" as const,

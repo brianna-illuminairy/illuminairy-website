@@ -9,6 +9,7 @@ import {
 import { isFreeLessonCalendlyEvent } from "@/lib/calendly/free-lesson-event";
 import { isScoreReviewCalendlyEvent } from "@/lib/calendly/score-review-event";
 import { KlaviyoEvents } from "@/lib/analytics-registry";
+import { FUNNEL_IDS } from "@/lib/analytics/funnel-id";
 import { notifyLabFreeLessonBooked } from "@/lib/crm/lab-free-lesson-notify";
 import { site } from "@/lib/site";
 import { PLAN_BUILDER_FUNNEL_ID } from "@/lib/quiz-funnel-b/constants";
@@ -79,6 +80,13 @@ export async function handleCalendlyInviteeCreated(body: CalendlyWebhookBody) {
       eventName,
     });
   const { meetLink, meetCode } = meetLinkFromCalendlyPayload(invitee);
+  // Webhook touches have no path, so name the funnel from the booked event type.
+  // Without this a booking lands with no funnel and is invisible in both funnels.
+  const bookedFunnelId = scoreReview
+    ? FUNNEL_IDS.scoreReview
+    : freeLesson
+      ? FUNNEL_IDS.freeLesson
+      : FUNNEL_IDS.strategyCall;
 
   if (lead) {
     await supabase
@@ -144,6 +152,7 @@ export async function handleCalendlyInviteeCreated(body: CalendlyWebhookBody) {
       event_type: "call_booked",
       source: "webhook",
       payload: {
+        funnel_id: bookedFunnelId,
         calendly_uri: calendlyUri,
         invitee_email: email,
         strategy_call_at: strategyCallAt,
@@ -179,6 +188,7 @@ export async function handleCalendlyInviteeCreated(body: CalendlyWebhookBody) {
       event_type: "call_booked",
       source: "webhook",
       payload: {
+        funnel_id: bookedFunnelId,
         calendly_uri: calendlyUri,
         invitee_email: email,
         strategy_call_at: strategyCallAt,

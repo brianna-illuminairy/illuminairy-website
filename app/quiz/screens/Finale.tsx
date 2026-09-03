@@ -13,6 +13,8 @@ import {
   captureQuizBookingError,
   captureQuizBookingValidation,
   captureQuizThankYouViewed,
+  captureQuizPhoneOtpFailed,
+  captureQuizPhoneOtpRequested,
   captureQuizPhoneVerified,
 } from '@/lib/quiz-funnel/analytics';
 import {
@@ -289,6 +291,7 @@ export function QFS5Approved({
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
+        captureQuizPhoneOtpFailed('send_rejected');
         setOtpSendError(
           typeof data.message === 'string' ? data.message : 'Could not send code.'
         );
@@ -296,14 +299,17 @@ export function QFS5Approved({
       }
       const confirmation = await sendPlanAPhoneOtp(String(parentPhone));
       setOtpConfirmation(confirmation);
+      captureQuizPhoneOtpRequested();
     } catch (err) {
       if (
         err instanceof Error &&
         (err.message.startsWith('recaptcha_') || err.message === 'recaptcha_browser_only')
       ) {
+        captureQuizPhoneOtpFailed('recaptcha');
         setOtpSendError(funnelRecaptchaEnterpriseClientErrorMessage(err));
         return;
       }
+      captureQuizPhoneOtpFailed('send_failed');
       setOtpSendError(funnelFirebaseClientErrorMessage(err));
     } finally {
       setOtpSending(false);

@@ -206,6 +206,25 @@ export function captureQuizStepBack(meta: {
   });
 }
 
+/** See the Plan A twin: separates "never asked for a code" from "would not enter it". */
+export function captureLabPhoneOtpRequested() {
+  const props = labProps();
+  if (getPostHogKey()) {
+    posthog.capture(LabPostHogEvents.labPhoneOtpRequested, props);
+  }
+  trackLabGa(LabGa4Events.labPhoneOtpRequested);
+  void recordClientTouch(TouchEvents.labPhoneOtpRequested, props);
+}
+
+export function captureLabPhoneOtpFailed(reason: string) {
+  const props = labProps({ reason });
+  if (getPostHogKey()) {
+    posthog.capture(LabPostHogEvents.labPhoneOtpFailed, props);
+  }
+  trackLabGa(LabGa4Events.labPhoneOtpFailed, { reason });
+  void recordClientTouch(TouchEvents.labPhoneOtpFailed, props);
+}
+
 export function captureLabPhoneVerified() {
   const props = labProps();
   if (getPostHogKey()) {
