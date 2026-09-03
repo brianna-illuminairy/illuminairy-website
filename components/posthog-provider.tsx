@@ -37,8 +37,11 @@ function PostHogInitGate() {
     if (!getPostHogKey()) return;
     if (defer && !ready) return;
     if (!ensurePostHogInitialized()) return;
-    const visitorId = ensureVisitorId();
-    posthog.identify(visitorId);
+    // Register the visitor id as a super property — never identify() with it.
+    // identify() on an anonymous session is what merges the funnel history into
+    // the lead; PostHog refuses to merge one identified id into another, so
+    // identifying here would orphan every pre-lead event on a visitor-id person.
+    posthog.register({ visitor_id: ensureVisitorId() });
     if (isPlanBuilderBPathname(pathname) || pathname === "/quiz-b" || pathname?.startsWith("/quiz-b/")) {
       posthog.register(LAB_ANALYTICS_PROPS);
     } else if (isStrategyCallQuizPath(pathname)) {

@@ -323,6 +323,9 @@ export function identifyQuizLead(email: string, answers: Record<string, unknown>
     ...opening,
     quiz_trigger: opening.q1
   });
+  // person_profiles: "identified_only" drops setPersonProperties fired on the
+  // anonymous session, so replay the full answer snapshot onto the lead person.
+  syncQuizPersonProperties(answers);
 }
 
 export function captureQuizPhoneVerified() {
