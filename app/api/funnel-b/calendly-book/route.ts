@@ -11,7 +11,11 @@ import {
   type QuizBookingErrorCode,
 } from "@/lib/calendly/booking-errors";
 import { funnelApiError } from "@/lib/calendly/funnel-api-errors";
-import { countPhoneDigits, isValidBookingPhone } from "@/lib/calendly/phone-e164";
+import {
+  countPhoneDigits,
+  isSamePhoneNumber,
+  isValidBookingPhone,
+} from "@/lib/calendly/phone-e164";
 import { getSupabaseAdmin } from "@/lib/supabase/server";
 import { appendTouchEvent } from "@/lib/crm/touch";
 import { notifyLabFreeLessonBooked } from "@/lib/crm/lab-free-lesson-notify";
@@ -202,6 +206,29 @@ export async function POST(request: Request) {
       message: "Please enter a valid US mobile number.",
       extra: { phone_digit_count: countPhoneDigits(parentPhone ?? "") },
     });
+  }
+
+  // The OTP is bound to a number, so reject a phone swapped in after verifying.
+  // Only an outright mismatch blocks: this screen has no OTP step to recover on,
+  // and b-phone already required verification to reach it.
+  const supabaseForVerify = getSupabaseAdmin();
+  if (supabaseForVerify && parentEmail) {
+    const { data: leadForVerify } = await supabaseForVerify
+      .from("leads")
+      .select("phone_verified_phone")
+      .eq("parent_email", parentEmail.toLowerCase())
+      .maybeSingle();
+    const verifiedPhone =
+      typeof leadForVerify?.phone_verified_phone === "string"
+        ? leadForVerify.phone_verified_phone
+        : null;
+    if (verifiedPhone && !isSamePhoneNumber(verifiedPhone, parentPhone)) {
+      return funnelApiError(400, "invalid_phone", {
+        field: "parentPhone",
+        message:
+          "That number does not match the one you verified. Use the verified number or request a new code.",
+      });
+    }
   }
 
   const freeLessonUrl = site.freeLessonCalendlyUrl;

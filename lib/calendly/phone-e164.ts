@@ -74,6 +74,25 @@ export function phoneToCalendlyE164(raw: string | undefined): string | null {
   return null;
 }
 
+/** Last 10 NANP digits — compare two numbers written in different formats. */
+export function phoneCompareKey(raw: string | null | undefined): string | null {
+  const e164 = phoneToCalendlyE164(raw ?? undefined);
+  if (!e164) return null;
+  const digits = e164.replace(/\D/g, "");
+  return digits.length >= 10 ? digits.slice(-10) : digits;
+}
+
+/** True when both parse to the same US number. Unparseable input never matches. */
+export function isSamePhoneNumber(
+  a: string | null | undefined,
+  b: string | null | undefined
+): boolean {
+  const keyA = phoneCompareKey(a);
+  const keyB = phoneCompareKey(b);
+  if (!keyA || !keyB) return false;
+  return keyA === keyB;
+}
+
 /** Parent-facing error from Calendly API or our validation. */
 export function friendlyCalendlyBookError(raw: string): string {
   const lower = raw.toLowerCase();

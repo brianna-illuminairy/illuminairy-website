@@ -1,4 +1,4 @@
-import { phoneToCalendlyE164 } from "@/lib/calendly/phone-e164";
+import { isSamePhoneNumber, phoneToCalendlyE164 } from "@/lib/calendly/phone-e164";
 import { isFirebaseClientConfigured } from "@/lib/firebase/public-config";
 import {
   isFirebasePhoneTokenVerifyConfigured,
@@ -6,13 +6,6 @@ import {
 } from "@/lib/firebase/verify-phone-id-token";
 
 export type FunnelBVerifyChannel = "firebase";
-
-function normalizePhoneForCompare(raw: string | null | undefined): string | null {
-  const e164 = phoneToCalendlyE164(raw ?? undefined);
-  if (!e164) return null;
-  const digits = e164.replace(/\D/g, "");
-  return digits.length >= 10 ? digits.slice(-10) : digits;
-}
 
 export function resolveFunnelBVerifyChannel(): FunnelBVerifyChannel {
   return "firebase";
@@ -56,15 +49,19 @@ export async function verifyFunnelBPhoneIdToken(input: { phone: string; idToken:
     return { ok: false as const, error, channel };
   }
 
-  if (result.user.phoneNumber !== expectedPhone) {
-    const expectedNorm = normalizePhoneForCompare(expectedPhone);
-    const tokenNorm = normalizePhoneForCompare(result.user.phoneNumber);
-    if (!expectedNorm || !tokenNorm || expectedNorm !== tokenNorm) {
-      return { ok: false as const, error: "phone_mismatch" as const, channel };
-    }
+  if (
+    result.user.phoneNumber !== expectedPhone &&
+    !isSamePhoneNumber(expectedPhone, result.user.phoneNumber)
+  ) {
+    return { ok: false as const, error: "phone_mismatch" as const, channel };
   }
 
-  return { ok: true as const, verifiedAt: new Date().toISOString(), channel };
+  return {
+    ok: true as const,
+    verifiedAt: new Date().toISOString(),
+    verifiedPhone: expectedPhone,
+    channel,
+  };
 }
 
 export function funnelBVerifyErrorMessage(error: string): string {

@@ -23,8 +23,8 @@ import {
 import { getVisitorById } from "@/lib/crm/visitors";
 import {
   acceptPhoneVerifyQaBypass,
-  isFreshPhoneVerifiedAt,
   isPlanAPhoneVerifyRequired,
+  phoneVerificationCoversBooking,
 } from "@/lib/quiz-funnel/phone-verify-gate";
 
 type CalendlyBookBody = {
@@ -265,12 +265,13 @@ export async function POST(request: Request) {
   if (isPlanAPhoneVerifyRequired() && !acceptPhoneVerifyQaBypass(body)) {
     let verifiedAt =
       typeof body.phoneVerifiedAt === "string" ? body.phoneVerifiedAt : undefined;
+    let verifiedPhone: string | undefined;
     const email = parentEmail.toLowerCase();
     const supabaseForVerify = getSupabaseAdmin();
     if (supabaseForVerify && email) {
       const { data: leadForVerify } = await supabaseForVerify
         .from("leads")
-        .select("phone_verified_at")
+        .select("phone_verified_at, phone_verified_phone")
         .eq("parent_email", email)
         .maybeSingle();
       const dbStamp =
@@ -280,8 +281,18 @@ export async function POST(request: Request) {
       if (dbStamp && (!verifiedAt || Date.parse(dbStamp) > Date.parse(verifiedAt))) {
         verifiedAt = dbStamp;
       }
+      verifiedPhone =
+        typeof leadForVerify?.phone_verified_phone === "string"
+          ? leadForVerify.phone_verified_phone
+          : undefined;
     }
-    if (!isFreshPhoneVerifiedAt(verifiedAt)) {
+    if (
+      !phoneVerificationCoversBooking({
+        verifiedAt,
+        verifiedPhone,
+        bookingPhone: parentPhone,
+      })
+    ) {
       await recordBookingError({
         errorCode: "phone_verify_required",
         errorMessage: BOOKING_FEEDBACK.phoneVerifyRequired,

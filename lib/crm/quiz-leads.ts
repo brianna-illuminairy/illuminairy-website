@@ -7,6 +7,7 @@ import {
   buildQuizAnswersSnapshot,
   type QuizAnswersSnapshotInput
 } from "@/lib/crm/quiz-answers-snapshot";
+import { phoneToCalendlyE164 } from "@/lib/calendly/phone-e164";
 import { getSupabaseAdmin } from "@/lib/supabase/server";
 import {
   promisedGainFromQuizAnswers,
@@ -99,6 +100,28 @@ export async function upsertLeadFromQuizFunnel(
   const promisedGain = promisedGainFromQuizAnswers(answers.q4, answers.q5, answers.q8);
   const gpaGap = showedGpaGapScreen(answers.q4, answers.q9);
   const metaMatch = normalizeMetaMatch(options.metaMatch);
+  const { data: existing } = await supabase
+    .from("leads")
+    .select("id, utm_source, first_touch_at, phone_verified_at, phone_verified_phone")
+    .eq("parent_email", email)
+    .maybeSingle();
+
+  // Later steps re-submit the lead without a stamp, so fall back to whatever the
+  // parent already verified. Clobbering it would cost them a second code.
+  const submittedVerifiedAt =
+    typeof answers.phoneVerifiedAt === "string" && answers.phoneVerifiedAt.trim()
+      ? answers.phoneVerifiedAt.trim()
+      : null;
+  const phoneVerifiedAt =
+    submittedVerifiedAt ??
+    (typeof existing?.phone_verified_at === "string"
+      ? existing.phone_verified_at
+      : null);
+  const phoneVerifiedPhone = submittedVerifiedAt
+    ? phoneToCalendlyE164(answers.parentPhone ?? undefined)
+    : typeof existing?.phone_verified_phone === "string"
+      ? existing.phone_verified_phone
+      : null;
 
   const leadRow = {
     parent_email: email,
@@ -130,10 +153,8 @@ export async function upsertLeadFromQuizFunnel(
     weeks_until_test: weeksUntilQ5Test(answers.q5),
     tcpa_consent: Boolean(answers.confirmTcpa),
     tcpa_consent_at: answers.confirmTcpa ? now : null,
-    phone_verified_at:
-      typeof answers.phoneVerifiedAt === "string" && answers.phoneVerifiedAt.trim()
-        ? answers.phoneVerifiedAt.trim()
-        : null,
+    phone_verified_at: phoneVerifiedAt,
+    phone_verified_phone: phoneVerifiedPhone,
     quiz_answers: quizSnapshot,
     additional_context: JSON.stringify({
       funnel: options.funnel ?? "sat_quiz",
@@ -171,12 +192,6 @@ export async function upsertLeadFromQuizFunnel(
     ...(metaMatch ?? {})
   };
 
-  const { data: existing } = await supabase
-    .from("leads")
-    .select("id, utm_source, first_touch_at")
-    .eq("parent_email", leadRow.parent_email)
-    .maybeSingle();
-
   let leadId: string;
   let isNewLead = false;
 
@@ -211,6 +226,7 @@ export async function upsertLeadFromQuizFunnel(
           tcpa_consent: leadRow.tcpa_consent,
           tcpa_consent_at: leadRow.tcpa_consent_at,
           phone_verified_at: leadRow.phone_verified_at,
+          phone_verified_phone: leadRow.phone_verified_phone,
           quiz_answers: leadRow.quiz_answers,
           additional_context: leadRow.additional_context,
           stage: leadRow.stage,

@@ -21,7 +21,7 @@ import {
 } from '@/lib/calendly/booking-errors';
 import { countPhoneDigits, phoneToCalendlyE164 } from '@/lib/calendly/phone-e164';
 import {
-  isFreshPhoneVerifiedAt,
+  hasPhoneVerifiedAt,
   isPlanAPhoneVerifyRequired,
 } from '@/lib/quiz-funnel/phone-verify-gate';
 import { isPlanPhoneVerifyQaActive } from '@/lib/quiz-funnel/phone-verify-qa-client';
@@ -237,7 +237,7 @@ export function QFS5Approved({
     contactReady &&
     validation.valid;
   const qWho = typeof answers.qWho === 'string' ? answers.qWho : undefined;
-  const phoneVerified = isFreshPhoneVerifiedAt(phoneVerifiedAt);
+  const phoneVerified = hasPhoneVerifiedAt(phoneVerifiedAt);
   const verifyRequired = isPlanAPhoneVerifyRequired();
   const qaBypass = isPlanPhoneVerifyQaActive();
 
@@ -441,7 +441,7 @@ export function QFS5Approved({
       '';
     const useQaBypass = Boolean(opts?.qaPhoneBypass) || qaBypass;
 
-    if (verifyRequired && !isFreshPhoneVerifiedAt(verifiedStamp) && !useQaBypass) {
+    if (verifyRequired && !hasPhoneVerifiedAt(verifiedStamp) && !useQaBypass) {
       void openOtpAndSend();
       return;
     }

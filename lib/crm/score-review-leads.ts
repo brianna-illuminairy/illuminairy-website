@@ -66,7 +66,7 @@ export async function upsertLeadFromScoreReviewFunnel(
     .update({
       funnel: SCORE_REVIEW_FUNNEL_KEY,
       school_referral: answers.srSchoolReferral?.trim() || null,
-      phone_verified_at: phoneVerifiedAt,
+      ...(phoneVerifiedAt ? { phone_verified_at: phoneVerifiedAt } : {}),
       updated_at: now,
     })
     .eq("id", result.leadId);

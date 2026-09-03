@@ -3,24 +3,37 @@
  * Reuses Plan B Firebase helpers; does not change Plan B routes.
  */
 
+import { isSamePhoneNumber } from "@/lib/calendly/phone-e164";
 import { isFunnelBVerifyConfigured } from "@/lib/funnel-b-verify";
-
-/** How long a client/server `phoneVerifiedAt` stamp stays valid. */
-export const PHONE_VERIFY_MAX_AGE_MS = 24 * 60 * 60 * 1000;
 
 export function isPlanAPhoneVerifyRequired(): boolean {
   return isFunnelBVerifyConfigured();
 }
 
-export function isFreshPhoneVerifiedAt(
-  value: unknown,
-  maxAgeMs: number = PHONE_VERIFY_MAX_AGE_MS
-): boolean {
+/** A verification happened at some point. No age limit: re-prompting a parent
+ * who already passed the OTP costs them a second code for no added safety,
+ * because booking checks the number itself. */
+export function hasPhoneVerifiedAt(value: unknown): boolean {
   if (typeof value !== "string" || !value.trim()) return false;
-  const ms = Date.parse(value.trim());
-  if (!Number.isFinite(ms)) return false;
-  const age = Date.now() - ms;
-  return age >= 0 && age <= maxAgeMs;
+  return Number.isFinite(Date.parse(value.trim()));
+}
+
+/**
+ * The OTP is bound to a number, so the phone being booked must be the phone
+ * that passed it. Without this a parent can verify a real number, edit it to a
+ * fake one, and still book.
+ *
+ * `verifiedPhone` is null on leads created before the column existed; those
+ * fall back to the timestamp alone rather than being forced to re-verify.
+ */
+export function phoneVerificationCoversBooking(input: {
+  verifiedAt: string | null | undefined;
+  verifiedPhone: string | null | undefined;
+  bookingPhone: string | null | undefined;
+}): boolean {
+  if (!hasPhoneVerifiedAt(input.verifiedAt)) return false;
+  if (!input.verifiedPhone) return true;
+  return isSamePhoneNumber(input.verifiedPhone, input.bookingPhone);
 }
 
 /** Non-production only — `?qa=phone` / `?qa=1` client stamp + body.qaPhoneBypass. */

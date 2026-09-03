@@ -78,6 +78,7 @@ export async function POST(request: Request) {
     ok: true,
     verifiedAt: result.verifiedAt,
     phoneVerifiedAt: result.verifiedAt,
+    verifiedPhone: result.verifiedPhone,
     channel: result.channel,
   });
 }

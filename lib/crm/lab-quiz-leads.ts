@@ -60,7 +60,7 @@ export async function upsertLeadFromLabFunnel(
       parent_zip: answers.parentZip?.trim() || null,
       school_referral: answers.qSchoolReferral?.trim() || null,
       child_email: answers.childEmail?.trim().toLowerCase() || null,
-      phone_verified_at: phoneVerifiedAt,
+      ...(phoneVerifiedAt ? { phone_verified_at: phoneVerifiedAt } : {}),
       target_schools: targetSchools,
       target_region: answers.targetRegionId?.trim() || null,
       regional_discount_code: answers.regionalDiscountCode?.trim() || null,

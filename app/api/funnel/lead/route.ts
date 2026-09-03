@@ -19,7 +19,7 @@ import { BOOKING_FEEDBACK } from "@/lib/quiz-funnel/booking-feedback";
 import { appendTouchEvent } from "@/lib/crm/touch";
 import {
   acceptPhoneVerifyQaBypass,
-  isFreshPhoneVerifiedAt,
+  hasPhoneVerifiedAt,
   isPlanAPhoneVerifyRequired,
 } from "@/lib/quiz-funnel/phone-verify-gate";
 
@@ -244,7 +244,7 @@ export async function POST(request: Request) {
   if (
     isPlanAPhoneVerifyRequired() &&
     !acceptPhoneVerifyQaBypass(body) &&
-    !isFreshPhoneVerifiedAt(body.phoneVerifiedAt)
+    !hasPhoneVerifiedAt(body.phoneVerifiedAt)
   ) {
     await recordLeadBookingError({
       body,
