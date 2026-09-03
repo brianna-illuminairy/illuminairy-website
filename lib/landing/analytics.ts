@@ -25,7 +25,7 @@ import { LAB_ANALYTICS_PROPS } from "@/lib/quiz-funnel-b/constants";
 import { STRATEGY_CALL_ANALYTICS_PROPS } from "@/lib/quiz-funnel/strategy-call-analytics-props";
 
 /** GA4/PostHog funnel tags by landing page (Strategy Call vs free lesson). */
-function landingOfferProps(landingPath: string) {
+export function landingOfferProps(landingPath: string) {
   if (
     landingPath === AD3_HD_LANDING_PATH ||
     landingPath.startsWith(`${AD3_HD_LANDING_PATH}/`)
@@ -41,6 +41,37 @@ function landingOfferProps(landingPath: string) {
     funnel_id: STRATEGY_CALL_ANALYTICS_PROPS.funnel_id,
     offer_goal: STRATEGY_CALL_ANALYTICS_PROPS.offer_goal,
   };
+}
+
+/** When the homepage CTA routes to `/plan-b`, tag free lesson even though path is `/`. */
+export function destinationOfferProps(destinationPath: string) {
+  if (
+    destinationPath === "/plan-b" ||
+    destinationPath.startsWith("/plan-b?") ||
+    destinationPath.startsWith("/plan-b/")
+  ) {
+    return {
+      funnel: LAB_ANALYTICS_PROPS.funnel_id,
+      funnel_id: LAB_ANALYTICS_PROPS.funnel_id,
+      offer_goal: LAB_ANALYTICS_PROPS.offer_goal,
+    };
+  }
+  if (
+    destinationPath === "/plan" ||
+    destinationPath.startsWith("/plan?") ||
+    destinationPath.startsWith("/plan/")
+  ) {
+    return {
+      funnel: STRATEGY_CALL_ANALYTICS_PROPS.funnel_id,
+      funnel_id: STRATEGY_CALL_ANALYTICS_PROPS.funnel_id,
+      offer_goal: STRATEGY_CALL_ANALYTICS_PROPS.offer_goal,
+    };
+  }
+  return landingOfferProps(
+    destinationPath.startsWith("/")
+      ? destinationPath.split("?")[0] || "/"
+      : "/"
+  );
 }
 
 declare global {
@@ -157,7 +188,10 @@ export function trackLandingCtaClick(
   landingPath: string,
   sectionId: LandingSectionId,
   ctaLabel: string,
-  extra?: Partial<LandingEventProps>
+  extra?: Partial<LandingEventProps> & {
+    /** Href the CTA navigates to — preferred over landingPath for offer tagging. */
+    cta_href?: string;
+  }
 ) {
   const props = baseProps(variant, layout, landingPath, {
     section_id: sectionId,
@@ -165,7 +199,9 @@ export function trackLandingCtaClick(
     ...extra
   });
   const analyticsProps = analyticsEventProps(props);
-  const offer = landingOfferProps(landingPath);
+  const offer = extra?.cta_href
+    ? destinationOfferProps(extra.cta_href)
+    : landingOfferProps(landingPath);
   persistLandingAttribution(props);
   if (getPostHogKey()) {
     posthog.capture(AnalyticsEvents.funnelCtaClick, { ...props, ...offer });

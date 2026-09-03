@@ -286,7 +286,7 @@ Ad Final URLs split traffic; measure as **parallel funnels**, not a randomized A
 Dashboard: [Dual funnel — Strategy Call vs free lesson](https://us.posthog.com/project/428901/dashboard/1945968)
 
 - `$pageview` suppressed on both `/plan` and `/plan-b` (step events are SSOT).
-- CRM free-lesson touch funnel remains `sat_quiz_b` (client `funnel_id` stays `plan_builder_b`).
+- CRM and touch events use `plan_builder_b` for the free lesson funnel (`sat_quiz_b` is a legacy alias only).
 - Free lesson playbook: [`plan-b-analytics-playbook.md`](plan-b-analytics-playbook.md)
 - Keys / warehouse: [`analytics-key-matrix.md`](analytics-key-matrix.md), [`warehouse-sources-runbook.md`](warehouse-sources-runbook.md)
 

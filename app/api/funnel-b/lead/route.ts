@@ -89,7 +89,7 @@ async function recordLeadBookingError(input: {
       http_status: input.httpStatus,
       field: input.field,
       retryable: input.retryable,
-      funnel: "sat_quiz_b",
+      funnel: PLAN_BUILDER_FUNNEL_ID,
       plan_builder_variant: PLAN_BUILDER_VARIANT,
       step: "b-book",
       booking_phase: "lead_submit",
@@ -260,7 +260,7 @@ export async function POST(request: Request) {
       quizFurthestStep:
         (visitorRow?.quiz_furthest_step as string | undefined) ?? "b-phone",
       satLpVariant: body.sat_lp_variant ?? undefined,
-      funnel: "sat_quiz_b",
+      funnel: PLAN_BUILDER_FUNNEL_ID,
       resumeBasePath: PLAN_BUILDER_B_PATH,
     }),
     lead_source: result.leadSource,
@@ -327,7 +327,7 @@ export async function POST(request: Request) {
     source: "server",
     payload: {
       parent_email: result.email,
-      funnel: "sat_quiz_b",
+      funnel: PLAN_BUILDER_FUNNEL_ID,
       plan_builder_variant: PLAN_BUILDER_VARIANT,
       qWho: body.qWho,
       qGrade: body.qGrade,

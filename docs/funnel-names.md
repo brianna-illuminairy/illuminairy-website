@@ -27,5 +27,7 @@ In PostHog it is registered as a super property, so it is on every event as `fun
 
 Two known gaps, both deliberate:
 
-- Homepage `funnel_cta_click` is `null` — that CTA can route to either funnel, so the destination is genuinely unknown.
-- 76 historical `call_booked` rows are `null` — Calendly bookings with no matching lead, unattributable from data we hold. New bookings are tagged from the booked Calendly event type.
+- Homepage `funnel_cta_click` uses the **CTA destination** (`cta_href`) when known, so `/` → `/plan` tags `sat_quiz` and `/` → `/plan-b` tags `plan_builder_b`. Older rows without `cta_href` may still be `null` or mis-tagged from landing path alone.
+- Some historical `call_booked` rows are `null` — Calendly bookings with no matching lead. New bookings are tagged from the booked Calendly event type.
+
+Question-by-question inventory: [`docs/funnel-question-comparison.md`](./funnel-question-comparison.md).

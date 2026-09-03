@@ -5,7 +5,7 @@ import {
 } from "@/lib/crm/quiz-leads";
 import { studentGradeFromPlanBGradeId } from "@/lib/quiz-funnel-b/grade-copy";
 import { getSupabaseAdmin } from "@/lib/supabase/server";
-import { PLAN_BUILDER_VARIANT } from "@/lib/quiz-funnel-b/constants";
+import { PLAN_BUILDER_FUNNEL_ID, PLAN_BUILDER_VARIANT } from "@/lib/quiz-funnel-b/constants";
 import type { AttributionSnapshot } from "@/lib/attribution";
 
 export type LabQuizAnswersPayload = QuizAnswersPayload & {
@@ -29,7 +29,7 @@ export async function upsertLeadFromLabFunnel(
 ) {
   const result = await upsertLeadFromQuizFunnel(answers, {
     ...options,
-    funnel: "sat_quiz_b",
+    funnel: PLAN_BUILDER_FUNNEL_ID,
   });
 
   if (!result.ok) {
@@ -55,7 +55,7 @@ export async function upsertLeadFromLabFunnel(
   await supabase
     .from("leads")
     .update({
-      funnel: "sat_quiz_b",
+      funnel: PLAN_BUILDER_FUNNEL_ID,
       plan_builder_variant: PLAN_BUILDER_VARIANT,
       parent_zip: answers.parentZip?.trim() || null,
       school_referral: answers.qSchoolReferral?.trim() || null,

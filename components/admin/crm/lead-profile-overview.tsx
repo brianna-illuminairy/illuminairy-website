@@ -31,6 +31,8 @@ export function LeadProfileOverview({
     parent_last: string | null;
     parent_email: string;
     parent_phone: string | null;
+    phone_verified_phone: string | null;
+    phone_verified_at: string | null;
     student_first: string | null;
     student_grade: string | null;
     student_school: string | null;
@@ -113,6 +115,39 @@ export function LeadProfileOverview({
           inputMode="tel"
           placeholder="(555) 555-5555"
           formatDisplay={formatUsPhone}
+        />
+        <Row
+          label="Verified phone"
+          value={
+            l.phone_verified_phone ? (
+              <span>
+                <a className="underline" href={`tel:${l.phone_verified_phone}`}>
+                  {formatUsPhone(l.phone_verified_phone)}
+                </a>
+                {l.parent_phone &&
+                l.phone_verified_phone.replace(/\D/g, "").slice(-10) !==
+                  l.parent_phone.replace(/\D/g, "").slice(-10) ? (
+                  <span className="ml-2 text-xs text-amber-700">
+                    differs from contact phone
+                  </span>
+                ) : null}
+              </span>
+            ) : l.phone_verified_at ? (
+              <span className="text-xs text-muted-foreground">
+                Verified (number not stored — legacy)
+              </span>
+            ) : (
+              <span className="text-xs text-muted-foreground">Not verified</span>
+            )
+          }
+        />
+        <Row
+          label="Verified at"
+          value={
+            l.phone_verified_at
+              ? new Date(l.phone_verified_at).toLocaleString()
+              : null
+          }
         />
       </Card>
 

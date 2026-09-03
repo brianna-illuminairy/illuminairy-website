@@ -1,4 +1,5 @@
 import { createAdminAlert } from "@/lib/admin/alerts";
+import { isFreeLessonFunnelId } from "@/lib/analytics/funnel-id";
 import {
   deriveLeadSource,
   type AttributionSnapshot
@@ -83,7 +84,7 @@ export async function upsertLeadFromQuizFunnel(
     ? await getVisitorById(options.visitorId)
     : null;
   const defaultFurthestStep =
-    options.funnel === "sat_quiz_b" ? "b-phone" : "s5";
+    isFreeLessonFunnelId(options.funnel) ? "b-phone" : "s5";
   const quizFurthestStep =
     (visitorRow?.quiz_furthest_step as string | undefined) ?? defaultFurthestStep;
   const satLpVariantFromVisitor =
@@ -159,7 +160,7 @@ export async function upsertLeadFromQuizFunnel(
     additional_context: JSON.stringify({
       funnel: options.funnel ?? "sat_quiz",
       offer_goal:
-        options.funnel === "sat_quiz_b"
+        isFreeLessonFunnelId(options.funnel)
           ? "free_lesson"
           : options.funnel === "score_review"
             ? "score_review"

@@ -127,7 +127,7 @@ async function recordBookingError(input: {
       start_time: input.startTime,
       field: input.field,
       retryable: input.retryable,
-      funnel: "sat_quiz_b",
+      funnel: PLAN_BUILDER_FUNNEL_ID,
       plan_builder_variant: PLAN_BUILDER_VARIANT,
       step: "b-book",
       booking_phase: "calendly_book",
@@ -327,7 +327,7 @@ export async function POST(request: Request) {
           payload: {
             calendly_uri: result.inviteeUri,
             free_lesson_at: result.startTime,
-            funnel: "sat_quiz_b",
+            funnel: PLAN_BUILDER_FUNNEL_ID,
             plan_builder_variant: PLAN_BUILDER_VARIANT,
             qWho,
             sat_lp_variant: body.sat_lp_variant,

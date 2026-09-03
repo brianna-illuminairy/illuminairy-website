@@ -181,8 +181,8 @@ export function heroHookForUtmContent(content: string): LandingHeroHook | null {
 
 /** Human label for CRM / dashboards from lead.funnel. */
 export function offerLabelForCrmFunnel(funnel: string | null | undefined): string {
-  if (funnel === "sat_quiz_b") return "Free lesson";
+  if (funnel === "sat_quiz_b" || funnel === "plan_builder_b") return "Free lesson";
   if (funnel === "score_review") return "Score review";
-  if (funnel === "sat_quiz") return "Strategy Call";
+  if (funnel === "sat_quiz" || funnel === "sat") return "Strategy Call";
   return funnel?.trim() || "Unknown";
 }

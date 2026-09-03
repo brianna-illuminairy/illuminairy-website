@@ -156,7 +156,7 @@ export async function applyCallAttendance(update: CallAttendanceUpdate): Promise
             source: update.source === "webhook" ? "webhook" : "server",
             payload: {
               call_id: update.callId,
-              funnel: "sat_quiz_b",
+              funnel: PLAN_BUILDER_FUNNEL_ID,
               plan_builder_variant: PLAN_BUILDER_VARIANT,
               attendance_source: update.attendanceSource ?? "manual",
             },

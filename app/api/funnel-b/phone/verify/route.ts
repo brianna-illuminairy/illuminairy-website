@@ -5,7 +5,7 @@ import {
   verifyFunnelBPhoneIdToken,
 } from "@/lib/funnel-b-verify";
 import { appendTouchEvent } from "@/lib/crm/touch";
-import { PLAN_BUILDER_VARIANT } from "@/lib/quiz-funnel-b/constants";
+import { PLAN_BUILDER_FUNNEL_ID, PLAN_BUILDER_VARIANT } from "@/lib/quiz-funnel-b/constants";
 
 export async function POST(request: Request) {
   if (!isFunnelBVerifyConfigured()) {
@@ -66,11 +66,15 @@ export async function POST(request: Request) {
   await appendTouchEvent({
     visitor_id: typeof body.visitorId === "string" ? body.visitorId.trim() : undefined,
     event_type: "lab_phone_verified",
+    path: "/plan-b",
     source: "server",
     payload: {
-      funnel: "sat_quiz_b",
+      funnel: PLAN_BUILDER_FUNNEL_ID,
+      funnel_id: PLAN_BUILDER_FUNNEL_ID,
       plan_builder_variant: PLAN_BUILDER_VARIANT,
       verify_channel: result.channel,
+      step: "b-phone",
+      verified_phone: result.verifiedPhone,
     },
   });
 

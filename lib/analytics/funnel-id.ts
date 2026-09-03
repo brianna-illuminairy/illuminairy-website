@@ -69,6 +69,11 @@ export function normalizeLegacyFunnelId(value: unknown): FunnelId | null {
   return LEGACY_ALIASES[value.trim()] ?? null;
 }
 
+/** True for free-lesson CRM / analytics funnel ids (canonical + legacy). */
+export function isFreeLessonFunnelId(value: unknown): boolean {
+  return normalizeLegacyFunnelId(value) === FUNNEL_IDS.freeLesson;
+}
+
 /** Path first, then whatever tag the caller happened to send. */
 export function resolveFunnelId(input: {
   path?: string | null;

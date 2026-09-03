@@ -104,10 +104,11 @@ export function LandingPage({ landingPath = "/", planBuilderB: planBuilderBForce
       trackLandingCtaClick(variant, layout, landingPath, sectionId, ctaLabel, {
         hero_hook: metaContext.heroHook,
         hero_hook_source: metaContext.heroHookSource,
-        lp_variant: lpVariantFromHeroHook(metaContext.heroHook)
+        lp_variant: lpVariantFromHeroHook(metaContext.heroHook),
+        cta_href: ctaHref,
       });
     },
-    [layout, landingPath, metaContext.heroHook, metaContext.heroHookSource, planBuilderB, variant]
+    [ctaHref, layout, landingPath, metaContext.heroHook, metaContext.heroHookSource, planBuilderB, variant]
   );
 
   return (

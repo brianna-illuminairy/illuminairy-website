@@ -6,9 +6,11 @@ Brief reference for `/plan-b` (lab funnel) event names and analysis scope.
 
 | Property | Value |
 |----------|--------|
-| PostHog / touch `funnel` | `sat_quiz_b` |
-| `funnel_id` / CAPI custom | `plan_builder_b` |
+| PostHog / touch / CRM `funnel_id` | `plan_builder_b` |
+| Legacy CRM alias (pre-2026-09) | `sat_quiz_b` (treat as free lesson) |
 | `plan_builder_variant` | `b` |
+
+SSOT: [`lib/analytics/funnel-id.ts`](../lib/analytics/funnel-id.ts), [`docs/funnel-names.md`](../docs/funnel-names.md).
 
 ## Live LP entry (ad3 tutor HD)
 
@@ -57,7 +59,7 @@ node scripts/funnel-b-analytics-smoke.mjs
 
 | Route | Purpose |
 |-------|---------|
-| `POST /api/funnel-b/lead` | Lead upsert (`sat_quiz_b`) |
+| `POST /api/funnel-b/lead` | Lead upsert (`plan_builder_b`) |
 | `POST /api/funnel-b/phone/send` | Twilio Verify SMS |
 | `POST /api/funnel-b/phone/verify` | Twilio Verify check |
 | `GET /api/funnel-b/calendly-availability` | Free lesson slots |

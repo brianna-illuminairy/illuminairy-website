@@ -1,4 +1,5 @@
 import type { QuizAnswersPayload } from "@/lib/crm/quiz-leads";
+import { isFreeLessonFunnelId } from "@/lib/analytics/funnel-id";
 import {
   promisedGainFromQuizAnswers,
   showedGpaGapScreen,
@@ -35,7 +36,7 @@ export function buildKlaviyoQuizProperties(ctx: KlaviyoQuizContext) {
   );
   const showedGpaGap = showedGpaGapScreen(answers.q4, answers.q9);
   const weeksUntil = weeksUntilQ5Test(answers.q5);
-  const step = quizFurthestStep ?? (funnel === "sat_quiz_b" ? "b-phone" : "s5");
+  const step = quizFurthestStep ?? (isFreeLessonFunnelId(funnel) ? "b-phone" : "s5");
   const resumeUrl = `https://illuminairy.com${resumeBasePath}?step=${encodeURIComponent(step)}`;
 
   return {

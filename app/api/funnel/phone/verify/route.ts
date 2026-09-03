@@ -66,11 +66,14 @@ export async function POST(request: Request) {
   await appendTouchEvent({
     visitor_id: typeof body.visitorId === "string" ? body.visitorId.trim() : undefined,
     event_type: "quiz_phone_verified",
+    path: "/plan",
     source: "server",
     payload: {
       funnel: "sat_quiz",
+      funnel_id: "sat_quiz",
       verify_channel: result.channel,
       step: "s5",
+      verified_phone: result.verifiedPhone,
     },
   });
 
